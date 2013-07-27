@@ -41,11 +41,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $poster;
 
     /**
-     * topic_title
+     * title
      *
      * @ORM\Column(type="string", length=255)
      */
-    private $topic_title = '';
+    private $title = '';
 
     /**
      * topic_time
@@ -198,9 +198,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->poster;
     }
 
-    public function getTopic_title()
+    public function getTitle()
     {
-        return $this->topic_title;
+        return $this->title;
     }
 
     public function getTopic_status()
@@ -263,9 +263,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_views++;
     }
 
-    public function setTopic_title($title)
+    public function setTitle($title)
     {
-        $this->topic_title = $title;
+        $this->title = $title;
     }
 
     /**

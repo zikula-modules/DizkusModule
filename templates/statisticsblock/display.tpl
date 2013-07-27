@@ -25,7 +25,7 @@
 <ul class="dzk_postlist">
     {foreach item='lastpost' from=$lastposts}
     <li>
-        <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.name} :: {$lastpost.topic_title}">{$lastpost.topic_title|truncate:21}</a><br />
+        <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.name} :: {$lastpost.title}">{$lastpost.title|truncate:21}</a><br />
         {gt text='%s reply' plural='%s replies' tag1=$lastpost.topic_replies count=$lastpost.topic_replies domain="module_dizkus"}
         <br />
         {$lastpost.poster_name|profilelinkbyuname}<br />{$lastpost.posted_time}

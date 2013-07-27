@@ -1,9 +1,9 @@
-{pagesetvar name=title value=$topic.topic_title}
+{pagesetvar name=title value=$topic.title}
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
 
 <div id="dizkus">
 
-    <h2>{$topic.topic_title|safetext}</h2>
+    <h2>{$topic.title|safetext}</h2>
 
     {foreach key='num' item='post' from=$topic.posts}
     <div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $post.poster_data.online}{$onlinestyle}{/if}>

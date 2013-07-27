@@ -1,4 +1,4 @@
- <h2>{$newtopic.topic_title|safetext}</h2>
+ <h2>{$newtopic.title|safetext}</h2>
 
 <div id="posting" class="forum_post post_bg1 dzk_rounded">
     <div class="inner">

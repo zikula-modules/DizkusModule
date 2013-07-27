@@ -31,14 +31,14 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $post = $args['post'];
 
         $subject = ($post->isFirst()) ? '' : 'Re: ';
-        $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTopic_title();
+        $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
 
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
         $view->assign('sitename', System::getVar('sitename'))
             ->assign('category_name', $post->getTopic()->getForum()->getParent()->getName())
             ->assign('name', $post->getTopic()->getForum()->getName())
-            ->assign('topic_subject', $post->getTopic()->getTopic_title())
+            ->assign('topic_subject', $post->getTopic()->getTitle())
             ->assign('poster_name', $post->getPoster()->getUser()->getUname())
             ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
             ->assign('post_message', $post->getPost_text())
@@ -100,7 +100,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             $email_from = System::getVar('adminmail');
         }
 
-        $subject = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']->getTopic()->getTopic_title());
+        $subject = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']->getTopic()->getTitle());
         $sitename = System::getVar('sitename');
 
         $recipients = array();
@@ -159,7 +159,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
         $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
-                . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTopic_title() . "\n\n"
+                . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . "\n\n"
                 . $this->__('Reporting user') . ": $reporting_username\n"
                 . $this->__('Comment') . ":\n"
                 . strip_tags($args['comment']) . " \n\n"

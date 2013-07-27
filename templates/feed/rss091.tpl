@@ -40,7 +40,7 @@ soon as possible!
 
 {foreach item='post' from=$posts}
     <item>
-    <title>{$post.topic_title|safetext}</title>
+    <title>{$post.title|safetext}</title>
     <link>{$post.last_post_url|safetext}</link>
     <description>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</description>
     </item>

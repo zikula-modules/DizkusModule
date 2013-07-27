@@ -42,7 +42,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
         $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
 
         $view->assign($managedTopic->get());
-        $view->assign('emailsubject', $managedTopic->get()->getTopic_title());
+        $view->assign('emailsubject', $managedTopic->get()->getTitle());
         $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
 
         return true;

@@ -1,4 +1,4 @@
-{gt text="Reply to '%s'" tag1=$reply.topic.topic_title|safetext assign='templatetitle'}
+{gt text="Reply to '%s'" tag1=$reply.topic.title|safetext assign='templatetitle'}
 {pagesetvar name='title' value=$templatetitle}
 
 {include file='user/header.tpl'}

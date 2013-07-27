@@ -96,7 +96,7 @@ class Dizkus_Manager_Topic
      */
     public function getTitle()
     {
-        return $this->_topic->getTopic_title();
+        return $this->_topic->getTitle();
     }
 
     /**
@@ -211,7 +211,7 @@ class Dizkus_Manager_Topic
 
     public function setTitle($title)
     {
-        $this->_topic->setTopic_title($title);
+        $this->_topic->setTitle($title);
         $this->entityManager->flush();
     }
 
@@ -238,7 +238,7 @@ class Dizkus_Manager_Topic
      * @param type $data['forum_id']
      * @param type $data['message']
      * @param type $data['attachSignature']
-     * @param type $data['topic_title']
+     * @param type $data['title']
      * @param type $data['subscribe_topic']
      */
     public function prepare($data)
@@ -249,7 +249,7 @@ class Dizkus_Manager_Topic
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
         unset($data['attachSignature']);
-        $this->_firstPost->setTitle($data['topic_title']);
+        $this->_firstPost->setTitle($data['title']);
         $this->_firstPost->setTopic($this->_topic);
         $this->_firstPost->setIsFirstPost(true);
         $this->_subscribe = $data['subscribe_topic'];

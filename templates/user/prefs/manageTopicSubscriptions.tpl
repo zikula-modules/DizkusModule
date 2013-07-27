@@ -26,8 +26,8 @@
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>
-                                    <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.topic_title|safetext}">{$subscription.topic.topic_title|safetext}</a>
-                                    <span>{gt text="Topic"}: {$subscription.topic.topic_title|truncate:70}</span>
+                                    <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
+                                    <span>{gt text="Topic"}: {$subscription.topic.title|truncate:70}</span>
                                 </dt>
                                 <dd class="lastpost">
                                     {include file='user/lastPostBy.tpl' last_post=$subscription.topic.last_post}

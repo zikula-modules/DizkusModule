@@ -12,7 +12,7 @@
         <webMaster>{$adminmail|safetext} ({$adminmail|safetext})</webMaster>
         {foreach item='post' from=$posts}
         <item>
-            <title>{$post.topic_title|safetext}</title>
+            <title>{$post.title|safetext}</title>
             <link>{$post.last_post_url|safetext}</link>
             <guid>{$post.last_post_url|safetext}</guid>
             <description>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</description>

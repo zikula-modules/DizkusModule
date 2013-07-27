@@ -309,7 +309,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
                 // store message
                 $newManagedTopic = new Dizkus_Manager_Topic();
-                $data = array('topic_title' => $subject,
+                $data = array('title' => $subject,
                             'message' => $message,
                             'topic_time' => $topicTime,
                             'forum_id' => $args['forum']['forum_id'],

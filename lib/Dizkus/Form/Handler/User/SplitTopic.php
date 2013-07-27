@@ -46,7 +46,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
 
         $this->view->assign($this->post->toArray());
-        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTopic_title());
+        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());
 
         return true;
     }

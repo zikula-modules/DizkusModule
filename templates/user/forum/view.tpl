@@ -161,7 +161,7 @@
                         {if $showattachment eq 1}
                         {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
                         {/if}
-                        {$topic.topic_id|viewtopiclink:$topic.topic_title}
+                        {$topic.topic_id|viewtopiclink:$topic.title}
                         <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
                         {assign var='total_posts' value=$topic.topic_replies+1}
                         {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}

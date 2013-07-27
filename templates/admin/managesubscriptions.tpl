@@ -46,8 +46,8 @@
                             {formcheckbox id=$subscription.id group='topicsubscriptions' cssClass="topicsubscriptions"}
                         </td>
                         <td>
-                            {$subscription.topic.topic_title}
-                            {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.name|safetext} :: {$subscription.topic_title|safetext}">{$subscription.topic_title|safetext}</a>*}
+                            {$subscription.topic.title}
+                            {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.name|safetext} :: {$subscription.title|safetext}">{$subscription.title|safetext}</a>*}
                         </td>
                         <td>
                             {$subscription.topic.poster.user.uid|profilelinkbyuid}

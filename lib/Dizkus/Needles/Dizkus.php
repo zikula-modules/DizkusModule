@@ -74,7 +74,7 @@ class Dizkus_Needles_Dizkus extends Zikula_AbstractHelper
                             if (!empty($managedTopic)) {
                                 if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get())) {
                                     $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
-                                    $title = DataUtil::formatForDisplay($result[0]['topic_title']);
+                                    $title = DataUtil::formatForDisplay($result[0]['title']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                 } else {
                                     $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for topic ID %s.', $id) . '</em>';

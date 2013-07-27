@@ -34,7 +34,7 @@
 {elseif $func eq 'viewforum' AND isset($forum)}
 {*assign var='maintitle' value=$forum.cat_title|cat:' - '|cat:$forum.name*}
 {elseif $func eq 'viewtopic' AND isset($topic)}
-{assign var='maintitle' value=$topic.topic_title}
+{assign var='maintitle' value=$topic.title}
 {elseif $func eq 'newtopic'}
 {gt text='New topic in forum' assign='maintitle'}
 {/if}

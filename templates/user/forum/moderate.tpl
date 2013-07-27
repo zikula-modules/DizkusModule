@@ -49,7 +49,7 @@
                                 {if $topic.hot_topic eq 1}
                                     {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
                                 {/if}
-                                {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.name}
+                                {$topic.topic_id|viewtopiclink:$topic.title:$forum.name}
                                 <em class="z-sub">({$topic.topic_views} {gt text="Views"})</em>
                                 <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}

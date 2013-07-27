@@ -744,7 +744,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         foreach ($topics as $topic)
         {
             /* @var $topic Dizkus_Entity_Topic */
-            $posts[$i]['topic_title'] = $topic->getTopic_title();
+            $posts[$i]['title'] = $topic->getTitle();
             $posts[$i]['cat_title'] = $topic->getForum()->getParent()->getName();
             $posts[$i]['forum_name'] = $topic->getForum()->getName();
             $posts[$i]['time'] = $topic->getTopic_time();

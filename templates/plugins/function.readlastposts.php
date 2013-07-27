@@ -118,7 +118,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
         /* @var $topic Dizkus_Entity_Topic */
         foreach ($topics as $topic) {
             $lastpost = array();
-            $lastpost['topic_title'] = DataUtil::formatforDisplay($topic->getTopic_title());
+            $lastpost['title'] = DataUtil::formatforDisplay($topic->getTitle());
             $lastpost['topic_replies'] = DataUtil::formatforDisplay($topic->getTopic_replies());
             $lastpost['name'] = DataUtil::formatforDisplay($topic->getForum()->getName());
             $lastpost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());

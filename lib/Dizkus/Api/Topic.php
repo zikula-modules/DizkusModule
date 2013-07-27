@@ -254,7 +254,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
                 // create shadow topic
                 $managedShadowTopic = new Dizkus_Manager_Topic();
                 $topicData = array(
-                    'topic_title' => $this->__f("*** The original posting '%s' has been moved", $managedTopic->getTitle()),
+                    'title' => $this->__f("*** The original posting '%s' has been moved", $managedTopic->getTitle()),
                     'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="'. ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedTopic->getId())) .'">' . $this->__('here') . '</a>.',
                     'forum_id' => $oldForumId,
                     'topic_time' => $managedTopic->get()->getTopic_time(),
@@ -295,7 +295,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // create new topic
         $newTopic = new Dizkus_Entity_Topic();
         $newTopic->setPoster($args['post']->get()->getPoster());
-        $newTopic->setTopic_title($args['data']['newsubject']);
+        $newTopic->setTitle($args['data']['newsubject']);
         $newTopic->setForum($managedTopic->get()->getForum());
         $args['post']->get()->setIsFirstPost(true);
         $args['post']->get()->setTitle($args['data']['newsubject']);

@@ -57,7 +57,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
              array('value' => '', 'text' => "<< " . $this->__("Choose target topic") . " >>"),
         );
         foreach ($topics as $topic) {
-            $topicSelect[] = array('value' => $topic->getTopic_id(), 'text' => $topic->getTopic_title());
+            $topicSelect[] = array('value' => $topic->getTopic_id(), 'text' => $topic->getTitle());
         }
         $this->view->assign('topicSelect', $topicSelect);        
         $actions = array(

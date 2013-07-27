@@ -1,4 +1,4 @@
-{assign var='templatetitle' value=$topic.topic_title}
+{assign var='templatetitle' value=$topic.title}
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
@@ -25,7 +25,7 @@
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
         {gt text="[Solved]"}
     </span>
-    <span id="topic_title">{$topic.topic_title|safetext}</span>
+    <span id="topic_title">{$topic.title|safetext}</span>
 </span>
 <a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
 </h2>

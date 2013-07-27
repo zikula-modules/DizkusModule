@@ -146,7 +146,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
 
             case 'post':
             default:
-                $where = Search_Api_User::construct_where($args, array('t.topic_title', 'p.post_text'), null);
+                $where = Search_Api_User::construct_where($args, array('t.title', 'p.post_text'), null);
                 if (!empty($where)) {
                     $where = trim(substr(trim($where), 1, -1));
                 }
@@ -167,7 +167,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         foreach ($topics as $topic) {
             $posts = $topic->getPosts();
             $record = array(
-                'title' => $topic->getTopic_title(),
+                'title' => $topic->getTitle(),
                 'text' => $posts[0]->getPost_text(),
                 'created' => $topic->getTopic_time(),
                 'module' => 'Dizkus',
@@ -235,22 +235,22 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
                 $searchtype = strtoupper($args['searchtype']);
                 if ($searchtype == 'EXACT') {
                     $q = DataUtil::formatForStore($args['q']);
-                    $wherematch = "(MATCH p.post_text AGAINST ('$q') OR MATCH t.topic_title AGAINST ('$q')) \n";
+                    $wherematch = "(MATCH p.post_text AGAINST ('$q') OR MATCH t.title AGAINST ('$q')) \n";
                 } else {
                     $plusminuscount = preg_match('/[\+\-]/', $args['q']);
                     if (($this->getVar('extendedsearch', 'no') == 'yes') && ($plusminuscount > 0)) {
                         // seems to be an extended search
                         $q = DataUtil::formatForStore($args['q']);
-                        $wherematch = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.topic_title AGAINST ('$q' IN BOOLEAN MODE)) \n";
+                        $wherematch = "(MATCH p.post_text AGAINST ('$q' IN BOOLEAN MODE) OR MATCH t.title AGAINST ('$q' IN BOOLEAN MODE)) \n";
                     } else {
                         $wherematcharray = array();
                         $words = explode(' ', $args['q']);
                         foreach ($words as $word) {
                             $word = DataUtil::formatForStore($word);
                             // get post_text and match up forums/topics/posts
-                            //$query .= "(pt.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
-                            $wherematcharray[] .= "(MATCH p.post_text AGAINST ('$word') OR MATCH t.topic_title AGAINST ('$word')) \n";
-                            //$wherematcharray[] = "(p.post_text LIKE '%$word%' OR t.topic_title LIKE '%$word%') \n";
+                            //$query .= "(pt.post_text LIKE '%$word%' OR t.title LIKE '%$word%') \n";
+                            $wherematcharray[] .= "(MATCH p.post_text AGAINST ('$word') OR MATCH t.title AGAINST ('$word')) \n";
+                            //$wherematcharray[] = "(p.post_text LIKE '%$word%' OR t.title LIKE '%$word%') \n";
                         }
                         $wherematch = implode(($searchtype == 'OR' ? ' OR ' : ' AND '), $wherematcharray);
                     }
@@ -302,7 +302,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         $sql = 'INSERT INTO ' . $ztable['search_result'] . '
                 (title, text, module, extra, created, found, sesid)
                 SELECT
-                  t.topic_title,
+                  t.title,
                   ' . $textsql . ',
                   \'Dizkus\',
                   REPLACE (\'' . $topicurl . '\', \'%%%\', t.topic_id) as extra,
