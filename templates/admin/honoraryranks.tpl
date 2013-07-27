@@ -17,8 +17,8 @@
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">
-                    <label for="rank_title">{gt text="Honorary rank name"}</label>
-                    <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
+                    <label for="title">{gt text="Honorary rank name"}</label>
+                    <input id="title" type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
                 </div>
                 <div class="z-formrow">
                     <label for="newrank_image">{gt text="Internal Dizkus image"}</label>
@@ -59,7 +59,7 @@
                 {foreach key='num' item='rank' from=$ranks}
                 <tr class="{cycle values='z-odd,z-even'}">
                     <td>
-                        <input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" />
+                        <input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
                     </td>
                     <td>
                         <select name="ranks[{$rank.rank_id}][rank_image]" id="rank_image{$num}" onchange="Zikula.Dizkus.ShowRankImage({$num}, '{$modvars.Dizkus.url_ranks_images}')">

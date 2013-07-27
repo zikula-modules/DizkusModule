@@ -32,11 +32,11 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     private $rank_id;
 
     /**
-     * rank_title
+     * title
      * 
      * @ORM\Column(type="string", length=50)
      */
-    private $rank_title = '';
+    private $title = '';
 
     /**
      * rank_desc
@@ -78,9 +78,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         return $this->rank_id;
     }
 
-    public function getRank_title()
+    public function getTitle()
     {
-        return $this->rank_title;
+        return $this->title;
     }
 
     public function getRank_desc()
@@ -126,9 +126,9 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
         $this->rank_id = $rank_id;
     }
 
-    public function setRank_title($rank_title)
+    public function setTitle($title)
     {
-        $this->rank_title = $rank_title;
+        $this->title = $title;
     }
 
     public function setRank_desc($rank_desc)

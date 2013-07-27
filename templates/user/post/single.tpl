@@ -32,7 +32,7 @@
                         {if $post.poster.rank.rank_link neq ''}
                         <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
                         {/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.rank_title}" title="{$post.poster.rank.rank_desc}" />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.rank_desc}" />
                         {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
                         {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
@@ -40,17 +40,17 @@
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
                         {if $posterRank.rank_image neq ''}
-                        <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.rank_title}" title="{$posterRank.rank_desc}" />
+                        <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.title}" title="{$posterRank.rank_desc}" />
                         {/if}
                         {if $posterRank.rank_link neq ''}</a>{/if}
                     {/if}
                 </div>
 
                 <ul>
-                    {if !empty($post.poster.rank.rank_title)}
-                    <li><strong>{gt text="Rank"}: </strong>{$post.poster.rank.rank_title|safetext}</li>
+                    {if !empty($post.poster.rank.title)}
+                    <li><strong>{gt text="Rank"}: </strong>{$post.poster.rank.title|safetext}</li>
                     {else}
-                    <li><strong>{gt text="Rank"}: </strong>{$posterRank.rank_title|safetext}</li>
+                    <li><strong>{gt text="Rank"}: </strong>{$posterRank.title|safetext}</li>
                     {/if}
                     {usergetvar name='user_regdate' assign="user_regdate"}
                     <li><strong>{gt text="Registered"}: </strong>{$user_regdate|dateformat:'datebrief'}</li>

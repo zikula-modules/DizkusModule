@@ -18,8 +18,8 @@
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">
-                    <label for="rank_title">{gt text="User rank name"}</label>
-                    <input id="rank_title" type="text" name="ranks[-1][rank_title]" value="" maxlength="50" size="20" />
+                    <label for="title">{gt text="User rank name"}</label>
+                    <input id="title" type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
                 </div>
                 <div class="z-formrow">
                     <label for="rank_min">{gt text="Minimum number of posts"}</label>
@@ -69,7 +69,7 @@
             <tbody>
                 {foreach key='num' item='rank' from=$ranks}
                 <tr class="{cycle values='z-odd,z-even'}">
-                    <td><input type="text" name="ranks[{$rank.rank_id}][rank_title]" value="{$rank.rank_title|safetext}" maxlength="50" size="20" /></td>
+                    <td><input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" /></td>
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_min]" value="{$rank.rank_min}" maxlength="5" size="4" /></td>
                     <td><input type="text" name="ranks[{$rank.rank_id}][rank_max]" value="{$rank.rank_max}" maxlength="5" size="4" /></td>
                     <td>

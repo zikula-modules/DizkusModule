@@ -41,7 +41,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
         if ($args['ranktype'] == Dizkus_Entity_Rank::TYPE_POSTCOUNT) {
             $orderby = 'rank_min';
         } else {
-            $orderby = 'rank_title';
+            $orderby = 'title';
         }
 
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Rank')
