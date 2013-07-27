@@ -113,11 +113,11 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $pop3Connection = null;
 
     /**
-     * forum_moduleref
+     * moduleref
      *
      * @ORM\Column(type="integer")
      */
-    private $forum_moduleref = 0;
+    private $moduleref = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum", cascade={"remove"})
@@ -309,14 +309,14 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->pop3Connection = $connection;
     }
 
-    public function getForum_moduleref()
+    public function getModuleref()
     {
-        return $this->forum_moduleref;
+        return $this->moduleref;
     }
 
-    public function setForum_moduleref($moduleref)
+    public function setModuleref($moduleref)
     {
-        $this->forum_moduleref = $moduleref;
+        $this->moduleref = $moduleref;
     }
 
     /**
