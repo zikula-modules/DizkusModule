@@ -98,7 +98,7 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
 
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
-     * @ORM\JoinColumn(name="topic_last_post_id", referencedColumnName="post_id", nullable=true)
+     * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
 
