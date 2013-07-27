@@ -200,7 +200,7 @@ class Dizkus_Manager_Topic
      */
     public function incrementViewsCount()
     {
-        $this->_topic->incrementTopic_views();
+        $this->_topic->incrementViewCount();
         $this->entityManager->flush();
     }
 

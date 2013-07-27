@@ -167,7 +167,7 @@
                         {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
                     <dd class="posts">{$topic.topic_replies}</dd>
-                    <dd class="views">{$topic.topic_views}</dd>
+                    <dd class="views">{$topic.viewCount}</dd>
                     <dd class="lastpost">
                         {if isset($topic.last_post)}
                         {include file='user/lastPostBy.tpl' last_post=$topic.last_post}

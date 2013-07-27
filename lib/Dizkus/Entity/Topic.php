@@ -63,11 +63,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $status = 0;
 
     /**
-     * topic_views
+     * viewCount
      *
      * @ORM\Column(type="integer")
      */
-    private $topic_views = 0;
+    private $viewCount = 0;
 
     /**
      * topic_replies
@@ -218,9 +218,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_time = $time;
     }
 
-    public function getTopic_views()
+    public function getViewCount()
     {
-        return $this->topic_views;
+        return $this->viewCount;
     }
 
     public function getSticky()
@@ -258,9 +258,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->sticky = false;
     }
 
-    public function incrementTopic_views()
+    public function incrementViewCount()
     {
-        $this->topic_views++;
+        $this->viewCount++;
     }
 
     public function setTitle($title)
