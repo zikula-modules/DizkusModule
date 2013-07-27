@@ -27,22 +27,23 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
         $force = (isset($args['force'])) ? (boolean)$args['force'] : false;
         $managedForum = new Dizkus_Manager_Forum($args['forum']);
         $forum = $managedForum->get();
+        $pop3conn = $forum->getPop3Connection()->getConnection(); // array of connection details
 
         include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
-        if ((($forum['pop3_active'] == 1) && ($forum['pop3_last_connect'] <= time() - ($forum['pop3_interval'] * 60)) ) || ($force == true)) {
+        if ((($forum->getPop3Connection()->isActive()) && ($pop3conn['last_connect'] <= time() - ($pop3conn['interval'] * 60)) ) || ($force == true)) {
             $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['forum_name'] . "\n", $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class;
-            $pop3->hostname = $forum['pop3_server'];
-            $pop3->port = $forum['pop3_port'];
+            $pop3->hostname = $pop3conn['server'];
+            $pop3->port = $pop3conn['port'];
             $error = '';
 
             // open connection to pop3 server
             if (($error = $pop3->Open()) == '') {
                 $this->mailcronecho("Connected to the POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                 // login to pop3 server
-                if (($error = $pop3->Login($forum['pop3_login'], base64_decode($forum['pop3_password']), 0)) == '') {
-                    $this->mailcronecho("User '" . $forum['pop3_login'] . "' logged into POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
+                if (($error = $pop3->Login($pop3conn['login'], base64_decode($pop3conn['password']), 0)) == '') {
+                    $this->mailcronecho("User '" . $pop3conn['login'] . "' logged into POP3 server '" . $pop3->hostname . "'.\n", $args['debug']);
                     // check for message
                     if (($error = $pop3->Statistics($messages, $size)) == '') {
                         $this->mailcronecho("There are $messages messages in the mailbox, amounting to a total of $size bytes.\n", $args['debug']);
@@ -53,15 +54,15 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
                             $this->mailcronecho("Logging out '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                             UserUtil::logOut();
                             // login the correct user
-                            if (UserUtil::logIn($forum['pop3_pnuser'], base64_decode($forum['pop3_pnpassword']), false)) {
-                                $this->mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' successfully logged in.', $args['debug']);
+                            if (UserUtil::logIn($pop3conn['coreUser']->getUid(), base64_decode($pop3conn['coreUser']->getPass()), false)) {
+                                $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' successfully logged in.', $args['debug']);
                                 if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum)) {
-                                    $this->mailcronecho("Error! Insufficient permissions for " . UserUtil::getVar('uname') . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
+                                    $this->mailcronecho("Error! Insufficient permissions for " . $pop3conn['coreUser']->getUname() . " in forum " . $forum['forum_name'] . "(id=" . $forum['forum_id'] . ").", $args['debug']);
                                     UserUtil::logOut();
-                                    $this->mailcronecho('Done! User ' . UserUtil::getVar('uname') . ' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
                                     return false;
                                 }
-                                $this->mailcronecho("Adding new posts as user '" . UserUtil::getVar('uname') . "'.\n", $args['debug']);
+                                $this->mailcronecho("Adding new posts as user '" . $pop3conn['coreUser']->getUname() . "'.\n", $args['debug']);
                                 // .cycle through the message list
                                 for ($cnt = 1; $cnt <= count($result); $cnt++) {
                                     if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
@@ -107,7 +108,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
 
                                         // check if subject matches our matchstring
                                         if (empty($original_topic_id)) {
-                                            if (empty($forum['pop3_matchstring']) || (preg_match($forum['pop3_matchstring'], $subject) <> 0)) {
+                                            if (empty($pop3conn['matchstring']) || (preg_match($pop3conn['matchstring'], $subject) <> 0)) {
                                                 $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
@@ -151,10 +152,10 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
                                 }
                                 // logout the mail2forum user
                                 if (UserUtil::logOut()) {
-                                    $this->mailcronecho('Done! User ' . $forum['pop3_pnuser'] . ' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
                                 }
                             } else {
-                                $this->mailcronecho("Error! Could not log user '" . $forum['pop3_pnuser'] . "' in.\n");
+                                $this->mailcronecho("Error! Could not log user '" . $pop3conn['coreUser']->getUname() . "' in.\n");
                             }
                             // close pop3 connection and finally delete messages
                             if ($error == '' && ($error = $pop3->Close()) == '') {
@@ -171,8 +172,7 @@ class Dizkus_Api_Cron extends Zikula_AbstractApi
             }
 
             // store the timestamp of the last connection to the database
-            $managedForum = new Dizkus_Manager_Forum($forum['forum_id']);
-            $managedForum->get()->setForum_pop3_lastconnect(time());
+            $managedForum->get()->getPop3Connection()->updateConnectTime();
             $this->entityManager->flush();
         }
 

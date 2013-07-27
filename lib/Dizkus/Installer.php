@@ -194,15 +194,25 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $stmt = $connection->prepare($sql);
         $stmt->execute();
 
+        // get all the pop3 connections for later re-entry
+        $sql = "SELECT forum_id AS id, forum_pop3_active AS active, forum_pop3_server AS server, forum_pop3_port AS port, forum_pop3_login AS login,
+                forum_pop3_password AS password, forum_pop3_interval AS interval, forum_pop3_lastconnect AS lastconnect, forum_pop3_pnuser as userid
+                FROM dizkus_forums
+                WHERE forum_pop3_active = 1";
+        $pop3connections = $connection->fetchAll($sql);
+
         // update all the tables to 4.0.0
         try {
             DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
             return LogUtil::registerError($e->getMessage());
         }
+
+        // migrate dataa from old formats
         $this->upgrade_to_4_0_0_migrateCategories();
         $this->upgrade_to_4_0_0_updatePosterData();
         $this->upgrade_to_4_0_0_migrateModGroups();
+        $this->upgrade_to_4_0_0_migratePop3Connections($pop3connections);
 
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
@@ -347,6 +357,22 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $stmt->execute();
 
         return;
+    }
+
+    /**
+     * migrate pop3 connection data from multiple columns to one object
+     *
+     * @param type $connections
+     */
+    private function upgrade_to_4_0_0_migratePop3Connections($connections)
+    {
+        foreach ($connections as $connectionData) {
+            $connectionData['coreUser'] = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $connectionData['userid']);
+            $connection = new Dizkus_Connection_Pop3($connectionData);
+            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $connectionData['id']);
+            $forum->setPop3Connection($connection);
+        }
+        $this->entityManager->flush();
     }
 
 }

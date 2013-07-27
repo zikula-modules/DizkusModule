@@ -106,74 +106,11 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $last_post;
 
     /**
-     * forum_pop3_active
+     * pop3Connection
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="object", nullable=true)
      */
-    private $forum_pop3_active = false;
-
-    /**
-     * forum_pop3_server
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $forum_pop3_server = '';
-
-    /**
-     * The following are annotations which define the forum_pop3_port field.
-     *
-     * @ORM\Column(type="integer", length=5)
-     */
-    private $forum_pop3_port = 110;
-
-    /**
-     * forum_pop3_login
-     *
-     * @ORM\Column(type="string", length=60)
-     */
-    private $forum_pop3_login = '';
-
-    /**
-     * forum_pop3_password
-     *
-     * @ORM\Column(type="string", length=60)
-     */
-    private $forum_pop3_password = '';
-
-    /**
-     * forum_pop3_interval
-     *
-     * @ORM\Column(type="integer", length=4)
-     */
-    private $forum_pop3_interval = 0;
-
-    /**
-     * forum_pop3_interval
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $forum_pop3_lastconnect = 0;
-
-    /**
-     * forum_pop3_interval
-     *
-     * @ORM\Column(type="string", length=60)
-     */
-    private $forum_pop3_pnuser = '';
-
-    /**
-     * forum_pop3_interval
-     *
-     * @ORM\Column(type="string", length=40)
-     */
-    private $forum_pop3_pnpassword = '';
-
-    /**
-     * forum_pop3_interval
-     *
-     * @ORM\Column(type="string", length=255)
-     */
-    private $forum_pop3_matchstring = '';
+    private $pop3Connection = null;
 
     /**
      * forum_moduleref
@@ -362,113 +299,14 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $this->last_post = $post;
     }
 
-    public function getForum_pop3_active()
+    public function getPop3Connection()
     {
-        return $this->forum_pop3_active;
+        return $this->pop3Connection;
     }
 
-    public function setForum_pop3_active($pop3_active)
+    public function setPop3Connection(Dizkus_Connection_Pop3 $connection)
     {
-        $this->forum_pop3_active = $pop3_active;
-    }
-
-    public function setExtsource($extsource)
-    {
-        if ($extsource == 'mail2forum') {
-            $this->forum_pop3_active = true;
-        } else {
-            $this->forum_pop3_active = false;
-        }
-    }
-
-    public function getForum_pop3_server()
-    {
-        return $this->forum_pop3_server;
-    }
-
-    public function setForum_pop3_server($pop3_server)
-    {
-        $this->forum_pop3_server = $pop3_server;
-    }
-
-    public function getForum_pop3_port()
-    {
-        return $this->forum_pop3_port;
-    }
-
-    public function setForum_pop3_port($pop3_port)
-    {
-        $this->forum_pop3_port = $pop3_port;
-    }
-
-    public function getForum_pop3_login()
-    {
-        return $this->forum_pop3_login;
-    }
-
-    public function setForum_pop3_login($pop3_login)
-    {
-        $this->forum_pop3_login = $pop3_login;
-    }
-
-    public function getForum_pop3_password()
-    {
-        return $this->forum_pop3_password;
-    }
-
-    public function setForum_pop3_password($pop3_password)
-    {
-        $this->forum_pop3_password = $pop3_password;
-    }
-
-    public function getForum_pop3_interval()
-    {
-        return $this->forum_pop3_interval;
-    }
-
-    public function setForum_pop3_interval($pop3_interval)
-    {
-        $this->forum_pop3_interval = $pop3_interval;
-    }
-
-    public function getForum_pop3_lastconnect()
-    {
-        return $this->forum_pop3_lastconnect;
-    }
-
-    public function setForum_pop3_lastconnect($pop3_lastconnection)
-    {
-        $this->forum_pop3_lastconnect = $pop3_lastconnection;
-    }
-
-    public function getForum_pop3_pnuser()
-    {
-        return $this->forum_pop3_pnuser;
-    }
-
-    public function setForum_pop3_pnuser($pop3_pnuser)
-    {
-        $this->forum_pop3_pnuser = $pop3_pnuser;
-    }
-
-    public function getForum_pop3_pnpassword()
-    {
-        return $this->forum_pop3_pnpassword;
-    }
-
-    public function setForum_pop3_pnpassword($pop3_pnpassword)
-    {
-        $this->forum_pop3_pnpassword = $pop3_pnpassword;
-    }
-
-    public function getForum_pop3_matchstring()
-    {
-        return $this->forum_pop3_matchstring;
-    }
-
-    public function setForum_pop3_matchstring($pop3_matchstring)
-    {
-        $this->forum_pop3_matchstring = $pop3_matchstring;
+        $this->pop3Connection = $connection;
     }
 
     public function getForum_moduleref()

@@ -71,8 +71,11 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $this->view->assign('parent', $parent->getForum_id());
         }
 
-        if ($this->_forum->get()->getforum_pop3_active()) {
+        $connection = $this->_forum->get()->getPop3Connection();
+        if (isset($connection)) {
             $this->view->assign('extsource', 'mail2forum');
+            $connectionData = $connection->getConnection();
+            $this->view->assign($connectionData);
         } else {
             $this->view->assign('extsource', 'noexternal');
         }
@@ -135,25 +138,53 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
+
+        // convert parent id to object
         $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forum', $data['parent']);
 
-        if ($data['extsource'] == 'mail2forum' && $data['pop3_passwordconfirm'] != $data['pop3_password']) {
-            return LogUtil::registerError('Passwords are not matching!');
+        if ($data['extsource'] == 'mail2forum') {
+            if ($data['passwordconfirm'] != $data['password']) {
+                return LogUtil::registerError('Pop3 passwords are not matching!');
+            } else {
+                //create connection object
+                $connectionData = array(
+                    'active' => true,
+                    'server' => $data['server'],
+                    'port' => $data['port'],
+                    'login' => $data['login'],
+                    'password' => $data['password'],
+                    'matchstring' => $data['matchstring'],
+                );
+                $connectionData['coreUser'] = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $data['coreUser']);
+                $connection = new Dizkus_Connection_Pop3($connectionData);
+                $this->_forum->get()->setPop3Connection($connection);
+
+                if ($data['pop3_test']) {
+                    // @todo perform test
+                    LogUtil::registerStatus($this->__("Pop3 test successful."));
+                }
+            }
+        } else if ($data['extsource'] == 'rss2forum') {
+            // @todo temporary value until known what to do
+            $this->_forum->get()->setPop3Connection(null);
         } else {
-            unset($data['pop3_passwordconfirm']);
+            $this->_forum->get()->setPop3Connection(null);
         }
 
-        if ($data['extsource'] == 'mail2forum' && $data['pnpasswordconfirm'] != $data['pnpassword']) {
-            return LogUtil::registerError('Passwords are not matching!');
-        } else {
-            unset($data['pnpasswordconfirm']);
-        }
-
-        //$this->_forum_mods = $data['forum_mods'];
-        //unset($data['forum_mods']);
-        //$this->_forum_id = $this->_forum->getforum_id();
-
+        // unset extra data before merge
+        unset($data['pop3_test'],
+                $data['extsource'],
+                $data['passwordconfirm'],
+                $data['server'],
+                $data['port'],
+                $data['login'],
+                $data['password'],
+                $data['matchstring'],
+                $data['coreUser']);
+        // add the rest of the form data
         $this->_forum->store($data);
+
+        // notify hooks
         $hookUrl = new Zikula_ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forum->getId()));
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_edit', $this->_forum->getId(), $hookUrl));
 

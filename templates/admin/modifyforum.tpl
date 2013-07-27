@@ -102,28 +102,28 @@
             {formcheckbox id="pop3_test"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_server" __text="POP3 server"}
-            {formtextinput id="pop3_server" maxLength="60" size="30"}
+            {formlabel for="server" __text="POP3 server"}
+            {formtextinput id="server" maxLength="60" size="30"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_port" __text="POP3 port"}
-            {formtextinput id="pop3_port" maxLength="5" size="5"}
+            {formlabel for="port" __text="POP3 port"}
+            {formtextinput id="port" maxLength="5" size="5"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_login" __text="POP3 log-in name"}
-            {formtextinput id="pop3_login" maxLength="60" size="30"}
+            {formlabel for="login" __text="POP3 log-in name"}
+            {formtextinput id="login" maxLength="60" size="30"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_password" __text="POP3 password"}
-            {formtextinput textMode="password" id="pop3_password" maxLength="60" size="30"}
+            {formlabel for="password" __text="POP3 password"}
+            {formtextinput textMode="password" id="password" maxLength="60" size="30"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_passwordconfirm" __text="POP3 password (repeat for verification)"}
-            {formtextinput textMode="password" id="pop3_passwordconfirm" maxLength="60" size="30"}
+            {formlabel for="passwordconfirm" __text="POP3 password (repeat for verification)"}
+            {formtextinput textMode="password" id="passwordconfirm" maxLength="60" size="30"}
         </div>
         <div class="z-formrow">
-            {formlabel for="pop3_matchstring" __text="Rule"}
-            {formtextinput id="pop3_matchstring" maxLength="255" size="30"}
+            {formlabel for="matchstring" __text="Rule"}
+            {formtextinput id="matchstring" maxLength="255" size="30"}
             <em class="z-formnote z-sub">
                 {gt text="Notice: This rule is a regular expression applied to posts incoming via e-mail, in order to prevent spam postings. If there is no rule here then no checks will be performed."}
             </em>
