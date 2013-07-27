@@ -183,13 +183,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     private $forum_moduleref = 0;
 
     /**
-     * forum_pntopic
-     *
-     * @ORM\Column(type="integer", length=4)
-     */
-    private $forum_pntopic = 0;
-
-    /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum", cascade={"remove"})
      */
     private $favorites;
@@ -486,16 +479,6 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     public function setForum_moduleref($moduleref)
     {
         $this->forum_moduleref = $moduleref;
-    }
-
-    public function getForum_pntopic()
-    {
-        return $this->forum_pntopic;
-    }
-
-    public function setForum_pntopic($pntopic)
-    {
-        $this->forum_pntopic = $pntopic;
     }
 
     /**
