@@ -264,7 +264,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         $last_page = 0;
         if ($post_sort_order == 'ASC') {
             // +1 for the initial posting
-            $last_page = floor(($args['topic_replies'] + 1) / $posts_per_page);
+            $last_page = floor(($args['topic_replies']) / $posts_per_page) * $posts_per_page + 1;
         }
 
         // if not ASC then DESC which means latest topic is on top anyway...

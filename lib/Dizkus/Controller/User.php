@@ -100,7 +100,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // get the input
         $topicId = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
         $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
-        $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1) - 1;
+        $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
@@ -131,7 +131,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());
-        $this->view->assign('posts', $managedTopic->getPosts($start));
+        $this->view->assign('posts', $managedTopic->getPosts(--$start));
         $this->view->assign('pager', $managedTopic->getPager());
         $this->view->assign('permissions', $managedTopic->getPermissions());
         $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
