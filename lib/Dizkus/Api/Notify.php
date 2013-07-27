@@ -156,7 +156,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             $reporting_username = $this->__('Guest');
         }
 
-        $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('topic_replies' => $args['post']->getTopic()->getTopic_replies()));
+        $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('replyCount' => $args['post']->getTopic()->getReplyCount()));
         $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . "\n\n"

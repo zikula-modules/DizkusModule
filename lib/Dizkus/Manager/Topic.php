@@ -220,7 +220,7 @@ class Dizkus_Manager_Topic
      */
     public function incrementRepliesCount()
     {
-        $this->_topic->incrementTopic_replies();
+        $this->_topic->incrementReplyCount();
         $this->entityManager->flush();
     }
 
@@ -229,7 +229,7 @@ class Dizkus_Manager_Topic
      */
     public function decrementRepliesCount()
     {
-        $this->_topic->decrementTopic_replies();
+        $this->_topic->decrementReplyCount();
         $this->entityManager->flush();
     }
 

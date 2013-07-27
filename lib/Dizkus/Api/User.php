@@ -245,15 +245,15 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
     /**
      * getTopicPage
-     * Uses the number of topic_replies and the posts_per_page settings to determine the page
+     * Uses the number of replyCount and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
      *
-     * @params $args['topic_replies'] int number of topic replies
+     * @params $args['replyCount'] int number of topic replies
      * @return int page number of last posting in the thread
      */
     public function getTopicPage($args)
     {
-        if (!isset($args['topic_replies']) || !is_numeric($args['topic_replies']) || $args['topic_replies'] < 0) {
+        if (!isset($args['replyCount']) || !is_numeric($args['replyCount']) || $args['replyCount'] < 0) {
             return LogUtil::registerArgsError();
         }
 
@@ -264,7 +264,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         $last_page = 0;
         if ($post_sort_order == 'ASC') {
             // +1 for the initial posting
-            $last_page = floor(($args['topic_replies']) / $posts_per_page) * $posts_per_page + 1;
+            $last_page = floor(($args['replyCount']) / $posts_per_page) * $posts_per_page + 1;
         }
 
         // if not ASC then DESC which means latest topic is on top anyway...

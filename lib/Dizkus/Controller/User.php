@@ -218,7 +218,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $managedPost = new Dizkus_Manager_Post();
             $managedPost->create($data);
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
+            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start
@@ -749,7 +749,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $posts[$i]['forum_name'] = $topic->getForum()->getName();
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');
-            $start = (int)((ceil(($topic->getTopic_replies() + 1)  / $posts_per_page) - 1) * $posts_per_page);
+            $start = (int)((ceil(($topic->getReplyCount() + 1)  / $posts_per_page) - 1) * $posts_per_page);
             $posts[$i]['post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic',
                                          array('topic' => $topic->getTopic_id(),
                                                'start' => $start), 

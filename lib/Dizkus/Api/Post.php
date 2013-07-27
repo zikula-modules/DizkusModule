@@ -66,7 +66,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 $text = DataUtil::formatForDisplay($this->__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
                 break;
             case 'unanswered':
-                $qb->where('t.topic_replies = 0');
+                $qb->where('t.replyCount = 0');
                 $text = $this->__('Unanswered');
                 break;
             case 'unsolved':

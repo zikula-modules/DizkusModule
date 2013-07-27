@@ -122,7 +122,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
                 ->getQuery()
                 ->getSingleScalarResult();
         $replies = (int)$replies - 1;
-        $args['topic']->setTopic_replies($replies);
+        $args['topic']->setReplyCount($replies);
         if ($flush) {
             $this->entityManager->flush();
         }

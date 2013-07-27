@@ -155,7 +155,7 @@
                         {else}
                         {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
                         {/if}
-                        {if $topic.topic_replies >= $modvars.Dizkus.hot_threshold}
+                        {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
                         {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
                         {/if}
                         {if $showattachment eq 1}
@@ -163,10 +163,10 @@
                         {/if}
                         {$topic.topic_id|viewtopiclink:$topic.title}
                         <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
-                        {assign var='total_posts' value=$topic.topic_replies+1}
+                        {assign var='total_posts' value=$topic.replyCount+1}
                         {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                     </dt>
-                    <dd class="posts">{$topic.topic_replies}</dd>
+                    <dd class="posts">{$topic.replyCount}</dd>
                     <dd class="views">{$topic.viewCount}</dd>
                     <dd class="lastpost">
                         {if isset($topic.last_post)}

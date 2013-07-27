@@ -70,11 +70,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $viewCount = 0;
 
     /**
-     * topic_replies
+     * replyCount
      *
      * @ORM\Column(type="integer", length=10)
      */
-    private $topic_replies = 0;
+    private $replyCount = 0;
 
     /**
      * sticky
@@ -144,24 +144,24 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->topic_id = $id;
     }
 
-    public function getTopic_replies()
+    public function getReplyCount()
     {
-        return $this->topic_replies;
+        return $this->replyCount;
     }
 
-    public function setTopic_replies($replies)
+    public function setReplyCount($replies)
     {
-        $this->topic_replies = $replies;
+        $this->replyCount = $replies;
     }
 
-    public function incrementTopic_replies()
+    public function incrementReplyCount()
     {
-        $this->topic_replies++;
+        $this->replyCount++;
     }
 
-    public function decrementTopic_replies()
+    public function decrementReplyCount()
     {
-        $this->topic_replies--;
+        $this->replyCount--;
     }
 
     /**

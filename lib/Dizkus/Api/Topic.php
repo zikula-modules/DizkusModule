@@ -322,12 +322,12 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         
         // update old topic
         ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
-        $oldReplyCount = $managedTopic->get()->getTopic_replies();
-        $managedTopic->get()->setTopic_replies($oldReplyCount - count($posts));
+        $oldReplyCount = $managedTopic->get()->getReplyCount();
+        $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
 
         // update new topic with post data
         $newTopic->setLast_post($post);
-        $newTopic->setTopic_replies(count($posts) - 1);
+        $newTopic->setReplyCount(count($posts) - 1);
         $newTopic->setTopic_time($post->getPost_time());
 
         // resync topic totals, etc

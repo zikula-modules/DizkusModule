@@ -75,7 +75,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
 
             $managedPost = new Dizkus_Manager_Post();
             $managedPost->create($data);
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('topic_replies' => $managedPost->get()->getTopic()->getTopic_replies()));
+            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start

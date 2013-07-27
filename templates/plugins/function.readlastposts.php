@@ -119,14 +119,14 @@ function smarty_function_readlastposts($params, Zikula_View $view)
         foreach ($topics as $topic) {
             $lastpost = array();
             $lastpost['title'] = DataUtil::formatforDisplay($topic->getTitle());
-            $lastpost['topic_replies'] = DataUtil::formatforDisplay($topic->getTopic_replies());
+            $lastpost['replyCount'] = DataUtil::formatforDisplay($topic->getReplyCount());
             $lastpost['name'] = DataUtil::formatforDisplay($topic->getForum()->getName());
             $lastpost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
             $lastpost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getName());
 
             $start = 0;
             if ($post_sort_order == "ASC") {
-                $start = ((ceil(($topic->getTopic_replies() + 1) / $posts_per_page) - 1) * $posts_per_page);
+                $start = ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page);
             }
 
             if ($topic->getPoster()->getUser_id() != 1) {
