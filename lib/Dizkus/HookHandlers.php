@@ -69,7 +69,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $start = 0;
 
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')
-                ->findOneBy(array('topic_reference' => '52-Kaik'));
+                ->findOneBy(array('reference' => '52-Kaik'));
         if (isset($topic)) {
             $managedTopic = new Dizkus_Manager_Topic(null, $topic);
         }

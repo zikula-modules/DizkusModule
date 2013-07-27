@@ -138,7 +138,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         return $this->entityManager->getRepository('Dizkus_Entity_Topic')
-                        ->findOneBy(array('topic_reference' => $reference))
+                        ->findOneBy(array('reference' => $reference))
                         ->toArray();
     }
 

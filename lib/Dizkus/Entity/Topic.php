@@ -90,11 +90,11 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $forum;
 
     /**
-     * topic_reference
+     * reference
      *
      * @ORM\Column(type="string", length=60)
      */
-    private $topic_reference = '';
+    private $reference = '';
 
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
@@ -228,9 +228,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->sticky;
     }
 
-    public function getTopic_reference()
+    public function getReference()
     {
-        return $this->topic_reference;
+        return $this->reference;
     }
 
     public function getSolved()

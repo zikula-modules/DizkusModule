@@ -298,7 +298,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             // Checking if the forum already has that news.
             $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')
-                ->findOneBy(array('topic_reference' => $reference));
+                ->findOneBy(array('reference' => $reference));
 
             if (!isset($topic)) {
                 // Not found, add the feed item
@@ -315,7 +315,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                             'forum_id' => $args['forum']['forum_id'],
                             'attachSignature' => false,
                             'subscribe_topic' => false,
-                            'topic_reference' => $reference);
+                            'reference' => $reference);
                 $newManagedTopic->prepare($data);
                 $topicId = $newManagedTopic->create();
 
