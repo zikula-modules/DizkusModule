@@ -39,7 +39,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
     }
 
     /**
-     * recalculate topicCount and forum_posts counts
+     * recalculate topicCount and postCount counts
      * 
      * @param Dizkus_Entity_Forum $args['forum']
      * @param Boolean $args['flush']
@@ -65,7 +65,7 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
         // count topics of a forum
         $data['topicCount'] = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumtopics', 'id' => $id, 'force' => true));
         // count posts of a forum
-        $data['forum_posts'] = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
+        $data['postCount'] = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
 
         $args['forum']->merge($data, false);
         $this->entityManager->persist($args['forum']);

@@ -60,7 +60,7 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $forum_posts = 0;
+    private $postCount = 0;
 
     /**
      * @Gedmo\TreeLeft
@@ -212,24 +212,24 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->topicCount--;
     }
 
-    public function getForum_posts()
+    public function getPostCount()
     {
-        return $this->forum_posts;
+        return $this->postCount;
     }
 
-    public function setForum_posts($posts)
+    public function setPostCount($posts)
     {
-        $this->forum_posts = $posts;
+        $this->postCount = $posts;
     }
 
-    public function incrementForum_posts()
+    public function incrementPostCount()
     {
-        $this->forum_posts++;
+        $this->postCount++;
     }
     
-    public function decrementForum_posts()
+    public function decrementPostCount()
     {
-        $this->forum_posts--;
+        $this->postCount--;
     }
 
     public function getLft()

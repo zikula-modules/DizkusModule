@@ -201,7 +201,7 @@ class Dizkus_Manager_Forum
      */
     public function incrementPostCount()
     {
-        $this->_forum->incrementForum_posts();
+        $this->_forum->incrementPostCount();
         $this->entityManager->flush();
     }
     
@@ -210,7 +210,7 @@ class Dizkus_Manager_Forum
      */
     public function decrementPostCount()
     {
-        $this->_forum->decrementForum_posts();
+        $this->_forum->decrementPostCount();
         $this->entityManager->flush();
     }
 

@@ -42,7 +42,7 @@
                         </dt>
                         <dd class="subforums">{$subforum.children|count}</dd>
                         <dd class="topics">{$subforum.topicCount|safetext}</dd>
-                        <dd class="posts">{$subforum.forum_posts|safetext}</dd>
+                        <dd class="posts">{$subforum.postCount|safetext}</dd>
 
                         <dd class="lastpost">
                             {if isset($subforum.last_post)}

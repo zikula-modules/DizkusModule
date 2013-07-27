@@ -37,7 +37,7 @@
 
                             <dd class="subforums">{$forum.children|count}</dd>
                             <dd class="topics">{$forum.topicCount|safetext}</dd>
-                            <dd class="posts">{$forum.forum_posts|safetext}</dd>
+                            <dd class="posts">{$forum.postCount|safetext}</dd>
                             <dd class="lastpost">
                                 {if isset($forum.last_post)}
                                 {include file='user/lastPostBy.tpl' last_post=$forum.last_post}
