@@ -46,11 +46,11 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     private $poster_ip = '';
 
     /**
-     * post_msgid
+     * msgid
      * 
      * @ORM\Column(type="string", length=100)
      */
-    private $post_msgid = '';
+    private $msgid = '';
 
     /**
      * post_text
@@ -178,9 +178,9 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->poster_ip;
     }
 
-    public function getPost_msgid()
+    public function getMsgid()
     {
-        return $this->post_msgid;
+        return $this->msgid;
     }
 
     /**
