@@ -32,7 +32,7 @@
                         {if $post.poster.rank.rank_link neq ''}
                         <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
                         {/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.rank_desc}" />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.rank_image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.description}" />
                         {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
                         {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
@@ -40,7 +40,7 @@
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
                         {if $posterRank.rank_image neq ''}
-                        <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.title}" title="{$posterRank.rank_desc}" />
+                        <img class="userinforankimage" src="{$baseurl}{$posterRank.rank_image}" alt="{$posterRank.title}" title="{$posterRank.description}" />
                         {/if}
                         {if $posterRank.rank_link neq ''}</a>{/if}
                     {/if}

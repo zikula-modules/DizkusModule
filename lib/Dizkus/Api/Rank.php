@@ -163,7 +163,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
 
     private function addImageAndLink($data)
     {
-        $data['rank_link'] = (substr($data['rank_desc'], 0, 7) == 'http://') ? $data['rank_desc'] : '';
+        $data['rank_link'] = (substr($data['description'], 0, 7) == 'http://') ? $data['description'] : '';
         if (!empty($data['rank_image'])) {
             $data['rank_image'] = $this->getVar('url_ranks_images') . '/' . $data['rank_image'];
             $data['rank_image_attr'] = function_exists('getimagesize') ? @getimagesize($data['rank_image']) : null;

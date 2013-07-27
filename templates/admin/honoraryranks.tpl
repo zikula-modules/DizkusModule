@@ -32,8 +32,8 @@
                     </div>
                 </div>
                 <div class="z-formrow">
-                    <label for="rank_desc">{gt text="Description"}</label>
-                    <input id="rank_desc" type="text" name="ranks[-1][rank_desc]" value="" maxlength="255" size="60" />
+                    <label for="description">{gt text="Description"}</label>
+                    <input id="description" type="text" name="ranks[-1][description]" value="" maxlength="255" size="60" />
                 </div>
                 <p class="z-formnote z-informationmsg">
                     {gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."}
@@ -68,7 +68,7 @@
                             {/foreach}
                         </select><img id="image{$num}" src="{$modvars.Dizkus.url_ranks_images}/{$rank.rank_image}" alt="rankimage" />
                     </td>
-                    <td><input type="text" name="ranks[{$rank.rank_id}][rank_desc]" value="{$rank.rank_desc}" maxlength="255" size="40" /></td>
+                    <td><input type="text" name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
                     <td>
                         <input type="checkbox" value="1" name="ranks[{$rank.rank_id}][rank_delete]" />
                     </td>

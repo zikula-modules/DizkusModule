@@ -219,7 +219,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
             'rank_image' => 'a',
             'rank' => 'a',
             'rank_link' => 'a',
-            'rank_desc' => 'a',
+            'description' => 'a',
             'moderate' => 'a',
             'edit' => 'a',
             'reply' => 'a',
