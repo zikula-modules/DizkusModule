@@ -54,11 +54,11 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     private $level = 1;
 
     /**
-     * user_lastvisit
+     * lastvisit
      * 
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $user_lastvisit = null;
+    private $lastvisit = null;
 
     /**
      * user_favorites
@@ -173,14 +173,14 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
         $this->level = $level;
     }
 
-    public function getUser_lastvisit()
+    public function getLastvisit()
     {
-        return $this->user_lastvisit;
+        return $this->lastvisit;
     }
 
-    public function setUser_lastvisit($lastvisit)
+    public function setLastvisit($lastvisit)
     {
-        $this->user_lastvisit = $lastvisit;
+        $this->lastvisit = $lastvisit;
     }
 
     /**

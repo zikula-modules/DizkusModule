@@ -26,7 +26,7 @@
                         {/if}
                         <li><strong>{gt text="Registered"}: </strong>{$post.poster_data.user_regdate|dateformat:'datebrief'}</li>
                         {if !$post.poster_data.online}
-                        <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.user_lastvisit|dateformat:'datebrief'}</li>
+                        <li><strong>{gt text="Last visit"}: </strong>{$post.poster_data.lastvisit|dateformat:'datebrief'}</li>
                         {/if}
                         <li><strong>{gt text="Posts"}: </strong>{$post.poster_data.postCount}</li>
                         {if $coredata.logged_in eq true}
