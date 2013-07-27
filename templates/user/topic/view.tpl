@@ -32,7 +32,7 @@
 
 {* add inline edit *}
 {usergetvar name='uid' assign='currentUser'}
-{if $permissions.moderate eq 1 || $topic.topic_poster.user.uid eq $currentUser}
+{if $permissions.moderate eq 1 || $topic.poster.user.uid eq $currentUser}
 {include file='ajax/edittopicsubject.tpl'}
 <script type="text/javascript">
     jQuery('#edittopicsubjectbutton').addClass('tooltips').attr('title', '{{gt text="Click to edit"}}');

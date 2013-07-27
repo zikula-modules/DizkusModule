@@ -51,7 +51,7 @@
                                 {/if}
                                 {$topic.topic_id|viewtopiclink:$topic.topic_title:$forum.name}
                                 <em class="z-sub">({$topic.topic_views} {gt text="Views"})</em>
-                                <span>{gt text="Poster: %s" tag1=$topic.topic_poster.user.uid|profilelinkbyuid}</span>
+                                <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                             </dt>
                             <dd class="posts">{$forum.topicCount}</dd>

@@ -294,7 +294,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         // create new topic
         $newTopic = new Dizkus_Entity_Topic();
-        $newTopic->setTopic_poster($args['post']->get()->getPoster());
+        $newTopic->setPoster($args['post']->get()->getPoster());
         $newTopic->setTopic_title($args['data']['newsubject']);
         $newTopic->setForum($managedTopic->get()->getForum());
         $args['post']->get()->setIsFirstPost(true);

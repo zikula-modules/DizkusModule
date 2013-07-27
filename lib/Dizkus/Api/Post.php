@@ -125,7 +125,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 ->orderBy('l.post_time', 'DESC');
 
         if ($args['action'] == 'topics') {
-            $qb->where('t.topic_poster = :uid');
+            $qb->where('t.poster = :uid');
             if ($own) {
                 $text = $this->__('Your topics');
             } else {

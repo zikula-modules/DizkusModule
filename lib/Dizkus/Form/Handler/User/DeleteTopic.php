@@ -58,7 +58,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
 
         $topic = new Dizkus_Manager_Topic($this->topic_id);
 
-        $this->topic_poster = $topic->get()->getTopic_poster();
+        $this->topic_poster = $topic->get()->getPoster();
         $topicPerms = $topic->getPermissions();
 
         if ($topicPerms['moderate'] <> true) {

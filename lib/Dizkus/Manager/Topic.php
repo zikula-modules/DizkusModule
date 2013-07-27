@@ -273,7 +273,7 @@ class Dizkus_Manager_Topic
         }
         $forumUser->incrementPostCount();
         $this->_firstPost->setPoster($forumUser);
-        $this->_topic->setTopic_poster($forumUser);
+        $this->_topic->setPoster($forumUser);
     }
 
     public function getPreview()

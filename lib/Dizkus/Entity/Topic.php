@@ -33,12 +33,12 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $topic_id;
 
     /**
-     * topic_poster
+     * poster
      *
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
-     * @ORM\JoinColumn(name="topic_poster", referencedColumnName="user_id")
+     * @ORM\JoinColumn(name="poster", referencedColumnName="user_id")
      */
-    private $topic_poster;
+    private $poster;
 
     /**
      * topic_title
@@ -193,9 +193,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * 
      * @return Dizkus_Entity_ForumUser
      */
-    public function getTopic_poster()
+    public function getPoster()
     {
-        return $this->topic_poster;
+        return $this->poster;
     }
 
     public function getTopic_title()
@@ -273,9 +273,9 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * 
      * @param Dizkus_Entity_ForumUser $poster
      */
-    public function setTopic_poster(Dizkus_Entity_ForumUser $poster)
+    public function setPoster(Dizkus_Entity_ForumUser $poster)
     {
-        $this->topic_poster = $poster;
+        $this->poster = $poster;
     }
 
     public function setSolved($solved)
