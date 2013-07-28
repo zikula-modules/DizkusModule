@@ -202,15 +202,17 @@ class Dizkus_Manager_Forum
     public function incrementPostCount()
     {
         $this->_forum->incrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent());
         $this->entityManager->flush();
     }
-    
+
     /**
      * decrease post count
      */
     public function decrementPostCount()
     {
         $this->_forum->decrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent(), 'decrement');
         $this->entityManager->flush();
     }
 
@@ -220,7 +222,23 @@ class Dizkus_Manager_Forum
     public function incrementTopicCount()
     {
         $this->_forum->incrementTopicCount();
+        $this->modifyParentCount($this->_forum->getParent(), 'increment', 'Topic');
         $this->entityManager->flush();
+    }
+
+    /**
+     * recursive method to modify parent forum's post or topic count
+     */
+    private function modifyParentCount(Dizkus_Entity_Forum $parentForum, $direction = 'increment', $entity = 'Post')
+    {
+        $direction = in_array($direction, array('increment', 'decrement')) ? $direction : 'increment';
+        $entity = in_array($entity, array('Post', 'Topic')) ? $entity : 'Post';
+        $method = "{$direction}{$entity}Count";
+        $parentForum->$method();
+        $grandParent = $parentForum->getParent();
+        if (isset($grandParent)) {
+            $this->modifyParentCount($grandParent, $direction, $entity);
+        }
     }
 
     public function setLastPost($post)

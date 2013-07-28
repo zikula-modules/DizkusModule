@@ -30,11 +30,16 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
      */
     public function forums()
     {
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findAll();
+        // reset count to zero
+        $dql = "UPDATE Dizkus_Entity_Forum f SET f.topicCount = 0, f.postCount = 0";
+        $this->entityManager->createQuery($dql)->execute();
+
+        // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy(array(), array('lvl' => 'ASC'));
         foreach ($forums as $forum) {
-            $this->forum(array('forum' => $forum, 'type' => 'forum'));
+            $this->forum(array('forum' => $forum));
         }
-        // flush?
+
         return true;
     }
 
@@ -58,22 +63,46 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
             $id = $args['forum'];
             $args['forum'] = $this->entityManager->find('Dizkus_Entity_Forum', $id);
         }
-        $flush = isset($args['flush']) ? $args['flush'] : true;
-
-        $data = array();
 
         // count topics of a forum
-        $data['topicCount'] = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumtopics', 'id' => $id, 'force' => true));
-        // count posts of a forum
-        $data['postCount'] = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
+        $topicCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumtopics', 'id' => $id, 'force' => true));
+        $args['forum']->setTopicCount($topicCount);
 
-        $args['forum']->merge($data, false);
-        $this->entityManager->persist($args['forum']);
-        if ($flush) {
-            $this->entityManager->flush();
-        }
+        // count posts of a forum
+        $postCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
+        $args['forum']->setPostCount($postCount);
+
+        $this->entityManager->flush();
+
+        $this->addToParentForumCount($args['forum'], 'Post');
+        $this->addToParentForumCount($args['forum'], 'Topic');
         
         return true;
+    }
+
+    /**
+     * recursive function to add counts to parents
+     * @param Dizkus_Entity_Forum $forum
+     * @param string $entity
+     */
+    private function addToParentForumCount(Dizkus_Entity_Forum $forum, $entity = 'Post')
+    {
+        $parent = $forum->getParent();
+        if (!isset($parent)) {
+            return;
+        }
+        $entity = in_array($entity, array('Post', 'Topic')) ? $entity : 'Post';
+        $getMethod = "get{$entity}Count";
+        $currentParentCount = $parent->$getMethod();
+        $forumCount = $forum->$getMethod();
+        $setMethod = "set{$entity}Count";
+        $parent->$setMethod($currentParentCount + $forumCount);
+        $this->entityManager->flush();
+
+        $grandParent = $parent->getParent();
+        if (isset($grandParent)) {
+            $this->addToParentForumCount($parent, $entity);
+        }
     }
 
     /**
