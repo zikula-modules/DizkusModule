@@ -23,7 +23,7 @@ class Dizkus_Manager_Post
      * @var Dizkus_Entity_Post
      */
     private $_post;
-    
+
     /**
      * Post topic
      * @var Dizkus_Manager_Topic
@@ -135,7 +135,7 @@ class Dizkus_Manager_Post
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
-        
+
         // update topic time to last post time
         $this->_topic->get()->setTopic_time($this->_post->getPost_time());
 
@@ -161,21 +161,21 @@ class Dizkus_Manager_Post
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
-        
-        // decrement user posts
-        $this->_post->getPoster()->decrementPostCount();
 
         // remove the post
-        $this->entityManager->getRepository('Dizkus_Entity_Post')->manualDelete($id);
+        $this->entityManager->remove($this->_post);
+
+        // decrement user posts
+        $this->_post->getPoster()->decrementPostCount();
 
         // decrement forum post count
         $managedForum->decrementPostCount();
 
         // decrement replies count
         $this->_topic->decrementRepliesCount();
-        
+
         $this->entityManager->flush();
-        
+
         // resetLastPost in topic and forum if required
         if ($id == $topicLastPostId) {
             $this->_topic->resetLastPost(true);
@@ -184,6 +184,16 @@ class Dizkus_Manager_Post
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
 
+    }
+
+    /**
+     * Checks if the post is the last post of a topic.
+     *
+     * @return bool True if this is the last post of the topic.
+     */
+    public function isLastPost()
+    {
+        return $this->_post->getPost_id() == $this->_topic->get()->getLast_post()->getPost_id();
     }
 
 }

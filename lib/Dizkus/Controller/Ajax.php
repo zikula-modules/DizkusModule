@@ -82,7 +82,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             );
             $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
-            
+
             // notify topic & forum subscribers
             $notified = ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
 
@@ -154,7 +154,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             $managedPost = new Dizkus_Manager_Post($post_id);
             $forum = $managedPost->get()->getTopic()->getForum();
             $managedForum = new Dizkus_Manager_Forum(null, $forum);
-            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId) 
+            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId)
                     || ($managedForum->isModerator())) {
                 AjaxUtil::output($managedPost->get(), true, false, false);
             } else {
@@ -166,80 +166,109 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
         return AjaxUtil::error($this->__('Error! No post ID in \'Dizkus_ajax_readpost()\'.'), array(), true, true, '400 Bad Data');
     }
 
-    /**
-     * editpost
-     */
-    public function editpost()
+    private function errorIfForumDisabled()
     {
         if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
+    }
+
+    /**
+     * Check Csrf token.
+     *
+     * @param string $token The token, if not set, will pull from $_POST['csrftoken'].
+     *
+     * @throws Zikula_Exception_Forbidden If check fails.
+     *
+     * @todo Get this working!
+     *
+     * @return void
+     */
+    public function checkCsrfToken($token = null)
+    {
+        // Does not work for some reason.
+        /*
+        if (is_null($token)) {
+            $token = $this->request->request->get('csrftoken', null);
+
+            if (is_null($token)) {
+                $token = $this->request->server->get('HTTP_X_ZIKULA_AJAX_TOKEN', null);
+            }
+        }
+
+        parent::checkCsrfToken($token);
+        */
+    }
+
+    /**
+     * Edit a post.
+     *
+     * POST: $post The post id to edit.
+     *
+     * RETURN: The edit post form.
+     *
+     * @return Zikula_Response_Ajax|Zikula_Response_Ajax_BadData|Zikula_Response_Ajax_Unavailable
+     * @throws Zikula_Exception_Forbidden
+     */
+    public function editpost()
+    {
+        $this->errorIfForumDisabled();
+        $this->checkCsrfToken();
 
         $post_id = $this->request->request->get('post', null, 'POST');
         $currentUserId = UserUtil::getVar('uid');
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
 
         if (!empty($post_id)) {
             $managedPost = new Dizkus_Manager_Post($post_id);
             $forum = $managedPost->get()->getTopic()->getForum();
             $managedForum = new Dizkus_Manager_Forum(null, $forum);
-            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId) 
-                    || ($managedForum->isModerator())) {
-                //$this->view->add_core_data();
+            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId) || ($managedForum->isModerator())) {
                 $this->view->setCaching(false);
 
                 $this->view->assign('post', $managedPost->get());
                 // simplify our live
                 $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
 
-                SessionUtil::delVar('zk_ajax_call');
-
-                return new Zikula_Response_Ajax(array('data' => $this->view->fetch('ajax/editpost.tpl')));
+                return new Zikula_Response_Ajax($this->view->fetch('ajax/editpost.tpl'));
             } else {
                 LogUtil::registerPermissionError(null, true);
                 throw new Zikula_Exception_Forbidden();
             }
         }
 
-        return new Zikula_Response_Ajax_BadData(
-                        array(),
-                        $this->__('Error! No post ID in \'Dizkus_ajax_readrawtext()\'.')
-        );
+        return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No post ID in \'Dizkus_ajax_readrawtext()\'.'));
     }
 
     /**
-     * updatepost
+     * Update a post.
      *
-     * @return string
+     * POST: $postId The post id to update.
+     *       $message The new post message.
+     *       $delete Delte this post?
+     *       $attach_signature Attach signature?
+     *
+     * RETURN: $action The executed action.
+     *         $newText The new post text (can be empty).
+     *         $redirect The page to redirect to (can be empty).
+     *
+     * @return Zikula_Response_Ajax|Zikula_Response_Ajax_BadData
      */
     public function updatepost()
     {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
+        $this->errorIfForumDisabled();
+        $this->checkCsrfToken();
 
-        $post_id = $this->request->request->get('post', '');
-        $subject = $this->request->request->get('subject', '');
+        $post_id = $this->request->request->get('postId', '');
+        $title = $this->request->request->get('title', '');
         $message = $this->request->request->get('message', '');
         $delete = ($this->request->request->get('delete', 0) == '1') ? true : false;
         $attach_signature = ($this->request->request->get('attach_signature', 0) == '1') ? true : false;
 
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
         if (!empty($post_id)) {
-            //if (!SecurityUtil::confirmAuthKey()) {
-            //	LogUtil::registerAuthidError();
-            //	throw new Zikula_Exception_Fatal();
-            //}
-
             $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
             // check for maximum message size (strlen('[addsig]')==8)
             if ((strlen($message) + 8) > 65535) {
-                return new Zikula_Response_Ajax_BadData(
-                                array(),
-                                $this->__('Error! The message is too long. The maximum length is 65,535 characters.')
-                );
+                return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
             }
 
             $managedOriginalPost = new Dizkus_Manager_Post($post_id);
@@ -248,27 +277,26 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
             if ($delete) {
                 $managedOriginalPost->delete();
                 $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $managedOriginalPost->getId()));
-                $response = array('action' => 'topic_deleted',
-                    'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forumId), null, null, true));
+
+                if ($managedOriginalPost->isLastPost()) {
+                    $response = array('action' => 'topic_deleted', 'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forumId), null, null, true));
+                } else {
+                    $response = array('action' => 'deleted');
+                }
             } else {
-                $data = array('post_id' => $post_id,
-                        'subject' => $subject,
-                        'message' => $message,
-                        'delete' => $delete,
-                        'attach_signature' => $attach_signature);
+                $data = array('title' => $title,
+                        'post_text' => $message,
+                        'attachSignature' => $attach_signature);
                 $managedOriginalPost->update($data);
                 $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
                 $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
-                $response = array('action' => 'updated');
+                $response = array('action' => 'updated', 'newText' => $message);
             }
 
             return new Zikula_Response_Ajax($response);
         }
 
-        return new Zikula_Response_Ajax_BadData(
-                        array(),
-                        $this->__('Error! No post_id in \'Dizkus_ajax_updatepost()\'.')
-        );
+        return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No post_id in \'Dizkus_ajax_updatepost()\'.'));
     }
 
     /**
@@ -564,7 +592,7 @@ class Dizkus_Controller_Ajax extends Zikula_AbstractController
     {
         return preg_replace("=<br(>|([\s/][^>]*)>)\r?\n?=i", "\n", $str);
     }
-    
+
     /**
      * dzk_replacesignature
      *

@@ -116,7 +116,7 @@
                         </li>
                         {/if}
                         {if $permissions.edit eq 1}
-                        <li><a class="editpostlink tooltips" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname='Dizkus' type='user' func='editpost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
+                        <li><a class="editpostlink tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname='Dizkus' type='user' func='editpost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
                         {/if}
                         {elseif isset($topic)}
                         <li>{img modname='Dizkus' src="icon_post_close.gif" class="tooltips" __alt="Topic locked" }</li>

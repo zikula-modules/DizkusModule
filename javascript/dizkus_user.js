@@ -2,7 +2,127 @@
  * dizkus_user.js
  */
 
+var postEditing = false;
+var postEditingChanged = false;
+var postId = false;
 
+function quickEdit(_postId) {
+    var successHandler = function(result, message, request) {
+        // Hide post footer
+        jQuery('#postingoptions_' + postId).hide();
+        // Overwrite posting text.
+        jQuery('#postingtext_' + postId).hide().after(result.data);
+
+        // Hide quickreply
+        jQuery('#dzk_quickreply').fadeOut();
+
+        // Observe buttons
+        jQuery('#postingtext_' + postId + '_edit').keyup(quickEditChanged);
+        jQuery('#postingtext_' + postId + '_save').click(quickEditSave);
+        jQuery('#postingtext_' + postId + '_cancel').click(quickEditCancel);
+
+    }, errorHandler = function(request, message, detail) {
+        postEditing = false;
+        postId = false;
+        alert(message + ": " + detail);
+    };
+
+    if (!postEditing) {
+        postEditing = true;
+        postEditingChanged = false;
+        postId = _postId;
+
+        jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=editpost', {
+            data: {post: postId}
+        }).done(successHandler).fail(errorHandler);
+    }
+}
+
+function quickEditChanged() {
+    if(!postEditingChanged) {
+        postEditingChanged = true;
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + statusChanged + '</span>');
+    }
+}
+
+function quickEditSave() {
+    var newPostMsg = jQuery('#postingtext_' + postId + '_edit').val(),
+        pars = {
+            postId: postId,
+            message: newPostMsg,
+            attach_signature: (jQuery('#postingtext_' + postId + '_attach_signature').prop('checked')) ? 1 : 0,
+            delete: false
+        };
+
+    if (!newPostMsg) {
+        // no text
+        return;
+    }
+
+
+    if (jQuery('#postingtext_' + postId + '_delete').prop('checked')) {
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + deletingPost + '</span>');
+        pars['delete'] = 1;
+    } else {
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + updatingPost + '</span>');
+    }
+
+    var successHandler = function(result, message, request) {
+        var action = result.data.action,
+            redirect = result.data.redirect,
+            newText = result.data.newText;
+
+        postEditing = false;
+        postEditingChanged = false;
+
+        // Remove editor.
+        jQuery('#postingtext_' + postId + '_editor').remove();
+
+        if (action === 'deleted') {
+            // Remove post
+            jQuery('#posting_' + postId).fadeOut();
+        } else if (action === 'topic_deleted') {
+            // Remove post
+            jQuery('#posting_' + postId).fadeOut();
+            // Redirect to overview url.
+            window.setTimeout("window.location.href='" + redirect + "';", 500);
+            return;
+        } else {
+            // Insert new text.
+            jQuery('#postingtext_' + postId).html(newText).show();
+        }
+
+        // Show quickreply
+        jQuery('#dzk_quickreply').fadeIn();
+
+        // Show post footer
+        jQuery('#postingoptions_' + postId).show();
+
+
+    }, errorHandler = function(request, message, detail) {
+        alert(message + ": " + detail);
+    };
+    jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=updatepost', {
+        data: pars
+    }).done(successHandler).fail(errorHandler);
+}
+
+function quickEditCancel() {
+    // Show post footer
+    jQuery('#postingoptions_' + postId).show();
+
+    // Show post text
+    jQuery('#postingtext_' + postId).show()
+
+    // Show quickreply
+    jQuery('#dzk_quickreply').fadeIn();
+
+    // Remove post editor
+    jQuery('#postingtext_' + postId + '_editor').remove();
+
+    postEditing = false;
+    postEditingChanged = false;
+}
 
 
 
@@ -11,7 +131,7 @@
  * - cmfcmf
  */
 
-
+/*
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
@@ -22,7 +142,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     initialize: function() {
         this.funcname = '';
 
-        this.editstatus = false;
+        postEditing = false;
         this.replystatus = false;
         this.editchanged = false;
         this.lockstatus = false;
@@ -175,132 +295,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         $('posting_{$post.post_id}').toggle();
         $('hidelink_posting_{$post.post_id}').toggle();
     },
-
-
-    quickEdit: function(editpostlinkid) {
-        if(this.editstatus == false) {
-            this.editstatus = true;
-            this.editchanged = false;
-            this.post_id = editpostlinkid.split('_')[1];
-            var pars = {
-                post: this.post_id
-            }
-            // Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=editpost",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            this.editstatus = false;
-                            return;
-                        }
-
-                        var msg = req.getData();
-
-                        // hide posting options, update authid
-                        $('postingoptions_' + this.post_id).hide();
-
-                        // hide quickreply
-                        if ($('dzk_quickreply')) {
-                            Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-                        }
-
-                        // add inline editor
-                        $('postingtext_' + this.post_id).insert({after: msg.data});
-                        $('postingtext_' + this.post_id + '_edit').observe('keyup', this.quickEditchanged.bind(this));
-                        $('postingtext_' + this.post_id + '_save').observe('click', this.quickEditsave.bind(this));
-                        $('postingtext_' + this.post_id + '_cancel').observe('click', this.quickEditcancel.bind(this));
-                    }.bind(this)
-                }
-            );
-        }
-    },
-
-    quickEditchanged: function() {
-        if(this.editchanged == false) {
-            this.editchanged = true;
-            $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + statusChanged + '</span>');
-        }
-    },
-
-    quickEditsave: function() {
-
-       if($F('postingtext_' + this.post_id + '_edit').blank() == true) {
-           // no text
-           return;
-       }
-       var pars = {
-           post: this.post_id,
-           message: $F('postingtext_' + this.post_id + '_edit'),
-           attach_signature: this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature')
-       }
-
-       if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
-           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + deletingPost + '</span>');
-           pars['delete'] =1;
-       } else {
-           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
-       }
-
-        // Ajax.Responders.register(this.dzk_globalhandlers);
-        var myAjax = new Zikula.Ajax.Request(
-            Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatepost",
-            {
-                method: 'post',
-                parameters: pars,
-                onComplete: function(req) {
-                    this.editstatus = false;
-                    this.editchanged = false;
-
-                    // show error if necessary
-                    if (!req.isSuccess()) {
-                        Zikula.showajaxerror(req.getMessage());
-                        return;
-                    }
-
-                    var msg = req.getData();
-
-                    $('postingtext_' + this.post_id + '_editor').remove();
-
-
-
-                    if(msg.action == 'deleted') {
-                        $('posting_' + this.post_id).remove();
-                    } else if (msg.action == 'topic_deleted') {
-                        window.setTimeout("window.location.href='" + msg.redirect + "';", 500);
-                        return;
-                    } else {
-                        $('postingtext_' + this.post_id).update(msg.post_text).show();
-                    }
-
-                    //  hide quickreply
-                    if($('dzk_quickreply')) {
-                        Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-                    }
-                }.bind(this)
-            }
-        );
-
-
-        $('postingoptions_' + this.post_id + '').show();
-    },
-
-    quickEditcancel: function() {
-        $('postingoptions_' + this.post_id).show();
-        $('postingtext_' + this.post_id + '_editor').remove();
-        this.editstatus = false;
-        this.editchanged = false;
-
-        // unhide quickreply
-        if($('dzk_quickreply')) {
-            Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-        }
-    },
-
 
     createnewtopic: function(event) {
         if (this.newtopicstatus==false) {
@@ -455,7 +449,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
 
                         // show new posting
                         $('quickreplyposting').update(msg.data).removeClassName('hidden');
-                        
+
                         // add observers to edit buttons per post
                         var editbutton = $('posting_'+msg.post_id).down('a[id^="editbutton"]');
                         editbutton.observe('click', this.quickEdit.bind(this, editbutton.id));
@@ -541,3 +535,4 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     }
 
 });
+*/

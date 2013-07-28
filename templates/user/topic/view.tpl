@@ -2,24 +2,43 @@
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 {pageaddvar name='javascript' value='jquery'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
 
 {pageaddvarblock}
-<script type="text/javascript">
-    function quote(text) {
-        text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
-        
-        jQuery('#message').val(jQuery('#message').val() + text);
-        
-        // jQuery does not support .scrollTo() - calculate position manually.
-        jQuery('html, body').animate({
-            scrollTop: jQuery("#dzk_quickreply").offset().top
-        }, 1000);
-    }
-</script>
-{/pageaddvarblock}
+    <script type="text/javascript">
+        function quote(text) {
+            text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
 
+            jQuery('#message').val(jQuery('#message').val() + text);
+
+            // jQuery does not support .scrollTo() - calculate position manually.
+            jQuery('html, body').animate({
+                scrollTop: jQuery("#dzk_quickreply").offset().top
+            }, 1000);
+        }
+    </script>
+    {if $modvars.Dizkus.ajax}
+    <script type="text/javascript">
+        jQuery(function(){
+            // Hook into edit link and use ajax instead.
+            jQuery('.editpostlink').each(
+                    function () {
+                        jQuery(this).click(editPostHandler);
+                    }
+            );
+
+            function editPostHandler(event) {
+                event.preventDefault();
+                var postId = jQuery(event.currentTarget).data('post');
+
+                quickEdit(postId);
+            }
+        });
+    </script>
+    {/if}
+{/pageaddvarblock}
 <h2>
 <span class="editabletopicheader" id="edittopicsubjectbutton" title="">
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
@@ -39,7 +58,6 @@
     jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
     jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
     jQuery("#topicsubjectedit_save").click(changeTopicTitle);
-
 </script>
 {/if}
 
@@ -171,7 +189,7 @@
                             {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
-                            
+
                             {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
                             <div class="dzk_subcols z-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
@@ -234,21 +252,6 @@
     var solveTopic = "{{gt text="Mark as solved"}}";
     var unsolveTopic = "{{gt text="Mark as unsolved"}}";
     // ]]>
-
-
-    /*
-    ajax overwriting
-    $$('.editpostlink').each(
-        function (e) {
-            e.observe('click', myHandler);
-        }
-    );
-
-    function myHandler(event) {
-        Event.stop(event);
-        alert('test');
-    };*/
-
 </script>
 
 {include file='user/footer.tpl'}
