@@ -109,6 +109,9 @@ class Dizkus_Manager_Post
     /**
      * create a post from provided data
      *
+     * @param array $data The data to create the new post of.
+     *
+     * @throws Zikula_Exception_Fatal
      * @return boolean
      */
     public function create($data = null)
@@ -187,13 +190,13 @@ class Dizkus_Manager_Post
     }
 
     /**
-     * Checks if the post is the last post of a topic.
+     * Checks if the post is the only post of a topic.
      *
-     * @return bool True if this is the last post of the topic.
+     * @return bool True if this is the only post of a topic.
      */
-    public function isLastPost()
+    public function isTheOnlyPost()
     {
-        return $this->_post->getPost_id() == $this->_topic->get()->getLast_post()->getPost_id();
+        return $this->_topic->get()->getPosts()->count() == 1;
     }
 
 }

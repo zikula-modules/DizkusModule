@@ -4,37 +4,25 @@
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {pageaddvar name='javascript' value='jquery'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
+{pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
+{pageaddvar name='javascript' value='zikula'}
 
 {pageaddvarblock}
-    <script type="text/javascript">
-        function quote(text) {
-            text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
-
-            jQuery('#message').val(jQuery('#message').val() + text);
-
-            // jQuery does not support .scrollTo() - calculate position manually.
-            jQuery('html, body').animate({
-                scrollTop: jQuery("#dzk_quickreply").offset().top
-            }, 1000);
-        }
-    </script>
     {if $modvars.Dizkus.ajax}
     <script type="text/javascript">
         jQuery(function(){
-            // Hook into edit link and use ajax instead.
-            jQuery('.editpostlink').each(
-                    function () {
-                        jQuery(this).click(editPostHandler);
-                    }
-            );
 
-            function editPostHandler(event) {
-                event.preventDefault();
-                var postId = jQuery(event.currentTarget).data('post');
+            // POST EDIT
+            hookEditLinks();
 
-                quickEdit(postId);
-            }
+            // QUICK REPLY
+            hookQuickReplySubmit();
+            hookQuickReplyPreview();
+            hookQuickReplyCancel();
+
+            // Show cancel button.
+            jQuery('#btnCancelQuickReply').removeClass('hidden');
         });
     </script>
     {/if}
@@ -206,8 +194,8 @@
                                         </li>
                                         {/if}
                                         <li id="quickreplybuttons" class="z-buttons">
-                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input id="btnSubmitQuickReply" class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input id="btnPreviewQuickReply" class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
                                             {button type="button" id="btnCancelQuickReply" class="dzk_detachable z-bt-small hidden" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                     </ul>
@@ -235,14 +223,12 @@
 {include file='user/moderatedBy.tpl' forum=$topic.forum}
 
 <script type="text/javascript">
+    // @TODO Replace by Zikula.__() and remove this vars.
     // <![CDATA[
     var storingReply = "{{gt text='Storing reply...'}}";
     var preparingPreview = "{{gt text='Preparing preview...'}}";
     var storingPost = "{{gt text='Storing post...'}}";
-    var deletingPost = "{{gt text='Deleting post...'}}";
-    var updatingPost = "{{gt text='Updating post...'}}";
     var statusNotChanged = "{{gt text='Unchanged'}}";
-    var statusChanged = "{{gt text='Changed'}}";
     var subscribeTopic = "{{gt text='Subscribe to topic'}}";
     var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
     var lockTopic = "{{gt text='Lock topic'}}";

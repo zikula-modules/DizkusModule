@@ -21,7 +21,7 @@
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$post.poster.user_id|profilelinkbyuid}</strong>
+                    <strong>{$post.poster.user.uid|profilelinkbyuid}</strong>
                     <br />
                     <p>{$post.poster.user.uname}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
                     <p>{$post.poster.user.email}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
