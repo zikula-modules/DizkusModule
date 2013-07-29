@@ -534,21 +534,14 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         return $this->view->fetch('user/post/latest.tpl');
     }
 
-    public function myposts()
-    {
-        $params = array('action' => $this->request->query->get('action', 'posts'));
-
-        return $this->search($params);
-    }
-
     /**
-     * View latest topics
+     * Display my posts or topics
      *
      * @param array $args Arguments array.
      *
      * @return string
      */
-    public function search($args)
+    public function mine($args)
     {
         // Permission check
         $this->throwForbiddenUnless(
@@ -575,7 +568,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit', $last_visit);
         $this->view->assign('last_visit_unix', $last_visit_unix);
 
-        return $this->view->fetch('user/post/search.tpl');
+        return $this->view->fetch('user/post/mine.tpl');
     }
 
     /**
