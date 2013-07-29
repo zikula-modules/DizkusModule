@@ -31,15 +31,15 @@
             {formemailinput id="email_from" text=$modvars.Dizkus.email_from size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
-            {formlabel for="hot_threshold" __text="'Hot topic' threshold"}
+            {formlabel for="hot_threshold" __text="'Hot topic' threshold (default: 20)"}
             {formintinput id="hot_threshold" text=$modvars.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=100}
         </div>
         <div class="z-formrow">
-            {formlabel for="posts_per_page" __text="Posts per page in topic index (default:20)"}
+            {formlabel for="posts_per_page" __text="Posts per page in topic index (default: 15)"}
             {formintinput id="posts_per_page" text=$modvars.Dizkus.posts_per_page size="3" maxLength="3" minValue=1 maxValue=100}
         </div>
         <div class="z-formrow">
-            {formlabel for="topics_per_page" __text="Topics per page in forum index (default:15)"}
+            {formlabel for="topics_per_page" __text="Topics per page in forum index (default: 15)"}
             {formintinput id="topics_per_page" text=$modvars.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=100}
         </div>
         <div class="z-formrow">
