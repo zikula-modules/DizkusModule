@@ -211,6 +211,13 @@ class Dizkus_Api_Sync extends Zikula_AbstractApi
 
         $topic = $query->getSingleResult();
         $args['forum']->setLast_post($topic->getLast_post());
+        $parent = $args['forum']->getParent();
+
+        // recurse up the tree
+        if (isset($parent)) {
+            $this->forumLastPost(array('forum' => $parent, 'flush' => false));
+        }
+        
         if ($flush) {
             $this->entityManager->flush();
         }
