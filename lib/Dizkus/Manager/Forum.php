@@ -149,7 +149,7 @@ class Dizkus_Manager_Forum
     public function getTopics($startNumber = 1)
     {
 
-        $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
+        $this->_itemsPerPage = ModUtil::getVar($this->name, 'topics_per_page');
 
         $id = $this->_forum->getForum_id();
 
