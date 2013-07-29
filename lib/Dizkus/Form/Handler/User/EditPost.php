@@ -89,6 +89,9 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
           } */
 
         if ($deleting) {
+            if ($this->_post->get()->isFirst()) {
+                return $this->view->registerError($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
+            }
             $this->_post->delete();
             $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $this->_post->getId()));
             return $view->redirect($url->getUrl());
