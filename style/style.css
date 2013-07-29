@@ -500,6 +500,10 @@ div#editpostoptions ul li {
     line-height: 30px;
 }
 
+#dizkus .forum_post .postbody .dizkusinformation_post {
+    margin: 10px;
+}
+
 /* Quick preview styles */
 
 #quickreplypreview .post_bg1 {
@@ -522,6 +526,9 @@ div#editpostoptions ul li {
 #dizkus #dzk_quickreply,
 #dizkus #dzk_newtopic {
     background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;
+}
+#dizkus .dzk_ajaxeditpost {
+    padding: 10px;
 }
 #dizkus #dzk_quickreply .post_header,
 #dizkus #dzk_newtopic .post_header,
@@ -549,6 +556,11 @@ div#editpostoptions ul li {
 /* General form styles
 /*******************************************************************************/
 
+#dizkus .dzk_ajaxinicator {
+    display: inline;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 #dizkus .dzk_form fieldset {
     border-width: 0;
     font-family: Verdana, Helvetica, Arial, sans-serif;

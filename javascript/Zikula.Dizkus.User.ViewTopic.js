@@ -1,20 +1,4 @@
 /**
- * Scroll to an element.
- *
- * @param selector The element's selector to scroll to.
- *
- * @note jQuery does not support .scrollTo() - calculate position manually.
- */
-function scrollTo(selector, time) {
-    if (!time) {
-        time = 1000;
-    }
-    jQuery('html, body').animate({
-        scrollTop: jQuery(selector).offset().top
-    }, time);
-}
-
-/**
  * Quote a text.
  *
  * @param text
@@ -120,20 +104,28 @@ var postId = false;
 
 /**
  * Shows an ajax indicator for a post or a quick reply.
+ * @param text The text to show next to the icon.
  * @param postId If set, the ajax indicator will be shown for a post, else for a quick reply.
- * @todo Add real indicator.
  */
-function showAjaxIndicator(postId) {
-    jQuery('body').css({'background': 'red'});
+function showAjaxIndicator(text, postId) {
+    var img = '<img width="16" height="16" class="dzk_ajaxinicator" src="' + Zikula.Config.baseURL + 'modules/Dizkus/images/ajaxindicator.gif" alt="" />';
+    if (postId) {
+        jQuery('#dizkusinformation_' + postId).html('<span style="color: red;">' + img + text + '</span>').fadeIn();
+    } else {
+        jQuery('#dizkusinformation').html(img + text).show();
+    }
 }
 
 /**
  * Hides an ajax indicator for a post or a quick reply.
  * @param postId If set, the ajax indicator will be hidden for a post, else for a quick reply.
- * @todo Add real indicator.
  */
 function hideAjaxIndicator(postId) {
-    jQuery('body').css({'background': 'green'});
+    if (postId) {
+        jQuery('#dizkusinformation_' + postId).html("").hide();
+    } else {
+        jQuery('#dizkusinformation').html("").hide();
+    }
 }
 
 /**
@@ -159,7 +151,7 @@ function quickEdit(id) {
     }, errorHandler = function (request, message, detail) {
         postEditing = false;
         postId = false;
-        alert(message + ": " + detail);
+        showAjaxError(request, message, detail);
     };
 
     if (!postEditing) {
@@ -170,7 +162,7 @@ function quickEdit(id) {
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=editpost', {
             data: {post: postId}
         }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(postId); });
-        showAjaxIndicator(postId);
+        showAjaxIndicator(Zikula.__('Loading post...'), postId);
     }
 }
 
@@ -193,7 +185,7 @@ function quickEditSave() {
             postId: postId,
             message: newPostMsg,
             attach_signature: (jQuery('#postingtext_' + postId + '_attach_signature').prop('checked')) ? 1 : 0,
-            delete: false
+            delete_post: 0 /* Do not use 'delete' here, this is a reserved word. */
         };
 
     if (!newPostMsg) {
@@ -203,7 +195,7 @@ function quickEditSave() {
 
     if (jQuery('#postingtext_' + postId + '_delete').prop('checked')) {
         jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Deleting post...') + '</span>');
-        pars['delete'] = 1;
+        pars['delete_post'] = 1;
     } else {
         jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Updating post...') + '</span>');
     }
@@ -239,12 +231,11 @@ function quickEditSave() {
         // Show post footer
         jQuery('#postingoptions_' + postId).show();
     }, errorHandler = function (request, message, detail) {
-        alert(message + ": " + detail);
+        showAjaxError(request, message, detail);
     };
     jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=updatepost', {
         data: pars
-    }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(postId); });
-    showAjaxIndicator(postId);
+    }).done(successHandler).fail(errorHandler);
 }
 
 /**
@@ -288,7 +279,6 @@ function createQuickReply() {
         }
 
         quickReplying = true;
-        //this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
         var pars = {
             topic: jQuery('#topic').val(),
             message: message,
@@ -299,8 +289,6 @@ function createQuickReply() {
 
         var successHandler = function (result, message, request) {
             var post = result.data.data;
-
-            //this.hidedizkusinfo();
 
             // clear textarea and reset preview
             cancelQuickReply();
@@ -328,13 +316,13 @@ function createQuickReply() {
             hookEditLinks();
 
         }, errorHandler = function (request, message, detail) {
-            alert(message + ": " + detail);
+            showAjaxError(request, message, detail);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {
             data: pars
         }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(); });
-        showAjaxIndicator();
+        showAjaxIndicator(Zikula.__('Storing reply...'));
 
     }
     return false;
@@ -352,7 +340,6 @@ function previewQuickReply() {
         }
 
         quickReplying = true;
-        //this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
 
         var pars = {
             topic: jQuery('#topic').val(),
@@ -362,8 +349,6 @@ function previewQuickReply() {
         };
 
         var successHandler = function (result, message, request) {
-            //this.hidedizkusinfo();
-
             // Show preview.
             jQuery('#quickreplypreview').html(result.data.data).removeClass('hidden');
 
@@ -372,13 +357,13 @@ function previewQuickReply() {
 
             quickReplying = false;
         }, errorHandler = function (request, message, detail) {
-            alert(message + ": " + detail);
+            showAjaxError(request, message, detail);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {
             data: pars
         }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(); });
-        showAjaxIndicator();
+        showAjaxIndicator(Zikula.__('Preparing preview...'));
     }
 }
 

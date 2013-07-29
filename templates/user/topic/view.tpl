@@ -5,6 +5,7 @@
 {pageaddvar name='javascript' value='jquery'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
 {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
 {pageaddvar name='javascript' value='zikula'}
 
@@ -225,10 +226,6 @@
 <script type="text/javascript">
     // @TODO Replace by Zikula.__() and remove this vars.
     // <![CDATA[
-    var storingReply = "{{gt text='Storing reply...'}}";
-    var preparingPreview = "{{gt text='Preparing preview...'}}";
-    var storingPost = "{{gt text='Storing post...'}}";
-    var statusNotChanged = "{{gt text='Unchanged'}}";
     var subscribeTopic = "{{gt text='Subscribe to topic'}}";
     var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
     var lockTopic = "{{gt text='Lock topic'}}";

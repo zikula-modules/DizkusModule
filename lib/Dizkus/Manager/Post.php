@@ -23,7 +23,7 @@ class Dizkus_Manager_Post
      * @var Dizkus_Entity_Post
      */
     private $_post;
-
+    
     /**
      * Post topic
      * @var Dizkus_Manager_Topic
@@ -109,9 +109,6 @@ class Dizkus_Manager_Post
     /**
      * create a post from provided data
      *
-     * @param array $data The data to create the new post of.
-     *
-     * @throws Zikula_Exception_Fatal
      * @return boolean
      */
     public function create($data = null)
@@ -138,7 +135,7 @@ class Dizkus_Manager_Post
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
-
+        
         // update topic time to last post time
         $this->_topic->get()->setTopic_time($this->_post->getPost_time());
 
@@ -164,21 +161,21 @@ class Dizkus_Manager_Post
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
-
-        // remove the post
-        $this->entityManager->remove($this->_post);
-
+        
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();
+
+        // remove the post
+        $this->entityManager->getRepository('Dizkus_Entity_Post')->manualDelete($id);
 
         // decrement forum post count
         $managedForum->decrementPostCount();
 
         // decrement replies count
         $this->_topic->decrementRepliesCount();
-
+        
         $this->entityManager->flush();
-
+        
         // resetLastPost in topic and forum if required
         if ($id == $topicLastPostId) {
             $this->_topic->resetLastPost(true);
@@ -186,7 +183,6 @@ class Dizkus_Manager_Post
         if ($id == $forumLastPostId) {
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
-
     }
 
     /**
