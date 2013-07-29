@@ -195,6 +195,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 $this->view->assign('post', $managedPost->get());
                 // simplify our live
                 $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
+                $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
 
                 return new Zikula_Response_Ajax($this->view->fetch('ajax/editpost.tpl'));
             } else {
@@ -218,7 +219,9 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
      *         $newText The new post text (can be empty).
      *         $redirect The page to redirect to (can be empty).
      *
+     *
      * @throws Zikula_Exception_Fatal
+     * @throws Zikula_Exception_Forbidden If the user tries to delete the only post of a topic.
      *
      * @return Zikula_Response_Ajax
      */
@@ -238,11 +241,10 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             $this->checkMessageLength($message);
 
             $managedOriginalPost = new Dizkus_Manager_Post($post_id);
-            $forumId = $managedOriginalPost->get()->getTopic()->getForum()->getForum_id();
 
             if ($delete) {
-                if ($managedOriginalPost->isTheOnlyPost()) {
-                    $response = array('action' => 'topic_deleted', 'redirect' => ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forumId), null, null, true));
+                if ($managedOriginalPost->get()->isFirst()) {
+                    throw new Zikula_Exception_Forbidden($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
                 } else {
                     $response = array('action' => 'deleted');
                 }

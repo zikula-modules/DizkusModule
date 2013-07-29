@@ -8,7 +8,7 @@
         <div id="editpostoptions" class="dzk_col_left">
             <ul>
                 <li><input type="checkbox" name="postingtext_{$post.post_id}attach_signature" id="postingtext_{$post.post_id}_attach_signature" {if $post.AttachSignature eq true}checked="checked"{/if} value="1" /><label for="postingtext_{$post.post_id}_attach_signature">&nbsp;{gt text="Attach my signature"}</label></li>
-                {if $post.poster_data.moderate eq true}
+                {if $post.poster_data.moderate eq true && !$isFirstPost}
                 <li><input id="postingtext_{$post.post_id}_delete" type="checkbox"  value="1" /><label for="postingtext_{$post.post_id}_delete">&nbsp;{gt text="Delete post"}</label></li>
                 {/if}
                 <li id="quickreplybuttons" class="z-buttons">
