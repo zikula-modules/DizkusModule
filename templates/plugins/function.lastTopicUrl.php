@@ -20,6 +20,6 @@ function smarty_function_lastTopicUrl($params, Zikula_View $view)
         'topic' => $topic->getTopic_id(),
         'start' => ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $topic->getReplyCount())),
     );
-    $url = new \Zikula\Core\ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, $topic->getLast_post()->getPost_id());
+    $url = new \Zikula\Core\ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, "pid" . $topic->getLast_post()->getPost_id());
     return $url->getUrl();
 }
