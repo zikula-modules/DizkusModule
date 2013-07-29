@@ -162,11 +162,11 @@ class Dizkus_Manager_Post
         $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
         $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
         
-        // remove the post
-        $this->entityManager->remove($this->_post);
-
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();
+
+        // remove the post
+        $this->entityManager->getRepository('Dizkus_Entity_Post')->manualDelete($id);
 
         // decrement forum post count
         $managedForum->decrementPostCount();
@@ -177,18 +177,13 @@ class Dizkus_Manager_Post
         $this->entityManager->flush();
         
         // resetLastPost in topic and forum if required
-        $flush = false;
         if ($id == $topicLastPostId) {
-            $this->_topic->resetLastPost(false);
-            $flush = true;
+            $this->_topic->resetLastPost(true);
         }
         if ($id == $forumLastPostId) {
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => false));
-            $flush = true;
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
-        if ($flush) {
-            $this->entityManager->flush();
-        }
+
     }
 
 }
