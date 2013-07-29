@@ -17,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
+ * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_PostRepository")
  */
 class Dizkus_Entity_Post extends Zikula_EntityAccess
 {
