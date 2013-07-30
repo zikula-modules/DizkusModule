@@ -98,7 +98,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
             $args = $args->toArray();
         }
 
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerError($this->getVar('forum_disabled_info'));
         }
 

@@ -24,6 +24,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function index($args = array())
     {
+        if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            return $this->view->fetch('dizkus_disabled.tpl');
+        }
         // Permission check
         $this->throwForbiddenUnless(
                 ModUtil::apiFunc($this->name, 'Permission', 'canRead')
@@ -63,6 +66,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewforum($args = array())
     {
+        if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            return $this->view->fetch('dizkus_disabled.tpl');
+        }
         // get the input
         $forumId = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
         $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
@@ -97,6 +103,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function viewtopic($args = array())
     {
+        if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+            return $this->view->fetch('dizkus_disabled.tpl');
+        }
         // get the input
         $topicId = (int)$this->request->query->get('topic', (isset($args['topic'])) ? $args['topic'] : null);
         $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
