@@ -45,6 +45,10 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         }
 
         $forum = new Dizkus_Manager_Forum($this->_forumId);
+        if ($forum->get()->isLocked()) {
+            // it should be impossible for a user to get here, but this is just a sanity check
+            return LogUtil::registerError($this->__('Error! This forum is locked. New topics cannot be created.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId)));
+        }
         $view->assign('forum', $forum->get());
         $view->assign('breadcrumbs', $forum->getBreadcrumbs(false));
         $view->assign('preview', false);

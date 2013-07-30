@@ -24,6 +24,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Dizkus_Entity_Forum extends Zikula_EntityAccess
 {
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
+    const STATUS_LOCKED = true;
+    const STATUS_UNLOCKED = false;
 
     /**
      * forum_id
@@ -148,6 +150,14 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
+
+    /**
+     * Forum status locked/unlocked
+     * locking a forum prevents new TOPICS from being created within
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $status = self::STATUS_UNLOCKED;
 
     /**
      * Constructor
@@ -416,6 +426,52 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     public function getSubscriptions()
     {
         return $this->subscriptions;
+    }
+
+    /**
+     * get forum status
+     *
+     * @return boolean
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * set forum status
+     * @param boolean $status
+     */
+    public function setStatus($status)
+    {
+        if (is_bool($status)) {
+            $this->status = $status;
+        }
+    }
+
+    /**
+     * is forum locked?
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->status;
+    }
+
+    /**
+     * lock the forum
+     */
+    public function lock()
+    {
+        $this->status = self::STATUS_LOCKED;
+    }
+
+    /**
+     * unlock the forum
+     */
+    public function unlock()
+    {
+        $this->status = self::STATUS_UNLOCKED;
     }
 
 }

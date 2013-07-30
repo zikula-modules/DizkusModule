@@ -63,7 +63,7 @@
         <div class="inner">
             <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
                 {* Moderate *}
-                {if $permissions.comment}
+                {if $permissions.comment && !$forum->isLocked()}
                 <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
 
@@ -106,6 +106,7 @@
 
 {if $forum.lvl > 1}
 {if $topics}
+{if ((count($topics) > 0) || (!$forum->isLocked()))}
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 {mediaattach_attachicon topics=$topics assign='uploadtopicids'}
@@ -189,6 +190,7 @@
 <div class="forumbg dzk_message dzk_rounded">
     <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
 </div>
+{/if}
 {/if}
 {/if}
 

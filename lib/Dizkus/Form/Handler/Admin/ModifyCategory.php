@@ -18,7 +18,7 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
     /**
      * category
      *
-     * @var statement
+     * @var Dizkus_Entity_Forum
      */
     private $category;
 
@@ -49,6 +49,7 @@ class Dizkus_Form_Handler_Admin_ModifyCategory extends Zikula_Form_AbstractHandl
             $category = new Dizkus_Entity_Forum();
             $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
             $category->setParent($forumRoot);
+            $category->lock();
             $view->assign('templatetitle', $this->__('Create category'));
         }
 

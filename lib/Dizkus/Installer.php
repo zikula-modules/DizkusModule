@@ -85,12 +85,14 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         // set up forum root
         $forumRoot = new Dizkus_Entity_Forum();
         $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot->lock();
         $this->entityManager->persist($forumRoot);
 
         // set up example forums
         $food = new Dizkus_Entity_Forum();
         $food->setName('Food');
         $food->setParent($forumRoot);
+        $food->lock();
         $this->entityManager->persist($food);
 
         $fruits = new Dizkus_Entity_Forum();
@@ -311,6 +313,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         // set up forum root
         $forumRoot = new Dizkus_Entity_Forum();
         $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot->lock();
         $this->entityManager->persist($forumRoot);
         $this->entityManager->flush();
 
@@ -324,6 +327,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             $newCatForum = new Dizkus_Entity_Forum();
             $newCatForum->setName($category['cat_title']);
             $newCatForum->setParent($forumRoot);
+            $newCatForum->lock();
             $this->entityManager->persist($newCatForum);
 
             // set parent of existing forums to new category forum
@@ -398,7 +402,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         }
         $this->entityManager->flush();
 
-        // dremove old group entries
+        // remove old group entries
         $sql = "DELETE FROM dizkus_forum_mods WHERE user_id > 1000000";
         $stmt = $connection->prepare($sql);
         $stmt->execute();

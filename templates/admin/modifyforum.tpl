@@ -27,11 +27,18 @@
             {formtextinput id="name" size="70" maxLength="150" mandatory=true}
         </div>
 
-
         <div class="z-formrow">
             {formlabel for="description" __text="Description"}
             {formtextinput id="description" textMode="multiline" rows="3" cols="40"}
         </div>
+
+        <div class="z-formrow">
+            {formlabel for="status" __text="Lock Forum"}
+            {formcheckbox id="status"}
+        </div>
+        <p class="z-formnote z-sub">
+            <em>{gt text="Locking a forum prevents new <strong>topics</strong> from being created in the forum."}</em>
+        </p>
 
         <div class="z-formrow">
             {formlabel for="parent" __text="Parent"}
