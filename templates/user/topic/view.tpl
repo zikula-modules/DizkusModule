@@ -2,24 +2,32 @@
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
 {pageaddvar name='javascript' value='jquery'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+{pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
+{pageaddvar name='javascript' value='zikula'}
 
 {pageaddvarblock}
-<script type="text/javascript">
-    function quote(text) {
-        text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
-        
-        jQuery('#message').val(jQuery('#message').val() + text);
-        
-        // jQuery does not support .scrollTo() - calculate position manually.
-        jQuery('html, body').animate({
-            scrollTop: jQuery("#dzk_quickreply").offset().top
-        }, 1000);
-    }
-</script>
-{/pageaddvarblock}
+    {if $modvars.Dizkus.ajax}
+    <script type="text/javascript">
+        jQuery(function(){
 
+            // POST EDIT
+            hookEditLinks();
+
+            // QUICK REPLY
+            hookQuickReplySubmit();
+            hookQuickReplyPreview();
+            hookQuickReplyCancel();
+
+            // Show cancel button.
+            jQuery('#btnCancelQuickReply').removeClass('hidden');
+        });
+    </script>
+    {/if}
+{/pageaddvarblock}
 <h2>
 <span class="editabletopicheader" id="edittopicsubjectbutton" title="">
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
@@ -39,7 +47,6 @@
     jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
     jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
     jQuery("#topicsubjectedit_save").click(changeTopicTitle);
-
 </script>
 {/if}
 
@@ -171,7 +178,7 @@
                             {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
-                            
+
                             {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
                             <div class="dzk_subcols z-clearfix">
                                 <div id="quickreplyoptions" class="dzk_col_left">
@@ -188,8 +195,8 @@
                                         </li>
                                         {/if}
                                         <li id="quickreplybuttons" class="z-buttons">
-                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
+                                            <input id="btnSubmitQuickReply" class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
+                                            <input id="btnPreviewQuickReply" class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
                                             {button type="button" id="btnCancelQuickReply" class="dzk_detachable z-bt-small hidden" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
                                         </li>
                                     </ul>
@@ -217,14 +224,8 @@
 {include file='user/moderatedBy.tpl' forum=$topic.forum}
 
 <script type="text/javascript">
+    // @TODO Replace by Zikula.__() and remove this vars.
     // <![CDATA[
-    var storingReply = "{{gt text='Storing reply...'}}";
-    var preparingPreview = "{{gt text='Preparing preview...'}}";
-    var storingPost = "{{gt text='Storing post...'}}";
-    var deletingPost = "{{gt text='Deleting post...'}}";
-    var updatingPost = "{{gt text='Updating post...'}}";
-    var statusNotChanged = "{{gt text='Unchanged'}}";
-    var statusChanged = "{{gt text='Changed'}}";
     var subscribeTopic = "{{gt text='Subscribe to topic'}}";
     var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
     var lockTopic = "{{gt text='Lock topic'}}";
@@ -234,21 +235,6 @@
     var solveTopic = "{{gt text="Mark as solved"}}";
     var unsolveTopic = "{{gt text="Mark as unsolved"}}";
     // ]]>
-
-
-    /*
-    ajax overwriting
-    $$('.editpostlink').each(
-        function (e) {
-            e.observe('click', myHandler);
-        }
-    );
-
-    function myHandler(event) {
-        Event.stop(event);
-        alert('test');
-    };*/
-
 </script>
 
 {include file='user/footer.tpl'}

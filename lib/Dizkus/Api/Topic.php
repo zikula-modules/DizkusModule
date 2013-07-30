@@ -53,7 +53,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      * Subscribe a topic.
      *
      * @param array $args Arguments array.
-     *        int $args['topic'] Topic
+     *        int|object $args['topic'] Topic id or object.
      *        int $args['user_id'] User id (optional: needs ACCESS_ADMIN).
      *
      * @return void
@@ -65,6 +65,10 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
+        if (!is_object($args['topic'])) {
+            $args['topic'] = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('topic_id' => $args['topic']));
+        }
+
 
         // TODO: Permission check
 
@@ -77,7 +81,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      * Unsubscribe a topic.
      *
      * @param array $args Arguments array.
-     *        int $args['topic'] Topic, if not set we unsubscribe all topics.
+     *        int|obect $args['topic'] Topic id or object, if not set we unsubscribe all topics.
      *        int $args['user_id'] Users id (optional: needs ACCESS_ADMIN).
      *
      * @return void|bool
@@ -88,6 +92,9 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
+        }
+        if (!is_object($args['topic'])) {
+            $args['topic'] = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('topic_id' => $args['topic']));
         }
 
         // TODO: Permission check
@@ -204,7 +211,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         // decrement topicCount
         $topic->getForum()->decrementTopicCount();
-        
+
         // update the db
         $this->entityManager->flush();
 
@@ -222,7 +229,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
         return $topic->getForum()->getForum_id();
     }
-    
+
     /**
      * Move topic
      *
@@ -244,7 +251,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $args['topicObj'] = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']); //->toArray();
         }
         $managedTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
-        
+
         if ($managedTopic->getForumId() <> $args['forum_id']) {
             // set new forum
             $oldForumId = $managedTopic->getForumId();
@@ -277,7 +284,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
         return;
     }
-    
+
     /**
      * split the topic at the provided post
      *
@@ -320,7 +327,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         // must flush here so sync gets correct information
         $this->entityManager->flush();
         // last iteration of `$post` used below
-        
+
         // update old topic
         ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
         $oldReplyCount = $managedTopic->get()->getReplyCount();
@@ -345,14 +352,14 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
      * @params $args['from_topic_id'] int this topic get integrated into to_topic (origin)
      * @params $args['topicObj'] Dizkus_Entity_Topic The (origin) topic as object
      *              must have *either* topicObj or from_topic_id
-     * 
+     *
      * @return Integer Destination topic ID
      */
     public function join($args)
     {
         if (!($args['topicObj'] instanceof Dizkus_Entity_Topic) && !isset($args['from_topic_id'])) {
             LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
-            return LogUtil::registerArgsError();            
+            return LogUtil::registerArgsError();
         }
         if (!isset($args['to_topic_id'])) {
             return LogUtil::registerArgsError();
@@ -363,7 +370,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
         $managedOriginTopic = new Dizkus_Manager_Topic($args['from_topic_id'], $args['topicObj']); // one param will be null
         $managedDestinationTopic = new Dizkus_Manager_Topic($args['to_topic_id']);
-        
+
         if ($managedDestinationTopic->get() === null) { // can't use isset() and ->get() at the same time
             LogUtil::registerError($this->__('Destination topic does not exist.'));
             return LogUtil::registerArgsError();

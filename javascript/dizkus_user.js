@@ -2,16 +2,12 @@
  * dizkus_user.js
  */
 
-
-
-
-
 /**
  * @todo All code below needs to be reviewed and either be deleted or refactored! If you refactored it, please move it ABOVE this message.
  * - cmfcmf
  */
 
-
+/*
 Zikula.define('Dizkus');
 
 document.observe('dom:loaded', function() {
@@ -22,7 +18,7 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
     initialize: function() {
         this.funcname = '';
 
-        this.editstatus = false;
+        postEditing = false;
         this.replystatus = false;
         this.editchanged = false;
         this.lockstatus = false;
@@ -176,132 +172,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         $('hidelink_posting_{$post.post_id}').toggle();
     },
 
-
-    quickEdit: function(editpostlinkid) {
-        if(this.editstatus == false) {
-            this.editstatus = true;
-            this.editchanged = false;
-            this.post_id = editpostlinkid.split('_')[1];
-            var pars = {
-                post: this.post_id
-            }
-            // Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=editpost",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            this.editstatus = false;
-                            return;
-                        }
-
-                        var msg = req.getData();
-
-                        // hide posting options, update authid
-                        $('postingoptions_' + this.post_id).hide();
-
-                        // hide quickreply
-                        if ($('dzk_quickreply')) {
-                            Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-                        }
-
-                        // add inline editor
-                        $('postingtext_' + this.post_id).insert({after: msg.data});
-                        $('postingtext_' + this.post_id + '_edit').observe('keyup', this.quickEditchanged.bind(this));
-                        $('postingtext_' + this.post_id + '_save').observe('click', this.quickEditsave.bind(this));
-                        $('postingtext_' + this.post_id + '_cancel').observe('click', this.quickEditcancel.bind(this));
-                    }.bind(this)
-                }
-            );
-        }
-    },
-
-    quickEditchanged: function() {
-        if(this.editchanged == false) {
-            this.editchanged = true;
-            $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + statusChanged + '</span>');
-        }
-    },
-
-    quickEditsave: function() {
-
-       if($F('postingtext_' + this.post_id + '_edit').blank() == true) {
-           // no text
-           return;
-       }
-       var pars = {
-           post: this.post_id,
-           message: $F('postingtext_' + this.post_id + '_edit'),
-           attach_signature: this.getcheckboxvalue('postingtext_' + this.post_id + '_attach_signature')
-       }
-
-       if($('postingtext_' + this.post_id + '_delete') && $('postingtext_' + this.post_id + '_delete').checked == true) {
-           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + deletingPost + '</span>');
-           pars['delete'] =1;
-       } else {
-           $('postingtext_' + this.post_id + '_status').update('<span style="color: red;">' + updatingPost + '</span>');
-       }
-
-        // Ajax.Responders.register(this.dzk_globalhandlers);
-        var myAjax = new Zikula.Ajax.Request(
-            Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=updatepost",
-            {
-                method: 'post',
-                parameters: pars,
-                onComplete: function(req) {
-                    this.editstatus = false;
-                    this.editchanged = false;
-
-                    // show error if necessary
-                    if (!req.isSuccess()) {
-                        Zikula.showajaxerror(req.getMessage());
-                        return;
-                    }
-
-                    var msg = req.getData();
-
-                    $('postingtext_' + this.post_id + '_editor').remove();
-
-
-
-                    if(msg.action == 'deleted') {
-                        $('posting_' + this.post_id).remove();
-                    } else if (msg.action == 'topic_deleted') {
-                        window.setTimeout("window.location.href='" + msg.redirect + "';", 500);
-                        return;
-                    } else {
-                        $('postingtext_' + this.post_id).update(msg.post_text).show();
-                    }
-
-                    //  hide quickreply
-                    if($('dzk_quickreply')) {
-                        Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-                    }
-                }.bind(this)
-            }
-        );
-
-
-        $('postingoptions_' + this.post_id + '').show();
-    },
-
-    quickEditcancel: function() {
-        $('postingoptions_' + this.post_id).show();
-        $('postingtext_' + this.post_id + '_editor').remove();
-        this.editstatus = false;
-        this.editchanged = false;
-
-        // unhide quickreply
-        if($('dzk_quickreply')) {
-            Effect.toggle($('dzk_quickreply'), this.comboeffect, this.comboparams);
-        }
-    },
-
-
     createnewtopic: function(event) {
         if (this.newtopicstatus==false) {
             if (($F('subject').blank() == true) || ($F('message').blank() == true)){
@@ -413,131 +283,6 @@ Zikula.Dizkus.UserClass = Class.create(Zikula.Dizkus.BaseClass, {
         this.newtopicstatus = false;
     },
 
-    createQuickReply: function(event) {
-        if(this.replystatus==false) {
-            if ($F('message').blank() == true){
-                // no subject and/or message
-                if (event) Event.stop(event);
-                return false;
-            }
-
-            this.replystatus = true;
-            this.showdizkusinfo(this.indicatorimage + ' ' + storingReply);
-            var pars = {
-                topic: $F('topic'),
-                message: $F('message'),
-                attach_signature: this.getcheckboxvalue('attach_signature'),
-                subscribe_topic: this.getcheckboxvalue('subscribe_topic')
-            }
-            //          Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        this.hidedizkusinfo();
-
-                        // show error if necessary
-                        if (!req.getMessage()) {
-                            Zikula.showajaxeError(req.getMessage());
-                            this.replystatus = false;
-                            if (event) {
-                                Event.stop(event)
-                            }
-                            return;
-                        }
-
-                        var msg = req.getData();
-
-                        // clear textarea and reset preview
-                        this.cancelQuickReply()
-
-                        // show new posting
-                        $('quickreplyposting').update(msg.data).removeClassName('hidden');
-                        
-                        // add observers to edit buttons per post
-                        var editbutton = $('posting_'+msg.post_id).down('a[id^="editbutton"]');
-                        editbutton.observe('click', this.quickEdit.bind(this, editbutton.id));
-
-                        // prepare everything for another quick reply
-                        $('quickreplyposting').insert({after: '<li id="new_quickreplyposting"></li>'});
-                        // clear old id
-                        $('quickreplyposting').id = '';
-                        // rename new id
-                        $('new_quickreplyposting').id = 'quickreplyposting';
-                        // enable js options in quickreply
-                        $$('ul.javascriptpostingoptions').each(function(el) {
-                            el.removeClassName('hidden');
-                        });
-
-                        if ($('myuploadframe') && $('btnUpload') && msg.uploadauthid) {
-                            Zikula.updateauthids(msg.uploadauthid);
-                            $('btnUpload').click();
-                        }
-
-                        this.replystatus = false;
-                    }.bind(this)
-                });
-        }
-        if (event) {
-            Event.stop(event);
-        }
-        return false;
-    },
-
-    previewQuickReply: function(event) {
-        if(this.replystatus==false) {
-            if ($F('message').blank() == true){
-                // no subject and/or message
-                if (event) Event.stop(event);
-                return;
-            }
-            this.replystatus = true;
-            this.showdizkusinfo(this.indicatorimage + ' ' + preparingPreview);
-
-            var pars = {
-                topic: $F('topic'),
-                message: $F('message'),
-                attach_signature: this.getcheckboxvalue('attach_signature'),
-                preview: 1
-            }
-
-            // Ajax.Responders.register(this.dzk_globalhandlers);
-            var myAjax = new Zikula.Ajax.Request(
-                Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=reply",
-                {
-                    method: 'post',
-                    parameters: pars,
-                    onComplete: function(req) {
-                        this.hidedizkusinfo();
-
-                        // show error if necessary
-                        if (!req.isSuccess()) {
-                            Zikula.showajaxerror(req.getMessage());
-                            this.replystatus = false;
-                            if (event) Event.stop(event);
-                            return;
-                        }
-
-                        var msg = req.getData();
-                        $('quickreplypreview').update(msg.data).removeClassName('hidden');
-                        this.replystatus = false;
-                    //if (event) Event.stop(event);
-                    }.bind(this)
-                }
-            );
-        }
-
-        if (event) {
-            Event.stop(event);
-        }
-    },
-
-    cancelQuickReply: function(event) {
-        $('message').clear();
-        $('quickreplypreview').update('&nbsp;').addClassName('hidden');
-        this.replystatus = false;
-    }
 
 });
+*/
