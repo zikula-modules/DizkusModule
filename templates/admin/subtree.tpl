@@ -4,7 +4,7 @@
     <tr class="{cycle values="z-odd,z-even"}">
         <td>{'&nbsp;'|str_repeat:$lvl}{$item.name}</td>
         <td nowrap="nowrap">
-            {if $item.lvl == 0}
+            {if $item.lvl == 1}
             <a href="{modurl modname='Dizkus' type='admin' func='modifyCategory' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='xedit.png' alt="Edit"}</a>
             <a href="{modurl modname='Dizkus' type='user' func='index' viewcat=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='demo.png' alt="View"}</a>
             {else}
