@@ -11,6 +11,13 @@
 class Dizkus_Api_Permission extends Zikula_AbstractApi
 {
 
+    /**
+     * Checks the persmissions of a user for a specific forum or category.
+     *
+     * @param string $args
+     *
+     * @return array|mixed
+     */
     public function get($args)
     {
         $permissions = array();
