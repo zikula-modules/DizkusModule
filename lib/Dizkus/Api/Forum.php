@@ -18,12 +18,14 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
      * @param integer $id
      * @return array
      */
-    public function getParents($id = null)
+    public function getParents($args)
     {
+        $id = isset($args['id']) ? $args['id'] : null;
+        $includeLocked = isset($args['includeLocked']) ? $args['includeLocked'] : true;
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
         $forumRoot = $repo->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
         $parents = $repo->childrenHierarchy($forumRoot);
-        $output = $this->getNode($parents, $id);
+        $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;
     }
@@ -56,18 +58,22 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
      * @param integer $level
      * @return array
      */
-    private function getNode($input, $id, $level = 0)
+    private function getNode($input, $id, $level = 0, $includeLocked = true)
     {
         $pre = str_repeat("-", $level * 2);
         $output = array();
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
-                $output[] = array(
-                    'value' => $i['forum_id'],
-                    'text' => $pre . $i['name']
-                );
+                // only include results if
+                if ((($i['status'] == Dizkus_Entity_Forum::STATUS_LOCKED) && $includeLocked)
+                        || ($i['status'] == Dizkus_Entity_Forum::STATUS_UNLOCKED)) {
+                    $output[] = array(
+                        'value' => $i['forum_id'],
+                        'text' => $pre . $i['name']
+                    );
+                }
                 if (isset($i['__children'])) {
-                    $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1));
+                    $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1, $includeLocked));
                 }
             }
         }

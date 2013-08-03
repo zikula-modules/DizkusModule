@@ -77,10 +77,13 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('ignorelist_handling', 'medium');
         $this->setVar('minsearchlength', 3);
         $this->setVar('maxsearchlength', 30);
-        // 3.2
-
+        // 4.0.0
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Dizkus_HookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'module_dispatch.service_links', array('Dizkus_HookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfigprocess'));
 
         // set up forum root
         $forumRoot = new Dizkus_Entity_Forum();
@@ -134,6 +137,9 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
 
         // remove module vars
         $this->delVars();
+
+        // unregister handlers
+        EventUtil::unregisterPersistentModuleHandlers('Dizkus');
 
         // unregister hooks
         HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
@@ -196,12 +202,14 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $stmt = $connection->prepare($sql);
         $stmt->execute();
 
-        // get all the pop3 connections for later re-entry
-        $sql = "SELECT forum_id AS id, forum_pop3_active AS active, forum_pop3_server AS server, forum_pop3_port AS port, forum_pop3_login AS login,
+        // get all the pop3 connections & hook references for later re-entry
+        $sql = "SELECT forum_id AS id, forum_moduleref as moduleref, forum_pop3_active AS active, forum_pop3_server AS server, forum_pop3_port AS port, forum_pop3_login AS login,
                 forum_pop3_password AS password, forum_pop3_interval AS interval, forum_pop3_lastconnect AS lastconnect, forum_pop3_pnuser as userid
                 FROM dizkus_forums
                 WHERE forum_pop3_active = 1";
-        $pop3connections = $connection->fetchAll($sql);
+        $forumdata = $connection->fetchAll($sql);
+
+        // @todo use sql to fetch topic_reference and decode to migrate below (if possible)
 
         // update all the tables to 4.0.0
         try {
@@ -214,7 +222,9 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->upgrade_to_4_0_0_migrateCategories();
         $this->upgrade_to_4_0_0_updatePosterData();
         $this->upgrade_to_4_0_0_migrateModGroups();
-        $this->upgrade_to_4_0_0_migratePop3Connections($pop3connections);
+        $this->upgrade_to_4_0_0_migratePop3Connections($forumdata);
+        // @todo use $forumdata to migrate forum modulerefs
+        // @todo migrate topic_reference to hook data
         $this->upgrade_to_4_0_0_renameColumns();
 
         $this->delVar('autosubscribe');
@@ -222,6 +232,11 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('gravatarimage');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
+
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Dizkus_HookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'module_dispatch.service_links', array('Dizkus_HookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
+        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfigprocess'));
 
         LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
 

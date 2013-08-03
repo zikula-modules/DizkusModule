@@ -14,6 +14,7 @@
  */
 class Dizkus_Version extends Zikula_AbstractVersion
 {
+    const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';
 
     /**
      * Assemble and return module metadata.
@@ -103,7 +104,7 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $this->registerHookSubscriberBundle($bundle3);
 
         // Topic Provider Hooks
-        $bundle5 = new Zikula_HookManager_ProviderBundle($this->name, 'provider.dizkus.ui_hooks.topic', 'ui_hooks', $this->__('Dizkus topic provider hook'));
+        $bundle5 = new Zikula_HookManager_ProviderBundle($this->name, self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
         $bundle5->addServiceHandler('display_view', 'Dizkus_HookHandlers', 'uiView', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('form_edit', 'Dizkus_HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('form_delete', 'Dizkus_HookHandlers', 'uiDelete', 'dizkus.hooks.topic');

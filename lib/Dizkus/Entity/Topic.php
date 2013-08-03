@@ -90,13 +90,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     private $forum;
 
     /**
-     * reference
-     *
-     * @ORM\Column(type="string", length=60)
-     */
-    private $reference = '';
-
-    /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
@@ -124,6 +117,35 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic", cascade={"remove"})
      */
     private $subscriptions;
+
+    /**
+     * module field (hooked module name)
+     *
+     * @ORM\Column(length=50)
+     */
+    private $hookedModule;
+
+    /**
+     * areaId field (hooked area id)
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $hookedAreaId;
+
+    /**
+     * objectId field (object id)
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $hookedObjectId;
+
+    /**
+     * url object
+     * @var Zikula_ModUrl
+     *
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $hookedUrlObject = null;
 
     /**
      * Constructor
@@ -228,11 +250,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         return $this->sticky;
     }
 
-    public function getReference()
-    {
-        return $this->reference;
-    }
-
     public function getSolved()
     {
         return $this->solved;
@@ -319,5 +336,46 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     {
         return $this->subscriptions;
     }
+
+    public function getHookedModule()
+    {
+        return $this->hookedModule;
+    }
+
+    public function setHookedModule($hookedModule)
+    {
+        $this->hookedModule = $hookedModule;
+    }
+
+    public function getHookedAreaId()
+    {
+        return $this->hookedAreaId;
+    }
+
+    public function setHookedAreaId($hookedAreaId)
+    {
+        $this->hookedAreaId = $hookedAreaId;
+    }
+
+    public function getHookedObjectId()
+    {
+        return $this->hookedObjectId;
+    }
+
+    public function setHookedObjectId($hookedObjectId)
+    {
+        $this->hookedObjectId = $hookedObjectId;
+    }
+
+    public function getHookedUrlObject()
+    {
+        return $this->hookedUrlObject;
+    }
+
+    public function setHookedUrlObject(Zikula_ModUrl $hookedUrlObject)
+    {
+        $this->hookedUrlObject = $hookedUrlObject;
+    }
+
 
 }

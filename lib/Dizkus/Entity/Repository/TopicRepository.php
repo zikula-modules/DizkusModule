@@ -52,4 +52,35 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
                 ->execute();
     }
 
+    /**
+     * retrieve a topic from hook parameters
+     *
+     * @param Zikula\Component\HookDispatcher\Hook $hook
+     * @return Dizkus_Entity_Topic/NULL
+     */
+    public function getHookedTopic(Zikula\Component\HookDispatcher\Hook $hook)
+    {
+        $dql = "SELECT a FROM Dizkus_Entity_Topic a " .
+                "WHERE a.hookedModule = :modulename " .
+                "AND a.hookedObjectId = :objectid " .
+                "AND a.hookedAreaId = :area ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters(array(
+            'modulename' => $hook->getCaller(),
+            'objectid' => $hook->getId(),
+            'area' => $hook->getAreaId(),
+        ));
+
+        try {
+            $result = $query->getOneOrNullResult();
+        } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            var_dump($query->getDQL());
+            var_dump($query->getParameters());
+            var_dump($query->getSQL());
+            die;
+        }
+        return $result;
+    }
 }

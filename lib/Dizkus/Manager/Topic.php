@@ -276,6 +276,19 @@ class Dizkus_Manager_Topic
         $this->_topic->setPoster($forumUser);
     }
 
+    /**
+     * Add hook data to topic
+     * 
+     * @param Zikula_ProcessHook $hook
+     */
+    public function setHookData(Zikula_ProcessHook $hook)
+    {
+        $this->_topic->setHookedModule($hook->getCaller());
+        $this->_topic->setHookedObjectId($hook->getId());
+        $this->_topic->setHookedAreaId($hook->getAreaId());
+        $this->_topic->setHookedUrlObject($hook->getUrl());
+    }
+
     public function getPreview()
     {
         return $this->_firstPost;
