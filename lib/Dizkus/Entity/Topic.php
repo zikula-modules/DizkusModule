@@ -121,21 +121,21 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
     /**
      * module field (hooked module name)
      *
-     * @ORM\Column(length=50)
+     * @ORM\Column(length=50, nullable=true)
      */
     private $hookedModule;
 
     /**
      * areaId field (hooked area id)
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $hookedAreaId;
 
     /**
      * objectId field (object id)
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $hookedObjectId;
 
