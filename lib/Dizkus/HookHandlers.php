@@ -144,6 +144,9 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
             $this->view->assign('forum', $topic->getForum()->getName());
+            $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
+            $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
+            $this->view->assign('actionWord', $actionWord);
             $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
@@ -229,7 +232,23 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     public function processDelete(Zikula_ProcessHook $hook)
     {
         $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
+        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        if (isset($topic)) {
+            switch ($deleteHookAction) {
+                case 'remove':
+                    ModUtil::apiFunc('Dizkus', 'Topic', 'delete', array('topic' => $topic));
+                    break;
+                case 'lock':
+                default:
+                    $topic->lock();
+                    $this->_em->flush();
+                    break;
+            }
+        }
+        $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
+        LogUtil::registerStatus($this->__f("Dizkus: Hooked discussion topic %s.", $actionWord, $this->domain));
 
+        return true;
     }
 
     /**
