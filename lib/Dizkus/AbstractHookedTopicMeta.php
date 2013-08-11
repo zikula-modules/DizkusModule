@@ -51,6 +51,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
 
     /**
      * Topic post content
+     *
      * @var string
      */
     protected $content = '';
@@ -58,10 +59,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
     /**
      * Constructor
      * 
-     * @param integer $objectId
-     * @param string $areaId
-     * @param string $module
-     * @param Zikula_ModUrl $urlObject 
+     * @param Zikula_ProcessHook $hook
      */
     function __construct(Zikula_ProcessHook $hook)
     {
@@ -69,9 +67,12 @@ abstract class Dizkus_AbstractHookedTopicMeta
         $this->setAreaId($hook->getAreaId());
         $this->setModule($hook->getCaller());
         $this->setUrlObject($hook->getUrl());
+        $this->setUp();
+        $this->setTitle();
+        $this->setContent();
     }
 
-    public function setObjectId($id)
+    private function setObjectId($id)
     {
         $this->objectId = $id;
     }
@@ -81,7 +82,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
         return $this->objectId;
     }
 
-    public function setAreaId($id)
+    private function setAreaId($id)
     {
         $this->areaId = $id;
     }
@@ -91,7 +92,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
         return $this->areaId;
     }
 
-    public function setModule($name)
+    private function setModule($name)
     {
         $this->module = $name;
     }
@@ -101,39 +102,45 @@ abstract class Dizkus_AbstractHookedTopicMeta
         return $this->module;
     }
 
-    /**
-     * Set the object's Url Object
-     * @param Zikula_ModUrl $objectUrlObject 
-     */
-    public function setUrlObject(Zikula_ModUrl $objectUrlObject)
+    private function setUrlObject(Zikula_ModUrl $objectUrlObject)
     {
         $this->urlObject = $objectUrlObject;
     }
 
-    /**
-     * Get the object's Url Object
-     * @return Zikula_ModUrl
-     */
     public function getUrlObject()
     {
         return $this->urlObject;
     }
 
-    abstract public function setTitle($title);
+    /**
+     * post-constructor setup hook
+     */
+    protected function setUp()
+    {
+        // override this method to set up the object you are manipulating
+    }
+
+    /**
+     * set the title for the topic
+     */
+    abstract public function setTitle();
 
     public function getTitle()
     {
         return $this->title;
     }
 
-    abstract public function setContent($content);
+    /**
+     * set the content of the topic's first post
+     */
+    abstract public function setContent();
 
     public function getContent()
     {
         return $this->content;
     }
 
-    public function getLink()
+    protected function getLink()
     {
         $title = $this->getTitle();
         $link = null;

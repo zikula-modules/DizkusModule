@@ -15,25 +15,19 @@ class Dizkus_HookedTopicMeta_Generic extends Dizkus_AbstractHookedTopicMeta
 {
     private $dom;
 
-    function __construct(Zikula_ProcessHook $hook)
+    public function setUp()
     {
         $this->dom = ZLanguage::getModuleDomain('Dizkus');
-        parent::__construct($hook);
-
-        $this->setTitle("");
-        $this->setContent("");
     }
 
-    public function setTitle($title)
+    public function setTitle()
     {
-        unset($title);
         $item = __('item', $this->dom);
         $this->title = "{$this->getModule()} $item (id# {$this->getObjectId()})";
     }
 
-    public function setContent($content)
+    public function setContent()
     {
-        unset($content);
         $this->content = __f("Discussion of item at: %s", $this->getLink(), $this->dom);
     }
 
