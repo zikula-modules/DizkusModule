@@ -127,7 +127,11 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 
     public function uiDelete(Zikula_DisplayHook $hook)
     {
-
+        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        if (isset($topic)) {
+            $this->view->assign('forum', $topic->getForum()->getName());
+            $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
+        }
     }
 
     public function validateEdit(Zikula_ValidationHook $hook)
@@ -182,6 +186,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 
     public function processDelete(Zikula_ProcessHook $hook)
     {
+        $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
 
     }
 
