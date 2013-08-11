@@ -58,7 +58,7 @@
     </div>
     {/if}
 
-    {if $forum.lvl > 1}
+    {if $forum.lvl > 0}
     <div class="roundedbar dzk_rounded">
         <div class="inner">
             <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
@@ -104,7 +104,7 @@
 </div>
 {/if}
 
-{if $forum.lvl > 1}
+{if $forum.lvl > 0}
 {if $topics}
 {if ((count($topics) > 0) || (!$forum->isLocked()))}
 

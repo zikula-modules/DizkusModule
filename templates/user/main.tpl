@@ -14,7 +14,7 @@
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_{$category.name}" title="{gt text="Go to category"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type=user func=viewforum forum=$category.forum_id}">{$category.name|safetext}</a></span>
+                            <span><a id="categorylink_{$category.name}" title="{gt text="Go to category"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$category.forum_id}">{$category.name|safetext}</a></span>
                         </dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
@@ -49,7 +49,12 @@
                     </li>
                     {foreachelse}
                     <li class="row dzk_empty">
-                        {gt text="No forums created."}
+                        {gt text="No subforums available."}
+                        {if $category.topicCount > 0}
+                            <p>{gt text="There is %s topic." plural="There are %s topics." tag1=$category.topicCount count=$category.topicCount}
+                            <a id="forumlink_{$category.name}" title="{gt text="Go to forum"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$category.forum_id}">{gt text="Go to forum"} '{$category.name|safetext}'</a>
+                            </p>
+                        {/if}
                     </li>
                 {/foreach}
             </ul>
