@@ -352,18 +352,32 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $module = $z_event['name'];
         $dom = ZLanguage::getModuleDomain('Dizkus');
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-
         $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
 
-        // take action on all topics with associated module
-        // @todo
+        $topics = $_em->getRepository('Dizkus_Entity_Topic')->findBy(array('hookedModule' => $module));
+        $count = 0;
+        foreach ($topics as $topic) {
+            switch ($deleteHookAction) {
+                case 'remove':
+                    ModUtil::apiFunc('Dizkus', 'Topic', 'delete', array('topic' => $topic));
+                    break;
+                case 'lock':
+                default:
+                    $topic->lock();
+                    $count++;
+                    if ($count > 20) {
+                        $_em->flush();
+                        $count = 0;
+                    }
+                    break;
+            }
+        }
+        // clear last remaining batch
+        $_em->flush();
+
+        $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
+        LogUtil::registerStatus($this->__f("Dizkus: All hooked discussion topics %s.", $actionWord, $dom));
     }
-
-
-    /********************
-    // @TODO need a handler for when the module is unhooked to remove the hookconfig
-    /********************
-
 
     /**
      * populate Services menu with hook option link
