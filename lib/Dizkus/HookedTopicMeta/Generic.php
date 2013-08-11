@@ -15,7 +15,7 @@ class Dizkus_HookedTopicMeta_Generic extends Dizkus_AbstractHookedTopicMeta
 {
     private $dom;
 
-    public function setUp()
+    public function setup()
     {
         $this->dom = ZLanguage::getModuleDomain('Dizkus');
     }

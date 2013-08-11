@@ -15,7 +15,7 @@ class Dizkus_HookedTopicMeta_News extends Dizkus_AbstractHookedTopicMeta
 {
     private $newsItem = null;
 
-    public function setUp()
+    public function setup()
     {
         $newsItem = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $this->getObjectId()));
         // the api takes care of the permissions check. we must check for pending/expiration & status

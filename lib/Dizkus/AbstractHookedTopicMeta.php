@@ -67,7 +67,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
         $this->setAreaId($hook->getAreaId());
         $this->setModule($hook->getCaller());
         $this->setUrlObject($hook->getUrl());
-        $this->setUp();
+        $this->setup();
         $this->setTitle();
         $this->setContent();
     }
@@ -115,7 +115,7 @@ abstract class Dizkus_AbstractHookedTopicMeta
     /**
      * post-constructor setup hook
      */
-    protected function setUp()
+    protected function setup()
     {
         // override this method to set up the object you are manipulating
     }
