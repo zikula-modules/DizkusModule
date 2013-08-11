@@ -47,70 +47,61 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     /**
      * Display hook for view.
      *
-     * Subject is the object being viewed that we're attaching to.
-     * args[id] Is the id of the object.
-     * args[caller] the module who notified of this event.
-     *
      * @param Zikula_DisplayHook $hook The hook.
      *
-     * @return void
+     * @return string
      */
     public function uiView(Zikula_DisplayHook $hook)
     {
-        // work out the input from the hook
-        $mod = $hook->getCaller();
-        $objectid = $hook->getId();
-
         // first check if the user is allowed to do any comments for this module/objectid
         // TODO: This securityschema doesn't exist 
 //        if (!SecurityUtil::checkPermission('Dizkus::', "$mod:$objectid:", ACCESS_OVERVIEW)) {
 //            return;
 //        }
 
-        $start = 0;
+        $start = 1;
 
-        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')
-                ->findOneBy(array('reference' => '52-Kaik'));
+        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
-            $managedTopic = new Dizkus_Manager_Topic(null, $topic);
+            $managedTopic = new Dizkus_Manager_Topic(null, $topic); // inject topic into manager
+        } else {
+            return;
         }
 
-        $this->view->assign('areaid', $hook->getAreaId());
-        $this->view->assign('topic', $topic);
-        $this->view->assign('post_count', $managedTopic->getPost_count());
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
-        $this->view->assign('modinfo', ModUtil::getInfo(ModUtil::getIdFromName($mod)));
-        $this->view->assign('msgmodule', System::getVar('messagemodule', ''));
-        $this->view->assign('prfmodule', System::getVar('profilemodule', ''));
-        $this->view->assign('allowadd', SecurityUtil::checkPermission('Dizkus::', "$mod:$objectid:", ACCESS_COMMENT));
-        $this->view->assign('loggedin', UserUtil::isLoggedIn());
-
-        $modUrl = $hook->getUrl();
-        $redirect = (!is_null($modUrl)) ? $modUrl->getUrl() : '';
-        $this->view->assign('returnurl', $redirect);
+//        $modUrl = $hook->getUrl();
+//        $redirect = (!is_null($modUrl)) ? $modUrl->getUrl() : '';
+//        $this->view->assign('returnurl', $redirect);
 
         // encode the url - otherwise we can get some problems out there....
-        $this->redirect = base64_encode($redirect);
-        $this->view->assign('redirect', $redirect);
-        $this->view->assign('objectid', $objectid);
-
-        // assign the user is of the content owner
-        $this->view->assign('owneruid', $owneruid);
+//        $this->redirect = base64_encode($redirect);
+//        $this->view->assign('redirect', $redirect);
+//        $this->view->assign('objectid', $objectid);
 
         // assign url that should be stored in db and sent in email if it
         // differs from the redirect url
-        $this->view->assign('useurl', $useurl);
+//        $this->view->assign('useurl', $useurl);
 
-        // flag to recognize the main call
-        static $mainScreen = true;
-        $this->view->assign('mainscreen', $mainScreen);
-        $mainScreen = false;
+        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+        $this->view->assign('ranks', $ranks);
+        $this->view->assign('start', $start);
+        $this->view->assign('topic', $managedTopic->get()->toArray());
+        $this->view->assign('posts', $managedTopic->getPosts(--$start));
+        $this->view->assign('pager', $managedTopic->getPager());
+        $this->view->assign('permissions', $managedTopic->getPermissions());
+        $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
+        $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
+        $this->view->assign('nextTopic', $managedTopic->getNext());
+        $this->view->assign('previousTopic', $managedTopic->getPrevious());
+        //$this->view->assign('post_count', count($topic['posts']));
+        //$this->view->assign('last_visit', $last_visit);
+        //$this->view->assign('last_visit_unix', $last_visit_unix);
+        //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
+
+        $managedTopic->incrementViewsCount();
 
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
 
-        // TODO: This hook area name no longer exists
-        $hook->setResponse(new Zikula_Response_DisplayHook('provider.dizkus.ui_hooks.comments', $this->view, DataUtil::formatForOS($templateset) . '/user/topic/view.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/topic/view.tpl'));
     }
 
     public function uiEdit(Zikula_DisplayHook $hook)
