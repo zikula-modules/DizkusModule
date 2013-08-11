@@ -96,7 +96,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 
-        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', $this->topic_id);
+        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', array('topic' => $this->topic_id));
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_delete', $this->topic_id));
 
         $data = $view->getValues();

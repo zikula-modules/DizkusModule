@@ -184,16 +184,18 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
     /**
      * delete a topic
      *
-     * This function deletes a topic given by id.
+     * This function deletes a topic given by id or object
      *
-     * @param int $topic_id The topics id.
+     * @param $args[topic] The topic's id or object
      *
-     * @return int the forums id for redirecting
+     * @return int the forum's id for redirecting
      */
-    public function delete($topic)
+    public function delete($args)
     {
-        if (is_numeric($topic)) {
-            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->find($topic);
+        if (is_numeric($args['topic'])) {
+            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->find($args['topic']);
+        } elseif ($args['topic'] instanceof Dizkus_Entity_Topic) {
+            $topic = $args['topic'];
         } else {
             LogUtil::registerArgsError();
         }
