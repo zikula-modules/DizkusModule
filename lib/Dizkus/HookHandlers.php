@@ -90,7 +90,6 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
         $this->view->assign('nextTopic', $managedTopic->getNext());
         $this->view->assign('previousTopic', $managedTopic->getPrevious());
-        //$this->view->assign('post_count', count($topic['posts']));
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
 
@@ -98,7 +97,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
 
-        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/topic/hookview.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
     public function uiEdit(Zikula_DisplayHook $hook)
@@ -109,7 +108,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             // admin didn't choose a forum, so create one and set as choice
             $managedForum = new Dizkus_Manager_Forum();
             $data = array(
-                'name' => __f("Discussion for %s", $hook->getCaller(), ZLanguage::getModuleDomain('Dizkus')),
+                'name' => __f("Discussion for %s", $hook->getCaller(), $this->domain),
                 'status' => Dizkus_Entity_Forum::STATUS_LOCKED,
                 'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME)),
             );
@@ -120,7 +119,10 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             $forumId = $managedForum->getId();
         }
         $forum = $this->_em->getRepository('Dizkus_Entity_Forum')->find($forumId);
-        echo "Creating a discussion topic in the <em>{$forum->getName()}</em> forum for this item.";
+
+        // add this response to the event stack
+        $this->view->assign('forum', $forum->getName());
+        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
 
     public function uiDelete(Zikula_DisplayHook $hook)
@@ -173,7 +175,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         // notify topic & forum subscribers
         ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
-        LogUtil::registerStatus($this->__("Dizkus: Hooked discussion topic created.", ZLanguage::getModuleDomain('Dizkus')));
+        LogUtil::registerStatus($this->__("Dizkus: Hooked discussion topic created.", $this->domain));
 
         return true;
     }
