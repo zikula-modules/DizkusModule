@@ -1,6 +1,7 @@
 Dizkus Forums
 =============
 
-This version works specifically with Zikula Core 1.3.x
+This version works only with Zikula Core 1.3.6+
 
-Please dont use this version. Unfortunately there is still a lot to do.
+The code is currently under heavy development, but typically is in a functional
+state. Feel free to test and report issues. thank you.
