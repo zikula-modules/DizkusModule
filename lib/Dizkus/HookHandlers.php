@@ -100,6 +100,13 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
+    /**
+     * Display hook for edit.
+     *
+     * @param Zikula_DisplayHook $hook The hook.
+     *
+     * @return string
+     */
     public function uiEdit(Zikula_DisplayHook $hook)
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
@@ -125,6 +132,13 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
 
+    /**
+     * Display hook for delete.
+     *
+     * @param Zikula_DisplayHook $hook The hook.
+     *
+     * @return string
+     */
     public function uiDelete(Zikula_DisplayHook $hook)
     {
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
@@ -134,16 +148,37 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         }
     }
 
+    /**
+     * Validate hook for edit.
+     *
+     * @param Zikula_ValidationHook $hook The hook.
+     *
+     * @return void (unused)
+     */
     public function validateEdit(Zikula_ValidationHook $hook)
     {
         return;
     }
 
+    /**
+     * Validate hook for delete.
+     *
+     * @param Zikula_ValidationHook $hook The hook.
+     *
+     * @return void (unused)
+     */
     public function validateDelete(Zikula_ValidationHook $hook)
     {
         return;
     }
 
+    /**
+     * Process hook for edit.
+     *
+     * @param Zikula_ProcessHook $hook The hook.
+     *
+     * @return boolean
+     */
     public function processEdit(Zikula_ProcessHook $hook)
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
@@ -184,6 +219,13 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         return true;
     }
 
+    /**
+     * Process hook for delete.
+     *
+     * @param Zikula_ProcessHook $hook The hook.
+     *
+     * @return boolean
+     */
     public function processDelete(Zikula_ProcessHook $hook)
     {
         $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
