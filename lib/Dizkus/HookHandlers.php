@@ -119,17 +119,17 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $forumId = $hookconfig[$hook->getAreaId()]['forum'];
         if (!isset($forumId)) {
             // admin didn't choose a forum, so create one and set as choice
-            $forum = new Dizkus_Manager_Forum();
+            $managedForum = new Dizkus_Manager_Forum();
             $data = array(
                 'name' => __f("Discussion for %s", $hook->getCaller(), ZLanguage::getModuleDomain('Dizkus')),
                 'status' => Dizkus_Entity_Forum::STATUS_LOCKED,
-                'parent' => Dizkus_Entity_Forum::ROOTNAME,
+                'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME)),
             );
-            $forum->store($data);
+            $managedForum->store($data);
             // cannot notify hooks in non-controller
-            $hookconfig[$hook->getAreaId()]['forum'] = $forum->getId();
+            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
             ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
-            $forumId = $forum->getId();
+            $forumId = $managedForum->getId();
         }
         $forum = $this->_em->getRepository('Dizkus_Entity_Forum')->find($forumId);
         echo "Creating a discussion topic in the <em>{$forum->getName()}</em> forum for this item.";
@@ -180,7 +180,6 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 
         // store new topic
         $newManagedTopic->create();
-        $topicUrl = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
         // cannot notify hooks in non-controller
 
         // notify topic & forum subscribers
