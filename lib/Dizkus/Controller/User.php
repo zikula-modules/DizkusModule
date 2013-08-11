@@ -178,6 +178,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // get the input
         $topic_id = (int)$this->request->request->get('topic', null);
         $post_id = (int)$this->request->request->get('post', null);
+        $returnurl = $this->request->request->get('returnurl', null);
         $message = $this->request->request->get('message', '');
         $attach_signature = (int)$this->request->request->get('attach_signature', 0);
         $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
@@ -237,6 +238,16 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             
             // notify topic & forum subscribers
             $notified = ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
+
+            // if viewed in hooked state, redirect back to hook subscriber
+            if (isset($returnurl)) {
+                $urlParams = unserialize(htmlspecialchars_decode($returnurl));
+                $mod = $urlParams['module']; unset ($urlParams['module']);
+                $type = $urlParams['type']; unset ($urlParams['type']);
+                $func = $urlParams['func']; unset ($urlParams['func']);
+                $params = array_merge($params, $urlParams);
+                $url = new Zikula_ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            }
 
             return $this->redirect($url->getUrl());
         } else {

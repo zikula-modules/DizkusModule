@@ -59,7 +59,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
 //            return;
 //        }
 
-        $start = 1;
+        $request = ServiceUtil::getService('request');
+        $start = (int)$request->query->get('start', 1);
 
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
@@ -68,18 +69,15 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             return;
         }
 
-//        $modUrl = $hook->getUrl();
-//        $redirect = (!is_null($modUrl)) ? $modUrl->getUrl() : '';
-//        $this->view->assign('returnurl', $redirect);
-
-        // encode the url - otherwise we can get some problems out there....
-//        $this->redirect = base64_encode($redirect);
-//        $this->view->assign('redirect', $redirect);
-//        $this->view->assign('objectid', $objectid);
-
-        // assign url that should be stored in db and sent in email if it
-        // differs from the redirect url
-//        $this->view->assign('useurl', $useurl);
+        // attempt to retrieve return url from hook or create if not available
+        $url = $hook->getUrl();
+        if (isset($url)) {
+            $urlParameters = $url->toArray();
+        } else {
+            $urlParameters = $request->query->all();
+        }
+        $returnurlparams = htmlspecialchars(serialize($urlParameters));
+        $this->view->assign('returnurl', $returnurlparams);
 
         list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
@@ -95,13 +93,12 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         //$this->view->assign('post_count', count($topic['posts']));
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
-        //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
 
         $managedTopic->incrementViewsCount();
 
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
 
-        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/topic/view.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/topic/hookview.tpl'));
     }
 
     public function uiEdit(Zikula_DisplayHook $hook)
