@@ -1,5 +1,8 @@
 /**
  * dizkus_user.js
+ *
+ * PROTOTYPE based JS
+ * Class file based on dizkus_tools.js > Zikula.Dizkus.BaseClass
  */
 
 /**

@@ -1,5 +1,7 @@
 /**
  * dizkus_tools.js
+ *
+ * PROTOTYPE based JS
  */
 Zikula.define('Dizkus');
 

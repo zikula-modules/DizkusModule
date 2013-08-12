@@ -1,3 +1,9 @@
+/**
+ * Zikula.Dizkus.Admin.DeleteForum.js
+ *
+ * jQuery based JS
+ */
+
 jQuery(document).ready(function(){
     jQuery('#action').change(function() {checkActionValue()});
     function checkActionValue() {

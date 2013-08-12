@@ -1,4 +1,10 @@
 /**
+ * Zikula.Dizkus.Tools.js
+ *
+ * jQuery based JS
+ */
+
+/**
  * Scroll to an element.
  *
  * @param selector The element's selector to scroll to.

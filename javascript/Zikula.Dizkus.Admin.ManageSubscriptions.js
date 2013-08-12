@@ -1,3 +1,9 @@
+/**
+ * Zikula.Dizkus.Admin.ManageSubscriptions.js
+ *
+ * PROTOTYPE based JS
+ */
+
 
 
 function liveusersearch() {

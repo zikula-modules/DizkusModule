@@ -1,5 +1,7 @@
 /**
  * dizkus_admin_ranks.js
+ *
+ * PROTOTYPE based JS
  */
 Zikula.define('Dizkus');
 
