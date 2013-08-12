@@ -42,10 +42,12 @@
 {if $permissions.moderate eq 1 || $topic.poster.user.uid eq $currentUser}
 {include file='ajax/edittopicsubject.tpl'}
 <script type="text/javascript">
-    jQuery('#edittopicsubjectbutton').addClass('tooltips').attr('title', '{{gt text="Click to edit"}}');
-    jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
-    jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
-    jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+    jQuery(document).ready(function () {
+        jQuery('#edittopicsubjectbutton').addClass('tooltips').attr('title', '{{gt text="Click to edit"}}');
+        jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
+        jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
+        jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+    });
 </script>
 {/if}
 
