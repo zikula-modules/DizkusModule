@@ -70,6 +70,13 @@ div#editpostoptions ul li {
 #dizkus a.dzk_top {
     background-image: url("../images/icon_up.gif");
 }
+#dizkus span.dzk_bottomlink {
+    float: right;
+    position: relative;
+    top: -1.2em;
+    margin-bottom: -1.2em;
+    margin-right: .5em;
+}
 
 /* links */
 

@@ -51,7 +51,7 @@
             {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
-            {formlabel for="ajax" __text="Enable ajax"}
+            {formlabel for="ajax" __text="Enable user-side ajax"}
             {formcheckbox id="ajax"}
         </div>
         <div class="z-formrow">

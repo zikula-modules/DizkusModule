@@ -2,44 +2,27 @@
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-{pageaddvar name='javascript' value='jquery'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+{if $modvars.Dizkus.ajax}
+    {pageaddvar name='javascript' value='jQuery'}
+    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
+    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+{/if}
 {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
 {pageaddvar name='javascript' value='zikula'}
 
-{pageaddvarblock}
-    {if $modvars.Dizkus.ajax}
-    <script type="text/javascript">
-        jQuery(function(){
-
-            // POST EDIT
-            hookEditLinks();
-
-            // QUICK REPLY
-            hookQuickReplySubmit();
-            hookQuickReplyPreview();
-            hookQuickReplyCancel();
-
-            // Show cancel button.
-            jQuery('#btnCancelQuickReply').removeClass('hidden');
-        });
-    </script>
-    {/if}
-{/pageaddvarblock}
 <h2>
-<span class="editabletopicheader" id="edittopicsubjectbutton" title="">
+<span {if $modvars.Dizkus.ajax}class="editabletopicheader" {/if}id="edittopicsubjectbutton" title="">
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
-        {gt text="[Solved]"}
+        [{gt text="Solved"}]
     </span>
     <span id="topic_title">{$topic.title|safetext}</span>
+    {icon id="edittopicicon" type="xedit" size="extrasmall" class="z-hide"}
 </span>
-<a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">&nbsp;{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a>
 </h2>
 
 {* add inline edit *}
 {usergetvar name='uid' assign='currentUser'}
-{if $permissions.moderate eq 1 || $topic.poster.user.uid eq $currentUser}
+{if ($modvars.Dizkus.ajax && ($permissions.moderate eq 1 || $topic.poster.user.uid eq $currentUser))}
 {include file='ajax/edittopicsubject.tpl'}
 <script type="text/javascript">
     jQuery(document).ready(function () {
@@ -134,6 +117,7 @@
                 <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
             </ul>
             {/if}
+            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a></span>
         </div>
 
     </div>
@@ -213,10 +197,8 @@
     </div>
 </div>
 
-{* mediaattach_fileuploads objectid=$topic.topic_id *}
 <div id="dzk_displayhooks">
     {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_view' id=$topic.topic_id}
-    {* if isset($hooks.Ratings)}{$hooks.Ratings}{/if *}
 </div>
 
 {/if}
@@ -237,5 +219,5 @@
     var unsolveTopic = "{{gt text="Mark as unsolved"}}";
     // ]]>
 </script>
-
+<a id="bottom" accesskey="b"></a>
 {include file='user/footer.tpl'}

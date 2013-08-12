@@ -78,6 +78,9 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->setVar('minsearchlength', 3);
         $this->setVar('maxsearchlength', 30);
         // 4.0.0
+        $this->setVar('fulltextindex', 'no');
+        $this->setVar('solved_enabled', true);
+        $this->setVar('ajax', true);
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
         EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Dizkus_HookHandlers', 'moduleDelete'));

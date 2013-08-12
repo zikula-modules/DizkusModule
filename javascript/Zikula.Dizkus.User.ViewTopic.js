@@ -9,6 +9,26 @@ jQuery(document).ready(function () {
     jQuery("#toggletopicsticky").click(changeTopicStatus);
     jQuery("#toggletopicsubscription").click(changeTopicStatus);
     jQuery("#toggletopicsolve").click(changeTopicStatus);
+    // POST EDIT
+    hookEditLinks();
+
+    // QUICK REPLY
+    hookQuickReplySubmit();
+    hookQuickReplyPreview();
+    hookQuickReplyCancel();
+
+    // Show cancel button.
+    jQuery('#btnCancelQuickReply').removeClass('hidden');
+
+    // toggle visibility of edit icon for topic title
+    jQuery('#edittopicsubjectbutton').hover(
+            function() {
+                jQuery('#edittopicicon').removeClass('z-hide');
+            },
+            function() {
+                jQuery('#edittopicicon').addClass('z-hide');
+            }
+    );
 });
 
 function changeTopicStatus(e) {
