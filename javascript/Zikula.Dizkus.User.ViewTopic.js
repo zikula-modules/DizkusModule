@@ -7,7 +7,7 @@
 jQuery(document).ready(function () {
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
-//    jQuery("#toggletopicsubscription").click(changeTopicStatus);
+    jQuery("#toggletopicsubscription").click(changeTopicStatus);
     jQuery("#toggletopicsolve").click(changeTopicStatus);
 });
 
