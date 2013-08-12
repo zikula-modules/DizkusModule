@@ -210,6 +210,10 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $forumdata = $connection->fetchAll($sql);
 
         // @todo use sql to fetch topic_reference and decode to migrate below (if possible)
+        $sql = "SELECT topic_id, topic_reference
+                FROM dizkus_topics
+                WHERE topic_reference = ''";
+        $hookedTopicData = $connection->fetchAll($sql);
 
         // update all the tables to 4.0.0
         try {
@@ -224,7 +228,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->upgrade_to_4_0_0_migrateModGroups();
         $this->upgrade_to_4_0_0_migratePop3Connections($forumdata);
         // @todo use $forumdata to migrate forum modulerefs
-        // @todo migrate topic_reference to hook data
+        $this->upgrade_to_4_0_0_migrateHookedTopics($hookedTopicData);
         $this->upgrade_to_4_0_0_renameColumns();
 
         $this->delVar('autosubscribe');
@@ -441,4 +445,17 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->entityManager->flush();
     }
 
+    /**
+     * @todo
+     * migrate hooked topics data to maintain hook connection with original object
+     *
+     * @param array $data
+     */
+    private function upgrade_to_4_0_0_migrateHookedTopics($data)
+    {
+        // hooked topics were identified in the topic_reference field by
+        // moduleID-objectId -> e.g. '14-57'
+        // but data supplied by @Kaik looks like '14-57_456' so unsure how to proceed
+        // one option would simply by to lock all topics with data in topic_reference field
+    }
 }
