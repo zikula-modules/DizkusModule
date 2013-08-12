@@ -88,14 +88,14 @@ function changeTopicTitle(e) {
             title: jQuery('#topicsubjectedit_subject').val(),
             action: 'setTitle'
         },
-        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&func=changeTopicStatus",
+        url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
                 jQuery('#topicsubjectedit_editor').addClass('z-hide');
                 jQuery('#topic_title').text(jQuery('#topicsubjectedit_subject').val());
             } else {
                 console.log(result);
-                alert('Error! Erroneous result from locking/unlocking action.');
+                alert('Error! Erroneous result when attempting to change topic title.');
             }
         },
         error: function(result) {
