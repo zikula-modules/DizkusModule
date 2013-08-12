@@ -1,5 +1,7 @@
 /**
- * dizkus_user.js
+ * Zikula.Dizkus.User.ViewForum.js
+ * 
+ * jQuery based JS
  */
 
 jQuery(document).ready(function () {
