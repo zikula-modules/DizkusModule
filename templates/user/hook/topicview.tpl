@@ -11,7 +11,6 @@
 
     <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
     {pageaddvar name='javascript' value='jQuery'}
-    {pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_user_viewtopic.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
     {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
