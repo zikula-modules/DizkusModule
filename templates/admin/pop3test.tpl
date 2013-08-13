@@ -1,6 +1,3 @@
-{ajaxheader modname='Dizkus'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="mail" size="small"}
