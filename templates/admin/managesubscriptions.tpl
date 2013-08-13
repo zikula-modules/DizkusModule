@@ -2,6 +2,7 @@
 {pageaddvar name='javascript' value='jQuery'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js'}
 {pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.Admin.ManageSubscriptions.js"}
+{pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.Tools.js"}
 {adminheader}
 {strip}
 {pageaddvarblock}
@@ -57,7 +58,7 @@
                     {/foreach}
                     <tr class="{cycle values='z-odd,z-even'}">
                         <td>
-                            <input name="alltopic" type="checkbox" value="1" onClick="Zikula.toggleInput('.topicsubscriptions');" />
+                            <input id="alltopic" type="checkbox" value="1" />
                         </td>
                         <td colspan=2>
                             <em>{gt text="All"}</em>
@@ -91,7 +92,7 @@
                     {/foreach}
                     <tr class="{cycle values='z-odd,z-even'}">
                         <td>
-                            <input name="allforums" type="checkbox" value="1" onClick="Zikula.toggleInput('.forumsubscriptions');" />
+                            <input id="allforums" type="checkbox" value="1" />
                         </td>
                         <td>
                             <em>{gt text="All"}</em>

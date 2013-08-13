@@ -13,4 +13,10 @@ jQuery(document).ready(function () {
             window.location.href = Zikula.Config.baseURL + "index.php?module=Dizkus&type=admin&func=managesubscriptions&uid=" + suggestion.data;
         }
     });
+    jQuery('#alltopic').click(function() {
+        DizkusToggleInput('.topicsubscriptions', jQuery(this).prop('checked'));
+    });
+    jQuery('#allforums').click(function() {
+        DizkusToggleInput('.forumsubscriptions', jQuery(this).prop('checked'));
+    });
 });
