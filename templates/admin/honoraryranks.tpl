@@ -1,7 +1,5 @@
-{ajaxheader modname='Dizkus'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin_ranks.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_tools.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/dizkus_admin.js'}
+{pageaddvar name="javascript" value="jquery"}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Admin.Ranks.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}
@@ -14,6 +12,7 @@
     <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='ranks' ranktype='1'}" method="post">
         <div>
             <input type="hidden" name="ranks[-1][type]" value="1" />
+            <input type="hidden" id="rankImagesPath" value="{$modvars.Dizkus.url_ranks_images}" />
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">
@@ -23,7 +22,7 @@
                 <div class="z-formrow">
                     <label for="newrank_image">{gt text="Internal Dizkus image"}</label>
                     <div>
-                        <select name="ranks[-1][image]" id="newrank_image" onchange="Zikula.Dizkus.ShowNewRankImage('{$modvars.Dizkus.url_ranks_images}')">
+                        <select name="ranks[-1][image]" id="newrank_image">
                             {foreach name='availableranks' item='rankimage' from=$rankimages}
                             <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
@@ -62,7 +61,7 @@
                         <input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
                     </td>
                     <td>
-                        <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" onchange="Zikula.Dizkus.ShowRankImage({$num}, '{$modvars.Dizkus.url_ranks_images}')">
+                        <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" class="rankimageselect">
                             {foreach item='rankimage' from=$rankimages}
                             <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
                             {/foreach}
