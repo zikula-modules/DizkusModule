@@ -50,7 +50,7 @@ function modifyForum(e) {
             }
         },
         error: function (result) {
-            Zikula.showajaxerror(result);
+            DizkusShowAjaxError(result);
             return;
         }
     });

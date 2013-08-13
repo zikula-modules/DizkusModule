@@ -91,7 +91,7 @@ function changeTopicStatus(e) {
             }
         },
         error: function(result) {
-            Zikula.showajaxerror(result);
+            DizkusShowAjaxError(result);
             return;
         }
     });
@@ -119,7 +119,7 @@ function changeTopicTitle(e) {
             }
         },
         error: function(result) {
-            Zikula.showajaxerror(result);
+            DizkusShowAjaxError(result);
             return;
         }
     });
@@ -279,7 +279,7 @@ function quickEdit(id) {
     }, errorHandler = function (request, message, detail) {
         postEditing = false;
         postId = false;
-        showAjaxError(request, message, detail);
+        DizkusShowAjaxError(request.responseText);
     };
 
     if (!postEditing) {
@@ -359,7 +359,7 @@ function quickEditSave() {
         // Show post footer
         jQuery('#postingoptions_' + postId).show();
     }, errorHandler = function (request, message, detail) {
-        showAjaxError(request, message, detail);
+        DizkusShowAjaxError(request.responseText);
     };
     jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=updatepost', {
         data: pars
@@ -444,7 +444,7 @@ function createQuickReply() {
             hookEditLinks();
 
         }, errorHandler = function (request, message, detail) {
-            showAjaxError(request, message, detail);
+            DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {
@@ -485,7 +485,7 @@ function previewQuickReply() {
 
             quickReplying = false;
         }, errorHandler = function (request, message, detail) {
-            showAjaxError(request, message, detail);
+            DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {

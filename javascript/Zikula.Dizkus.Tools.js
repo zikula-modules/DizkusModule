@@ -1,7 +1,7 @@
 /**
  * Zikula.Dizkus.Tools.js
  *
- * jQuery based JS*
+ * jQuery based JS
  */
 
 /**
@@ -21,19 +21,6 @@ function scrollTo(selector, time) {
     jQuery('html, body').animate({
         scrollTop: toPos
     }, time);
-}
-
-/**
- * Show an ajax error.
- *
- * requires Zikula.js which employs prototype-based JS for the showajaxerror() function
- *
- * @param request
- * @param message
- * @param detail
- */
-function showAjaxError(request, message, detail) {
-    Zikula.showajaxerror(request.responseText);
 }
 
 /**
@@ -67,3 +54,65 @@ function DizkusToggleInput(selector, value) {
         }
     }
 };
+
+/**
+ * rewrite of Zikula.js::Zikula.showajaxerror from Prototype to jQuery
+ * Shows an error message with alert().
+ *
+ * @todo beautify this
+ *
+ * @param {String} errortext The text to show.
+ *
+ * @return void
+ */
+function DizkusShowAjaxError(errortext) {
+    if ((jQuery.type(errortext) === "string") && errortext.isJSON()) {
+        var decoded = jQuery.parseJSON(errortext); //errortext.evalJSON(true);
+        if (decoded.core && decoded.core.statusmsg) {
+            if (jQuery.type(decoded.core.statusmsg) === "object") {
+                if (jQuery.type(decoded.core.statusmsg) !== "array") {
+                    decoded.core.statusmsg = decoded.core.statusmsg.val();
+                }
+                errortext = decoded.core.statusmsg.join("\n");
+            } else {
+                errortext = decoded.core.statusmsg;
+            }
+        }
+    } else if (jQuery.type(errortext) === "array") {
+        errortext = errortext.join("\n");
+    } else if (jQuery.type(errortext) === "object") {
+        errortext = errortext.val().join("\n");
+    }
+    if (errortext) {
+        alert(errortext);
+    }
+    return;
+};
+
+/**
+ * helper function to determine if a string is JSON formatted
+ * taken from https://github.com/DarkMantisCS/isJSON
+ * @license - no license documented. Assuming PD
+ */
+(function ($) {
+    $.isJSON = function (json) {
+        json = json.replace(/\\["\\\/bfnrtu]/g, '@');
+        json = json.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+        json = json.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+        return (/^[\],:{}\s]*$/.test(json));
+    };
+    $.fn.isJSON = function () {
+        var json = this;
+        if (jQuery(json).is(":input")) {
+            json = jQuery(json).val();
+            json = new String(json);
+            return jQuery.isJSON(json);
+        } else {
+            throw new SyntaxError("$(object).isJSON only accepts fields!");
+        }
+    };
+    String.prototype.isJSON = function () {
+        var y = this;
+        return jQuery.isJSON(y);
+    };
+})(jQuery);
