@@ -10,31 +10,14 @@
 <div id="dizkus">
 
     <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
+{if $modvars.Dizkus.ajax}
+    {* JS files not loaded via header like other templates*}
     {pageaddvar name='javascript' value='jQuery'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+{/if}
     {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
     {pageaddvar name='javascript' value='zikula'}
-
-    {pageaddvarblock}
-        {if $modvars.Dizkus.ajax}
-        <script type="text/javascript">
-            jQuery(function(){
-
-                // POST EDIT
-                hookEditLinks();
-
-                // QUICK REPLY
-                hookQuickReplySubmit();
-                hookQuickReplyPreview();
-                hookQuickReplyCancel();
-
-                // Show cancel button.
-                jQuery('#btnCancelQuickReply').removeClass('hidden');
-            });
-        </script>
-        {/if}
-    {/pageaddvarblock}
 
     {userloggedin assign='userloggedin'}
 

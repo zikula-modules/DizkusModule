@@ -1,5 +1,6 @@
-{pageaddvar name='javascript' value='jQuery'}
-{pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.User.TopicDelete.js"}
+{if $modvars.Dizkus.ajax}
+    {pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.User.TopicDelete.js"}
+{/if}
 {gt text="Delete this topic" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl' parent=$topic_id}

@@ -3,7 +3,6 @@
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {if $modvars.Dizkus.ajax}
-    {pageaddvar name='javascript' value='jQuery'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
 {/if}
