@@ -1,3 +1,5 @@
+{pageaddvar name='javascript' value='jQuery'}
+{pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.User.TopicDelete.js"}
 {gt text="Delete this topic" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl' parent=$topic_id}
@@ -15,10 +17,10 @@
             <h3>{gt text='Delete Topic'}: {$title}</h3>
             <div class="z-formrow">
                 {formlabel for="sendReason" __text='Send a reason to the poster'}
-                {formcheckbox id="sendReason" value=false onclick="Zikula.checkboxswitchdisplaystate(this, 'diskus_reason_container', true);"}
+                {formcheckbox id="sendReason" value=false}
             </div>
             
-             <div class="z-formrow" id="diskus_reason_container" style="display:none">
+            <div class="z-formrow" id="diskus_reason_container" style="display:none">
                 {formlabel for="reason" text='Write a reason'}
                 {gt text='Your post "%s" was deleted, because ' tag1=$title assign='reason'}
                 {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
