@@ -1,17 +1,16 @@
 /**
  * Zikula.Dizkus.Admin.ManageSubscriptions.js
  *
- * PROTOTYPE based JS
+ * JQUERY based JS
  */
 
-
-
-function liveusersearch() {
-    $("liveusersearch").removeClassName("z-hide");
-    var options = Zikula.Ajax.Request.defaultOptions({
+jQuery(document).ready(function () {
+    jQuery('#username').autocomplete({
+        serviceUrl: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=getUsers",
         paramName: 'fragment',
-        minChars: 3
+        onSelect: function (suggestion) {
+            console.log(suggestion);
+            window.location.href = Zikula.Config.baseURL + "index.php?module=Dizkus&type=admin&func=managesubscriptions&uid=" + suggestion.data;
+        }
     });
-    
-    new Ajax.Autocompleter("username", "username_choices", Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=getUsers", options);
-}
+});

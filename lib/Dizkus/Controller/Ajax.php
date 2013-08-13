@@ -584,26 +584,27 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
     /**
      * Performs a user search based on the user name fragment entered so far.
      *
-     * Parameters passed via POST:
+     * Parameters passed via GET:
      * ---------------------------
      * string fragment A partial user name entered by the user.
      *
-     * @return string Zikula_Response_Ajax_Plain with list of users matching the criteria.
+     * @return string Zikula_Response_Ajax_Plain with json_encoded object of users matching the criteria.
      */
     public function getUsers()
     {
-        //$this->checkAjaxToken();
-        $view = Zikula_View::getInstance($this->name);
-
+        $this->checkAjaxToken();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            $fragment = $this->request->query->get('fragment', $this->request->request->get('fragment'));
+            $fragment = $this->request->query->get('fragment', null);
             $users = ModUtil::apiFunc('Dizkus', 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
-            $view->assign('results', $users);
+        }
+        $reply = array();
+        $reply['query'] = $fragment;
+        $reply['suggestions'] = array();
+        foreach ($users as $user) {
+            $reply['suggestions'][] = array('value' => htmlentities(stripslashes($user->getUname())), 'data' => $user->getUid());
         }
 
-        $output = $view->fetch('ajax/getusers.tpl');
-
-        return new Zikula_Response_Ajax_Plain($output);
+        return new Zikula_Response_Ajax_Plain(json_encode($reply));
     }
 
     /**

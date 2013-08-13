@@ -1,13 +1,16 @@
-{ajaxheader modname=$modinfo.name filename='Zikula.Dizkus.Admin.ManageSubscriptions.js' ui=true}
-{pageaddvar name="stylesheet" value="modules/Dizkus/style/liveusersearch.css"}
+{pageaddvar name='javascript' value='zikula'}
+{pageaddvar name='javascript' value='jQuery'}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js'}
+{pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.Admin.ManageSubscriptions.js"}
 {adminheader}
 {strip}
 {pageaddvarblock}
-<script type="text/javascript">
-    document.observe("dom:loaded", function() {
-        liveusersearch();
-    });
-</script>
+<style>
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+</style>
 {/pageaddvarblock}
 {/strip}
 <div class="z-admin-content-pagetitle">
@@ -22,8 +25,6 @@
         <div id="liveusersearch" class="">
             <fieldset>
                 <label for="username">{gt text="Search for a user"}:</label>&nbsp;<input size="25" maxlength="25" type="text" id="username" value="{$username}" />
-                <div id="username_choices" class="autocomplete_user"></div>
-                {img id="ajax_indicator" style="display: none;" modname='core' set="ajax" src="indicator_circle.gif" alt=""}
             </fieldset>
         </div>
    
@@ -84,7 +85,7 @@
                             {formcheckbox id=$subscription.msg_id group='forumsubscriptions' cssClass="forumsubscriptions"}
                         </td>
                         <td>
-                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum_id}" title="{$subscription.forum.name}">{$subscription.forum.name|safetext}</a>
+                            <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name}">{$subscription.forum.name|safetext}</a>
                         </td>
                     </tr>
                     {/foreach}

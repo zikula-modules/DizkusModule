@@ -42,19 +42,18 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
             return LogUtil::registerPermissionError();
         }
 
-        $this->_uid = 0;
         $topicsubscriptions = array();
         $forumsubscriptions = array();
-        $this->_username = $this->request->query->get('username', '');
+        $this->_uid = $this->request->query->get('uid', 0);
 
-        if (!empty($this->_username)) {
-            $this->_uid = UserUtil::getIDFromName($this->_username);
+        if (!empty($this->_uid)) {
+            $this->_username = UserUtil::getVar('uname', $this->_uid);
         }
 
         if (!empty($this->_uid)) {
             $params = array('uid' => $this->_uid);
             $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'Topic', 'getSubscriptions', $params);
-            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'user', 'getForumSubscriptions', $this->_uid);
+            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'Forum', 'getSubscriptions', $params);
         }
 
         $view->assign('username', $this->_username);
