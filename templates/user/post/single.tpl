@@ -23,16 +23,17 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uid|profilelinkbyuid}</strong>
                     <br />
-                    <p>{$post.poster.user.uname}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
-                    <p>{$post.poster.user.email}</p>{* TODO: this is temp to show the data is here w/o another DB call *}
-                    {useravatar uid=$post.poster.user.uid}
+                    {* TODO: this is temp to show the data is here w/o another DB call
+                    <p>{$post.poster.user.uname}</p>
+                    <p>{$post.poster.user.email}</p>
+                    *}
+                    <div>{useravatar uid=$post.poster.user.uid}</div>
 
                     {if !empty($post.poster.rank.image)}
-                        <br />
                         {if $post.poster.rank.rank_link neq ''}
                         <a href="{$post.poster.rank.rank_link}" title="{$post.poster.rank.rank_link}">
                         {/if}
-                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.image}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.description}" />
+                        <img class="userinforankimage" src="{$baseurl}{$post.poster.rank.imageLink}" alt="{$post.poster.rank.title}" title="{$post.poster.rank.description}" />
                         {if $post.poster.rank.rank_link neq ''}</a>{/if}
                     {else}
                         {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
@@ -40,7 +41,7 @@
                         <a href="{$posterRank.rank_link}" title="{$posterRank.rank_link}">
                         {/if}
                         {if $posterRank.image neq ''}
-                        <img class="userinforankimage" src="{$baseurl}{$posterRank.image}" alt="{$posterRank.title}" title="{$posterRank.description}" />
+                        <img class="userinforankimage" src="{$baseurl}{$posterRank.imageLink}" alt="{$posterRank.title}" title="{$posterRank.description}" />
                         {/if}
                         {if $posterRank.rank_link neq ''}</a>{/if}
                     {/if}
@@ -62,8 +63,8 @@
                     <li><strong>{gt text="Posts"}: </strong>{$post.poster.postCount}</li>
                     {if $coredata.logged_in eq true}
                     <li>
-                        {* image link to profile deactivated because of a bug in the core *}
-                        {* $post.user_data.uname|profilelinkbyuname:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif" *}
+                        {* image link to profile deactivated because of a bug in the core - reactivated 8/14/13 CAH *}
+                        {$post.poster.user.uname|profilelinkbyuname:'':"`$baseurl`modules/Dizkus/images/icon_post_profile.gif"}
                         {if $msgmodule}
                         <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
                         {/if}

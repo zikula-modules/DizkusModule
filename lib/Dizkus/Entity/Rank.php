@@ -115,10 +115,12 @@ class Dizkus_Entity_Rank extends Zikula_EntityAccess
     public function getRank_link()
     {
         $link = (substr($this->description, 0, 7) == 'http://') ? $this->description : '';
-        if (!empty($this->image)) {
-            $this->image = ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->image;
-        }
         return $link;
+    }
+
+    public function getImageLink()
+    {
+        return ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->image;
     }
 
     public function setRank_id($rank_id)
