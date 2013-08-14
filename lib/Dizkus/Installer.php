@@ -41,46 +41,10 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         }
 
         // ToDo: create FULLTEXT index
-        // forum settings
-        $this->setVar('posts_per_page', 15);
-        $this->setVar('topics_per_page', 15);
-        $this->setVar('hot_threshold', 20);
-        $this->setVar('email_from', System::getVar('adminmail'));
-        $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
-        $this->setVar('post_sort_order', 'ASC');
-        $this->setVar('log_ip', 'no');
-        $this->setVar('slimforum', 'no');
-        // 2.5
-        $this->setVar('extendedsearch', 'no');
-        $this->setVar('m2f_enabled', 'yes');
-        $this->setVar('favorites_enabled', 'yes');
-        $this->setVar('hideusers', 'no');
-        $this->setVar('removesignature', 'no');
-        $this->setVar('striptags', 'no');
-        // 2.6
-        $this->setVar('deletehookaction', 'lock');
-        $this->setVar('rss2f_enabled', 'yes');
-        // 2.7
-        $this->setVar('shownewtopicconfirmation', 'no');
-        $this->setVar('timespanforchanges', 24);
-        $this->setVar('forum_enabled', 'yes');
-        $this->setVar(
-                'forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.')
-        );
-        // 3.0
-        $this->setVar('autosubscribe', 'no');
-        $this->setVar('newtopicconfirmation', 'no');
-        $this->setVar('signaturemanagement', 'no');
-        $this->setVar('signature_start', '');
-        $this->setVar('signature_end', '');
-        $this->setVar('showtextinsearchresults', 'yes');
-        $this->setVar('ignorelist_handling', 'medium');
-        $this->setVar('minsearchlength', 3);
-        $this->setVar('maxsearchlength', 30);
-        // 4.0.0
-        $this->setVar('fulltextindex', 'no');
-        $this->setVar('solved_enabled', true);
-        $this->setVar('ajax', true);
+
+        // set the module vars
+        $this->setVars(self::getDefaultVars());
+
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
         EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Dizkus_HookHandlers', 'moduleDelete'));
@@ -170,6 +134,49 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         }
 
         return true;
+    }
+
+    /**
+     * get the default module var values
+     * 
+     * @return array
+     */
+    public static function getDefaultVars()
+    {
+        $dom = ZLanguage::getModuleDomain('Dizkus');
+        return array(
+            'posts_per_page' => 15,
+            'topics_per_page' => 15,
+            'hot_threshold' => 20,
+            'email_from' => System::getVar('adminmail'),
+            'url_ranks_images' => 'modules/Dizkus/images/ranks',
+            'post_sort_order' => 'ASC',
+            'log_ip' => 'no',
+            'slimforum' => 'no',
+            'extendedsearch' => 'no',
+            'm2f_enabled' => 'yes',
+            'favorites_enabled' => 'yes',
+            'hideusers' => 'no',
+            'removesignature' => 'no',
+            'striptags' => 'no',
+            'deletehookaction' => 'lock',
+            'rss2f_enabled' => 'yes',
+            'shownewtopicconfirmation' => 'no',
+            'timespanforchanges' => 24,
+            'forum_enabled' => 'yes',
+            'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
+            'newtopicconfirmation' => 'no',
+            'signaturemanagement' => 'no',
+            'signature_start' => '',
+            'signature_end' => '',
+            'showtextinsearchresults' => 'yes',
+            'ignorelist_handling' => 'medium',
+            'minsearchlength' => 3,
+            'maxsearchlength' => 30,
+            'fulltextindex' => 'no',
+            'solved_enabled' => true,
+            'ajax' => true,
+        );
     }
 
     /**
