@@ -109,7 +109,7 @@
         </div>
         <div class="z-formrow">
             {formlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
-            {formcheckbox id="newtopicconf"}
+            {formcheckbox id="newtopicconfirmation"}
         </div>
         <div class="z-formrow">
             {if $contactlist_available eq true}

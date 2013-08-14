@@ -10,6 +10,26 @@
  */
 class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 {
+    /**
+     * These array keys are module vars that (for BC reasons) are stored
+     * as text 'yes' or 'no' instead of boolean
+     */
+    private $YESNOS = array(
+            'log_ip',
+            'slimforum',
+            'm2f_enabled',
+            'rss2f_enabled',
+            'favorites_enabled',
+            'hideusers',
+            'signaturemanagement',
+            'removesignature',
+            'striptags',
+            'newtopicconfirmation',
+            'forum_enabled',
+            'fulltextindex',
+            'extendedsearch',
+            'showtextinsearchresults'
+        );
 
     function initialize(Zikula_Form_View $view)
     {
@@ -26,23 +46,9 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             array('text' => $this->__('None'), 'value' => 'none')));
 
         $vars = $this->getVars();
-        $yesorno = array(
-            'log_ip',
-            'slimforum',
-            'm2f_enabled',
-            'rss2f_enabled',
-            'favorites_enabled',
-            'hideusers',
-            'signaturemanagement',
-            'removesignature',
-            'striptags',
-            'newtopicconfirmation',
-            'forum_enabled',
-            'fulltextindex',
-            'extendedsearch',
-            'showtextinsearchresults'
-        );
-        foreach ($yesorno as $value) {
+
+        // convert yes/no to boolean
+        foreach ($this->YESNOS as $value) {
             if (array_key_exists($value, $vars) and $vars[$value] == 'yes') {
                 $vars[$value] = true;
             } else {
@@ -73,87 +79,22 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 
             $data = $view->getValues();
 
+            // convert booleans to yes/no
+            foreach ($this->YESNOS as $yesno) {
+                $this->setVar($yesno, $data[$yesno] == 1 ? 'yes' : 'no');
+                unset($data[$yesno]);
+            }
 
-            // checkboxes 
-            $this->setVar('log_ip', $data['log_ip'] == 1 ? 'yes' : 'no');
-            $this->setVar('slimforum', $data['slimforum'] == 1 ? 'yes' : 'no');
-            $this->setVar('m2f_enabled', $data['m2f_enabled'] == 1 ? 'yes' : 'no');
-            $this->setVar('rss2f_enabled', $data['rss2f_enabled'] == 1 ? 'yes' : 'no');
-            $this->setVar('favorites_enabled', $data['favorites_enabled'] == 1 ? 'yes' : 'no');
-            $this->setVar('hideusers', $data['hideusers'] == 1 ? 'yes' : 'no');
-            $this->setVar('signaturemanagement', $data['signaturemanagement'] == 1 ? 'yes' : 'no');
-            $this->setVar('removesignature', $data['removesignature'] == 1 ? 'yes' : 'no');
-            $this->setVar('striptags', $data['striptags'] == 1 ? 'yes' : 'no');
-            $this->setVar('newtopicconfirmation', $data['newtopicconf'] == 1 ? 'yes' : 'no');
-            $this->setVar('forum_enabled', $data['forum_enabled'] == 1 ? 'yes' : 'no');
-            $this->setVar('fulltextindex', $data['fulltextindex'] == 1 ? 'yes' : 'no');
-            $this->setVar('extendedsearch', $data['extendedsearch'] == 1 ? 'yes' : 'no');
-            $this->setVar('showtextinsearchresults', $data['showtextinsearchresults'] == 1 ? 'yes' : 'no');
-
-            // dropdowns
-            $this->setVar('post_sort_order', $data['post_sort_order']);
-            $this->setVar('deletehookaction', $data['deletehookaction']);
-            //if ($this->available('ContactList')) {
-            //    $this->setVar('ignorelist_handling', $data['ignorelist_handling']);
-            //}
-            // ints
-            $this->setVar('hot_threshold', $data['hot_threshold']);
-            $this->setVar('posts_per_page', $data['posts_per_page']);
-            $this->setVar('topics_per_page', $data['topics_per_page']);
-            $this->setVar('timespanforchanges', $data['timespanforchanges']);
-            $this->setVar('minsearchlength', $data['minsearchlength']);
-            $this->setVar('maxsearchlength', $data['maxsearchlength']);
-
-            // strings
-            $this->setVar('email_from', $data['email_from']);
-            $this->setVar('signature_start', $data['signature_start']);
-            $this->setVar('signature_end', $data['signature_end']);
-            $this->setVar('forum_disabled_info', $data['forum_disabled_info']);
-            $this->setVar('url_ranks_images', $data['url_ranks_images']);
-
-            $this->setVar('ajax', $data['ajax']);
-            $this->setVar('solved_enabled', $data['solved_enabled']);
-
+            // set the rest from the array
+            $this->setVars($data);
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
         } elseif ($args['commandName'] == 'restore') {
-            // checkboxes
-            $this->setVar('log_ip', 'no');
-            $this->setVar('slimforum', 'no');
-            $this->setVar('m2f_enabled', 'yes');
-            $this->setVar('rss2f_enabled', 'yes');
-            $this->setVar('favorites_enabled', 'yes');
-            $this->setVar('hideusers', 'no');
-            $this->setVar('signaturemanagement', 'no');
-            $this->setVar('removesignature', 'no');
-            $this->setVar('striptags', 'no');
-            $this->setVar('newtopicconfirmation', 'no');
-            $this->setVar('forum_enabled', 'yes');
-            $this->setVar('sendemailswithsqlerrors', 'no');
-            $this->setVar('showtextinsearchresults', 'yes');
-
-            // dropdowns
-            $this->setVar('post_sort_order', 'ASC');
-            $this->setVar('deletehookaction', 'lock');
-            $this->setVar('ignorelist_handling', 'medium');
-
-            // ints
-            $this->setVar('hot_threshold', 20);
-            $this->setVar('posts_per_page', 15);
-            $this->setVar('topics_per_page', 15);
-            $this->setVar('timespanforchanges', 24);
-            $this->setVar('minsearchlength', 3);
-            $this->setVar('maxsearchlength', 30);
-
-            // strings
-            $this->setVar('email_from', System::getVar('adminmail'));
-            $this->setVar('signature_start', '');
-            $this->setVar('signature_end', '');
-            $this->setVar('forum_disabled_info', $this->__('Sorry! The forums are currently off-line for maintenance. Please try later.'));
-            $this->setVar('url_ranks_images', 'modules/Dizkus/images/ranks');
-
+            $this->setVars(Dizkus_Installer::getDefaultVars());
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 
+        // redirect to compensate for trouble with `databound`
+        $this->view->redirect(ModUtil::url('Dizkus', 'admin', 'tree'));
         return true;
     }
 

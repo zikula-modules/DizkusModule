@@ -161,7 +161,6 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'striptags' => 'no',
             'deletehookaction' => 'lock',
             'rss2f_enabled' => 'yes',
-            'shownewtopicconfirmation' => 'no',
             'timespanforchanges' => 24,
             'forum_enabled' => 'yes',
             'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
