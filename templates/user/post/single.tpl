@@ -27,7 +27,7 @@
                     <p>{$post.poster.user.uname}</p>
                     <p>{$post.poster.user.email}</p>
                     *}
-                    <div>{useravatar uid=$post.poster.user.uid}</div>
+                    <div>{useravatar uid=$post.poster.user.uid class='gravatar'}</div>
 
                     {if !empty($post.poster.rank.image)}
                         {if $post.poster.rank.rank_link neq ''}
