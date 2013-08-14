@@ -11,6 +11,7 @@
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ForumUser entity class
@@ -56,6 +57,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     /**
      * lastvisit
      * 
+     * @Gedmo\Timestampable
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastvisit = null;
