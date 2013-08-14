@@ -88,13 +88,13 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfigprocess'));
 
-        // set up forum root
+        // set up forum root (required)
         $forumRoot = new Dizkus_Entity_Forum();
         $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
         $forumRoot->lock();
         $this->entityManager->persist($forumRoot);
 
-        // set up example forums
+        // set up EXAMPLE forums
         $food = new Dizkus_Entity_Forum();
         $food->setName('Food');
         $food->setParent($forumRoot);
@@ -212,10 +212,10 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
                 WHERE forum_pop3_active = 1";
         $forumdata = $connection->fetchAll($sql);
 
-        // @todo use sql to fetch topic_reference and decode to migrate below (if possible)
+        // fetch topic_reference and decode to migrate below (if possible)
         $sql = "SELECT topic_id, topic_reference
                 FROM dizkus_topics
-                WHERE topic_reference = ''";
+                WHERE topic_reference <> ''";
         $hookedTopicData = $connection->fetchAll($sql);
 
         // update all the tables to 4.0.0
@@ -225,7 +225,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             return LogUtil::registerError($e->getMessage());
         }
 
-        // migrate dataa from old formats
+        // migrate data from old formats
         $this->upgrade_to_4_0_0_migrateCategories();
         $this->upgrade_to_4_0_0_updatePosterData();
         $this->upgrade_to_4_0_0_migrateModGroups();
@@ -239,7 +239,13 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('gravatarimage');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
+        $this->setVar('fulltextindex', 'no');
+        $this->setVar('solved_enabled', true);
+        $this->setVar('ajax', true);
 
+        // register new hooks and event handlers
+        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
+        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
         EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Dizkus_HookHandlers', 'moduleDelete'));
         EventUtil::registerPersistentModuleHandler('Dizkus', 'module_dispatch.service_links', array('Dizkus_HookHandlers', 'servicelinks'));
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
@@ -449,16 +455,57 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
     }
 
     /**
-     * @todo
      * migrate hooked topics data to maintain hook connection with original object
      *
-     * @param array $data
+     * This routine will only attempt to migrate references where the topic_reference field
+     * looks like `moduleID-objectId` -> e.g. '14-57'. If the field contains any underscores
+     * the topic will be locked and the reference left unmigrated. This is mainly because
+     * modules that use that style of reference are not compatible with Core 1.3.6+
+     * anyway and so migrating their references would be pointless.
+     *
+     * Additionally, if the subscriber module has more than one subscriber area, then migration is
+     * also impossible (which to choose?) so the topic is locked and reference left
+     * unmigrated also.
+     *
+     * @param array $rows
      */
-    private function upgrade_to_4_0_0_migrateHookedTopics($data)
+    private function upgrade_to_4_0_0_migrateHookedTopics($rows)
     {
-        // hooked topics were identified in the topic_reference field by
-        // moduleID-objectId -> e.g. '14-57'
-        // but data supplied by @Kaik looks like '14-57_456' so unsure how to proceed
-        // one option would simply by to lock all topics with data in topic_reference field
+        $count = 0;
+        foreach ($rows as $row) {
+            $topic = $this->entityManager->find('Dizkus_Entity_Topic', $row['topic_id']);
+            if (isset($topic)) {
+                if (strpos($row['topic_reference'], '_') !== false) {
+                    // reference contains an unsupported underscore, lock the topic
+                    $topic->lock();
+                } else {
+                    list($moduleId, $objectId) = explode('-', $row['topic_reference']);
+                    $moduleInfo = ModUtil::getInfo($moduleId);
+                    if ($moduleInfo) {
+                        $searchCritera = array(
+                            'owner' => $moduleInfo['name'],
+                            'areatype' => 's',
+                            'category' => 'ui_hooks');
+                        $subscriberArea = $this->entityManager->getRepository('Zikula\Component\HookDispatcher\Storage\Doctrine\Entity\HookAreaEntity')->findBy($searchCritera);
+                        if (count($subscriberArea) <> 1) {
+                            // found either too many areas or none. cannot migrate
+                            $topic->lock();
+                        } else {
+                            // finally set the information
+                            $topic->setHookedModule($moduleInfo['name']);
+                            $topic->setHookedAreaId($subscriberArea->getId());
+                            $topic->setHookedObjectId($objectId);
+                        }
+                    } // if $moduleinfo
+                }
+                $count++;
+                if ($count > 20) {
+                    $this->entityManager->flush();
+                    $count = 0;
+                }
+            } // if $topic
+        }
+        // flush remaining
+        $this->entityManager->flush();
     }
 }
