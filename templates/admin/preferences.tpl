@@ -141,6 +141,11 @@
                 {gt text="hours"}
             </span>
         </div>
+        <div class="z-formrow">
+            {formlabel for="striptagsfromemail" __text="Strip HTML tags from outgoing email post content"}
+            {formcheckbox id="striptagsfromemail"}
+            <p class="z-formnote z-informationmsg">{gt text="Strip action occurs post filter hook action."}</p>
+        </div>
     </fieldset>
 
     <fieldset>

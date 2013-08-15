@@ -158,7 +158,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'favorites_enabled' => 'yes',
             'hideusers' => 'no',
             'removesignature' => 'no',
-            'striptags' => 'no',
+            'striptags' => 'yes', // default to yes for security
             'deletehookaction' => 'lock',
             'rss2f_enabled' => 'yes',
             'timespanforchanges' => 24,
@@ -175,6 +175,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'fulltextindex' => 'no',
             'solved_enabled' => true,
             'ajax' => true,
+            'striptagsfromemail' => false,
         );
     }
 

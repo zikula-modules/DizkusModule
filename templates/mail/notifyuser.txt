@@ -3,7 +3,8 @@
 
 {gt text='%1$s wrote at %2$s' tag1=$poster_name tag2=$topic_time_ml}
 ---------------------------------------------------------------------
-{$post_message|strip_tags|truncate:400:"...":true}
+{assign value=$post_message|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter' var='message'}
+{if $modvars.Dizkus.striptagsfromemail}{$message|strip_tags}{else}{$message}{/if}
 ---------------------------------------------------------------------
 {gt text="Browse thread: %s \n\n" tag1=$topic_url}
 {gt text="Reply to this message: %s" tag1=$reply_url}
