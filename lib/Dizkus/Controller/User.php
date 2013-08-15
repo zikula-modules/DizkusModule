@@ -182,8 +182,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $message = $this->request->request->get('message', '');
         $attach_signature = (int)$this->request->request->get('attach_signature', 0);
         $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
-        $preview = $this->request->request->get('preview', '');
-        $submit = $this->request->request->get('submit', '');
+        $preview = $this->request->request->get('preview', false);
+        $submit = $this->request->request->get('submit', false);
         $cancel = $this->request->request->get('cancel', '');
 
         /**
@@ -192,9 +192,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (!empty($cancel)) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
-
-        $preview = (empty($preview)) ? false : true;
-        $submit = (empty($submit)) ? false : true;
 
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
         // check for maximum message size
