@@ -392,7 +392,7 @@ div#editpostoptions ul li {
     line-height: 2.2em;
 }
 #dizkus dd.lastpost {
-    width: 21%;
+    /*width: 21%;*/
 }
 #dizkus dd.favorites {
     width: 23.5%;
