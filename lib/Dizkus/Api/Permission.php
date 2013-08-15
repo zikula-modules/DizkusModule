@@ -135,7 +135,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         }
 
         $component = 'Dizkus::';
-        $instance = $args['cat_id'] . ':' . $args['forum_id'] . ':';
+        $instance = $args['parent'] . ':' . $args['forum_id'] . ':';
         $user = $args['user_id'];
 
         return SecurityUtil::checkPermission($component, $instance, $level, $user);
