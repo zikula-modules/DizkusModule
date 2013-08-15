@@ -60,7 +60,6 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
      *
      * POST: $topic_id The topic id to reply to.
      *       $message The post message.
-     *       $title @todo What is title for??
      *       $attach_signature Attach signature?
      *       $subscribe_topic Subscribe to topic.
      *       $preview Is this a preview only?
@@ -79,14 +78,12 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         $topic_id = $this->request->request->get('topic', null);
         $message = $this->request->request->get('message', '');
-        $title = $this->request->request->get('title', '');
 
         $attach_signature = ($this->request->request->get('attach_signature', 0) == '1') ? true : false;
         $subscribe_topic = ($this->request->request->get('subscribe_topic', 0) == '1') ? true : false;
         $preview = ($this->request->request->get('preview', 0) == '1') ? true : false;
 
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
-        $title = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $title);
 
         // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
         $managedTopic = new Dizkus_Manager_Topic($topic_id);
@@ -137,7 +134,6 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             // create unix timestamp
             $post['post_time'] = time();
 
-            $post['title'] = $title;
             $post['post_textdisplay'] = $this->phpbb_br2nl($message);
             if ($attach_signature == 1) {
                 $post['post_textdisplay'] .= '[addsig]';
