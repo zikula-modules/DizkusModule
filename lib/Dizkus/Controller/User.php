@@ -121,7 +121,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $managedTopic = new Dizkus_Manager_Topic($topicId);
 
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic->getForum()));
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum()));
 
         if (!$managedTopic->exists()) {
             return LogUtil::registerError(
