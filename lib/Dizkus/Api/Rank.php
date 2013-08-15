@@ -63,7 +63,7 @@ class Dizkus_Api_Rank extends Zikula_AbstractApi
             return LogUtil::registerPermissionError();
         }
 
-        //type, rank_id, minimumCount, maximumCount, image, rank_id
+        //title, description, minimumCount, maximumCount, type, image
 
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
