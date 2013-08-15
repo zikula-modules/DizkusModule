@@ -392,6 +392,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
 
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            // only need read perms to make a favorite
             LogUtil::registerPermissionError();
             throw new Zikula_Exception_Forbidden();
         }

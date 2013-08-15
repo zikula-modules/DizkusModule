@@ -28,9 +28,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             return $this->view->fetch('dizkus_disabled.tpl');
         }
         // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
         // Check if all forums or only one category should be shown
         // @deprecated
@@ -77,9 +75,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         $managedForum = new Dizkus_Manager_Forum($forumId);
         // Permission check
-        $this->throwForbiddenUnless(
-            ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
 
         $this->view->assign('forum', $managedForum->get())
             ->assign('topics', $managedForum->getTopics($start))
@@ -125,9 +121,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $managedTopic = new Dizkus_Manager_Topic($topicId);
 
         // Permission check
-        //$this->throwForbiddenUnless(
-        //    ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic)
-        //);
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $topic->getForum()));
 
         if (!$managedTopic->exists()) {
             return LogUtil::registerError(
@@ -166,13 +160,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
      */
     public function reply()
     {
-        // I cannot see how using the Form lib will work here. This method is post submission of the form...
-        // the form would need to be instanciated in the viewtopic method
-//        $form = FormUtil::newForm($this->name, $this);
-//        return $form->execute('user/topic/reply.tpl', new Dizkus_Form_Handler_User_QuickReply());
-        // Permission check
-        // todo check topic
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        // Comment Permission check
+        $forum_id = (int)$this->request->request->get('forum', null);
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canWrite', array('forum_id' => $forum_id)));
         $this->checkCsrfToken();
 
         // get the input
@@ -476,17 +466,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function ignorelistmanagement()
     {
         // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
-            return LogUtil::registerPermissionError();
-        }
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canWrite'));
 
         // check for Contactlist module and admin settings
         $ignorelist_handling = ModUtil::getVar('Dizkus', 'ignorelist_handling');
@@ -523,9 +509,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function viewlatest($args = array())
     {
         // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
         }
@@ -561,9 +545,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function mine($args)
     {
         // Permission check
-        $this->throwForbiddenUnless(
-                ModUtil::apiFunc($this->name, 'Permission', 'canRead')
-        );
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
@@ -700,17 +682,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
          */
         if (!empty($forum_id)) {
             $managedForum = new Dizkus_Manager_Forum($forum_id);
-            if (!SecurityUtil::checkPermission('Dizkus::', ":$forum_id:", ACCESS_READ)) {
-                LogUtil::registerPermissionError($mainUrl);
-            }
+            $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id)));
+
             $where = array('t.forum', (int)DataUtil::formatForStore($forum_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
             $forumname = $managedForum->get()->getName();
         } elseif (!empty($cat_id)) {
             $managedForum = new Dizkus_Manager_Forum($cat_id);
-            if (!SecurityUtil::checkPermission('Dizkus::', $cat_id . ':.*:', ACCESS_READ)) {
-                LogUtil::registerPermissionError($mainUrl);
-            }
+            $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $cat_id)));
+
             $where = array('t.parent', (int)DataUtil::formatForStore($cat_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('viewcat' => $cat_id), null, null, true);
             $forumname = $managedForum->get()->getParent()->getName();

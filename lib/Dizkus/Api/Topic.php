@@ -71,7 +71,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
 
 
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('topic' => $args['topic'])));
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
 
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         $managedForumUser->get()->addTopicSubscription($args['topic']);
@@ -99,7 +99,7 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
         }
 
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('topic' => $args['topic'])));
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
 
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         if (isset($args['topic'])) {
