@@ -59,6 +59,20 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->entityManager->persist($forumRoot);
 
         // set up EXAMPLE forums
+        $this->setUpExampleForums($forumRoot);
+
+        // set up sample ranks
+        $this->setUpSampleRanks();
+
+        // Initialisation successful
+        return true;
+    }
+
+    /**
+     * Set up example forums on install
+     */
+    private function setUpExampleForums($forumRoot)
+    {
         $food = new Dizkus_Entity_Forum();
         $food->setName('Food');
         $food->setParent($forumRoot);
@@ -81,10 +95,67 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->entityManager->persist($carrots);
 
         $this->entityManager->flush();
-        // end set up
+    }
 
-        // Initialisation successful
-        return true;
+    private function setUpSampleRanks()
+    {
+        //title, description, minimumCount, maximumCount, type, image
+        $ranks = array(
+            array('title' => 'Level 1',
+                'description' => 'New forum user',
+                'minimumCount' => 1,
+                'maximumCount' => 9,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'zerostar.gif'),
+            array('title' => 'Level 2',
+                'description' => 'Basic forum user',
+                'minimumCount' => 10,
+                'maximumCount' => 49,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'onestar.gif'),
+            array('title' => 'Level 3',
+                'description' => 'Moderate forum user',
+                'minimumCount' => 50,
+                'maximumCount' => 99,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'twostars.gif'),
+            array('title' => 'Level 4',
+                'description' => 'Advanced forum user',
+                'minimumCount' => 100,
+                'maximumCount' => 199,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'threestars.gif'),
+            array('title' => 'Level 5',
+                'description' => 'Expert forum user',
+                'minimumCount' => 200,
+                'maximumCount' => 499,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'fourstars.gif'),
+            array('title' => 'Level 6',
+                'description' => 'Superior forum user',
+                'minimumCount' => 500,
+                'maximumCount' => 999,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'fivestars.gif'),
+            array('title' => 'Level 7',
+                'description' => 'Senior forum user',
+                'minimumCount' => 1000,
+                'maximumCount' => 4999,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'spezstars.gif'),
+            array('title' => 'Legend',
+                'description' => 'Legend forum user',
+                'minimumCount' => 5000,
+                'maximumCount' => 1000000,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'adminstars.gif'),
+        );
+        foreach ($ranks as $rank) {
+            $r = new Dizkus_Entity_Rank();
+            $r->merge($rank);
+            $this->entityManager->persist($r);
+        }
+        $this->entityManager->flush();
     }
 
     /**
