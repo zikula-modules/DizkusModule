@@ -15,8 +15,8 @@
             {foreach from=$breadcrumbs item='breadcrumb'}
             <li>
                 {gt text="&nbsp;&raquo;&nbsp;"}
-                <a class="tooltips" href="{$breadcrumb.url}" title="{$breadcrumb.title|safetext}">
-                    {$breadcrumb.title|safetext}
+                <a class="tooltips" href="{$breadcrumb.url}" title="{$breadcrumb.title|safehtml|notifyfilters:'dizkus.filter_hooks.topic.filter'}">
+                    {$breadcrumb.title|safehtml|notifyfilters:'dizkus.filter_hooks.topic.filter'}
                 </a>
             </li>
             {/foreach}
@@ -25,7 +25,7 @@
             {if isset($templatetitle)}
             <li>
                 <span class="tooltips">
-                    {gt text="&nbsp;&raquo;&nbsp;"}{$templatetitle|safetext}
+                    {gt text="&nbsp;&raquo;&nbsp;"}{$templatetitle|safehtml|notifyfilters:'dizkus.filter_hooks.topic.filter'}
                 </span>
             </li>
             {/if}
