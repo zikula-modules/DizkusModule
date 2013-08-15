@@ -21,7 +21,7 @@ function smarty_function_getRankByPostCount($params, Zikula_View $view)
     $posterRank = null;
     
     foreach ($params['ranks'] as $rank) {
-        if (($posts > $rank->getMinimumCount()) && ($posts < $rank->getMaximumCount())) {
+        if (($posts >= $rank->getMinimumCount()) && ($posts <= $rank->getMaximumCount())) {
             $posterRank = $rank;
         }
     }
