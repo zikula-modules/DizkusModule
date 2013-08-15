@@ -44,8 +44,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
             ->assign('post_message', $post->getPost_text())
             ->assign('topic_id', $post->getTopic_id())
             ->assign('forum_id', $post->getTopic()->getForum()->getForum_id())
-            ->assign('reply_url', ModUtil::url('Dizkus', 'user', 'reply', array('topic' => $post->getTopic_id(), 'forum' => $post->getTopic()->getForum()->getForum_id()), null, null, true))
-            ->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post->getTopic_id()), null, null, true))
+            ->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))
             ->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true))
             ->assign('base_url', System::getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
