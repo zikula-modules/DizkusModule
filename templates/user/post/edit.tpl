@@ -25,7 +25,7 @@
                         </div>
                         {/if*}
                         <div>
-                            {formlabel for="message" __text="Message body"}<br />
+                            {formlabel for="post_text" __text="Message body"}<br />
                             {formtextinput textMode="multiline" id="post_text" rows="10" cols="60"}
                             {if $modvars.Dizkus.striptags == 'yes'}
                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
