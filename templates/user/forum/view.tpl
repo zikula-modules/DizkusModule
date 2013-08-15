@@ -144,23 +144,26 @@
                 <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                     <dt class='ctheme-topic-title'>
                         {if $topic.sticky eq 1}
-                        {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
+                        {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' class='tooltips'}
                         {/if}
                         {if $topic.status eq 1}
-                        {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' }
+                        {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' class='tooltips'}
+                        {/if}
+                        {if $topic.solved}
+                        {icon type="ok" size="extrasmall" __alt='Solved Topic' __title='This topic is solved.' class='tooltips'}
                         {/if}
 
                         {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                         {if $comp}
-                        {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
+                        {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' class='tooltips'}
                         {else}
-                        {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
+                        {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
                         {/if}
                         {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
-                        {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
+                        {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
                         {/if}
                         {if $showattachment eq 1}
-                        {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' }
+                        {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' class='tooltips'}
                         {/if}
                         {$topic.topic_id|viewtopiclink:$topic.title}
                         <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
