@@ -132,7 +132,6 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             }
         } else {
             $ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
-            //$ranks = FormUtil::getPassedValue('ranks');
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 

@@ -45,24 +45,8 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
         $letter = strtolower($letter);
 
         list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_HONORARY));
-//        $rankarray = array();
-//        $rankarray[] = array('value' => 0, 'text' => $this->__('no rank'));
-//        foreach ($ranks as $rank) {
-//            $rankarray[] = array(
-//                'value' => $rank->getRank_id(),
-//                'text' => $rank->getRank_title()
-//            );
-//        }
 
         $perpage = 20;
-
-        /* $inlinecss = '<style type="text/css">' ."\n";
-          $rankpath = ModUtil::getVar('Dizkus', 'url_ranks_images') .'/';
-          foreach ($ranks as $rank) {
-          $inlinecss .= '#dizkus_admin option[value='.$rank['rank_id'].']:before { content:url("'.System::getBaseUrl() . $rankpath . $rank['image'].'"); }' . "\n";
-          }
-          $inlinecss .= '</style>' . "\n";
-          PageUtil::addVar('rawtext', $inlinecss); */
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('cu.uid, cu.uname, r.rank_id')
