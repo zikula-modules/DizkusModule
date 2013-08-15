@@ -90,6 +90,8 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
         $data['forum_id'] = $this->_forumId;
+        $data['message'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['message']);
+        $data['title'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['title']);
 
         /* if ($this->isSpam($args['message'])) {
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));

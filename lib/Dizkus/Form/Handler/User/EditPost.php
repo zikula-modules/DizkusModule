@@ -98,6 +98,8 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
         }
         unset($data['delete']);
 
+        $data['post_text'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['post_text']);
+
         $this->_post->prepare($data);
 
         // show preview
