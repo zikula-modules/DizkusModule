@@ -66,4 +66,21 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
         return $this->childrenHierarchy(null, false);
     }
 
+    public function getRssForums()
+    {
+        $dql = "SELECT f FROM Dizkus_Entity_Forum f
+                WHERE f.pop3Connection IS NOT NULL";
+        $query = $this->_em->createQuery($dql);
+        try {
+            $result = $query->getResult();
+        } catch (Exception $e) {
+            echo "<pre>";
+            var_dump($e->getMessage());
+            var_dump($query->getDQL());
+            var_dump($query->getParameters());
+            var_dump($query->getSQL());
+            die;
+        }
+        return $result;
+    }
 }

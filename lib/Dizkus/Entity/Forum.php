@@ -319,6 +319,11 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->pop3Connection = $connection;
     }
 
+    public function removePop3Connection()
+    {
+        $this->pop3Connection = null;
+    }
+
     public function getModuleref()
     {
         return $this->moduleref;

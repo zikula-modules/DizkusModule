@@ -44,7 +44,8 @@ if (!ModUtil::available('Feeds')) {
 //
 // Getting All forums where RSS2DIZKUS is SET...
 //
-$forums = $em->getRepository('Dizkus_Entity_Forum')->findBy(array('forum_pop3_active' => 2));
+$forums = $em->getRepository('Dizkus_Entity_Forum')->getRssForums();
+// this may return some forums intented for mail2forum cron stuff... I don't know.
 
 if (!$forums) {
     return;
@@ -54,14 +55,15 @@ $loggedin = false;
 $lastuser = '';
 foreach ($forums as $forum)
 {
+    $connection = $forum->getPop3Connection()->getConnection();
     $forum = $forum->toArray();
 
-    if ($lastuser <> $forum['forum_pop3_pnuser']) {
+    if ($lastuser <> $connection['coreUser']->getUid()) {
         UserUtil::logOut();
         $loggedin = false;
         // login the correct user
-        if (UserUtil::logIn($forum['forum_pop3_pnuser'], base64_decode($forum['forum_pop3_pnpassword']), false)) {
-            $lastuser = $forum['forum_pop3_pnuser'];
+        if (UserUtil::logIn($connection['coreUser']->getUname(), base64_decode($connection['coreUser']->getPass()), false)) {
+            $lastuser = $connection['coreUser']->getUid();
             $loggedin = true;
         } else {
             // unable to login
@@ -72,7 +74,7 @@ foreach ($forums as $forum)
     }
 
     if ($loggedin == true) {
-        $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array('fid' => $forum['forum_pop3_server']));
+        $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array('fid' => $connection['server']));
 
         if (!$rss) {
             // this feed does not exist
