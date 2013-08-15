@@ -91,6 +91,12 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         return $this->checkPermission($args, ACCESS_ADMIN);
     }
 
+    /**
+     * Check to see if COMMENT perms are granted on provided module
+     *
+     * @param string $module
+     * @return boolean
+     */
     public function canComment($module)
     {
         return SecurityUtil::checkPermission("$module::", "::", ACCESS_COMMENT);
@@ -117,8 +123,12 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         if (empty($args['user_id'])) {
             $args['user_id'] = null; // current user
         }
-        if (!isset($args['cat_id'])) {
-            $args['cat_id'] = '';
+        if (!isset($args['parent'])) {
+            $args['parent'] = '';
+        } else {
+            if (gettype($args['parent'] == 'object')) {
+                $args['parent'] = $args['parent']->getForum_id();
+            }
         }
         if (!isset($args['forum_id'])) {
             $args['forum_id'] = '';
