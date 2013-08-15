@@ -140,7 +140,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         
-        // TODO: perms check?
+        // Permission check
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum' => $args['forum'])));
         
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         $managedForumUser->get()->addForumSubscription($args['forum']);
@@ -169,7 +170,8 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         
-        // TODO: Permission check?
+        // Permission check
+        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum' => $args['forum'])));
 
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         if (isset($args['forum'])) {

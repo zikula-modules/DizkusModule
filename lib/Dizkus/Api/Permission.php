@@ -91,6 +91,11 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         return $this->checkPermission($args, ACCESS_ADMIN);
     }
 
+    public function canComment($module)
+    {
+        return SecurityUtil::checkPermission("$module::", "::", ACCESS_COMMENT);
+    }
+
     /**
      * check Permission
      *

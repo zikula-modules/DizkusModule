@@ -73,7 +73,9 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         $data = $view->getValues();
         
         if ($args['commandName'] == 'move') {
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic)) {
+            // require perms for both subject topic and destination forum
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $this->topic))
+                || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('forum' => $args['forum_id']))) {
                 return LogUtil::registerPermissionError();
             }
 
@@ -89,8 +91,9 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
         if ($args['commandName'] == 'join') {
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic)) {
-                // TODO: also need to check Perms on destination topic here
+            // require perms for both subject topic and destination topic
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $this->topic))
+                || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $args['to_topic_id']))) {
                 return LogUtil::registerPermissionError();
             }
 
