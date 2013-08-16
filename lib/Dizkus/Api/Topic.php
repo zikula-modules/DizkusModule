@@ -69,13 +69,18 @@ class Dizkus_Api_Topic extends Zikula_AbstractApi
             $args['topic'] = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('topic_id' => $args['topic']));
         }
 
-
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
 
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
-        $managedForumUser->get()->addTopicSubscription($args['topic']);
-        $this->entityManager->flush();
+        $searchParams = array(
+            'topic' => $args['topic'],
+            'forumUser' => $managedForumUser->get());
+        $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy($searchParams);
+        if (!$topicSubscription) {
+            $managedForumUser->get()->addTopicSubscription($args['topic']);
+            $this->entityManager->flush();
+        }
     }
 
     /**

@@ -301,9 +301,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     public function addTopicSubscription(Dizkus_Entity_Topic $topic)
     {
         $topicSubscription = new Dizkus_Entity_TopicSubscription($this, $topic);
-        if (!$this->topicSubscriptions->contains($topicSubscription)) {
-            $this->topicSubscriptions->add($topicSubscription);
-        }
+        $this->topicSubscriptions->add($topicSubscription);
     }
 
     /**
@@ -339,9 +337,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     public function addForumSubscription(Dizkus_Entity_Forum $forum)
     {
         $forumSubscription = new Dizkus_Entity_ForumSubscription($this, $forum);
-        if (!$this->forumSubscriptions->contains($forumSubscription)) {
-            $this->forumSubscriptions->add($forumSubscription);
-        }
+        $this->forumSubscriptions->add($forumSubscription);
     }
 
     /**

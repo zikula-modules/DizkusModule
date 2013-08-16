@@ -215,6 +215,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $managedPost = new Dizkus_Manager_Post();
             $managedPost->create($data);
+            // handle subscription
+            if ($subscribe_topic) {
+                ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic' => $topic_id));
+            } else {
+                ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic' => $topic_id));
+            }
             $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array(
                 'topic' => $topic_id,
