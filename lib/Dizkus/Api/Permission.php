@@ -105,40 +105,43 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     /**
      * check Permission
      *
-     * @param array $args  Arguments.
+     * @param array|object $args  Arguments.
      * @param int   $level Level.
      *
      * @return boolean
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
-        if (gettype($args) == 'object') {
-            $args = $args->toArray();
+        // ensure always working with an Dizkus_Entity_Forum object or null
+        if (empty($args)) {
+            $forum = null;
+        } else if ($args instanceof Dizkus_Entity_Forum) {
+            $forum = $args;
+        } else if (is_numeric($args)) {
+            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args);
+        } else if (is_array($args)) {
+            // reconsititute object
+            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
+            $userId = $args['user_id'];
+        } else {
+            return LogUtil::registerArgsError();
         }
 
         if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerError($this->getVar('forum_disabled_info'));
         }
 
-        if (empty($args['user_id'])) {
-            $args['user_id'] = null; // current user
+        if (empty($userId)) {
+            $userId = null; // current user
         }
-        if (!isset($args['parent'])) {
-            $args['parent'] = '';
+
+        if (isset($forum)) {
+            $instance = $forum->getParent()->getForum_id() . ':' . $forum->getForum_id() . ':';
         } else {
-            if (gettype($args['parent'] == 'object')) {
-                $args['parent'] = $args['parent']->getForum_id();
-            }
-        }
-        if (!isset($args['forum_id'])) {
-            $args['forum_id'] = '';
+            $instance = '::';
         }
 
-        $component = 'Dizkus::';
-        $instance = $args['parent'] . ':' . $args['forum_id'] . ':';
-        $user = $args['user_id'];
-
-        return SecurityUtil::checkPermission($component, $instance, $level, $user);
+        return SecurityUtil::checkPermission('Dizkus::', $instance, $level, $userId);
     }
 
 }
