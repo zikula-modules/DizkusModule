@@ -180,19 +180,8 @@ class Dizkus_Manager_Topic
      */
     public function getBreadcrumbs()
     {
-        $i = $this->entityManager->find('Dizkus_Entity_Forum', $this->getForumId());
-
-        $output = array();
-        while ($i->getLvl() != 0) {
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
-            $output[] = array(
-                'url' => $url,
-                'title' => $i->getName()
-            );
-            $i = $i->getParent();
-        }
-
-        return array_reverse($output);
+        $managedForum = new Dizkus_Manager_Forum(null, $this->get()->getForum());
+        return $managedForum->getBreadcrumbs(false);
     }
 
     /**
