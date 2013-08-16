@@ -119,16 +119,7 @@ class Dizkus_Manager_Forum
             return array();
         }
 
-        $output = array();
-        if (!$withoutCurrent) {
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forum->getForum_id()));
-            $output[] = array(
-                'url' => $url,
-                'title' => $this->_forum->getName()
-            );
-        }
-
-        $i = $this->_forum->getParent();
+        $i = (!$withoutCurrent) ? $this->_forum : $this->_forum->getParent();
         while ($i->getLvl() != 0) {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
             $output[] = array(
