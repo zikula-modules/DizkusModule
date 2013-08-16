@@ -5,13 +5,15 @@
  */
 
 jQuery(document).ready(function () {
-    // toogle forum favorite state
+    // toggle forum favorite state
     jQuery("#forum-favourite").click(modifyForum);
-//    jQuery("#forum-subscription").click(modifyForum);
+    // toggle forum subscription
+    jQuery("#forum-subscription").click(modifyForum);
 });
 
 function modifyForum(e) {
     var id = jQuery('#forum_id').val(), action, i = jQuery(this);
+    console.log(i.text());
     if (i.text() == favouriteForum) {
         action = 'addToFavorites';
     } else if (i.text() == unfavouriteForum) {
@@ -46,7 +48,7 @@ function modifyForum(e) {
                     i.text(subscribeForum);
                 }
             } else {
-                alert('Error! Erroneous result from favourite addition/removal.');
+                alert('Error! Erroneous result from modifyForum request.');
             }
         },
         error: function (result) {
