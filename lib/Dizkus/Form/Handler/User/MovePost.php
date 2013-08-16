@@ -40,7 +40,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
      */
     function initialize(Zikula_Form_View $view)
     {
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
@@ -60,11 +60,6 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         }
 
         return true;
-
-        //if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $post)) {
-        //    // user is not allowed to moderate this forum
-        //    return LogUtil::registerPermissionError();
-        //}
     }
 
     /**

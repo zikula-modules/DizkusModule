@@ -435,7 +435,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             'cat_id' => $cat_id,
             'forum_id' => $forum_id
         );
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $topic)) {
+        $managedForum = new Dizkus_Manager_Forum($forum_id);
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $managedForum->get())) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }
