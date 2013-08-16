@@ -126,7 +126,7 @@ class Dizkus_Manager_Topic
 
     public function getPermissions()
     {
-        return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_topic);
+        return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_topic->getForum());
     }
 
     /**
