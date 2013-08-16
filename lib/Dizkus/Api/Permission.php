@@ -12,7 +12,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
 {
 
     /**
-     * Checks the permissions of a user for a specific forum or category.
+     * Checks the permissions of a user for a specific forum.
      *
      * @param string $args
      *
