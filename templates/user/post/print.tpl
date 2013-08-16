@@ -37,7 +37,7 @@
                         <strong>{gt text="Posted"}:</strong>&nbsp;{$post.posted_unixtime|dateformat:'datetimebrief'}
                     </div>
                     <div class="content" id="postingtext_{$post.post_id}">
-                        {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.message.filter'}
+                        {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
                     </div>
                 </div>
 

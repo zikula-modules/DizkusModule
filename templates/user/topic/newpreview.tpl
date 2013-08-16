@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="content"{if isset($newtopic.post_id)} id="postingtext_{$newtopic.post_id}"{/if}>
-                    {$data.message|notifyfilters:'dizkus.filter_hooks.message.filter'}
+                    {$data.message|notifyfilters:'dizkus.filter_hooks.post.filter'}
                 </div>
 
             </div>

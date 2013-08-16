@@ -14,7 +14,7 @@
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
         [{gt text="Solved"}]
     </span>
-    <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.topic.filter'}</span>
+    <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span>
     {icon id="edittopicicon" type="xedit" size="extrasmall" class="z-hide"}
 </span>
 </h2>
