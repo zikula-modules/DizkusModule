@@ -72,7 +72,7 @@ class Dizkus_Needles_Dizkus extends Zikula_AbstractHelper
                             $managedTopic = new Dizkus_Manager_Topic($id);
 
                             if (!empty($managedTopic)) {
-                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get())) {
+                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
                                     $url   = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
                                     $title = DataUtil::formatForDisplay($result[0]['title']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';

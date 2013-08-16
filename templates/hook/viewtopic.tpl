@@ -16,7 +16,7 @@
                 <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                 {/if}
 
-                <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+                <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
 
                 {if $coredata.logged_in}
                 <li>
@@ -71,7 +71,7 @@
                     <li><a class="dzk_arrow mailtolink" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                     {/if}
 
-                    <li>{printtopic_button topic_id=$topic.topic_id cat_id=$topic.cat_id forum_id=$topic.forum_id}</li>
+                    <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
 
                     {if $coredata.logged_in}
                     {if $topic.is_subscribed == 0}

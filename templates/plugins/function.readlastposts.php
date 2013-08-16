@@ -35,8 +35,8 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $whereforum = array();
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
         // get the category id and check permissions
-        $params['cat_id'] = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', array('forum_id' => $params['forum_id']));
-        if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $params)) {
+        $managedForum = new Dizkus_Manager_Forum($params['forum_id']);
+        if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $managedForum->get())) {
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
             return;
