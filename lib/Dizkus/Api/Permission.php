@@ -32,7 +32,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check if a user is allowed to see category and forum.
+     * Check if a user is allowed to see forum.
      *
      * @param array $args Arguments.
      *
@@ -44,7 +44,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check if a user is allowed to read category and forum.
+     * Check if a user is allowed to read forum.
      *
      * @param array $args Arguments.
      *
@@ -56,7 +56,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check if a user is allowed to write category and forum.
+     * Check if a user is allowed to write forum.
      *
      * @param array $args Arguments.
      *
@@ -68,7 +68,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check if a user is allowed to moderate category and forum.
+     * Check if a user is allowed to moderate forum.
      *
      * @param array $args Arguments.
      *
@@ -80,7 +80,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check if a user is allowed to administrate category and forum.
+     * Check if a user is allowed to administrate forum.
      *
      * @param array $args Arguments.
      *

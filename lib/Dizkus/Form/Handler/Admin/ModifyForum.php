@@ -59,9 +59,6 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         if (!$this->_forum->exists()) {
             return LogUtil::registerError($this->__f('Item with id %s not found', $id), null, $url);
         }
-        if (!$this->_forum->isCategory()) {
-            return LogUtil::registerError($this->__f('Item with id %s is a category', $id), null, $url);
-        }
 
         $t = $this->_forum->toArray();
         unset($t['parent']);

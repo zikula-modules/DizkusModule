@@ -80,18 +80,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
                 return $cache[$type];
                 break;
                 
-            case 'category':
-                if (!isset($cache[$type])) {
-                    $qb = $this->entityManager->createQueryBuilder();
-                    $qb->select('count(a)')
-                            ->from('Dizkus_Entity_Forum', 'a')
-                            ->add('where', $qb->expr()->isNull('a.parent'));
-                    $cache[$type] = (int)$qb->getQuery()->getSingleScalarResult();
-                }
-
-                return $cache[$type];
-                break;
-                
             case 'topic':
                 if (!isset($cache[$type][$id])) {
                     $cache[$type][$id] = $this->countEntity('Post', 'topic', $id);

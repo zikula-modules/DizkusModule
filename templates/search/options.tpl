@@ -10,13 +10,13 @@
     <dl>
         {* ToDo: Reactivate "search in forum"
         <dt>
-            <label for="Dizkus_forum">{gt text='Category and forum:' domain="module_dizkus"}</label>
+            <label for="Dizkus_forum">{gt text='forum:' domain="module_dizkus"}</label>
         </dt>
         <dd>
             <select name="Dizkus_forum[]" id="Dizkus_forum" size="5" multiple="multiple">
                 <option value="-1" selected="selected">{gt text='All forums' domain="module_dizkus"}</option>
                 {foreach item='forum' from=$forums}
-                <option value="{$forum.forum_id}">{$forum.cat_title|safetext} {gt text='&nbsp;::&nbsp;'} {$forum.name|safetext}</option>
+                <option value="{$forum.forum_id}">{$forum.parent.name|safetext} :: {$forum.name|safetext}</option>
                 {/foreach}
             </select>
         </dd>

@@ -21,7 +21,6 @@
  */
 function smarty_function_readstatistics($params, Zikula_View $view) 
 {
-    $view->assign('total_categories', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'category')));
     $view->assign('total_topics', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'alltopics')));
     $view->assign('total_posts', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'allposts')));
     $view->assign('total_forums', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forum')));

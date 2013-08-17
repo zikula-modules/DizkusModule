@@ -36,7 +36,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
         $view->assign('sitename', System::getVar('sitename'))
-            ->assign('category_name', $post->getTopic()->getForum()->getParent()->getName())
+            ->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())
             ->assign('name', $post->getTopic()->getForum()->getName())
             ->assign('topic_subject', $post->getTopic()->getTitle())
             ->assign('poster_name', $post->getPoster()->getUser()->getUname())

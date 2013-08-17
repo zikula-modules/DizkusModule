@@ -38,13 +38,6 @@
 
 function smarty_function_dizkusonline($params, Zikula_View $view)
 {
-    if (!isset($params['category_id'])) {
-        $params['category_id'] = (isset($view->_tpl_vars['viewcat']) && $view->_tpl_vars['viewcat'] != -1) ? $view->_tpl_vars['viewcat'] : '';
-    }
-    if (!isset($params['forum_id'])) {
-        $params['forum_id'] = isset($view->_tpl_vars['forum']) ? $view->_tpl_vars['forum'] : '';
-    }
-
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
     
     // set some defaults

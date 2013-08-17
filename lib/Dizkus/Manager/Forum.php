@@ -57,16 +57,6 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * Check if forum is category (lvl ==0)
-     *
-     * @return boolean
-     */
-    public function isCategory()
-    {
-        return $this->_forum->getLvl() == 0 ? false : true;
-    }
-
-    /**
      * return page as array
      *
      * @return array|boolean false

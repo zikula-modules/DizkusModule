@@ -14,15 +14,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 {
 
     /**
-     * Show all categories and forums a user may see
-     *
-     * $args['viewcat'] int only expand the category, all others shall be hidden / collapsed
-     *
-     * @param array $args Arguments array.
+     * Show all forums a user may see
      *
      * @return string
      */
-    public function index($args = array())
+    public function index()
     {
         if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');

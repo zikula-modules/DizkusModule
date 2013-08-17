@@ -52,7 +52,6 @@
 <strong>{gt text="Total" domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_statslist">
-    <li>{gt text="Categories" domain="module_dizkus"}: {$total_categories}</li>
     <li>{gt text="Forums" domain="module_dizkus"}: {$total_forums}</li>
     <li>{gt text="Topics" domain="module_dizkus"}: {$total_topics}</li>
     <li>{gt text="Posts" domain="module_dizkus"}: {$total_posts}</li>
