@@ -74,13 +74,13 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl = 1;
+    private $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $rgt = 3;
+    private $rgt;
 
     /**
      * @Gedmo\TreeRoot
@@ -184,12 +184,23 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
 
     public function getName()
     {
+        if ($this->name == self::ROOTNAME) {
+            // do not display actual rootname
+            return 'Forum Index'; // cannot translate in entity :-(
+        }
         return $this->name;
     }
 
     public function setName($name)
     {
-        $this->name = $name;
+        // dont' allow user to set another forum to rootname
+        if (($name == self::ROOTNAME) && ($this->lvl != 0)) {
+            return;
+        }
+        // once root forum is set do not allow to change name
+        if ($this->name != self::ROOTNAME) {
+            $this->name = $name;
+        }
     }
 
     public function getDescription()
