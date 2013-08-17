@@ -72,7 +72,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $managedForum = new Dizkus_Manager_Forum($forumId);
-//        echo "<pre>";        Doctrine\Common\Util\Debug::dump($managedForum->get()); echo "</pre>";
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
 
