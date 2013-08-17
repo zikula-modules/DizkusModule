@@ -119,6 +119,8 @@ class Dizkus_Manager_Forum
             return array();
         }
 
+        $output = array();
+
         $i = (!$withoutCurrent) ? $this->_forum : $this->_forum->getParent();
         while ($i->getLvl() != 0) {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
