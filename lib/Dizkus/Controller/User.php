@@ -42,8 +42,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         // get tree level
-        $level = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel($viewcat);
-        $this->view->assign('tree', $level);
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel($viewcat);
+        
+        // filter the forum array by permissions
+        $forums = ModUtil::apiFunc($this->name, 'Permission', 'filterForumArrayByPermission', $forums);
+
+        $this->view->assign('tree', $forums);
 
         $numposts = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
@@ -77,7 +81,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
 
-        $this->view->assign('forum', $managedForum->get())
+        // filter the forum children by permissions
+        $forum = ModUtil::apiFunc($this->name, 'Permission', 'filterForumChildrenByPermission', $managedForum->get());
+
+        $this->view->assign('forum', $forum)
             ->assign('topics', $managedForum->getTopics($start))
             ->assign('pager', $managedForum->getPager())
             ->assign('permissions', $managedForum->getPermissions())

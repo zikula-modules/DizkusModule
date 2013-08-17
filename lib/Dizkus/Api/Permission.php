@@ -132,16 +132,57 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         }
 
         if (empty($userId)) {
-            $userId = null; // current user
+            $userId = null; // will default to current user
         }
 
-        if (isset($forum)) {
-            $instance = $forum->getParent()->getForum_id() . ':' . $forum->getForum_id() . ':';
-        } else {
-            $instance = '::';
+        if (!isset($forum)) {
+            return SecurityUtil::checkPermission('Dizkus::', '::', $level, $userId);
         }
 
-        return SecurityUtil::checkPermission('Dizkus::', $instance, $level, $userId);
+        // loop through current forum and all parents and check for perms,
+        // if ever false (at any parent) return false
+        while ($forum->getLvl() != 0) {
+            $perm = SecurityUtil::checkPermission('Dizkus::', $forum->getForum_id() . '::', $level, $userId);
+            if (!$perm) {
+                return false;
+            }
+            $forum = $forum->getParent();
+        }
+        return true;
     }
 
+    /**
+     * check and filter and array of forums and their children for READ permissions
+     * @param array $forums
+     */
+    public function filterForumArrayByPermission(array $forums) {
+        // confirm user has permissions to view each forum
+        // in this case, it is know that there are only two levels to the tree, $forum and $subforum
+        foreach ($forums as $key => $forum) {
+            // $forums is an array
+            if (!$this->canRead($forum)) {
+                $this->entityManager->detach($forum); // ensure that future operations are not persisted
+                unset($forums[$key]);
+                continue;
+            }
+            $this->filterForumChildrenByPermission($forum);
+        }
+        return $forums;
+    }
+
+    /**
+     * check and filter child forums for READ permissions
+     * @param Dizkus_Entity_Forum $forum
+     */
+    public function filterForumChildrenByPermission(Dizkus_Entity_Forum $forum) {
+        $subforums = $forum->getChildren();
+        foreach ($subforums as $subforum) {
+            // $subforums is a PersistentCollection
+            if (!$this->canRead($subforum)) {
+                $this->entityManager->detach($subforum); // ensure that future operations are not persisted
+                $forum->getChildren()->removeElement($subforum);
+            }
+        }
+        return $forum;
+    }
 }

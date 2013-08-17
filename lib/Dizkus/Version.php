@@ -31,8 +31,8 @@ class Dizkus_Version extends Zikula_AbstractVersion
         $meta['version'] = '3.2.0'; // will be 4.0.0 on release
         $meta['core_min'] = '1.3.6'; // Fixed to 1.3.x range
         $meta['core_max'] = '1.3.99'; // Fixed to 1.3.x range
-        $meta['securityschema'] = array('Dizkus::' => 'CategoryID:ForumID:',
-            'Dizkus::CreateForum' => 'CategoryID::');
+        $meta['securityschema'] = array('Dizkus::' => 'ForumID::',
+            'Dizkus::CreateForum' => 'ForumID::');
         $meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
             HookUtil::PROVIDER_CAPABLE => array('enabled' => true));
 
