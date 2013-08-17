@@ -85,14 +85,9 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
 
-        // ContactList integration: Is the user ignored and allowed to write an answer to this topic?
         $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
         $start = 0;
-        $ignorelist_setting = ModUtil::apiFunc('Dizkus', 'user', 'get_settings_ignorelist', array('uid' => $managedTopic->get()->getPoster()->getUser_id()));
-        if (ModUtil::available('ContactList') && ($ignorelist_setting == 'strict') && (ModUtil::apiFunc('ContactList', 'user', 'isIgnored', array('uid' => (int)$managedTopic->get()->getPoster()->getUser_id(), 'iuid' => UserUtil::getVar('uid'))))) {
-            throw new Zikula_Exception_Fatal($this->__('Error! The user who started this topic is ignoring you, and does not want you to be able to write posts under this topic. Please contact the topic originator for more information.'));
-        }
 
         $this->checkMessageLength($message);
 
@@ -470,28 +465,15 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
                         'attach_signature' => $attach_signature,
                         'subscribe_topic' => $subscribe_topic));
 
-            // `readtopic()` removed - when this method is refactored, the persisted topic is automatically available
-
             if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
                 $this->view->assign('topic', $topic);
                 $confirmation = $this->view->fetch('ajax/newtopicconfirmation.tpl');
             } else {
                 $confirmation = false;
             }
-
-            // --- MediaAttach check ---
-            if (ModUtil::available('MediaAttach') && ModUtil::isHooked('MediaAttach', 'Dizkus')) {
-                return new Zikula_Response_Ajax(array('topic' => $topic,
-                            'confirmation' => $confirmation,
-                            'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true),
-                            'uploadredirect' => urlencode(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id))),
-                            'uploadobjectid' => $topic_id,
-                            'uploadauthid' => SecurityUtil::generateCsrfToken('MediaAttach')));
-            } else {
-                return new Zikula_Response_Ajax(array('topic' => $topic,
-                            'confirmation' => $confirmation,
-                            'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true)));
-            }
+            return new Zikula_Response_Ajax(array('topic' => $topic,
+                        'confirmation' => $confirmation,
+                        'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true)));
         }
 
         // preview == true, create fake topic

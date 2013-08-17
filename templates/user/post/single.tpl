@@ -8,13 +8,6 @@
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}" ></a>
 
-{if $post3.contactlist_ignored|default:0 == 1}
-<div id="hidelink_posting_{$post.post_id}" class="roundedbar dzk_rounded">
-    {gt text="Show hidden postings of ignored user"} <em>{$post.poster.user_id}</em>
-    <a href="javascript:void(0);" title="{gt text="Click here"}">({gt text="Click here"})</a>
-</div>
-{/if}
-
 <div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $isPosterOnline}{$onlinestyle}{/if}>
     <div class="inner">
 
@@ -133,11 +126,3 @@
 
     </div>
 </div>
-
-{*if $post.contactlist_ignored|default:0 == 1}
-<script type="text/javascript">
-    // <![CDATA[
-    $('posting_{{$post.post_id}}').toggle();
-    // ]]>
-</script>
-{/if*}

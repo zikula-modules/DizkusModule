@@ -329,43 +329,6 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return true;
     }
 
-    /**
-     * get_settings_ignorelist
-     *
-     * @params none
-     * @params $args['uid']  int     the users id
-     * @return string|boolean level for ignorelist handling as string
-     */
-    public function get_settings_ignorelist($args)
-    {
-        // if Contactlist is not available there will be no ignore settings
-        if (!ModUtil::available('ContactList')) {
-            return false;
-        }
-
-        // get parameters
-        $uid = (int)$args['uid'];
-        if (!($uid > 1)) {
-            return false;
-        }
-
-        $attr = UserUtil::getVar('__ATTRIBUTES__', $uid);
-        $ignorelist_myhandling = $attr['dzk_ignorelist_myhandling'];
-        $default = ModUtil::getVar('Dizkus', 'ignorelist_handling');
-        if (isset($ignorelist_myhandling) && ($ignorelist_myhandling != '')) {
-            if (($ignorelist_myhandling == 'strict') && ($default != $ignorelist_myhandling)) {
-                // maybe the admin value changed and the user's value is "higher" than the admin's value
-                return $default;
-            } else {
-                // return user's value
-                return $ignorelist_myhandling;
-            }
-        } else {
-            // return admin's default value
-            return $default;
-        }
-    }
-
     public function isSpam($message)
     {
         // Akismet

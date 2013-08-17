@@ -46,14 +46,6 @@ class Dizkus_Api_Prefs extends Zikula_AbstractApi
                     'class' => 'z-icon-es-options',
                 );
             }
-            if ($this->getVar('ignorelist_handling') != "none" && ModUtil::available('ContactList')) {
-                $links[] = array(
-                    'url' => ModUtil::url('Dizkus', 'user', 'ignorelistmanagement'),
-                    'text' => $this->__('Ignore list'),
-                    'title' => $this->__('Manage ignore list'),
-                    'class' => 'z-icon-es-options',
-                );
-            }
         }
 
         return $links;

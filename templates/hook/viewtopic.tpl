@@ -187,11 +187,6 @@
     </div>
 </div>
 
-{mediaattach_fileuploads objectid=$topic.topic_id}
-<div id="dzk_displayhooks">
-    {if isset($hooks.Ratings)}{$hooks.Ratings}{/if}
-</div>
-
 {/if}
 
 {if $topic.forum.moderatorUsers|@count > 0}

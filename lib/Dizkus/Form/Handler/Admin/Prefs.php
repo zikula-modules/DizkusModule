@@ -41,10 +41,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
         $this->view->assign('deletehook_options', array(array('text' => $this->__('Delete topic'), 'value' => 'remove'),
             array('text' => $this->__('Close topic'), 'value' => 'lock')));
 
-        $this->view->assign('ignorelist_options', array(array('text' => $this->__('Strict'), 'value' => 'strict'),
-            array('text' => $this->__('Medium'), 'value' => 'medium'),
-            array('text' => $this->__('None'), 'value' => 'none')));
-
         $vars = $this->getVars();
 
         // convert yes/no to boolean
@@ -57,8 +53,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
         }
 
         $this->view->assign($vars);
-
-        $this->view->assign('contactlist_available', ModUtil::available('ContactList'));
 
         return true;
     }

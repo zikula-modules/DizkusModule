@@ -466,34 +466,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     }
 
     /**
-     * ignorelist management
-     * 
-     */
-    public function ignorelistmanagement()
-    {
-        // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
-
-        if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
-        }
-        // Security check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canWrite'));
-
-        // check for Contactlist module and admin settings
-        $ignorelist_handling = ModUtil::getVar('Dizkus', 'ignorelist_handling');
-        if (!ModUtil::available('ContactList') || ($ignorelist_handling == 'none')) {
-            return LogUtil::registerError($this->__("No 'ignore list' configuration is currently possible."), null, ModUtil::url('Dizkus', 'user', 'prefs'));
-        }
-
-        // Create output and assign data
-        $render = FormUtil::newForm($this->name, $this);
-
-        // Return the output
-        return $render->execute('user/prefs/ignorelistmanagement.tpl', new Dizkus_Form_Handler_User_IgnoreListManagement());
-    }
-
-    /**
      * User interface to email a topic to a arbitrary email-address
      *
      * @return string

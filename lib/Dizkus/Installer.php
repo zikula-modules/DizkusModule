@@ -240,7 +240,6 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'signature_start' => '',
             'signature_end' => '',
             'showtextinsearchresults' => 'yes',
-            'ignorelist_handling' => 'medium',
             'minsearchlength' => 3,
             'maxsearchlength' => 30,
             'fulltextindex' => 'no',
@@ -315,6 +314,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
+        $this->delVar('ignorelist_handling');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
         $this->setVar('fulltextindex', 'no');

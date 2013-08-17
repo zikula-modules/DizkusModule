@@ -111,15 +111,6 @@
             {formlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
             {formcheckbox id="newtopicconfirmation"}
         </div>
-        <div class="z-formrow">
-            {if $contactlist_available eq true}
-            {formlabel for="ignorelist_handling" __text="Highest-allowed 'ignore list' ostracism level"}
-            {formdropdownlist id="ignorelist_handling" items=$ignorelist_options selectedValue=$modvars.Dizkus.ignorelist_handling}
-            <p class="z-formnote z-informationmsg">{gt text="Users who are being ignored by a topic poster cannot post messages under this topic when 'strict' level is active. When 'medium' level is active, they can reply but their postings will generally not be shown to users who are ignoring the poster. Also, e-mail notifications will not be sent. Concealed postings will be shown when you click on the posting."}</p>
-            {else}
-            <p class="z-formnote z-informationmsg">{gt text="Notice: 'Ignore list' support is not currently available. The ContactList module must be installed for this feature to function."}</p>
-            {/if}
-        </div>
     </fieldset>
 
     <fieldset>

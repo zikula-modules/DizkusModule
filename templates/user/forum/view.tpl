@@ -109,7 +109,6 @@
 {if ((count($topics) > 0) || (!$forum->isLocked()))}
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
-{mediaattach_attachicon topics=$topics assign='uploadtopicids'}
 
 <div class="forumbg dzk_rounded">
     <div class="inner">
