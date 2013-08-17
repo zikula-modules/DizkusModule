@@ -19,11 +19,11 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
      *
      * Get the first level of the tree.
      *
-     * @param int $category Category id
+     * @param int $forumId Forumid
      *
      * @return object
      */
-    public function getOneLevel($category = null)
+    public function getOneLevel($forumId = null)
     {
         $qb = $this->_em
                 ->createQueryBuilder()
@@ -33,9 +33,9 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
                 ->leftJoin('f.children', 'c')
                 ->leftJoin('c.last_post', 'l');
 
-        // category
-        if ($category > 0) {
-            $qb->andWhere('f.forum_id = :category')->setParameter('category', $category);
+        // forum
+        if ($forumId > 0) {
+            $qb->andWhere('f.forum_id = :forumId')->setParameter('forumId', $forumId);
         } else {
             $qb->andWhere('f.lvl = 1');
         }
