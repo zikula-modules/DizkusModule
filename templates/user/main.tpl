@@ -1,20 +1,16 @@
 {include file='user/header.tpl'}
 
-{if $viewcat > 0}
-<h2>{$tree.0.name|safetext}</h2>
-{else}
 <h2>{gt text="Forums index page"}</h2>
-{/if}
 
 <div id="dzk_maincategorylist">
-    {foreach item='category' from=$tree}
+    {foreach item='parent' from=$forums}
     <div class="forabg dzk_rounded">
         <div class="inner">
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
                         <dt>
-                            <span><a id="categorylink_{$category.name}" title="{gt text="Go to category"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$category.forum_id}">{$category.name|safetext}</a></span>
+                            <span><a id="categorylink_{$parent.name}" title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$parent.forum_id}">{$parent.name|safetext}</a></span>
                         </dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
@@ -25,7 +21,7 @@
             </ul>
 
             <ul class="topiclist forums">
-                {foreach item='forum' from=$category.children}
+                {foreach item='forum' from=$parent.children}
                     <li class="row">
                         <dl class="icon">
                             {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
@@ -34,7 +30,6 @@
                                 {if $forum.description neq ''}{$forum.description|safehtml}<br />{/if}
                                 {include file='user/moderatedBy.tpl' forum=$forum}
                             </dt>
-
                             <dd class="subforums">{$forum.children|count}</dd>
                             <dd class="topics">{$forum.topicCount|safetext}</dd>
                             <dd class="posts">{$forum.postCount|safetext}</dd>
@@ -50,20 +45,14 @@
                     {foreachelse}
                     <li class="row dzk_empty">
                         {gt text="No subforums available."}
-                        {if $category.topicCount > 0}
-                            <p>{gt text="There is %s topic." plural="There are %s topics." tag1=$category.topicCount count=$category.topicCount}
-                            <a id="forumlink_{$category.name}" title="{gt text="Go to forum"} '{$category.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$category.forum_id}">{gt text="Go to forum"} '{$category.name|safetext}'</a>
+                        {if $parent.topicCount > 0}
+                            <p>{gt text="There is %s topic." plural="There are %s topics." tag1=$parent.topicCount count=$parent.topicCount}
+                            <a id="forumlink_{$parent.name}" title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$parent.forum_id}">{gt text="Go to forum"} '{$parent.name|safetext}'</a>
                             </p>
                         {/if}
                     </li>
                 {/foreach}
             </ul>
-            {if $viewcat > 0}
-            <div id="dzk_displayhooks">
-                {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_view' id=$category.forum_id}
-            </div>
-            {/if}
-
         </div>
     </div>
     {/foreach}

@@ -30,24 +30,17 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
-        // Check if all forums or only one category should be shown
-        // @deprecated
-        // as of v4.0.0 this is not used except where $viewcat is assigned to be 0
-        // @todo remove in 4.1.0
-        $viewcat = (int)$this->request->query->get('viewcat', (isset($args['viewcat'])) ? $args['viewcat'] : 0);
-        $this->view->assign('viewcat', $viewcat);
-
         list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         $this->view->assign('last_visit', $lastVisit);
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        // get tree level
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel($viewcat);
+        // get first and second level forums
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel();
         
         // filter the forum array by permissions
         $forums = ModUtil::apiFunc($this->name, 'Permission', 'filterForumArrayByPermission', $forums);
 
-        $this->view->assign('tree', $forums);
+        $this->view->assign('forums', $forums);
 
         $numposts = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
@@ -73,11 +66,13 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         // get the input
         $forumId = (int)$this->request->query->get('forum', (isset($args['forum'])) ? $args['forum'] : null);
+        $this->throwNotFoundUnless($forumId > 0, $this->__("That forum doesn't exist!"));
         $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
 
         list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $managedForum = new Dizkus_Manager_Forum($forumId);
+//        echo "<pre>";        Doctrine\Common\Util\Debug::dump($managedForum->get()); echo "</pre>";
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
 

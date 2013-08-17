@@ -23,7 +23,7 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
      *
      * @return object
      */
-    public function getOneLevel($forumId = null)
+    public function getOneLevel()
     {
         $qb = $this->_em
                 ->createQueryBuilder()
@@ -31,15 +31,8 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
                 ->orderBy('f.lft')
                 ->from('Dizkus_Entity_Forum', 'f')
                 ->leftJoin('f.children', 'c')
-                ->leftJoin('c.last_post', 'l');
-
-        // forum
-        if ($forumId > 0) {
-            $qb->andWhere('f.forum_id = :forumId')->setParameter('forumId', $forumId);
-        } else {
-            $qb->andWhere('f.lvl = 1');
-        }
-
+                ->leftJoin('c.last_post', 'l')
+                ->andWhere('f.lvl = 1');
 
         // favorites
         if (UserUtil::isLoggedIn() && ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes') {
