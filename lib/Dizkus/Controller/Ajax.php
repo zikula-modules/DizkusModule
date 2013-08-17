@@ -258,6 +258,56 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus_ajax_updatepost()\'.'));
     }
 
+    /**
+     * changeTopicStatus
+     *
+     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     *
+     * @return string
+     */
+    public function changeTopicStatus()
+    {
+        // Check if forum is disabled
+        if ($this->getVar('forum_enabled') == 'no') {
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+        }
+
+        // Get common parameters
+        $params = array();
+        $params['topic_id'] = FormUtil::getPassedValue('topic', '', 'POST');
+        $params['action'] = FormUtil::getPassedValue('action', '', 'POST');
+
+        // Check if topic is is set
+        if (empty($params['topic_id'])) {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus_ajax_changeTopicStatus()\'.'));
+        }
+
+        // Check if action is legal
+        $allowedActions = array('lock', 'unlock', 'sticky', 'unsticky', 'subscribe', 'unsubscribe', 'solve', 'unsolve', 'setTitle');
+        if (empty($params['action']) || !in_array($params['action'], $allowedActions)) {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($params['action'])));
+        }
+
+        // Get title parameter if action == setTitle
+        if ($params['action'] == 'setTitle') {
+            $params['title'] = FormUtil::getPassedValue('title', '', 'POST');
+            $params['title'] = trim($params['title']);
+            if (empty($params['title'])) {
+                return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The post has no subject line.'));
+            }
+        }
+
+        SessionUtil::setVar('zk_ajax_call', 'ajax');
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+            LogUtil::registerPermissionError(null, true);
+            throw new Zikula_Exception_Forbidden();
+        }
+
+        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+
+        return new Zikula_Response_Ajax_Plain('successful');
+    }
 
 
 
@@ -309,57 +359,6 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         }
 
         return AjaxUtil::error($this->__('Error! No post ID in \'Dizkus_ajax_readpost()\'.'), array(), true, true, '400 Bad Data');
-    }
-
-    /**
-     * lockunlocktopic
-     *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
-     *
-     * @return string
-     */
-    public function changeTopicStatus()
-    {
-        // Check if forum is disabled
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        // Get common parameters
-        $params = array();
-        $params['topic_id'] = FormUtil::getPassedValue('topic', '', 'POST');
-        $params['action'] = FormUtil::getPassedValue('action', '', 'POST');
-
-        // Check if topic is is set
-        if (empty($params['topic_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus_ajax_changeTopicStatus()\'.'));
-        }
-
-        // Check if action is legal
-        $allowedActions = array('lock', 'unlock', 'sticky', 'unsticky', 'subscribe', 'unsubscribe', 'solve', 'unsolve', 'setTitle');
-        if (empty($params['action']) || !in_array($params['action'], $allowedActions)) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($params['action'])));
-        }
-
-        // Get title parameter if action == setTitle
-        if ($params['action'] == 'setTitle') {
-            $params['title'] = FormUtil::getPassedValue('title', '', 'POST');
-            $params['title'] = trim($params['title']);
-            if (empty($params['title'])) {
-                return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The post has no subject line.'));
-            }
-        }
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
-            LogUtil::registerPermissionError(null, true);
-            throw new Zikula_Exception_Forbidden();
-        }
-
-        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
-
-        return new Zikula_Response_Ajax_Plain('successful');
     }
 
     /**
