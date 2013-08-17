@@ -132,12 +132,6 @@
             {foreach item=topic from=$topics}
 
             {assign var='topic' value=$topic->toArray()}
-            {assign var='showattachment' value='0'}
-            {foreach item='hasuploads' key='topicid' from=$uploadtopicids}
-            {if $topicid eq $topic.topic_id && $hasuploads eq 1}
-            {assign var='showattachment' value='1'}
-            {/if}
-            {/foreach}
 
             <li class="row">
                 <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
@@ -160,9 +154,6 @@
                         {/if}
                         {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
                         {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
-                        {/if}
-                        {if $showattachment eq 1}
-                        {img modname='core' set='icons/extrasmall' src='attach.gif' __alt='Attachments'  __title='Attachments' class='tooltips'}
                         {/if}
                         {$topic.topic_id|viewtopiclink:$topic.title}
                         <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
