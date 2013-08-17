@@ -10,7 +10,7 @@
  */
 
 /**
- * This class provides a handler to edit categories.
+ * This class provides a handler to Assign ranks
  */
 class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
 {

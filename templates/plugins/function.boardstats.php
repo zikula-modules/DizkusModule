@@ -19,11 +19,10 @@
  *
  * Possible values of $type and $id and what they deliver
  * ------------------------------------------------------
- * 'all' (id not important): total number of postings in all categories and forums
+ * 'all' (id not important): total number of postings in all forums
  * 'topic' (id = topic id) : total number of posts in the given topic
  * 'forumposts' (id = forum id): total number of postings in the given forum
  * 'forumtopics' (id= forum id): total number of topics in the given forum
- * 'category' (id not important): total number of categories
  */
 function smarty_function_boardstats($params, Zikula_View $view) 
 {

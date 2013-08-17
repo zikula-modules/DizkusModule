@@ -31,7 +31,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     }
     
     /**
-     * Get all tree nodes that are not root categories
+     * Get all tree nodes that are not root
      * Format as array suitable for {formdropdownlist}
      * 
      * @return array

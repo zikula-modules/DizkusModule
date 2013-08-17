@@ -23,7 +23,7 @@ class Dizkus_Api_Admin extends Zikula_AbstractApi
             $links[] = array(
                 'url' => ModUtil::url('Dizkus', 'admin', 'tree'),
                 'text' => $this->__('Edit forum tree'),
-                'title' => $this->__('Create, delete, edit and re-order categories and forums'),
+                'title' => $this->__('Create, delete, edit and re-order forums'),
                 'class' => 'z-icon-es-options',
             );
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'ranks', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT)),
