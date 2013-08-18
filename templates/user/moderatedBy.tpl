@@ -1,11 +1,22 @@
-{if count($forum.moderatorUsers) > 0}
+{if (count($forum.moderatorUsers) > 0) OR (count($forum.moderatorGroups) > 0)}
+<div id='dzk_moderatedby'>
 <em>{gt text="Moderated by"}:</em>
-{foreach name='moderators' item='mod' key='modid' from=$forum.moderatorUsers}
-{$mod.forumUser.user_id|profilelinkbyuid}{* demo code *}-{$mod.forumUser.user.uname}{* /demo code *}{if !$smarty.foreach.moderators.last}, {/if}
-{/foreach}
 {/if}
-{if count($forum.moderatorGroups) > 0},
-{foreach name='moderators' item='mod' key='modid' from=$forum.moderatorGroups}
-{$mod.group.name} ({gt text='Group'}){if !$smarty.foreach.moderators.last}, {/if}
+{if count($forum.moderatorUsers) > 0}
+<span>
+{foreach name='moderators' item='mod' key='modid' from=$forum.moderatorUsers}
+{$mod.forumUser.user.uid|profilelinkbyuid}{if !$smarty.foreach.moderators.last}, {/if}
 {/foreach}
+{if count($forum.moderatorGroups) > 0}, {/if}
+</span>
+{/if}
+{if count($forum.moderatorGroups) > 0}
+<span>
+{foreach name='modgroups' item='group' key='id' from=$forum.moderatorGroups}
+{$group.group.name} ({gt text='Group'}){if !$smarty.foreach.modgroups.last}, {/if}
+{/foreach}
+</span>
+{/if}
+{if (count($forum.moderatorUsers) > 0) OR (count($forum.moderatorGroups) > 0)}
+</div>
 {/if}
