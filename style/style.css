@@ -630,6 +630,10 @@ div#editpostoptions ul li {
     vertical-align: middle;
 }
 
+#dizkus #message {
+    width: 96%;
+}
+
 /*******************************************************************************/
 /* These style definitions are mainly IE specific tweaks required due to its poor CSS support.
 /*******************************************************************************/
