@@ -186,7 +186,8 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
     {
         if ($this->name == self::ROOTNAME) {
             // do not display actual rootname
-            return 'Forum Index'; // cannot translate in entity :-(
+            $dom = ZLanguage::getModuleDomain('Dizkus');
+            return __('Forum Index', $dom);
         }
         return $this->name;
     }
@@ -374,11 +375,21 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $this->moderatorUsers;
     }
 
-    public function getModeratorUsersAsIdArray()
+    /**
+     * Get all the moderator uids for current forum or full tree
+     *
+     * @param boolean $includeParents include entire parent tree? (recursive)
+     * @return array
+     */
+    public function getModeratorUsersAsIdArray($includeParents = false)
     {
         $output = array();
-        foreach ($this->moderatorUsers as $moderatorUser) {
-            $output[] = $moderatorUser->getForumUser()->getUser_id();
+        $thisForum = $this;
+        while ((isset($thisForum)) && ($thisForum->getForum_id() > 1)) {
+            foreach ($thisForum->getModeratorUsers() as $moderatorUser) {
+                $output[] = $moderatorUser->getForumUser()->getUser_id();
+            }
+            $thisForum = ($includeParents) ? $thisForum->getParent() : null;
         }
 
         return $output;
@@ -409,11 +420,21 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         return $this->moderatorGroups;
     }
 
-    public function getModeratorGroupsAsIdArray()
+    /**
+     * Get all the moderator group ids for current forum or full tree
+     *
+     * @param boolean $includeParents include entire parent tree? (recursive)
+     * @return array
+     */
+    public function getModeratorGroupsAsIdArray($includeParents = false)
     {
         $output = array();
-        foreach ($this->moderatorGroups as $moderatorGroup) {
-            $output[] = $moderatorGroup->getGroup()->getGid();
+        $thisForum = $this;
+        while ((isset($thisForum)) && ($thisForum->getForum_id() > 1)) {
+            foreach ($thisForum->getModeratorGroups() as $moderatorGroup) {
+                $output[] = $moderatorGroup->getGroup()->getGid();
+            }
+            $thisForum = ($includeParents) ? $thisForum->getParent() : null;
         }
 
         return $output;

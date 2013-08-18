@@ -253,16 +253,17 @@ class Dizkus_Manager_Forum
         if (!isset($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray();
+        $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
         if (in_array($uid, $moderatorUsers)) {
             return true;
         }
-        $gids = $this->_forum->getModeratorGroupsAsIdArray();
+        $gids = $this->_forum->getModeratorGroupsAsIdArray(true);
         if (empty($gids)) {
             return false;
         }
 
-        $dql = "SELECT m FROM Groups\Entity\GroupMembershipEntity m
+        // is this user in any of the groups?
+        $dql = "SELECT m FROM Zikula\Module\GroupsModule\Entity\GroupMembershipEntity m
             WHERE m.uid = :uid
             AND m.gid IN (:gids)";
         $groupMembership = $this->entityManager->createQuery($dql)

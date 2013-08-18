@@ -29,15 +29,27 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi
         $em = $this->getService('doctrine.entitymanager');
         $mods = array('users' => array(), 
             'groups' => array());
-        
+        if (isset($forum_id)) {
+            // get array of parents
+            $forum = $em->getRepository('Dizkus_Entity_Forum')->find($forum_id);
+            $conn = $em->getConnection();
+            // resort to brute SQL because no easy DQL way here.
+            $sql = "SELECT parent FROM dizkus_forums WHERE forum_order <= {$forum->getLft()} AND rgt >= {$forum->getRgt()} AND parent > 1";
+            $parents = $conn->fetchAll($sql);
+        }
         // get moderator users
         $qb = $em->createQueryBuilder();
         $qb->select('m')
             ->from('Dizkus_Entity_Moderator_User', 'm')
             ->leftJoin('m.forumUser', 'u');
         if (!empty($forum_id)) {
-            $qb->andWhere('m.forum = :forum')
+            $qb->where('m.forum = :forum')
                 ->setParameter('forum', $forum_id);
+            // check parents also
+            if (!empty($parents)) {
+                $qb->orWhere('m.forum IN (:forums)')
+                    ->setParameter('forums', $parents);
+            }
         } else {
             $qb->groupBy('m.forumUser');
         }
@@ -55,8 +67,13 @@ class Dizkus_Api_Moderators extends Zikula_AbstractApi
             ->from('Dizkus_Entity_Moderator_Group', 'm')
             ->leftJoin('m.group', 'g');
         if (!empty($forum_id)) {
-            $qb->andWhere('m.forum = :forum')
+            $qb->where('m.forum = :forum')
                 ->setParameter('forum', $forum_id);
+            // check parents also
+            if (!empty($parents)) {
+                $qb->orWhere('m.forum IN (:forums)')
+                    ->setParameter('forums', $parents);
+            }
         } else {
             $qb->groupBy('m.group');
         }
