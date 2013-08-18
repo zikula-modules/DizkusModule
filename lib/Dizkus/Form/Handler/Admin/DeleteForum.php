@@ -63,7 +63,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $this->view->assign('actions', $actions);
         $this->view->assign('action', self::DELETE_CHILDREN); // default
 
-        $destinations = ModUtil::apiFunc($this->name, 'Forum', 'getParents');
+        $destinations = ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeLocked' => false));
         $this->view->assign('destinations', $destinations);
 
         $this->view->caching = false;

@@ -22,9 +22,7 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     {
         $id = isset($args['id']) ? $args['id'] : null;
         $includeLocked = isset($args['includeLocked']) ? $args['includeLocked'] : true;
-        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
-        $forumRoot = $repo->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
-        $parents = $repo->childrenHierarchy($forumRoot);
+        $parents = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy();
         $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;
@@ -67,6 +65,9 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
                 // only include results if
                 if ((($i['status'] == Dizkus_Entity_Forum::STATUS_LOCKED) && $includeLocked)
                         || ($i['status'] == Dizkus_Entity_Forum::STATUS_UNLOCKED)) {
+                    if ($i['name'] == Dizkus_Entity_Forum::ROOTNAME) {
+                        $i['name'] = $this->__('Forum Index (top level)');
+                    }
                     $output[] = array(
                         'value' => $i['forum_id'],
                         'text' => $pre . $i['name']

@@ -173,16 +173,6 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
     /**
      *
      */
-    public function modifycategory()
-    {
-        $form = FormUtil::newForm('Dizkus', $this);
-
-        return $form->execute('admin/modifycategory.tpl', new Dizkus_Form_Handler_Admin_ModifyCategory());
-    }
-
-    /**
-     *
-     */
     public function modifyForum()
     {
         $form = FormUtil::newForm('Dizkus', $this);

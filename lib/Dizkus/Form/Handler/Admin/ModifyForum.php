@@ -45,10 +45,16 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
 
         $id = $this->request->query->get('id', null);
-        if ($id) {
+        // disallow editing of root forum
+        if ($id == 1) {
+            LogUtil::registerError($this->__("Editing of root forum is disallowed", 403));
+            System::redirect(ModUtil::url('Dizkus', 'admin', 'tree'));
+        }
+        if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
             $this->_action = 'e';
         } else {
+            $id = null;
             $view->assign('templatetitle', $this->__('Create forum'));
             $this->_action = 'c';
         }
