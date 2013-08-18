@@ -170,6 +170,8 @@ class Dizkus_Entity_Forum extends Zikula_EntityAccess
         $this->moderatorGroups = new ArrayCollection();
         $this->subscriptions = new ArrayCollection();
         $this->children = new ArrayCollection();
+        //set a default value for the forum order
+        $this->lft = 'forum_name';
     }
 
     public function getForum_id()
