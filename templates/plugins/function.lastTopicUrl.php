@@ -9,7 +9,7 @@
  */
 
 /**
- * allowedhtml plugin
+ * lastTopicUrl plugin
  * lists all allowed html tags
  *
  */
