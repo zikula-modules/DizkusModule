@@ -24,6 +24,7 @@ class Dizkus_Manager_Topic
      */
     private $_topic;
     private $_itemsPerPage;
+    private $_defaultPostSortOrder;
     private $_numberOfItems;
     /**
      * first post in topic
@@ -53,6 +54,8 @@ class Dizkus_Manager_Topic
             // create new topic
             $this->_topic = new Dizkus_Entity_Topic();
         }
+        $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
+        $this->_defaultPostSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
     }
 
     /**
@@ -136,21 +139,22 @@ class Dizkus_Manager_Topic
      */
     public function getPosts($startNumber = 1)
     {
-        // Feb 1, 2013 - the posts are part of the $_topic var - could we pull them from there?
-
-        $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
-
-        $id = $this->_topic->getTopic_id();
-
+        if (UserUtil::isLoggedIn()) {
+            $managedForumUser = new Dizkus_Manager_ForumUser();
+            $postSortOrder = $managedForumUser->getPostOrder();
+        } else {
+            $postSortOrder = $this->_defaultPostSortOrder;
+        }
+        // Do a new query in order to limit maxresults, firstresult, order, etc.
         $query = $this->entityManager
                 ->createQueryBuilder()
                 ->select('p, u, r')
                 ->from('Dizkus_Entity_Post', 'p')
                 ->where('p.topic = :topicId')
-                ->setParameter('topicId', $id)
+                ->setParameter('topicId', $this->_topic->getTopic_id())
                 ->leftJoin('p.poster', 'u')
                 ->leftJoin('u.rank', 'r')
-                ->orderBy('p.post_time', 'ASC') // should be set by user preference item @see Poster
+                ->orderBy('p.post_time', $postSortOrder)
                 ->getQuery();
 
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);

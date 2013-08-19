@@ -86,7 +86,7 @@
     <fieldset>
         <legend>{gt text="User-related settings"}</legend>
         <div class="z-formrow">
-            {formlabel for="post_sort_order" __text="Sort order for posts"}
+            {formlabel for="post_sort_order" __text="Default sort order for posts"}
             {formdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$modvars.Dizkus.post_sort_order}
         </div>
         <div class="z-formrow">

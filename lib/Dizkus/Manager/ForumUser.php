@@ -42,6 +42,8 @@ class Dizkus_Manager_ForumUser
             $this->_forumUser = new Dizkus_Entity_ForumUser();
             $coreUser = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $uid);
             $this->_forumUser->setUser($coreUser);
+            $this->entityManager->persist($this->_forumUser);
+            $this->entityManager->flush();
         }
     }
 
