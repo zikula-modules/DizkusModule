@@ -19,16 +19,6 @@ jQuery(document).ready(function () {
 
     // Show cancel button.
     jQuery('#btnCancelQuickReply').removeClass('hidden');
-
-    // toggle visibility of edit icon for topic title
-    jQuery('#edittopicsubjectbutton').hover(
-            function() {
-                jQuery('#edittopicicon').removeClass('z-hide');
-            },
-            function() {
-                jQuery('#edittopicicon').addClass('z-hide');
-            }
-    );
 });
 
 function changeTopicStatus(e) {
@@ -106,6 +96,7 @@ function changeTopicTitle(e) {
         data: {
             topic: jQuery('#topic_id').val(),
             title: jQuery('#topicsubjectedit_subject').val(),
+            userAllowedToEdit: jQuery('#userAllowedToEdit').val(),
             action: 'setTitle'
         },
         url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=changeTopicStatus",

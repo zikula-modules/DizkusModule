@@ -274,8 +274,9 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         // Get common parameters
         $params = array();
-        $params['topic_id'] = FormUtil::getPassedValue('topic', '', 'POST');
-        $params['action'] = FormUtil::getPassedValue('action', '', 'POST');
+        $params['topic_id'] = $this->request->request->get('topic', '');
+        $params['action'] = $this->request->request->get('action', '');
+        $userAllowedToEdit = $this->request->request->get('userAllowedToEdit', 0);
 
         // Check if topic is is set
         if (empty($params['topic_id'])) {
@@ -285,7 +286,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         // Check if action is legal
         $allowedActions = array('lock', 'unlock', 'sticky', 'unsticky', 'subscribe', 'unsubscribe', 'solve', 'unsolve', 'setTitle');
         if (empty($params['action']) || !in_array($params['action'], $allowedActions)) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus_ajax_lockunlocktopic()\'.', DataUtil::formatForDisplay($params['action'])));
+            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus/Ajax/changeTopicStatus()\'.', DataUtil::formatForDisplay($params['action'])));
         }
 
         // Get title parameter if action == setTitle
@@ -299,7 +300,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         SessionUtil::setVar('zk_ajax_call', 'ajax');
 
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate') && !($userAllowedToEdit == 1)) {
             LogUtil::registerPermissionError(null, true);
             throw new Zikula_Exception_Forbidden();
         }

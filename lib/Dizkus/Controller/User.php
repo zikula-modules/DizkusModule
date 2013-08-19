@@ -130,7 +130,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
-        $this->view->assign('topic', $managedTopic->get()->toArray());
+        $this->view->assign('topic', $managedTopic->get());
         $this->view->assign('posts', $managedTopic->getPosts(--$start));
         $this->view->assign('pager', $managedTopic->getPager());
         $this->view->assign('permissions', $managedTopic->getPermissions());

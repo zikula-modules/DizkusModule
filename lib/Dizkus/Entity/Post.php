@@ -270,4 +270,23 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
         return $this->topic->getTopic_id();
     }
 
+    /**
+     * determine if a user is allowed to edit this post
+     *
+     * @param integer $uid
+     * @return boolean
+     */
+    public function userAllowedToEdit($uid = null)
+    {
+        // default to current user
+        $uid = (isset($uid)) ? $uid : UserUtil::getVar('uid');
+        $timeAllowedToEdit = ModUtil::getVar('Dizkus', 'timespanforchanges'); // in hours
+        $postTime = clone $this->post_time;
+        $canEditUtil = $postTime->modify("+$timeAllowedToEdit hours");
+        $now = new DateTime();
+        if (($uid == $this->poster->getUser_id()) && ($now <= $canEditUtil)) {
+            return true;
+        }
+        return false;
+    }
 }

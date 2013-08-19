@@ -377,5 +377,8 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
         $this->hookedUrlObject = $hookedUrlObject;
     }
 
-
+    public function userAllowedToEdit($uid = null)
+    {
+        return $this->posts->first()->userAllowedToEdit($uid);
+    }
 }

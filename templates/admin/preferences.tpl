@@ -120,9 +120,9 @@
         </div>
 
         <div class="z-formrow">
-            {formlabel for="timespanforchanges" __text="Number of hours during which edits to posts are allowed (Maximum:72)"}
+            {formlabel for="timespanforchanges" __text="Number of hours during which non-moderators are allowed to edit their post (leave blank for unlimited)"}
             <span>
-                {formintinput id="timespanforchanges" text=$modvars.Dizkus.timespanforchanges size="3" maxLength="3" minValue=1 maxValue=72}
+                {formintinput id="timespanforchanges" text=$modvars.Dizkus.timespanforchanges size="3" maxLength="3"}
                 {gt text="hours"}
             </span>
         </div>

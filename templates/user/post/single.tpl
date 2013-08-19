@@ -111,7 +111,7 @@
                             <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
                         </li>
                         {/if}
-                        {if $permissions.edit eq 1}
+                        {if $permissions.edit eq 1 OR $post->userAllowedToEdit()}
                         <li><a class="editpostlink tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname='Dizkus' type='user' func='editpost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
                         {/if}
                         {elseif isset($topic)}

@@ -10,7 +10,7 @@
 {pageaddvar name='javascript' value='zikula'}
 
 <h2>
-<span {if $modvars.Dizkus.ajax}class="editabletopicheader" {/if}id="edittopicsubjectbutton" title="">
+<span id="edittopicsubjectbutton" title="">
     <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
         [{gt text="Solved"}]
     </span>
@@ -21,11 +21,16 @@
 
 {* add inline edit *}
 {usergetvar name='uid' assign='currentUser'}
-{if ($modvars.Dizkus.ajax && ($permissions.moderate eq 1 || $topic.poster.user.uid eq $currentUser))}
+{if ($modvars.Dizkus.ajax && ($permissions.moderate eq 1 || $topic->userAllowedToEdit()))}
 {include file='ajax/edittopicsubject.tpl'}
 <script type="text/javascript">
     jQuery(document).ready(function () {
-        jQuery('#edittopicsubjectbutton').addClass('tooltips').attr('title', '{{gt text="Click to edit"}}');
+        // toggle visibility of edit icon for topic title
+        jQuery('#edittopicsubjectbutton').hover(
+            function() {jQuery('#edittopicicon').removeClass('z-hide');},
+            function() {jQuery('#edittopicicon').addClass('z-hide');}
+        );
+        jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', '{{gt text="Click to edit"}}');
         jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')});
         jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')});
         jQuery("#topicsubjectedit_save").click(changeTopicTitle);
