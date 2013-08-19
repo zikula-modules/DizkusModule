@@ -18,8 +18,8 @@
         </div>
         {if $modvars.Dizkus.favorites_enabled eq 'yes'}
         <div class="z-formrow">
-            {formlabel for="user_favorites" __text="Display only favorite forums"}
-            {formcheckbox id="user_favorites"}
+            {formlabel for="displayOnlyFavorites" __text="Display only favorite forums"}
+            {formcheckbox id="displayOnlyFavorites"}
         </div>
         {/if}
         <div class="z-formrow">

@@ -195,6 +195,17 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
     }
 
     /**
+     * set the displayOnlyFavorites value;
+     * @param boolean $val
+     */
+    public function setDisplayOnlyFavorites($val)
+    {
+        if (is_bool($val)) {
+            $this->displayOnlyFavorites = $val;
+        }
+    }
+
+    /**
      * display favorite forums only
      */
     public function showFavoritesOnly()
