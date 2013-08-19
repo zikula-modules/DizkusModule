@@ -1,6 +1,5 @@
 {pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
-{readtopforums}
-{* readtopforums maxforums=$maxforums USE THIS WITH MAXFORUMS PARAMETER SET IN BLOCK CONFIGURATION*}
+{readtopforums params=$statparams}
 {if $topforumscount > 0}
 <br />
 <strong>{$topforumscount}&nbsp;{gt text="Most-active forums" domain="module_dizkus"}:</strong>
@@ -15,9 +14,7 @@
 </ul>
 {/if}
 
-{* use show_m2f=true as parameter for readlastposts to show mail2forum postings, they are hidden by default *}
-{readlastposts}
-{* readlastposts maxposts=$maxposts forum_id=$forum_id  USE THIS WITH MAXPOSTS AND FORUM_ID PARAMETERS SET IN BLOCK CONFIGURATION *}
+{readlastposts params=$statparams}
 {if $lastpostcount > 0}
 <br />
 <strong>{$lastpostcount} {gt text="Recent topics" domain="module_dizkus"}:</strong>
@@ -34,8 +31,7 @@
 </ul>
 {/if}
 
-{readtopposters}
-{* readtopposters maxposters=$maxposters USE THIS WITH MAXPOSTERS PARAMETER SET IN BLOCK CONFIGURATION *}
+{readtopposters params=$statparams}
 {if $toppostercount > 0}
 <br />
 <strong>{$toppostercount} {gt text="Most-active posters" domain="module_dizkus"}:</strong>
@@ -47,7 +43,7 @@
 </ul>
 {/if}
 
-{readstatistics}
+{readstatistics}{* accepts no parameters *}
 <br />
 <strong>{gt text="Total" domain="module_dizkus"}:</strong>
 <br />

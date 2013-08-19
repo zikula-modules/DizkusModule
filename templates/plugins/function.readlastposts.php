@@ -25,6 +25,7 @@
  */
 function smarty_function_readlastposts($params, Zikula_View $view)
 {
+    $params = $params['params'];
     $maxposts = (isset($params['maxposts']) && is_numeric($params['maxposts']) && $params['maxposts'] > 0) ? $params['maxposts'] : 5;
     // hard limit maxposts to 100 to be safe
     $maxposts = ($maxposts > 100) ? 100 : $maxposts;
@@ -56,9 +57,11 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     }
 
     $wherefavorites = array();
-    // we only want to do this if $favorites is set and $whereforum is empty
+    // only do this if $favorites is set and $whereforum is empty
     // and the user is logged in.
     // (Anonymous doesn't have favorites)
+    $managedForumUser = null;
+    $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
     if (isset($params['favorites']) && $params['favorites'] && empty($whereforum) && $loggedIn) {
         // get the favorites
         $managedForumUser = new Dizkus_Manager_ForumUser($uid);
@@ -68,19 +71,21 @@ function smarty_function_readlastposts($params, Zikula_View $view)
                 $wherefavorites[] = $forum->getForum()->getForum_id();
             }
         }
+        $post_sort_order = $managedForumUser->getPostOrder();
     }
 
-    $wherespecial = array(0);
-    // if show_m2f is set we show contents of m2f forums where.
-    // forum_pop3_active is set to 1
-    if (isset($params['show_m2f']) && $params['show_m2f'] == true) {
-        $wherespecial[] = 1;
-    }
-    // if show_rss is set we show contents of rss2f forums where.
-    // forum_pop3_active is set to 2
-    if (isset($params['show_rss']) && $params['show_rss'] == true) {
-        $wherespecial[] = 2;
-    }
+//    DISABLED UNTIL m2f and rss2f are reactivated
+//    $wherespecial = array(0);
+//    // if show_m2f is set we show contents of m2f forums where.
+//    // forum_pop3_active is set to 1
+//    if (isset($params['show_m2f']) && $params['show_m2f'] == true) {
+//        $wherespecial[] = 1;
+//    }
+//    // if show_rss is set we show contents of rss2f forums where.
+//    // forum_pop3_active is set to 2
+//    if (isset($params['show_rss']) && $params['show_rss'] == true) {
+//        $wherespecial[] = 2;
+//    }
 
     /** @var $em Doctrine\ORM\EntityManager */
     $em = $view->getContainer()->get('doctrine.entitymanager');
@@ -98,10 +103,11 @@ function smarty_function_readlastposts($params, Zikula_View $view)
         $qb->andWhere('t.forum IN (:forum)')
                 ->setParameter('forum', $wherefavorites);
     }
-    if (!empty($wherespecial)) {
-        $qb->andWhere('f.forum_pop3_active IN (:special)')
-                ->setParameter('special', $wherespecial);
-    }
+//    DISABLED UNTIL m2f and rss2f are reactivated
+//    if (!empty($wherespecial)) {
+//        $qb->andWhere('f.forum_pop3_active IN (:special)')
+//                ->setParameter('special', $wherespecial);
+//    }
     if (!empty($params['user_id'])) {
         $whereUserId = ($params['user_id'] == -1 && $loggedIn) ? $uid : $params['user_id'];
         $qb->andWhere('fu.uid = :id)')
@@ -113,7 +119,6 @@ function smarty_function_readlastposts($params, Zikula_View $view)
 
     $lastposts = array();
     if (!empty($topics)) {
-        $post_sort_order = $managedForumUser->getPostOrder();
         $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
         /* @var $topic Dizkus_Entity_Topic */
         foreach ($topics as $topic) {

@@ -83,15 +83,16 @@ class Dizkus_Block_Center extends Zikula_Controller_AbstractBlock
         if (empty($vars['cb_parameters'])) {
             $vars['cb_parameters'] = 'maxposts=5';
         }
-        $params = explode(',', $vars['cb_parameters']);
 
+        $paramarray = array();
+        $params = explode(',', $vars['cb_parameters']);
         if (is_array($params) && (count($params) > 0)) {
             foreach ($params as $param) {
                 $paramdata = explode('=', $param);
-                $this->view->assign(trim($paramdata[0]), trim($paramdata[1]));
+                $paramarray[trim($paramdata[0])] = trim($paramdata[1]);
             }
         }
-
+        $this->view->assign('params', $paramarray);
         $blockinfo['content'] = $this->view->fetch(trim($vars['cb_template']));
 
         return BlockUtil::themesideblock($blockinfo);

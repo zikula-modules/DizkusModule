@@ -1,5 +1,3 @@
-{* Rename this to display.tpl if you want to use it*}
-
 {pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
 {pageaddvar name="javascript" value="javascript/ajax/prototype.js"}
 {pageaddvar name="javascript" value="javascript/helpers/Zikula.js"}

@@ -1,8 +1,6 @@
 {pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
 
-{* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *}
-{readlastposts maxposts=$maxposts}
-{*readlastposts maxposts=$maxposts forum_id=$forum_id USE THIS WITH FORUM_ID PARAMETERS SET IN BLOCK CONFIGURATION*}
+{readlastposts params=$params}
 {if $lastpostcount > 0}
 <p class="dzk_centerblockheader">
     <strong>{$lastpostcount}&nbsp;{gt text="Recent postings:" domain="module_dizkus"}</strong>

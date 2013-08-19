@@ -78,15 +78,15 @@ class Dizkus_Block_Statistics extends Zikula_Controller_AbstractBlock
             $vars['sb_parameters'] = 'maxposts=5';
         }
 
+        $paramarray = array();
         $params = explode(',', $vars['sb_parameters']);
-
         if (is_array($params) && count($params) > 0) {
             foreach ($params as $param) {
                 $paramdata = explode('=', $param);
-                $this->view->assign(trim($paramdata[0]), trim($paramdata[1]));
+                $paramarray[trim($paramdata[0])] = trim($paramdata[1]);
             }
         }
-
+        $this->view->assign('statparams', $paramarray);
         $blockinfo['content'] = $this->view->fetch(trim($vars['sb_template']));
 
         return BlockUtil::themesideblock($blockinfo);

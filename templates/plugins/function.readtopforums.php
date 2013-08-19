@@ -10,6 +10,7 @@
  */
 function smarty_function_readtopforums($params, Zikula_View $view)
 {
+    $params = $params['params'];
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
 
     /** @var $em Doctrine\ORM\EntityManager */

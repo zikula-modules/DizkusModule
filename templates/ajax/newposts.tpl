@@ -1,5 +1,4 @@
-{* use show_m2f=true as parameter for readlastposts to show mail2forum postings, there are hidden per default *}
-{readlastposts maxposts=$maxposts}
+{readlastposts params=$params}
 
 {if $lastpostcount > 0}
 <dl>

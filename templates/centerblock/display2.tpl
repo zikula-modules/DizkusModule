@@ -1,6 +1,6 @@
 {pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
 
-{readlastposts forum_id=$forum_id maxposts=$maxposts}
+{readlastposts params=$params}
 {if $lastpostcount > 0}
 <table class="z-datatable">
     <tr>

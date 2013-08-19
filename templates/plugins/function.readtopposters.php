@@ -19,6 +19,7 @@
  */
 function smarty_function_readtopposters($params, Zikula_View $view)
 {
+    $params = $params['params'];
     $postermax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
 
     /** @var $em Doctrine\ORM\EntityManager */
