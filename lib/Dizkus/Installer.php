@@ -234,7 +234,6 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'timespanforchanges' => 24,
             'forum_enabled' => 'yes',
             'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
-            'newtopicconfirmation' => 'no',
             'signaturemanagement' => 'no',
             'signature_start' => '',
             'signature_end' => '',
@@ -315,6 +314,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('gravatarimage');
         $this->delVar('ignorelist_handling');
         $this->delVar('hideusers');
+        $this->delVar('newtopicconfirmation');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
         $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB

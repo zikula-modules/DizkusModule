@@ -58,6 +58,4 @@
     </fieldset>
 {/form}
 
-<div id="newtopicconfirmation" style="display: none;">&nbsp;</div>
-
 {include file='user/footer.tpl'}

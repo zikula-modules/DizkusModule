@@ -464,14 +464,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
                         'attach_signature' => $attach_signature,
                         'subscribe_topic' => $subscribe_topic));
 
-            if (ModUtil::getVar('Dizkus', 'newtopicconfirmation') == 'yes') {
-                $this->view->assign('topic', $topic);
-                $confirmation = $this->view->fetch('ajax/newtopicconfirmation.tpl');
-            } else {
-                $confirmation = false;
-            }
             return new Zikula_Response_Ajax(array('topic' => $topic,
-                        'confirmation' => $confirmation,
                         'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true)));
         }
 

@@ -23,7 +23,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             'signaturemanagement',
             'removesignature',
             'striptags',
-            'newtopicconfirmation',
             'forum_enabled',
             'fulltextindex',
             'extendedsearch',

@@ -105,10 +105,6 @@
             {formlabel for="removesignature" __text="Strip user signatures from posts"}
             {formcheckbox id="removesignature"}
         </div>
-        <div class="z-formrow">
-            {formlabel for="newtopicconf" __text="Display confirmation when a new topic has been created"}
-            {formcheckbox id="newtopicconfirmation"}
-        </div>
     </fieldset>
 
     <fieldset>
