@@ -12,8 +12,6 @@
 <p class='ctheme-description'>{$forum.description|safehtml}</p>
 {/if}
 
-{if $permissions.moderate eq true or $permissions.comment eq true}
-
 <div id="dzk_maincategorylist">
 
     {if count($forum.children) > 0}
@@ -58,11 +56,11 @@
     </div>
     {/if}
 
+    {if $permissions.comment eq true}
     {if $forum.lvl > 0}
     <div class="roundedbar dzk_rounded">
         <div class="inner">
             <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
-                {* Moderate *}
                 {if $permissions.comment && !$forum->isLocked()}
                 <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                 {/if}
@@ -101,8 +99,8 @@
         </div>
     </div>
     {/if}
+    {/if}
 </div>
-{/if}
 
 {if $forum.lvl > 0}
 {if $topics}
