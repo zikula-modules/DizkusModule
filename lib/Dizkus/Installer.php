@@ -227,7 +227,6 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'extendedsearch' => 'no',
             'm2f_enabled' => 'yes',
             'favorites_enabled' => 'yes',
-            'hideusers' => 'no',
             'removesignature' => 'no',
             'striptags' => 'yes', // default to yes for security
             'deletehookaction' => 'lock',
@@ -315,6 +314,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
         $this->delVar('ignorelist_handling');
+        $this->delVar('hideusers');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
         $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB

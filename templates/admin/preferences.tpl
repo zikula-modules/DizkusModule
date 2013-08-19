@@ -40,10 +40,6 @@
             {formintinput id="topics_per_page" text=$modvars.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=100}
         </div>
         <div class="z-formrow">
-            {formlabel for="hideusers" __text="Hide users in forum admin interface"}
-            {formcheckbox id="hideusers"}
-        </div>
-        <div class="z-formrow">
             {formlabel for="url_ranks_images" __text="Path to rank images"}
             {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
         </div>
@@ -59,7 +55,7 @@
 
     <fieldset>
         <legend>{gt text="Advanced settings"}</legend>
-        {*
+        {* fulltext disabled until technology available
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
             {formcheckbox id="fulltextindex"}

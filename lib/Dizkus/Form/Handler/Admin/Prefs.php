@@ -20,7 +20,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             'm2f_enabled',
             'rss2f_enabled',
             'favorites_enabled',
-            'hideusers',
             'signaturemanagement',
             'removesignature',
             'striptags',
