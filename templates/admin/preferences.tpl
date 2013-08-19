@@ -54,7 +54,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>{gt text="Advanced settings"}</legend>
+        <legend>{gt text="Forum Search settings"}</legend>
         {* fulltext disabled until technology available
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
