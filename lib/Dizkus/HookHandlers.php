@@ -54,7 +54,9 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     public function uiView(Zikula_DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canComment', $hook->getCaller()));
+        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", "::", ACCESS_COMMENT)) {
+            return;
+        }
 
         $request = ServiceUtil::getService('request');
         $start = (int)$request->query->get('start', 1);

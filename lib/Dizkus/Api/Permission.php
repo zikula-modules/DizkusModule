@@ -92,17 +92,6 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
     }
 
     /**
-     * Check to see if COMMENT perms are granted on provided module
-     *
-     * @param string $module
-     * @return boolean
-     */
-    public function canComment($module)
-    {
-        return SecurityUtil::checkPermission("$module::", "::", ACCESS_COMMENT);
-    }
-
-    /**
      * check Permission
      *
      * @param array|object $args  Arguments.
