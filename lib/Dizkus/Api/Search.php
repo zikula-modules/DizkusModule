@@ -184,13 +184,14 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         $topics = $qb->getQuery()->getResult();
 
         $sessionId = session_id();
+        $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');
 
         // Process the result set and insert into search result table
         foreach ($topics as $topic) {
             $posts = $topic->getPosts();
             $record = array(
                 'title' => $topic->getTitle(),
-                'text' => $posts[0]->getPost_text(),
+                'text' => ($showtextinsearchresults == 'yes') ? $posts[0]->getPost_text() : '',
                 'created' => $topic->getTopic_time()->format("Y-m-d H:i:s"),
                 'module' => 'Dizkus',
                 'session' => $sessionId,
