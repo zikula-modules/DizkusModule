@@ -100,13 +100,13 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
     {
         if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
             // for privacy issues ip logging can be deactivated
-            $this->poster_ip = '127.0.0.1';
+            $this->poster_ip = 'unrecorded';
         } else {
-            // some enviroment for logging ;)
+            $request = ServiceUtil::getService('request');
             if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
-                $this->poster_ip = System::serverGetVar('REMOTE_ADDR') . "/" . System::serverGetVar('HTTP_X_FORWARDED_FOR');
+                $this->poster_ip = $request->server->get('REMOTE_ADDR') . "/" . $request->server->get('HTTP_X_FORWARDED_FOR');
             } else {
-                $this->poster_ip = System::serverGetVar('REMOTE_ADDR');
+                $this->poster_ip = $request->server->get('REMOTE_ADDR');
             }
         }
     }
