@@ -253,6 +253,10 @@ class Dizkus_Manager_Forum
         if (!isset($uid)) {
             $uid = UserUtil::getVar('uid');
         }
+        // all admins are moderators
+        if (SecurityUtil::checkPermission('Dizkus', '::', ACCESS_ADMIN)) {
+            return true;
+        }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
         if (in_array($uid, $moderatorUsers)) {
             return true;
@@ -274,7 +278,7 @@ class Dizkus_Manager_Forum
     }
 
     /**
-     * Is this foruma child of the provided forum?
+     * Is this forum a child of the provided forum?
      * 
      * @param Dizkus_Entity_Forum $forum
      * @return boolean
