@@ -79,12 +79,13 @@
                 <div class="content" id="postingtext_{$post.post_id}">
                     {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
-                    {if $post.attachSignature}
+                    {if $post.attachSignature AND ($modvars.Dizkus.removesignature == 'no')}
                     {usergetvar name='signature' assign="signature"}
                     {if !empty($signature)}
                         <em>
-                            <br /><br />--<br />
+                            <br /><br />{$modvars.Dizkus.signature_start}<br />
                             {$signature|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
+                            <br />{$modvars.Dizkus.signature_end}</br>
                         </em>
                     {/if}
                     {/if}
