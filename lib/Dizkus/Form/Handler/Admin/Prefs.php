@@ -36,7 +36,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             array('text' => $this->__('Descending'), 'value' => 'DESC')));
 
         $this->view->assign('deletehook_options', array(array('text' => $this->__('Delete topic'), 'value' => 'remove'),
-            array('text' => $this->__('Close topic'), 'value' => 'lock')));
+            array('text' => $this->__('Lock topic'), 'value' => 'lock')));
 
         $vars = $this->getVars();
 
