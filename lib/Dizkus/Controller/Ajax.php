@@ -195,7 +195,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             }
         }
 
-        throw new Zikula_Exception_Fatal($this->__('Error! No post ID in \'Dizkus_ajax_readrawtext()\'.'));
+        throw new Zikula_Exception_Fatal($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
     }
 
     /**
@@ -255,7 +255,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             return new Zikula_Response_Ajax($response);
         }
 
-        throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus_ajax_updatepost()\'.'));
+        throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
     }
 
     /**
@@ -280,7 +280,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         // Check if topic is is set
         if (empty($params['topic_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus_ajax_changeTopicStatus()\'.'));
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus/Ajax/changeTopicStatus()\'.'));
         }
 
         // Check if action is legal
@@ -359,7 +359,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             }
         }
 
-        return AjaxUtil::error($this->__('Error! No post ID in \'Dizkus_ajax_readpost()\'.'), array(), true, true, '400 Bad Data');
+        return AjaxUtil::error($this->__('Error! No post ID in \'Dizkus/Ajax/readpost()\'.'), array(), true, true, '400 Bad Data');
     }
 
     /**
@@ -382,7 +382,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             'action' => FormUtil::getPassedValue('action', 'POST')
         );
         if (empty($params['forum_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus_ajax_addremovefavorite()\'.'));
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
         }
 
 
