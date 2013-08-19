@@ -22,7 +22,14 @@ class Dizkus_Api_Forum extends Zikula_AbstractApi
     {
         $id = isset($args['id']) ? $args['id'] : null;
         $includeLocked = isset($args['includeLocked']) ? $args['includeLocked'] : true;
-        $parents = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy();
+        $includeRoot = ((isset($args['includeRoot'])) && ($args['includeRoot'] == false)) ? false : true;
+        if ($includeRoot) {
+            $forumRoot = null;
+        } else {
+            $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')
+                        ->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
+        }
+        $parents = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;

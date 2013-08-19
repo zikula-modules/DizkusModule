@@ -41,7 +41,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             $view = Zikula_View::getInstance('Dizkus', false, null, true);
             $view->assign('active', (isset($args['active']) && isset($args['active']['Dizkus'])) || !isset($args['active']));
-            $view->assign('forums', ModUtil::apiFunc('Dizkus', 'admin', 'readforums'));
+            $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
             return $view->fetch('search/options.tpl');
         }
         return false;
@@ -78,7 +78,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
-        if ($this->request->isGet()) {
+        if ($this->request->isMethod('GET')) {
             $args['forums'] = $this->request->query->get('Dizkus_forum', null);
             $args['searchwhere'] = $this->request->query->get('Dizkus_searchwhere', 'post');
         } else {
@@ -131,6 +131,13 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
         }
+        // get all forums the user is allowed to read
+        $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
+        if (!is_array($userforums) || count($userforums) == 0) {
+            // error or user is not allowed to read any forum at all
+            // return empty result set without even doing a db access
+            return true;
+        }
 
         $where = '';
         switch ($args['searchwhere']) {
@@ -138,7 +145,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
                 // searchfor is empty, we search by author only (done later on)
                 $searchauthor = UserUtil::getIDFromName($args['q']);
                 if ($searchauthor > 0) {
-                    $where = "p.poster_id = " . DataUtil::formatForStore($searchauthor);
+                    $where = "p.poster = " . DataUtil::formatForStore($searchauthor);
                 } else {
                     return true;
                 }
@@ -152,13 +159,28 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
                 }
         }
 
-        ModUtil::dbInfoLoad('Search');
+        // check forums (multiple selection is possible!)
+        if ((!is_array($args['forums']) && $args['forums'] == -1) || $args['forums'][0] == -1) {
+            // search in all forums we are allowed to see
+            $whereforums = 't.forum IN (' . DataUtil::formatForStore(implode($userforums, ',')) . ') ';
+        } else {
+            // filter out forums we are not allowed to read
+            $args['forums'] = array_intersect($userforums, (array)$args['forums']);
+
+            if (count($args['forums']) == 0) {
+                // error or user is not allowed to read any forum at all
+                // return empty result set without even doing a db access
+                return true;
+            }
+            $whereforums = 't.forum IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
+        }
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t')
                 ->from('Dizkus_Entity_Topic', 't')
                 ->leftJoin('t.posts', 'p')
-                ->add('where', $where);
+                ->where($where)
+                ->andWhere($whereforums);
         $topics = $qb->getQuery()->getResult();
 
         $sessionId = session_id();
@@ -169,9 +191,10 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
             $record = array(
                 'title' => $topic->getTitle(),
                 'text' => $posts[0]->getPost_text(),
-                'created' => $topic->getTopic_time(),
+                'created' => $topic->getTopic_time()->format("Y-m-d H:i:s"),
                 'module' => 'Dizkus',
-                'session' => $sessionId
+                'session' => $sessionId,
+                'extra' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id())),
             );
             if (!DBUtil::insertObject($record, 'search_result')) {
                 return LogUtil::registerError($this->__('Error! Could not save the search results.'));
