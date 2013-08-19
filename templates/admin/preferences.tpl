@@ -11,7 +11,6 @@
 
     <fieldset>
         <legend>{gt text="General settings"}</legend>
-
         <div class="z-formrow">
             {formlabel for="forum_enabled" __text='Forums are accessible to visitors'}
             {formcheckbox id="forum_enabled"}
@@ -135,11 +134,6 @@
 
     <fieldset>
         <legend>{gt text="Other settings"}</legend>
-
-        <div class="z-formrow">
-            {formlabel for="slimforum" __text="Hide category view when there is only one category"}
-            {formcheckbox id="slimforum"}
-        </div>
         <div class="z-formrow">
             {formlabel for="m2f_enabled" __text="Enable Mail2Forum"}
             {formcheckbox id="m2f_enabled"}

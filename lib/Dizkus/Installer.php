@@ -223,7 +223,6 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'url_ranks_images' => 'modules/Dizkus/images/ranks',
             'post_sort_order' => 'ASC',
             'log_ip' => 'no',
-            'slimforum' => 'no',
             'extendedsearch' => 'no',
             'm2f_enabled' => 'no',
             'favorites_enabled' => 'yes',
@@ -315,6 +314,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('ignorelist_handling');
         $this->delVar('hideusers');
         $this->delVar('newtopicconfirmation');
+        $this->delVar('slimforum');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
         $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB
