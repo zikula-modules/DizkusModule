@@ -78,6 +78,8 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
                 $this->setVar($yesno, $data[$yesno] == 1 ? 'yes' : 'no');
                 unset($data[$yesno]);
             }
+            $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB
+            $this->setVar('extendedsearch', 'no'); // disable until technology catches up with InnoDB
 
             // set the rest from the array
             $this->setVars($data);

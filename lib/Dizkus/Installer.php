@@ -317,7 +317,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
         $this->delVar('ignorelist_handling');
         // remove pn from images/rank folder
         $this->setVar('url_ranks_images', "modules/Dizkus/images/ranks");
-        $this->setVar('fulltextindex', 'no');
+        $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB
         $this->setVar('solved_enabled', true);
         $this->setVar('ajax', true);
 

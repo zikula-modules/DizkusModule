@@ -59,6 +59,7 @@
 
     <fieldset>
         <legend>{gt text="Advanced settings"}</legend>
+        {*
         <div class="z-formrow">
             {formlabel for="fulltextindex" __text="Enable full-text index field searching"}
             {formcheckbox id="fulltextindex"}
@@ -69,6 +70,7 @@
             {formcheckbox id="extendedsearch"}
             <p class="z-formnote z-informationmsg">{gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
         </div>
+        *}
         <div class="z-formrow">
             {formlabel for="showtextinsearchresults" __text="Show text in search results"}
             {formcheckbox id="showtextinsearchresults"}

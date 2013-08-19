@@ -198,6 +198,7 @@ class Dizkus_Api_Search extends Zikula_AbstractApi
      */
     private function fulltext($args)
     {
+        return; // disabled until reimplemented
         /*
          * There are no simple solutions for Fulltext searching using Doctrine
          * http://stackoverflow.com/questions/7246008/doctrine2-use-fulltext-and-myisam
