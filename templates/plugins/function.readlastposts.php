@@ -113,7 +113,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
 
     $lastposts = array();
     if (!empty($topics)) {
-        $post_sort_order = $managedForumUser->getPostOrder(); //ModUtil::apiFunc('Dizkus', 'user', 'get_user_post_order');
+        $post_sort_order = $managedForumUser->getPostOrder();
         $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
         /* @var $topic Dizkus_Entity_Topic */
         foreach ($topics as $topic) {
