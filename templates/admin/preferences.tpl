@@ -136,11 +136,11 @@
         <legend>{gt text="Other settings"}</legend>
         <div class="z-formrow">
             {formlabel for="m2f_enabled" __text="Enable Mail2Forum"}
-            {formcheckbox id="m2f_enabled"}
+            {formcheckbox id="m2f_enabled" disabled=true}
         </div>
         <div class="z-formrow">
             {formlabel for="rss2f_enabled" __text="Enable RSS2Forum"}
-            {formcheckbox id="rss2f_enabled"}
+            {formcheckbox id="rss2f_enabled" disabled=true}
         </div>
         <div class="z-formrow">
             {formlabel for="favorites_enabled" __text="Enable favourites"}
