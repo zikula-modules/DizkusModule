@@ -2,7 +2,7 @@
 {readtopforums params=$statparams}
 {if $topforumscount > 0}
 <br />
-<strong>{$topforumscount}&nbsp;{gt text="Most-active forums" domain="module_dizkus"}:</strong>
+<strong>{gt text="%s Most-active forum" plural="%s Most-active forums" tag1=$topforumscount count=$topforumscount domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_forumlist">
     {foreach item='topforum' from=$topforums}
@@ -17,7 +17,7 @@
 {readlastposts params=$statparams}
 {if $lastpostcount > 0}
 <br />
-<strong>{$lastpostcount} {gt text="Recent topics" domain="module_dizkus"}:</strong>
+<strong>{gt text="%s Recent topic" plural="%s Recent topics" tag1=$lastpostcount count=$lastpostcount domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_postlist">
     {foreach item='lastpost' from=$lastposts}
@@ -34,7 +34,7 @@
 {readtopposters params=$statparams}
 {if $toppostercount > 0}
 <br />
-<strong>{$toppostercount} {gt text="Most-active posters" domain="module_dizkus"}:</strong>
+<strong>{gt text="%s Most-active poster" plural="%s Most-active posters" tag1=$toppostercount count=$toppostercount domain="module_dizkus"}:</strong>
 <br />
 <ul class="dzk_posterlist">
     {foreach item='topposter' from=$topposters}
