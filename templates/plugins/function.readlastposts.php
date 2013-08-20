@@ -129,9 +129,9 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             $lastpost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
             $lastpost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getName());
 
-            $start = 0;
+            $start = 1;
             if ($post_sort_order == "ASC") {
-                $start = ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page);
+                $start = ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
             }
 
             if ($topic->getPoster()->getUser_id() != 1) {
