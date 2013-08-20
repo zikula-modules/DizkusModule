@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>{$sitename|safetext} - {$name|safetext}</title>
-        <link>{$forum_link|safetext}</link>
+        <link>{$forum_link|htmlentities|safetext}</link>
         <description>{$sitename|safetext} - {$name|safetext}</description>
         <language>{$current_language}</language>
         <pubDate>{$current_date}</pubDate>
@@ -13,11 +13,11 @@
         {foreach item='post' from=$posts}
         <item>
             <title>{$post.title|safetext}</title>
-            <link>{$post.last_post_url|safetext}</link>
-            <guid>{$post.last_post_url|safetext}</guid>
-            <description>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</description>
+            <link>{$post.last_post_url|htmlentities|safetext}</link>
+            <guid>{$post.last_post_url|htmlentities|safetext}</guid>
+            <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
             <pubDate>{$post.rsstime}</pubDate>
-            <category>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</category>
+            <category>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</category>
         </item>
         {/foreach}
     </channel>

@@ -604,7 +604,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
     public function feed()
     {
         $forum_id = $this->request->query->get('forum_id', null);
-        $cat_id = $this->request->query->get('cat_id', null);
         $count = (int)$this->request->query->get('count', 10);
         $feed = $this->request->query->get('feed', 'rss20');
         $user = $this->request->query->get('user', null);
@@ -617,10 +616,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
         if (isset($forum_id) && !is_numeric($forum_id)) {
             LogUtil::registerError($this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
-            return $this->redirect($mainUrl);
-        }
-        if (isset($cat_id) && !is_numeric($cat_id)) {
-            LogUtil::registerError($this->__f('Error! An invalid category ID %s was encountered.', $cat_id));
             return $this->redirect($mainUrl);
         }
 
@@ -662,13 +657,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $where = array('t.forum', (int)DataUtil::formatForStore($forum_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
             $forumname = $managedForum->get()->getName();
-        } elseif (!empty($cat_id)) {
-            $managedForum = new Dizkus_Manager_Forum($cat_id);
-            $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $cat_id)));
-
-            $where = array('t.parent', (int)DataUtil::formatForStore($cat_id), '=');
-            $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('viewcat' => $cat_id), null, null, true);
-            $forumname = $managedForum->get()->getParent()->getName();
         } elseif (isset($uid) && ($uid<>false)) {
             $where = array('p.poster', ' $uid', '=');
         } else {
@@ -710,7 +698,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         {
             /* @var $topic Dizkus_Entity_Topic */
             $posts[$i]['title'] = $topic->getTitle();
-            $posts[$i]['cat_title'] = $topic->getForum()->getParent()->getName();
+            $posts[$i]['parenttitle'] = $topic->getForum()->getParent()->getName();
             $posts[$i]['forum_name'] = $topic->getForum()->getName();
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');

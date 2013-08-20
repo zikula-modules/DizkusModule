@@ -34,15 +34,15 @@ soon as possible!
 <rss version="0.91">
 <channel>
 <title>{$sitename|safetext} - {$name|safetext}</title>
-<link>{$forum_link|safetext}</link>
+<link>{$forum_link|htmlentities|safetext}</link>
 <description>{$sitename|safetext} - {$name|safetext}</description>
 <webMaster>{$adminmail|safetext}</webMaster>
 
 {foreach item='post' from=$posts}
     <item>
     <title>{$post.title|safetext}</title>
-    <link>{$post.last_post_url|safetext}</link>
-    <description>{$post.cat_title|safetext} :: {$post.forum_name|safetext}</description>
+    <link>{$post.last_post_url|safetext|safetext}</link>
+    <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
     </item>
 {/foreach}
 
