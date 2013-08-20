@@ -76,7 +76,7 @@ class Dizkus_Entity_ForumUser extends Zikula_EntityAccess
      *
      * @ORM\Column(type="boolean")
      */
-    private $postOrder = false;
+    private $postOrder = false; // ASC (oldest to newest)
 
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Rank", cascade={"persist"} )

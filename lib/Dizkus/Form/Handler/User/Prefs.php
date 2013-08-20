@@ -46,11 +46,11 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         $orders = array(
             0 => array(
                 'text' => 'newest submissions at top',
-                'value' => 0
+                'value' => 1
             ),
             1 => array(
                 'text' => 'oldest submissions at top',
-                'value' => 1
+                'value' => 0
             )
         );
         $view->assign('orders', $orders);

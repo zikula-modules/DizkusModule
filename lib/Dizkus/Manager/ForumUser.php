@@ -54,7 +54,7 @@ class Dizkus_Manager_ForumUser
      */
     public function getPostOrder()
     {
-        return $this->_forumUser->getPostOrder() ? 'ASC' : 'DESC';
+        return $this->_forumUser ? 'ASC' : 'DESC';
     }
 
     /**
@@ -64,10 +64,10 @@ class Dizkus_Manager_ForumUser
      */
     public function setPostOrder($sort)
     {
-        if ($sort == 'asc') {
-            $order = false;
-        } else {
+        if (strtolower($sort) == 'asc') {
             $order = true;
+        } else {
+            $order = false;
         }
         $this->_forumUser->setPostOrder($order);
         $this->entityManager->flush();

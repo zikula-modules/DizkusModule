@@ -221,7 +221,7 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'hot_threshold' => 20,
             'email_from' => System::getVar('adminmail'),
             'url_ranks_images' => 'modules/Dizkus/images/ranks',
-            'post_sort_order' => 'ASC',
+            'post_sort_order' => 'ASC', // means oldest to newest
             'log_ip' => 'no',
             'extendedsearch' => 'no',
             'm2f_enabled' => 'no',
