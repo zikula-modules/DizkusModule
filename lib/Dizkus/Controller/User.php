@@ -23,6 +23,10 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if (($this->getVar('forum_enabled') == 'no') && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');
         }
+        $indexTo = $this->getVar('indexTo');
+        if (!empty($indexTo)) {
+            $this->redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => (int)$indexTo)));
+        }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 

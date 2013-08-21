@@ -23,6 +23,13 @@
             {formtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$modvars.Dizkus.forum_disabled_info}
         </div>
         <div class="z-formrow">
+            {formlabel for="indexTo" __text="Redirect forum index to forum id"}
+            {formtextinput id="indexTo" text=$modvars.Dizkus.indexTo size="5" maxLength="10"}
+        </div>
+        <p class="z-formnote z-informationmsg">
+            {gt text="Leave blank to use standard forum index."}
+        </p>
+        <div class="z-formrow">
             {formlabel for="email_from" __text="Sender address for e-mail messages from forums"}
             {formemailinput id="email_from" text=$modvars.Dizkus.email_from size="30" maxLength="100"}
         </div>
