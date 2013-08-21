@@ -45,7 +45,7 @@
         </li>
         {/if}
 
-        {if $online.numguests > 0 or $anonsessions == 1}
+        {if $online.numguests > 0 and $anonsessions == 1}
         <li>
             {gt text='and %1$s anonymous guest' plural='and %1$s anonymous guests' count=$online.numguests tag1=$online.numguests}
         </li>

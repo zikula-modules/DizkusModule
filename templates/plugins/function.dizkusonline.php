@@ -52,28 +52,16 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $dql = "SELECT s.uid, u.uname
             FROM Zikula\Module\UsersModule\Entity\UserSessionEntity s, Zikula\Module\UsersModule\Entity\UserEntity u
             WHERE s.lastused > :activetime
-            AND s.uid >= :usertype
-            AND s.uid = u.uid
+            AND (s.uid >= 2
+            AND s.uid = u.uid)
+            OR s.uid = 0
             GROUP BY s.ipaddr, s.uid";
-
     $query = $em->createQuery($dql);
     $activetime = new DateTime(); // @todo maybe need to check TZ here
     $activetime->modify("-" . System::getVar('secinactivemins') . " minutes");
     $query->setParameter('activetime', $activetime);
-    $query->setParameter('usertype', System::getVar('anonymoussessions') ? 1 : 2);
-    // anonymoussessions = 1 for yes and 0 for no
-    // so usertype = 1 if sessions are used for anonymous guests
-    // usertype = 2 if sessions are NOT used for anonymous guests
-//    echo "<pre>";
-//    echo $query->getDQL();
-//    echo "<br /><br />";
-//    echo $query->getSQL();
-//    echo "<br /><br />";
-//    var_dump($activetime); echo "<br /><br />`";
-//    var_dump(System::getVar('anonymoussessions'));
-//    echo "`";
-    $onlineusers = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
-//    echo "<br /><br />"; var_dump($onlineusers); echo "</pre>";
+
+    $onlineusers = $query->getArrayResult();
     
     if (is_array($onlineusers)) {
         $total = count($onlineusers);
