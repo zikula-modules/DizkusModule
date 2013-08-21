@@ -163,8 +163,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     /**
      * setcookies
      * 
-     * reads the cookie, updates it and returns the last visit date in readable (%Y-%m-%d %H:%M)
-     * and unix time format
+     * reads the cookie, updates it and returns the last visit date in unix timestamp
      *
      * @params none
      * @returns unix timestamp last visit date
