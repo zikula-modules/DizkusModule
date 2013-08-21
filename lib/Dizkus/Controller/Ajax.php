@@ -336,6 +336,49 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
     }
 
     /**
+     * addremovefavorite
+     *
+     */
+    public function modifyForum()
+    {
+
+        if ($this->getVar('forum_enabled') == 'no') {
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+        }
+
+        if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'no') {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
+        }
+
+        $params = array(
+            'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
+            'action' => FormUtil::getPassedValue('action', 'POST')
+        );
+        if (empty($params['forum_id'])) {
+            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
+        }
+
+
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            // only need read perms to make a favorite
+            LogUtil::registerPermissionError();
+            throw new Zikula_Exception_Forbidden();
+        }
+
+        /* if (!SecurityUtil::confirmAuthKey()) {
+          LogUtil::registerAuthidError();
+          return AjaxUtil::error(null, array(), true, true);
+          } */
+
+        SessionUtil::setVar('zk_ajax_call', 'ajax');
+
+        ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
+
+
+        return new Zikula_Response_Ajax_Plain('successful');
+    }
+
+    /**
      * forumusers
      * update the "users online" section in the footer
      *
