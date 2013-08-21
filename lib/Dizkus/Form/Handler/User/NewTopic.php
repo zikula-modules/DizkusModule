@@ -104,8 +104,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
             $view->assign('post', $newManagedTopic->getPreview());
-            list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-            $view->assign('last_visit', $lastVisit);
+            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
             return true;

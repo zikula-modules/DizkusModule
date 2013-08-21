@@ -44,13 +44,12 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
             return LogUtil::registerPermissionError();
         }
         
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $this->view->assign('forum_id', $forum_id);
         $this->view->assign('mode', '');
         $this->view->assign('topic_ids', array());
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('last_visit_unix', $lastVisitUnix);
         $this->view->assign('forum', $this->_managedForum->get());
         $topics = $this->_managedForum->getTopics();
         $topicSelect = array(

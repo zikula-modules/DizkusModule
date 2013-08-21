@@ -167,7 +167,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      * and unix time format
      *
      * @params none
-     * @returns array of (readable last visits data, unix time last visit date)
+     * @returns unix timestamp last visit date
      *
      */
     public function setcookies()
@@ -191,7 +191,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
         CookieUtil::setCookie('DizkusLastVisitTemp', "$temptime", time() + 1800, $path, null, null, false);
 
-        return array(DateUtil::formatDatetime($temptime, '%Y-%m-%d %H:%M:%S'), $temptime);
+        return $temptime;
     }
 
     /**

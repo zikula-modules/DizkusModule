@@ -30,8 +30,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
 
-        list($lastVisit, $lastVisitUnix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-        $this->view->assign('last_visit', $lastVisit);
+        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         // get first and second level forums
@@ -69,7 +68,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->throwNotFoundUnless($forumId > 0, $this->__("That forum doesn't exist!"));
         $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
 
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $managedForum = new Dizkus_Manager_Forum($forumId);
         // Permission check
@@ -85,8 +84,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             ->assign('isModerator', $managedForum->isModerator())
             ->assign('breadcrumbs', $managedForum->getBreadcrumbs())
             ->assign('hot_threshold', $this->getVar('hot_threshold'))
-            ->assign('last_visit', $last_visit)
-            ->assign('last_visit_unix', $last_visit_unix);
+            ->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->view->fetch('user/forum/view.tpl');
     }
@@ -108,7 +106,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $post_id = (int)$this->request->query->get('post', (isset($args['post'])) ? $args['post'] : null);
         $start = (int)$this->request->query->get('start', (isset($args['start'])) ? $args['start'] : 1);
 
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc($this->name, 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
         if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
             $managedPost = new Dizkus_Manager_Post($post_id);
@@ -142,10 +140,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
         $this->view->assign('nextTopic', $managedTopic->getNext());
         $this->view->assign('previousTopic', $managedTopic->getPrevious());
-        //$this->view->assign('post_count', count($topic['posts']));
-        //$this->view->assign('last_visit', $last_visit);
-        //$this->view->assign('last_visit_unix', $last_visit_unix);
-        //$this->view->assign('favorites', ModUtil::apifunc($this->name, 'user', 'get_favorite_status'));
+        $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         $managedTopic->incrementViewsCount();
 
@@ -245,7 +240,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             return $this->redirect($url->getUrl());
         } else {
-            list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $managedTopic = new Dizkus_Manager_Topic($topic_id);
             $managedPoster = new Dizkus_Manager_ForumUser();
             $reply = array(
@@ -263,8 +258,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $this->view->assign('reply', $reply);
             $this->view->assign('preview', $preview);
-            $this->view->assign('last_visit', $last_visit);
-            $this->view->assign('last_visit_unix', $last_visit_unix);
+            $this->view->assign('last_visit_unix', $lastVisitUnix);
 
             return $this->view->fetch('user/topic/reply.tpl');
         }
@@ -494,10 +488,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
 
         // get the input
-        $params['selorder'] = $this->request->query->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1);
-        $params['nohours'] = (int)$this->request->query->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
+        $params['selorder'] = $this->request->query->get('selorder', $this->request->request->get('selorder', (isset($args['selorder'])) ? $args['selorder'] : 1));
+        $params['nohours'] = (int)$this->request->request->get('nohours', (isset($args['nohours'])) ? $args['nohours'] : null);
         $params['unanswered'] = (int)$this->request->query->get('unanswered', (isset($args['unanswered'])) ? $args['unanswered'] : 0);
         $params['amount'] = (int)$this->request->query->get('amount', (isset($args['amount'])) ? $args['amount'] : null);
+        $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', (isset($args['last_visit_unix'])) ? $args['last_visit_unix'] : time());
         $this->view->assign($params);
 
         list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
@@ -506,10 +501,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
 
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->view->fetch('user/post/latest.tpl');
     }
@@ -541,10 +535,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
 
-        list($last_visit, $last_visit_unix) = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
-        $this->view->assign('last_visit', $last_visit);
-        $this->view->assign('last_visit_unix', $last_visit_unix);
+        $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->view->fetch('user/post/mine.tpl');
     }

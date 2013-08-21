@@ -22,7 +22,6 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
      * @params $args['selorder'] int 1-6, see below
      * @params $args['nohours'] int posting within these hours
      * @params $args['unanswered'] int 0 or 1(= postings with no answers)
-     * @params $args['last_visit'] string the users last visit data
      * @params $args['last_visit_unix'] string the users last visit data as unix timestamp
      * @params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
      * @returns array (postings, mail2forumpostings, rsspostings, text_to_display)
@@ -45,12 +44,12 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
             case '3' : // since yesterday
                 $qb->where('l.post_time > :wheretime')
                         ->setParameter('wheretime', new DateTime('yesterday'));
-                $text = $this->__('Yesterday');
+                $text = $this->__('Since yesterday');
                 break;
             case '4' : // lastweek
                 $qb->where('l.post_time > :wheretime')
                         ->setParameter('wheretime', new DateTime('-1 week'));
-                $text = $this->__('Last week');
+                $text = $this->__('In the last week');
                 break;
             case '5' : // last x hours
                 // maximum two weeks back = 2 * 24 * 7 hours
@@ -59,11 +58,13 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
                 }
                 $qb->where('l.post_time > :wheretime')
                         ->setParameter('wheretime', new DateTime('-' . $args['nohours'] . ' hours'));
-                $text = DataUtil::formatForDisplay($this->__f('Last %s hours', $args['nohours']));
+                $text = DataUtil::formatForDisplay($this->__f('In the last %s hours', $args['nohours']));
                 break;
             case '6' : // last visit
-                $wheretime = " AND t.topic_time > '" . DataUtil::formatForStore($args['last_visit']) . "' ";
-                $text = DataUtil::formatForDisplay($this->__f('Last visit: %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
+                $lastVisit = DateTime::createFromFormat('U', $args['last_visit_unix']);
+                $qb->where('l.post_time > :wheretime')
+                        ->setParameter('wheretime', $lastVisit);
+                $text = DataUtil::formatForDisplay($this->__f('Since your last visit on %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
                 break;
             case 'unanswered':
                 $qb->where('t.replyCount = 0');
@@ -77,7 +78,7 @@ class Dizkus_Api_Post extends Zikula_AbstractApi
             default:   // last 24 hours
                 $qb->where('l.post_time > :wheretime')
                         ->setParameter('wheretime', new DateTime('-24 hours'));
-                $text = $this->__('Last 24 hours');
+                $text = $this->__('In the last 24 hours');
                 break;
         }
 
