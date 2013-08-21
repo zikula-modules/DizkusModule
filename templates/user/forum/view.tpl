@@ -2,6 +2,7 @@
 {include file='user/header.tpl' parent=$forum}
 
 {if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
+{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
 {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewForum.js'}
 <input id="forum_id" type="hidden" value={$forum.forum_id}>
 {/if}

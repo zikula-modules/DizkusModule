@@ -13,7 +13,6 @@ jQuery(document).ready(function () {
 
 function modifyForum(e) {
     var id = jQuery('#forum_id').val(), action, i = jQuery(this);
-    console.log(i.text());
     if (i.text() == favouriteForum) {
         action = 'addToFavorites';
     } else if (i.text() == unfavouriteForum) {
@@ -30,7 +29,6 @@ function modifyForum(e) {
         forum: id,
         action: action
     }
-    //Ajax.Responders.register(this.dzk_globalhandlers);
 
     jQuery.ajax({
         type: "POST",
@@ -52,7 +50,7 @@ function modifyForum(e) {
             }
         },
         error: function (result) {
-            DizkusShowAjaxError(result);
+            DizkusShowAjaxError(result.responseJSON.core.statusmsg);
             return;
         }
     });
