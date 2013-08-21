@@ -14,7 +14,7 @@
         // ]]>
     </script>
     <noscript>
-        {include file='dizkus_ajax_forumusers.html'}
+        {include file='ajax/forumusers.html'}
     </noscript>
 </div>
 <p id="dzk_footer_line">{gt text="Powered by "}<a href="https://github.com/zikula-modules/Dizkus" title="Dizkus forum software for Zikula">Dizkus {modgetinfo modname='Dizkus' info='version'}</a></p>

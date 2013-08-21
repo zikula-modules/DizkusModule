@@ -310,256 +310,11 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         return new Zikula_Response_Ajax_Plain('successful');
     }
 
-
-
-
-
-    /*
-     *
-     *
-     *
-     *
-     * The code below must be checked!
-     * -- cmfcmf
-     *
-     *
-     *
-     */
-
-
-
-
-
-
-
-    /**
-     * readpost
-     */
-    public function readpost()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return AjaxUtil::error(strip_tags(ModUtil::getVar('Dizkus', 'forum_disabled_info')), array(), true, true, '400 Bad Data');
-        }
-
-        $post_id = FormUtil::getPassedValue('post', null, 'POST');
-        $currentUserId = UserUtil::getVar('uid');
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
-        if (!empty($post_id)) {
-            $managedPost = new Dizkus_Manager_Post($post_id);
-            $forum = $managedPost->get()->getTopic()->getForum();
-            $managedForum = new Dizkus_Manager_Forum(null, $forum);
-            if (($managedPost->get()->getPoster()->getUser_id() == $currentUserId)
-                || ($managedForum->isModerator())) {
-                AjaxUtil::output($managedPost->get(), true, false, false);
-            } else {
-                LogUtil::registerPermissionError();
-                return AjaxUtil::error(null, array(), true, true, '400 Bad Data');
-            }
-        }
-
-        return AjaxUtil::error($this->__('Error! No post ID in \'Dizkus/Ajax/readpost()\'.'), array(), true, true, '400 Bad Data');
-    }
-
-    /**
-     * addremovefavorite
-     *
-     */
-    public function modifyForum()
-    {
-
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'no') {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
-        }
-
-        $params = array(
-            'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
-            'action' => FormUtil::getPassedValue('action', 'POST')
-        );
-        if (empty($params['forum_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-        }
-
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            // only need read perms to make a favorite
-            LogUtil::registerPermissionError();
-            throw new Zikula_Exception_Forbidden();
-        }
-
-        /* if (!SecurityUtil::confirmAuthKey()) {
-          LogUtil::registerAuthidError();
-          return AjaxUtil::error(null, array(), true, true);
-          } */
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
-        ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
-
-
-        return new Zikula_Response_Ajax_Plain('successful');
-    }
-
-    /**
-     * newtopic
-     *
-     */
-    public function newtopic()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-
-        $forum_id = FormUtil::getPassedValue('forum', null, 'POST');
-        $message = FormUtil::getPassedValue('message', '', 'POST');
-        $subject = FormUtil::getPassedValue('subject', '', 'POST');
-        $attach_signature = FormUtil::getPassedValue('attach_signature', null, 'POST');
-        $subscribe_topic = FormUtil::getPassedValue('subscribe_topic', null, 'POST');
-        $preview = (int)FormUtil::getPassedValue('preview', 0, 'POST');
-
-        $cat_id = ModUtil::apiFunc('Dizkus', 'user', 'get_forum_category', array('forum_id' => $forum_id));
-
-        $topic = array(
-            'cat_id' => $cat_id,
-            'forum_id' => $forum_id
-        );
-        $managedForum = new Dizkus_Manager_Forum($forum_id);
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $managedForum->get())) {
-            LogUtil::registerPermissionError(null, true);
-            throw new Zikula_Exception_Forbidden();
-        }
-
-        $preview = ($preview == 1) ? true : false;
-        //$attach_signature = ($attach_signature=='1') ? true : false;
-        //$subscribe_topic  = ($subscribe_topic=='1') ? true : false;
-
-        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
-        // check for maximum message size
-        if ((strlen($message) + 8/* strlen('[addsig]') */) > 65535) {
-            return AjaxUtil::error($this->__('Error! The message is too long. The maximum length is 65,535 characters.'), array(), true, true);
-        }
-
-        if (strlen($message) == 0) {
-            return AjaxUtil::error($this->__('Error! You tried to post a blank message. Please go back and try again.'), array(), true, true);
-        }
-
-        if (strlen($subject) == 0) {
-            return AjaxUtil::error($this->__('Error! The post has no subject line.'), array(), true, true);
-        }
-
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-
-        if ($preview == false) {
-            // store new topic
-            $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('forum_id' => $forum_id,
-                        'subject' => $subject,
-                        'message' => $message,
-                        'attach_signature' => $attach_signature,
-                        'subscribe_topic' => $subscribe_topic));
-
-            return new Zikula_Response_Ajax(array('topic' => $topic,
-                        'redirect' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id), null, null, true)));
-        }
-
-        // preview == true, create fake topic
-        $managedPoster = new Dizkus_Manager_ForumUser();
-        $newtopic['cat_id'] = $cat_id;
-        $newtopic['forum_id'] = $forum_id;
-        $newtopic['topic_unixtime'] = time();
-        $newtopic['poster_data'] = $managedPoster->toArray();
-        $newtopic['subject'] = $subject;
-        $newtopic['message'] = $message;
-        $newtopic['message_display'] = $message; // $this->phpbb_br2nl($message);
-
-        if (($attach_signature == 1) && (!empty($newtopic['poster_data']['signature']))) {
-            $newtopic['message_display'] .= '[addsig]';
-            $newtopic['message_display'] = $this->dzk_replacesignature(array('text' => $newtopic['message_display'], 'signature' => $newtopic['poster_data']['signature']));
-        }
-
-//      list($newtopic['message_display']) = ModUtil::callHooks('item', 'transform', '', array($newtopic['message_display']));
-        $newtopic['message_display'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $newtopic['message_display']);
-
-        if (UserUtil::isLoggedIn()) {
-            // If it's the topic start
-            if (empty($subject) && empty($message)) {
-                $newtopic['attach_signature'] = 1;
-                $newtopic['subscribe_topic'] = (ModUtil::getVar('Dizkus', 'autosubscribe') == 'yes') ? 1 : 0;
-            } else {
-                $newtopic['attach_signature'] = $attach_signature;
-                $newtopic['subscribe_topic'] = $subscribe_topic;
-            }
-        } else {
-            $newtopic['attach_signature'] = 0;
-            $newtopic['subscribe_topic'] = 0;
-        }
-
-        $this->view->assign('newtopic', $newtopic);
-
-        return new Zikula_Response_Ajax(array('data' => $this->view->fetch('user/topic/newpreview.tpl'),
-                    'newtopic' => $newtopic));
-    }
-
-    /**
-     * forumusers
-     * update the "users online" section in the footer
-     * original version by gf
-     *
-     */
-    public function forumusers()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-        if (System::getVar('shorturls')) {
-            include_once('lib/render/plugins/outputfilter.shorturls.php');
-            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
-        }
-
-        $this->view->display('ajax/forumusers.tpl');
-        System::shutDown();
-    }
-
-    /**
-     * newposts
-     * update the "new posts" block
-     * original version by gf
-     *
-     */
-    public function newposts()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-
-        $this->view->add_core_data();
-        $this->view->setCaching(false);
-        if (System::getVar('shorturls')) {
-            include_once 'lib/render/plugins/outputfilter.shorturls.php';
-            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
-        }
-
-        $out = $this->view->fetch('ajax/newposts.tpl');
-        echo $out;
-        System::shutDown();
-    }
-
     /**
      * Performs a user search based on the user name fragment entered so far.
      *
      * Parameters passed via GET:
-     * ---------------------------
-     * string fragment A partial user name entered by the user.
+     * @param string $fragment A partial user name entered by the user.
      *
      * @return string Zikula_Response_Ajax_Plain with json_encoded object of users matching the criteria.
      */
@@ -581,35 +336,50 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
     }
 
     /**
-     * removes instances of <br /> since sometimes they are stored in DB :(
+     * forumusers
+     * update the "users online" section in the footer
+     *
+     * used in user/footer_with_ajax.tpl
      */
-    public function phpbb_br2nl($str)
+    public function forumusers()
     {
-        return preg_replace("=<br(>|([\s/][^>]*)>)\r?\n?=i", "\n", $str);
+        if ($this->getVar('forum_enabled') == 'no') {
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+        }
+
+        $this->view->add_core_data();
+        $this->view->setCaching(false);
+        if (System::getVar('shorturls')) {
+            $this->view->_get_plugin_filepath('outputfilter','shorturls');
+            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
+        }
+
+        $this->view->display('ajax/forumusers.tpl');
+        System::shutDown();
     }
 
     /**
-     * dzk_replacesignature
+     * newposts
+     * update the "new posts" block
      *
+     * only user in centerblock/display3.tpl
      */
-    public function dzk_replacesignature($args)
+    public function newposts()
     {
-        $text = $args['text'];
-        $signature = isset($args['signature']) ? $args['signature'] : '';
-        $removesignature = ModUtil::getVar('Dizkus', 'removesignature');
-        if ($removesignature == 'yes') {
-            $signature = '';
+        if ($this->getVar('forum_enabled') == 'no') {
+            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
 
-        if (!empty($signature)) {
-            $sigstart = stripslashes(ModUtil::getVar('Dizkus', 'signature_start'));
-            $sigend   = stripslashes(ModUtil::getVar('Dizkus', 'signature_end'));
-            $text = preg_replace("/\[addsig]$/", "\n\n" . $sigstart . $signature . $sigend, $text);
-        } else {
-            $text = preg_replace("/\[addsig]$/", '', $text);
+        $this->view->add_core_data();
+        $this->view->setCaching(false);
+        if (System::getVar('shorturls')) {
+            $this->view->_get_plugin_filepath('outputfilter','shorturls');
+            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
         }
 
-        return $text;
+        $out = $this->view->fetch('ajax/newposts.tpl');
+        echo $out;
+        System::shutDown();
     }
 
 }
