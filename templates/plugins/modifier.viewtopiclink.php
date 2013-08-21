@@ -61,5 +61,5 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $title = ServiceUtil::getManager()->get('hook_dispatcher')->dispatch('dizkus.filter_hooks.post.filter', $hook)->getData();
     }
 
-    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . $title .'">' . $subject . '</a>';
+    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . strip_tags($title) .'">' . $subject . '</a>';
 }
