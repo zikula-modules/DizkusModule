@@ -35,7 +35,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         }
 
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
+            return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageTopicSubscriptions')));
         }
 
         $subscriptions = ModUtil::apiFunc('Dizkus', 'topic', 'getSubscriptions');

@@ -27,7 +27,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
     function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'loginscreen', array('redirecttype' => 1));
+            return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageTopicSubscriptions')));
         }
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar('Dizkus', 'signaturemanagement') == 'yes'))) {
