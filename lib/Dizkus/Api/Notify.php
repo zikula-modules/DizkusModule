@@ -107,6 +107,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         
         // check if list is empty - then do nothing
         // we create an array of recipients here
+        $notifyAdminAsMod = (int)$this->getVar('notifyAdminAsMod');
         $admin_is_mod = false;
         if (count($mods['groups']) > 0) {
             foreach (array_keys($mods['groups']) as $gid) {
@@ -119,7 +120,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
                             $recipients[$gm_uid] = array('uname' => $mod_uname,
                                 'email' => $mod_email);
                         }
-                        if ($gm_uid == 2) {
+                        if ($gm_uid == $notifyAdminAsMod) {
                             // admin is also moderator
                             $admin_is_mod = true;
                         }
@@ -134,19 +135,16 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
                     $recipients[$uid] = array('uname' => $uname,
                         'email' => $mod_email);
                 }
-                if ($uid == 2) {
+                if ($uid == $notifyAdminAsMod) {
                     // admin is also moderator
                     $admin_is_mod = true;
                 }
             }
         }
-        // always inform the admin. he might be a moderator to so we check the
-        // admin_is_mod flag now
-        // TODO: consider reworking this to just include the Admin group?
-        // or a flag in settings: "always notify admin" t/f
-        if ($admin_is_mod == false) {
-            $recipients[2] = array('uname' => System::getVar('sitename'),
-                'email' => $email_from);
+        // determine if we also notify an admin as a moderator
+        if (($admin_is_mod == false) && ($notifyAdminAsMod > 1)) {
+            $recipients[$notifyAdminAsMod] = array('uname' => UserUtil::getVar('uname', $notifyAdminAsMod),
+                'email' => UserUtil::getVar('email', $notifyAdminAsMod));
         }
 
         $reporting_userid = UserUtil::getVar('uid');
@@ -156,7 +154,8 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
         }
 
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('replyCount' => $args['post']->getTopic()->getReplyCount()));
-        $linkToTopic = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true));
+        $linkToTopic = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true);
+        $posttext = ($this->getVar('striptagsfromemail')) ? strip_tags($args['post']->getPost_text()) : $args['post']->getPost_text();
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . "\n"
                 . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . "\n\n"
                 . $this->__('Reporting user') . ": $reporting_username\n"
@@ -164,7 +163,7 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
                 . strip_tags($args['comment']) . " \n\n"
                 . $this->__('Post Content') . ":\n"
                 . "---------------------------------------------------------------------\n"
-                . strip_tags($args['post']->getPost_text()) . " \n"
+                . $posttext . " \n"
                 . "---------------------------------------------------------------------\n\n"
                 . $this->__('Link to topic') . ": $linkToTopic\n"
                 . "\n";
@@ -183,6 +182,9 @@ class Dizkus_Api_Notify extends Zikula_AbstractApi
                     'headers' => array('X-UserID: ' . $reporting_userid,
                         'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
             }
+            LogUtil::registerStatus($this->__("The moderator has been contacted about this post. Thank you."));
+        } else {
+            LogUtil::registerError($this->__("There were no moderators set to be notified. Consider manually contacting the site admin."));
         }
 
         return;

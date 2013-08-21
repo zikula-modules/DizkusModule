@@ -40,6 +40,13 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 
         $vars = $this->getVars();
 
+        $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', array('gid' => 2));
+        $admins = array(0 => array('text' => 'disable', 'value' => '-1'));
+        foreach($adminGroup['members'] as $admin) {
+            $admins[] = array('text' => UserUtil::getVar('uname', $admin['uid']), 'value' => $admin['uid']);
+        }
+        $this->view->assign('admins', $admins);
+
         // convert yes/no to boolean
         foreach ($this->YESNOS as $value) {
             if (array_key_exists($value, $vars) and $vars[$value] == 'yes') {

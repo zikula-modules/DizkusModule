@@ -243,7 +243,8 @@ class Dizkus_Installer extends Zikula_AbstractInstaller
             'solved_enabled' => true,
             'ajax' => true,
             'striptagsfromemail' => false,
-            'indexTo' => ''
+            'indexTo' => '',
+            'notifyAdminAsMod' => 2,
         );
     }
 

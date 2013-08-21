@@ -137,6 +137,10 @@
             {formcheckbox id="striptagsfromemail"}
             <p class="z-formnote z-informationmsg">{gt text="Strip action occurs post filter hook action."}</p>
         </div>
+        <div class="z-formrow">
+            {formlabel for="notifyAdminAsMod" __text="Admin to notify with Moderator notifications"}
+            {formdropdownlist id="notifyAdminAsMod" items=$admins selectedValue=$modvars.Dizkus.notifyAdminAsMod}
+        </div>
     </fieldset>
 
     <fieldset>
