@@ -157,6 +157,10 @@ function hookEditLinks() {
 function hookQuickReplySubmit() {
     function submitQuickReplyHandler(event) {
         event.preventDefault();
+        if (typeof getAjaxData !== 'undefined') {
+            // this is scribite's API for returning data to the standard textareas
+            getAjaxData();
+        }
         createQuickReply();
     }
 
