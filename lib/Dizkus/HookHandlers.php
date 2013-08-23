@@ -374,8 +374,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         // clear last remaining batch
         $_em->flush();
 
-        $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
-        LogUtil::registerStatus($this->__f("Dizkus: All hooked discussion topics %s.", $actionWord, $dom));
+        $actionWord = ($deleteHookAction == "lock") ? __("locked", $dom) : __("deleted", $dom);
+        LogUtil::registerStatus(__f("Dizkus: All hooked discussion topics %s.", $actionWord, $dom));
     }
 
     /**
