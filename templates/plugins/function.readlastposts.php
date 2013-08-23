@@ -144,6 +144,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
                 $user_name = ModUtil::getVar('Users', 'anonymous');
             }
             $lastpost['poster_name'] = DataUtil::formatForDisplay($user_name);
+            // @todo see ticket #184 maybe this should be using UserApi::dzkVarPrepHTMLDisplay ????
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($topic->getLast_post()->getPost_text()));
             $lastpost['posted_time'] = DateUtil::formatDatetime($topic->getTopic_time(), 'datetimebrief');
             $lastpost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
