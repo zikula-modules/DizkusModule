@@ -94,7 +94,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         if ($preview == false) {
             $data = array(
                 'topic_id' => $topic_id,
-                'post_text' => $message,
+                // @todo should varPrep BEFORE going into the DB or after (before display)????
+                'post_text' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message),
                 'attachSignature' => $attach_signature,
             );
 
@@ -128,14 +129,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             $post['poster'] = $managedPoster->toArray();
             // create unix timestamp
             $post['post_time'] = time();
-
-            $post['post_textdisplay'] = $this->phpbb_br2nl($message);
-            if ($attach_signature == 1) {
-                $post['post_textdisplay'] .= '[addsig]';
-                $post['post_textdisplay'] = $this->dzk_replacesignature(array('text' => $post['post_textdisplay'], 'signature' => $post['poster_data']['signature']));
-            }
-            $post['post_textdisplay'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $post['post_textdisplay']);
-
+            $post['post_textdisplay'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
+            $post['attachSignature'] = $attach_signature;
             $post['post_text'] = $post['post_textdisplay'];
 
             // Do not show edit link

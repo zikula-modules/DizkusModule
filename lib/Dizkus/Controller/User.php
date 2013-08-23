@@ -205,7 +205,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
 
             $data = array(
                 'topic_id' => $topic_id,
-                'post_text' => $message,
+                // @todo should varPrep BEFORE going into the DB or after (before display)????
+                'post_text' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message),
                 'attachSignature' => $attach_signature
             );
 
@@ -252,8 +253,8 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'poster_data' => $managedPoster->toArray(),
             );
             if ($preview) {
-                $reply['message'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
-                $reply['message_display'] = nl2br($reply['message']);
+                $reply['message_display'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
+                $reply['message'] = $message;
             }
 
             $this->view->assign('reply', $reply);

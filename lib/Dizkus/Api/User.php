@@ -372,6 +372,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
         // re-insert code tags
         for ($i = 0; $i < $codecount1; $i++) {
+            // @todo should use htmlentities here???? dzkstriptags too vvv
             $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
         }
 
@@ -380,7 +381,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
     
     /**
      * dzkstriptags
-     * strip all thml tags outside of [code][/code]
+     * strip all html tags outside of [code][/code]
      *
      * @params  $text     string the text
      * @returns string    the sanitized text
@@ -400,6 +401,7 @@ class Dizkus_Api_User extends Zikula_AbstractApi
 
             // replace code tags saved before
             for ($i = 0; $i < $codecount; $i++) {
+                // @todo should use htmlentities here???? dzkstriptagst too ^^^
                 $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
             }
         }
