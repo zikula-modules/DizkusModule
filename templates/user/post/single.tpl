@@ -84,7 +84,7 @@
                     {if !empty($signature)}
                         <em>
                             <br /><br />{$modvars.Dizkus.signature_start}<br />
-                            {$signature|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
+                            {$signature|nl2br|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
                             <br />{$modvars.Dizkus.signature_end}</br>
                         </em>
                     {/if}
