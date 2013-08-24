@@ -164,7 +164,7 @@ class Dizkus_Controller_Admin extends Zikula_AbstractController
             return LogUtil::registerPermissionError();
         }
 
-        $tree = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getTree();
+        $tree = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy(null, false);
 
         return $this->view->assign('tree', $tree)
                         ->fetch('admin/tree.tpl');
