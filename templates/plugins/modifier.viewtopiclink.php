@@ -31,8 +31,6 @@
  */
 function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class='', $start=null, $last_post_id=null)
 {
-    // @ToDo: Possibility do disable topic previews
-
     if (!isset($topic_id)) {
         return '';
     }
@@ -49,17 +47,7 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
         $url .= '#pid' . (int)$last_post_id;
     }
 
-    // get first post text
-    $firstPostText = '';
-    /* @var $em Doctrine\ORM\EntityManager */
-    $em = ServiceUtil::getService('doctrine.entitymanager');
-    $firstPost = $em->getRepository('Dizkus_Entity_Post')->findOneBy(array('topic' => $topic_id, 'isFirstPost' => true));
+    $title = DataUtil::formatForDisplay(Dizkus_Api_User::truncate(strip_tags($subject), 60));
 
-    if (isset($firstPost)) {
-        $firstPostText = DataUtil::formatForDisplayHTML(substr($firstPost->getPost_text(), 0, 255));
-        $hook = new \Zikula\Core\Hook\FilterHook($firstPostText);
-        $title = ServiceUtil::getManager()->get('hook_dispatcher')->dispatch('dizkus.filter_hooks.post.filter', $hook)->getData();
-    }
-
-    return '<a '. $class .' href="' . DataUtil::formatForDisplay($url) . '" title="' . strip_tags($title) .'">' . $subject . '</a>';
+    return "<a $class href='" . DataUtil::formatForDisplay($url) . "' title='go to topic'>$title</a>";
 }

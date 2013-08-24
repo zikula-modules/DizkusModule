@@ -443,4 +443,19 @@ class Dizkus_Api_User extends Zikula_AbstractApi
         return $users;
     }
 
+    /**
+     * Truncate text to desired length to nearest word
+     * @see http://stackoverflow.com/a/9219884/2600812
+     * @param string $text
+     * @param integer $chars
+     * @return string
+     */
+    public static function truncate($text, $chars = 25)
+    {
+        $text = $text . " ";
+        $text = substr($text, 0, $chars);
+        $text = substr($text, 0, strrpos($text, ' '));
+        $text = $text . "...";
+        return $text;
+    }
 }
