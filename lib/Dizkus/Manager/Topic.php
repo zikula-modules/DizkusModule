@@ -145,6 +145,8 @@ class Dizkus_Manager_Topic
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
         }
+        // do not allow negative first result
+        $startNumber = ($startNumber > 0) ? $startNumber : 0;
         // Do a new query in order to limit maxresults, firstresult, order, etc.
         $query = $this->entityManager
                 ->createQueryBuilder()
