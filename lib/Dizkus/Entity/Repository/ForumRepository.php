@@ -13,52 +13,6 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
 {
-
-    /**
-     * getOneLevel
-     *
-     * Get the first level of the tree.
-     *
-     * @param int $forumId Forumid
-     *
-     * @return object
-     */
-    public function getOneLevel()
-    {
-        $qb = $this->_em
-                ->createQueryBuilder()
-                ->select('f, c, l')
-                ->orderBy('f.lft')
-                ->from('Dizkus_Entity_Forum', 'f')
-                ->leftJoin('f.children', 'c')
-                ->leftJoin('c.last_post', 'l')
-                ->andWhere('f.lvl = 1');
-
-        // favorites
-        if (UserUtil::isLoggedIn() && ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes') {
-            if (ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus')) {
-                $qb->join('c.favorites', 'fa')
-                    ->andWhere('fa.forumUser = :uid')
-                    ->setParameter('uid', UserUtil::getVar('uid'));
-            }
-        }
-
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
-
-    /**
-     * getForumTree
-     *
-     * Determines the forum tree.
-     *
-     * @return array
-     */
-    public function getTree()
-    {
-        return $this->childrenHierarchy(null, false);
-    }
-
     public function getRssForums()
     {
         $dql = "SELECT f FROM Dizkus_Entity_Forum f

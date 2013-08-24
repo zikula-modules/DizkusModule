@@ -105,4 +105,13 @@ class Dizkus_Manager_ForumUser
         $this->entityManager->flush();
     }
 
+    /**
+     * Change the value of Favorite Forum display
+     * @param boolean $value
+     */
+    public function displayFavoriteForumsOnly($value)
+    {
+        $this->_forumUser->setDisplayOnlyFavorites($value);
+        $this->entityManager->flush();
+    }
 }

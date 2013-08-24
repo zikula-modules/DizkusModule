@@ -33,9 +33,34 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        // get first and second level forums
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getOneLevel();
-        
+        // get the forms to display
+        $showOnlyFavorites = ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus');
+        $siteFavoritesAllowed = (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes');
+        $uid = UserUtil::getVar('uid');
+        $qb = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenQueryBuilder();
+        if (UserUtil::isLoggedIn() && $siteFavoritesAllowed && $showOnlyFavorites) {
+            // display only favorite forums
+            $qb->join('node.favorites', 'fa');
+            $qb->andWhere('fa.forumUser = :uid');
+            $qb->setParameter('uid', $uid);
+        } else {
+            // display an index of the level 1 forums
+            $qb->andWhere('node.lvl = 1');
+        }
+        $forums = $qb->getQuery()->getResult();
+
+        // check to make sure there are forums to display
+        if (count($forums) < 1) {
+            if ($showOnlyFavorites) {
+                LogUtil::registerError($this->__('You have not selected any favorite forums. Please select some and try again.'));
+                $managedForumUser = new Dizkus_Manager_ForumUser($uid);
+                $managedForumUser->displayFavoriteForumsOnly(false);
+                $this->redirect(ModUtil::url($this->name, 'user', 'index'));
+            } else {
+                LogUtil::registerError($this->__('This site has not set up any forums. Contact the administrator.'));
+            }
+        }
+
         // filter the forum array by permissions
         $forums = ModUtil::apiFunc($this->name, 'Permission', 'filterForumArrayByPermission', $forums);
 
