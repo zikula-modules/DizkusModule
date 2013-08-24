@@ -135,7 +135,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->forum->getForum_id()));
 
-        if ($managedDestinationForum) {
+        if (isset($managedDestinationForum)) {
             // sync last post in destination
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get()));
         }
