@@ -70,12 +70,12 @@
                     {/if}
                     <a id="toggletopicsubscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                 </li>
-                {if $modvars.Dizkus.solved_enabled|default:0}
+                {if ($modvars.Dizkus.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
                 <li>
                     {if $topic.solved}
                         {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
                         {gt text="Mark as unsolved" assign='msg'}
-                        {else}
+                    {else}
                         {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
                         {gt text="Mark as solved" assign='msg'}
                     {/if}
