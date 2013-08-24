@@ -30,8 +30,9 @@
             </li>
             {/if}
 
+            {modapifunc modname='Dizkus' type='Favorites' func='getStatus' assign="favorites"}
             {if isset($favorites) and $favorites}
-                <li>&nbsp;<em>({gt text="Favourites"})</em></li>
+                <li>&nbsp;<em>({gt text="Favorites"})</em></li>
             {/if}
         </ul>
         {* /bread crumbs menu *}
@@ -39,7 +40,6 @@
 
         <ul class="linklist z-clearfix" style="float:right;">
         {if $coredata.logged_in eq 1 AND $func eq 'index' AND $modvars.Dizkus.favorites_enabled eq 'yes'}
-            {modapifunc modname='Dizkus' type='Favorites' func='getStatus' assign="favorites"}
             {if $favorites}
                 <li><a class="dzk_arrow showallforumslink tooltips" href="{modurl modname='Dizkus' type='user' func='showallforums'}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                 {else}
