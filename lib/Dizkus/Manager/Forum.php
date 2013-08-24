@@ -108,20 +108,21 @@ class Dizkus_Manager_Forum
             // already root
             return array();
         }
-
+        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getPath($this->_forum);
         $output = array();
-
-        $i = (!$withoutCurrent) ? $this->_forum : $this->_forum->getParent();
-        while ($i->getLvl() != 0) {
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $i->getForum_id()));
+        foreach($forums as $key => $forum) {
+            if ($key == 0) continue;
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum->getForum_id()));
             $output[] = array(
                 'url' => $url,
-                'title' => $i->getName()
+                'title' => $forum->getName()
             );
-            $i = $i->getParent();
         }
-
-        return array_reverse($output);
+        if ($withoutCurrent) {
+            // last element added in template instead
+            array_pop($output);
+        }
+        return $output;
     }
 
     /**
