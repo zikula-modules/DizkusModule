@@ -49,6 +49,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         }
         $forums = $qb->getQuery()->getResult();
 
+        // filter the forum array by permissions
+        $forums = ModUtil::apiFunc($this->name, 'Permission', 'filterForumArrayByPermission', $forums);
+
         // check to make sure there are forums to display
         if (count($forums) < 1) {
             if ($showOnlyFavorites) {
@@ -57,12 +60,9 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 $managedForumUser->displayFavoriteForumsOnly(false);
                 $this->redirect(ModUtil::url($this->name, 'user', 'index'));
             } else {
-                LogUtil::registerError($this->__('This site has not set up any forums. Contact the administrator.'));
+                LogUtil::registerError($this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
             }
         }
-
-        // filter the forum array by permissions
-        $forums = ModUtil::apiFunc($this->name, 'Permission', 'filterForumArrayByPermission', $forums);
 
         $this->view->assign('forums', $forums);
 
