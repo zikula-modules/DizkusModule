@@ -1,5 +1,8 @@
-{include file='user/header.tpl' __templatetitle='Manage topic subscriptions'}
+{gt text="Manage topic subscriptions" assign='templatetitle'}
+{pagesetvar name=title value=$templatetitle}
+{include file='user/header.tpl'}
 
+<h2>{$templatetitle}</h2>
 {modulelinks modname='Dizkus' type='prefs'}<br />
 
 {if $subscriptions}

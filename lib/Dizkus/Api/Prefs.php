@@ -12,14 +12,14 @@ class Dizkus_Api_Prefs extends Zikula_AbstractApi
 {
 
     /**
-     * get available admin panel links
+     * get available user pref panel links
      *
      * @return array array of admin links
      */
     public function getlinks()
     {
         $links = array();
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
             $links[] = array(
                 'url' => ModUtil::url('Dizkus', 'user', 'prefs'),
                 'text' => $this->__('Personal settings'),
