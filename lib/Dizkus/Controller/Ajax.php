@@ -272,6 +272,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         $params['topic_id'] = $this->request->request->get('topic', '');
         $params['action'] = $this->request->request->get('action', '');
         $userAllowedToEdit = $this->request->request->get('userAllowedToEdit', 0);
+        // certain actions a user is always allowed
+        $userAllowedToEdit = (in_array($params['action'], array('subscribe', 'unsubscribe', 'solve', 'unsolve'))) ? 1 : $userAllowedToEdit;
 
         // Check if topic is is set
         if (empty($params['topic_id'])) {
