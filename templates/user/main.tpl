@@ -9,7 +9,7 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt>
+                        <dt class="forumlist">
                             <span><a id="categorylink_{$parent.name}" title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$parent.forum_id}">{$parent.name|safetext}</a></span>
                         </dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>

@@ -21,7 +21,7 @@
             <ul class="topiclist">
                 <li class="dzk_header">
                     <dl>
-                        <dt><span>{gt text='Sub Forums'}</span></dt>
+                        <dt class="forumlist"><span>{gt text='Sub Forums'}</span></dt>
                         <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
                         <dd class="topics"><span>{gt text="Topics"}</span></dd>
                         <dd class="posts"><span>{gt text="Posts"}</span></dd>

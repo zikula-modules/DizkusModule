@@ -274,6 +274,9 @@ div#editpostoptions ul li {
 #dizkus ul.topiclist li.dzk_header dt {
     width: 49%;
 }
+#dizkus ul.topiclist li.dzk_header dt.forumlist {
+    width: 40%;
+}
 #dizkus ul.topiclist li dt {
     width: 43%;
 }
@@ -366,12 +369,12 @@ div#editpostoptions ul li {
 #dizkus dl.icon dt.new-posts {
     background: url('../images/red_folder.gif') no-repeat 5px 50%;
     font-weight: normal;
-    width: 43%;
+    width: 35%;
 }
 #dizkus dl.icon dt.no-new-posts {
     background:transparent url(../images/folder.gif) no-repeat scroll 5px 50%;
     font-weight:normal;
-    width:43%;
+    width:35%;
 }
 #dizkus dl.icon dt.ctheme-topic-title a,
 #dizkus dl.icon dt.new-posts a,
