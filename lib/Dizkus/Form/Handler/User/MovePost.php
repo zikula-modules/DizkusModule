@@ -73,7 +73,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => '0#pid' . $this->post_id));
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), null, 'pid' . $this->post_id);
             return $view->redirect($url);
         }
 
@@ -89,7 +89,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $newTopicPostCount = ModUtil::apiFunc('Dizkus', 'post', 'move', $data);
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start)) . '#pid' . $this->post_id;
+        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), null, 'pid' . $this->post_id);
         return $view->redirect($url);
     }
 

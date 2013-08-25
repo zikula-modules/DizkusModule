@@ -55,7 +55,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         $managedPost = new Dizkus_Manager_Post($post_id);
 
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(), 'start' => '0')) . '#pid' . $managedPost->getId();
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(), 'start' => 1), null, 'pid' . $managedPost->getId());
             return $view->redirect($url);
         }
 

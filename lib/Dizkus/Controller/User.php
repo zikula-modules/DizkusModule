@@ -725,7 +725,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $posts[$i]['forum_name'] = $topic->getForum()->getName();
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');
-            $start = (int)((ceil(($topic->getReplyCount() + 1)  / $posts_per_page) - 1) * $posts_per_page);
+            $start = (int)((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
             $posts[$i]['post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic',
                                          array('topic' => $topic->getTopic_id(),
                                                'start' => $start), 

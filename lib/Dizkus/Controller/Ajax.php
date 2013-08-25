@@ -87,7 +87,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
 
         $managedTopic = new Dizkus_Manager_Topic($topic_id);
 
-        $start = 0;
+        $start = 1;
 
         $this->checkMessageLength($message);
 
