@@ -111,7 +111,7 @@ class Dizkus_Api_Permission extends Zikula_AbstractApi
         } else if (is_array($args)) {
             // reconsititute object
             $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
-            $userId = $args['user_id'];
+            $userId = isset($args['user_id']) ? $args['user_id'] : null;
         } else {
             return LogUtil::registerArgsError();
         }
