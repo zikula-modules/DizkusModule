@@ -16,21 +16,13 @@
 /**
  * Smarty modifier to prepare text for display
  *
- * Available parameters:
- *   $text
- *
  * Example
- *
  *   {$text|dzkVarPrepHTMLDisplay}
  *
- *
- * @author       Frank Schummertz
- * @author       The Dizkus team
- * @since        16. Sept. 2003
- * @param        array    $string     the contents to transform
+ * @param        string   $text     the string to transform
  * @return       string   the modified output
  */
-function smarty_modifier_dzkVarPrepHTMLDisplay($text=null)
+function smarty_modifier_dzkVarPrepHTMLDisplay($text = null)
 {
     if (!isset($text)) {
         return '';
