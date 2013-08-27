@@ -4,7 +4,7 @@
 
 {modapifunc modname='Dizkus' type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
 
-
+{if $preview eq 1}<<< PREVIEW >>>{/if}
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}" ></a>
 
@@ -77,16 +77,16 @@
                 </div>
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
                 <div class="content" id="postingtext_{$post.post_id}">
-                    {$post.post_text|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
+                    {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
                     {if $post.attachSignature AND ($modvars.Dizkus.removesignature == 'no')}
                     {usergetvar name='signature' assign="signature"}
                     {if !empty($signature)}
-                        <em>
-                            <br /><br />{$modvars.Dizkus.signature_start}<br />
-                            {$signature|nl2br|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}
-                            <br />{$modvars.Dizkus.signature_end}</br>
-                        </em>
+                    <div class='dzk_postSignature'>
+                        {$modvars.Dizkus.signature_start}
+                        <br />{$signature|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
+                        <br />{$modvars.Dizkus.signature_end}
+                    </div>
                     {/if}
                     {/if}
 

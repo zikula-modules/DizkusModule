@@ -94,8 +94,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         if ($preview == false) {
             $data = array(
                 'topic_id' => $topic_id,
-                // @todo should varPrep BEFORE going into the DB or after (before display)????
-                'post_text' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message),
+                'post_text' => $message,
                 'attachSignature' => $attach_signature,
             );
 
@@ -129,9 +128,8 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
             $post['poster'] = $managedPoster->toArray();
             // create unix timestamp
             $post['post_time'] = time();
-            $post['post_textdisplay'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
             $post['attachSignature'] = $attach_signature;
-            $post['post_text'] = $post['post_textdisplay'];
+            $post['post_text'] = $message;
 
             // Do not show edit link
             $permissions = array();
@@ -244,7 +242,13 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 $managedOriginalPost->update($data);
                 $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
                 $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
-                $response = array('action' => 'updated', 'newText' => $message);
+                if ($attach_signature && ($this->getVar('removesignature') == 'no')) {
+                    // include signature in response text
+                    $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
+                    $message .= (!empty($sig)) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />$sig<br />{$this->getVar('signature_end')}</div>" : '';
+                }
+                // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
+                $response = array('action' => 'updated', 'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
             }
 
             return new Zikula_Response_Ajax($response);

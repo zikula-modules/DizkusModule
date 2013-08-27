@@ -520,7 +520,10 @@ div#editpostoptions ul li {
 #dizkus .forum_post .postbody .dizkusinformation_post {
     margin: 10px;
 }
-
+#dizkus .forum_post .postbody .dzk_postSignature {
+    font-style: italic;
+    padding: 1em 0 0 1em;
+}
 /* Quick preview styles */
 
 #quickreplypreview .post_bg1 {

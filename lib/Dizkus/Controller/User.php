@@ -193,7 +193,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $message = $this->request->request->get('message', '');
         $attach_signature = (int)$this->request->request->get('attach_signature', 0);
         $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
-        $preview = $this->request->request->get('preview', false);
+        $isPreview = $this->request->request->get('preview', false);
         $submit = $this->request->request->get('submit', false);
         $cancel = $this->request->request->get('cancel', '');
 
@@ -209,12 +209,12 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         if ((strlen($message) + strlen('[addsig]')) > 65535) {
             LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
             // switch to preview mode
-            $preview = true;
+            $isPreview = true;
         }
         if (empty($message)) {
             LogUtil::registerStatus($this->__('Error! The message is empty. Please add some text.'));
             // switch to preview mode
-            $preview = true;
+            $isPreview = true;
         }
         // check hooked modules for validation
         if ($submit) {
@@ -222,16 +222,15 @@ class Dizkus_Controller_User extends Zikula_AbstractController
             $hookvalidators = $this->notifyHooks($hook)->getValidators();
             if ($hookvalidators->hasErrors()) {
                 LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
-                $preview = true;
+                $isPreview = true;
             }
         }
 
-        if ($submit && !$preview) {
+        if ($submit && !$isPreview) {
 
             $data = array(
                 'topic_id' => $topic_id,
-                // @todo should varPrep BEFORE going into the DB or after (before display)????
-                'post_text' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message),
+                'post_text' => $message,
                 'attachSignature' => $attach_signature
             );
 
@@ -276,14 +275,11 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'subscribe_topic' => $subscribe_topic,
                 'topic' => $managedTopic->toArray(),
                 'poster_data' => $managedPoster->toArray(),
+                'message' => $message,
             );
-            if ($preview) {
-                $reply['message_display'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message);
-                $reply['message'] = $message;
-            }
 
             $this->view->assign('reply', $reply);
-            $this->view->assign('preview', $preview);
+            $this->view->assign('preview', $isPreview);
             $this->view->assign('last_visit_unix', $lastVisitUnix);
 
             return $this->view->fetch('user/topic/reply.tpl');

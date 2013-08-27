@@ -1,5 +1,5 @@
 {assign var="onlinestyle" value="style='background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\"'"} 
-
+<<< PREVIEW >>>
 <div id="posting_{$reply.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {$onlinestyle}>
     <div class="inner">
 
@@ -8,9 +8,7 @@
                 <div class="dzk_avatar">
                     <strong>{$reply.poster_data.user.uid|profilelinkbyuid}</strong>
                     <br />
-                    <strong>{$reply.poster_data.user.uname}</strong>{* TODO: this is temp to show the data is here w/o another DB call *}
-                    <br />
-                    {useravatar uid=$reply.poster_data.user.uid}
+                    {useravatar uid=$reply.poster_data.user.uid class='gravatar'}
                     {if isset($reply.poster_data.image) && isset($reply.poster_data.rank)}
                     <br />
                     <img class="userinforankimage" src="{$baseurl}{$reply.poster_data.image}" alt="{$reply.poster_data.rank}" {$reply.poster_data.image_image_attr.3} />
@@ -38,7 +36,7 @@
                 </div>
 
                 <div class="content" id="postingtext_{$reply.post_id}">
-                    {$reply.message_display}
+                    {$reply.message|dzkVarPrepHTMLdisplay}
                 </div>
 
             </div>

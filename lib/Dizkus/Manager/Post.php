@@ -87,7 +87,7 @@ class Dizkus_Manager_Post
 
     public function prepare($data)
     {
-        $this->_post->merge($data);
+        $this->_post->merge(DataUtil::formatForStore($data));
     }
 
     /**

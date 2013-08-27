@@ -240,11 +240,11 @@ class Dizkus_Manager_Topic
     {
         // prepare first post
         $this->_firstPost = new Dizkus_Entity_Post();
-        $this->_firstPost->setPost_text($data['message']);
+        $this->_firstPost->setPost_text(DataUtil::formatForStore($data['message']));
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
         unset($data['attachSignature']);
-        $this->_firstPost->setTitle($data['title']);
+        $this->_firstPost->setTitle(DataUtil::formatForStore($data['title']));
         $this->_firstPost->setTopic($this->_topic);
         $this->_firstPost->setIsFirstPost(true);
         $this->_subscribe = $data['subscribe_topic'];
