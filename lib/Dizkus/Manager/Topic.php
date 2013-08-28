@@ -294,30 +294,30 @@ class Dizkus_Manager_Topic
      *
      * @return boolean
      */
-    public function store()
-    {
-        // write topic & first post
-        $this->entityManager->persist($this->_topic);
-        $this->entityManager->persist($this->_firstPost);
-        $this->entityManager->flush();
-
-        // increment forum post count
-        $managedForum = new Dizkus_Manager_Forum($this->getForumId());
-        $managedForum->incrementPostCount();
-        $managedForum->incrementTopicCount();
-        $managedForum->setLastPost($this->_firstPost);
-
-        // subscribe
-        if ($this->_subscribe) {
-            $params = array(
-                'topic_id' => $this->_topic->getTopic_id(),
-                'action' => 'subscribe'
-            );
-            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
-        }
-
-        return $this->_topic->getTopic_id();
-    }
+//    public function store()
+//    {
+//        // write topic & first post
+//        $this->entityManager->persist($this->_topic);
+//        $this->entityManager->persist($this->_firstPost);
+//        $this->entityManager->flush();
+//
+//        // increment forum post count
+//        $managedForum = new Dizkus_Manager_Forum($this->getForumId());
+//        $managedForum->incrementPostCount();
+//        $managedForum->incrementTopicCount();
+//        $managedForum->setLastPost($this->_firstPost);
+//
+//        // subscribe
+//        if ($this->_subscribe) {
+//            $params = array(
+//                'topic_id' => $this->_topic->getTopic_id(),
+//                'action' => 'subscribe'
+//            );
+//            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+//        }
+//
+//        return $this->_topic->getTopic_id();
+//    }
 
     /**
      * create topic and post

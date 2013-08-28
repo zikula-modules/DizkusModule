@@ -131,6 +131,7 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
                 'attachSignature' => $attach_signature,
                 'post_text' => $message,
                 'subscribe_topic' => $subscribe_topic,
+                'userAllowedToEdit' => false,
             );
 
             // Do not show edit link

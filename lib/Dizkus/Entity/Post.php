@@ -276,7 +276,7 @@ class Dizkus_Entity_Post extends Zikula_EntityAccess
      * @param integer $uid
      * @return boolean
      */
-    public function userAllowedToEdit($uid = null)
+    public function getUserAllowedToEdit($uid = null)
     {
         // default to current user
         $uid = (isset($uid)) ? $uid : UserUtil::getVar('uid');

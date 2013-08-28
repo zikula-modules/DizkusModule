@@ -280,7 +280,6 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'attach_signature' => $attach_signature,
                 'subscribe_topic' => $subscribe_topic,
                 'topic' => $managedTopic->toArray(),
-                'poster_data' => $managedPoster->toArray(),
                 'message' => $message,
             );
             $post = array(
@@ -291,6 +290,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'post_time' => time(),
                 'attachSignature' => $attach_signature,
                 'post_text' => $message,
+                'userAllowedToEdit' => false,
             );
 
             // Do not show edit link

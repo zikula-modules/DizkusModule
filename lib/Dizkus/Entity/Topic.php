@@ -379,6 +379,6 @@ class Dizkus_Entity_Topic extends Zikula_EntityAccess
 
     public function userAllowedToEdit($uid = null)
     {
-        return $this->posts->first()->userAllowedToEdit($uid);
+        return $this->posts->first()->getUserAllowedToEdit($uid);
     }
 }

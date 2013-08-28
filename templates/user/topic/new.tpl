@@ -4,8 +4,7 @@
 
 {if $preview}
 <div id="nonajaxnewtopicpreview">
-    {*include file='user/topic/newpreview.tpl'*}
-    {include file='user/post/single.tpl'}
+    {include file='user/topic/newpreview.tpl'}
 </div>
 {/if}
 

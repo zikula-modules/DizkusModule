@@ -103,15 +103,22 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
         // show preview
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
-            $view->assign('post', $newManagedTopic->getPreview());
+            $post = $newManagedTopic->getPreview()->toArray();
+            $post['post_id'] = 0;
+            $post['post_time'] = time();
+            $post['topic_id'] = 0;
+            $post['subscribe_topic'] = $data['subscribe_topic'];
+            $view->assign('post', $post);
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+            $this->view->assign('ranks', $ranks);
             return true;
         }
 
         // store new topic
-        $topicId = $newManagedTopic->create();
+        $newManagedTopic->create();
         $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
         // notify hooks for both POST and TOPIC
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newManagedTopic->getFirstPost()->getPost_id(), $url));
