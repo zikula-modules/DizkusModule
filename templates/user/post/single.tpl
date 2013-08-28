@@ -2,9 +2,8 @@
 {assign var="onlinestyle" value="style=\"background-image: url(`$baseurl`modules/Dizkus/images/`$coredata.language`/icon_user_online.gif); background-position: top right; background-repeat: no-repeat;\""}
 
 
-{modapifunc modname='Dizkus' type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
+{modapifunc modname='Dizkus' type='UserData' func='getUserOnlineStatus' uid=$post.poster.user.uid assign='isPosterOnline'}
 
-{if $preview eq 1}<<< PREVIEW >>>{/if}
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}" ></a>
 
@@ -71,7 +70,8 @@
             </div>
 
             <div class="postbody dzk_colpost_right">
-                <div class="postinfo">
+                <div class="postinfo{if $preview eq 1} preview{/if}">
+                    {if $preview eq 1}<span>{gt text='PREVIEW'}</span>{/if}
                     {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
                     <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
                 </div>
@@ -108,7 +108,7 @@
                         {if isset($topic) AND $topic.status neq 1}
                         {if $permissions.comment eq true}
                         <li>
-                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
+                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');">{img modname='Dizkus' src='icon_post_quote.gif' __alt='Quote'}</a>
                         </li>
                         {/if}
                         {if $permissions.edit eq 1 OR $post->userAllowedToEdit()}

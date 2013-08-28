@@ -499,6 +499,14 @@ div#editpostoptions ul li {
     padding: 2px 0 2px 7px;
     text-align: right;
 }
+#dizkus .forum_post .postbody .preview {
+    background-color:#ffaa44;
+}
+#dizkus .forum_post .postbody .preview span {
+    float: left;
+    font-weight: bold;
+    padding-left: 2em;
+}
 #dizkus .forum_post .postbody .content {
     height: auto !important;
     /* height: 4em; */

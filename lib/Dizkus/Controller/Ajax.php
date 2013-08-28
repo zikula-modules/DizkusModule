@@ -123,13 +123,15 @@ class Dizkus_Controller_Ajax extends Zikula_Controller_AbstractAjax
         } else {
             // preview == true, create fake post
             $managedPoster = new Dizkus_Manager_ForumUser();
-            $post['post_id'] = 0;
-            $post['topic_id'] = $topic_id;
-            $post['poster'] = $managedPoster->toArray();
-            // create unix timestamp
-            $post['post_time'] = time();
-            $post['attachSignature'] = $attach_signature;
-            $post['post_text'] = $message;
+            $post = array(
+                'post_id' => 0,
+                'topic_id' => $topic_id,
+                'poster' => $managedPoster->toArray(),
+                'post_time' => time(), // create unix timestamp
+                'attachSignature' => $attach_signature,
+                'post_text' => $message,
+                'subscribe_topic' => $subscribe_topic,
+            );
 
             // Do not show edit link
             $permissions = array();

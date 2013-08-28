@@ -166,6 +166,7 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $this->view->assign('nextTopic', $managedTopic->getNext());
         $this->view->assign('previousTopic', $managedTopic->getPrevious());
         $this->view->assign('last_visit_unix', $lastVisitUnix);
+        $this->view->assign('preview', false);
 
         $managedTopic->incrementViewsCount();
 
@@ -193,15 +194,20 @@ class Dizkus_Controller_User extends Zikula_AbstractController
         $message = $this->request->request->get('message', '');
         $attach_signature = (int)$this->request->request->get('attach_signature', 0);
         $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
-        $isPreview = $this->request->request->get('preview', false);
-        $submit = $this->request->request->get('submit', false);
-        $cancel = $this->request->request->get('cancel', '');
+
+        // convert form submit buttons to boolean
+        $isPreview = $this->request->request->get('preview', null);
+        $isPreview = isset($isPreview) ? true : false;
+        $submit = $this->request->request->get('submit', null);
+        $submit = isset($submit) ? true : false;
+        $cancel = $this->request->request->get('cancel', null);
+        $cancel = isset($cancel) ? true : false;
 
         /**
          * if cancel is submitted move to topic-view
          */
-        if (!empty($cancel)) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+        if ($cancel) {
+            return $this->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
         }
 
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
@@ -277,10 +283,27 @@ class Dizkus_Controller_User extends Zikula_AbstractController
                 'poster_data' => $managedPoster->toArray(),
                 'message' => $message,
             );
+            $post = array(
+                'post_id' => 0,
+                'topic_id' => $topic_id,
+                'poster' => $managedPoster->toArray(),
+                // create unix timestamp
+                'post_time' => time(),
+                'attachSignature' => $attach_signature,
+                'post_text' => $message,
+            );
 
+            // Do not show edit link
+            $permissions = array();
+
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+            $this->view->assign('ranks', $ranks);
+            $this->view->assign('post', $post);
             $this->view->assign('reply', $reply);
+            $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
             $this->view->assign('preview', $isPreview);
             $this->view->assign('last_visit_unix', $lastVisitUnix);
+            $this->view->assign('permissions', $permissions);
 
             return $this->view->fetch('user/topic/reply.tpl');
         }

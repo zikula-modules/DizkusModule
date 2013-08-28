@@ -5,7 +5,7 @@
 
 {if $preview|default:false}
 <div id="replypreview" style="margin:1em 0;">
-    {include file='user/topic/replypreview.tpl'}
+    {include file='user/post/single.tpl'}
 </div>
 {/if}
 
@@ -40,7 +40,7 @@
                                         <li><strong>{gt text="Options"}</strong></li>
                                         {if $coredata.logged_in}
                                         <li>
-                                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                            <input type="checkbox" id="attach_signature" name="attach_signature" {if $reply.attach_signature eq true}checked="checked"{/if} value="1" />
                                             <label for="attach_signature">{gt text="Attach my signature"}</label>
                                         </li>
                                         <li>
@@ -51,7 +51,7 @@
                                         <li id="nonajaxreplybuttons" class="z-buttons">
                                             <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
                                             <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
-                                            <input class="z-bt-cancel z-bt-small" type="submit" name="reset" value="{gt text="Cancel"}" />
+                                            <input class="z-bt-cancel z-bt-small" type="submit" name="cancel" value="{gt text="Cancel"}" />
                                         </li>
                                     </ul>
                                 </div>
