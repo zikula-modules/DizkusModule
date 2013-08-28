@@ -452,10 +452,11 @@ class Dizkus_Api_User extends Zikula_AbstractApi
      */
     public static function truncate($text, $chars = 25)
     {
+        $originalText = $text;
         $text = $text . " ";
         $text = substr($text, 0, $chars);
         $text = substr($text, 0, strrpos($text, ' '));
-        $text = $text . "...";
+        $text = (strlen($originalText) == strlen($text)) ? $text : $text . "...";
         return $text;
     }
 }
