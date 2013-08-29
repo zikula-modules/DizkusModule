@@ -62,10 +62,6 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
      */
     function handleCommand(Zikula_Form_View $view, &$args)
     {
-        // get the input
-//        $post_id = (int)$this->request->query->get('post');
-//        $managedPost = new Dizkus_Manager_Post($post_id);
-
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
             return $view->redirect($url);
