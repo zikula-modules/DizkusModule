@@ -54,7 +54,7 @@
                                 <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
                                 {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                             </dt>
-                            <dd class="posts">{$forum.topicCount}</dd>
+                            <dd class="posts">{$topic.replyCount}</dd>
                             <dd class="lastpost">
                                 {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                             </dd>
