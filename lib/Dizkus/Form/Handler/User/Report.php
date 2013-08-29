@@ -16,11 +16,11 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
 {
 
     /**
-     * post id
+     * post
      *
-     * @var integer
+     * @var Dizkus_Manager_Post
      */
-    private $post_id;
+    private $_post;
 
     /**
      * Setup form.
@@ -36,6 +36,18 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
+        // get the input
+        $id = (int)$this->request->query->get('post');
+
+        if (!isset($id)) {
+            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
+        }
+
+        $this->_post = new Dizkus_Manager_Post($id);
+        $view->assign('post', $this->_post->get());
+        $view->assign('notify', true);
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+        $this->view->assign('ranks', $ranks);
 
         return true;
     }
@@ -51,11 +63,11 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
     function handleCommand(Zikula_Form_View $view, &$args)
     {
         // get the input
-        $post_id = (int)$this->request->query->get('post');
-        $managedPost = new Dizkus_Manager_Post($post_id);
+//        $post_id = (int)$this->request->query->get('post');
+//        $managedPost = new Dizkus_Manager_Post($post_id);
 
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(), 'start' => 1), null, 'pid' . $managedPost->getId());
+            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
             return $view->redirect($url);
         }
 
@@ -81,12 +93,12 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
             }
         }
 
-        ModUtil::apiFunc('Dizkus', 'notify', 'notify_moderator', array('post' => $managedPost->get(),
+        ModUtil::apiFunc('Dizkus', 'notify', 'notify_moderator', array('post' => $this->_post->get(),
             'comment' => $data['comment']));
 
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
+        $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedPost->getTopicId(),
+        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
                     'start' => $start));
         return $view->redirect($url);
     }

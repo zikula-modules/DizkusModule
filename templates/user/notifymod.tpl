@@ -2,6 +2,9 @@
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}
 
+<h2>{$templatetitle}</h2>
+{include file='user/post/single.tpl'}
+
 <p class="z-informationmsg">
     {gt text="A moderator will be notified about the selected posting.<br />Valid reasons are: Copyright violations, personal insults and so on.<br />The following are not valid reasons for moderation: Typos, difference of opinion on the topic et cetera."}
 </p>
