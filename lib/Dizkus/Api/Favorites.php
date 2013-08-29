@@ -24,6 +24,9 @@ class Dizkus_Api_Favorites extends Zikula_AbstractApi
     public function getStatus()
     {
         $uid = UserUtil::getVar('uid');
+        if ($uid < 2) {
+            return false;
+        }
         // caching
         if (isset($this->_displayOnlyFavorites[$uid])) {
             return $this->_displayOnlyFavorites[$uid];
