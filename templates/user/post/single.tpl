@@ -118,7 +118,9 @@
                         <li>{img modname='Dizkus' src="icon_post_close.gif" class="tooltips" __alt="Topic locked" }</li>
                         {/if}
                         {if !isset($notify) OR $notify eq false}
+                        {if $permissions.comment eq true}
                         <li><a class="notifymoderatorlink tooltips" href="{modurl modname='Dizkus' type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{img modname='Dizkus' src='icon_topic_mod.gif' __alt='Notify moderator' }</a></li>
+                        {/if}
                         <li><a class="dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;{img modname='Dizkus' src="icon_up.gif" __alt="Top" }</a></li>
                         {/if}
                     </ul>
