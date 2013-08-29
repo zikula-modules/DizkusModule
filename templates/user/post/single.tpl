@@ -70,13 +70,13 @@
             </div>
 
             <div class="postbody dzk_colpost_right">
-                <div class="postinfo{if $preview eq 1} preview{/if}">
-                    {if $preview eq 1}<span>{gt text='PREVIEW'}</span>{/if}
+                <div class="postinfo">
                     {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
                     <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
                 </div>
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
                 <div class="content" id="postingtext_{$post.post_id}">
+                    {if $preview eq 1}<div class='z-warningmsg z-bold'>{gt text='PREVIEW'}</div>{/if}
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
                     {if $post.attachSignature AND ($modvars.Dizkus.removesignature == 'no')}
