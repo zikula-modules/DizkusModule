@@ -35,8 +35,8 @@ use LogUtil;
 use Zikula_Exception_Forbidden;
 use HookUtil;
 use System;
-use Dizkus_AbstractHookedTopicMeta;
-use Dizkus_HookedTopicMeta_Generic;
+use Dizkus\AbstractHookedTopicMeta;
+use Dizkus\HookedTopicMeta\Generic;
 use Zikula\Core\Event\GenericEvent;
 
 class HookHandlers extends \Zikula_Hook_AbstractHandler
@@ -410,16 +410,20 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $locations = array($module, 'Dizkus');
         // locations to search for the class
         foreach ($locations as $location) {
-            $classname = $location . '_HookedTopicMeta_' . $module;
-            if (class_exists($classname)) {
-                $instance = new $classname($hook);
-                if ($instance instanceof Dizkus_AbstractHookedTopicMeta) {
-                    return $instance;
+            $classnames = array(
+                $location . '_HookedTopicMeta_' . $module,
+                "$location\\HookedTopicMeta\\$module");
+            foreach ($classnames as $classname) {
+                if (class_exists($classname)) {
+                    $instance = new $classname($hook);
+                    if ($instance instanceof AbstractHookedTopicMeta) {
+                        return $instance;
+                    }
                 }
             }
         }
 
-        return new Dizkus_HookedTopicMeta_Generic($hook);
+        return new Generic($hook);
     }
 
 }

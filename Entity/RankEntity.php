@@ -9,18 +9,17 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Entity;
+
+use ModUtil;
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Rank entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_ranks")
  */
-
-namespace Dizkus\Entity;
-
-use ModUtil;
-use Doctrine\ORM\Mapping as ORM;
-
 class RankEntity extends \Zikula_EntityAccess
 {
 

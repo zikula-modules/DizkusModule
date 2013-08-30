@@ -16,7 +16,7 @@ namespace Dizkus\HookedTopicMeta;
 
 use ZLanguage;
 
-class GenericHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
+class Generic extends Dizkus\AbstractHookedTopicMeta
 {
 
     private $dom;

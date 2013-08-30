@@ -9,14 +9,6 @@
  * @package Dizkus
  */
 
-/**
- * Topics entity class
- *
- * @ORM\Entity
- * @ORM\Table(name="dizkus_topics")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\TopicRepository")
- */
-
 namespace Dizkus\Entity;
 
 use ModUtil;
@@ -24,6 +16,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Topics entity class
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="dizkus_topics")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\TopicRepository")
+ */
 class TopicEntity extends \Zikula_EntityAccess
 {
 

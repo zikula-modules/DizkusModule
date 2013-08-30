@@ -9,15 +9,6 @@
  * @package Dizkus
  */
 
-/**
- * Forums entity class
- *
- * @ORM\Entity
- * @Gedmo\Tree(type="nested")
- * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\ForumRepository")
- */
-
 namespace Dizkus\Entity;
 
 use ZLanguage;
@@ -31,6 +22,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * Forums entity class
+ *
+ * @ORM\Entity
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Table(name="dizkus_forums")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\ForumRepository")
+ */
 class ForumEntity extends \Zikula_EntityAccess
 {
 

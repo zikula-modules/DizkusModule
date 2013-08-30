@@ -9,17 +9,16 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Favorites entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_favorites", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
-
-namespace Dizkus\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
 class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 {
 

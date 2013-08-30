@@ -9,13 +9,6 @@
  * @package Dizkus
  */
 
-/**
- * ForumUser entity class
- *
- * @ORM\Entity
- * @ORM\Table(name="dizkus_users")
- */
-
 namespace Dizkus\Entity;
 
 use Dizkus\Entity\ForumUserFavoriteEntity;
@@ -25,6 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+/**
+ * ForumUser entity class
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="dizkus_users")
+ */
 class ForumUserEntity extends \Zikula_EntityAccess
 {
 

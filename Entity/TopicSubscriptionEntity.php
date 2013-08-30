@@ -9,17 +9,16 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * TopicSubscriptions entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topic_subscription")
  */
-
-namespace Dizkus\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
 class TopicSubscriptionEntity extends \Zikula_EntityAccess
 {
 

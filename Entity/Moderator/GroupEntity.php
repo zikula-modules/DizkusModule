@@ -8,6 +8,9 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
+
+namespace Dizkus\Entity\Moderator;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,9 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_mods_group")
  */
-
-namespace Dizkus\Entity\Moderator;
-
 class GroupEntity extends \Zikula_EntityAccess
 {
 

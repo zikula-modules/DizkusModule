@@ -9,17 +9,16 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * ForumSubscription entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_subscription", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
  */
-
-namespace Dizkus\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
 class ForumSubscriptionEntity extends \Zikula_EntityAccess
 {
 

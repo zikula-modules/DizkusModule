@@ -9,14 +9,6 @@
  * @package Dizkus
  */
 
-/**
- * Post entity class
- *
- * @ORM\Entity
- * @ORM\Table(name="dizkus_posts")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\PostRepository")
- */
-
 namespace Dizkus\Entity;
 
 use ServiceUtil;
@@ -27,6 +19,13 @@ use UserUtil;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+/**
+ * Post entity class
+ *
+ * @ORM\Entity
+ * @ORM\Table(name="dizkus_posts")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\PostRepository")
+ */
 class PostEntity extends \Zikula_EntityAccess
 {
 

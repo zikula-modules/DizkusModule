@@ -17,7 +17,7 @@ namespace Dizkus\HookedTopicMeta;
 use ModUtil;
 use News_Api_User;
 
-class NewsHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
+class News extends Dizkus\AbstractHookedTopicMeta
 {
 
     private $newsItem = null;

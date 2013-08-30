@@ -22,7 +22,7 @@ use System;
 use ModUtil;
 use Dizkus\Entity\ForumUserEntity;
 use Dizkus\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
-use Dizkus_Connection_Pop3;
+use Dizkus\Connection\Pop3Connection;
 
 class DizkusInstaller extends \Zikula_AbstractInstaller
 {
@@ -511,7 +511,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     {
         foreach ($connections as $connectionData) {
             $connectionData['coreUser'] = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
-            $connection = new Dizkus_Connection_Pop3($connectionData);
+            $connection = new Pop3Connection($connectionData);
             $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $connectionData['id']);
             $forum->setPop3Connection($connection);
         }

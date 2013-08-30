@@ -8,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * This class provides the post api functions
@@ -19,12 +18,12 @@ namespace Dizkus\Api;
 use DateTime;
 use DataUtil;
 use DateUtil;
-use Paginator;
 use UserUtil;
 use LogUtil;
 use Dizkus_Manager_Topic;
 use Dizkus_Manager_Post;
 use ModUtil;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostApi extends \Zikula_AbstractApi
 {
