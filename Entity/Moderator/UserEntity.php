@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity\Moderator;
 
-class User extends \Zikula_EntityAccess
+class UserEntity extends \Zikula_EntityAccess
 {
 
     /**
