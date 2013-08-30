@@ -62,7 +62,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $this->_em = ServiceUtil::getService('doctrine.entitymanager');
         $this->domain = ZLanguage::getModuleDomain('Dizkus');
     }
-    
+
     /**
      * Display hook for view.
      *
@@ -110,7 +110,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
-    
+
     /**
      * Display hook for edit.
      *
@@ -137,7 +137,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $this->view->assign('forum', $forum->getName());
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
-    
+
     /**
      * Display hook for delete.
      *
@@ -157,7 +157,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
-    
+
     /**
      * Validate hook for edit.
      *
@@ -169,7 +169,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         return;
     }
-    
+
     /**
      * Validate hook for delete.
      *
@@ -181,7 +181,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         return;
     }
-    
+
     /**
      * Process hook for edit.
      *
@@ -213,9 +213,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         // notify topic & forum subscribers
         ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
         LogUtil::registerStatus($this->__('Dizkus: Hooked discussion topic created.', $this->domain));
+
         return true;
     }
-    
+
     /**
      * Process hook for delete.
      *
@@ -242,9 +243,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         }
         $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
         LogUtil::registerStatus($this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
+
         return true;
     }
-    
+
     /**
      * add hook config options to hooked module's module config
      *
@@ -281,7 +283,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
         $z_event->stop();
     }
-    
+
     /**
      * process results of dizkushookconfig
      *
@@ -317,9 +319,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         LogUtil::registerStatus(__('Dizkus: Hook option settings updated.', $dom));
         $z_event->setData(true);
         $z_event->stop();
+
         return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
     }
-    
+
     /**
      * Handle module uninstall event "installer.module.uninstalled".
      * Receives $modinfo as $args
@@ -358,7 +361,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
         LogUtil::registerStatus(__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
     }
-    
+
     /**
      * populate Services menu with hook option link
      *
@@ -373,12 +376,12 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             $event->data[] = array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom));
         }
     }
-    
+
     /**
      * Find Meta Class and instantiate
      *
-     * @param Zikula_ProcessHook $hook
-     * @return instantiated object of found class
+     * @param  Zikula_ProcessHook $hook
+     * @return instantiated       object of found class
      */
     private function getClassInstance(Zikula_ProcessHook $hook)
     {
@@ -397,6 +400,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
                 }
             }
         }
+
         return new Dizkus_HookedTopicMeta_Generic($hook);
     }
 

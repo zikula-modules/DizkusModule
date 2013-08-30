@@ -8,10 +8,7 @@
  */
 use Doctrine\ORM\EntityRepository;
 
-
-
 namespace Dizkus\Entity\Repository;
-
 
 class PostRepository extends \EntityRepository
 {
@@ -19,7 +16,7 @@ class PostRepository extends \EntityRepository
      * Delete a post via dql
      * avoids cascading deletion errors
      * but does not deleted associations
-     * 
+     *
      * @param integer $id
      */
     public function manualDelete($id)

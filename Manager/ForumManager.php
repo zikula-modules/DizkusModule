@@ -12,10 +12,6 @@
  * information regarding copyright and licensing.
  */
 
-
-
-
-
 namespace Dizkus\Manager;
 
 use ServiceUtil;
@@ -52,7 +48,7 @@ class ForumManager
             $this->_forum = new Dizkus_Entity_Forum();
         }
     }
-    
+
     /**
      * Check if forum exists
      *
@@ -62,7 +58,7 @@ class ForumManager
     {
         return $this->_forum ? true : false;
     }
-    
+
     /**
      * return page as array
      *
@@ -73,9 +69,10 @@ class ForumManager
         if (!$this->_forum) {
             return false;
         }
+
         return $this->_forum->toArray();
     }
-    
+
     /**
      * return page as array
      *
@@ -85,7 +82,7 @@ class ForumManager
     {
         return $this->_forum->getForum_id();
     }
-    
+
     /**
      * return forum as doctrine2 object
      *
@@ -95,12 +92,12 @@ class ForumManager
     {
         return $this->_forum;
     }
-    
+
     public function getPermissions()
     {
         return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_forum);
     }
-    
+
     /**
      * get forum bread crumbs
      *
@@ -127,9 +124,10 @@ class ForumManager
             // last element added in template instead
             array_pop($output);
         }
+
         return $output;
     }
-    
+
     /**
      * return posts of a forum as doctrine2 object
      *
@@ -143,9 +141,10 @@ class ForumManager
         $query->setFirstResult($startNumber - 1)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
+
         return $paginator;
     }
-    
+
     /**
      * get the pager
      *
@@ -155,7 +154,7 @@ class ForumManager
     {
         return array('itemsperpage' => $this->_itemsPerPage, 'numitems' => $this->_numberOfItems);
     }
-    
+
     /**
      * increase read count
      *
@@ -165,9 +164,10 @@ class ForumManager
     {
         $this->_forum->incrementCounter();
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * Increase post count
      */
@@ -177,7 +177,7 @@ class ForumManager
         $this->modifyParentCount($this->_forum->getParent());
         $this->entityManager->flush();
     }
-    
+
     /**
      * decrease post count
      */
@@ -187,7 +187,7 @@ class ForumManager
         $this->modifyParentCount($this->_forum->getParent(), 'decrement');
         $this->entityManager->flush();
     }
-    
+
     /**
      * increase topic count
      */
@@ -197,7 +197,7 @@ class ForumManager
         $this->modifyParentCount($this->_forum->getParent(), 'increment', 'Topic');
         $this->entityManager->flush();
     }
-    
+
     /**
      * recursive method to modify parent forum's post or topic count
      */
@@ -212,13 +212,13 @@ class ForumManager
             $this->modifyParentCount($grandParent, $direction, $entity);
         }
     }
-    
+
     public function setLastPost($post)
     {
         $this->_forum->setLast_post($post);
         $this->entityManager->flush();
     }
-    
+
     /**
      * store the forum
      *
@@ -230,11 +230,11 @@ class ForumManager
         $this->entityManager->persist($this->_forum);
         $this->entityManager->flush();
     }
-    
+
     /**
      * Is the current user (provided user) a forum moderator?
-     * 
-     * @param integer $uid (optional, default: null)
+     *
+     * @param  integer $uid (optional, default: null)
      * @return boolean
      */
     public function isModerator($uid = null)
@@ -259,13 +259,14 @@ class ForumManager
             WHERE m.uid = :uid
             AND m.gid IN (:gids)';
         $groupMembership = $this->entityManager->createQuery($dql)->setParameter('uid', $uid)->setParameter('gids', $gids)->getResult();
+
         return count($groupMembership) > 0 ? true : false;
     }
-    
+
     /**
      * Is this forum a child of the provided forum?
-     * 
-     * @param Dizkus_Entity_Forum $forum
+     *
+     * @param  Dizkus_Entity_Forum $forum
      * @return boolean
      */
     public function isChildOf(Dizkus_Entity_Forum $forum)

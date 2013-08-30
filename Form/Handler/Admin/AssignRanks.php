@@ -24,7 +24,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -32,7 +32,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
 
         $letter = $this->request->query->get('letter');
         $lastletter = $this->request->query->get('lastletter');
-        $page = (int)$this->request->query->get('page', 1);
+        $page = (int) $this->request->query->get('page', 1);
 
         // check for a letter parameter
         if (!empty($lastletter)) {
@@ -59,7 +59,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
                 ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
         }
         $query = $qb->getQuery();
-        
+
         // Paginator
         // this isn't working at the moment - Jan 26 2013
 //            $startnum = ($page - 1) * $perpage;
@@ -76,7 +76,6 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
         $this->view->assign('page', $page);
         $this->view->assign('perpage', $perpage);
 //            $this->view->assign('usercount', $count);
-
         return true;
     }
 
@@ -88,7 +87,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // check for valid form
         if (!$view->isValid()) {
@@ -105,6 +104,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
         ModUtil::apiFunc('Dizkus', 'Rank', 'assign', array('setrank' => $setrank));
         unset($data['setrank']);
         $url = new Zikula_ModUrl('Dizkus', 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
+
         return $view->redirect($url->getUrl());
     }
 

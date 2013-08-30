@@ -31,7 +31,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
 
         if (!UserUtil::isLoggedIn()) {
@@ -40,7 +40,6 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
 
         // get the input
         $this->_forumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
-
 
         $view->assign($this->_forumUser->toArray());
         $orders = array(
@@ -55,7 +54,6 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         );
         $view->assign('orders', $orders);
 
-
         return true;
     }
 
@@ -67,10 +65,11 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'prefs');
+
             return $view->redirect($url);
         }
 

@@ -21,10 +21,10 @@ use Dizkus_Manager_Forum;
 class ForumApi extends \Zikula_AbstractApi
 {
     /**
-     * get tree 
+     * get tree
      * format as array suitable for {formdropdownlist}
-     * 
-     * @param integer $id
+     *
+     * @param  integer $id
      * @return array
      */
     public function getParents($args)
@@ -39,13 +39,14 @@ class ForumApi extends \Zikula_AbstractApi
         }
         $parents = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id, 0, $includeLocked);
+
         return $output;
     }
-    
+
     /**
      * Get all tree nodes that are not root
      * Format as array suitable for {formdropdownlist}
-     * 
+     *
      * @return array
      */
     public function getAllChildren()
@@ -53,15 +54,16 @@ class ForumApi extends \Zikula_AbstractApi
         $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
         $query = $this->entityManager->createQueryBuilder()->select('node')->from('Dizkus_Entity_Forum', 'node')->orderBy('node.root, node.lft', 'ASC')->where('node.lvl > 0')->getQuery();
         $tree = $repo->buildTree($query->getArrayResult());
+
         return $this->getNode($tree, null);
     }
-    
+
     /**
      * Format ArrayResult for usage in {formdropdownlist}
-     * 
-     * @param ArrayAccess $input
-     * @param integer $id
-     * @param integer $level
+     *
+     * @param  ArrayAccess $input
+     * @param  integer     $id
+     * @param  integer     $level
      * @return array
      */
     private function getNode($input, $id, $level = 0, $includeLocked = true)
@@ -82,14 +84,15 @@ class ForumApi extends \Zikula_AbstractApi
                 }
             }
         }
+
         return $output;
     }
-    
+
     /**
      * Get the ids of all the forums the user is allowed to see
-     * 
-     * @param integer $args['parent']
-     * @param integer $args['userId']
+     *
+     * @param  integer $args['parent']
+     * @param  integer $args['userId']
      * @return array
      */
     public function getForumIdsByPermission($args)
@@ -106,9 +109,10 @@ class ForumApi extends \Zikula_AbstractApi
                 $ids[] = $forumId;
             }
         }
+
         return $ids;
     }
-    
+
     /**
      * Get forum subscription status
      *
@@ -120,9 +124,10 @@ class ForumApi extends \Zikula_AbstractApi
     public function isSubscribed($args)
     {
         $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array('forum' => $args['forum'], 'forumUser' => UserUtil::getVar('uid')));
+
         return isset($forumSubscription);
     }
-    
+
     /**
      * subscribe a forum
      *
@@ -148,9 +153,10 @@ class ForumApi extends \Zikula_AbstractApi
             $managedForumUser->get()->addForumSubscription($args['forum']);
             $this->entityManager->flush();
         }
+
         return true;
     }
-    
+
     /**
      * Unsubscribe a forum
      *
@@ -178,9 +184,10 @@ class ForumApi extends \Zikula_AbstractApi
             $managedForumUser->get()->removeForumSubscription($forumSubscription);
         }
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * Get forum subscriptions of a user
      *
@@ -194,13 +201,14 @@ class ForumApi extends \Zikula_AbstractApi
             $args['uid'] = UserUtil::getVar('uid');
         }
         $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+
         return $managedForumUser->get()->getForumSubscriptions();
     }
-    
+
     /**
      * modify unser/forum association
-     * 
-     * @param integer $args['forum_id']
+     *
+     * @param  integer $args['forum_id']
      * @return boolean
      */
     public function modify($args)
@@ -226,6 +234,7 @@ class ForumApi extends \Zikula_AbstractApi
                 break;
         }
         $this->entityManager->flush();
+
         return true;
     }
 

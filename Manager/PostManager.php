@@ -11,9 +11,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Doctrine\ORM\Tools\Pagination\Paginator;
-
-
 
 namespace Dizkus\Manager;
 
@@ -55,7 +52,7 @@ class PostManager
             $this->_post = new Dizkus_Entity_Post();
         }
     }
-    
+
     /**
      * return page as array
      *
@@ -69,19 +66,20 @@ class PostManager
         $output = $this->_post->toArray();
         $output['topic_subject'] = $this->_topic->getTitle();
         $output = array_merge($output, $this->_topic->getPermissions());
+
         return $output;
     }
-    
+
     public function getId()
     {
         return $this->_post->getPost_id();
     }
-    
+
     public function getTopicId()
     {
         return $this->_topic->getId();
     }
-    
+
     /**
      * get the Post entity
      *
@@ -91,12 +89,12 @@ class PostManager
     {
         return $this->_post;
     }
-    
+
     public function prepare($data)
     {
         $this->_post->merge(DataUtil::formatForStore($data));
     }
-    
+
     /**
      * update the post
      *
@@ -111,7 +109,7 @@ class PostManager
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }
-    
+
     /**
      * create a post from provided data
      *
@@ -149,7 +147,7 @@ class PostManager
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }
-    
+
     /**
      * delete a post
      *

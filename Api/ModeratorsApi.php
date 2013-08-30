@@ -10,7 +10,6 @@
 
 namespace Dizkus\Api;
 
-
 /**
  * This class provides the moderators api functions
  */
@@ -73,6 +72,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
                 $mods['groups'][$moderatorGroup->getGroup()->getGid()] = $moderatorGroup->getGroup()->getName();
             }
         }
+
         return $mods;
     }
 

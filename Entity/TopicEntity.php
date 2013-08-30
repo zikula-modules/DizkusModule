@@ -95,14 +95,14 @@ class TopicEntity extends \Zikula_EntityAccess
     private $solved = false;
     /**
      * posts
-     * 
+     *
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic", cascade={"remove"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
     /**
      * Subscriptions
-     * 
+     *
      * Dizkus_Entity_TopicSubscription collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic", cascade={"remove"})
      */
@@ -140,37 +140,37 @@ class TopicEntity extends \Zikula_EntityAccess
         $this->posts = new ArrayCollection();
         $this->subscriptions = new ArrayCollection();
     }
-    
+
     public function getTopic_id()
     {
         return $this->topic_id;
     }
-    
+
     public function setTopic_id($id)
     {
         $this->topic_id = $id;
     }
-    
+
     public function getReplyCount()
     {
         return $this->replyCount;
     }
-    
+
     public function setReplyCount($replies)
     {
         $this->replyCount = $replies;
     }
-    
+
     public function incrementReplyCount()
     {
         $this->replyCount++;
     }
-    
+
     public function decrementReplyCount()
     {
         $this->replyCount--;
     }
-    
+
     /**
      * get Forum
      * @return Dizkus_Entity_Forum
@@ -179,117 +179,117 @@ class TopicEntity extends \Zikula_EntityAccess
     {
         return $this->forum;
     }
-    
+
     public function setForum(Dizkus_Entity_Forum $forum)
     {
         $this->forum = $forum;
     }
-    
+
     public function getLast_post()
     {
         return $this->last_post;
     }
-    
+
     public function setLast_post(Dizkus_Entity_Post $post)
     {
         return $this->last_post = $post;
     }
-    
+
     /**
      * get the topic poster
-     * 
+     *
      * @return Dizkus_Entity_ForumUser
      */
     public function getPoster()
     {
         return $this->poster;
     }
-    
+
     public function getTitle()
     {
         return $this->title;
     }
-    
+
     public function getStatus()
     {
         return $this->status;
     }
-    
+
     public function getTopic_time()
     {
         return $this->topic_time;
     }
-    
+
     public function setTopic_time(DateTime $time)
     {
         $this->topic_time = $time;
     }
-    
+
     public function getViewCount()
     {
         return $this->viewCount;
     }
-    
+
     public function getSticky()
     {
         return $this->sticky;
     }
-    
+
     public function getSolved()
     {
         return $this->solved;
     }
-    
+
     public function lock()
     {
         $this->status = 1;
     }
-    
+
     public function unlock()
     {
         $this->status = 0;
     }
-    
+
     public function sticky()
     {
         $this->sticky = true;
     }
-    
+
     public function unsticky()
     {
         $this->sticky = false;
     }
-    
+
     public function incrementViewCount()
     {
         $this->viewCount++;
     }
-    
+
     public function setTitle($title)
     {
         $this->title = $title;
     }
-    
+
     /**
      * set the Topic poster
-     * 
+     *
      * @param Dizkus_Entity_ForumUser $poster
      */
     public function setPoster(Dizkus_Entity_ForumUser $poster)
     {
         $this->poster = $poster;
     }
-    
+
     public function setSolved($solved)
     {
         $this->solved = $solved;
     }
-    
+
     public function getPosts()
     {
         return $this->posts;
     }
-    
+
     /**
      * remove all posts
      */
@@ -297,24 +297,25 @@ class TopicEntity extends \Zikula_EntityAccess
     {
         $this->posts = null;
     }
-    
+
     public function addPost(Dizkus_Entity_Post $post)
     {
         $this->posts[] = $post;
     }
-    
+
     public function getTotal_posts()
     {
         return count($this->posts);
     }
-    
+
     public function getHot_topic()
     {
         $hotThreshold = ModUtil::getVar('Dizkus', 'hot_threshold');
         $totalPosts = $this->getTotal_posts();
+
         return $totalPosts >= $hotThreshold;
     }
-    
+
     /**
      * get Topic Subscriptions
      * @return Dizkus_Entity_TopicSubscription collection
@@ -323,47 +324,47 @@ class TopicEntity extends \Zikula_EntityAccess
     {
         return $this->subscriptions;
     }
-    
+
     public function getHookedModule()
     {
         return $this->hookedModule;
     }
-    
+
     public function setHookedModule($hookedModule)
     {
         $this->hookedModule = $hookedModule;
     }
-    
+
     public function getHookedAreaId()
     {
         return $this->hookedAreaId;
     }
-    
+
     public function setHookedAreaId($hookedAreaId)
     {
         $this->hookedAreaId = $hookedAreaId;
     }
-    
+
     public function getHookedObjectId()
     {
         return $this->hookedObjectId;
     }
-    
+
     public function setHookedObjectId($hookedObjectId)
     {
         $this->hookedObjectId = $hookedObjectId;
     }
-    
+
     public function getHookedUrlObject()
     {
         return $this->hookedUrlObject;
     }
-    
+
     public function setHookedUrlObject(Zikula_ModUrl $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
     }
-    
+
     public function userAllowedToEdit($uid = null)
     {
         return $this->posts->first()->getUserAllowedToEdit($uid);

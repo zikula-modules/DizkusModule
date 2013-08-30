@@ -31,13 +31,13 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $postId = (int)$this->request->query->get('post');
+        $postId = (int) $this->request->query->get('post');
         $this->post = new Dizkus_Manager_Post($postId);
 
         $this->view->assign($this->post->toArray());
@@ -54,7 +54,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
@@ -70,6 +70,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'split', array('post' => $this->post, 'data' => $data));
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
+
         return $view->redirect($url);
     }
 

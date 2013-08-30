@@ -17,12 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity;
 
-
 class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 {
     /**
      * forumUser
-     * 
+     *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
@@ -37,14 +36,14 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
     /**
      * Constructor
      * @param Dizkus_Entity_ForumUser $forumUser
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus_Entity_Forum     $forum
      */
     public function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Forum $forum)
     {
         $this->forumUser = $forumUser;
         $this->forum = $forum;
     }
-    
+
     /**
      * get the forum
      * @return Dizkus_Entity_Forum
@@ -53,7 +52,7 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
     {
         return $this->forum;
     }
-    
+
     /**
      * get the forumUser
      * @return Dizkus_Entity_ForumUser
@@ -62,7 +61,7 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
     {
         return $this->forumUser;
     }
-    
+
     /**
      * set the forum
      * @param Dizkus_Entity_Forum $forum
@@ -71,7 +70,7 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
     {
         $this->forum = $forum;
     }
-    
+
     /**
      * set the forumUser
      * @param Dizkus_Entity_ForumUser $forumUser

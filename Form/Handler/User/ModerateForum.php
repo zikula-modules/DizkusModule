@@ -31,9 +31,9 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
-        $forum_id = (int)$this->request->query->get('forum', null);
+        $forum_id = (int) $this->request->query->get('forum', null);
         if (!isset($forum_id)) {
             return LogUtil::registerArgsError();
         }
@@ -43,7 +43,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();
         }
-        
+
         $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
 
         $this->view->assign('forum_id', $forum_id);
@@ -58,7 +58,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
         foreach ($topics as $topic) {
             $topicSelect[] = array('value' => $topic->getTopic_id(), 'text' => $topic->getTitle());
         }
-        $this->view->assign('topicSelect', $topicSelect);        
+        $this->view->assign('topicSelect', $topicSelect);
         $actions = array(
             array('value' => '', 'text' => "<< " . $this->__("Choose action") . " >>"),
             array('value' => 'sticky', 'text' => $this->__("Give selected topics 'sticky' status")),
@@ -86,10 +86,11 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
+
             return $view->redirect($url);
         }
 
@@ -164,6 +165,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
         }
 
         $url = ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
+
         return $view->redirect($url);
     }
 

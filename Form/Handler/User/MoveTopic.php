@@ -21,10 +21,10 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      * @var integer
      */
     private $topic_id;
-    
+
     /**
      *
-     * @var Dizkus_Entity_Topic 
+     * @var Dizkus_Entity_Topic
      */
     private $topic;
 
@@ -37,13 +37,13 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->topic_id = (int)$this->request->query->get('topic', null);
+        $this->topic_id = (int) $this->request->query->get('topic', null);
         $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
         $this->topic = $managedTopic->get();
         $view->assign('topic', $this->topic_id);
@@ -58,10 +58,11 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+
             return $view->redirect($url);
         }
 
@@ -71,7 +72,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-        
+
         if ($args['commandName'] == 'move') {
             // require perms for both subject topic and destination forum
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $this->topic->getForum()))
@@ -87,6 +88,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
             ModUtil::apiFunc('Dizkus', 'topic', 'move', $data);
 
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+
             return $view->redirect($url);
         }
 
@@ -108,6 +110,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
             ModUtil::apiFunc('Dizkus', 'topic', 'join', $data);
 
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
+
             return $view->redirect($url);
         }
 

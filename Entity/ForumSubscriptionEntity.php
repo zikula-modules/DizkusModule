@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity;
 
-
 class ForumSubscriptionEntity extends \Zikula_EntityAccess
 {
     /**
@@ -35,7 +34,7 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
     private $forum;
     /**
      * forumUser
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
@@ -43,39 +42,39 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * Constructor
      * @param Dizkus_Entity_ForumUser $forumUser
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus_Entity_Forum     $forum
      */
     public function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Forum $forum)
     {
         $this->forumUser = $forumUser;
         $this->forum = $forum;
     }
-    
+
     public function getMsg_id()
     {
         return $this->msg_id;
     }
-    
+
     /**
      * get forum
-     * 
+     *
      * @return Dizkus_Entity_Forum
      */
     public function getForum()
     {
         return $this->forum;
     }
-    
+
     /**
      * set forum
-     * 
+     *
      * @param Dizkus_Entity_Forum $forum
      */
     public function setForum(Dizkus_Entity_Forum $forum)
     {
         $this->forum = $forum;
     }
-    
+
     /**
      * get the forumUser
      * @return Dizkus_Entity_ForumUser
@@ -84,7 +83,7 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
     {
         return $this->forumUser;
     }
-    
+
     /**
      * set the forumUser
      * @param Dizkus_Entity_ForumUser $forumUser

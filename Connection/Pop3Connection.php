@@ -15,7 +15,6 @@
 
 namespace Dizkus\Connection;
 
-
 /**
  * Class to define a connection to a pop3 server
  *
@@ -92,7 +91,7 @@ class Pop3Connection
         $this->coreUser = isset($data['coreUser']) ? $data['coreUser'] : null;
         $this->matchstring = isset($data['matchstring']) ? $data['matchstring'] : '';
     }
-    
+
     /**
      * Get connection details
      * @return array connection details
@@ -101,7 +100,7 @@ class Pop3Connection
     {
         return array('server' => $this->server, 'port' => $this->port, 'login' => $this->login, 'password' => $this->password, 'interval' => $this->interval, 'lastconnect' => $this->lastconnect, 'coreUser' => $this->coreUser, 'matchstring' => $this->matchstring);
     }
-    
+
     /**
      * get connection status
      * @return boolean
@@ -110,7 +109,7 @@ class Pop3Connection
     {
         return $this->active;
     }
-    
+
     public function updateConnectTime()
     {
         $this->lastconnect = time();

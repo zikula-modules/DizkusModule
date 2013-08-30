@@ -20,7 +20,7 @@ class SyncApi extends \Zikula_AbstractApi
 {
     /**
      * perform sync on all forums, topics and posters
-     * 
+     *
      * @param Boolean $silentMode (unused)
      */
     public function all($silentMode = false)
@@ -29,7 +29,7 @@ class SyncApi extends \Zikula_AbstractApi
         $this->topics();
         $this->posters();
     }
-    
+
     /**
      * perform sync on all forums
      *
@@ -45,15 +45,16 @@ class SyncApi extends \Zikula_AbstractApi
         foreach ($forums as $forum) {
             $this->forum(array('forum' => $forum));
         }
+
         return true;
     }
-    
+
     /**
      * recalculate topicCount and postCount counts
-     * 
+     *
      * @param Dizkus_Entity_Forum $args['forum']
-     * @param Boolean $args['flush']
-     * 
+     * @param Boolean             $args['flush']
+     *
      * @return boolean
      */
     public function forum($args)
@@ -76,13 +77,14 @@ class SyncApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         $this->addToParentForumCount($args['forum'], 'Post');
         $this->addToParentForumCount($args['forum'], 'Topic');
+
         return true;
     }
-    
+
     /**
      * recursive function to add counts to parents
      * @param Dizkus_Entity_Forum $forum
-     * @param string $entity
+     * @param string              $entity
      */
     private function addToParentForumCount(Dizkus_Entity_Forum $forum, $entity = 'Post')
     {
@@ -102,10 +104,10 @@ class SyncApi extends \Zikula_AbstractApi
             $this->addToParentForumCount($parent, $entity);
         }
     }
-    
+
     /**
      * perform sync on all topics
-     * 
+     *
      * @return boolean
      */
     public function topics()
@@ -117,13 +119,13 @@ class SyncApi extends \Zikula_AbstractApi
         // flush?
         return true;
     }
-    
+
     /**
      * recalcluate Topic replies for one topic
-     * 
+     *
      * @param Dizkus_Entity_Topic $args['topic']
-     * @param Boolean $args['flush']
-     * 
+     * @param Boolean             $args['flush']
+     *
      * @return boolean
      */
     public function topic($args)
@@ -146,12 +148,13 @@ class SyncApi extends \Zikula_AbstractApi
         if ($flush) {
             $this->entityManager->flush();
         }
+
         return true;
     }
-    
+
     /**
      * recalculate user posts for all users
-     * 
+     *
      * @return boolean
      */
     public function posters()
@@ -168,14 +171,15 @@ class SyncApi extends \Zikula_AbstractApi
             $forumUser->setPostCount($post[1]);
         }
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * reset the last post in a forum due to movement
      * @param Dizkus_Entity_Forum $args['forum']
-     * @param Boolean $args['flush'] default: true
-     * 
+     * @param Boolean             $args['flush'] default: true
+     *
      * @return void
      */
     public function forumLastPost($args)
@@ -204,12 +208,12 @@ class SyncApi extends \Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
-    
+
     /**
      * reset the last post in a topic due to movement
      * @param Dizkus_Entity_Topic $args['topic']
-     * @param Boolean $args['flush']
-     * 
+     * @param Boolean             $args['flush']
+     *
      * @return void
      */
     public function topicLastPost($args)

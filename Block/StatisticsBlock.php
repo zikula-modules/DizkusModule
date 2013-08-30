@@ -28,7 +28,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     {
         SecurityUtil::registerPermissionSchema('Dizkus::Statisticsblock', 'Block ID::');
     }
-    
+
     /**
      * info
      *
@@ -38,7 +38,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     {
         return array('module' => 'Dizkus', 'text_type' => $this->__('Dizkus statistic'), 'text_type_long' => $this->__('Dizkus Statistics Block'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true);
     }
-    
+
     /**
      * display the statisticsblock
      *
@@ -58,6 +58,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
             $blockinfo['content'] = $this->getVar('forum_disabled_info');
+
             return BlockUtil::themesideblock($blockinfo);
         }
         // break out options from our content field
@@ -79,9 +80,10 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         }
         $this->view->assign('statparams', $paramarray);
         $blockinfo['content'] = $this->view->fetch(trim($vars['sb_template']));
+
         return BlockUtil::themesideblock($blockinfo);
     }
-    
+
     /**
      * Update the block
      *
@@ -97,9 +99,10 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         $sb_template = $this->request->request->get('sb_template', 'statisticsblock/display.tpl');
         $sb_parameters = $this->request->request->get('sb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('sb_template', 'sb_parameters'));
+
         return $blockinfo;
     }
-    
+
     /**
      * Modify the block
      *

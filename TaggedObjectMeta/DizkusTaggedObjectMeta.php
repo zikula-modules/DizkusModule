@@ -53,25 +53,25 @@ class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
             }
         }
     }
-    
+
     public function setObjectTitle($title)
     {
         $this->title = $title;
     }
-    
+
     public function setObjectDate($date)
     {
         $this->date = DateUtil::formatDatetime($date, 'datetimebrief');
     }
-    
+
     public function setObjectAuthor($author)
     {
         $this->author = $author;
     }
-    
+
     /**
      * Override the method to present specialized link
-     * @return string 
+     * @return string
      */
     public function getPresentationLink()
     {
@@ -87,6 +87,7 @@ class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
             $modinfo = ModUtil::getInfoFromName('Dizkus');
             $link = "{$modinfo['displayname']} {$label}: <a href='{$urlObject->getUrl()}'>{$title}</a> ({$date})";
         }
+
         return $link;
     }
 

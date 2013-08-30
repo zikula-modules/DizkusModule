@@ -32,7 +32,7 @@ class UserDataApi extends \Zikula_AbstractApi
         $this->_online = array();
         parent::__construct($serviceManager);
     }
-    
+
     /**
      * getUserOnlineStatus
      *
@@ -64,6 +64,7 @@ class UserDataApi extends \Zikula_AbstractApi
         $uid = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR);
         $isOnline = !empty($uid) ? true : false;
         $this->_online[$args['uid']] = $isOnline;
+
         return $isOnline;
     }
 

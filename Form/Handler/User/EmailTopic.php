@@ -31,13 +31,13 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->topic_id = (int)$this->request->query->get('topic');
+        $this->topic_id = (int) $this->request->query->get('topic');
 
         $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
 
@@ -56,7 +56,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
@@ -75,6 +75,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
             'subject' => $data['emailsubject']
         ));
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+
         return $view->redirect($url);
     }
 

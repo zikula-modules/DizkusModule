@@ -70,6 +70,7 @@ class CronApi extends \Zikula_AbstractApi
                                     $this->mailcronecho('Error! Insufficient permissions for ' . $pop3conn['coreUser']->getUname() . ' in forum ' . $forum['name'] . '(id=' . $forum['forum_id'] . ').', $args['debug']);
                                     UserUtil::logOut();
                                     $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
+
                                     return false;
                                 }
                                 $this->mailcronecho('Adding new posts as user \'' . $pop3conn['coreUser']->getUname() . '\'.
@@ -178,9 +179,10 @@ class CronApi extends \Zikula_AbstractApi
             $managedForum->get()->getPop3Connection()->updateConnectTime();
             $this->entityManager->flush();
         }
+
         return;
     }
-    
+
     /**
      * mailcronecho
      */
@@ -191,6 +193,7 @@ class CronApi extends \Zikula_AbstractApi
             echo '<br />';
         }
         flush();
+
         return;
     }
 

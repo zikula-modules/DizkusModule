@@ -33,7 +33,7 @@ class SearchApi extends \Zikula_AbstractApi
     {
         return array('title' => $this->__('Dizkus'), 'functions' => array('Dizkus' => 'search'));
     }
-    
+
     /**
      * Search form component
      *
@@ -48,11 +48,13 @@ class SearchApi extends \Zikula_AbstractApi
             $view = Zikula_View::getInstance('Dizkus', false, null, true);
             $view->assign('active', isset($args['active']) && isset($args['active']['Dizkus']) || !isset($args['active']));
             $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
+
             return $view->fetch('search/options.tpl');
         }
+
         return false;
     }
-    
+
     /**
      * Do last minute access checking and assign URL to items
      *
@@ -66,9 +68,10 @@ class SearchApi extends \Zikula_AbstractApi
     public function search_check($args)
     {
         $args['datarow']['url'] = $args['datarow']['extra'];
+
         return true;
     }
-    
+
     /**
      * Search plugin main function
      *
@@ -109,7 +112,7 @@ class SearchApi extends \Zikula_AbstractApi
         //$funcname = ($this->getVar('fulltextindex', 'no') == 'yes') ? 'fulltext' : 'nonfulltext';
         return $this->nonfulltext($args);
     }
-    
+
     /**
      * nonfulltext
      *
@@ -184,9 +187,10 @@ class SearchApi extends \Zikula_AbstractApi
                 return LogUtil::registerError($this->__('Error! Could not save the search results.'));
             }
         }
+
         return true;
     }
-    
+
     /**
      * fulltext
      *
@@ -195,7 +199,7 @@ class SearchApi extends \Zikula_AbstractApi
      *
      * @params q             string the text to search
      * @params searchtype    string 'AND', 'OR' or 'EXACT'
-     * @params searchorder   string 'newest', 'oldest' or 'alphabetical' 
+     * @params searchorder   string 'newest', 'oldest' or 'alphabetical'
      * from Dizkus:
      * @params searchwhere   string 'posts' or 'author'
      * @params forums        array of forums to search
@@ -209,7 +213,7 @@ class SearchApi extends \Zikula_AbstractApi
         /*
          * There are no simple solutions for Fulltext searching using Doctrine
          * http://stackoverflow.com/questions/7246008/doctrine2-use-fulltext-and-myisam
-         * 
+         *
          */
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             return true;
@@ -275,9 +279,10 @@ class SearchApi extends \Zikula_AbstractApi
             $whereforums .= 'p.forum_id IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
         $this->start_search($wherematch, $whereforums);
+
         return true;
     }
-    
+
     /**
      * Start search
      *
@@ -312,6 +317,7 @@ class SearchApi extends \Zikula_AbstractApi
                   AND ' . $whereforums . '
                   GROUP BY p.topic_id';
         $res = DBUtil::executeSQL($sql);
+
         return true;
     }
 

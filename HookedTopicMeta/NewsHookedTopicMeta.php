@@ -30,12 +30,12 @@ class NewsHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
             $this->newsItem = $newsItem;
         }
     }
-    
+
     public function setTitle()
     {
         $this->title = $this->newsItem['title'];
     }
-    
+
     public function setContent()
     {
         $this->content = $this->newsItem['hometext'];

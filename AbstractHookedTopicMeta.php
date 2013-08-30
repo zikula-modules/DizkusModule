@@ -13,7 +13,6 @@
 
 namespace Dizkus;
 
-
 abstract class AbstractHookedTopicMeta
 {
     /**
@@ -36,7 +35,7 @@ abstract class AbstractHookedTopicMeta
     private $module;
     /**
      * URL for view of hooked object
-     * 
+     *
      * @var Zikula_ModUrl
      */
     private $urlObject;
@@ -54,7 +53,7 @@ abstract class AbstractHookedTopicMeta
     protected $content = '';
     /**
      * Constructor
-     * 
+     *
      * @param Zikula_ProcessHook $hook
      */
     public function __construct(Zikula_ProcessHook $hook)
@@ -67,73 +66,73 @@ abstract class AbstractHookedTopicMeta
         $this->setTitle();
         $this->setContent();
     }
-    
+
     private function setObjectId($id)
     {
         $this->objectId = $id;
     }
-    
+
     public function getObjectId()
     {
         return $this->objectId;
     }
-    
+
     private function setAreaId($id)
     {
         $this->areaId = $id;
     }
-    
+
     public function getAreaId()
     {
         return $this->areaId;
     }
-    
+
     private function setModule($name)
     {
         $this->module = $name;
     }
-    
+
     public function getModule()
     {
         return $this->module;
     }
-    
+
     private function setUrlObject(Zikula_ModUrl $objectUrlObject)
     {
         $this->urlObject = $objectUrlObject;
     }
-    
+
     public function getUrlObject()
     {
         return $this->urlObject;
     }
-    
+
     /**
      * post-constructor setup hook
      */
     protected function setup()
     {
-        
+
     }
-    
+
     /**
      * set the title for the topic
      */
-    public abstract function setTitle();
+    abstract public function setTitle();
     public function getTitle()
     {
         return $this->title;
     }
-    
+
     /**
      * set the content of the topic's first post
      */
-    public abstract function setContent();
+    abstract public function setContent();
     public function getContent()
     {
         return $this->content;
     }
-    
+
     protected function getLink()
     {
         $title = $this->getTitle();
@@ -142,6 +141,7 @@ abstract class AbstractHookedTopicMeta
             $url = $this->getUrlObject()->getUrl();
             $link = "<a href='{$url}'>{$title}</a>";
         }
+
         return $link;
     }
 

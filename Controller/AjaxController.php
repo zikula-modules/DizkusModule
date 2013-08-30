@@ -47,7 +47,7 @@ namespace Dizkus\Controller {
                 throw new Zikula_Exception_Forbidden(strip_tags($this->getVar('forum_disabled_info')));
             }
         }
-        
+
         /**
          * Checks if a message is shorter than 65535 - 8 characters.
          *
@@ -62,7 +62,7 @@ namespace Dizkus\Controller {
                 throw new Zikula_Exception_Fatal($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
             }
         }
-        
+
         /**
          * Create and configure the view for the controller.
          *
@@ -76,7 +76,7 @@ namespace Dizkus\Controller {
             $this->view->setController($this);
             $this->view->assign('controller', $this);
         }
-        
+
         /**
          * Reply to a topic (or just preview).
          *
@@ -139,9 +139,10 @@ namespace Dizkus\Controller {
             $this->view->assign('permissions', $permissions);
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
+
             return new Zikula_Response_Ajax(array('data' => $this->view->fetch('user/post/single.tpl'), 'post_id' => $post['post_id']));
         }
-        
+
         /**
          * Edit a post.
          *
@@ -170,6 +171,7 @@ namespace Dizkus\Controller {
                     // simplify our live
                     $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
                     $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
+
                     return new Zikula_Response_Ajax($this->view->fetch('ajax/editpost.tpl'));
                 } else {
                     LogUtil::registerPermissionError(null, true);
@@ -178,7 +180,7 @@ namespace Dizkus\Controller {
             }
             throw new Zikula_Exception_Fatal($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
         }
-        
+
         /**
          * Update a post.
          *
@@ -231,11 +233,12 @@ namespace Dizkus\Controller {
                     // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
                     $response = array('action' => 'updated', 'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
                 }
+
                 return new Zikula_Response_Ajax($response);
             }
             throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
         }
-        
+
         /**
          * changeTopicStatus
          *
@@ -279,9 +282,10 @@ namespace Dizkus\Controller {
                 throw new Zikula_Exception_Forbidden();
             }
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+
             return new Zikula_Response_Ajax_Plain('successful');
         }
-        
+
         /**
          * Performs a user search based on the user name fragment entered so far.
          *
@@ -303,9 +307,10 @@ namespace Dizkus\Controller {
             foreach ($users as $user) {
                 $reply['suggestions'][] = array('value' => htmlentities(stripslashes($user->getUname())), 'data' => $user->getUid());
             }
+
             return new Zikula_Response_Ajax_Plain(json_encode($reply));
         }
-        
+
         /**
          * addremovefavorite
          *
@@ -329,13 +334,15 @@ namespace Dizkus\Controller {
             }
             /* if (!SecurityUtil::confirmAuthKey()) {
                LogUtil::registerAuthidError();
+
                return AjaxUtil::error(null, array(), true, true);
                } */
             SessionUtil::setVar('zk_ajax_call', 'ajax');
             ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
+
             return new Zikula_Response_Ajax_Plain('successful');
         }
-        
+
         /**
          * forumusers
          * update the "users online" section in the footer
@@ -356,7 +363,7 @@ namespace Dizkus\Controller {
             $this->view->display('ajax/forumusers.tpl');
             System::shutDown();
         }
-        
+
         /**
          * newposts
          * update the "new posts" block
@@ -378,6 +385,6 @@ namespace Dizkus\Controller {
             echo $out;
             System::shutDown();
         }
-    
+
     }
 }

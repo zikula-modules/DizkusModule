@@ -47,9 +47,10 @@ class RankApi extends \Zikula_AbstractApi
             $orderby = 'title';
         }
         $ranks = $this->entityManager->getRepository('Dizkus_Entity_Rank')->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
+
         return array($filelist, $ranks);
     }
-    
+
     /**
      * Modify a rank
      *
@@ -79,9 +80,10 @@ class RankApi extends \Zikula_AbstractApi
             }
         }
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * assignranksave
      *
@@ -105,9 +107,10 @@ class RankApi extends \Zikula_AbstractApi
             }
             $this->entityManager->flush();
         }
+
         return true;
     }
-    
+
     /**
      * Get user rank data
      *
@@ -125,6 +128,7 @@ class RankApi extends \Zikula_AbstractApi
         $userRank = $args['poster']->getRank();
         if (isset($userRank)) {
             $data = $userRank->toArray();
+
             return $data = $this->addImageAndLink($data);
         }
         // check if rank by number of posts is cached
@@ -139,9 +143,10 @@ class RankApi extends \Zikula_AbstractApi
         }
         // cache rank by number of posts
         $this->_userRanks[$uid] = $data;
+
         return $data;
     }
-    
+
     private function addImageAndLink($data)
     {
         $data['rank_link'] = substr($data['description'], 0, 7) == 'http://' ? $data['description'] : '';
@@ -149,9 +154,10 @@ class RankApi extends \Zikula_AbstractApi
             $data['image'] = $this->getVar('url_ranks_images') . '/' . $data['image'];
             $data['image_attr'] = function_exists('getimagesize') ? @getimagesize($data['image']) : null;
         }
+
         return $data;
     }
-    
+
     /**
      * dzk is an image
      * check if a filename is an image or not
@@ -164,6 +170,7 @@ class RankApi extends \Zikula_AbstractApi
         if (preg_match('/^(.*)\\.(gif|jpg|jpeg|png)/si', $filepath)) {
             return true;
         }
+
         return false;
     }
 

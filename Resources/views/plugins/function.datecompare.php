@@ -42,7 +42,7 @@ function smarty_function_datecompare($params, Zikula_View $view)
             $result = ($date1 < $date2);
             break;
     }
-    
+
     if (isset($params['assign'])) {
         $view->assign($params['assign'], $result);
     } else {

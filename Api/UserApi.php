@@ -39,7 +39,7 @@ class UserApi extends \Zikula_AbstractApi
     {
         $this->setView();
     }
-    
+
     /**
      * Set view property.
      *
@@ -53,9 +53,10 @@ class UserApi extends \Zikula_AbstractApi
             $view = Zikula_View::getInstance($this->getName());
         }
         $this->view = $view;
+
         return $this;
     }
-    
+
     /**
      * Counts posts in forums, topics
      * or counts forum users
@@ -77,18 +78,21 @@ class UserApi extends \Zikula_AbstractApi
                 if (!isset($cache[$type])) {
                     $cache[$type] = $this->countEntity('Post');
                 }
+
                 return $cache[$type];
                 break;
             case 'forum':
                 if (!isset($cache[$type])) {
                     $cache[$type] = $this->countEntity('Forum');
                 }
+
                 return $cache[$type];
                 break;
             case 'topic':
                 if (!isset($cache[$type][$id])) {
                     $cache[$type][$id] = $this->countEntity('Post', 'topic', $id);
                 }
+
                 return $cache[$type][$id];
                 break;
             case 'forumposts':
@@ -102,24 +106,28 @@ class UserApi extends \Zikula_AbstractApi
                     $query = $this->entityManager->createQuery($dql)->setParameter('forum', $id);
                     $cache[$type][$id] = $query->getSingleScalarResult();
                 }
+
                 return $cache[$type][$id];
                 break;
             case 'forumtopics':
                 if ($force || !isset($cache[$type][$id])) {
                     $cache[$type][$id] = $this->countEntity('Topic', 'forum', $id);
                 }
+
                 return $cache[$type][$id];
                 break;
             case 'alltopics':
                 if (!isset($cache[$type])) {
                     $cache[$type] = $this->countEntity('Topic');
                 }
+
                 return $cache[$type];
                 break;
             case 'allmembers':
                 if (!isset($cache[$type])) {
                     $cache[$type] = count(UserUtil::getUsers());
                 }
+
                 return $cache[$type];
                 break;
             case 'lastmember':
@@ -130,13 +138,14 @@ class UserApi extends \Zikula_AbstractApi
                     $user = $qb->getQuery()->getSingleResult();
                     $cache[$type] = $user->getUser()->getUname();
                 }
+
                 return $cache[$type];
                 break;
             default:
                 return LogUtil::registerError($this->__('Error! Wrong parameters in countstats().'), null, ModUtil::url('Dizkus', 'user', 'index'));
         }
     }
-    
+
     private function countEntity($entityname, $where = null, $parameter = null)
     {
         $qb = $this->entityManager->createQueryBuilder();
@@ -144,12 +153,13 @@ class UserApi extends \Zikula_AbstractApi
         if (isset($where) && isset($parameter)) {
             $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
         }
+
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
-    
+
     /**
      * setcookies
-     * 
+     *
      * reads the cookie, updates it and returns the last visit date in unix timestamp
      *
      * @params none
@@ -174,9 +184,10 @@ class UserApi extends \Zikula_AbstractApi
         $temptime = empty($lastVisitTemp) ? $time : $lastVisitTemp;
         // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
         CookieUtil::setCookie('DizkusLastVisitTemp', "{$temptime}", time() + 1800, $path, null, null, false);
+
         return $temptime;
     }
-    
+
     /**
      * get_viewip_data
      *
@@ -202,9 +213,10 @@ class UserApi extends \Zikula_AbstractApi
             /* @var $post Dizkus_Entity_Post */
             $viewip['users'][] = array('uid' => $post->getPoster()->getUser_id(), 'uname' => $post->getPoster()->getUser()->getUname(), 'postcount' => $post->getPoster()->getPostCount());
         }
+
         return $viewip;
     }
-    
+
     /**
      * getTopicPage
      * Uses the number of replyCount and the posts_per_page settings to determine the page
@@ -229,7 +241,7 @@ class UserApi extends \Zikula_AbstractApi
         // if not ASC then DESC which means latest topic is on top anyway...
         return $last_page;
     }
-    
+
     /**
      * insert rss
      * @see rss2dizkus.php - only used there
@@ -271,9 +283,10 @@ class UserApi extends \Zikula_AbstractApi
                 }
             }
         }
+
         return true;
     }
-    
+
     public function isSpam($message)
     {
         // Akismet
@@ -282,9 +295,10 @@ class UserApi extends \Zikula_AbstractApi
                 return true;
             }
         }
+
         return false;
     }
-    
+
     /**
      * Check if the useragent is a bot (blacklisted)
      *
@@ -300,9 +314,10 @@ class UserApi extends \Zikula_AbstractApi
                 return true;
             }
         }
+
         return false;
     }
-    
+
     /**
      * dzkVarPrepHTMLDisplay
      * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML()
@@ -321,9 +336,10 @@ class UserApi extends \Zikula_AbstractApi
             // @todo should use htmlentities here???? dzkstriptags too vvv
             $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
         }
+
         return $text;
     }
-    
+
     /**
      * dzkstriptags
      * strip all html tags outside of [code][/code]
@@ -347,14 +363,15 @@ class UserApi extends \Zikula_AbstractApi
                 $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
             }
         }
+
         return $text;
     }
-    
+
     /**
      * get an array of users where uname matching text fragment(s)
-     * 
-     * @param array $args['fragments']
-     * @param integer $args['limit']
+     *
+     * @param  array   $args['fragments']
+     * @param  integer $args['limit']
      * @return array
      */
     public function getUsersByFragments($args)
@@ -379,14 +396,15 @@ class UserApi extends \Zikula_AbstractApi
             $sql .= " LIMIT {$limit}";
         }
         $users = $this->entityManager->createNativeQuery($sql, $rsm)->getResult();
+
         return $users;
     }
-    
+
     /**
      * Truncate text to desired length to nearest word
      * @see http://stackoverflow.com/a/9219884/2600812
-     * @param string $text
-     * @param integer $chars
+     * @param  string  $text
+     * @param  integer $chars
      * @return string
      */
     public static function truncate($text, $chars = 25)
@@ -396,6 +414,7 @@ class UserApi extends \Zikula_AbstractApi
         $text = substr($text, 0, $chars);
         $text = substr($text, 0, strrpos($text, ' '));
         $text = strlen($originalText) == strlen($text) ? $text : $text . '...';
+
         return $text;
     }
 

@@ -38,5 +38,6 @@ function smarty_function_readtopforums($params, Zikula_View $view)
 
     $view->assign('topforumscount', count($topforums));
     $view->assign('topforums', $topforums);
+
     return;
 }

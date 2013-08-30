@@ -17,15 +17,15 @@ function smarty_function_getRankByPostCount($params, Zikula_View $view)
     if (!isset($params['ranks'])) {
         return LogUtil::registerArgsError();
     }
-    
+
     $posterRank = null;
-    
+
     foreach ($params['ranks'] as $rank) {
         if (($posts >= $rank->getMinimumCount()) && ($posts <= $rank->getMaximumCount())) {
             $posterRank = $rank;
         }
     }
-    
+
     if (isset($params['assign'])) {
         $view->assign($params['assign'], $posterRank);
     } else {

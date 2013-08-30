@@ -31,14 +31,14 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
         // get the input
-        $this->_forumId = (int)$this->request->query->get('forum');
+        $this->_forumId = (int) $this->request->query->get('forum');
 
         if (!isset($this->_forumId)) {
             return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
@@ -64,10 +64,11 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId));
+
             return $view->redirect($url);
         }
 
@@ -114,6 +115,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
             $view->assign('data', $data);
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
+
             return true;
         }
 

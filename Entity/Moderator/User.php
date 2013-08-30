@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity\Moderator;
 
-
 class User extends \Zikula_EntityAccess
 {
     /**
@@ -30,7 +29,7 @@ class User extends \Zikula_EntityAccess
     private $id;
     /**
      * forumUser
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
@@ -42,34 +41,34 @@ class User extends \Zikula_EntityAccess
     private $forum;
     /**
      * get ForumUser
-     * 
+     *
      * @return Dizkus_Entity_ForumUser
      */
     public function getForumUser()
     {
         return $this->forumUser;
     }
-    
+
     /**
      * set ForumUser
-     * 
+     *
      * @param Dizkus_Entity_ForumUser $user
      */
     public function setForumUser(Dizkus_Entity_ForumUser $user)
     {
         $this->forumUser = $user;
     }
-    
+
     /**
      * get Forum
-     * 
+     *
      * @return Dizkus_Entity_Forum
      */
     public function getForum()
     {
         return $this->forum;
     }
-    
+
     /**
      * set Forum
      * @param Dizkus_Entity_Forum $forum

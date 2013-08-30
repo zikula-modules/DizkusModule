@@ -28,7 +28,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             'showtextinsearchresults'
         );
 
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         $this->view->caching = false;
 
@@ -42,7 +42,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 
         $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', array('gid' => 2));
         $admins = array(0 => array('text' => 'disable', 'value' => '-1'));
-        foreach($adminGroup['members'] as $admin) {
+        foreach ($adminGroup['members'] as $admin) {
             $admins[] = array('text' => UserUtil::getVar('uname', $admin['uid']), 'value' => $admin['uid']);
         }
         $this->view->assign('admins', $admins);
@@ -61,7 +61,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
         return true;
     }
 
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
@@ -95,6 +95,7 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 
         // redirect to compensate for trouble with `databound`
         $this->view->redirect(ModUtil::url('Dizkus', 'admin', 'tree'));
+
         return true;
     }
 

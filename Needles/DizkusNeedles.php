@@ -23,7 +23,7 @@ class DizkusNeedles extends \Zikula_AbstractHelper
         //reverse lookpup possible, needs MultiHook_needleapi_dizkus_inspect() function
         return $info;
     }
-    
+
     /**
      * Dizkus needle
      * @param $args['nid'] needle id
@@ -92,6 +92,7 @@ class DizkusNeedles extends \Zikula_AbstractHelper
         } else {
             $result = '<em>' . $this->__('Error! No needle ID.') . '</em>';
         }
+
         return $result;
     }
 

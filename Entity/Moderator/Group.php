@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity\Moderator;
 
-
 class Group extends \Zikula_EntityAccess
 {
     /**
@@ -46,7 +45,7 @@ class Group extends \Zikula_EntityAccess
     {
         return $this->group;
     }
-    
+
     /**
      * set group
      * @param Zikula\Module\GroupsModule\Entity\GroupEntity $group
@@ -55,7 +54,7 @@ class Group extends \Zikula_EntityAccess
     {
         $this->group = $group;
     }
-    
+
     /**
      * get Forum
      * @return Dizkus_Entity_Forum
@@ -64,7 +63,7 @@ class Group extends \Zikula_EntityAccess
     {
         return $this->forum;
     }
-    
+
     /**
      * set Forum
      * @param Dizkus_Entity_Forum $forum

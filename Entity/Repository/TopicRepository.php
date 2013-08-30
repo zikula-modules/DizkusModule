@@ -8,10 +8,7 @@
  */
 use Doctrine\ORM\EntityRepository;
 
-
-
 namespace Dizkus\Entity\Repository;
-
 
 class TopicRepository extends \EntityRepository
 {
@@ -19,7 +16,7 @@ class TopicRepository extends \EntityRepository
      * Delete a topic via dql
      * avoids cascading deletion errors
      * but does not deleted associations
-     * 
+     *
      * @param integer $id
      */
     public function manualDelete($id)
@@ -28,18 +25,18 @@ class TopicRepository extends \EntityRepository
             WHERE t.topic_id = :id';
         $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }
-    
+
     public function manualDeletePosts($id)
     {
         $dql = 'DELETE Dizkus_Entity_Post p
             WHERE p.topic = :topic';
         $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
-    
+
     /**
      * Delete all subscriptions for a topic
      * $id can be the integer topic id or the Dizkus_Entity_Topic object
-     * 
+     *
      * @param mixed int/obj $id
      */
     public function deleteTopicSubscriptions($id)
@@ -48,11 +45,11 @@ class TopicRepository extends \EntityRepository
             WHERE ts.topic = :topic';
         $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
-    
+
     /**
      * retrieve a topic from hook parameters
      *
-     * @param Zikula\Component\HookDispatcher\Hook $hook
+     * @param  Zikula\Component\HookDispatcher\Hook $hook
      * @return Dizkus_Entity_Topic/NULL
      */
     public function getHookedTopic(Zikula\Component\HookDispatcher\Hook $hook)
@@ -70,6 +67,7 @@ class TopicRepository extends \EntityRepository
             var_dump($query->getSQL());
             die;
         }
+
         return $result;
     }
 

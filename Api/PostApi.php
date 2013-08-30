@@ -89,9 +89,10 @@ class PostApi extends \Zikula_AbstractApi
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
         $pager = array('numitems' => count($topics), 'itemsperpage' => 10);
+
         return array($topics, $text, $pager);
     }
-    
+
     public function search($args)
     {
         $text = '';
@@ -134,9 +135,10 @@ class PostApi extends \Zikula_AbstractApi
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
         $pager = array('numitems' => count($topics), 'itemsperpage' => 10);
+
         return array($topics, $text, $pager);
     }
-    
+
     /**
      * movepost
      *
@@ -166,9 +168,10 @@ class PostApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedOriginTopic->get(), 'flush' => false));
         ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
+
         return $managedDestinationTopic->getPostCount();
     }
-    
+
     /**
      * Checks if the given message isn't too long.
      *
@@ -184,6 +187,7 @@ class PostApi extends \Zikula_AbstractApi
         if (strlen($args['message']) + 8 > 65535) {
             return false;
         }
+
         return true;
     }
 

@@ -59,7 +59,7 @@ class TopicApi extends \Zikula_AbstractApi
             }
         }
     }
-    
+
     /**
      * Subscribe a topic.
      *
@@ -89,7 +89,7 @@ class TopicApi extends \Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
-    
+
     /**
      * Unsubscribe a topic.
      *
@@ -121,7 +121,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         $this->entityManager->flush();
     }
-    
+
     /**
      * Get topic subscriptions
      *
@@ -135,9 +135,10 @@ class TopicApi extends \Zikula_AbstractApi
             $args['uid'] = UserUtil::getVar('uid');
         }
         $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+
         return $managedForumUser->get()->getTopicSubscriptions();
     }
-    
+
     /**
      * getIdByReference
      *
@@ -152,9 +153,10 @@ class TopicApi extends \Zikula_AbstractApi
         if (empty($reference)) {
             return LogUtil::registerArgsError();
         }
+
         return $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('reference' => $reference))->toArray();
     }
-    
+
     /**
      * email
      *
@@ -176,9 +178,10 @@ class TopicApi extends \Zikula_AbstractApi
             $sender_email = ModUtil::getVar('Dizkus', 'email_from');
         }
         $params = array('fromname' => $sender_name, 'fromaddress' => $sender_email, 'toname' => $args['sendto_email'], 'toaddress' => $args['sendto_email'], 'subject' => $args['subject'], 'body' => $args['message']);
+
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $params);
     }
-    
+
     /**
      * delete a topic
      *
@@ -219,9 +222,10 @@ class TopicApi extends \Zikula_AbstractApi
         // sync the forum up with the changes
         ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
+
         return $topic->getForum()->getForum_id();
     }
-    
+
     /**
      * Move topic
      *
@@ -264,9 +268,10 @@ class TopicApi extends \Zikula_AbstractApi
             ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $oldForumId, 'flush' => false));
             ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $forum, 'flush' => true));
         }
+
         return;
     }
-    
+
     /**
      * split the topic at the provided post
      *
@@ -316,9 +321,10 @@ class TopicApi extends \Zikula_AbstractApi
         // resync topic totals, etc
         ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $newTopic->getForum(), 'flush' => false));
         $this->entityManager->flush();
+
         return $newTopic->getTopic_id();
     }
-    
+
     /**
      * joins two topics together
      *
@@ -333,6 +339,7 @@ class TopicApi extends \Zikula_AbstractApi
     {
         if (!$args['topicObj'] instanceof Dizkus_Entity_Topic && !isset($args['from_topic_id'])) {
             LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
+
             return LogUtil::registerArgsError();
         }
         if (!isset($args['to_topic_id'])) {
@@ -348,6 +355,7 @@ class TopicApi extends \Zikula_AbstractApi
         if ($managedDestinationTopic->get() === null) {
             // can't use isset() and ->get() at the same time
             LogUtil::registerError($this->__('Destination topic does not exist.'));
+
             return LogUtil::registerArgsError();
         }
         // move posts from Origin to Destination topic
@@ -372,6 +380,7 @@ class TopicApi extends \Zikula_AbstractApi
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => true));
         ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false));
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true));
+
         return $managedDestinationTopic->getId();
     }
 

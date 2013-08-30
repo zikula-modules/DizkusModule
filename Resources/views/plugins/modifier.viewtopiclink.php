@@ -37,14 +37,14 @@ function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_nam
 
     $class = 'class="tooltips ' . DataUtil::formatForDisplay($class) . '"';
 
-    $args = array('topic' => (int)$topic_id);
+    $args = array('topic' => (int) $topic_id);
     if (isset($start)) {
-        $args['start'] = (int)$start;
+        $args['start'] = (int) $start;
     }
 
     $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $args);
     if (isset($last_post_id)) {
-        $url .= '#pid' . (int)$last_post_id;
+        $url .= '#pid' . (int) $last_post_id;
     }
 
     $title = DataUtil::formatForDisplay(Dizkus_Api_User::truncate(strip_tags($subject), 60));

@@ -56,7 +56,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     private $level = 1;
     /**
      * lastvisit
-     * 
+     *
      * @Gedmo\Timestampable
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -105,12 +105,12 @@ class ForumUserEntity extends \Zikula_EntityAccess
         $this->topicSubscriptions = new ArrayCollection();
         $this->forumSubscriptions = new ArrayCollection();
     }
-    
+
     public function getUser_id()
     {
         return $this->user->getUid();
     }
-    
+
     /**
      * Core User Entity
      * @return Zikula\Module\UsersModule\Entity\UserEntity
@@ -119,7 +119,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         return $this->user;
     }
-    
+
     /**
      * set the user
      * @param Zikula\Module\UsersModule\Entity\UserEntity $user
@@ -128,57 +128,57 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->user = $user;
     }
-    
+
     public function getPostCount()
     {
         return $this->postCount;
     }
-    
+
     public function setPostCount($posts)
     {
         $this->postCount = $posts;
     }
-    
+
     public function incrementPostCount()
     {
         $this->postCount++;
     }
-    
+
     public function decrementPostCount()
     {
         $this->postCount--;
     }
-    
+
     public function getAutosubscribe()
     {
         return $this->autosubscribe;
     }
-    
+
     public function setAutosubscribe($autosubscribe)
     {
         $this->autosubscribe = $autosubscribe;
     }
-    
+
     public function getLevel()
     {
         return $this->level;
     }
-    
+
     public function setLevel($level)
     {
         $this->level = $level;
     }
-    
+
     public function getLastvisit()
     {
         return $this->lastvisit;
     }
-    
+
     public function setLastvisit($lastvisit)
     {
         $this->lastvisit = $lastvisit;
     }
-    
+
     /**
      * get if user wants only to display favorite forums
      * @return boolean
@@ -187,7 +187,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         return $this->displayOnlyFavorites;
     }
-    
+
     /**
      * set the displayOnlyFavorites value;
      * @param boolean $val
@@ -198,7 +198,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
             $this->displayOnlyFavorites = $val;
         }
     }
-    
+
     /**
      * display favorite forums only
      */
@@ -206,7 +206,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->displayOnlyFavorites = true;
     }
-    
+
     /**
      * display all forums (not just favorites)
      */
@@ -214,27 +214,27 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->displayOnlyFavorites = false;
     }
-    
+
     public function getPostOrder()
     {
         return $this->postOrder;
     }
-    
+
     public function setPostOrder($postOrder)
     {
         $this->postOrder = $postOrder;
     }
-    
+
     /**
      * get User rank
-     * 
+     *
      * @return Dizkus_Entity_Rank
      */
     public function getRank()
     {
         return $this->rank;
     }
-    
+
     /**
      * set the User rank
      * @param Dizkus_Entity_Rank $rank
@@ -243,7 +243,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->rank = $rank;
     }
-    
+
     /**
      * clear the User rank value
      */
@@ -251,7 +251,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->rank = null;
     }
-    
+
     /**
      * get User favorite forums
      * @return Dizkus_Entity_ForumUserFavorite collection
@@ -260,7 +260,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         return $this->favoriteForums;
     }
-    
+
     /**
      * add a forum as favorite
      * @param Dizkus_Entity_Forum $forum
@@ -272,7 +272,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
             $this->favoriteForums->add($forumUserFavorite);
         }
     }
-    
+
     /**
      * remove a forum as favorite
      * @param Dizkus_Entity_ForumUserFavorite $forumUserFavorite
@@ -281,7 +281,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->favoriteForums->removeElement($forumUserFavorite);
     }
-    
+
     /**
      * clear all forum favorites
      */
@@ -289,7 +289,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->favoriteForums->clear();
     }
-    
+
     /**
      * get User topic subscriptions
      * @return Dizkus_Entity_TopicSubscription collection
@@ -298,7 +298,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         return $this->topicSubscriptions;
     }
-    
+
     /**
      * add a topic subscription
      * @param Dizkus_Entity_Topic $topic
@@ -308,7 +308,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
         $topicSubscription = new Dizkus_Entity_TopicSubscription($this, $topic);
         $this->topicSubscriptions->add($topicSubscription);
     }
-    
+
     /**
      * remove a topic subscription
      * @param Dizkus_Entity_TopicSubscription $topicSubscription
@@ -317,7 +317,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->topicSubscriptions->removeElement($topicSubscription);
     }
-    
+
     /**
      * clear all topic subscriptions
      */
@@ -325,7 +325,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->topicSubscriptions->clear();
     }
-    
+
     /**
      * get User forum subscriptions
      * @return Dizkus_Entity_ForumSubscription collection
@@ -334,7 +334,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         return $this->forumSubscriptions;
     }
-    
+
     /**
      * add a forum subscription
      * @param Dizkus_Entity_Forum $forum
@@ -344,7 +344,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
         $forumSubscription = new Dizkus_Entity_ForumSubscription($this, $forum);
         $this->forumSubscriptions->add($forumSubscription);
     }
-    
+
     /**
      * remove a forum subscription
      * @param Dizkus_Entity_ForumSubscription $forumSubscription
@@ -353,7 +353,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     {
         $this->forumSubscriptions->removeElement($forumSubscription);
     }
-    
+
     /**
      * clear all forum subscriptions
      */

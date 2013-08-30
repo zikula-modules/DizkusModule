@@ -24,7 +24,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'signaturemanagement')));
@@ -37,6 +37,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
         $view->assign('signature', UserUtil::getVar('signature'));
         $view->caching = false;
         $view->add_core_data();
+
         return true;
     }
 
@@ -48,10 +49,10 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'update') {
-            // Security check 
+            // Security check
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
                 return LogUtil::registerPermissionError();
             }
@@ -67,6 +68,7 @@ class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractH
 
             // redirect to user preferences page
             $url = ModUtil::url('Dizkus', 'user', 'prefs');
+
             return $view->redirect($url);
         }
 

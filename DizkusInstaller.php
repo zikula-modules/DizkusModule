@@ -61,7 +61,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         // Initialisation successful
         return true;
     }
-    
+
     /**
      * Set up example forums on install
      */
@@ -86,7 +86,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         $this->entityManager->persist($carrots);
         $this->entityManager->flush();
     }
-    
+
     private function setUpSampleRanks()
     {
         //title, description, minimumCount, maximumCount, type, image
@@ -98,7 +98,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         }
         $this->entityManager->flush();
     }
-    
+
     /**
      *  Deletes an install of the Dizkus module
      *
@@ -123,13 +123,14 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         // Deletion successful
         return true;
     }
-    
+
     public function upgrade($oldversion)
     {
         // Only support upgrade from version 3.1 and up. Notify users if they have a version below that one.
         if (version_compare($oldversion, '3.1', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
+
             return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
         }
         switch ($oldversion) {
@@ -138,20 +139,22 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
                 $this->upgrade_to_4_0_0();
                 break;
         }
+
         return true;
     }
-    
+
     /**
      * get the default module var values
-     * 
+     *
      * @return array
      */
     public static function getDefaultVars()
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
+
         return array('posts_per_page' => 15, 'topics_per_page' => 15, 'hot_threshold' => 20, 'email_from' => System::getVar('adminmail'), 'url_ranks_images' => 'modules/Dizkus/images/ranks', 'post_sort_order' => 'ASC', 'log_ip' => 'no', 'extendedsearch' => 'no', 'm2f_enabled' => 'no', 'favorites_enabled' => 'yes', 'removesignature' => 'no', 'striptags' => 'yes', 'deletehookaction' => 'lock', 'rss2f_enabled' => 'no', 'timespanforchanges' => 24, 'forum_enabled' => 'yes', 'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom), 'signaturemanagement' => 'no', 'signature_start' => '--', 'signature_end' => '--', 'showtextinsearchresults' => 'yes', 'minsearchlength' => 3, 'maxsearchlength' => 30, 'fulltextindex' => 'no', 'solved_enabled' => true, 'ajax' => true, 'striptagsfromemail' => false, 'indexTo' => '', 'notifyAdminAsMod' => 2);
     }
-    
+
     /**
      * upgrade to 4.0.0
      */
@@ -227,9 +230,10 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfigprocess'));
         LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
+
         return true;
     }
-    
+
     /**
      * remove all table prefixes
      */
@@ -248,7 +252,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
             }
         }
     }
-    
+
     /**
      * rename some table columns
      * This must be done before updateSchema takes place
@@ -292,7 +296,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
             }
         }
     }
-    
+
     /**
      * Migrate categories from 3.1 > 4.0.0
      *
@@ -329,9 +333,10 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         $sql = 'DROP TABLE dizkus_categories';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
+
         return;
     }
-    
+
     /**
      * Update Poster Data from 3.1 > 4.0.0
      *
@@ -356,9 +361,10 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         }
         $this->entityManager->flush();
         ModUtil::apiFunc('Dizkus', 'Sync', 'all');
+
         return;
     }
-    
+
     /**
      * Migrate the Moderator Groups out of the `dizkus_forum_mods` table and put
      * in the new `dizkus_forum_mods_group` table
@@ -384,9 +390,10 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         $sql = 'DELETE FROM dizkus_forum_mods WHERE user_id > 1000000';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
+
         return;
     }
-    
+
     /**
      * migrate pop3 connection data from multiple columns to one object
      *
@@ -402,7 +409,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         }
         $this->entityManager->flush();
     }
-    
+
     /**
      * migrate hooked topics data to maintain hook connection with original object
      *

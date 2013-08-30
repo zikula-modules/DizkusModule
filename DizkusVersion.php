@@ -43,9 +43,10 @@ class DizkusVersion extends \Zikula_AbstractVersion
         $meta['capabilities'] = array(HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true), HookUtil::PROVIDER_CAPABLE => array('enabled' => true));
         // module depedencies
         $meta['dependencies'] = array(array('modname' => 'LuMicuLa', 'minversion' => '0.1.0', 'maxversion' => '', 'status' => ModUtil::DEPENDENCY_RECOMMENDED), array('modname' => 'Scribite', 'minversion' => '5.0.0', 'maxversion' => '', 'status' => ModUtil::DEPENDENCY_RECOMMENDED), array('modname' => 'BBCode', 'minversion' => '3.0.0', 'maxversion' => '', 'status' => ModUtil::DEPENDENCY_RECOMMENDED), array('modname' => 'BBSmile', 'minversion' => '3.0.0', 'maxversion' => '', 'status' => ModUtil::DEPENDENCY_RECOMMENDED));
+
         return $meta;
     }
-    
+
     /**
      * Define the hook bundles supported by this module.
      *

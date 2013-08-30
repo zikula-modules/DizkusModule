@@ -13,8 +13,6 @@
  */
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-
-
 namespace Dizkus\Manager;
 
 use ServiceUtil;
@@ -67,7 +65,7 @@ class TopicManager
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
         $this->_defaultPostSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
     }
-    
+
     /**
      * Check if topic exists
      *
@@ -77,7 +75,7 @@ class TopicManager
     {
         return $this->_topic ? true : false;
     }
-    
+
     /**
      * return page as array
      *
@@ -88,9 +86,10 @@ class TopicManager
         if (!$this->_topic) {
             return false;
         }
+
         return $this->_topic->toArray();
     }
-    
+
     /**
      * return topic id
      *
@@ -100,7 +99,7 @@ class TopicManager
     {
         return $this->_topic->getTopic_id();
     }
-    
+
     /**
      * return topic title
      *
@@ -110,7 +109,7 @@ class TopicManager
     {
         return $this->_topic->getTitle();
     }
-    
+
     /**
      * return topic as doctrine2 object
      *
@@ -120,7 +119,7 @@ class TopicManager
     {
         return $this->_topic;
     }
-    
+
     /**
      * return topic forum id
      *
@@ -130,17 +129,17 @@ class TopicManager
     {
         return $this->_topic->getForum()->getForum_id();
     }
-    
+
     public function getFirstPost()
     {
         return $this->_firstPost;
     }
-    
+
     public function getPermissions()
     {
         return ModUtil::apiFunc($this->name, 'Permission', 'get', $this->_topic->getForum());
     }
-    
+
     /**
      * return posts of a topic as doctrine2 object
      *
@@ -161,9 +160,10 @@ class TopicManager
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
+
         return $paginator;
     }
-    
+
     /**
      * return pager
      *
@@ -173,7 +173,7 @@ class TopicManager
     {
         return array('itemsperpage' => $this->_itemsPerPage, 'numitems' => $this->_numberOfItems);
     }
-    
+
     /**
      * get forum bread crumbs
      *
@@ -182,9 +182,10 @@ class TopicManager
     public function getBreadcrumbs()
     {
         $managedForum = new Dizkus_Manager_Forum(null, $this->get()->getForum());
+
         return $managedForum->getBreadcrumbs(false);
     }
-    
+
     /**
      * add to views count
      */
@@ -193,18 +194,18 @@ class TopicManager
         $this->_topic->incrementViewCount();
         $this->entityManager->flush();
     }
-    
+
     public function setLastPost(Dizkus_Entity_Post $lastPost)
     {
         $this->_topic->setLast_post($lastPost);
     }
-    
+
     public function setTitle($title)
     {
         $this->_topic->setTitle($title);
         $this->entityManager->flush();
     }
-    
+
     /**
      * add to replies count
      */
@@ -213,7 +214,7 @@ class TopicManager
         $this->_topic->incrementReplyCount();
         $this->entityManager->flush();
     }
-    
+
     /**
      * subtract from replies count
      */
@@ -222,9 +223,9 @@ class TopicManager
         $this->_topic->decrementReplyCount();
         $this->entityManager->flush();
     }
-    
+
     /**
-     * 
+     *
      * @param type $data['forum_id']
      * @param type $data['message']
      * @param type $data['attachSignature']
@@ -262,10 +263,10 @@ class TopicManager
         $this->_firstPost->setPoster($forumUser);
         $this->_topic->setPoster($forumUser);
     }
-    
+
     /**
      * Add hook data to topic
-     * 
+     *
      * @param Zikula_ProcessHook $hook
      */
     public function setHookData(Zikula_ProcessHook $hook)
@@ -275,12 +276,12 @@ class TopicManager
         $this->_topic->setHookedAreaId($hook->getAreaId());
         $this->_topic->setHookedUrlObject($hook->getUrl());
     }
-    
+
     public function getPreview()
     {
         return $this->_firstPost;
     }
-    
+
     /**
      * persist the topic
      *
@@ -335,9 +336,10 @@ class TopicManager
             $params = array('topic_id' => $this->_topic->getTopic_id(), 'action' => 'subscribe');
             ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
         }
+
         return $this->_topic->getTopic_id();
     }
-    
+
     /**
      * set topic sticky
      *
@@ -347,9 +349,10 @@ class TopicManager
     {
         $this->_topic->sticky();
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * set topic unsticky
      *
@@ -359,9 +362,10 @@ class TopicManager
     {
         $this->_topic->unsticky();
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * lock topic
      *
@@ -371,9 +375,10 @@ class TopicManager
     {
         $this->_topic->lock();
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * unlock topic
      *
@@ -383,9 +388,10 @@ class TopicManager
     {
         $this->_topic->unlock();
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * set topic solved
      *
@@ -395,9 +401,10 @@ class TopicManager
     {
         $this->_topic->setSolved(true);
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * set topic unsolved
      *
@@ -407,9 +414,10 @@ class TopicManager
     {
         $this->_topic->setSolved(false);
         $this->entityManager->flush();
+
         return true;
     }
-    
+
     /**
      * get if the current user is subscribed
      *
@@ -421,9 +429,10 @@ class TopicManager
             return false;
         }
         $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
+
         return isset($topicSubscription);
     }
-    
+
     /**
      * find last post by post_time and set
      */
@@ -442,7 +451,7 @@ class TopicManager
             $this->entityManager->flush();
         }
     }
-    
+
     /**
      * get the number of posts in this topic
      * @return integer
@@ -451,7 +460,7 @@ class TopicManager
     {
         return $this->_topic->getReplyCount();
     }
-    
+
     /**
      * Get the next topic (by time) in the same Forum
      * @return integer
@@ -460,7 +469,7 @@ class TopicManager
     {
         return $this->getAdjacent('>', 'ASC');
     }
-    
+
     /**
      * Get the previous topic (by time) in the same Forum
      * @return integer
@@ -469,7 +478,7 @@ class TopicManager
     {
         return $this->getAdjacent('<', 'DESC');
     }
-    
+
     /**
      * Get the adjacent topic (by time) in the same Forum
      * @param $oper string less than or greater than operator < or >

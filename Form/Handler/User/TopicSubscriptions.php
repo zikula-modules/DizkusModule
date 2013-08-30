@@ -24,7 +24,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
@@ -40,6 +40,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
 
         $subscriptions = ModUtil::apiFunc('Dizkus', 'topic', 'getSubscriptions');
         $view->assign('subscriptions', $subscriptions);
+
         return true;
     }
 
@@ -51,7 +52,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // check for valid form
         if (!$view->isValid()) {
@@ -59,7 +60,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         }
 
         $data = $view->getValues();
-        
+
         if (count($data['topicIds']) > 0) {
             foreach (array_keys($data['topicIds']) as $topicId) {
                 if ($topicId) {
@@ -69,6 +70,7 @@ class Dizkus_Form_Handler_User_TopicSubscriptions extends Zikula_Form_AbstractHa
         }
 
         $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
+
         return $view->redirect($url);
     }
 

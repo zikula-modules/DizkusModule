@@ -28,7 +28,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     {
         SecurityUtil::registerPermissionSchema('Dizkus_Centerblock::', 'Block ID::');
     }
-    
+
     /**
      * info
      *
@@ -38,7 +38,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     {
         return array('module' => 'Dizkus', 'text_type' => $this->__('Dizkus recent'), 'text_type_long' => $this->__('Dizkus recent posts'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true);
     }
-    
+
     /**
      * Display the center block
      *
@@ -56,6 +56,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
             $blockinfo['content'] = $this->getVar('forum_disabled_info');
+
             return BlockUtil::themesideblock($blockinfo);
         }
         // return immediately if no post exist
@@ -81,9 +82,10 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         }
         $this->view->assign('params', $paramarray);
         $blockinfo['content'] = $this->view->fetch(trim($vars['cb_template']));
+
         return BlockUtil::themesideblock($blockinfo);
     }
-    
+
     /**
      * Update the block
      *
@@ -97,9 +99,10 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         $cb_template = $this->request->request->get('cb_template', 'centerblock/display.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
+
         return $blockinfo;
     }
-    
+
     /**
      * Modify the block
      *
@@ -118,6 +121,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
             $vars['cb_template'] = 'centerblock/display.tpl';
         }
+
         return $this->view->assign('vars', $vars)->fetch('centerblock/config.tpl');
     }
 

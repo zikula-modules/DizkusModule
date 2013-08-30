@@ -33,7 +33,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -51,7 +51,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         } else {
             return LogUtil::registerArgsError();
         }
-        
+
         $actions = array(
             array(
                 'text' => $this->__('Move them to a new parent forum'),
@@ -80,7 +80,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = ModUtil::url('Dizkus', 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
@@ -99,7 +99,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         }
 
         $data = $view->getValues();
-        
+
         if ($data['action'] == self::MOVE_CHILDREN) {
             $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
 

@@ -91,9 +91,10 @@ namespace Dizkus\Controller {
             $this->view->assign('forums', $forums);
             $numposts = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => '0', 'type' => 'all'));
             $this->view->assign('numposts', $numposts);
+
             return $this->view->fetch('user/main.tpl');
         }
-        
+
         /**
          * View forum by id
          *
@@ -121,9 +122,10 @@ namespace Dizkus\Controller {
             // filter the forum children by permissions
             $forum = ModUtil::apiFunc($this->name, 'Permission', 'filterForumChildrenByPermission', $managedForum->get());
             $this->view->assign('forum', $forum)->assign('topics', $managedForum->getTopics($start))->assign('pager', $managedForum->getPager())->assign('permissions', $managedForum->getPermissions())->assign('isModerator', $managedForum->isModerator())->assign('breadcrumbs', $managedForum->getBreadcrumbs())->assign('hot_threshold', $this->getVar('hot_threshold'))->assign('last_visit_unix', $lastVisitUnix);
+
             return $this->view->fetch('user/forum/view.tpl');
         }
-        
+
         /**
          * viewtopic
          *
@@ -169,9 +171,10 @@ namespace Dizkus\Controller {
             $this->view->assign('last_visit_unix', $lastVisitUnix);
             $this->view->assign('preview', false);
             $managedTopic->incrementViewsCount();
+
             return $this->view->fetch('user/topic/view.tpl');
         }
-        
+
         /**
          * reply
          *
@@ -254,6 +257,7 @@ namespace Dizkus\Controller {
                     $params = array_merge($params, $urlParams);
                     $url = new Zikula_ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
                 }
+
                 return $this->redirect($url->getUrl());
             } else {
                 $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
@@ -271,10 +275,11 @@ namespace Dizkus\Controller {
                 $this->view->assign('preview', $isPreview);
                 $this->view->assign('last_visit_unix', $lastVisitUnix);
                 $this->view->assign('permissions', $permissions);
+
                 return $this->view->fetch('user/topic/reply.tpl');
             }
         }
-        
+
         /**
          * Create new topic
          *
@@ -285,9 +290,10 @@ namespace Dizkus\Controller {
         public function newtopicAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/topic/new.tpl', new Dizkus_Form_Handler_User_NewTopic());
         }
-        
+
         /**
          * Edit post
          *
@@ -298,9 +304,10 @@ namespace Dizkus\Controller {
         public function editpostAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/post/edit.tpl', new Dizkus_Form_Handler_User_EditPost());
         }
-        
+
         /**
          * Delete topic
          *
@@ -311,9 +318,10 @@ namespace Dizkus\Controller {
         public function deletetopicAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/topic/delete.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
         }
-        
+
         /**
          * Move topic
          *
@@ -324,12 +332,13 @@ namespace Dizkus\Controller {
         public function movetopicAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/topic/move.tpl', new Dizkus_Form_Handler_User_MoveTopic());
         }
-        
+
         /**
          * View the posters IP information
-         * 
+         *
          * @return string
          */
         public function viewIpDataAction()
@@ -340,9 +349,10 @@ namespace Dizkus\Controller {
                 return LogUtil::registerArgsError();
             }
             $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
+
             return $this->view->fetch('user/viewip.tpl');
         }
-        
+
         /**
          * prefs
          *
@@ -353,9 +363,10 @@ namespace Dizkus\Controller {
         public function prefsAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/prefs/prefs.tpl', new Dizkus_Form_Handler_User_Prefs());
         }
-        
+
         /**
          * Interface for a user to manage topic subscriptions
          *
@@ -364,9 +375,10 @@ namespace Dizkus\Controller {
         public function manageForumSubscriptionsAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/prefs/manageForumSubscriptions.tpl', new Dizkus_Form_Handler_User_ForumSubscriptions());
         }
-        
+
         /**
          * Interface for a user to manage topic subscriptions
          *
@@ -375,9 +387,10 @@ namespace Dizkus\Controller {
         public function manageTopicSubscriptionsAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
         }
-        
+
         /**
          * Show all forums in index view instead of only favorite forums
          *
@@ -386,7 +399,7 @@ namespace Dizkus\Controller {
         {
             return $this->changeViewSetting('all');
         }
-        
+
         /**
          * Show only favorite forums in index view instead of all forums
          *
@@ -395,7 +408,7 @@ namespace Dizkus\Controller {
         {
             return $this->changeViewSetting('favorites');
         }
-        
+
         /**
          * Show only favorite forums in index view instead of all forums
          *
@@ -405,6 +418,7 @@ namespace Dizkus\Controller {
             $url = ModUtil::url('Dizkus', 'user', 'index');
             if (!UserUtil::isLoggedIn()) {
                 LogUtil::registerPermissionError();
+
                 return System::redirect($url);
             }
             $uid = UserUtil::getVar('uid');
@@ -418,9 +432,10 @@ namespace Dizkus\Controller {
             $forumUser->{$method}();
             $this->entityManager->persist($forumUser);
             $this->entityManager->flush();
+
             return System::redirect($url);
         }
-        
+
         /**
          * Add/remove a forum from the favorites
          */
@@ -428,9 +443,10 @@ namespace Dizkus\Controller {
         {
             $params = array('action' => $this->request->query->get('action'), 'forum_id' => (int) $this->request->query->get('forum'));
             ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
+
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $params['forum_id'])));
         }
-        
+
         /**
          * Add/remove the sticky status of a topic
          */
@@ -440,9 +456,10 @@ namespace Dizkus\Controller {
             $params['action'] = $this->request->query->get('action');
             $params['topic_id'] = (int) $this->request->query->get('topic');
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
+
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $params['topic_id'])));
         }
-        
+
         /**
          * Interface for a user to manage signature
          *
@@ -451,9 +468,10 @@ namespace Dizkus\Controller {
         public function signaturemanagementAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/prefs/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
         }
-        
+
         /**
          * User interface to email a topic to a arbitrary email-address
          *
@@ -462,9 +480,10 @@ namespace Dizkus\Controller {
         public function emailtopicAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/topic/email.tpl', new Dizkus_Form_Handler_User_EmailTopic());
         }
-        
+
         /**
          * View latest topics
          *
@@ -492,9 +511,10 @@ namespace Dizkus\Controller {
             $this->view->assign('pager', $pager);
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $this->view->assign('last_visit_unix', $lastVisitUnix);
+
             return $this->view->fetch('user/post/latest.tpl');
         }
-        
+
         /**
          * Display my posts or topics
          *
@@ -518,9 +538,10 @@ namespace Dizkus\Controller {
             $this->view->assign('pager', $pager);
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $this->view->assign('last_visit_unix', $lastVisitUnix);
+
             return $this->view->fetch('user/post/mine.tpl');
         }
-        
+
         /**
          * Split topic
          *
@@ -529,9 +550,10 @@ namespace Dizkus\Controller {
         public function splittopicAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/topic/split.tpl', new Dizkus_Form_Handler_User_SplitTopic());
         }
-        
+
         /**
          * User interface to move a single post to another thread
          *
@@ -540,9 +562,10 @@ namespace Dizkus\Controller {
         public function movepostAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/post/move.tpl', new Dizkus_Form_Handler_User_MovePost());
         }
-        
+
         /**
          * Moderate forum
          *
@@ -553,9 +576,10 @@ namespace Dizkus\Controller {
         public function moderateForumAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/forum/moderate.tpl', new Dizkus_Form_Handler_User_ModerateForum());
         }
-        
+
         /**
          * Report
          *
@@ -566,9 +590,10 @@ namespace Dizkus\Controller {
         public function reportAction()
         {
             $form = FormUtil::newForm($this->name, $this);
+
             return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_User_Report());
         }
-        
+
         /**
          * generate and display an RSS feed of recent topics
          * @return string
@@ -585,6 +610,7 @@ namespace Dizkus\Controller {
             $mainUrl = ModUtil::url($this->name, 'user', 'index');
             if (isset($forum_id) && !is_numeric($forum_id)) {
                 LogUtil::registerError($this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
+
                 return $this->redirect($mainUrl);
             }
             /**
@@ -594,6 +620,7 @@ namespace Dizkus\Controller {
             if (!$this->view->template_exists($templatefile)) {
                 // silently stop working
                 LogUtil::registerError($this->__f('Error! Could not find a template for an %s-type feed.', $feed));
+
                 return $this->redirect($mainUrl);
             }
             /**
@@ -663,8 +690,9 @@ namespace Dizkus\Controller {
             $this->view->assign('posts', $posts);
             $this->view->assign('dizkusinfo', $dzkinfo);
             header('Content-Type: text/xml');
+
             return $this->view->display($templatefile);
         }
-    
+
     }
 }

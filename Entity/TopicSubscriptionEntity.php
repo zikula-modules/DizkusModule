@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 namespace Dizkus\Entity;
 
-
 class TopicSubscriptionEntity extends \Zikula_EntityAccess
 {
     /**
@@ -30,14 +29,14 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     private $id;
     /**
      * topic
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      */
     private $topic;
     /**
      * forumUser
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
@@ -45,14 +44,14 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * constructor
      * @param Dizkus_Entity_ForumUser $forumUser
-     * @param Dizkus_Entity_Topic $topic
+     * @param Dizkus_Entity_Topic     $topic
      */
     public function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Topic $topic)
     {
         $this->forumUser = $forumUser;
         $this->topic = $topic;
     }
-    
+
     /**
      * get the table id
      * @return integer
@@ -61,22 +60,22 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     {
         return $this->id;
     }
-    
+
     /**
      * get topic
-     * 
+     *
      * @return Dizkus_Entity_Topic
      */
     public function getTopic()
     {
         return $this->topic;
     }
-    
+
     public function setTopic(Dizkus_Entity_Topic $topic)
     {
         return $this->topic = $topic;
     }
-    
+
     /**
      * get the forumUser
      * @return Dizkus_Entity_ForumUser
@@ -85,7 +84,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     {
         return $this->forumUser;
     }
-    
+
     /**
      * set the forumUser
      * @param Dizkus_Entity_ForumUser $forumUser

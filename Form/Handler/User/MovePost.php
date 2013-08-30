@@ -38,24 +38,25 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
         // get the input
-        $id = (int)$this->request->query->get('post');
-        
+        $id = (int) $this->request->query->get('post');
+
         $this->post_id = $id;
 
         $managedPost = new Dizkus_Manager_Post($id);
-        
+
         $this->old_topic_id = $managedPost->getTopicId();
 
         if ($managedPost->get()->isFirst()) {
             LogUtil::registerError('You can not move the first post of a topic!');
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $managedPost->getTopicId()));
+
             return System::redirect($url);
         }
 
@@ -70,10 +71,11 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), null, 'pid' . $this->post_id);
+
             return $view->redirect($url);
         }
 
@@ -90,6 +92,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar('Dizkus', 'posts_per_page', 15);
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), null, 'pid' . $this->post_id);
+
         return $view->redirect($url);
     }
 

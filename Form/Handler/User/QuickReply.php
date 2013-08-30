@@ -31,14 +31,14 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
         // get the input
-        $id = (int)$this->request->query->get('post');
+        $id = (int) $this->request->query->get('post');
 
         if (!isset($id)) {
             return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
@@ -59,7 +59,7 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId()));
         if ($args['commandName'] == 'cancel') {
@@ -79,6 +79,7 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
 
         if (isset($data['delete']) && $data['delete'] === true) {
             $this->_post->delete();
+
             return $view->redirect($url);
         }
         unset($data['delete']);
@@ -92,6 +93,7 @@ class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
+
             return true;
         }
 

@@ -22,13 +22,13 @@ class GenericHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
     {
         $this->dom = ZLanguage::getModuleDomain('Dizkus');
     }
-    
+
     public function setTitle()
     {
         $item = __('item', $this->dom);
         $this->title = "{$this->getModule()} {$item} (id# {$this->getObjectId()})";
     }
-    
+
     public function setContent()
     {
         $this->content = __f('Discussion of item at: %s', $this->getLink(), $this->dom);

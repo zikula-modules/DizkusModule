@@ -36,7 +36,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
      *
      * @return boolean
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -72,7 +72,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
 
         // check for valid form
@@ -95,6 +95,7 @@ class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_Abstract
         }
 
         $url = ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => $this->_username));
+
         return $view->redirect($url);
     }
 

@@ -43,13 +43,13 @@ class ForumEntity extends \Zikula_EntityAccess
     private $forum_id;
     /**
      * forum_name
-     * 
+     *
      * @ORM\Column(type="string", length=150)
      */
     private $name = '';
     /**
      * description
-     * 
+     *
      * @ORM\Column(type="text")
      */
     private $description = '';
@@ -133,7 +133,7 @@ class ForumEntity extends \Zikula_EntityAccess
     private $moderatorGroups;
     /**
      * Subscriptions
-     * 
+     *
      * Dizkus_Entity_ForumSubscription collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum", cascade={"remove"})
      */
@@ -157,27 +157,29 @@ class ForumEntity extends \Zikula_EntityAccess
         $this->subscriptions = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
-    
+
     public function getForum_id()
     {
         return $this->forum_id;
     }
-    
+
     public function setForum_id($forum_id)
     {
         $this->forum_id = $forum_id;
     }
-    
+
     public function getName()
     {
         if ($this->name == self::ROOTNAME) {
             // do not display actual rootname
             $dom = ZLanguage::getModuleDomain('Dizkus');
+
             return __('Forum Index', $dom);
         }
+
         return $this->name;
     }
-    
+
     public function setName($name)
     {
         // dont' allow user to set another forum to rootname
@@ -189,102 +191,102 @@ class ForumEntity extends \Zikula_EntityAccess
             $this->name = $name;
         }
     }
-    
+
     public function getDescription()
     {
         return $this->description;
     }
-    
+
     public function setDescription($description)
     {
         $this->description = $description;
     }
-    
+
     public function getTopicCount()
     {
         return $this->topicCount;
     }
-    
+
     public function setTopicCount($topics)
     {
         $this->topicCount = $topics;
     }
-    
+
     public function incrementTopicCount()
     {
         $this->topicCount++;
     }
-    
+
     public function decrementTopicCount()
     {
         $this->topicCount--;
     }
-    
+
     public function getPostCount()
     {
         return $this->postCount;
     }
-    
+
     public function setPostCount($posts)
     {
         $this->postCount = $posts;
     }
-    
+
     public function incrementPostCount()
     {
         $this->postCount++;
     }
-    
+
     public function decrementPostCount()
     {
         $this->postCount--;
     }
-    
+
     public function getLft()
     {
         return $this->lft;
     }
-    
+
     public function getLvl()
     {
         return $this->lvl;
     }
-    
+
     public function getRgt()
     {
         return $this->rgt;
     }
-    
+
     public function getRoot()
     {
         return $this->root;
     }
-    
+
     /**
      * get Forum parent
-     * 
+     *
      * @return Dizkus_Entity_Forum
      */
     public function getParent()
     {
         return $this->parent;
     }
-    
+
     public function setParent(Dizkus_Entity_Forum $parent = null)
     {
         $this->parent = $parent;
     }
-    
+
     /**
      * get Children
-     * 
+     *
      * @return ArrayCollection Dizkus_Entity_Forum
      */
     public function getChildren()
     {
         return $this->children;
     }
-    
+
     /**
      * remove all the child forums
      */
@@ -292,47 +294,47 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         $this->children->clear();
     }
-    
+
     /**
      * get last post in Forum
-     * 
+     *
      * @return Dizkus_Entity_Post
      */
     public function getLast_post()
     {
         return $this->last_post;
     }
-    
+
     public function setLast_post(Dizkus_Entity_Post $post)
     {
         return $this->last_post = $post;
     }
-    
+
     public function getPop3Connection()
     {
         return $this->pop3Connection;
     }
-    
+
     public function setPop3Connection(Dizkus_Connection_Pop3 $connection)
     {
         $this->pop3Connection = $connection;
     }
-    
+
     public function removePop3Connection()
     {
         $this->pop3Connection = null;
     }
-    
+
     public function getModuleref()
     {
         return $this->moduleref;
     }
-    
+
     public function setModuleref($moduleref)
     {
         $this->moduleref = $moduleref;
     }
-    
+
     /**
      * get ForumUsers that have marked this forum as favorite
      * @return ArrayCollection Dizkus_Entity_ForumUserFavorites
@@ -341,31 +343,31 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         return $this->favorites;
     }
-    
+
     /**
      * get forum Topics
-     * 
+     *
      * @return ArrayCollection Dizkus_Entity_Topic
      */
     public function getTopics()
     {
         return $this->topics;
     }
-    
+
     /**
      * get Moderators
-     * 
+     *
      * @return ArrayCollection Dizkus_Entity_Moderator_User
      */
     public function getModeratorUsers()
     {
         return $this->moderatorUsers;
     }
-    
+
     /**
      * Get all the moderator uids for current forum or full tree
      *
-     * @param boolean $includeParents include entire parent tree? (recursive)
+     * @param  boolean $includeParents include entire parent tree? (recursive)
      * @return array
      */
     public function getModeratorUsersAsIdArray($includeParents = false)
@@ -378,9 +380,10 @@ class ForumEntity extends \Zikula_EntityAccess
             }
             $thisForum = $includeParents ? $thisForum->getParent() : null;
         }
+
         return $output;
     }
-    
+
     public function setModeratorUsers($users)
     {
         // clear the associated users
@@ -394,21 +397,21 @@ class ForumEntity extends \Zikula_EntityAccess
             $this->moderatorUsers->add($moderator);
         }
     }
-    
+
     /**
      * get forum moderator groups
-     * 
+     *
      * @return ArrayCollection Dizkus_Entity_Moderator_Group
      */
     public function getModeratorGroups()
     {
         return $this->moderatorGroups;
     }
-    
+
     /**
      * Get all the moderator group ids for current forum or full tree
      *
-     * @param boolean $includeParents include entire parent tree? (recursive)
+     * @param  boolean $includeParents include entire parent tree? (recursive)
      * @return array
      */
     public function getModeratorGroupsAsIdArray($includeParents = false)
@@ -421,9 +424,10 @@ class ForumEntity extends \Zikula_EntityAccess
             }
             $thisForum = $includeParents ? $thisForum->getParent() : null;
         }
+
         return $output;
     }
-    
+
     public function setModeratorGroups($gids)
     {
         // remove the associated moderators
@@ -438,7 +442,7 @@ class ForumEntity extends \Zikula_EntityAccess
             $this->moderatorGroups->add($moderatorGroup);
         }
     }
-    
+
     /**
      * get Forum Subscriptions
      * @return ArrayCollection Dizkus_Entity_ForumSubscription
@@ -447,7 +451,7 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         return $this->subscriptions;
     }
-    
+
     /**
      * get forum status
      *
@@ -457,7 +461,7 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         return $this->status;
     }
-    
+
     /**
      * set forum status
      * @param boolean $status
@@ -468,7 +472,7 @@ class ForumEntity extends \Zikula_EntityAccess
             $this->status = $status;
         }
     }
-    
+
     /**
      * is forum locked?
      * @return boolean
@@ -477,7 +481,7 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         return $this->status;
     }
-    
+
     /**
      * lock the forum
      */
@@ -485,7 +489,7 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         $this->status = self::STATUS_LOCKED;
     }
-    
+
     /**
      * unlock the forum
      */

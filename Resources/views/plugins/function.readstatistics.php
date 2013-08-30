@@ -10,19 +10,20 @@
 
 /**
  * readstatistics
- * reads some statistics of the forum 
+ * reads some statistics of the forum
  * results are assigned to
  *
- * $total_topics    : total number of topics 
+ * $total_topics    : total number of topics
  * $total_posts     : total number of posts
  * $total_forums    : total number of forums
  * $last_user       : newest user
  */
-function smarty_function_readstatistics($params, Zikula_View $view) 
+function smarty_function_readstatistics($params, Zikula_View $view)
 {
     $view->assign('total_topics', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'alltopics')));
     $view->assign('total_posts', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'allposts')));
     $view->assign('total_forums', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forum')));
     $view->assign('last_user', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'lastuser')));
+
     return;
 }

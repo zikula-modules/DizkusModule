@@ -37,26 +37,26 @@ class PostEntity extends \Zikula_EntityAccess
     private $post_id;
     /**
      * post_time
-     * 
+     *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
     private $post_time;
     /**
      * poster_ip
-     * 
+     *
      * @ORM\Column(type="string", length=50)
      */
     private $poster_ip = '';
     /**
      * msgid
-     * 
+     *
      * @ORM\Column(type="string", length=100)
      */
     private $msgid = '';
     /**
      * post_text
-     * 
+     *
      * @ORM\Column(type="text")
      */
     private $post_text = '';
@@ -74,7 +74,7 @@ class PostEntity extends \Zikula_EntityAccess
     private $isFirstPost = false;
     /**
      * title
-     * 
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $title = '';
@@ -105,42 +105,42 @@ class PostEntity extends \Zikula_EntityAccess
             }
         }
     }
-    
+
     public function getPost_id()
     {
         return $this->post_id;
     }
-    
+
     public function getPost_text()
     {
         return $this->post_text;
     }
-    
+
     public function setPost_text($text)
     {
         return $this->post_text = stripslashes($text);
     }
-    
+
     public function getAttachSignature()
     {
         return $this->attachSignature;
     }
-    
+
     public function setAttachSignature($attachSignature)
     {
         return $this->attachSignature = $attachSignature;
     }
-    
+
     public function getIsFirstPost()
     {
         return $this->isFirstPost;
     }
-    
+
     public function setIsFirstPost($first)
     {
         return $this->isFirstPost = $first;
     }
-    
+
     /**
      * Is the post a first post in topic?
      * convenience naming
@@ -151,27 +151,27 @@ class PostEntity extends \Zikula_EntityAccess
     {
         return $this->isFirstPost;
     }
-    
+
     public function getTitle()
     {
         return $this->title;
     }
-    
+
     public function setTitle($title)
     {
         return $this->title = $title;
     }
-    
+
     public function getPost_time()
     {
         return $this->post_time;
     }
-    
+
     public function setPost_time(DateTime $time)
     {
         $this->post_time = $time;
     }
-    
+
     public function updatePost_time(DateTime $time = null)
     {
         if (!isset($time)) {
@@ -179,86 +179,86 @@ class PostEntity extends \Zikula_EntityAccess
         }
         $this->post_time = $time;
     }
-    
+
     public function getPoster_ip()
     {
         return $this->poster_ip;
     }
-    
+
     public function getMsgid()
     {
         return $this->msgid;
     }
-    
+
     /**
      * Get User who made post
-     * 
+     *
      * @return Dizkus_Entity_ForumUser
      */
     public function getPoster()
     {
         return $this->poster;
     }
-    
+
     /**
      * set user who made the post
-     * 
+     *
      * @param Dizkus_Entity_ForumUser $poster
      */
     public function setPoster(Dizkus_Entity_ForumUser $poster)
     {
         $this->poster = $poster;
     }
-    
+
     /**
      * convenience method to retrieve user id of poster
-     * 
+     *
      * @return integer
      */
     public function getPoster_id()
     {
         return $this->poster->getUser_id();
     }
-    
+
     public function getPoster_data()
     {
         return array('image' => 'a', 'rank' => 'a', 'rank_link' => 'a', 'description' => 'a', 'moderate' => 'a', 'edit' => 'a', 'reply' => 'a', 'postCount' => 'a', 'seeip' => 'a');
     }
-    
+
     /**
      * get Post topic
-     * 
+     *
      * @return Dizkus_Entity_Topic
      */
     public function getTopic()
     {
         return $this->topic;
     }
-    
+
     /**
      * Set post Topic
-     * 
+     *
      * @param Dizkus_Entity_Topic $topic
      */
     public function setTopic(Dizkus_Entity_Topic $topic)
     {
         $this->topic = $topic;
     }
-    
+
     /**
      * convenience method to retreive topic ID
-     * 
+     *
      * @return integer
      */
     public function getTopic_id()
     {
         return $this->topic->getTopic_id();
     }
-    
+
     /**
      * determine if a user is allowed to edit this post
      *
-     * @param integer $uid
+     * @param  integer $uid
      * @return boolean
      */
     public function getUserAllowedToEdit($uid = null)
@@ -273,6 +273,7 @@ class PostEntity extends \Zikula_EntityAccess
         if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
             return true;
         }
+
         return false;
     }
 

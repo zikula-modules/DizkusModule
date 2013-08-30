@@ -39,9 +39,10 @@ class FavoritesApi extends \Zikula_AbstractApi
             return false;
         }
         $this->_displayOnlyFavorites[$uid] = $forumUser->getDisplayOnlyFavorites();
+
         return $this->_displayOnlyFavorites[$uid];
     }
-    
+
     /**
      * Get forum subscription status
      *
@@ -58,6 +59,7 @@ class FavoritesApi extends \Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorite')->findOneBy(array('forum' => $args['forum'], 'forumUser' => $args['user_id']));
+
         return isset($forumUserFavorite);
     }
 

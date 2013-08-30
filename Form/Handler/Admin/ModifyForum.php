@@ -21,11 +21,11 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      * @var Dizkus_Manager_Forum
      */
     private $_forum;
-    
+
     /**
      * action [e]dit/[c]reate
-     * 
-     * @var string 
+     *
+     * @var string
      */
     private $_action;
 
@@ -38,7 +38,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
@@ -82,7 +82,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         } else {
             $this->view->assign('extsource', 'noexternal');
         }
-        
+
         $view->assign('moderatorUsers', $this->_forum->get()->getModeratorUsersAsIdArray());
         $view->assign('moderatorGroups', $this->_forum->get()->getModeratorGroupsAsIdArray());
 
@@ -122,7 +122,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         $url = ModUtil::url('Dizkus', 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
@@ -167,7 +167,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
                     LogUtil::registerStatus($this->__("Pop3 test successful."));
                 }
             }
-        } else if ($data['extsource'] == 'rss2forum') {
+        } elseif ($data['extsource'] == 'rss2forum') {
             // @todo temporary value until known what to do
             $this->_forum->get()->setPop3Connection(null);
         } else {

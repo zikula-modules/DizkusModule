@@ -13,7 +13,6 @@
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
  */
 
-
 /**
  * Smarty function to read the users who are online
  * This function returns an array (ig assign is used) or four variables
@@ -39,7 +38,7 @@
 function smarty_function_dizkusonline($params, Zikula_View $view)
 {
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
-    
+
     // set some defaults
     $numguests = 0;
     $numusers = 0;
@@ -62,7 +61,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $query->setParameter('activetime', $activetime);
 
     $onlineusers = $query->getArrayResult();
-    
+
     if (is_array($onlineusers)) {
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {

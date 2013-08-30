@@ -48,7 +48,7 @@ class ForumUserManager
             $this->entityManager->flush();
         }
     }
-    
+
     /**
      * postOrder
      *
@@ -58,7 +58,7 @@ class ForumUserManager
     {
         return $this->_forumUser ? 'ASC' : 'DESC';
     }
-    
+
     /**
      * set postOrder
      *
@@ -74,7 +74,7 @@ class ForumUserManager
         $this->_forumUser->setPostOrder($order);
         $this->entityManager->flush();
     }
-    
+
     /**
      * return topic as doctrine2 object
      *
@@ -84,7 +84,7 @@ class ForumUserManager
     {
         return $this->_forumUser;
     }
-    
+
     /**
      * return topic as array
      *
@@ -94,7 +94,7 @@ class ForumUserManager
     {
         return $this->_forumUser->toArray();
     }
-    
+
     /**
      * persist and flush
      *
@@ -106,7 +106,7 @@ class ForumUserManager
         $this->entityManager->persist($this->_forumUser);
         $this->entityManager->flush();
     }
-    
+
     /**
      * Change the value of Favorite Forum display
      * @param boolean $value

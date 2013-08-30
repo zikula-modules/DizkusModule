@@ -32,9 +32,10 @@ class PermissionApi extends \Zikula_AbstractApi
         $permissions['moderate'] = $permissions['comment'] && $this->canModerate($args);
         $permissions['edit'] = $permissions['moderate'];
         $permissions['admin'] = $permissions['moderate'] && $this->canAdministrate($args);
+
         return $permissions;
     }
-    
+
     /**
      * Check if a user is allowed to see forum.
      *
@@ -46,7 +47,7 @@ class PermissionApi extends \Zikula_AbstractApi
     {
         return $this->checkPermission($args, ACCESS_OVERVIEW);
     }
-    
+
     /**
      * Check if a user is allowed to read forum.
      *
@@ -58,7 +59,7 @@ class PermissionApi extends \Zikula_AbstractApi
     {
         return $this->checkPermission($args, ACCESS_READ);
     }
-    
+
     /**
      * Check if a user is allowed to write forum.
      *
@@ -70,7 +71,7 @@ class PermissionApi extends \Zikula_AbstractApi
     {
         return $this->checkPermission($args, ACCESS_COMMENT);
     }
-    
+
     /**
      * Check if a user is allowed to moderate forum.
      *
@@ -82,7 +83,7 @@ class PermissionApi extends \Zikula_AbstractApi
     {
         return $this->checkPermission($args, ACCESS_MODERATE);
     }
-    
+
     /**
      * Check if a user is allowed to administrate forum.
      *
@@ -94,12 +95,12 @@ class PermissionApi extends \Zikula_AbstractApi
     {
         return $this->checkPermission($args, ACCESS_ADMIN);
     }
-    
+
     /**
      * check Permission
      *
      * @param array|object $args  Arguments.
-     * @param int   $level Level.
+     * @param int          $level Level.
      *
      * @return boolean
      */
@@ -143,9 +144,10 @@ class PermissionApi extends \Zikula_AbstractApi
             }
             $forum = $forum->getParent();
         }
+
         return true;
     }
-    
+
     /**
      * check and filter and array of forums and their children for READ permissions
      * @param array $forums
@@ -164,9 +166,10 @@ class PermissionApi extends \Zikula_AbstractApi
             }
             $this->filterForumChildrenByPermission($forum);
         }
+
         return $forums;
     }
-    
+
     /**
      * check and filter child forums for READ permissions
      * @param Dizkus_Entity_Forum $forum
@@ -182,6 +185,7 @@ class PermissionApi extends \Zikula_AbstractApi
                 $forum->getChildren()->removeElement($subforum);
             }
         }
+
         return $forum;
     }
 

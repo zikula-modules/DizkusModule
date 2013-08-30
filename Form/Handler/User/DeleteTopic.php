@@ -38,17 +38,16 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->topic_id = (int)$this->request->query->get('topic');
-
+        $this->topic_id = (int) $this->request->query->get('topic');
 
         if (empty($this->topic_id)) {
-            $post_id = (int)$this->request->query->get('post');
+            $post_id = (int) $this->request->query->get('post');
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
@@ -78,11 +77,12 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+
             return $view->redirect($url);
         }
 
@@ -114,6 +114,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
 
         // redirect to the forum of the deleted topic
         $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+
         return $view->redirect($url);
     }
 

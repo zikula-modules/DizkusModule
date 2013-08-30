@@ -30,6 +30,7 @@ class AdminApi extends \Zikula_AbstractApi
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'manageSubscriptions'), 'text' => $this->__('Manage subscriptions'), 'title' => $this->__('Remove a user\'s topic and forum subscriptions'), 'class' => 'z-icon-es-mail');
             $links[] = array('url' => ModUtil::url('Dizkus', 'admin', 'preferences'), 'text' => $this->__('Settings'), 'title' => $this->__('Edit general forum-wide settings'), 'class' => 'z-icon-es-config');
         }
+
         return $links;
     }
 

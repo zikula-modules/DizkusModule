@@ -40,10 +40,11 @@ function smarty_function_readlastposts($params, Zikula_View $view)
         if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $managedForum->get())) {
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
+
             return;
         }
         $whereforum[] = $params['forum_id'];
-    } else if (!isset($params['favorites'])) {
+    } elseif (!isset($params['favorites'])) {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
         $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
@@ -51,6 +52,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             // error or user is not allowed to read any forum at all
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
+
             return;
         }
         $whereforum = $userforums;
@@ -157,5 +159,6 @@ function smarty_function_readlastposts($params, Zikula_View $view)
 
     $view->assign('lastpostcount', count($lastposts));
     $view->assign('lastposts', $lastposts);
+
     return;
 }

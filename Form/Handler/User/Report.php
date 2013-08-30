@@ -31,13 +31,13 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
      *
      * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
-    function initialize(Zikula_Form_View $view)
+    public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
         // get the input
-        $id = (int)$this->request->query->get('post');
+        $id = (int) $this->request->query->get('post');
 
         if (!isset($id)) {
             return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
@@ -60,10 +60,11 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
      *
      * @return bool|void
      */
-    function handleCommand(Zikula_Form_View $view, &$args)
+    public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
+
             return $view->redirect($url);
         }
 
@@ -96,6 +97,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
 
         $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
                     'start' => $start));
+
         return $view->redirect($url);
     }
 
@@ -118,7 +120,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
                                        System::serverGetVar('SERVER_PROTOCOL'),
                                        System::serverGetVar('HTTP_REFERRER'),
                                        System::serverGetVar('HTTP_USER_AGENT')));
-            fwrite($fh, DataUtil::formatForStore($line) . "\n");                           
+            fwrite($fh, DataUtil::formatForStore($line) . "\n");
             fclose($fh);
         }
 
@@ -130,7 +132,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
      * @author       Thomas Zeithaml <info@spider-trap.de>
      * @copyright    (c) 2005-2006 Spider-Trap Team
      */
-    private function dzk_validip($ip) 
+    private function dzk_validip($ip)
     {
        if (!empty($ip) && ip2long($ip)!=-1) {
            $reserved_ips = array (
@@ -149,6 +151,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
                $max = ip2long($r[1]);
                if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) return false;
            }
+
            return true;
        } else {
            return false;

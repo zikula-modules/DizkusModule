@@ -8,10 +8,7 @@
  */
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-
-
 namespace Dizkus\Entity\Repository;
-
 
 class ForumRepository extends \NestedTreeRepository
 {
@@ -30,6 +27,7 @@ class ForumRepository extends \NestedTreeRepository
             var_dump($query->getSQL());
             die;
         }
+
         return $result;
     }
 

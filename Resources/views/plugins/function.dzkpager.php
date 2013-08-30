@@ -34,8 +34,7 @@ function smarty_function_dzkpager($params, Zikula_View $view)
 
     // check if we are in view or moderate mode
     $func = isset($params['force']) ? $params['force'] : FormUtil::getPassedValue('func');
-    switch ($func)
-    {
+    switch ($func) {
         case 'viewforum':
         case 'moderateforum':
             $per_page = ModUtil::getVar('Dizkus', 'topics_per_page');
@@ -67,38 +66,38 @@ function smarty_function_dzkpager($params, Zikula_View $view)
     $on_page = floor($start / $per_page) + 1;
 
     $page_string = '';
-    if ( $total_pages > 10 ) {
+    if ($total_pages > 10) {
         $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;
 
         for ($i = 1; $i < $init_page_max + 1; $i++) {
             $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1 ))) . '">' . $i . '</a>';
-            if ( $i <  $init_page_max ) {
+            if ($i <  $init_page_max) {
                 $page_string .= $separator;
             }
         }
 
-        if ( $total_pages > 3 ) {
-            if ( $on_page > 1  && $on_page < $total_pages ) {
+        if ($total_pages > 3) {
+            if ($on_page > 1  && $on_page < $total_pages) {
                 $page_string .= ( $on_page > 5 ) ? ' ... ' : $separator;
 
                 $init_page_min = ( $on_page > 4 ) ? $on_page : 5;
                 $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;
 
-                for($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {
+                for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {
                     $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1 ))) . '">' . $i . '</a>';
-                    if ( $i <  $init_page_max + 1 ) {
+                    if ($i <  $init_page_max + 1) {
                         $page_string .= $separator;
                     }
                 }
 
                 $page_string .= ( $on_page < $total_pages - 4 ) ? ' ... ' : $separator;
-            } else  {
+            } else {
                 $page_string .= ' ... ';
             }
 
             for ($i = $total_pages - 2; $i < $total_pages + 1; $i++) {
                 $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>'  : '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1 ))) . '">' . $i . '</a>';
-                if ( $i <  $total_pages ) {
+                if ($i <  $total_pages) {
                     $page_string .= $separator;
                 }
             }
@@ -106,7 +105,7 @@ function smarty_function_dzkpager($params, Zikula_View $view)
     } else {
         for ($i = 1; $i < $total_pages + 1; $i++) {
             $page_string .= (($i == $on_page) && ($linkall==false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1 ))) . '">' . $i . '</a>';
-            if ( $i <  $total_pages ) {
+            if ($i <  $total_pages) {
                 $page_string .= $separator;
             }
         }
@@ -115,15 +114,15 @@ function smarty_function_dzkpager($params, Zikula_View $view)
     $add_prev_set = false;
     $add_next_set = false;
     if ($add_prevnext==true) {
-        if ( $on_page > 1 ) {
+        if ($on_page > 1) {
             $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 2 ) * $per_page + 1 ))) . '">-1</a>] ' . $page_string;
             $add_prev_set = true;
         }
-        if ( $on_page > 10 ) {
+        if ($on_page > 10) {
             $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 11) * $per_page + 1 ))) . '">-10</a> ' . $page_string;
             $add_prev_set = true;
         }
-        if ( $on_page > 100 ) {
+        if ($on_page > 100) {
             $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 101) * $per_page + 1 ))) . '">-100</a> ' . $page_string;
             $add_prev_set = true;
         }
@@ -131,7 +130,7 @@ function smarty_function_dzkpager($params, Zikula_View $view)
             $page_string = '[' . $page_string;
         }
 
-        if ( $on_page < $total_pages ) {
+        if ($on_page < $total_pages) {
             $page_string .= ' [<a href="' . DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', $func, array($objectname => $objectid, 'start' => $on_page * $per_page + 1 ))) . '">+1</a>';
             $add_next_set = true;
         }

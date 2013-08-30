@@ -24,17 +24,18 @@
  * 'forumposts' (id = forum id): total number of postings in the given forum
  * 'forumtopics' (id= forum id): total number of topics in the given forum
  */
-function smarty_function_boardstats($params, Zikula_View $view) 
+function smarty_function_boardstats($params, Zikula_View $view)
 {
     $type = (!empty($params['type'])) ? $params['type'] : 'all';
     $id   = (!empty($params['id'])) ? $params['id'] : '0';
-    
+
     $count = ModUtil::apiFunc('Dizkus', 'user', 'countstats',
                           array('id'   => $id,
                                 'type' => $type));
 
     if (!empty($params['assign'])) {
         $view->assign($params['assign'], $count);
+
         return;
     }
 

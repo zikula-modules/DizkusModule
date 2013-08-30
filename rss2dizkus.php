@@ -54,7 +54,7 @@ foreach ($forums as $forum) {
             $lastuser = $connection['coreUser']->getUid();
             $loggedin = true;
         } else {
-            
+
         }
     } else {
         // we have been here before
@@ -81,7 +81,7 @@ foreach ($forums as $forum) {
         // See the function below...
         $insert = ModUtil::apiFunc('Dizkus', 'user', 'insertrss', array('items' => $items, 'forum' => $forum));
         if (!$insert) {
-            
+
         }
     }
 }

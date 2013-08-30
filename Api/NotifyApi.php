@@ -63,9 +63,10 @@ class NotifyApi extends \Zikula_AbstractApi
                 $notified[] = $subscriber->getUid();
             }
         }
+
         return $notified;
     }
-    
+
     /**
      * notify moderators
      *
@@ -137,11 +138,11 @@ class NotifyApi extends \Zikula_AbstractApi
 ' . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . '
 
 ' . $this->__('Reporting user') . ": {$reporting_username}\n" . $this->__('Comment') . ':
-' . strip_tags($args['comment']) . ' 
+' . strip_tags($args['comment']) . '
 
 ' . $this->__('Post Content') . ':
 ' . '---------------------------------------------------------------------
-' . $posttext . ' 
+' . $posttext . '
 ' . '---------------------------------------------------------------------
 
 ' . $this->__('Link to topic') . ": {$linkToTopic}\n" . '
@@ -155,9 +156,10 @@ class NotifyApi extends \Zikula_AbstractApi
         } else {
             LogUtil::registerError($this->__('There were no moderators set to be notified. Consider manually contacting the site admin.'));
         }
+
         return;
     }
-    
+
     /**
      * email
      *
@@ -175,6 +177,7 @@ class NotifyApi extends \Zikula_AbstractApi
             $sender_email = ModUtil::getVar('Dizkus', 'email_from');
         }
         $args2 = array('fromname' => $sender_name, 'fromaddress' => $sender_email, 'toname' => $args['sendto_email'], 'toaddress' => $args['sendto_email'], 'subject' => $args['subject'], 'body' => $args['message']);
+
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args2);
     }
 

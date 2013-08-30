@@ -31,6 +31,7 @@ class PrefsApi extends \Zikula_AbstractApi
                 $links[] = array('url' => ModUtil::url('Dizkus', 'user', 'signaturemanagement'), 'text' => $this->__('Signature'), 'title' => $this->__('Manage signature'), 'class' => 'z-icon-es-options');
             }
         }
+
         return $links;
     }
 
