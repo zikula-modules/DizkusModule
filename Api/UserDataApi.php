@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -20,13 +21,16 @@ use Doctrine;
  */
 class UserDataApi extends \Zikula_AbstractApi
 {
+
     private $_online;
+
     /**
      * user array
      *
      * @var array
      */
     private $usersarray = array();
+
     public function __construct(Zikula_ServiceManager $serviceManager)
     {
         $this->_online = array();

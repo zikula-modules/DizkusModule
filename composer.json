@@ -1,9 +1,9 @@
 <?php
 
-namespace Zikula\Dizkus;
+        namespace Zikula\Dizkus;
 
-use Zikula\Core\AbstractModule;
+        use Zikula\Core\AbstractModule;
 
-class ZikulaDizkusModule extends AbstractModule
+        class ZikulaDizkusModule extends AbstractModule
 {
 }

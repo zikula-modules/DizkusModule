@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -26,6 +28,7 @@ use Dizkus_Entity_ForumSubscription;
 
 class ForumUserEntity extends \Zikula_EntityAccess
 {
+
     /**
      * Core user entity
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
@@ -36,24 +39,28 @@ class ForumUserEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
     private $user;
+
     /**
      * postCount
      *
      * @ORM\Column(type="integer")
      */
     private $postCount = 0;
+
     /**
      * autosubscribe preference
      *
      * @ORM\Column(type="boolean")
      */
     private $autosubscribe = true;
+
     /**
      * user level
      *
      * @ORM\Column(type="integer")
      */
     private $level = 1;
+
     /**
      * lastvisit
      *
@@ -61,6 +68,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $lastvisit = null;
+
     /**
      * user_favorites
      * user choice to display favorites only (true)
@@ -69,6 +77,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
      * @ORM\Column(name="user_favorites", type="boolean")
      */
     private $displayOnlyFavorites = false;
+
     /**
      * postOrder
      *
@@ -81,21 +90,25 @@ class ForumUserEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="rank", referencedColumnName="rank_id", nullable=true)
      */
     private $rank;
+
     /**
      * Dizkus_Entity_ForumUserFavorite collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $favoriteForums;
+
     /**
      * Dizkus_Entity_TopicSubscription collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $topicSubscriptions;
+
     /**
      * Dizkus_Entity_ForumSubscription collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $forumSubscriptions;
+
     /**
      * constructor
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -15,6 +16,7 @@ namespace Dizkus\Api;
  */
 class ModeratorsApi extends \Zikula_AbstractApi
 {
+
     /**
      * Returns an array of all the moderators of a forum (including groups)
      *

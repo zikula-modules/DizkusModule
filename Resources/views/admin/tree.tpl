@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-        {include file='admin/subtree.tpl'}
+            {include file='admin/subtree.tpl'}
         </tbody>
 
     </table>

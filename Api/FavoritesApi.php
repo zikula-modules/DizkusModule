@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -15,7 +16,9 @@ use LogUtil;
 
 class FavoritesApi extends \Zikula_AbstractApi
 {
+
     private $_displayOnlyFavorites = array();
+
     /**
      * display of user favorite forums only?
      *

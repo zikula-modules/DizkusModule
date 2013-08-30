@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -19,6 +21,7 @@ namespace Dizkus\Entity\Moderator;
 
 class Group extends \Zikula_EntityAccess
 {
+
     /**
      * id
      *
@@ -27,16 +30,19 @@ class Group extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\ManyToOne(targetEntity="Zikula\Module\GroupsModule\Entity\GroupEntity", inversedBy="gid")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="gid")
      */
     private $group;
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorGroups")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
+
     /**
      * get Core Group
      * @return Zikula\Module\GroupsModule\Entity\GroupEntity

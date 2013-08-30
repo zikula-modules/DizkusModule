@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -18,7 +19,9 @@ use News_Api_User;
 
 class NewsHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
 {
+
     private $newsItem = null;
+
     public function setup()
     {
         $newsItem = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $this->getObjectId()));

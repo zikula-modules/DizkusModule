@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -21,8 +23,10 @@ use ModUtil;
 
 class RankEntity extends \Zikula_EntityAccess
 {
+
     const TYPE_HONORARY = 1;
     const TYPE_POSTCOUNT = 0;
+
     /**
      * rank_id
      *
@@ -31,42 +35,49 @@ class RankEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $rank_id;
+
     /**
      * title
      *
      * @ORM\Column(type="string", length=50)
      */
     private $title = '';
+
     /**
      * description
      *
      * @ORM\Column(type="string", length=255)
      */
     private $description = '';
+
     /**
      * minimumCount
      *
      * @ORM\Column(type="integer")
      */
     private $minimumCount = 0;
+
     /**
      * maximumCount
      *
      * @ORM\Column(type="integer")
      */
     private $maximumCount = 0;
+
     /**
      * type
      *
      * @ORM\Column(type="integer", length=2)
      */
     private $type = 0;
+
     /**
      * image
      *
      * @ORM\Column(type="string", length=255)
      */
     private $image = '';
+
     public function getRank_id()
     {
         return $this->rank_id;

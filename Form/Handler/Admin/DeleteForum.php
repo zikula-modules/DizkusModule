@@ -14,6 +14,7 @@
  */
 class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
 {
+
     const MOVE_CHILDREN = '1';
     const DELETE_CHILDREN = '0';
 

@@ -53,7 +53,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
         $this->view->assign('forum', $this->_managedForum->get());
         $topics = $this->_managedForum->getTopics();
         $topicSelect = array(
-             array('value' => '', 'text' => "<< " . $this->__("Choose target topic") . " >>"),
+            array('value' => '', 'text' => "<< " . $this->__("Choose target topic") . " >>"),
         );
         foreach ($topics as $topic) {
             $topicSelect[] = array('value' => $topic->getTopic_id(), 'text' => $topic->getTitle());
@@ -71,7 +71,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
         );
         $this->view->assign('actions', $actions);
         // For Movetopic
-        $forums =ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren');
+        $forums = ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren');
         array_unshift($forums, array('value' => '', 'text' => "<< " . $this->__("Select target forum") . " >>"));
         $this->view->assign('forums', $forums);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,20 +8,24 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
+
 namespace Dizkus\Controller {
+
     use ModUtil;
-    use System;
-    use LogUtil;
-    use SecurityUtil;
-    use FormUtil;
-    use Dizkus_Form_Handler_Admin_Prefs;
-    use Dizkus_Entity_Rank;
-    use Dizkus_Form_Handler_Admin_AssignRanks;
-    use Dizkus_Form_Handler_Admin_ModifyForum;
-    use Dizkus_Form_Handler_Admin_DeleteForum;
-    use Dizkus_Form_Handler_Admin_ManageSubscriptions;
+use System;
+use LogUtil;
+use SecurityUtil;
+use FormUtil;
+use Dizkus_Form_Handler_Admin_Prefs;
+use Dizkus_Entity_Rank;
+use Dizkus_Form_Handler_Admin_AssignRanks;
+use Dizkus_Form_Handler_Admin_ModifyForum;
+use Dizkus_Form_Handler_Admin_DeleteForum;
+use Dizkus_Form_Handler_Admin_ManageSubscriptions;
+
     class AdminController extends \Zikula_AbstractController
     {
+
         public function postInitializeAction()
         {
             $this->view->setCaching(false)->add_core_data();

@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="lib/jasmine-1.3.1/jasmine.css" />
         <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine.js"></script>
         <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine-html.js"></script>
-        
+
         <!-- jQuery -->
         <script src="../scripts/jquery-1.8.2.min.js"></script>
         <script src="../scripts/jquery.mockjax.js"></script>
@@ -16,18 +16,18 @@
         <!-- specs -->
         <script type="text/javascript" src="autocompleteBehavior.js"></script>
     </head>
-<body>
-    <script type="text/javascript">
-        /*jslint vars: true; */
-        (function () {
-            var jasmineEnv = jasmine.getEnv();
-            jasmineEnv.updateInterval = 500;
+    <body>
+        <script type="text/javascript">
+            /*jslint vars: true; */
+            (function() {
+                var jasmineEnv = jasmine.getEnv();
+                jasmineEnv.updateInterval = 500;
 
-            var htmlReporter = new jasmine.HtmlReporter();
-            jasmineEnv.addReporter(htmlReporter);
-            jasmineEnv.specFilter = htmlReporter.specFilter;
-            jasmineEnv.execute();
-        }());
-    </script>
-</body>
+                var htmlReporter = new jasmine.HtmlReporter();
+                jasmineEnv.addReporter(htmlReporter);
+                jasmineEnv.specFilter = htmlReporter.specFilter;
+                jasmineEnv.execute();
+            }());
+        </script>
+    </body>
 </html>

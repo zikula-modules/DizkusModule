@@ -7,11 +7,11 @@
 
 {if $forum.topics}
 
-{form cssClass="z-form"}
-{formvalidationsummary}
+    {form cssClass="z-form"}
+    {formvalidationsummary}
 
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
-    {dzkpager total=$forum.topicCount}
+        {dzkpager total=$forum.topicCount}
 
     <div class="forumbg dzk_rounded">
         <div class="inner">
@@ -34,75 +34,75 @@
                     <li class="row">
                         <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                             <dt class='ctheme-topic-title'>
-                                {if $topic.sticky eq 1}
-                                    {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
+                            {if $topic.sticky eq 1}
+                                {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
                                 {/if}
-                                {if $topic.status eq 1}
-                                    {img modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
-                                {/if}
-                                {datecompare date1=$topic.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
-                                {if $comp}
-                                    {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
-                                    {else}
-                                    {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
-                                {/if}
-                                {if $topic.hot_topic eq 1}
-                                    {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
-                                {/if}
-                                {$topic.topic_id|viewtopiclink:$topic.title:$forum.name}
+                                    {if $topic.status eq 1}
+                                        {img modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
+                                        {/if}
+                                            {datecompare date1=$topic.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                                            {if $comp}
+                                                {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
+                                                {else}
+                                                    {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
+                                                    {/if}
+                                                        {if $topic.hot_topic eq 1}
+                                                            {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
+                                                            {/if}
+                                                                {$topic.topic_id|viewtopiclink:$topic.title:$forum.name}
                                 <em class="z-sub">({$topic.viewCount} {gt text="Views"})</em>
                                 <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
-                                {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
+                                                                {dzkpager objectid=$topic.topic_id total=$topic.total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
                             </dt>
                             <dd class="posts">{$topic.replyCount}</dd>
                             <dd class="lastpost">
-                                {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
+                                                                {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                             </dd>
                             <dd class="mark">
                                 <input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}" />
                             </dd>
                         </dl>
                     </li>
-                {/foreach}
+                                                                {/foreach}
             </ul>
 
         </div>
     </div>
     <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
-    {dzkpager total=$forum.topicCount}
+                                                                    {dzkpager total=$forum.topicCount}
 
     <div class="z-warningmsg">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>
 
     <fieldset>
         <legend>{gt text="Moderator options"}</legend>
         <div class="z-formrow">
-            {formlabel for="mode" __text="Actions"}
-            {formdropdownlist id="mode" items=$actions}
+                                                                    {formlabel for="mode" __text="Actions"}
+                                                                    {formdropdownlist id="mode" items=$actions}
         </div>
         <div class="z-formrow">
-            {formlabel for="moveto" __text="Choose target forum to move topic(s) to"}
-            {formdropdownlist id="moveto" items=$forums}
+                                                                    {formlabel for="moveto" __text="Choose target forum to move topic(s) to"}
+                                                                    {formdropdownlist id="moveto" items=$forums}
         </div>
         <div class="z-formrow">
-            {formlabel for="createshadowtopic" __text="Create shadow topic"}
-            {formcheckbox id="createshadowtopic"}
+                                                                    {formlabel for="createshadowtopic" __text="Create shadow topic"}
+                                                                    {formcheckbox id="createshadowtopic"}
         </div>
         <div class="z-formrow">
-            {formlabel for="jointotopic" __text="To join topics, select the target topic here"}
+                                                                    {formlabel for="jointotopic" __text="To join topics, select the target topic here"}
             <span>
-                {formdropdownlist id="jointotopic" items=$topicSelect}
-                {formlabel for="jointo" __text="or target topic #"}
-                {formintinput id="jointo" size="5" maxLength="10"}
+                                                                    {formdropdownlist id="jointotopic" items=$topicSelect}
+                                                                    {formlabel for="jointo" __text="or target topic #"}
+                                                                    {formintinput id="jointo" size="5" maxLength="10"}
             </span>
         </div>
     </fieldset>
     <div class="z-formbuttons z-buttons">
-        {formbutton class="z-bt-ok" commandName="submit"  __text="Submit"}
-        {formbutton class="z-bt-cancel" commandName="cancel"   __text="Cancel"}
+                                                                    {formbutton class="z-bt-ok" commandName="submit"  __text="Submit"}
+                                                                    {formbutton class="z-bt-cancel" commandName="cancel"   __text="Cancel"}
     </div>
-{/form}
+                                                                    {/form}
 
-    {else}
+                                                                    {else}
 
 <div class="forumbg dzk_message dzk_rounded">
     <div class="inner">
@@ -110,6 +110,6 @@
     </div>
 </div>
 
-{/if}
+                                                                        {/if}
 
-{include file='user/footer.tpl'}
+                                                                            {include file='user/footer.tpl'}

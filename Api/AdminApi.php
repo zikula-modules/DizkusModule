@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -16,6 +17,7 @@ use SecurityUtil;
 
 class AdminApi extends \Zikula_AbstractApi
 {
+
     /**
      * get available admin panel links
      *

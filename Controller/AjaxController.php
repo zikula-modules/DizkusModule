@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,34 +8,38 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
+
 namespace Dizkus\Controller {
+
     use Zikula_Exception_Forbidden;
-    use Zikula_Exception_Fatal;
-    use ModUtil;
-    use Dizkus_Manager_Topic;
-    use Dizkus_Manager_Post;
-    use ZLanguage;
-    use Zikula_ModUrl;
-    use Zikula_ProcessHook;
-    use Dizkus_Manager_ForumUser;
-    use Dizkus_Entity_Rank;
-    use Zikula_Response_Ajax;
-    use UserUtil;
-    use Dizkus_Manager_Forum;
-    use LogUtil;
-    use Zikula_Response_Ajax_Unavailable;
-    use Zikula_Response_Ajax_BadData;
-    use DataUtil;
-    use FormUtil;
-    use SessionUtil;
-    use Zikula_Response_Ajax_Plain;
-    use SecurityUtil;
-    use System;
+use Zikula_Exception_Fatal;
+use ModUtil;
+use Dizkus_Manager_Topic;
+use Dizkus_Manager_Post;
+use ZLanguage;
+use Zikula_ModUrl;
+use Zikula_ProcessHook;
+use Dizkus_Manager_ForumUser;
+use Dizkus_Entity_Rank;
+use Zikula_Response_Ajax;
+use UserUtil;
+use Dizkus_Manager_Forum;
+use LogUtil;
+use Zikula_Response_Ajax_Unavailable;
+use Zikula_Response_Ajax_BadData;
+use DataUtil;
+use FormUtil;
+use SessionUtil;
+use Zikula_Response_Ajax_Plain;
+use SecurityUtil;
+use System;
+
     /**
      * Ajax controller functions.
      */
     class AjaxController extends \Zikula_Controller_AbstractAjax
     {
+
         /**
          * Checks if the forum is disabled.
          *
@@ -228,7 +233,7 @@ namespace Dizkus\Controller {
                     if ($attach_signature && $this->getVar('removesignature') == 'no') {
                         // include signature in response text
                         $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
-                        $message .= !empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
+                        $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
                     }
                     // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
                     $response = array('action' => 'updated', 'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
@@ -333,10 +338,10 @@ namespace Dizkus\Controller {
                 throw new Zikula_Exception_Forbidden();
             }
             /* if (!SecurityUtil::confirmAuthKey()) {
-               LogUtil::registerAuthidError();
+              LogUtil::registerAuthidError();
 
-               return AjaxUtil::error(null, array(), true, true);
-               } */
+              return AjaxUtil::error(null, array(), true, true);
+              } */
             SessionUtil::setVar('zk_ajax_call', 'ajax');
             ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 

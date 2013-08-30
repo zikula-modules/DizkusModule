@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license   GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package   Dizkus
  */
-
 /**
  * Zikula_View plugin
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
@@ -16,7 +16,6 @@
 /**
  * Smarty function to compare dates
  */
-
 function smarty_function_datecompare($params, Zikula_View $view)
 {
     /* assumes date is either DateTime Obj or unix timestamp */

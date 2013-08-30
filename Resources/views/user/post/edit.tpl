@@ -3,9 +3,9 @@
 {include file='user/header.tpl'}
 
 {if $preview}
-<div id="editpostpreview" style="margin:1em 0;">
-    {include file='user/post/single.tpl'}
-</div>
+    <div id="editpostpreview" style="margin:1em 0;">
+        {include file='user/post/single.tpl'}
+    </div>
 {/if}
 
 <div id="dzk_newtopic" class="forum_post post_bg2 dzk_rounded">
@@ -20,15 +20,15 @@
                         <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
                         {*if $post.moderate eq true OR $post.edit_subject eq true}
                         <div>
-                            <label for="subject">{gt text="Subject line"}</label><br />
-                            <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$post.topic_subject|safehtml}" />
+                        <label for="subject">{gt text="Subject line"}</label><br />
+                        <input style="width: 98%" type="text" name="subject" size="80" maxlength="100" id="subject" tabindex="0" value="{$post.topic_subject|safehtml}" />
                         </div>
                         {/if*}
                         <div>
                             {formlabel for="post_text" __text="Message body"}<br />
                             {formtextinput textMode="multiline" id="post_text" rows="10" cols="60"}
                             {if $modvars.Dizkus.striptags == 'yes'}
-                            <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                                <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
                             {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}
                         </div>
@@ -37,18 +37,18 @@
                             <div id="editpostoptions" class="dzk_col_left">
                                 <ul>
                                     {if $moderate eq true}
-                                    <li><strong>{gt text="Options"}</strong></li>
-                                    {if !$isFirstPost}
-                                    <li>
-                                        {formcheckbox id="delete"}
-                                        {formlabel for="delete" __text="Delete post"}
-                                        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_delete' id=$post_id}{* not sure about this one - hook intended more for standalone form*}
-                                    </li>
-                                    {/if}
-                                    <li>
-                                        {formcheckbox id="attachSignature"}
-                                        {formlabel for="attachSignature" __text="Attach my signature"}
-                                    </li>
+                                        <li><strong>{gt text="Options"}</strong></li>
+                                                {if !$isFirstPost}
+                                            <li>
+                                                {formcheckbox id="delete"}
+                                                {formlabel for="delete" __text="Delete post"}
+                                                {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_delete' id=$post_id}{* not sure about this one - hook intended more for standalone form*}
+                                            </li>
+                                        {/if}
+                                        <li>
+                                            {formcheckbox id="attachSignature"}
+                                            {formlabel for="attachSignature" __text="Attach my signature"}
+                                        </li>
                                     {/if}
                                 </ul>
                             </div>

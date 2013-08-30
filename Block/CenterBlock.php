@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -19,6 +20,7 @@ use BlockUtil;
  */
 class CenterBlock extends \Zikula_Controller_AbstractBlock
 {
+
     /**
      * init
      *

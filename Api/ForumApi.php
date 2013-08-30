@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -20,6 +21,7 @@ use Dizkus_Manager_Forum;
 
 class ForumApi extends \Zikula_AbstractApi
 {
+
     /**
      * get tree
      * format as array suitable for {formdropdownlist}

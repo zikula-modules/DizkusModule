@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -19,6 +21,7 @@ namespace Dizkus\Entity\Moderator;
 
 class User extends \Zikula_EntityAccess
 {
+
     /**
      * id
      *
@@ -27,6 +30,7 @@ class User extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * forumUser
      *
@@ -34,11 +38,13 @@ class User extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
+
     /**
      * get ForumUser
      *

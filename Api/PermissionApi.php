@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -16,6 +17,7 @@ use SecurityUtil;
 
 class PermissionApi extends \Zikula_AbstractApi
 {
+
     /**
      * Checks the permissions of a user for a specific forum.
      *

@@ -11,7 +11,7 @@
         <fieldset>
             <legend>{gt text="POP3 test results"}}</legend>
             {foreach item=message from=$messages}
-            <p>{$message}</p>
+                <p>{$message}</p>
             {/foreach}
         </fieldset>
         <div class="z-formbuttons z-buttons">

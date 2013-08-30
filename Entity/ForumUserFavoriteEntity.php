@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -19,6 +21,7 @@ namespace Dizkus\Entity;
 
 class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 {
+
     /**
      * forumUser
      *
@@ -27,12 +30,14 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
+
     /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="favorites")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
+
     /**
      * Constructor
      * @param Dizkus_Entity_ForumUser $forumUser

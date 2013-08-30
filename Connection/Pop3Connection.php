@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Dizkus Team 2012
  *
@@ -21,60 +22,70 @@ namespace Dizkus\Connection;
  */
 class Pop3Connection
 {
+
     /**
      * active
      *
      * boolean
      */
     private $active = false;
+
     /**
      * server
      *
      * string
      */
     private $server = '';
+
     /**
      * port
      *
      * integer
      */
     private $port = 110;
+
     /**
      * login
      *
      * string
      */
     private $login = '';
+
     /**
      * password
      *
      * string
      */
     private $password = '';
+
     /**
      * interval
      *
      * integer
      */
     private $interval = 0;
+
     /**
      * lastconnect
      *
      * integer
      */
     private $lastconnect = 0;
+
     /**
      * Zikula\Module\UsersModule\Entity\UserEntity
      *
      * object
      */
     private $coreUser = null;
+
     /**
      * matchstring
      *
      * string
      */
     private $matchstring = '';
+
     /**
      * Constructor.
      * @param array $data connection details

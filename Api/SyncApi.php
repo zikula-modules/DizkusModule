@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -18,6 +19,7 @@ use Dizkus_Entity_ForumUser;
 
 class SyncApi extends \Zikula_AbstractApi
 {
+
     /**
      * perform sync on all forums, topics and posters
      *

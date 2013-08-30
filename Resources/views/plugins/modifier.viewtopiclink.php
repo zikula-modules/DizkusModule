@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 /**
  * Zikula_View plugin
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
@@ -29,7 +29,7 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_viewtopiclink($topic_id=null, $subject=null, $forum_name=null, $class='', $start=null, $last_post_id=null)
+function smarty_modifier_viewtopiclink($topic_id = null, $subject = null, $forum_name = null, $class = '', $start = null, $last_post_id = null)
 {
     if (!isset($topic_id)) {
         return '';

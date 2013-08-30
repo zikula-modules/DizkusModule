@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -24,12 +25,14 @@ use Doctrine;
 
 class UserApi extends \Zikula_AbstractApi
 {
+
     /**
      * Instance of Zikula_View.
      *
      * @var Zikula_View
      */
     protected $view;
+
     /**
      * Initialize.
      *

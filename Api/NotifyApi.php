@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -21,6 +22,7 @@ use LogUtil;
 
 class NotifyApi extends \Zikula_AbstractApi
 {
+
     /**
      * Notify Subscribers by e-mail
      *

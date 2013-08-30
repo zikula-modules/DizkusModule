@@ -4,9 +4,9 @@
 {include file='user/header.tpl'}
 
 {if $preview|default:false}
-<div id="replypreview" style="margin:1em 0;">
-    {include file='user/post/single.tpl'}
-</div>
+    <div id="replypreview" style="margin:1em 0;">
+        {include file='user/post/single.tpl'}
+    </div>
 {/if}
 
 <div id="dzk_quickreply" class="forum_post post_bg2 dzk_rounded">
@@ -29,7 +29,7 @@
                                 <textarea id="message" name="message" rows="10" cols="60">{$reply.message}</textarea>
 
                                 {if $modvars.Dizkus.striptags == 'yes'}
-                                <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                                    <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
                             </div>
 
@@ -38,15 +38,15 @@
                                 <div id="replyoptions" class="dzk_col_left">
                                     <ul>
                                         <li><strong>{gt text="Options"}</strong></li>
-                                        {if $coredata.logged_in}
-                                        <li>
-                                            <input type="checkbox" id="attach_signature" name="attach_signature" {if $reply.attach_signature eq true}checked="checked"{/if} value="1" />
-                                            <label for="attach_signature">{gt text="Attach my signature"}</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $reply.subscribe_topic eq true}checked="checked"{/if} value="1" />
-                                            <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
-                                        </li>
+                                                {if $coredata.logged_in}
+                                            <li>
+                                                <input type="checkbox" id="attach_signature" name="attach_signature" {if $reply.attach_signature eq true}checked="checked"{/if} value="1" />
+                                                <label for="attach_signature">{gt text="Attach my signature"}</label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $reply.subscribe_topic eq true}checked="checked"{/if} value="1" />
+                                                <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
+                                            </li>
                                         {/if}
                                         <li id="nonajaxreplybuttons" class="z-buttons">
                                             <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />

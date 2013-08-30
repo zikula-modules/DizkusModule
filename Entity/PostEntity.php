@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -27,6 +29,7 @@ use UserUtil;
 
 class PostEntity extends \Zikula_EntityAccess
 {
+
     /**
      * post_id
      *
@@ -35,6 +38,7 @@ class PostEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $post_id;
+
     /**
      * post_time
      *
@@ -42,52 +46,61 @@ class PostEntity extends \Zikula_EntityAccess
      * @Gedmo\Timestampable(on="create")
      */
     private $post_time;
+
     /**
      * poster_ip
      *
      * @ORM\Column(type="string", length=50)
      */
     private $poster_ip = '';
+
     /**
      * msgid
      *
      * @ORM\Column(type="string", length=100)
      */
     private $msgid = '';
+
     /**
      * post_text
      *
      * @ORM\Column(type="text")
      */
     private $post_text = '';
+
     /**
      * attachSignature
      *
      * @ORM\Column(type="boolean")
      */
     private $attachSignature = false;
+
     /**
      * isFirstPost
      *
      * @ORM\Column(type="boolean")
      */
     private $isFirstPost = false;
+
     /**
      * title
      *
      * @ORM\Column(type="string", length=255)
      */
     private $title = '';
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic", inversedBy="posts")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      * */
     private $topic;
+
     /**
      * Constructor
      */

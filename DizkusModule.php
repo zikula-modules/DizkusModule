@@ -6,4 +6,5 @@ use Zikula\Core\AbstractModule;
 
 class DizkusModule extends AbstractModule
 {
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
- "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+    "http://my.netscape.com/publish/formats/rss-0.91.dtd">
 
 <!--
 Possible parameters for feed
@@ -32,19 +32,19 @@ soon as possible!
 -->
 
 <rss version="0.91">
-<channel>
-<title>{$sitename|safetext} - {$name|safetext}</title>
-<link>{$forum_link|htmlentities|safetext}</link>
-<description>{$sitename|safetext} - {$name|safetext}</description>
-<webMaster>{$adminmail|safetext}</webMaster>
+    <channel>
+        <title>{$sitename|safetext} - {$name|safetext}</title>
+        <link>{$forum_link|htmlentities|safetext}</link>
+        <description>{$sitename|safetext} - {$name|safetext}</description>
+        <webMaster>{$adminmail|safetext}</webMaster>
 
-{foreach item='post' from=$posts}
-    <item>
-    <title>{$post.title|safetext}</title>
-    <link>{$post.last_post_url|safetext|safetext}</link>
-    <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
-    </item>
-{/foreach}
+        {foreach item='post' from=$posts}
+            <item>
+                <title>{$post.title|safetext}</title>
+                <link>{$post.last_post_url|safetext|safetext}</link>
+                <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
+            </item>
+        {/foreach}
 
-</channel>
+    </channel>
 </rss>

@@ -12,28 +12,28 @@
 
 {form cssClass="z-form"}
 {formvalidationsummary}
-    <div>
-        <fieldset id="dzk_deletetopic">
-            <legend>{gt text="Confirmation prompt"}</legend>
-            <h3>{gt text='Delete Topic'}: {$title}</h3>
-            <div class="z-formrow">
-                {formlabel for="sendReason" __text='Send a reason to the poster'}
-                {formcheckbox id="sendReason" value=false}
-            </div>
-            
-            <div class="z-formrow" id="diskus_reason_container" style="display:none">
-                {formlabel for="reason" text='Write a reason'}
-                {gt text='Your post "%s" was deleted, because ' tag1=$title assign='reason'}
-                {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
-            </div>
-            {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_delete' id=$post_id}
+<div>
+    <fieldset id="dzk_deletetopic">
+        <legend>{gt text="Confirmation prompt"}</legend>
+        <h3>{gt text='Delete Topic'}: {$title}</h3>
+        <div class="z-formrow">
+            {formlabel for="sendReason" __text='Send a reason to the poster'}
+            {formcheckbox id="sendReason" value=false}
+        </div>
 
-            <div class="z-formbuttons z-buttons">
-                {formbutton class="z-bt-ok"     commandName="save"   __text="Yes"}
-                {formbutton class="z-bt-cancel" commandName="cancel" __text="No"}
-            </div>
-        </fieldset>
-    </div>      
+        <div class="z-formrow" id="diskus_reason_container" style="display:none">
+            {formlabel for="reason" text='Write a reason'}
+            {gt text='Your post "%s" was deleted, because ' tag1=$title assign='reason'}
+            {formtextinput id="reason" textMode="multiline" rows="3" cols="40"}
+        </div>
+        {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_delete' id=$post_id}
+
+        <div class="z-formbuttons z-buttons">
+            {formbutton class="z-bt-ok"     commandName="save"   __text="Yes"}
+            {formbutton class="z-bt-cancel" commandName="cancel" __text="No"}
+        </div>
+    </fieldset>
+</div>      
 {/form}
 
 {include file='user/footer.tpl'}

@@ -3,9 +3,9 @@
         <div class="{if $newcategory <> true}dzk_handle {/if}z-clearfix">
             <div id="categorytitle_{$category.cat_id}" style="float: left; width: 60%;">
                 {if $newcategory <> true}
-                <a title="{gt text="Visit this forum category"}" href="{modurl modname=Dizkus type=user func=main viewcat=$category.cat_id}">{$category.cat_title}</a> (ID:{$category.cat_id})
+                    <a title="{gt text="Visit this forum category"}" href="{modurl modname=Dizkus type=user func=main viewcat=$category.cat_id}">{$category.cat_title}</a> (ID:{$category.cat_id})
                 {else}
-                {$category.cat_title} ({gt text="new category"})
+                    {$category.cat_title} ({gt text="new category"})
                 {/if}
             </div>
             <div class="z-buttons" style="float: right; width: 30%; text-align: right; padding-right: 1em;">
@@ -14,9 +14,9 @@
                 <button id="hideforumlist_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Hide forums"}">{img modname='Dizkus' src="icon_hideforums.gif"}</button>
                 <button id="showforumlist_{$category.cat_id}" class="z-bt-small" title="{gt text="Show forums"}">{img modname='Dizkus' src="icon_showforums.gif"}</button>
                 <button id="addforum_{$category.cat_id}" class="z-bt-small" title="{gt text="Create forum"}">{img modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
-                {if $newcategory == true}
+                    {if $newcategory == true}
                 <button id="canceladdcategory_{$category.cat_id}" class="z-bt-small" title="{gt text="Cancel"}">{img modname='Dizkus' src="icon_cancel.gif" __alt="Cancel" }</button>
-                {/if}
+                        {/if}
                 <img id="progresscategoryimage_{$category.cat_id}" style="visibility: hidden; margin-left: 5px;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
             </div>
         </div>
@@ -33,24 +33,24 @@
                         <label for="delete_{$category.cat_id}">{gt text="Delete this category"}</label>
                         <input name="delete" id="delete_{$category.cat_id}" type="checkbox" value="delete" />
                     </div>
-                    {if $newcategory eq true}
+                            {if $newcategory eq true}
                     <input type="hidden" name="add" value="add" />
-                    {/if}
+                            {/if}
                 </fieldset>
                 <div class="z-formbuttons z-buttons">
-                    {button id="submitcategory_`$category.cat_id`" src="button_ok.png" set="icons/extrasmall" __alt="Save" __title="Save" __text="Save"}
+                            {button id="submitcategory_`$category.cat_id`" src="button_ok.png" set="icons/extrasmall" __alt="Save" __title="Save" __text="Save"}
                 </div>
             </div>
         </form>
     </div>
     <ul id="cid_{$category.cat_id}" class="dzk_treeforumlist" style="display: none;">
         <li id="emptycategory_{$category.cat_id}" class="z-informationmsg" style="{if $category.forums|@count <> 0}display: none; {/if}">
-            {gt text="This category does not yet contain any forums."}
+                            {gt text="This category does not yet contain any forums."}
         </li>
-        {if $category.forums|@count <> 0}
-        {foreach item='forum' from=$category.forums}
-        {include file='ajax/singleforum.tpl'}
-        {/foreach}
-        {/if}
+                            {if $category.forums|@count <> 0}
+                                {foreach item='forum' from=$category.forums}
+                                    {include file='ajax/singleforum.tpl'}
+                                {/foreach}
+                            {/if}
     </ul>
 </li>

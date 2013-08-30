@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -25,6 +27,7 @@ use ModUtil;
 
 class TopicEntity extends \Zikula_EntityAccess
 {
+
     /**
      * topic_id
      *
@@ -33,6 +36,7 @@ class TopicEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $topic_id;
+
     /**
      * poster
      *
@@ -40,12 +44,14 @@ class TopicEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="poster", referencedColumnName="user_id")
      */
     private $poster;
+
     /**
      * title
      *
      * @ORM\Column(type="string", length=255)
      */
     private $title = '';
+
     /**
      * topic_time
      *
@@ -53,46 +59,54 @@ class TopicEntity extends \Zikula_EntityAccess
      * @Gedmo\Timestampable(on="create")
      */
     private $topic_time;
+
     /**
      * status
      *
      * @ORM\Column(type="integer")
      */
     private $status = 0;
+
     /**
      * viewCount
      *
      * @ORM\Column(type="integer")
      */
     private $viewCount = 0;
+
     /**
      * replyCount
      *
      * @ORM\Column(type="integer", length=10)
      */
     private $replyCount = 0;
+
     /**
      * sticky
      *
      * @ORM\Column(type="boolean")
      */
     private $sticky = false;
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="topics")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
+
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
+
     /**
      * solved
      *
      * @ORM\Column(type="boolean")
      */
     private $solved = false;
+
     /**
      * posts
      *
@@ -100,6 +114,7 @@ class TopicEntity extends \Zikula_EntityAccess
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
+
     /**
      * Subscriptions
      *
@@ -107,24 +122,28 @@ class TopicEntity extends \Zikula_EntityAccess
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic", cascade={"remove"})
      */
     private $subscriptions;
+
     /**
      * module field (hooked module name)
      *
      * @ORM\Column(length=50, nullable=true)
      */
     private $hookedModule;
+
     /**
      * areaId field (hooked area id)
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $hookedAreaId;
+
     /**
      * objectId field (object id)
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $hookedObjectId;
+
     /**
      * url object
      * @var Zikula_ModUrl
@@ -132,6 +151,7 @@ class TopicEntity extends \Zikula_EntityAccess
      * @ORM\Column(type="object", nullable=true)
      */
     private $hookedUrlObject = null;
+
     /**
      * Constructor
      */

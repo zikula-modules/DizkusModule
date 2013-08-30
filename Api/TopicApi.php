@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -24,6 +25,7 @@ use Dizkus_Manager_Post;
  */
 class TopicApi extends \Zikula_AbstractApi
 {
+
     public function changeStatus($args)
     {
         $managedTopic = new Dizkus_Manager_Topic($args['topic_id']);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -15,6 +16,7 @@ use SecurityUtil;
 
 class PrefsApi extends \Zikula_AbstractApi
 {
+
     /**
      * get available user pref panel links
      *

@@ -24,7 +24,7 @@
                     <div>
                         <select name="ranks[-1][image]" id="newrank_image">
                             {foreach name='availableranks' item='rankimage' from=$rankimages}
-                            <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
+                                <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
                         </select>
                         <img id="newimage" src="{$modvars.Dizkus.url_ranks_images}/{$selectedimage}" alt="rankimage" />
@@ -56,25 +56,25 @@
             </thead>
             <tbody>
                 {foreach key='num' item='rank' from=$ranks}
-                <tr class="{cycle values='z-odd,z-even'}">
-                    <td>
-                        <input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
-                    </td>
-                    <td>
-                        <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" class="rankimageselect">
-                            {foreach item='rankimage' from=$rankimages}
-                            <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
-                            {/foreach}
-                        </select><img id="image{$num}" src="{$modvars.Dizkus.url_ranks_images}/{$rank.image}" alt="rankimage" />
-                    </td>
-                    <td><input type="text" name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
-                    <td>
-                        <input type="checkbox" value="1" name="ranks[{$rank.rank_id}][rank_delete]" />
-                    </td>
-                </tr>
+                    <tr class="{cycle values='z-odd,z-even'}">
+                        <td>
+                            <input type="text" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
+                        </td>
+                        <td>
+                            <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" class="rankimageselect">
+                                {foreach item='rankimage' from=$rankimages}
+                                    <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
+                                {/foreach}
+                            </select><img id="image{$num}" src="{$modvars.Dizkus.url_ranks_images}/{$rank.image}" alt="rankimage" />
+                        </td>
+                        <td><input type="text" name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
+                        <td>
+                            <input type="checkbox" value="1" name="ranks[{$rank.rank_id}][rank_delete]" />
+                        </td>
+                    </tr>
                 {foreachelse}
-                <tr class="z-admintableempty"><td colspan="4">{gt text='No items found.'}</td></tr>
-                {/foreach}
+                    <tr class="z-admintableempty"><td colspan="4">{gt text='No items found.'}</td></tr>
+                    {/foreach}
             </tbody>
         </table>
         <div class="z-formbuttons z-buttons">

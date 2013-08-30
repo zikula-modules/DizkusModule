@@ -1,11 +1,11 @@
 {if $mode eq "sticky"}
-{gt text="Give this topic 'sticky' status" assign="templatetitle"}
-{gt text="When you click the 'Sticky' button at the bottom of this page, the topic you have selected will be assigned <strong>'sticky'</strong> status. You can change its status again at a later time if you so choose." assign="description"}
-{gt text="Give this topic 'sticky' status" assign="buttontitle"}
+    {gt text="Give this topic 'sticky' status" assign="templatetitle"}
+    {gt text="When you click the 'Sticky' button at the bottom of this page, the topic you have selected will be assigned <strong>'sticky'</strong> status. You can change its status again at a later time if you so choose." assign="description"}
+    {gt text="Give this topic 'sticky' status" assign="buttontitle"}
 {else}
-{gt text="Remove 'sticky' status" assign="templatetitle"}
-{gt text="When you click the 'Unsticky' button at the bottom of this page, the topic you have selected will be set to <strong>'unsticky'</strong> status. You can change its status again at a later time if you so choose." assign="description"}
-{gt text="Remove 'sticky' status" assign="buttontitle"}
+    {gt text="Remove 'sticky' status" assign="templatetitle"}
+    {gt text="When you click the 'Unsticky' button at the bottom of this page, the topic you have selected will be set to <strong>'unsticky'</strong> status. You can change its status again at a later time if you so choose." assign="description"}
+    {gt text="Remove 'sticky' status" assign="buttontitle"}
 {/if}
 {pagesetvar name=title value=$templatetitle}
 {include file='user/header.tpl'}

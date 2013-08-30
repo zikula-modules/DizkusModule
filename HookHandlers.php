@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Copyright 2013 Zikula Foundation.
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -32,7 +34,9 @@ use Dizkus_Entity_Forum;
 use Dizkus_Entity_Topic;
 use LogUtil;
 use Zikula_Exception_Forbidden;
-use ;
+
+use;
+
 use HookUtil;
 use System;
 use Dizkus_AbstractHookedTopicMeta;
@@ -40,16 +44,19 @@ use Dizkus_HookedTopicMeta_Generic;
 
 class HookHandlers extends \Zikula_Hook_AbstractHandler
 {
+
     /**
      * Zikula_View instance
      * @var Zikula_View
      */
     private $view;
+
     /**
      * Zikula entity manager instance
      * @var Doctrine\ORM\EntityManager
      */
     private $_em;
+
     /**
      * Post constructor hook.
      *

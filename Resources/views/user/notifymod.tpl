@@ -10,19 +10,19 @@
 </p>
 {form cssClass="z-form z-linear"}
 {formvalidationsummary}
-    <div>
-        <fieldset id="dzk_notifymoderator">
-            <div class="z-formrow">
-                {formlabel for="comment" __text="Your comment:"}
-                {formtextinput id="comment" textMode="multiline" rows="6" cols="60"}
-            </div>
-                
+<div>
+    <fieldset id="dzk_notifymoderator">
+        <div class="z-formrow">
+            {formlabel for="comment" __text="Your comment:"}
+            {formtextinput id="comment" textMode="multiline" rows="6" cols="60"}
+        </div>
+
         <div class="z-formbuttons z-buttons">
             {formbutton class="z-bt-ok" commandName="send" __text="Send"}
             {formbutton class="z-bt-cancel" commandName="cancel" __text="Cancel"}
         </div>
-        </fieldset>
-    </div>
+    </fieldset>
+</div>
 {/form}
 
 {include file='user/footer.tpl'}

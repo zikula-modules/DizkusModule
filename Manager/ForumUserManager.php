@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Dizkus Team 2012
  *
@@ -21,6 +22,7 @@ use Dizkus_Entity_ForumUser;
 
 class ForumUserManager
 {
+
     /**
      * managed forum user
      * @var Dizkus_Entity_ForumUser
@@ -28,6 +30,7 @@ class ForumUserManager
     private $_forumUser;
     protected $entityManager;
     protected $name;
+
     /**
      * construct
      * @param integer $uid user id (optional: defaults to current user)

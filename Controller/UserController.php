@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,41 +8,45 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
+
 namespace Dizkus\Controller {
+
     use Doctrine\ORM\Tools\Pagination\Paginator;
-    use SecurityUtil;
-    use ModUtil;
-    use UserUtil;
-    use LogUtil;
-    use Dizkus_Manager_ForumUser;
-    use Dizkus_Manager_Forum;
-    use Dizkus_Manager_Post;
-    use System;
-    use Dizkus_Manager_Topic;
-    use Dizkus_Entity_Rank;
-    use Zikula_Hook_ValidationProviders;
-    use Zikula_ValidationHook;
-    use ZLanguage;
-    use Zikula_ModUrl;
-    use Zikula_ProcessHook;
-    use FormUtil;
-    use Dizkus_Form_Handler_User_NewTopic;
-    use Dizkus_Form_Handler_User_EditPost;
-    use Dizkus_Form_Handler_User_DeleteTopic;
-    use Dizkus_Form_Handler_User_MoveTopic;
-    use Dizkus_Form_Handler_User_Prefs;
-    use Dizkus_Form_Handler_User_ForumSubscriptions;
-    use Dizkus_Form_Handler_User_TopicSubscriptions;
-    use Dizkus_Entity_ForumUser;
-    use Dizkus_Form_Handler_User_SignatureManagement;
-    use Dizkus_Form_Handler_User_EmailTopic;
-    use Dizkus_Form_Handler_User_SplitTopic;
-    use Dizkus_Form_Handler_User_MovePost;
-    use Dizkus_Form_Handler_User_ModerateForum;
-    use Dizkus_Form_Handler_User_Report;
-    use DataUtil;
+use SecurityUtil;
+use ModUtil;
+use UserUtil;
+use LogUtil;
+use Dizkus_Manager_ForumUser;
+use Dizkus_Manager_Forum;
+use Dizkus_Manager_Post;
+use System;
+use Dizkus_Manager_Topic;
+use Dizkus_Entity_Rank;
+use Zikula_Hook_ValidationProviders;
+use Zikula_ValidationHook;
+use ZLanguage;
+use Zikula_ModUrl;
+use Zikula_ProcessHook;
+use FormUtil;
+use Dizkus_Form_Handler_User_NewTopic;
+use Dizkus_Form_Handler_User_EditPost;
+use Dizkus_Form_Handler_User_DeleteTopic;
+use Dizkus_Form_Handler_User_MoveTopic;
+use Dizkus_Form_Handler_User_Prefs;
+use Dizkus_Form_Handler_User_ForumSubscriptions;
+use Dizkus_Form_Handler_User_TopicSubscriptions;
+use Dizkus_Entity_ForumUser;
+use Dizkus_Form_Handler_User_SignatureManagement;
+use Dizkus_Form_Handler_User_EmailTopic;
+use Dizkus_Form_Handler_User_SplitTopic;
+use Dizkus_Form_Handler_User_MovePost;
+use Dizkus_Form_Handler_User_ModerateForum;
+use Dizkus_Form_Handler_User_Report;
+use DataUtil;
+
     class UserController extends \Zikula_AbstractController
     {
+
         /**
          * Show all forums a user may see
          *

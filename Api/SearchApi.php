@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -24,6 +25,7 @@ use DBUtil;
  */
 class SearchApi extends \Zikula_AbstractApi
 {
+
     /**
      * Search plugin info
      *

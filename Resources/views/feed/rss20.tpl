@@ -10,15 +10,15 @@
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Dizkus {$dizkusinfo.version}</generator>
         <webMaster>{$adminmail|safetext} ({$adminmail|safetext})</webMaster>
-        {foreach item='post' from=$posts}
-        <item>
-            <title>{$post.title|safetext}</title>
-            <link>{$post.last_post_url|htmlentities|safetext}</link>
-            <guid>{$post.last_post_url|htmlentities|safetext}</guid>
-            <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
-            <pubDate>{$post.rsstime}</pubDate>
-            <category>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</category>
-        </item>
+            {foreach item='post' from=$posts}
+            <item>
+                <title>{$post.title|safetext}</title>
+                <link>{$post.last_post_url|htmlentities|safetext}</link>
+                <guid>{$post.last_post_url|htmlentities|safetext}</guid>
+                <description>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</description>
+                <pubDate>{$post.rsstime}</pubDate>
+                <category>{$post.parenttitle|safetext} :: {$post.forum_name|safetext}</category>
+            </item>
         {/foreach}
     </channel>
 </rss>

@@ -175,15 +175,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         }
 
         // unset extra data before merge
-        unset($data['pop3_test'],
-                $data['extsource'],
-                $data['passwordconfirm'],
-                $data['server'],
-                $data['port'],
-                $data['login'],
-                $data['password'],
-                $data['matchstring'],
-                $data['coreUser']);
+        unset($data['pop3_test'], $data['extsource'], $data['passwordconfirm'], $data['server'], $data['port'], $data['login'], $data['password'], $data['matchstring'], $data['coreUser']);
         // add the rest of the form data
         $this->_forum->store($data);
 

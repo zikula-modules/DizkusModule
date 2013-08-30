@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Copyright Dizkus Team 2012
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -28,6 +30,7 @@ use Dizkus_Entity_ForumUser;
 
 class TopicManager
 {
+
     /**
      * managed topic
      * @var Dizkus_Entity_Topic
@@ -36,6 +39,7 @@ class TopicManager
     private $_itemsPerPage;
     private $_defaultPostSortOrder;
     private $_numberOfItems;
+
     /**
      * first post in topic
      * @var Dizkus_Entity_Post
@@ -45,6 +49,7 @@ class TopicManager
     private $_forumId;
     protected $entityManager;
     protected $name;
+
     /**
      * construct
      */

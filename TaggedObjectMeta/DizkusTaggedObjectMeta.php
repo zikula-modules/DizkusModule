@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -18,6 +19,7 @@ use ModUtil;
 
 class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
 {
+
     public function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)
     {
         parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);

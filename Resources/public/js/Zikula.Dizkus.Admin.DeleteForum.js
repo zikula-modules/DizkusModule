@@ -4,7 +4,7 @@
  * jQuery based JS
  */
 
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
     jQuery('#action').change(function() {
         if (jQuery('#action').val() == '0') {
             jQuery('#destinationSelector').hide("slow");

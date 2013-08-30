@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -31,5 +32,4 @@ function smarty_function_getRankByPostCount($params, Zikula_View $view)
     } else {
         return $posterRank;
     }
-
 }

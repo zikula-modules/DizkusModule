@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -12,6 +14,7 @@ namespace Dizkus\Entity\Repository;
 
 class PostRepository extends \EntityRepository
 {
+
     /**
      * Delete a post via dql
      * avoids cascading deletion errors

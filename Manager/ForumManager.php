@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Copyright Dizkus Team 2012
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -23,6 +25,7 @@ use SecurityUtil;
 
 class ForumManager
 {
+
     /**
      * managed forum
      * @var Dizkus_Entity_Forum
@@ -32,6 +35,7 @@ class ForumManager
     private $_numberOfItems;
     protected $entityManager;
     protected $name;
+
     /**
      * construct
      */

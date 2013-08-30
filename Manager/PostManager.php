@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Copyright Dizkus Team 2012
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -26,11 +28,13 @@ use ModUtil;
 
 class PostManager
 {
+
     /**
      * managed post
      * @var Dizkus_Entity_Post
      */
     private $_post;
+
     /**
      * Post topic
      * @var Dizkus_Manager_Topic
@@ -38,6 +42,7 @@ class PostManager
     private $_topic;
     protected $entityManager;
     protected $name;
+
     /**
      * construct
      */

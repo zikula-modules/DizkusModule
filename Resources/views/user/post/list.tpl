@@ -15,10 +15,10 @@
         </ul>
 
         <ul class="topiclist forums">
-        {foreach item='topic' from=$posts}
-            <li class="row">
-                <dl class="icon">
-                    <dt class='ctheme-topic-title'>
+            {foreach item='topic' from=$posts}
+                <li class="row">
+                    <dl class="icon">
+                        <dt class='ctheme-topic-title'>
                         {if $topic.sticky eq 1}
                             {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                         {/if}
@@ -31,16 +31,16 @@
                         {/if}
                         <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.title|truncate:70}">{$topic.title|truncate:70}</a>
                         <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topic.forum.forum_id}" title="{$topic.forum.name|truncate:70}">{$topic.forum.name|truncate:70}</a></span>
-                    </dt>
-                    <dd class="posts">{$topic.replyCount|safetext}</dd>
-                    <dd class="lastpost">
-                    {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
-                    </dd>
-                </dl>
-            </li>
+                        </dt>
+                        <dd class="posts">{$topic.replyCount|safetext}</dd>
+                        <dd class="lastpost">
+                            {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
+                        </dd>
+                    </dl>
+                </li>
             {foreachelse}
-            <li class="row nonewtopics">{gt text="No posts"}</li>
-        {/foreach}
+                <li class="row nonewtopics">{gt text="No posts"}</li>
+                {/foreach}
 
         </ul>
     </div>

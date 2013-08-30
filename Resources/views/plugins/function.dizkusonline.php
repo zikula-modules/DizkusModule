@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license   GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package   Dizkus
  */
-
 /**
  * Zikula_View plugin
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
@@ -34,7 +34,6 @@
  *
  * @return       array
  */
-
 function smarty_function_dizkusonline($params, Zikula_View $view)
 {
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
@@ -90,10 +89,9 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
                 }
             }
 
-            $users[$user['uid']] = array('uid'   => $user['uid'],
-                                         'uname' => $user['uname'],
-                                         'admin' => $user['admin']);
-
+            $users[$user['uid']] = array('uid' => $user['uid'],
+                'uname' => $user['uname'],
+                'admin' => $user['admin']);
         }
         $unames = $users;
     }

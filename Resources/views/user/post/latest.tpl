@@ -20,9 +20,9 @@
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='viewlatest' selorder=4}">{gt text="Last week"}</a></li>
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='viewlatest' selorder=unanswered}">{gt text="Unanswered"}</a></li>
                     <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='viewlatest' selorder=unsolved}">{gt text="Unsolved"}</a></li>
-                    {if $last_visit_unix <> 0}
-                    <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
-                    {/if}
+                        {if $last_visit_unix <> 0}
+                        <li><a class="dzk_arrow" href="{modurl modname='Dizkus' type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
+                        {/if}
                 </ul>
             </form>
         </div>

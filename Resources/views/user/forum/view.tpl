@@ -2,188 +2,188 @@
 {include file='user/header.tpl' parent=$forum}
 
 {if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewForum.js'}
-<input id="forum_id" type="hidden" value={$forum.forum_id}>
+    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewForum.js'}
+    <input id="forum_id" type="hidden" value={$forum.forum_id}>
 {/if}
 
 <h2>{$forum.name|safetext}</h2>
 
 {if $forum.description neq ''}
-<p class='ctheme-description'>{$forum.description|safehtml}</p>
+    <p class='ctheme-description'>{$forum.description|safehtml}</p>
 {/if}
 
 <div id="dzk_maincategorylist">
 
     {if count($forum.children) > 0}
-    <div class="forabg dzk_rounded dzk_marginbottom">
-        <div class="inner">
-            <ul class="topiclist">
-                <li class="dzk_header">
-                    <dl>
-                        <dt class="forumlist"><span>{gt text='Sub Forums'}</span></dt>
-                        <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
-                        <dd class="topics"><span>{gt text="Topics"}</span></dd>
-                        <dd class="posts"><span>{gt text="Posts"}</span></dd>
-                        <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
-                    </dl>
-                </li>
-            </ul>
+        <div class="forabg dzk_rounded dzk_marginbottom">
+            <div class="inner">
+                <ul class="topiclist">
+                    <li class="dzk_header">
+                        <dl>
+                            <dt class="forumlist"><span>{gt text='Sub Forums'}</span></dt>
+                            <dd class="subforums"><span>{gt text="Subforums"}</span></dd>
+                            <dd class="topics"><span>{gt text="Topics"}</span></dd>
+                            <dd class="posts"><span>{gt text="Posts"}</span></dd>
+                            <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
+                        </dl>
+                    </li>
+                </ul>
 
-            <ul class="topiclist forums">
-                {foreach item='subforum' from=$forum.children}
-                <li class="row">
-                    <dl class="icon">
-                        {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
-                        <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
-                            <a title="{gt text="Go to subforum"} '{$subforum.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.name|safetext}</a><br />
+                <ul class="topiclist forums">
+                    {foreach item='subforum' from=$forum.children}
+                        <li class="row">
+                            <dl class="icon">
+                                {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                                <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
+                                <a title="{gt text="Go to subforum"} '{$subforum.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.name|safetext}</a><br />
                             {if $subforum.description neq ''}{$subforum.description|safehtml}<br />{/if}
-                        </dt>
-                        <dd class="subforums">{$subforum.children|count}</dd>
-                        <dd class="topics">{$subforum.topicCount|safetext}</dd>
-                        <dd class="posts">{$subforum.postCount|safetext}</dd>
+                            </dt>
+                            <dd class="subforums">{$subforum.children|count}</dd>
+                            <dd class="topics">{$subforum.topicCount|safetext}</dd>
+                            <dd class="posts">{$subforum.postCount|safetext}</dd>
 
-                        <dd class="lastpost">
-                            {if isset($subforum.last_post)}
-                            {include file='user/lastPostBy.tpl' last_post=$subforum.last_post}
-                            {/if}
-                        </dd>
-                    </dl>
-                </li>
+                            <dd class="lastpost">
+                                {if isset($subforum.last_post)}
+                                    {include file='user/lastPostBy.tpl' last_post=$subforum.last_post}
+                                {/if}
+                            </dd>
+                        </dl>
+                    </li>
                 {/foreach}
             </ul>
 
         </div>
     </div>
-    {/if}
+{/if}
 
-    {if $permissions.comment eq true}
+{if $permissions.comment eq true}
     {if $forum.lvl > 0}
-    <div class="roundedbar dzk_rounded">
-        <div class="inner">
-            <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
-                {if $permissions.comment && !$forum->isLocked()}
-                <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
-                {/if}
+        <div class="roundedbar dzk_rounded">
+            <div class="inner">
+                <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
+                    {if $permissions.comment && !$forum->isLocked()}
+                        <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                        {/if}
 
-                {if $coredata.logged_in}
-                <li>
-                {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
-                {if !$isSubscribed}
-                    {modurl modname='Dizkus' type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
-                    {gt text="Subscribe to forum" assign='msg'}
-                {else}
-                    {modurl modname='Dizkus' type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
-                    {gt text="Unsubscribe from forum" assign='msg'}
-                {/if}
-                <a id="forum-subscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
-                </li>
-                {if $modvars.Dizkus.favorites_enabled eq "yes"}
-                <li>
-                    {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
-                    {if $isFavorite}
-                        {modurl modname='Dizkus' type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
-                        {gt text="Remove forum from favourites" assign='msg'}
-                    {else}
-                        {modurl modname='Dizkus' type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
-                        {gt text="Add forum to favourites" assign='msg'}
+                    {if $coredata.logged_in}
+                        <li>
+                            {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
+                            {if !$isSubscribed}
+                                {modurl modname='Dizkus' type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
+                                {gt text="Subscribe to forum" assign='msg'}
+                            {else}
+                                {modurl modname='Dizkus' type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
+                                {gt text="Unsubscribe from forum" assign='msg'}
+                            {/if}
+                            <a id="forum-subscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
+                        </li>
+                        {if $modvars.Dizkus.favorites_enabled eq "yes"}
+                            <li>
+                                {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
+                                {if $isFavorite}
+                                    {modurl modname='Dizkus' type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
+                                    {gt text="Remove forum from favourites" assign='msg'}
+                                {else}
+                                    {modurl modname='Dizkus' type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
+                                    {gt text="Add forum to favourites" assign='msg'}
+                                {/if}
+                                <a id="forum-favourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
+                            </li>
+                        {/if}
                     {/if}
-                    <a id="forum-favourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
-                </li>
-                {/if}
-                {/if}
 
-                {if $isModerator OR $permissions.moderate}
-                <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
-                {/if}
-            </ul>
+                    {if $isModerator OR $permissions.moderate}
+                        <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+                        {/if}
+                </ul>
+            </div>
         </div>
-    </div>
     {/if}
-    {/if}
+{/if}
 </div>
 
 {if $forum.lvl > 0}
-{if $topics}
-{if ((count($topics) > 0) || (!$forum->isLocked()))}
+    {if $topics}
+        {if ((count($topics) > 0) || (!$forum->isLocked()))}
 
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+            {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
-<div class="forumbg dzk_rounded">
-    <div class="inner">
+            <div class="forumbg dzk_rounded">
+                <div class="inner">
 
-        <ul class="topiclist">
-            <li class="dzk_header">
-                <dl>
-                    <dt><span>{gt text="Topic"}</span></dt>
-                    <dd class="posts"><span>{gt text="Replies"}</span></dd>
-                    <dd class="views"><span>{gt text="Views"}</span></dd>
-                    <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
-                </dl>
-            </li>
-        </ul>
+                    <ul class="topiclist">
+                        <li class="dzk_header">
+                            <dl>
+                                <dt><span>{gt text="Topic"}</span></dt>
+                                <dd class="posts"><span>{gt text="Replies"}</span></dd>
+                                <dd class="views"><span>{gt text="Views"}</span></dd>
+                                <dd class="lastpost"><span>{gt text="Last post"}</span></dd>
+                            </dl>
+                        </li>
+                    </ul>
 
-        <ul class="topiclist forums">
+                    <ul class="topiclist forums">
 
-            {assign var='fstarted' value='0'}
-            {assign var='topicstarted'  value='0'}
+                        {assign var='fstarted' value='0'}
+                        {assign var='topicstarted'  value='0'}
 
-            {foreach item=topic from=$topics}
+                        {foreach item=topic from=$topics}
 
-            {assign var='topic' value=$topic->toArray()}
+                            {assign var='topic' value=$topic->toArray()}
 
-            <li class="row">
-                <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
-                    <dt class='ctheme-topic-title'>
-                        {if $topic.sticky eq 1}
-                        {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' class='tooltips'}
-                        {/if}
-                        {if $topic.status eq 1}
-                        {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' class='tooltips'}
-                        {/if}
-                        {if $topic.solved}
-                        {icon type="ok" size="extrasmall" __alt='Solved Topic' __title='This topic is solved.' class='tooltips'}
-                        {/if}
+                            <li class="row">
+                                <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
+                                    <dt class='ctheme-topic-title'>
+                                    {if $topic.sticky eq 1}
+                                        {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' class='tooltips'}
+                                    {/if}
+                                    {if $topic.status eq 1}
+                                        {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' class='tooltips'}
+                                    {/if}
+                                    {if $topic.solved}
+                                        {icon type="ok" size="extrasmall" __alt='Solved Topic' __title='This topic is solved.' class='tooltips'}
+                                    {/if}
 
-                        {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
-                        {if $comp}
-                        {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' class='tooltips'}
-                        {else}
-                        {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
-                        {/if}
-                        {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
-                        {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
-                        {/if}
-                        {$topic.topic_id|viewtopiclink:$topic.title}
-                        <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
-                        {assign var='total_posts' value=$topic.replyCount+1}
-                        {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
-                    </dt>
-                    <dd class="posts">{$topic.replyCount}</dd>
-                    <dd class="views">{$topic.viewCount}</dd>
-                    <dd class="lastpost">
-                        {if isset($topic.last_post)}
-                        {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
-                        {/if}
-                    </dd>
-                </dl>
-            </li>
-            {/foreach}
+                                    {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                                    {if $comp}
+                                        {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' class='tooltips'}
+                                    {else}
+                                        {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
+                                    {/if}
+                                    {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
+                                        {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
+                                    {/if}
+                                    {$topic.topic_id|viewtopiclink:$topic.title}
+                                    <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>
+                                    {assign var='total_posts' value=$topic.replyCount+1}
+                                    {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="span"}
+                                    </dt>
+                                    <dd class="posts">{$topic.replyCount}</dd>
+                                    <dd class="views">{$topic.viewCount}</dd>
+                                    <dd class="lastpost">
+                                        {if isset($topic.last_post)}
+                                            {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
+                                        {/if}
+                                    </dd>
+                                </dl>
+                            </li>
+                        {/foreach}
 
-        </ul>
-    </div>
+                    </ul>
+                </div>
 
-</div>
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+            </div>
+            {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
 
-{else}
+        {else}
 
-<div class="forumbg dzk_message dzk_rounded">
-    <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
-</div>
-{/if}
-{/if}
+            <div class="forumbg dzk_message dzk_rounded">
+                <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
+            </div>
+        {/if}
+    {/if}
 {/if}
 
 <div id="dzk_displayhooks">

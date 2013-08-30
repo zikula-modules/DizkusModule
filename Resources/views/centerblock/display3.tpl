@@ -6,16 +6,16 @@
     <script type="text/javascript">
         // <![CDATA[
         new Ajax.PeriodicalUpdater(
-        'newposts',
-        Zikula.Config.baseURL + 'ajax.php',
+                'newposts',
+                Zikula.Config.baseURL + 'ajax.php',
         {
-            method: 'post',
-            parameters: 'module=Dizkus&type=ajax&func=newposts',
-            frequency: 60
-        });
+                    method: 'post',
+                    parameters: 'module=Dizkus&type=ajax&func=newposts',
+                    frequency: 60
+                });
         // ]]>
     </script>
     <noscript>
-        {include file="ajax/newposts.tpl"}
+    {include file="ajax/newposts.tpl"}
     </noscript>
 </div>

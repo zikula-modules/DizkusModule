@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 /**
  * Zikula_View plugin
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty
@@ -29,17 +29,10 @@
  * @param        array    $string     the contents to transform
  * @return       string   the modified output
  */
-function smarty_modifier_searchlink($uname=null)
+function smarty_modifier_searchlink($uname = null)
 {
     $link = ModUtil::url(
-        'Search',
-        'user',
-        'search',
-        array( 'q' => $uname, 'active[Dizkus]'=> 1, 'Dizkus_searchwhere' => 'author'),
-        null,
-        null,
-        null,
-        true
+                    'Search', 'user', 'search', array('q' => $uname, 'active[Dizkus]' => 1, 'Dizkus_searchwhere' => 'author'), null, null, null, true
     );
 
     return DataUtil::formatForDisplay($link);

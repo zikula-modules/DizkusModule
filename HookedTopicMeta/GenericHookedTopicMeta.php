@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -17,7 +18,9 @@ use ZLanguage;
 
 class GenericHookedTopicMeta extends \Dizkus_AbstractHookedTopicMeta
 {
+
     private $dom;
+
     public function setup()
     {
         $this->dom = ZLanguage::getModuleDomain('Dizkus');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -20,7 +21,9 @@ use Dizkus_Manager_ForumUser;
  */
 class RankApi extends \Zikula_AbstractApi
 {
+
     private $_userRanks = array();
+
     /**
      * Get all ranks
      *

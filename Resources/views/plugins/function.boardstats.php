@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 // type, id, assign (optional)
 /**
  * boardstats plugin
@@ -27,11 +27,10 @@
 function smarty_function_boardstats($params, Zikula_View $view)
 {
     $type = (!empty($params['type'])) ? $params['type'] : 'all';
-    $id   = (!empty($params['id'])) ? $params['id'] : '0';
+    $id = (!empty($params['id'])) ? $params['id'] : '0';
 
-    $count = ModUtil::apiFunc('Dizkus', 'user', 'countstats',
-                          array('id'   => $id,
-                                'type' => $type));
+    $count = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => $id,
+                'type' => $type));
 
     if (!empty($params['assign'])) {
         $view->assign($params['assign'], $count);

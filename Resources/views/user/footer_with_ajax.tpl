@@ -4,17 +4,17 @@
     <script type="text/javascript">
         // <![CDATA[
         new Ajax.PeriodicalUpdater(
-        'dzk_footer',
-        Zikula.Config.baseURL+'index.php',
+                'dzk_footer',
+                Zikula.Config.baseURL + 'index.php',
         {
-            method: 'get',
-            parameters: 'module=Dizkus&type=ajax&func=forumusers',
-            frequency: 60
-        });
+                    method: 'get',
+                    parameters: 'module=Dizkus&type=ajax&func=forumusers',
+                    frequency: 60
+                });
         // ]]>
     </script>
     <noscript>
-        {include file='ajax/forumusers.html'}
+    {include file='ajax/forumusers.html'}
     </noscript>
 </div>
 <p id="dzk_footer_line">{gt text="Powered by "}<a href="https://github.com/zikula-modules/Dizkus" title="Dizkus forum software for Zikula">Dizkus {modgetinfo modname='Dizkus' info='version'}</a></p>

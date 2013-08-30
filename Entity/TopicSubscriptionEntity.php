@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -19,6 +21,7 @@ namespace Dizkus\Entity;
 
 class TopicSubscriptionEntity extends \Zikula_EntityAccess
 {
+
     /**
      * table id
      *
@@ -27,6 +30,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * topic
      *
@@ -34,6 +38,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      */
     private $topic;
+
     /**
      * forumUser
      *
@@ -41,6 +46,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
+
     /**
      * constructor
      * @param Dizkus_Entity_ForumUser $forumUser

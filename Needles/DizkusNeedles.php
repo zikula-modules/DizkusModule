@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -17,6 +18,7 @@ use Dizkus_Manager_Topic;
 
 class DizkusNeedles extends \Zikula_AbstractHelper
 {
+
     public function info()
     {
         $info = array('module' => 'Dizkus', 'info' => 'DIZKUS{F-forumid|T-topicid}', 'inspect' => true);

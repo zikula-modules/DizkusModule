@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -18,6 +19,7 @@ use DataUtil;
 
 class CronApi extends \Zikula_AbstractApi
 {
+
     /**
      * cron
      *

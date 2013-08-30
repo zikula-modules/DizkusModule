@@ -4,7 +4,7 @@
  * jQuery based JS
  */
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
     jQuery("#toggletopicsubscription").click(changeTopicStatus);
@@ -143,9 +143,9 @@ function hookEditLinks() {
     }
 
     jQuery('.editpostlink').each(
-        function () {
-            jQuery(this).click(editPostHandler);
-        }
+            function() {
+                jQuery(this).click(editPostHandler);
+            }
     );
 
 }
@@ -164,9 +164,9 @@ function hookQuickReplySubmit() {
     }
 
     jQuery('#btnSubmitQuickReply').each(
-        function () {
-            jQuery(this).click(submitQuickReplyHandler);
-        }
+            function() {
+                jQuery(this).click(submitQuickReplyHandler);
+            }
     );
 
 }
@@ -181,9 +181,9 @@ function hookQuickReplyPreview() {
     }
 
     jQuery('#btnPreviewQuickReply').each(
-        function () {
-            jQuery(this).click(previewQuickReplyHandler);
-        }
+            function() {
+                jQuery(this).click(previewQuickReplyHandler);
+            }
     );
 }
 
@@ -196,9 +196,9 @@ function hookQuickReplyCancel() {
     }
 
     jQuery('#btnCancelQuickReply').each(
-        function () {
-            jQuery(this).click(cancelQuickReplyHandler);
-        }
+            function() {
+                jQuery(this).click(cancelQuickReplyHandler);
+            }
     );
 }
 
@@ -256,7 +256,7 @@ function hideAjaxIndicator(postId) {
  * @param id The post id.
  */
 function quickEdit(id) {
-    var successHandler = function (result, message, request) {
+    var successHandler = function(result, message, request) {
         // Hide post footer
         jQuery('#postingoptions_' + postId).hide();
         // Overwrite posting text.
@@ -270,7 +270,7 @@ function quickEdit(id) {
         jQuery('#postingtext_' + postId + '_save').click(quickEditSave);
         jQuery('#postingtext_' + postId + '_cancel').click(quickEditCancel);
 
-    }, errorHandler = function (request, message, detail) {
+    }, errorHandler = function(request, message, detail) {
         postEditing = false;
         postId = false;
         DizkusShowAjaxError(request.responseText);
@@ -283,7 +283,9 @@ function quickEdit(id) {
 
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=editpost', {
             data: {post: postId}
-        }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(postId); });
+        }).done(successHandler).fail(errorHandler).always(function() {
+            hideAjaxIndicator(postId);
+        });
         showAjaxIndicator(Zikula.__('Loading post...'), postId);
     }
 }
@@ -303,12 +305,12 @@ function quickEditChanged() {
  */
 function quickEditSave() {
     var newPostMsg = jQuery('#postingtext_' + postId + '_edit').val(),
-        pars = {
-            postId: postId,
-            message: newPostMsg,
-            attach_signature: (jQuery('#postingtext_' + postId + '_attach_signature').prop('checked')) ? 1 : 0,
-            delete_post: 0 /* Do not use 'delete' here, this is a reserved word. */
-        };
+            pars = {
+        postId: postId,
+        message: newPostMsg,
+        attach_signature: (jQuery('#postingtext_' + postId + '_attach_signature').prop('checked')) ? 1 : 0,
+        delete_post: 0 /* Do not use 'delete' here, this is a reserved word. */
+    };
 
     if (!newPostMsg) {
         // no text
@@ -322,10 +324,10 @@ function quickEditSave() {
         jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Updating post...') + '</span>');
     }
 
-    var successHandler = function (result, message, request) {
+    var successHandler = function(result, message, request) {
         var action = result.data.action,
-            redirect = result.data.redirect,
-            newText = result.data.newText;
+                redirect = result.data.redirect,
+                newText = result.data.newText;
 
         postEditing = false;
         postEditingChanged = false;
@@ -352,7 +354,7 @@ function quickEditSave() {
 
         // Show post footer
         jQuery('#postingoptions_' + postId).show();
-    }, errorHandler = function (request, message, detail) {
+    }, errorHandler = function(request, message, detail) {
         DizkusShowAjaxError(request.responseText);
     };
     jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=updatepost', {
@@ -409,7 +411,7 @@ function createQuickReply() {
             preview: 0
         };
 
-        var successHandler = function (result, message, request) {
+        var successHandler = function(result, message, request) {
             var post = result.data.data;
 
             // clear textarea and reset preview
@@ -428,7 +430,7 @@ function createQuickReply() {
             // rename new id
             jQuery('#new_quickreplyposting').prop('id', 'quickreplyposting');
             // enable js options in quickreply
-            jQuery('ul.javascriptpostingoptions').each(function () {
+            jQuery('ul.javascriptpostingoptions').each(function() {
                 jQuery(this).removeClass('hidden');
             });
 
@@ -437,13 +439,15 @@ function createQuickReply() {
             // Hook into edit link to work via ajax.
             hookEditLinks();
 
-        }, errorHandler = function (request, message, detail) {
+        }, errorHandler = function(request, message, detail) {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {
             data: pars
-        }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(); });
+        }).done(successHandler).fail(errorHandler).always(function() {
+            hideAjaxIndicator();
+        });
         showAjaxIndicator(Zikula.__('Storing reply...'));
 
     }
@@ -470,7 +474,7 @@ function previewQuickReply() {
             preview: 1
         };
 
-        var successHandler = function (result, message, request) {
+        var successHandler = function(result, message, request) {
             // Show preview.
             jQuery('#quickreplypreview').html(result.data.data).removeClass('hidden');
 
@@ -478,13 +482,15 @@ function previewQuickReply() {
             scrollTo('#quickreplypreview');
 
             quickReplying = false;
-        }, errorHandler = function (request, message, detail) {
+        }, errorHandler = function(request, message, detail) {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
         jQuery.ajax('ajax.php?module=Dizkus&type=ajax&func=reply', {
             data: pars
-        }).done(successHandler).fail(errorHandler).always(function () {hideAjaxIndicator(); });
+        }).done(successHandler).fail(errorHandler).always(function() {
+            hideAjaxIndicator();
+        });
         showAjaxIndicator(Zikula.__('Preparing preview...'));
     }
 }

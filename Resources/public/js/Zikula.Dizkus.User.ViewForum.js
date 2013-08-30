@@ -4,7 +4,7 @@
  * jQuery based JS
  */
 
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
     // toggle forum favorite state
     jQuery("#forum-favourite").click(modifyForum);
     // toggle forum subscription
@@ -34,7 +34,7 @@ function modifyForum(e) {
         type: "POST",
         data: pars,
         url: Zikula.Config.baseURL + "ajax.php?module=Dizkus&type=ajax&func=modifyForum",
-        success: function (result) {
+        success: function(result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {
                     i.text(unfavouriteForum);
@@ -49,7 +49,7 @@ function modifyForum(e) {
                 alert('Error! Erroneous result from modifyForum request.');
             }
         },
-        error: function (result) {
+        error: function(result) {
             DizkusShowAjaxError(result.responseJSON.core.statusmsg);
             return;
         }

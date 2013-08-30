@@ -10,23 +10,24 @@
  */
 class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
 {
+
     /**
      * These array keys are module vars that (for BC reasons) are stored
      * as text 'yes' or 'no' instead of boolean
      */
     private $YESNOS = array(
-            'log_ip',
-            'm2f_enabled',
-            'rss2f_enabled',
-            'favorites_enabled',
-            'signaturemanagement',
-            'removesignature',
-            'striptags',
-            'forum_enabled',
-            'fulltextindex',
-            'extendedsearch',
-            'showtextinsearchresults'
-        );
+        'log_ip',
+        'm2f_enabled',
+        'rss2f_enabled',
+        'favorites_enabled',
+        'signaturemanagement',
+        'removesignature',
+        'striptags',
+        'forum_enabled',
+        'fulltextindex',
+        'extendedsearch',
+        'showtextinsearchresults'
+    );
 
     public function initialize(Zikula_Form_View $view)
     {
@@ -84,7 +85,6 @@ class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
             }
             $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB
             $this->setVar('extendedsearch', 'no'); // disable until technology catches up with InnoDB
-
             // set the rest from the array
             $this->setVars($data);
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));

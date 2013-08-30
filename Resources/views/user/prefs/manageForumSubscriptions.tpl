@@ -7,7 +7,7 @@
 
 {if $subscriptions}
     {form id="dzk_topicsubscriptions"}
-        {formvalidationsummary}
+    {formvalidationsummary}
     <div>
         <div class="forumbg dzk_rounded">
             <div class="inner">
@@ -28,7 +28,7 @@
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>
-                                    <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a>
+                                <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a>
                                 </dt>
                                 <dd class="lastpost">
                                     {formcheckbox class="topic_checkbox" id=$subscription.forum.forum_id group="forumIds"}
@@ -47,13 +47,13 @@
     </div>
     {/form}
 
-    {else}
+{else}
 
-<div class="forumbg dzk_message dzk_rounded">
-    <div class="inner">
-        <strong>{gt text="No forum subscriptions found."}</strong>
+    <div class="forumbg dzk_message dzk_rounded">
+        <div class="inner">
+            <strong>{gt text="No forum subscriptions found."}</strong>
+        </div>
     </div>
-</div>
 
 {/if}
 

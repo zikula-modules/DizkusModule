@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -7,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 /**
  * Zikula_View plugin
  * This file is a plugin for Zikula_View, the Zikula implementation of Smarty

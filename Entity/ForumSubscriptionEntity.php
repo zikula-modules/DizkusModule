@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -19,6 +21,7 @@ namespace Dizkus\Entity;
 
 class ForumSubscriptionEntity extends \Zikula_EntityAccess
 {
+
     /**
      * The following are annotations which define the msg_id field.
      *
@@ -27,11 +30,13 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $msg_id;
+
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum;
+
     /**
      * forumUser
      *
@@ -39,6 +44,7 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
+
     /**
      * Constructor
      * @param Dizkus_Entity_ForumUser $forumUser

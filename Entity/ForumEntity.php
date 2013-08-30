@@ -1,4 +1,6 @@
-<?php/**
+<?php
+
+/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -30,9 +32,11 @@ use ServiceUtil;
 
 class ForumEntity extends \Zikula_EntityAccess
 {
+
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
     const STATUS_LOCKED = true;
     const STATUS_UNLOCKED = false;
+
     /**
      * forum_id
      *
@@ -41,96 +45,114 @@ class ForumEntity extends \Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $forum_id;
+
     /**
      * forum_name
      *
      * @ORM\Column(type="string", length=150)
      */
     private $name = '';
+
     /**
      * description
      *
      * @ORM\Column(type="text")
      */
     private $description = '';
+
     /**
      * topicCount
      *
      * @ORM\Column(type="integer")
      */
     private $topicCount = 0;
+
     /**
      * The number of posts of the forum
      *
      * @ORM\Column(type="integer")
      */
     private $postCount = 0;
+
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="forum_order", type="integer")
      */
     private $lft;
+
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
      */
     private $lvl;
+
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
      */
     private $rgt;
+
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="cat_id", type="integer", nullable=true)
      */
     private $root;
+
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="children")
      * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
      */
     private $parent;
+
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forum", mappedBy="parent", cascade={"remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
+
     /**
      * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
+
     /**
      * pop3Connection
      *
      * @ORM\Column(type="object", nullable=true)
      */
     private $pop3Connection = null;
+
     /**
      * moduleref
      *
      * @ORM\Column(type="integer")
      */
     private $moduleref = 0;
+
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum", cascade={"remove"})
      */
     private $favorites;
+
     /**
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum", cascade={"remove"})
      */
     private $topics;
+
     /**
      * Dizkus_Entity_Moderator_User collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorUsers;
+
     /**
      * Dizkus_Entity_Moderator_Group collection
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorGroups;
+
     /**
      * Subscriptions
      *
@@ -138,6 +160,7 @@ class ForumEntity extends \Zikula_EntityAccess
      * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
+
     /**
      * Forum status locked/unlocked
      * locking a forum prevents new TOPICS from being created within
@@ -145,6 +168,7 @@ class ForumEntity extends \Zikula_EntityAccess
      * @ORM\Column(type="boolean")
      */
     private $status = self::STATUS_UNLOCKED;
+
     /**
      * Constructor
      */

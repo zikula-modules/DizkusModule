@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dizkus
  *
@@ -25,7 +26,9 @@ use Dizkus_Connection_Pop3;
 
 class DizkusInstaller extends \Zikula_AbstractInstaller
 {
+
     private $_entities = array('Dizkus_Entity_Forum', 'Dizkus_Entity_Post', 'Dizkus_Entity_Topic', 'Dizkus_Entity_ForumUserFavorite', 'Dizkus_Entity_ForumUser', 'Dizkus_Entity_Moderator_User', 'Dizkus_Entity_Moderator_Group', 'Dizkus_Entity_ForumSubscription', 'Dizkus_Entity_TopicSubscription', 'Dizkus_Entity_Rank');
+
     /**
      *  Initialize a new install of the Dizkus module
      *

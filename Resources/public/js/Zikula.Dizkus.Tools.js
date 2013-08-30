@@ -53,7 +53,8 @@ function DizkusToggleInput(selector, value) {
             jQuery(selector).prop("checked", value);
         }
     }
-};
+}
+;
 
 /**
  * rewrite of Zikula.js::Zikula.showajaxerror from Prototype to jQuery
@@ -87,21 +88,22 @@ function DizkusShowAjaxError(errortext) {
         alert(errortext);
     }
     return;
-};
+}
+;
 
 /**
  * helper function to determine if a string is JSON formatted
  * taken from https://github.com/DarkMantisCS/isJSON
  * @license - no license documented. Assuming PD
  */
-(function ($) {
-    $.isJSON = function (json) {
+(function($) {
+    $.isJSON = function(json) {
         json = json.replace(/\\["\\\/bfnrtu]/g, '@');
         json = json.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
         json = json.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
         return (/^[\],:{}\s]*$/.test(json));
     };
-    $.fn.isJSON = function () {
+    $.fn.isJSON = function() {
         var json = this;
         if (jQuery(json).is(":input")) {
             json = jQuery(json).val();
@@ -111,7 +113,7 @@ function DizkusShowAjaxError(errortext) {
             throw new SyntaxError("$(object).isJSON only accepts fields!");
         }
     };
-    String.prototype.isJSON = function () {
+    String.prototype.isJSON = function() {
         var y = this;
         return jQuery.isJSON(y);
     };

@@ -50,13 +50,13 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('cu.uid, cu.uname, r.rank_id')
-            ->from('Dizkus_Entity_ForumUser', 'u')
-            ->leftJoin('u.user', 'cu')
-            ->leftJoin('u.rank', 'r')
-            ->orderBy('cu.uname', 'ASC');
+                ->from('Dizkus_Entity_ForumUser', 'u')
+                ->leftJoin('u.user', 'cu')
+                ->leftJoin('u.rank', 'r')
+                ->orderBy('cu.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
             $qb->andWhere('cu.uname LIKE :letter')
-                ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
+                    ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
         }
         $query = $qb->getQuery();
 

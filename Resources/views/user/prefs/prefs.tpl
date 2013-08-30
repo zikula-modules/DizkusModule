@@ -17,10 +17,10 @@
             {formdropdownlist id="postOrder" items=$orders}
         </div>
         {if $modvars.Dizkus.favorites_enabled eq 'yes'}
-        <div class="z-formrow">
-            {formlabel for="displayOnlyFavorites" __text="Display only favorite forums"}
-            {formcheckbox id="displayOnlyFavorites"}
-        </div>
+            <div class="z-formrow">
+                {formlabel for="displayOnlyFavorites" __text="Display only favorite forums"}
+                {formcheckbox id="displayOnlyFavorites"}
+            </div>
         {/if}
         <div class="z-formrow">
             {formlabel for="autosubscribe" __text="Autosubscribe to new topics"}

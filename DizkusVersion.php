@@ -1,4 +1,5 @@
 <?php
+
 /**
  * general module informations
  * @author Andreas Krapohl
@@ -20,7 +21,9 @@ use Zikula_HookManager_ProviderBundle;
  */
 class DizkusVersion extends \Zikula_AbstractVersion
 {
+
     const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';
+
     /**
      * Assemble and return module metadata.
      *
