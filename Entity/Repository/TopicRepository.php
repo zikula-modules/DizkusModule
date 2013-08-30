@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -10,7 +8,12 @@
  */
 use Doctrine\ORM\EntityRepository;
 
-class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
+
+
+namespace Dizkus\Entity\Repository;
+
+
+class TopicRepository extends \EntityRepository
 {
     /**
      * Delete a topic via dql
@@ -21,22 +24,18 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
      */
     public function manualDelete($id)
     {
-        $dql = "DELETE Dizkus_Entity_Topic t
-            WHERE t.topic_id = :id";
-        $this->_em->createQuery($dql)
-                ->setParameter('id', $id)
-                ->execute();
+        $dql = 'DELETE Dizkus_Entity_Topic t
+            WHERE t.topic_id = :id';
+        $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }
     
     public function manualDeletePosts($id)
     {
-        $dql = "DELETE Dizkus_Entity_Post p
-            WHERE p.topic = :topic";
-        $this->_em->createQuery($dql)
-                ->setParameter('topic', $id)
-                ->execute();        
+        $dql = 'DELETE Dizkus_Entity_Post p
+            WHERE p.topic = :topic';
+        $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
-
+    
     /**
      * Delete all subscriptions for a topic
      * $id can be the integer topic id or the Dizkus_Entity_Topic object
@@ -45,13 +44,11 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
      */
     public function deleteTopicSubscriptions($id)
     {
-        $dql = "DELETE from Dizkus_Entity_TopicSubscription ts
-            WHERE ts.topic = :topic";
-        $this->_em->createQuery($dql)
-                ->setParameter('topic', $id)
-                ->execute();
+        $dql = 'DELETE from Dizkus_Entity_TopicSubscription ts
+            WHERE ts.topic = :topic';
+        $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
-
+    
     /**
      * retrieve a topic from hook parameters
      *
@@ -60,21 +57,13 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
      */
     public function getHookedTopic(Zikula\Component\HookDispatcher\Hook $hook)
     {
-        $dql = "SELECT a FROM Dizkus_Entity_Topic a " .
-                "WHERE a.hookedModule = :modulename " .
-                "AND a.hookedObjectId = :objectid " .
-                "AND a.hookedAreaId = :area ";
+        $dql = 'SELECT a FROM Dizkus_Entity_Topic a ' . 'WHERE a.hookedModule = :modulename ' . 'AND a.hookedObjectId = :objectid ' . 'AND a.hookedAreaId = :area ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameters(array(
-            'modulename' => $hook->getCaller(),
-            'objectid' => $hook->getId(),
-            'area' => $hook->getAreaId(),
-        ));
-
+        $query->setParameters(array('modulename' => $hook->getCaller(), 'objectid' => $hook->getId(), 'area' => $hook->getAreaId()));
         try {
             $result = $query->getOneOrNullResult();
         } catch (Exception $e) {
-            echo "<pre>";
+            echo '<pre>';
             var_dump($e->getMessage());
             var_dump($query->getDQL());
             var_dump($query->getParameters());
@@ -83,4 +72,5 @@ class Dizkus_Entity_Repository_TopicRepository extends EntityRepository
         }
         return $result;
     }
+
 }

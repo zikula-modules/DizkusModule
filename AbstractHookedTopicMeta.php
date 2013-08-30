@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -11,57 +10,54 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-abstract class Dizkus_AbstractHookedTopicMeta
-{
 
+namespace Dizkus;
+
+
+abstract class AbstractHookedTopicMeta
+{
     /**
      * Hooked module object id
      *
      * @var integer
      */
     private $objectId;
-
     /**
      * Hooked module area id
      *
      * @var string
      */
     private $areaId;
-
     /**
      * Hooked module
      *
      * @var string
      */
     private $module;
-
     /**
      * URL for view of hooked object
      * 
      * @var Zikula_ModUrl
      */
     private $urlObject;
-
     /**
      * Topic title
      *
      * @var string
      */
     protected $title = '';
-
     /**
      * Topic post content
      *
      * @var string
      */
     protected $content = '';
-
     /**
      * Constructor
      * 
      * @param Zikula_ProcessHook $hook
      */
-    function __construct(Zikula_ProcessHook $hook)
+    public function __construct(Zikula_ProcessHook $hook)
     {
         $this->setObjectId($hook->getId());
         $this->setAreaId($hook->getAreaId());
@@ -71,82 +67,80 @@ abstract class Dizkus_AbstractHookedTopicMeta
         $this->setTitle();
         $this->setContent();
     }
-
+    
     private function setObjectId($id)
     {
         $this->objectId = $id;
     }
-
+    
     public function getObjectId()
     {
         return $this->objectId;
     }
-
+    
     private function setAreaId($id)
     {
         $this->areaId = $id;
     }
-
+    
     public function getAreaId()
     {
         return $this->areaId;
     }
-
+    
     private function setModule($name)
     {
         $this->module = $name;
     }
-
+    
     public function getModule()
     {
         return $this->module;
     }
-
+    
     private function setUrlObject(Zikula_ModUrl $objectUrlObject)
     {
         $this->urlObject = $objectUrlObject;
     }
-
+    
     public function getUrlObject()
     {
         return $this->urlObject;
     }
-
+    
     /**
      * post-constructor setup hook
      */
     protected function setup()
     {
-        // override this method to set up the object you are manipulating
+        
     }
-
+    
     /**
      * set the title for the topic
      */
-    abstract public function setTitle();
-
+    public abstract function setTitle();
     public function getTitle()
     {
         return $this->title;
     }
-
+    
     /**
      * set the content of the topic's first post
      */
-    abstract public function setContent();
-
+    public abstract function setContent();
     public function getContent()
     {
         return $this->content;
     }
-
+    
     protected function getLink()
     {
         $title = $this->getTitle();
         $link = null;
         if (!empty($title)) {
             $url = $this->getUrlObject()->getUrl();
-            $link = "<a href='$url'>$title</a>";
+            $link = "<a href='{$url}'>{$title}</a>";
         }
         return $link;
     }

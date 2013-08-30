@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Copyright 2013 Zikula Foundation.
  *
  * This work is contributed to the Zikula Foundation under one or more
@@ -16,34 +14,55 @@ use Zikula\Core\Event\GenericEvent;
 /**
  * EZComments Hooks Handlers.
  */
-class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
-{
 
+namespace Dizkus;
+
+use Zikula_View;
+use ServiceUtil;
+use ZLanguage;
+use SecurityUtil;
+use Dizkus_Manager_Topic;
+use Dizkus_Entity_Rank;
+use ModUtil;
+use PageUtil;
+use Dizkus_Version;
+use Zikula_Response_DisplayHook;
+use Dizkus_Manager_Forum;
+use Dizkus_Entity_Forum;
+use Dizkus_Entity_Topic;
+use LogUtil;
+use Zikula_Exception_Forbidden;
+use ;
+use HookUtil;
+use System;
+use Dizkus_AbstractHookedTopicMeta;
+use Dizkus_HookedTopicMeta_Generic;
+
+class HookHandlers extends \Zikula_Hook_AbstractHandler
+{
     /**
      * Zikula_View instance
      * @var Zikula_View
      */
     private $view;
-    
     /**
      * Zikula entity manager instance
      * @var Doctrine\ORM\EntityManager
      */
     private $_em;
-
     /**
      * Post constructor hook.
      *
      * @return void
      */
-
     public function setup()
     {
-        $this->view = Zikula_View::getInstance('Dizkus', false); // set caching off
+        $this->view = Zikula_View::getInstance('Dizkus', false);
+        // set caching off
         $this->_em = ServiceUtil::getService('doctrine.entitymanager');
         $this->domain = ZLanguage::getModuleDomain('Dizkus');
     }
-
+    
     /**
      * Display hook for view.
      *
@@ -54,20 +73,17 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     public function uiView(Zikula_DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
-        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", "::", ACCESS_COMMENT)) {
+        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_COMMENT)) {
             return;
         }
-
         $request = ServiceUtil::getService('request');
-        $start = (int)$request->query->get('start', 1);
-
+        $start = (int) $request->query->get('start', 1);
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
-            $managedTopic = new Dizkus_Manager_Topic(null, $topic); // inject topic into manager
+            $managedTopic = new Dizkus_Manager_Topic(null, $topic);
         } else {
             return;
         }
-
         // attempt to retrieve return url from hook or create if not available
         $url = $hook->getUrl();
         if (isset($url)) {
@@ -77,7 +93,6 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         $returnurlparams = htmlspecialchars(serialize($urlParameters));
         $this->view->assign('returnurl', $returnurlparams);
-
         list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
@@ -91,14 +106,11 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $this->view->assign('previousTopic', $managedTopic->getPrevious());
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
-
         $managedTopic->incrementViewsCount();
-
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
-
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
-
+    
     /**
      * Display hook for edit.
      *
@@ -113,11 +125,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         if (!isset($forumId)) {
             // admin didn't choose a forum, so create one and set as choice
             $managedForum = new Dizkus_Manager_Forum();
-            $data = array(
-                'name' => __f("Discussion for %s", $hook->getCaller(), $this->domain),
-                'status' => Dizkus_Entity_Forum::STATUS_LOCKED,
-                'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME)),
-            );
+            $data = array('name' => __f('Discussion for %s', $hook->getCaller(), $this->domain), 'status' => Dizkus_Entity_Forum::STATUS_LOCKED, 'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME)));
             $managedForum->store($data);
             // cannot notify hooks in non-controller
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
@@ -125,12 +133,11 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             $forumId = $managedForum->getId();
         }
         $forum = $this->_em->getRepository('Dizkus_Entity_Forum')->find($forumId);
-
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
-
+    
     /**
      * Display hook for delete.
      *
@@ -143,13 +150,14 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
             $this->view->assign('forum', $topic->getForum()->getName());
-            $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
-            $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
+            $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
+            // lock or remove
+            $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
             $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
-
+    
     /**
      * Validate hook for edit.
      *
@@ -161,7 +169,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         return;
     }
-
+    
     /**
      * Validate hook for delete.
      *
@@ -173,7 +181,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         return;
     }
-
+    
     /**
      * Process hook for edit.
      *
@@ -184,43 +192,30 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     public function processEdit(Zikula_ProcessHook $hook)
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
-
         // create new topic in selected forum
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (!isset($topic)) {
             $topic = new Dizkus_Entity_Topic();
         }
-
         // use Meta class to create topic data
         $topicMetaInstance = $this->getClassInstance($hook);
-
         // format data for topic creation
-        $data = array(
-            'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
-            'title' => $topicMetaInstance->getTitle(),
-            'message' => $topicMetaInstance->getContent(),
-            'subscribe_topic' => false,
-            'attachSignature' => false,
-        );
-
+        $data = array('forum_id' => $hookconfig[$hook->getAreaId()]['forum'], 'title' => $topicMetaInstance->getTitle(), 'message' => $topicMetaInstance->getContent(), 'subscribe_topic' => false, 'attachSignature' => false);
         // create the new topic
-        $newManagedTopic = new Dizkus_Manager_Topic(null, $topic); // inject new topic into manager
+        $newManagedTopic = new Dizkus_Manager_Topic(null, $topic);
+        // inject new topic into manager
         $newManagedTopic->prepare($data);
         // add hook data to topic
         $newManagedTopic->setHookData($hook);
-
         // store new topic
         $newManagedTopic->create();
         // cannot notify hooks in non-controller
-
         // notify topic & forum subscribers
         ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
-
-        LogUtil::registerStatus($this->__("Dizkus: Hooked discussion topic created.", $this->domain));
-
+        LogUtil::registerStatus($this->__('Dizkus: Hooked discussion topic created.', $this->domain));
         return true;
     }
-
+    
     /**
      * Process hook for delete.
      *
@@ -230,7 +225,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
      */
     public function processDelete(Zikula_ProcessHook $hook)
     {
-        $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
+        $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
+        // lock or remove
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
             switch ($deleteHookAction) {
@@ -244,12 +240,11 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
                     break;
             }
         }
-        $actionWord = ($deleteHookAction == "lock") ? $this->__("locked", $this->domain) : $this->__("deleted", $this->domain);
-        LogUtil::registerStatus($this->__f("Dizkus: Hooked discussion topic %s.", $actionWord, $this->domain));
-
+        $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
+        LogUtil::registerStatus($this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
         return true;
     }
-
+    
     /**
      * add hook config options to hooked module's module config
      *
@@ -259,8 +254,7 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'dizkushookconfig' && (strrpos(get_class($subject), '_Controller_Admin')) ||
-                                                       strrpos(get_class($subject), '\\AdminController'))) {
+        if (!($z_event['method'] == 'dizkushookconfig' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
             return;
         }
         $moduleName = $subject->getName();
@@ -269,13 +263,12 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         $view = Zikula_View::getInstance('Dizkus', false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
-
         $classname = $moduleName . '_Version';
-        $moduleVersionObj = new $classname;
+        $moduleVersionObj = new $classname();
         $_em = ServiceUtil::getService('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'Dizkus');
         foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $_em->getRepository('Zikula\Component\HookDispatcher\Storage\Doctrine\Entity\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
+            $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
             $bindingsBetweenOwners[$k]['areatitle'] = $view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
             $hookconfig[$binding['sareaid']]['admincatselected'] = isset($hookconfig[$binding['sareaid']]['admincatselected']) ? $hookconfig[$binding['sareaid']]['admincatselected'] : 0;
@@ -283,15 +276,12 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         $view->assign('areas', $bindingsBetweenOwners);
         $view->assign('dizkushookconfig', $hookconfig);
-
         $view->assign('ActiveModule', $moduleName);
-
         $view->assign('forums', ModUtil::apiFunc('Dizkus', 'Forum', 'getParents', array('includeLocked' => false)));
-
         $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
         $z_event->stop();
     }
-
+    
     /**
      * process results of dizkushookconfig
      *
@@ -301,13 +291,10 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'dizkushookconfigprocess' && (strrpos(get_class($subject), '_Controller_Admin')) ||
-                                                                  strrpos(get_class($subject), '\\AdminController'))) {
+        if (!($z_event['method'] == 'dizkushookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
             return;
         }
-
         $dom = ZLanguage::getModuleDomain('Dizkus');
-
         $request = ServiceUtil::getService('request');
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
@@ -315,29 +302,24 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             throw new Zikula_Exception_Forbidden(__('Security token validation failed', $dom));
         }
         unset($hookdata['dizkus_csrftoken']);
-
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-
         foreach ($hookdata as $area => $data) {
-            if ((!isset($data['forum'])) || (empty($data['forum']))) {
-                LogUtil::registerError(__f("Error: No forum selected for area '%s'", $area, $dom));
+            if (!isset($data['forum']) || empty($data['forum'])) {
+                LogUtil::registerError(__f('Error: No forum selected for area \'%s\'', $area, $dom));
                 $hookdata[$area]['forum'] = null;
             }
         }
-
         ModUtil::setVar($moduleName, 'dizkushookconfig', $hookdata);
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
-
-        LogUtil::registerStatus(__("Dizkus: Hook option settings updated.", $dom));
-
+        LogUtil::registerStatus(__('Dizkus: Hook option settings updated.', $dom));
         $z_event->setData(true);
         $z_event->stop();
         return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
     }
-
+    
     /**
      * Handle module uninstall event "installer.module.uninstalled".
      * Receives $modinfo as $args
@@ -351,8 +333,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $module = $z_event['name'];
         $dom = ZLanguage::getModuleDomain('Dizkus');
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction'); // lock or remove
-
+        $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
+        // lock or remove
         $topics = $_em->getRepository('Dizkus_Entity_Topic')->findBy(array('hookedModule' => $module));
         $count = 0;
         foreach ($topics as $topic) {
@@ -373,11 +355,10 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         }
         // clear last remaining batch
         $_em->flush();
-
-        $actionWord = ($deleteHookAction == "lock") ? __("locked", $dom) : __("deleted", $dom);
-        LogUtil::registerStatus(__f("Dizkus: All hooked discussion topics %s.", $actionWord, $dom));
+        $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
+        LogUtil::registerStatus(__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
     }
-
+    
     /**
      * populate Services menu with hook option link
      *
@@ -388,12 +369,11 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('Dizkus');
         $module = ModUtil::getName();
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'Dizkus'));
-        if (($bindingCount > 0) && ($module <> 'Dizkus') && (empty($event->data) || (is_array($event->data)
-                && !in_array(array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom)), $event->data)))) {
+        if ($bindingCount > 0 && $module != 'Dizkus' && (empty($event->data) || is_array($event->data) && !in_array(array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
             $event->data[] = array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom));
         }
     }
-
+    
     /**
      * Find Meta Class and instantiate
      *
@@ -406,8 +386,8 @@ class Dizkus_HookHandlers extends Zikula_Hook_AbstractHandler
             return false;
         }
         $module = $hook->getCaller();
-
-        $locations = array($module, 'Dizkus'); // locations to search for the class
+        $locations = array($module, 'Dizkus');
+        // locations to search for the class
         foreach ($locations as $location) {
             $classname = $location . '_HookedTopicMeta_' . $module;
             if (class_exists($classname)) {

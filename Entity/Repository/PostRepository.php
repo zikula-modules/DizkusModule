@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -10,7 +8,12 @@
  */
 use Doctrine\ORM\EntityRepository;
 
-class Dizkus_Entity_Repository_PostRepository extends EntityRepository
+
+
+namespace Dizkus\Entity\Repository;
+
+
+class PostRepository extends \EntityRepository
 {
     /**
      * Delete a post via dql
@@ -21,11 +24,9 @@ class Dizkus_Entity_Repository_PostRepository extends EntityRepository
      */
     public function manualDelete($id)
     {
-        $dql = "DELETE Dizkus_Entity_Post p
-            WHERE p.post_id = :id";
-        $this->_em->createQuery($dql)
-                ->setParameter('id', $id)
-                ->execute();
+        $dql = 'DELETE Dizkus_Entity_Post p
+            WHERE p.post_id = :id';
+        $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }
 
 }

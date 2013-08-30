@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -8,20 +6,24 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
+
+
+namespace Dizkus\Entity\Repository;
+
+
+class ForumRepository extends \NestedTreeRepository
 {
     public function getRssForums()
     {
-        $dql = "SELECT f FROM Dizkus_Entity_Forum f
-                WHERE f.pop3Connection IS NOT NULL";
+        $dql = 'SELECT f FROM Dizkus_Entity_Forum f
+                WHERE f.pop3Connection IS NOT NULL';
         $query = $this->_em->createQuery($dql);
         try {
             $result = $query->getResult();
         } catch (Exception $e) {
-            echo "<pre>";
+            echo '<pre>';
             var_dump($e->getMessage());
             var_dump($query->getDQL());
             var_dump($query->getParameters());
@@ -30,4 +32,5 @@ class Dizkus_Entity_Repository_ForumRepository extends NestedTreeRepository
         }
         return $result;
     }
+
 }

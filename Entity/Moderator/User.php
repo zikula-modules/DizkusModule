@@ -1,6 +1,4 @@
-<?php
-
-/**
+<?php/**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
@@ -8,7 +6,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,9 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_mods")
  */
-class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
-{
 
+namespace Dizkus\Entity\Moderator;
+
+
+class User extends \Zikula_EntityAccess
+{
     /**
      * id
      *
@@ -28,7 +28,6 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * forumUser
      * 
@@ -36,13 +35,11 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
-
     /**
      * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
-
     /**
      * get ForumUser
      * 
@@ -52,7 +49,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
     {
         return $this->forumUser;
     }
-
+    
     /**
      * set ForumUser
      * 
@@ -62,7 +59,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
     {
         $this->forumUser = $user;
     }
-
+    
     /**
      * get Forum
      * 
@@ -72,7 +69,7 @@ class Dizkus_Entity_Moderator_User extends Zikula_EntityAccess
     {
         return $this->forum;
     }
-
+    
     /**
      * set Forum
      * @param Dizkus_Entity_Forum $forum
