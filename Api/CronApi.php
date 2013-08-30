@@ -40,8 +40,7 @@ class CronApi extends \Zikula_AbstractApi
         // array of connection details
         include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
         if ($forum->getPop3Connection()->isActive() && $pop3conn['last_connect'] <= time() - $pop3conn['interval'] * 60 || $force == true) {
-            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['name'] . '
-', $args['debug']);
+            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['name'] . '\n', $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class();
             $pop3->hostname = $pop3conn['server'];
@@ -49,12 +48,10 @@ class CronApi extends \Zikula_AbstractApi
             $error = '';
             // open connection to pop3 server
             if (($error = $pop3->Open()) == '') {
-                $this->mailcronecho('Connected to the POP3 server \'' . $pop3->hostname . '\'.
-', $args['debug']);
+                $this->mailcronecho('Connected to the POP3 server \'' . $pop3->hostname . "'.\n", $args['debug']);
                 // login to pop3 server
                 if (($error = $pop3->Login($pop3conn['login'], base64_decode($pop3conn['password']), 0)) == '') {
-                    $this->mailcronecho('User \'' . $pop3conn['login'] . '\' logged into POP3 server \'' . $pop3->hostname . '\'.
-', $args['debug']);
+                    $this->mailcronecho('User \'' . $pop3conn['login'] . '\' logged into POP3 server \'' . $pop3->hostname . "'.\n", $args['debug']);
                     // check for message
                     if (($error = $pop3->Statistics($messages, $size)) == '') {
                         $this->mailcronecho("There are {$messages} messages in the mailbox, amounting to a total of {$size} bytes.\n", $args['debug']);
@@ -62,8 +59,7 @@ class CronApi extends \Zikula_AbstractApi
                         $result = $pop3->ListMessages('', 1);
                         if (is_array($result) && count($result) > 0) {
                             // logout the currentuser
-                            $this->mailcronecho('Logging out \'' . UserUtil::getVar('uname') . '\'.
-', $args['debug']);
+                            $this->mailcronecho('Logging out \'' . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                             UserUtil::logOut();
                             // login the correct user
                             if (UserUtil::logIn($pop3conn['coreUser']->getUid(), base64_decode($pop3conn['coreUser']->getPass()), false)) {
@@ -75,8 +71,7 @@ class CronApi extends \Zikula_AbstractApi
 
                                     return false;
                                 }
-                                $this->mailcronecho('Adding new posts as user \'' . $pop3conn['coreUser']->getUname() . '\'.
-', $args['debug']);
+                                $this->mailcronecho('Adding new posts as user \'' . $pop3conn['coreUser']->getUname() . "'.\n", $args['debug']);
                                 // .cycle through the message list
                                 for ($cnt = 1; $cnt <= count($result); $cnt++) {
                                     if (($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1)) == '') {
@@ -121,8 +116,7 @@ class CronApi extends \Zikula_AbstractApi
                                         // check if subject matches our matchstring
                                         if (empty($original_topic_id)) {
                                             if (empty($pop3conn['matchstring']) || preg_match($pop3conn['matchstring'], $subject) != 0) {
-                                                $message = '[code=htmlmail,user=' . $from . ']' . implode('
-', $body) . '[/code]';
+                                                $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
                                                     // and store this mail in the same thread
@@ -152,8 +146,7 @@ class CronApi extends \Zikula_AbstractApi
                                                                 'attach_signature' => 1,
                                                                 'subscribe_topic' => 0,
                                                                 'msgid' => $msgid));
-                                                    $this->mailcronecho("Added new topic '{$subject}' (topic ID {$topic_id}) to '" . $forum['name'] . '\' forum.
-', $args['debug']);
+                                                    $this->mailcronecho("Added new topic '{$subject}' (topic ID {$topic_id}) to '" . $forum['name'] . "' forum.\n", $args['debug']);
                                                 }
                                             } else {
                                                 $this->mailcronecho("Warning! Message subject  line '{$subject}' does not match requirements and will be ignored.", $args['debug']);
@@ -170,13 +163,11 @@ class CronApi extends \Zikula_AbstractApi
                                     $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
                                 }
                             } else {
-                                $this->mailcronecho('Error! Could not log user \'' . $pop3conn['coreUser']->getUname() . '\' in.
-');
-                            }
+                                $this->mailcronecho("Error! Could not log user '" . $pop3conn['coreUser']->getUname() . "' in.\n");
+
                             // close pop3 connection and finally delete messages
                             if ($error == '' && ($error = $pop3->Close()) == '') {
-                                $this->mailcronecho('Disconnected from POP3 server \'' . $pop3->hostname . '\'.
-');
+                                $this->mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
                             }
                         } else {
                             $error = $result;
