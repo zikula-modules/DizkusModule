@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to move a post.
  */
-class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
+class MovePost extends \Zikula_Form_AbstractHandler
 {
 
     /**

@@ -17,7 +17,7 @@ use DateUtil;
 use ZLanguage;
 use ModUtil;
 
-class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
+class Dizkus extends \Tag_AbstractTaggedObjectMeta
 {
 
     public function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)

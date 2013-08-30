@@ -8,9 +8,11 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-class Dizkus_Form_Handler_Admin_Prefs extends Zikula_Form_AbstractHandler
-{
 
+namespace Dizkus\Form\Handler\Admin;
+
+class Prefs extends \Zikula_Form_AbstractHandler
+{
     /**
      * These array keys are module vars that (for BC reasons) are stored
      * as text 'yes' or 'no' instead of boolean

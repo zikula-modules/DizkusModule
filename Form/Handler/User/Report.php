@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to report posts.
  */
-class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
+class Report extends \Zikula_Form_AbstractHandler
 {
 
     /**

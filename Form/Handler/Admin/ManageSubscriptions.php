@@ -9,10 +9,12 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\Admin;
+
 /**
  * This class provides a handler to manage subscriptions.
  */
-class Dizkus_Form_Handler_Admin_ManageSubscriptions extends Zikula_Form_AbstractHandler
+class ManageSubscriptions extends \Zikula_Form_AbstractHandler
 {
 
     /**

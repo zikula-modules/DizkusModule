@@ -9,10 +9,12 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\Admin;
+
 /**
  * This class provides a handler to Assign ranks
  */
-class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
+class AssignRanks extends \Zikula_Form_AbstractHandler
 {
 
     /**

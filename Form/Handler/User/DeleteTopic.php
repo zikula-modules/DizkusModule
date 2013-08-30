@@ -9,12 +9,14 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\PostManager;
 use Dizkus\Manager\TopicManager;
 /**
  * This class provides a handler to delete a topic.
  */
-class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
+class DeleteTopic extends \Zikula_Form_AbstractHandler
 {
 
     /**

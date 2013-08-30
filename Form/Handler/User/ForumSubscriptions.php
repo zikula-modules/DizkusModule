@@ -9,10 +9,12 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 /**
  * This class provides a handler to manage topic subscriptions.
  */
-class Dizkus_Form_Handler_User_ForumSubscriptions extends Zikula_Form_AbstractHandler
+class ForumSubscriptions extends \Zikula_Form_AbstractHandler
 {
 
     /**

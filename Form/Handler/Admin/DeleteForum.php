@@ -8,11 +8,14 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
+
+namespace Dizkus\Form\Handler\Admin;
+
 use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to edit forums.
  */
-class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
+class DeleteForum extends \Zikula_Form_AbstractHandler
 {
 
     const MOVE_CHILDREN = '1';

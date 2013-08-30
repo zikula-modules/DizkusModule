@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\ForumUserManager;
 /**
  * This class provides a handler to create a new topic.
  */
-class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
+class Prefs extends \Zikula_Form_AbstractHandler
 {
 
     /**

@@ -9,10 +9,12 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 /**
  * This class provides a handler for the signature management.
  */
-class Dizkus_Form_Handler_User_SignatureManagement extends Zikula_Form_AbstractHandler
+class SignatureManagement extends \Zikula_Form_AbstractHandler
 {
 
     /**

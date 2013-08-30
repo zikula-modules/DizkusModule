@@ -18,10 +18,6 @@ use SecurityUtil;
 use FormUtil;
 use Dizkus_Form_Handler_Admin_Prefs;
 use Dizkus\Entity\RankEntity;
-use Dizkus_Form_Handler_Admin_AssignRanks;
-use Dizkus_Form_Handler_Admin_ModifyForum;
-use Dizkus_Form_Handler_Admin_DeleteForum;
-use Dizkus_Form_Handler_Admin_ManageSubscriptions;
 
 class AdminController extends \Zikula_AbstractController
 {
@@ -153,7 +149,7 @@ class AdminController extends \Zikula_AbstractController
         }
         $form = FormUtil::newForm('Dizkus', $this);
 
-        return $form->execute('admin/assignranks.tpl', new Dizkus_Form_Handler_Admin_AssignRanks());
+        return $form->execute('admin/assignranks.tpl', new Dizkus\Form\Handler\Admin\AssignRanks());
     }
 
     /**
@@ -180,7 +176,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm('Dizkus', $this);
 
-        return $form->execute('admin/modifyforum.tpl', new Dizkus_Form_Handler_Admin_ModifyForum());
+        return $form->execute('admin/modifyforum.tpl', new Dizkus\Form\Handler\Admin\ModifyForum());
     }
 
     /**
@@ -190,7 +186,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm('Dizkus', $this);
 
-        return $form->execute('admin/deleteforum.tpl', new Dizkus_Form_Handler_Admin_DeleteForum());
+        return $form->execute('admin/deleteforum.tpl', new Dizkus\Form\Handler\Admin\DeleteForum());
     }
 
     /**
@@ -201,7 +197,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm('Dizkus', $this);
 
-        return $form->execute('admin/managesubscriptions.tpl', new Dizkus_Form_Handler_Admin_ManageSubscriptions());
+        return $form->execute('admin/managesubscriptions.tpl', new Dizkus\Form\Handler\Admin\ManageSubscriptions());
     }
 
 }

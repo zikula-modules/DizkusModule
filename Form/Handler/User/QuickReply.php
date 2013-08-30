@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to create a new topic.
  */
-class Dizkus_Form_Handler_User_QuickReply extends Zikula_Form_AbstractHandler
+class QuickReply extends \Zikula_Form_AbstractHandler
 {
 
     /**

@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\Admin;
+
 use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to edit forums.
  */
-class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
+class ModifyForum extends \Zikula_Form_AbstractHandler
 {
 
     /**

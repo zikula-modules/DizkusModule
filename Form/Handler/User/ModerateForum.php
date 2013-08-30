@@ -9,11 +9,13 @@
  * @package Dizkus
  */
 
+namespace Dizkus\Form\Handler\User;
+
 use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to move a post.
  */
-class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
+class ModerateForum extends \Zikula_Form_AbstractHandler
 {
 
     /**

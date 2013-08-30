@@ -28,20 +28,7 @@ use ZLanguage;
 use Zikula_ModUrl;
 use Zikula_ProcessHook;
 use FormUtil;
-use Dizkus_Form_Handler_User_NewTopic;
-use Dizkus_Form_Handler_User_EditPost;
-use Dizkus_Form_Handler_User_DeleteTopic;
-use Dizkus_Form_Handler_User_MoveTopic;
-use Dizkus_Form_Handler_User_Prefs;
-use Dizkus_Form_Handler_User_ForumSubscriptions;
-use Dizkus_Form_Handler_User_TopicSubscriptions;
 use Dizkus\Entity\ForumUserEntity;
-use Dizkus_Form_Handler_User_SignatureManagement;
-use Dizkus_Form_Handler_User_EmailTopic;
-use Dizkus_Form_Handler_User_SplitTopic;
-use Dizkus_Form_Handler_User_MovePost;
-use Dizkus_Form_Handler_User_ModerateForum;
-use Dizkus_Form_Handler_User_Report;
 use DataUtil;
 
 class UserController extends \Zikula_AbstractController
@@ -314,7 +301,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/new.tpl', new Dizkus_Form_Handler_User_NewTopic());
+        return $form->execute('user/topic/new.tpl', new Dizkus\Form\Handler\User\NewTopic());
     }
 
     /**
@@ -328,7 +315,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/post/edit.tpl', new Dizkus_Form_Handler_User_EditPost());
+        return $form->execute('user/post/edit.tpl', new Dizkus\Form\Handler\User\EditPost());
     }
 
     /**
@@ -342,7 +329,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/delete.tpl', new Dizkus_Form_Handler_User_DeleteTopic());
+        return $form->execute('user/topic/delete.tpl', new Dizkus\Form\Handler\User\DeleteTopic());
     }
 
     /**
@@ -356,7 +343,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/move.tpl', new Dizkus_Form_Handler_User_MoveTopic());
+        return $form->execute('user/topic/move.tpl', new Dizkus\Form\Handler\User\MoveTopic());
     }
 
     /**
@@ -387,7 +374,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/prefs.tpl', new Dizkus_Form_Handler_User_Prefs());
+        return $form->execute('user/prefs/prefs.tpl', new Dizkus\Form\Handler\User\Prefs());
     }
 
     /**
@@ -399,7 +386,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/manageForumSubscriptions.tpl', new Dizkus_Form_Handler_User_ForumSubscriptions());
+        return $form->execute('user/prefs/manageForumSubscriptions.tpl', new Dizkus\Form\Handler\User\ForumSubscriptions());
     }
 
     /**
@@ -411,7 +398,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new Dizkus_Form_Handler_User_TopicSubscriptions());
+        return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new Dizkus\Form\Handler\User\TopicSubscriptions());
     }
 
     /**
@@ -494,7 +481,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/signaturemanagement.tpl', new Dizkus_Form_Handler_User_SignatureManagement());
+        return $form->execute('user/prefs/signaturemanagement.tpl', new Dizkus\Form\Handler\User\SignatureManagement());
     }
 
     /**
@@ -506,7 +493,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/email.tpl', new Dizkus_Form_Handler_User_EmailTopic());
+        return $form->execute('user/topic/email.tpl', new Dizkus\Form\Handler\User\EmailTopic());
     }
 
     /**
@@ -576,7 +563,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/split.tpl', new Dizkus_Form_Handler_User_SplitTopic());
+        return $form->execute('user/topic/split.tpl', new Dizkus\Form\Handler\User\SplitTopic());
     }
 
     /**
@@ -588,7 +575,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/post/move.tpl', new Dizkus_Form_Handler_User_MovePost());
+        return $form->execute('user/post/move.tpl', new Dizkus\Form\Handler\User\MovePost());
     }
 
     /**
@@ -602,7 +589,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/forum/moderate.tpl', new Dizkus_Form_Handler_User_ModerateForum());
+        return $form->execute('user/forum/moderate.tpl', new Dizkus\Form\Handler\User\ModerateForum());
     }
 
     /**
@@ -616,7 +603,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/notifymod.tpl', new Dizkus_Form_Handler_User_Report());
+        return $form->execute('user/notifymod.tpl', new Dizkus\Form\Handler\User\Report());
     }
 
     /**
