@@ -8,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Favorites entity class.
@@ -18,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 
 namespace Dizkus\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
 
 class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 {
@@ -40,10 +41,10 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 
     /**
      * Constructor
-     * @param Dizkus\Entity\ForumUserEntity $forumUser
-     * @param Dizkus\Entity\ForumEntity     $forum
+     * @param ForumUserEntity $forumUser
+     * @param ForumEntity     $forum
      */
-    public function __construct(Dizkus\Entity\ForumUserEntity $forumUser, Dizkus\Entity\ForumEntity $forum)
+    public function __construct(ForumUserEntity $forumUser, ForumEntity $forum)
     {
         $this->forumUser = $forumUser;
         $this->forum = $forum;
@@ -51,7 +52,7 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 
     /**
      * get the forum
-     * @return Dizkus\Entity\ForumEntity
+     * @return ForumEntity
      */
     public function getForum()
     {
@@ -60,7 +61,7 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 
     /**
      * get the forumUser
-     * @return Dizkus\Entity\ForumUserEntity
+     * @return ForumUserEntity
      */
     public function getForumUser()
     {
@@ -69,18 +70,18 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
 
     /**
      * set the forum
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      */
-    public function setForum(Dizkus\Entity\ForumEntity $forum)
+    public function setForum(ForumEntity $forum)
     {
         $this->forum = $forum;
     }
 
     /**
      * set the forumUser
-     * @param Dizkus\Entity\ForumUserEntity $forumUser
+     * @param ForumUserEntity $forumUser
      */
-    public function setUser(Dizkus\Entity\ForumUserEntity $forumUser)
+    public function setUser(ForumUserEntity $forumUser)
     {
         $this->forumUser = $forumUser;
     }

@@ -124,7 +124,7 @@ use Dizkus_Form_Handler_Admin_ManageSubscriptions;
                 return LogUtil::registerPermissionError();
             }
             $submit = $this->request->getPost()->filter('submit', 2);
-            $ranktype = $this->request->getGet()->filter('ranktype', Dizkus\Entity\RankEntity::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
+            $ranktype = $this->request->getGet()->filter('ranktype', RankEntity::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
             if ($submit == 2) {
                 list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
                 $this->view->assign('ranks', $ranks);

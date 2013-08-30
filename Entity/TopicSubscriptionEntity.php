@@ -8,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * TopicSubscriptions entity class
@@ -18,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 
 namespace Dizkus\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
 
 class TopicSubscriptionEntity extends \Zikula_EntityAccess
 {
@@ -49,10 +50,10 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
 
     /**
      * constructor
-     * @param Dizkus\Entity\ForumUserEntity $forumUser
-     * @param Dizkus\Entity\TopicEntity     $topic
+     * @param ForumUserEntity $forumUser
+     * @param TopicEntity     $topic
      */
-    public function __construct(Dizkus\Entity\ForumUserEntity $forumUser, Dizkus\Entity\TopicEntity $topic)
+    public function __construct(ForumUserEntity $forumUser, TopicEntity $topic)
     {
         $this->forumUser = $forumUser;
         $this->topic = $topic;
@@ -70,21 +71,21 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * get topic
      *
-     * @return Dizkus\Entity\TopicEntity
+     * @return TopicEntity
      */
     public function getTopic()
     {
         return $this->topic;
     }
 
-    public function setTopic(Dizkus\Entity\TopicEntity $topic)
+    public function setTopic(TopicEntity $topic)
     {
         return $this->topic = $topic;
     }
 
     /**
      * get the forumUser
-     * @return Dizkus\Entity\ForumUserEntity
+     * @return ForumUserEntity
      */
     public function getForumUser()
     {
@@ -93,9 +94,9 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
 
     /**
      * set the forumUser
-     * @param Dizkus\Entity\ForumUserEntity $forumUser
+     * @param ForumUserEntity $forumUser
      */
-    public function setUser(Dizkus\Entity\ForumUserEntity $forumUser)
+    public function setUser(ForumUserEntity $forumUser)
     {
         $this->forumUser = $forumUser;
     }

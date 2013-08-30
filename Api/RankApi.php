@@ -44,7 +44,7 @@ class RankApi extends \Zikula_AbstractApi
             }
         }
         asort($filelist);
-        if ($args['ranktype'] == Dizkus\Entity\RankEntity::TYPE_POSTCOUNT) {
+        if ($args['ranktype'] == RankEntity::TYPE_POSTCOUNT) {
             $orderby = 'minimumCount';
         } else {
             $orderby = 'title';
@@ -69,7 +69,7 @@ class RankApi extends \Zikula_AbstractApi
         //title, description, minimumCount, maximumCount, type, image
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
-                $r = new Dizkus\Entity\RankEntity();
+                $r = new RankEntity();
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {

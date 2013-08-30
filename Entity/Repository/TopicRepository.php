@@ -8,11 +8,13 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\EntityRepository;
 
 namespace Dizkus\Entity\Repository;
 
-class TopicRepository extends \EntityRepository
+use Doctrine\ORM\EntityRepository;
+use Zikula\Component\HookDispatcher\Hook;
+
+class TopicRepository extends EntityRepository
 {
 
     /**
@@ -52,12 +54,15 @@ class TopicRepository extends \EntityRepository
     /**
      * retrieve a topic from hook parameters
      *
-     * @param  Zikula\Component\HookDispatcher\Hook $hook
-     * @return Dizkus\Entity\TopicEntity/NULL
+     * @param  Hook $hook
+     * @return TopicEntity/NULL
      */
-    public function getHookedTopic(Zikula\Component\HookDispatcher\Hook $hook)
+    public function getHookedTopic(Hook $hook)
     {
-        $dql = 'SELECT a FROM Dizkus\Entity\TopicEntity a ' . 'WHERE a.hookedModule = :modulename ' . 'AND a.hookedObjectId = :objectid ' . 'AND a.hookedAreaId = :area ';
+        $dql = 'SELECT a FROM Dizkus\Entity\TopicEntity a
+            WHERE a.hookedModule = :modulename
+            AND a.hookedObjectId = :objectid
+            AND a.hookedAreaId = :area ';
         $query = $this->_em->createQuery($dql);
         $query->setParameters(array(
             'modulename' => $hook->getCaller(),
@@ -65,7 +70,7 @@ class TopicRepository extends \EntityRepository
             'area' => $hook->getAreaId()));
         try {
             $result = $query->getOneOrNullResult();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo '<pre>';
             var_dump($e->getMessage());
             var_dump($query->getDQL());

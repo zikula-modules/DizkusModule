@@ -37,7 +37,7 @@ class ForumApi extends \Zikula_AbstractApi
         if ($includeRoot) {
             $forumRoot = null;
         } else {
-            $forumRoot = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findOneBy(array('name' => Dizkus\Entity\ForumEntity::ROOTNAME));
+            $forumRoot = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findOneBy(array('name' => ForumEntity::ROOTNAME));
         }
         $parents = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id, 0, $includeLocked);
@@ -75,8 +75,8 @@ class ForumApi extends \Zikula_AbstractApi
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
                 // only include results if
-                if ($i['status'] == Dizkus\Entity\ForumEntity::STATUS_LOCKED && $includeLocked || $i['status'] == Dizkus\Entity\ForumEntity::STATUS_UNLOCKED) {
-                    if ($i['name'] == Dizkus\Entity\ForumEntity::ROOTNAME) {
+                if ($i['status'] == ForumEntity::STATUS_LOCKED && $includeLocked || $i['status'] == ForumEntity::STATUS_UNLOCKED) {
+                    if ($i['name'] == ForumEntity::ROOTNAME) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
                     $output[] = array(
@@ -203,7 +203,7 @@ class ForumApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns Dizkus\Entity\ForumSubscriptionEntity collection, may be empty
+     * @returns ForumSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {

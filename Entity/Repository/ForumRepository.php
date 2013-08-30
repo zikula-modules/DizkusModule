@@ -8,11 +8,12 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 namespace Dizkus\Entity\Repository;
 
-class ForumRepository extends \NestedTreeRepository
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+
+class ForumRepository extends NestedTreeRepository
 {
 
     public function getRssForums()

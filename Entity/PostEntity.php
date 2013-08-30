@@ -8,15 +8,13 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Post entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_PostRepositoryEntity")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\PostRepository")
  */
 
 namespace Dizkus\Entity;
@@ -26,6 +24,8 @@ use System;
 use ModUtil;
 use DateTime;
 use UserUtil;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 class PostEntity extends \Zikula_EntityAccess
 {
@@ -206,7 +206,7 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * Get User who made post
      *
-     * @return Dizkus\Entity\ForumUserEntity
+     * @return ForumUserEntity
      */
     public function getPoster()
     {
@@ -216,9 +216,9 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * set user who made the post
      *
-     * @param Dizkus\Entity\ForumUserEntity $poster
+     * @param ForumUserEntity $poster
      */
-    public function setPoster(Dizkus\Entity\ForumUserEntity $poster)
+    public function setPoster(ForumUserEntity $poster)
     {
         $this->poster = $poster;
     }
@@ -250,7 +250,7 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * get Post topic
      *
-     * @return Dizkus\Entity\TopicEntity
+     * @return TopicEntity
      */
     public function getTopic()
     {
@@ -260,9 +260,9 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * Set post Topic
      *
-     * @param Dizkus\Entity\TopicEntity $topic
+     * @param TopicEntity $topic
      */
-    public function setTopic(Dizkus\Entity\TopicEntity $topic)
+    public function setTopic(TopicEntity $topic)
     {
         $this->topic = $topic;
     }

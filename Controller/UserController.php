@@ -162,7 +162,7 @@ use DataUtil;
             if (!$managedTopic->exists()) {
                 return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url('Dizkus', 'user', 'index'));
             }
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
             $this->view->assign('start', $start);
             $this->view->assign('topic', $managedTopic->get());
@@ -290,7 +290,7 @@ use DataUtil;
                     'userAllowedToEdit' => false);
                 // Do not show edit link
                 $permissions = array();
-                list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
+                list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
                 $this->view->assign('ranks', $ranks);
                 $this->view->assign('post', $post);
                 $this->view->assign('reply', $reply);
@@ -447,7 +447,7 @@ use DataUtil;
             $uid = UserUtil::getVar('uid');
             $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
             if (!$forumUser) {
-                $forumUser = new Dizkus\Entity\ForumUserEntity();
+                $forumUser = new ForumUserEntity();
                 $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
                 $forumUser->setUser($coreUser);
             }
@@ -700,7 +700,7 @@ use DataUtil;
             $posts = array();
             $i = 0;
             foreach ($topics as $topic) {
-                /* @var $topic Dizkus\Entity\TopicEntity */
+                /* @var $topic TopicEntity */
                 $posts[$i]['title'] = $topic->getTitle();
                 $posts[$i]['parenttitle'] = $topic->getForum()->getParent()->getName();
                 $posts[$i]['forum_name'] = $topic->getForum()->getName();

@@ -28,7 +28,7 @@ class ForumManager
 
     /**
      * managed forum
-     * @var Dizkus\Entity\ForumEntity
+     * @var ForumEntity
      */
     private $_forum;
     private $_itemsPerPage;
@@ -39,7 +39,7 @@ class ForumManager
     /**
      * construct
      */
-    public function __construct($id = null, Dizkus\Entity\ForumEntity $forum = null)
+    public function __construct($id = null, ForumEntity $forum = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
@@ -49,7 +49,7 @@ class ForumManager
         } elseif ($id > 0) {
             $this->_forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $id);
         } else {
-            $this->_forum = new Dizkus\Entity\ForumEntity();
+            $this->_forum = new ForumEntity();
         }
     }
 
@@ -90,7 +90,7 @@ class ForumManager
     /**
      * return forum as doctrine2 object
      *
-     * @return Dizkus\Entity\ForumEntity
+     * @return ForumEntity
      */
     public function get()
     {
@@ -209,7 +209,7 @@ class ForumManager
     /**
      * recursive method to modify parent forum's post or topic count
      */
-    private function modifyParentCount(Dizkus\Entity\ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
+    private function modifyParentCount(ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
     {
         $direction = in_array($direction, array('increment', 'decrement')) ? $direction : 'increment';
         $entity = in_array($entity, array('Post', 'Topic')) ? $entity : 'Post';
@@ -274,10 +274,10 @@ class ForumManager
     /**
      * Is this forum a child of the provided forum?
      *
-     * @param  Dizkus\Entity\ForumEntity $forum
+     * @param  ForumEntity $forum
      * @return boolean
      */
-    public function isChildOf(Dizkus\Entity\ForumEntity $forum)
+    public function isChildOf(ForumEntity $forum)
     {
         return $this->get()->getLft() > $forum->getLft() && $this->get()->getRgt() < $forum->getRgt();
     }

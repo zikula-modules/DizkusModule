@@ -13,7 +13,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 namespace Dizkus\Manager;
 
@@ -22,18 +21,18 @@ use Dizkus\Entity\TopicEntity;
 use ModUtil;
 use Dizkus_Manager_ForumUser;
 use UserUtil;
-use Paginator;
 use Dizkus_Manager_Forum;
 use Dizkus\Entity\PostEntity;
 use DataUtil;
 use Dizkus\Entity\ForumUserEntity;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class TopicManager
 {
 
     /**
      * managed topic
-     * @var Dizkus\Entity\TopicEntity
+     * @var TopicEntity
      */
     private $_topic;
     private $_itemsPerPage;
@@ -42,7 +41,7 @@ class TopicManager
 
     /**
      * first post in topic
-     * @var Dizkus\Entity\PostEntity
+     * @var PostEntity
      */
     private $_firstPost = null;
     private $_subscribe = false;
@@ -53,7 +52,7 @@ class TopicManager
     /**
      * construct
      */
-    public function __construct($id = null, Dizkus\Entity\TopicEntity $topic = null)
+    public function __construct($id = null, TopicEntity $topic = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
@@ -65,7 +64,7 @@ class TopicManager
             $this->_topic = $this->entityManager->find('Dizkus\Entity\TopicEntity', $id);
         } else {
             // create new topic
-            $this->_topic = new Dizkus\Entity\TopicEntity();
+            $this->_topic = new TopicEntity();
         }
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
         $this->_defaultPostSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
@@ -202,7 +201,7 @@ class TopicManager
         $this->entityManager->flush();
     }
 
-    public function setLastPost(Dizkus\Entity\PostEntity $lastPost)
+    public function setLastPost(PostEntity $lastPost)
     {
         $this->_topic->setLast_post($lastPost);
     }
@@ -242,7 +241,7 @@ class TopicManager
     public function prepare($data)
     {
         // prepare first post
-        $this->_firstPost = new Dizkus\Entity\PostEntity();
+        $this->_firstPost = new PostEntity();
         $this->_firstPost->setPost_text(DataUtil::formatForStore($data['message']));
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
@@ -262,7 +261,7 @@ class TopicManager
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new Dizkus\Entity\ForumUserEntity();
+            $forumUser = new ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }

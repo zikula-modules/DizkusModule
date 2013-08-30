@@ -63,7 +63,7 @@ class GroupEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum
-     * @return Dizkus\Entity\ForumEntity
+     * @return ForumEntity
      */
     public function getForum()
     {
@@ -72,9 +72,9 @@ class GroupEntity extends \Zikula_EntityAccess
 
     /**
      * set Forum
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      */
-    public function setForum(Dizkus\Entity\ForumEntity $forum)
+    public function setForum(ForumEntity $forum)
     {
         $this->forum = $forum;
     }

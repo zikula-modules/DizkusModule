@@ -31,7 +31,7 @@ class PostManager
 
     /**
      * managed post
-     * @var Dizkus\Entity\PostEntity
+     * @var PostEntity
      */
     private $_post;
 
@@ -54,7 +54,7 @@ class PostManager
             $this->_post = $this->entityManager->find('Dizkus\Entity\PostEntity', $id);
             $this->_topic = new Dizkus_Manager_Topic(null, $this->_post->getTopic());
         } else {
-            $this->_post = new Dizkus\Entity\PostEntity();
+            $this->_post = new PostEntity();
         }
     }
 
@@ -88,7 +88,7 @@ class PostManager
     /**
      * get the Post entity
      *
-     * @return Dizkus\Entity\PostEntity
+     * @return PostEntity
      */
     public function get()
     {
@@ -134,7 +134,7 @@ class PostManager
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new Dizkus\Entity\ForumUserEntity();
+            $forumUser = new ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }

@@ -8,9 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ForumUser entity class
@@ -21,10 +18,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 namespace Dizkus\Entity;
 
-use ArrayCollection;
 use Dizkus\Entity\ForumUserFavoriteEntity;
 use Dizkus\Entity\TopicSubscriptionEntity;
 use Dizkus\Entity\ForumSubscriptionEntity;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 class ForumUserEntity extends \Zikula_EntityAccess
 {
@@ -241,7 +240,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
     /**
      * get User rank
      *
-     * @return Dizkus\Entity\RankEntity
+     * @return RankEntity
      */
     public function getRank()
     {
@@ -250,9 +249,9 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * set the User rank
-     * @param Dizkus\Entity\RankEntity $rank
+     * @param RankEntity $rank
      */
-    public function setRank(Dizkus\Entity\RankEntity $rank)
+    public function setRank(RankEntity $rank)
     {
         $this->rank = $rank;
     }
@@ -267,7 +266,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * get User favorite forums
-     * @return Dizkus\Entity\ForumUserFavoriteEntity collection
+     * @return ForumUserFavoriteEntity collection
      */
     public function getFavoriteForums()
     {
@@ -276,11 +275,11 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * add a forum as favorite
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      */
-    public function addFavoriteForum(Dizkus\Entity\ForumEntity $forum)
+    public function addFavoriteForum(ForumEntity $forum)
     {
-        $forumUserFavorite = new Dizkus\Entity\ForumUserFavoriteEntity($this, $forum);
+        $forumUserFavorite = new ForumUserFavoriteEntity($this, $forum);
         if (!$this->favoriteForums->contains($forumUserFavorite)) {
             $this->favoriteForums->add($forumUserFavorite);
         }
@@ -288,9 +287,9 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * remove a forum as favorite
-     * @param Dizkus\Entity\ForumUserFavoriteEntity $forumUserFavorite
+     * @param ForumUserFavoriteEntity $forumUserFavorite
      */
-    public function removeFavoriteForum(Dizkus\Entity\ForumUserFavoriteEntity $forumUserFavorite)
+    public function removeFavoriteForum(ForumUserFavoriteEntity $forumUserFavorite)
     {
         $this->favoriteForums->removeElement($forumUserFavorite);
     }
@@ -305,7 +304,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * get User topic subscriptions
-     * @return Dizkus\Entity\TopicSubscriptionEntity collection
+     * @return TopicSubscriptionEntity collection
      */
     public function getTopicSubscriptions()
     {
@@ -314,19 +313,19 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * add a topic subscription
-     * @param Dizkus\Entity\TopicEntity $topic
+     * @param TopicEntity $topic
      */
-    public function addTopicSubscription(Dizkus\Entity\TopicEntity $topic)
+    public function addTopicSubscription(TopicEntity $topic)
     {
-        $topicSubscription = new Dizkus\Entity\TopicSubscriptionEntity($this, $topic);
+        $topicSubscription = new TopicSubscriptionEntity($this, $topic);
         $this->topicSubscriptions->add($topicSubscription);
     }
 
     /**
      * remove a topic subscription
-     * @param Dizkus\Entity\TopicSubscriptionEntity $topicSubscription
+     * @param TopicSubscriptionEntity $topicSubscription
      */
-    public function removeTopicSubscription(Dizkus\Entity\TopicSubscriptionEntity $topicSubscription)
+    public function removeTopicSubscription(TopicSubscriptionEntity $topicSubscription)
     {
         $this->topicSubscriptions->removeElement($topicSubscription);
     }
@@ -341,7 +340,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * get User forum subscriptions
-     * @return Dizkus\Entity\ForumSubscriptionEntity collection
+     * @return ForumSubscriptionEntity collection
      */
     public function getForumSubscriptions()
     {
@@ -350,19 +349,19 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * add a forum subscription
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      */
-    public function addForumSubscription(Dizkus\Entity\ForumEntity $forum)
+    public function addForumSubscription(ForumEntity $forum)
     {
-        $forumSubscription = new Dizkus\Entity\ForumSubscriptionEntity($this, $forum);
+        $forumSubscription = new ForumSubscriptionEntity($this, $forum);
         $this->forumSubscriptions->add($forumSubscription);
     }
 
     /**
      * remove a forum subscription
-     * @param Dizkus\Entity\ForumSubscriptionEntity $forumSubscription
+     * @param ForumSubscriptionEntity $forumSubscription
      */
-    public function removeForumSubscription(Dizkus\Entity\ForumSubscriptionEntity $forumSubscription)
+    public function removeForumSubscription(ForumSubscriptionEntity $forumSubscription)
     {
         $this->forumSubscriptions->removeElement($forumSubscription);
     }

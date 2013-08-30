@@ -142,7 +142,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
 
                 case 'move':
                     if (empty($moveto)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
+                        return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
                     }
                     foreach ($topic_ids as $topic_id) {
                         ModUtil::apiFunc('Dizkus', 'topic', 'move', array('topic_id' => $topic_id,
@@ -165,7 +165,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
 
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $forum_id)));
+                        return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
                     }
                     // text input overrides select box
                     if (empty($jointo) && !empty($jointo_select)) {

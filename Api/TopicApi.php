@@ -131,7 +131,7 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns Dizkus\Entity\TopicSubscriptionEntity collection, may be empty
+     * @returns TopicSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {
@@ -205,7 +205,7 @@ class TopicApi extends \Zikula_AbstractApi
     {
         if (is_numeric($args['topic'])) {
             $topic = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->find($args['topic']);
-        } elseif ($args['topic'] instanceof Dizkus\Entity\TopicEntity) {
+        } elseif ($args['topic'] instanceof TopicEntity) {
             $topic = $args['topic'];
         } else {
             LogUtil::registerArgsError();
@@ -244,13 +244,13 @@ class TopicApi extends \Zikula_AbstractApi
      * @params $args['topic_id'] int the topics id
      * @params $args['forum_id'] int the destination forums id
      * @params $args['createshadowtopic']   boolean true = create shadow topic
-     * @params $args['topicObj'] Dizkus\Entity\TopicEntity
+     * @params $args['topicObj'] TopicEntity
      *
      * @returns void
      */
     public function move($args)
     {
-        if (!isset($args['topicObj']) || !$args['topicObj'] instanceof Dizkus\Entity\TopicEntity) {
+        if (!isset($args['topicObj']) || !$args['topicObj'] instanceof TopicEntity) {
             if (!isset($args['topic_id'])) {
                 return LogUtil::registerArgsError();
             }
@@ -312,7 +312,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         $managedTopic = new Dizkus_Manager_Topic(null, $args['post']->get()->getTopic());
         // create new topic
-        $newTopic = new Dizkus\Entity\TopicEntity();
+        $newTopic = new TopicEntity();
         $newTopic->setPoster($args['post']->get()->getPoster());
         $newTopic->setTitle($args['data']['newsubject']);
         $newTopic->setForum($managedTopic->get()->getForum());
@@ -355,14 +355,14 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * @params $args['to_topic_id'] int the target topic that will contain the post from from_topic (destination)
      * @params $args['from_topic_id'] int this topic get integrated into to_topic (origin)
-     * @params $args['topicObj'] Dizkus\Entity\TopicEntity The (origin) topic as object
+     * @params $args['topicObj'] TopicEntity The (origin) topic as object
      *              must have *either* topicObj or from_topic_id
      *
      * @return Integer Destination topic ID
      */
     public function join($args)
     {
-        if (!$args['topicObj'] instanceof Dizkus\Entity\TopicEntity && !isset($args['from_topic_id'])) {
+        if (!$args['topicObj'] instanceof TopicEntity && !isset($args['from_topic_id'])) {
             LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
 
             return LogUtil::registerArgsError();

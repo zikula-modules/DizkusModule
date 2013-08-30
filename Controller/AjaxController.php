@@ -153,7 +153,7 @@ use System;
             $this->view->assign('start', $start);
             $this->view->assign('preview', $preview);
             $this->view->assign('permissions', $permissions);
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
 
             return new Zikula_Response_Ajax(array(

@@ -11,7 +11,6 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-use Zikula\Core\Event\GenericEvent;
 
 /**
  * EZComments Hooks Handlers.
@@ -38,6 +37,7 @@ use HookUtil;
 use System;
 use Dizkus_AbstractHookedTopicMeta;
 use Dizkus_HookedTopicMeta_Generic;
+use Zikula\Core\Event\GenericEvent;
 
 class HookHandlers extends \Zikula_Hook_AbstractHandler
 {
@@ -97,7 +97,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         }
         $returnurlparams = htmlspecialchars(serialize($urlParameters));
         $this->view->assign('returnurl', $returnurlparams);
-        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
+        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());
@@ -131,9 +131,9 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             $managedForum = new Dizkus_Manager_Forum();
             $data = array(
                 'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
-                'status' => Dizkus\Entity\ForumEntity::STATUS_LOCKED,
+                'status' => ForumEntity::STATUS_LOCKED,
                 'parent' => $this->_em->getRepository('Dizkus\Entity\ForumEntity')->findOneBy(array(
-                    'name' => Dizkus\Entity\ForumEntity::ROOTNAME)));
+                    'name' => ForumEntity::ROOTNAME)));
             $managedForum->store($data);
             // cannot notify hooks in non-controller
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
@@ -203,7 +203,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         // create new topic in selected forum
         $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (!isset($topic)) {
-            $topic = new Dizkus\Entity\TopicEntity();
+            $topic = new TopicEntity();
         }
         // use Meta class to create topic data
         $topicMetaInstance = $this->getClassInstance($hook);

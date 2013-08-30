@@ -8,22 +8,21 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Topics entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_TopicRepositoryEntity")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\TopicRepository")
  */
 
 namespace Dizkus\Entity;
 
-use ArrayCollection;
 use ModUtil;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class TopicEntity extends \Zikula_EntityAccess
 {
@@ -193,14 +192,14 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum
-     * @return Dizkus\Entity\ForumEntity
+     * @return ForumEntity
      */
     public function getForum()
     {
         return $this->forum;
     }
 
-    public function setForum(Dizkus\Entity\ForumEntity $forum)
+    public function setForum(ForumEntity $forum)
     {
         $this->forum = $forum;
     }
@@ -210,7 +209,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->last_post;
     }
 
-    public function setLast_post(Dizkus\Entity\PostEntity $post)
+    public function setLast_post(PostEntity $post)
     {
         return $this->last_post = $post;
     }
@@ -218,7 +217,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * get the topic poster
      *
-     * @return Dizkus\Entity\ForumUserEntity
+     * @return ForumUserEntity
      */
     public function getPoster()
     {
@@ -293,9 +292,9 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * set the Topic poster
      *
-     * @param Dizkus\Entity\ForumUserEntity $poster
+     * @param ForumUserEntity $poster
      */
-    public function setPoster(Dizkus\Entity\ForumUserEntity $poster)
+    public function setPoster(ForumUserEntity $poster)
     {
         $this->poster = $poster;
     }
@@ -318,7 +317,7 @@ class TopicEntity extends \Zikula_EntityAccess
         $this->posts = null;
     }
 
-    public function addPost(Dizkus\Entity\PostEntity $post)
+    public function addPost(PostEntity $post)
     {
         $this->posts[] = $post;
     }
@@ -338,7 +337,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * get Topic Subscriptions
-     * @return Dizkus\Entity\TopicSubscriptionEntity collection
+     * @return TopicSubscriptionEntity collection
      */
     public function getSubscriptions()
     {

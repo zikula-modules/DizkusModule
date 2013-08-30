@@ -25,7 +25,7 @@ class ForumUserManager
 
     /**
      * managed forum user
-     * @var Dizkus\Entity\ForumUserEntity
+     * @var ForumUserEntity
      */
     private $_forumUser;
     protected $entityManager;
@@ -44,7 +44,7 @@ class ForumUserManager
         }
         $this->_forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$this->_forumUser) {
-            $this->_forumUser = new Dizkus\Entity\ForumUserEntity();
+            $this->_forumUser = new ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $this->_forumUser->setUser($coreUser);
             $this->entityManager->persist($this->_forumUser);
@@ -81,7 +81,7 @@ class ForumUserManager
     /**
      * return topic as doctrine2 object
      *
-     * @return Dizkus\Entity\ForumUserEntity
+     * @return ForumUserEntity
      */
     public function get()
     {

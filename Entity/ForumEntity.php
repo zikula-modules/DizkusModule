@@ -8,9 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Forums entity class
@@ -18,17 +15,21 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_ForumRepositoryEntity")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository\ForumRepository")
  */
 
 namespace Dizkus\Entity;
 
-use ArrayCollection;
 use ZLanguage;
 use Dizkus\Entity\Moderator\UserEntity;
 use Dizkus_Manager_ForumUser;
 use Dizkus\Entity\Moderator\GroupEntity;
 use ServiceUtil;
+use Dizkus\Entity\Moderator\UserEntity as ModeratorUserEntity;
+use Dizkus\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class ForumEntity extends \Zikula_EntityAccess
 {
@@ -289,14 +290,14 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Forum parent
      *
-     * @return Dizkus\Entity\ForumEntity
+     * @return ForumEntity
      */
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function setParent(Dizkus\Entity\ForumEntity $parent = null)
+    public function setParent(ForumEntity $parent = null)
     {
         $this->parent = $parent;
     }
@@ -304,7 +305,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Children
      *
-     * @return ArrayCollection Dizkus\Entity\ForumEntity
+     * @return ArrayCollection ForumEntity
      */
     public function getChildren()
     {
@@ -322,14 +323,14 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get last post in Forum
      *
-     * @return Dizkus\Entity\PostEntity
+     * @return PostEntity
      */
     public function getLast_post()
     {
         return $this->last_post;
     }
 
-    public function setLast_post(Dizkus\Entity\PostEntity $post)
+    public function setLast_post(PostEntity $post)
     {
         return $this->last_post = $post;
     }
@@ -361,7 +362,7 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * get ForumUsers that have marked this forum as favorite
-     * @return ArrayCollection Dizkus\Entity\ForumUserFavoritesEntity
+     * @return ArrayCollection ForumUserFavoritesEntity
      */
     public function getFavorites()
     {
@@ -371,7 +372,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get forum Topics
      *
-     * @return ArrayCollection Dizkus\Entity\TopicEntity
+     * @return ArrayCollection TopicEntity
      */
     public function getTopics()
     {
@@ -381,7 +382,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Moderators
      *
-     * @return ArrayCollection Dizkus\Entity\Moderator\UserEntity
+     * @return ArrayCollection Moderator\UserEntity
      */
     public function getModeratorUsers()
     {
@@ -414,7 +415,7 @@ class ForumEntity extends \Zikula_EntityAccess
         $this->moderatorUsers->clear();
         // add users
         foreach ($users as $uid) {
-            $moderator = new Dizkus\Entity\Moderator\UserEntity();
+            $moderator = new ModeratorUserEntity();
             $managedForumUser = new Dizkus_Manager_ForumUser($uid);
             $moderator->setForumUser($managedForumUser->get());
             $moderator->setForum($this);
@@ -425,7 +426,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get forum moderator groups
      *
-     * @return ArrayCollection Dizkus\Entity\Moderator\GroupEntity
+     * @return ArrayCollection ModeratorGroupEntity
      */
     public function getModeratorGroups()
     {
@@ -458,7 +459,7 @@ class ForumEntity extends \Zikula_EntityAccess
         $this->moderatorGroups->clear();
         // add moderators
         foreach ($gids as $gid) {
-            $moderatorGroup = new Dizkus\Entity\Moderator\GroupEntity();
+            $moderatorGroup = new ModeratorGroupEntity();
             $em = ServiceUtil::getService('doctrine.entitymanager');
             $group = $em->find('Zikula\\Module\\GroupsModule\\Entity\\GroupEntity', $gid);
             $moderatorGroup->setGroup($group);
@@ -469,7 +470,7 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum Subscriptions
-     * @return ArrayCollection Dizkus\Entity\ForumSubscriptionEntity
+     * @return ArrayCollection ForumSubscriptionEntity
      */
     public function getSubscriptions()
     {

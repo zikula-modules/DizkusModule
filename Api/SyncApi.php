@@ -54,7 +54,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * recalculate topicCount and postCount counts
      *
-     * @param Dizkus\Entity\ForumEntity $args['forum']
+     * @param ForumEntity $args['forum']
      * @param Boolean             $args['flush']
      *
      * @return boolean
@@ -64,7 +64,7 @@ class SyncApi extends \Zikula_AbstractApi
         if (!isset($args['forum'])) {
             return LogUtil::registerArgsError();
         }
-        if ($args['forum'] instanceof Dizkus\Entity\ForumEntity) {
+        if ($args['forum'] instanceof ForumEntity) {
             $id = $args['forum']->getForum_id();
         } else {
             $id = $args['forum'];
@@ -91,10 +91,10 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * recursive function to add counts to parents
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      * @param string              $entity
      */
-    private function addToParentForumCount(Dizkus\Entity\ForumEntity $forum, $entity = 'Post')
+    private function addToParentForumCount(ForumEntity $forum, $entity = 'Post')
     {
         $parent = $forum->getParent();
         if (!isset($parent)) {
@@ -133,7 +133,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * recalcluate Topic replies for one topic
      *
-     * @param Dizkus\Entity\TopicEntity $args['topic']
+     * @param TopicEntity $args['topic']
      * @param Boolean             $args['flush']
      *
      * @return boolean
@@ -143,7 +143,7 @@ class SyncApi extends \Zikula_AbstractApi
         if (!isset($args['topic'])) {
             return LogUtil::registerArgsError();
         }
-        if ($args['topic'] instanceof Dizkus\Entity\TopicEntity) {
+        if ($args['topic'] instanceof TopicEntity) {
             $id = $args['topic']->getTopic_id();
         } else {
             $id = $args['topic'];
@@ -174,7 +174,7 @@ class SyncApi extends \Zikula_AbstractApi
         foreach ($posts as $post) {
             $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $post['user_id']);
             if (!$forumUser) {
-                $forumUser = new Dizkus\Entity\ForumUserEntity();
+                $forumUser = new ForumUserEntity();
                 $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['user_id']);
                 $forumUser->setUser($coreUser);
             }
@@ -187,14 +187,14 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * reset the last post in a forum due to movement
-     * @param Dizkus\Entity\ForumEntity $args['forum']
+     * @param ForumEntity $args['forum']
      * @param Boolean             $args['flush'] default: true
      *
      * @return void
      */
     public function forumLastPost($args)
     {
-        if (!isset($args['forum']) || !$args['forum'] instanceof Dizkus\Entity\ForumEntity) {
+        if (!isset($args['forum']) || !$args['forum'] instanceof ForumEntity) {
             return LogUtil::registerArgsError();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
@@ -223,14 +223,14 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * reset the last post in a topic due to movement
-     * @param Dizkus\Entity\TopicEntity $args['topic']
+     * @param TopicEntity $args['topic']
      * @param Boolean             $args['flush']
      *
      * @return void
      */
     public function topicLastPost($args)
     {
-        if (!isset($args['topic']) || !$args['topic'] instanceof Dizkus\Entity\TopicEntity) {
+        if (!isset($args['topic']) || !$args['topic'] instanceof TopicEntity) {
             return LogUtil::registerArgsError();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;

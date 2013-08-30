@@ -8,11 +8,12 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\EntityRepository;
 
 namespace Dizkus\Entity\Repository;
 
-class PostRepository extends \EntityRepository
+use Doctrine\ORM\EntityRepository;
+
+class PostRepository extends EntityRepository
 {
 
     /**

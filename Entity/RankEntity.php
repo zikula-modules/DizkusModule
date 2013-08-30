@@ -8,7 +8,6 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Rank entity class
@@ -20,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 namespace Dizkus\Entity;
 
 use ModUtil;
+use Doctrine\ORM\Mapping as ORM;
 
 class RankEntity extends \Zikula_EntityAccess
 {

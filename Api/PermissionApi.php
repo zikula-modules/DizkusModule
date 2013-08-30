@@ -108,11 +108,11 @@ class PermissionApi extends \Zikula_AbstractApi
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
-        // ensure always working with an Dizkus\Entity\ForumEntity object or null
+        // ensure always working with an ForumEntity object or null
         if (empty($args)) {
             $forum = null;
         } else {
-            if ($args instanceof Dizkus\Entity\ForumEntity) {
+            if ($args instanceof ForumEntity) {
                 $forum = $args;
             } else {
                 if (is_numeric($args)) {
@@ -174,9 +174,9 @@ class PermissionApi extends \Zikula_AbstractApi
 
     /**
      * check and filter child forums for READ permissions
-     * @param Dizkus\Entity\ForumEntity $forum
+     * @param ForumEntity $forum
      */
-    public function filterForumChildrenByPermission(Dizkus\Entity\ForumEntity $forum)
+    public function filterForumChildrenByPermission(ForumEntity $forum)
     {
         $subforums = $forum->getChildren();
         foreach ($subforums as $subforum) {
