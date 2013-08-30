@@ -34,9 +34,6 @@ use Dizkus_Entity_Forum;
 use Dizkus_Entity_Topic;
 use LogUtil;
 use Zikula_Exception_Forbidden;
-
-use;
-
 use HookUtil;
 use System;
 use Dizkus_AbstractHookedTopicMeta;
