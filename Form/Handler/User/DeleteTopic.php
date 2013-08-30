@@ -44,10 +44,10 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->topic_id = (int) $this->request->query->get('topic');
+        $this->topic_id = (int)$this->request->query->get('topic');
 
         if (empty($this->topic_id)) {
-            $post_id = (int) $this->request->query->get('post');
+            $post_id = (int)$this->request->query->get('post');
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }

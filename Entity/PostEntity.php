@@ -235,7 +235,16 @@ class PostEntity extends \Zikula_EntityAccess
 
     public function getPoster_data()
     {
-        return array('image' => 'a', 'rank' => 'a', 'rank_link' => 'a', 'description' => 'a', 'moderate' => 'a', 'edit' => 'a', 'reply' => 'a', 'postCount' => 'a', 'seeip' => 'a');
+        return array(
+            'image' => 'a',
+            'rank' => 'a',
+            'rank_link' => 'a',
+            'description' => 'a',
+            'moderate' => 'a',
+            'edit' => 'a',
+            'reply' => 'a',
+            'postCount' => 'a',
+            'seeip' => 'a');
     }
 
     /**

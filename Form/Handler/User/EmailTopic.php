@@ -37,7 +37,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $this->topic_id = (int) $this->request->query->get('topic');
+        $this->topic_id = (int)$this->request->query->get('topic');
 
         $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
 

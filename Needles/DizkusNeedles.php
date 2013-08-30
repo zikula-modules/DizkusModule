@@ -21,7 +21,10 @@ class DizkusNeedles extends \Zikula_AbstractHelper
 
     public function info()
     {
-        $info = array('module' => 'Dizkus', 'info' => 'DIZKUS{F-forumid|T-topicid}', 'inspect' => true);
+        $info = array(
+            'module' => 'Dizkus',
+            'info' => 'DIZKUS{F-forumid|T-topicid}',
+            'inspect' => true);
         //reverse lookpup possible, needs MultiHook_needleapi_dizkus_inspect() function
         return $info;
     }
@@ -74,6 +77,7 @@ class DizkusNeedles extends \Zikula_AbstractHelper
                             if (!empty($managedTopic)) {
                                 if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
                                     $url = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
+                                                        'topic' => $id)));
                                     $title = DataUtil::formatForDisplay($result[0]['title']);
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                 } else {

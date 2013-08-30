@@ -157,7 +157,7 @@ class UserApi extends \Zikula_AbstractApi
             $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
         }
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int)$qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -203,7 +203,9 @@ class UserApi extends \Zikula_AbstractApi
     {
         $managedPost = new Dizkus_Manager_Post($args['post_id']);
         $pip = $managedPost->get()->getPoster_ip();
-        $viewip = array('poster_ip' => $pip, 'poster_host' => gethostbyaddr($pip));
+        $viewip = array(
+            'poster_ip' => $pip,
+            'poster_host' => gethostbyaddr($pip));
         $dql = 'SELECT p, fu, u
             FROM Dizkus_Entity_Post p
             JOIN p.poster fu
@@ -214,7 +216,10 @@ class UserApi extends \Zikula_AbstractApi
         $posts = $query->getResult();
         foreach ($posts as $post) {
             /* @var $post Dizkus_Entity_Post */
-            $viewip['users'][] = array('uid' => $post->getPoster()->getUser_id(), 'uname' => $post->getPoster()->getUser()->getUname(), 'postcount' => $post->getPoster()->getPostCount());
+            $viewip['users'][] = array(
+                'uid' => $post->getPoster()->getUser_id(),
+                'uname' => $post->getPoster()->getUser()->getUname(),
+                'postcount' => $post->getPoster()->getPostCount());
         }
 
         return $viewip;
@@ -277,7 +282,14 @@ class UserApi extends \Zikula_AbstractApi
                 $message = '<strong>' . $this->__('Summary') . ' :</strong>\\n\\n' . $item->get_description() . '\\n\\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\\n\\n';
                 // store message
                 $newManagedTopic = new Dizkus_Manager_Topic();
-                $data = array('title' => $subject, 'message' => $message, 'topic_time' => $topicTime, 'forum_id' => $args['forum']['forum_id'], 'attachSignature' => false, 'subscribe_topic' => false, 'reference' => $reference);
+                $data = array(
+                    'title' => $subject,
+                    'message' => $message,
+                    'topic_time' => $topicTime,
+                    'forum_id' => $args['forum']['forum_id'],
+                    'attachSignature' => false,
+                    'subscribe_topic' => false,
+                    'reference' => $reference);
                 $newManagedTopic->prepare($data);
                 $topicId = $newManagedTopic->create();
                 if (!$topicId) {
@@ -310,7 +322,14 @@ class UserApi extends \Zikula_AbstractApi
     public function useragentIsBot()
     {
         // check the user agent - if it is a bot, return immediately
-        $robotslist = array('ia_archiver', 'googlebot', 'mediapartners-google', 'yahoo!', 'msnbot', 'jeeves', 'lycos');
+        $robotslist = array(
+            'ia_archiver',
+            'googlebot',
+            'mediapartners-google',
+            'yahoo!',
+            'msnbot',
+            'jeeves',
+            'lycos');
         $useragent = System::serverGetVar('HTTP_USER_AGENT');
         for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
             if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {

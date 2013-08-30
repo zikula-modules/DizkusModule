@@ -176,7 +176,9 @@ class TopicManager
      */
     public function getPager()
     {
-        return array('itemsperpage' => $this->_itemsPerPage, 'numitems' => $this->_numberOfItems);
+        return array(
+            'itemsperpage' => $this->_itemsPerPage,
+            'numitems' => $this->_numberOfItems);
     }
 
     /**
@@ -338,7 +340,9 @@ class TopicManager
         $this->entityManager->flush();
         // subscribe
         if ($this->_subscribe) {
-            $params = array('topic_id' => $this->_topic->getTopic_id(), 'action' => 'subscribe');
+            $params = array(
+                'topic_id' => $this->_topic->getTopic_id(),
+                'action' => 'subscribe');
             ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
         }
 

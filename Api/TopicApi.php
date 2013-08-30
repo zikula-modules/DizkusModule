@@ -84,7 +84,9 @@ class TopicApi extends \Zikula_AbstractApi
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
-        $searchParams = array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get());
+        $searchParams = array(
+            'topic' => $args['topic'],
+            'forumUser' => $managedForumUser->get());
         $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy($searchParams);
         if (!$topicSubscription) {
             $managedForumUser->get()->addTopicSubscription($args['topic']);
@@ -179,7 +181,13 @@ class TopicApi extends \Zikula_AbstractApi
             $sender_name = ModUtil::getVar('Users', 'anonymous');
             $sender_email = ModUtil::getVar('Dizkus', 'email_from');
         }
-        $params = array('fromname' => $sender_name, 'fromaddress' => $sender_email, 'toname' => $args['sendto_email'], 'toaddress' => $args['sendto_email'], 'subject' => $args['subject'], 'body' => $args['message']);
+        $params = array(
+            'fromname' => $sender_name,
+            'fromaddress' => $sender_email,
+            'toname' => $args['sendto_email'],
+            'toaddress' => $args['sendto_email'],
+            'subject' => $args['subject'],
+            'body' => $args['message']);
 
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $params);
     }
@@ -257,7 +265,14 @@ class TopicApi extends \Zikula_AbstractApi
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
                 $managedShadowTopic = new Dizkus_Manager_Topic();
-                $topicData = array('title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()), 'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $managedTopic->getId())) . '">' . $this->__('here') . '</a>.', 'forum_id' => $oldForumId, 'topic_time' => $managedTopic->get()->getTopic_time(), 'attachSignature' => false, 'subscribe_topic' => false);
+                $topicData = array(
+                    'title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
+                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url('Dizkus', 'user', 'viewtopic', array(
+                        'topic' => $managedTopic->getId())) . '">' . $this->__('here') . '</a>.',
+                    'forum_id' => $oldForumId,
+                    'topic_time' => $managedTopic->get()->getTopic_time(),
+                    'attachSignature' => false,
+                    'subscribe_topic' => false);
                 $managedShadowTopic->prepare($topicData);
                 $managedShadowTopic->lock();
                 $this->entityManager->persist($managedShadowTopic->get());
@@ -265,10 +280,18 @@ class TopicApi extends \Zikula_AbstractApi
             $this->entityManager->flush();
             // re-sync all forum counts and last posts
             $previousForumLocation = $this->entityManager->find('Dizkus_Entity_Forum', $oldForumId);
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $previousForumLocation, 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $forum, 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $oldForumId, 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $forum, 'flush' => true));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array(
+                'forum' => $previousForumLocation,
+                'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array(
+                'forum' => $forum,
+                'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array(
+                'forum' => $oldForumId,
+                'flush' => false));
+            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array(
+                'forum' => $forum,
+                'flush' => true));
         }
 
         return;

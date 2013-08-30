@@ -89,7 +89,8 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
                 }
             }
 
-            $users[$user['uid']] = array('uid' => $user['uid'],
+            $users[$user['uid']] = array(
+                'uid' => $user['uid'],
                 'uname' => $user['uname'],
                 'admin' => $user['admin']);
         }

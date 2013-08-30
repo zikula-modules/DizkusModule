@@ -71,10 +71,16 @@ class SyncApi extends \Zikula_AbstractApi
             $args['forum'] = $this->entityManager->find('Dizkus_Entity_Forum', $id);
         }
         // count topics of a forum
-        $topicCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumtopics', 'id' => $id, 'force' => true));
+        $topicCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array(
+                    'type' => 'forumtopics',
+                    'id' => $id,
+                    'force' => true));
         $args['forum']->setTopicCount($topicCount);
         // count posts of a forum
-        $postCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forumposts', 'id' => $id, 'force' => true));
+        $postCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array(
+                    'type' => 'forumposts',
+                    'id' => $id,
+                    'force' => true));
         $args['forum']->setPostCount($postCount);
         $this->entityManager->flush();
         $this->addToParentForumCount($args['forum'], 'Post');
@@ -116,7 +122,9 @@ class SyncApi extends \Zikula_AbstractApi
     {
         $topics = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findAll();
         foreach ($topics as $topic) {
-            $this->topic(array('topic' => $topic, 'type' => 'forum'));
+            $this->topic(array(
+                'topic' => $topic,
+                'type' => 'forum'));
         }
         // flush?
         return true;
@@ -145,7 +153,7 @@ class SyncApi extends \Zikula_AbstractApi
         // count posts of a topic
         $qb = $this->entityManager->createQueryBuilder();
         $replies = $qb->select('COUNT(p)')->from('Dizkus_Entity_Post', 'p')->where('p.topic = :id')->setParameter('id', $id)->getQuery()->getSingleScalarResult();
-        $replies = (int) $replies - 1;
+        $replies = (int)$replies - 1;
         $args['topic']->setReplyCount($replies);
         if ($flush) {
             $this->entityManager->flush();
@@ -204,7 +212,9 @@ class SyncApi extends \Zikula_AbstractApi
         // recurse up the tree
         $parent = $args['forum']->getParent();
         if (isset($parent)) {
-            $this->forumLastPost(array('forum' => $parent, 'flush' => false));
+            $this->forumLastPost(array(
+                'forum' => $parent,
+                'flush' => false));
         }
         if ($flush) {
             $this->entityManager->flush();

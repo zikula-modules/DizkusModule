@@ -79,7 +79,9 @@ class ForumApi extends \Zikula_AbstractApi
                     if ($i['name'] == Dizkus_Entity_Forum::ROOTNAME) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
-                    $output[] = array('value' => $i['forum_id'], 'text' => $pre . $i['name']);
+                    $output[] = array(
+                        'value' => $i['forum_id'],
+                        'text' => $pre . $i['name']);
                 }
                 if (isset($i['__children'])) {
                     $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1, $includeLocked));
@@ -125,7 +127,9 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function isSubscribed($args)
     {
-        $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array('forum' => $args['forum'], 'forumUser' => UserUtil::getVar('uid')));
+        $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+            'forum' => $args['forum'],
+            'forumUser' => UserUtil::getVar('uid')));
 
         return isset($forumSubscription);
     }
@@ -149,7 +153,9 @@ class ForumApi extends \Zikula_AbstractApi
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
-        $searchParams = array('forum' => $args['forum'], 'forumUser' => $managedForumUser->get());
+        $searchParams = array(
+            'forum' => $args['forum'],
+            'forumUser' => $managedForumUser->get());
         $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy($searchParams);
         if (!$forumSubscription) {
             $managedForumUser->get()->addForumSubscription($args['forum']);
@@ -182,7 +188,9 @@ class ForumApi extends \Zikula_AbstractApi
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         if (isset($args['forum'])) {
-            $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array('forum' => $args['forum'], 'forumUser' => $managedForumUser->get()));
+            $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+                'forum' => $args['forum'],
+                'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeForumSubscription($forumSubscription);
         }
         $this->entityManager->flush();

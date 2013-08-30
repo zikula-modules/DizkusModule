@@ -27,7 +27,17 @@ use Dizkus_Connection_Pop3;
 class DizkusInstaller extends \Zikula_AbstractInstaller
 {
 
-    private $_entities = array('Dizkus_Entity_Forum', 'Dizkus_Entity_Post', 'Dizkus_Entity_Topic', 'Dizkus_Entity_ForumUserFavorite', 'Dizkus_Entity_ForumUser', 'Dizkus_Entity_Moderator_User', 'Dizkus_Entity_Moderator_Group', 'Dizkus_Entity_ForumSubscription', 'Dizkus_Entity_TopicSubscription', 'Dizkus_Entity_Rank');
+    private $_entities = array(
+        'Dizkus_Entity_Forum',
+        'Dizkus_Entity_Post',
+        'Dizkus_Entity_Topic',
+        'Dizkus_Entity_ForumUserFavorite',
+        'Dizkus_Entity_ForumUser',
+        'Dizkus_Entity_Moderator_User',
+        'Dizkus_Entity_Moderator_Group',
+        'Dizkus_Entity_ForumSubscription',
+        'Dizkus_Entity_TopicSubscription',
+        'Dizkus_Entity_Rank');
 
     /**
      *  Initialize a new install of the Dizkus module
@@ -93,7 +103,63 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     private function setUpSampleRanks()
     {
         //title, description, minimumCount, maximumCount, type, image
-        $ranks = array(array('title' => 'Level 1', 'description' => 'New forum user', 'minimumCount' => 1, 'maximumCount' => 9, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'zerostar.gif'), array('title' => 'Level 2', 'description' => 'Basic forum user', 'minimumCount' => 10, 'maximumCount' => 49, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'onestar.gif'), array('title' => 'Level 3', 'description' => 'Moderate forum user', 'minimumCount' => 50, 'maximumCount' => 99, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'twostars.gif'), array('title' => 'Level 4', 'description' => 'Advanced forum user', 'minimumCount' => 100, 'maximumCount' => 199, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'threestars.gif'), array('title' => 'Level 5', 'description' => 'Expert forum user', 'minimumCount' => 200, 'maximumCount' => 499, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'fourstars.gif'), array('title' => 'Level 6', 'description' => 'Superior forum user', 'minimumCount' => 500, 'maximumCount' => 999, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'fivestars.gif'), array('title' => 'Level 7', 'description' => 'Senior forum user', 'minimumCount' => 1000, 'maximumCount' => 4999, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'spezstars.gif'), array('title' => 'Legend', 'description' => 'Legend forum user', 'minimumCount' => 5000, 'maximumCount' => 1000000, 'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT, 'image' => 'adminstars.gif'));
+        $ranks = array(
+            array(
+                'title' => 'Level 1',
+                'description' => 'New forum user',
+                'minimumCount' => 1,
+                'maximumCount' => 9,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'zerostar.gif'),
+            array(
+                'title' => 'Level 2',
+                'description' => 'Basic forum user',
+                'minimumCount' => 10,
+                'maximumCount' => 49,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'onestar.gif'),
+            array(
+                'title' => 'Level 3',
+                'description' => 'Moderate forum user',
+                'minimumCount' => 50,
+                'maximumCount' => 99,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'twostars.gif'),
+            array(
+                'title' => 'Level 4',
+                'description' => 'Advanced forum user',
+                'minimumCount' => 100,
+                'maximumCount' => 199,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'threestars.gif'),
+            array(
+                'title' => 'Level 5',
+                'description' => 'Expert forum user',
+                'minimumCount' => 200,
+                'maximumCount' => 499,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'fourstars.gif'),
+            array(
+                'title' => 'Level 6',
+                'description' => 'Superior forum user',
+                'minimumCount' => 500,
+                'maximumCount' => 999,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'fivestars.gif'),
+            array(
+                'title' => 'Level 7',
+                'description' => 'Senior forum user',
+                'minimumCount' => 1000,
+                'maximumCount' => 4999,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'spezstars.gif'),
+            array(
+                'title' => 'Legend',
+                'description' => 'Legend forum user',
+                'minimumCount' => 5000,
+                'maximumCount' => 1000000,
+                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'image' => 'adminstars.gif'));
         foreach ($ranks as $rank) {
             $r = new Dizkus_Entity_Rank();
             $r->merge($rank);
@@ -155,7 +221,36 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     {
         $dom = ZLanguage::getModuleDomain('Dizkus');
 
-        return array('posts_per_page' => 15, 'topics_per_page' => 15, 'hot_threshold' => 20, 'email_from' => System::getVar('adminmail'), 'url_ranks_images' => 'modules/Dizkus/images/ranks', 'post_sort_order' => 'ASC', 'log_ip' => 'no', 'extendedsearch' => 'no', 'm2f_enabled' => 'no', 'favorites_enabled' => 'yes', 'removesignature' => 'no', 'striptags' => 'yes', 'deletehookaction' => 'lock', 'rss2f_enabled' => 'no', 'timespanforchanges' => 24, 'forum_enabled' => 'yes', 'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom), 'signaturemanagement' => 'no', 'signature_start' => '--', 'signature_end' => '--', 'showtextinsearchresults' => 'yes', 'minsearchlength' => 3, 'maxsearchlength' => 30, 'fulltextindex' => 'no', 'solved_enabled' => true, 'ajax' => true, 'striptagsfromemail' => false, 'indexTo' => '', 'notifyAdminAsMod' => 2);
+        return array(
+            'posts_per_page' => 15,
+            'topics_per_page' => 15,
+            'hot_threshold' => 20,
+            'email_from' => System::getVar('adminmail'),
+            'url_ranks_images' => 'modules/Dizkus/images/ranks',
+            'post_sort_order' => 'ASC',
+            'log_ip' => 'no',
+            'extendedsearch' => 'no',
+            'm2f_enabled' => 'no',
+            'favorites_enabled' => 'yes',
+            'removesignature' => 'no',
+            'striptags' => 'yes',
+            'deletehookaction' => 'lock',
+            'rss2f_enabled' => 'no',
+            'timespanforchanges' => 24,
+            'forum_enabled' => 'yes',
+            'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
+            'signaturemanagement' => 'no',
+            'signature_start' => '--',
+            'signature_end' => '--',
+            'showtextinsearchresults' => 'yes',
+            'minsearchlength' => 3,
+            'maxsearchlength' => 30,
+            'fulltextindex' => 'no',
+            'solved_enabled' => true,
+            'ajax' => true,
+            'striptagsfromemail' => false,
+            'indexTo' => '',
+            'notifyAdminAsMod' => 2);
     }
 
     /**
@@ -244,7 +339,17 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     {
         $connection = $this->entityManager->getConnection();
         // remove table prefixes
-        $dizkusTables = array('dizkus_categories', 'dizkus_forum_mods', 'dizkus_forums', 'dizkus_posts', 'dizkus_subscription', 'dizkus_ranks', 'dizkus_topics', 'dizkus_topic_subscription', 'dizkus_forum_favorites', 'dizkus_users');
+        $dizkusTables = array(
+            'dizkus_categories',
+            'dizkus_forum_mods',
+            'dizkus_forums',
+            'dizkus_posts',
+            'dizkus_subscription',
+            'dizkus_ranks',
+            'dizkus_topics',
+            'dizkus_topic_subscription',
+            'dizkus_forum_favorites',
+            'dizkus_users');
         foreach ($dizkusTables as $value) {
             $sql = 'RENAME TABLE ' . $prefix . $value . ' TO ' . $value;
             $stmt = $connection->prepare($sql);
@@ -441,7 +546,10 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
                     list($moduleId, $objectId) = explode('-', $row['topic_reference']);
                     $moduleInfo = ModUtil::getInfo($moduleId);
                     if ($moduleInfo) {
-                        $searchCritera = array('owner' => $moduleInfo['name'], 'areatype' => 's', 'category' => 'ui_hooks');
+                        $searchCritera = array(
+                            'owner' => $moduleInfo['name'],
+                            'areatype' => 's',
+                            'category' => 'ui_hooks');
                         $subscriberArea = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->findBy($searchCritera);
                         if (count($subscriberArea) != 1) {
                             // found either too many areas or none. cannot migrate

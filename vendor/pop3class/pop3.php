@@ -202,9 +202,11 @@ class pop3_class
             $authenticated = 0;
             if (strcmp($this->authentication_mechanism, "USER") && function_exists("class_exists") && class_exists("sasl_client_class")) {
                 if (strlen($this->authentication_mechanism))
-                    $mechanisms = array($this->authentication_mechanism);
+                    $mechanisms = array(
+                        $this->authentication_mechanism);
                 else {
-                    $mechanisms = array();
+                    $mechanisms = array(
+                            );
                     if ($this->PutLine("CAPA") == 0)
                         return($this->SetError("Could not send the CAPA command"));
                     $response = $this->GetLine();
@@ -353,7 +355,8 @@ class pop3_class
         if ($this->Tokenize($response, " ") != "+OK")
             return($this->SetError("Could not get the message listing: " . $this->Tokenize("\r\n")));
         if ($message == "") {
-            for ($messages = array();;) {
+            for ($messages = array(
+            );;) {
                 $response = $this->GetLine();
                 if (GetType($response) != "string")
                     return($this->SetError("Could not get message list response"));
@@ -398,7 +401,8 @@ class pop3_class
             return($this->SetError("Could not get message retrieval command response"));
         if ($this->Tokenize($response, " ") != "+OK")
             return($this->SetError("Could not retrieve the message: " . $this->Tokenize("\r\n")));
-        for ($headers = $body = array(), $line = 0;;) {
+        for ($headers = $body = array(
+        ), $line = 0;;) {
             $response = $this->GetLine();
             if (GetType($response) != "string")
                 return($this->SetError("Could not retrieve the message"));
@@ -559,7 +563,8 @@ class pop3_class
 
     Function &SetConnection($set, &$current_name, &$pop3)
     {
-        static $connections = array();
+        static $connections = array(
+        );
 
         if ($set > 0) {
             $current_name = strval(count($connections));

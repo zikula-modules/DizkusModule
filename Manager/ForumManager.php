@@ -122,7 +122,9 @@ class ForumManager
                 continue;
             }
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum->getForum_id()));
-            $output[] = array('url' => $url, 'title' => $forum->getName());
+            $output[] = array(
+                'url' => $url,
+                'title' => $forum->getName());
         }
         if ($withoutCurrent) {
             // last element added in template instead
@@ -156,7 +158,9 @@ class ForumManager
      */
     public function getPager()
     {
-        return array('itemsperpage' => $this->_itemsPerPage, 'numitems' => $this->_numberOfItems);
+        return array(
+            'itemsperpage' => $this->_itemsPerPage,
+            'numitems' => $this->_numberOfItems);
     }
 
     /**

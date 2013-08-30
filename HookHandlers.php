@@ -84,7 +84,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             return;
         }
         $request = ServiceUtil::getService('request');
-        $start = (int) $request->query->get('start', 1);
+        $start = (int)$request->query->get('start', 1);
         $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new Dizkus_Manager_Topic(null, $topic);
@@ -132,7 +132,11 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         if (!isset($forumId)) {
             // admin didn't choose a forum, so create one and set as choice
             $managedForum = new Dizkus_Manager_Forum();
-            $data = array('name' => __f('Discussion for %s', $hook->getCaller(), $this->domain), 'status' => Dizkus_Entity_Forum::STATUS_LOCKED, 'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME)));
+            $data = array(
+                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
+                'status' => Dizkus_Entity_Forum::STATUS_LOCKED,
+                'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array(
+                    'name' => Dizkus_Entity_Forum::ROOTNAME)));
             $managedForum->store($data);
             // cannot notify hooks in non-controller
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
@@ -207,7 +211,12 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         // use Meta class to create topic data
         $topicMetaInstance = $this->getClassInstance($hook);
         // format data for topic creation
-        $data = array('forum_id' => $hookconfig[$hook->getAreaId()]['forum'], 'title' => $topicMetaInstance->getTitle(), 'message' => $topicMetaInstance->getContent(), 'subscribe_topic' => false, 'attachSignature' => false);
+        $data = array(
+            'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
+            'title' => $topicMetaInstance->getTitle(),
+            'message' => $topicMetaInstance->getContent(),
+            'subscribe_topic' => false,
+            'attachSignature' => false);
         // create the new topic
         $newManagedTopic = new Dizkus_Manager_Topic(null, $topic);
         // inject new topic into manager
@@ -218,7 +227,8 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $newManagedTopic->create();
         // cannot notify hooks in non-controller
         // notify topic & forum subscribers
-        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
+        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array(
+            'post' => $newManagedTopic->getFirstPost()));
         LogUtil::registerStatus($this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 
         return true;
@@ -379,8 +389,12 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $dom = ZLanguage::getModuleDomain('Dizkus');
         $module = ModUtil::getName();
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'Dizkus'));
-        if ($bindingCount > 0 && $module != 'Dizkus' && (empty($event->data) || is_array($event->data) && !in_array(array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
-            $event->data[] = array('url' => ModUtil::url($module, 'admin', 'dizkushookconfig'), 'text' => __('Dizkus Hook Settings', $dom));
+        if ($bindingCount > 0 && $module != 'Dizkus' && (empty($event->data) || is_array($event->data) && !in_array(array(
+                    'url' => ModUtil::url($module, 'admin', 'dizkushookconfig'),
+                    'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
+            $event->data[] = array(
+                'url' => ModUtil::url($module, 'admin', 'dizkushookconfig'),
+                'text' => __('Dizkus Hook Settings', $dom));
         }
     }
 

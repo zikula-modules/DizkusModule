@@ -38,7 +38,14 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function info()
     {
-        return array('module' => 'Dizkus', 'text_type' => $this->__('Dizkus statistic'), 'text_type_long' => $this->__('Dizkus Statistics Block'), 'allow_multiple' => true, 'form_content' => false, 'form_refresh' => false, 'show_preview' => true);
+        return array(
+            'module' => 'Dizkus',
+            'text_type' => $this->__('Dizkus statistic'),
+            'text_type_long' => $this->__('Dizkus Statistics Block'),
+            'allow_multiple' => true,
+            'form_content' => false,
+            'form_refresh' => false,
+            'show_preview' => true);
     }
 
     /**

@@ -44,7 +44,9 @@ class NotifyApi extends \Zikula_AbstractApi
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
-        $view->assign('sitename', System::getVar('sitename'))->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())->assign('name', $post->getTopic()->getForum()->getName())->assign('topic_subject', $post->getTopic()->getTitle())->assign('poster_name', $post->getPoster()->getUser()->getUname())->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())->assign('forum_id', $post->getTopic()->getForum()->getForum_id())->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(), null, null, true))->assign('base_url', System::getBaseUrl());
+        $view->assign('sitename', System::getVar('sitename'))->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())->assign('name', $post->getTopic()->getForum()->getName())->assign('topic_subject', $post->getTopic()->getTitle())->assign('poster_name', $post->getPoster()->getUser()->getUname())->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())->assign('forum_id', $post->getTopic()->getForum()->getForum_id())->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array(
+                    'topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(
+                        ), null, null, true))->assign('base_url', System::getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
         $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
         $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions()->toArray();
@@ -60,7 +62,17 @@ class NotifyApi extends \Zikula_AbstractApi
                 continue;
             }
             if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber->getUid())) {
-                $args = array('fromname' => System::getVar('sitename'), 'fromaddress' => $fromAddress, 'toname' => $subscriber->getUname(), 'toaddress' => $subscriberEmail, 'subject' => $subject, 'body' => $message, 'headers' => array('X-UserID: ' . md5(UserUtil::getVar('uid')), 'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'], 'X-DizkusTopicID: ' . $post->getTopic_id()));
+                $args = array(
+                    'fromname' => System::getVar('sitename'),
+                    'fromaddress' => $fromAddress,
+                    'toname' => $subscriber->getUname(),
+                    'toaddress' => $subscriberEmail,
+                    'subject' => $subject,
+                    'body' => $message,
+                    'headers' => array(
+                        'X-UserID: ' . md5(UserUtil::getVar('uid')),
+                        'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'],
+                        'X-DizkusTopicID: ' . $post->getTopic_id()));
                 ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
                 $notified[] = $subscriber->getUid();
             }
@@ -92,7 +104,7 @@ class NotifyApi extends \Zikula_AbstractApi
         // using the uid as the key to the array avoids duplication
         // check if list is empty - then do nothing
         // we create an array of recipients here
-        $notifyAdminAsMod = (int) $this->getVar('notifyAdminAsMod');
+        $notifyAdminAsMod = (int)$this->getVar('notifyAdminAsMod');
         $admin_is_mod = false;
         if (count($mods['groups']) > 0) {
             foreach (array_keys($mods['groups']) as $gid) {
@@ -102,7 +114,9 @@ class NotifyApi extends \Zikula_AbstractApi
                         $mod_email = UserUtil::getVar('email', $gm_uid);
                         $mod_uname = UserUtil::getVar('uname', $gm_uid);
                         if (!empty($mod_email)) {
-                            $recipients[$gm_uid] = array('uname' => $mod_uname, 'email' => $mod_email);
+                            $recipients[$gm_uid] = array(
+                                'uname' => $mod_uname,
+                                'email' => $mod_email);
                         }
                         if ($gm_uid == $notifyAdminAsMod) {
                             // admin is also moderator
@@ -116,7 +130,9 @@ class NotifyApi extends \Zikula_AbstractApi
             foreach ($mods['users'] as $uid => $uname) {
                 $mod_email = UserUtil::getVar('email', $uid);
                 if (!empty($mod_email)) {
-                    $recipients[$uid] = array('uname' => $uname, 'email' => $mod_email);
+                    $recipients[$uid] = array(
+                        'uname' => $uname,
+                        'email' => $mod_email);
                 }
                 if ($uid == $notifyAdminAsMod) {
                     // admin is also moderator
@@ -126,7 +142,9 @@ class NotifyApi extends \Zikula_AbstractApi
         }
         // determine if we also notify an admin as a moderator
         if ($admin_is_mod == false && $notifyAdminAsMod > 1) {
-            $recipients[$notifyAdminAsMod] = array('uname' => UserUtil::getVar('uname', $notifyAdminAsMod), 'email' => UserUtil::getVar('email', $notifyAdminAsMod));
+            $recipients[$notifyAdminAsMod] = array(
+                'uname' => UserUtil::getVar('uname', $notifyAdminAsMod),
+                'email' => UserUtil::getVar('email', $notifyAdminAsMod));
         }
         $reporting_userid = UserUtil::getVar('uid');
         $reporting_username = UserUtil::getVar('uname');
@@ -152,7 +170,16 @@ class NotifyApi extends \Zikula_AbstractApi
         $modinfo = ModUtil::getInfoFromName('Dizkus');
         if (count($recipients) > 0) {
             foreach ($recipients as $recipient) {
-                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array('fromname' => $sitename, 'fromaddress' => $email_from, 'toname' => $recipient['uname'], 'toaddress' => $recipient['email'], 'subject' => $subject, 'body' => $message, 'headers' => array('X-UserID: ' . $reporting_userid, 'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
+                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
+                    'fromname' => $sitename,
+                    'fromaddress' => $email_from,
+                    'toname' => $recipient['uname'],
+                    'toaddress' => $recipient['email'],
+                    'subject' => $subject,
+                    'body' => $message,
+                    'headers' => array(
+                        'X-UserID: ' . $reporting_userid,
+                        'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
             }
             LogUtil::registerStatus($this->__('The moderator has been contacted about this post. Thank you.'));
         } else {
@@ -178,7 +205,13 @@ class NotifyApi extends \Zikula_AbstractApi
             $sender_name = ModUtil::getVar('Users', 'anonymous');
             $sender_email = ModUtil::getVar('Dizkus', 'email_from');
         }
-        $args2 = array('fromname' => $sender_name, 'fromaddress' => $sender_email, 'toname' => $args['sendto_email'], 'toaddress' => $args['sendto_email'], 'subject' => $args['subject'], 'body' => $args['message']);
+        $args2 = array(
+            'fromname' => $sender_name,
+            'fromaddress' => $sender_email,
+            'toname' => $args['sendto_email'],
+            'toaddress' => $args['sendto_email'],
+            'subject' => $args['subject'],
+            'body' => $args['message']);
 
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args2);
     }

@@ -117,9 +117,9 @@ use DataUtil;
                 return $this->view->fetch('dizkus_disabled.tpl');
             }
             // get the input
-            $forumId = (int) $this->request->query->get('forum', isset($args['forum']) ? $args['forum'] : null);
+            $forumId = (int)$this->request->query->get('forum', isset($args['forum']) ? $args['forum'] : null);
             $this->throwNotFoundUnless($forumId > 0, $this->__('That forum doesn\'t exist!'));
-            $start = (int) $this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
+            $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
             $managedForum = new Dizkus_Manager_Forum($forumId);
             // Permission check
@@ -144,9 +144,9 @@ use DataUtil;
                 return $this->view->fetch('dizkus_disabled.tpl');
             }
             // get the input
-            $topicId = (int) $this->request->query->get('topic', isset($args['topic']) ? $args['topic'] : null);
-            $post_id = (int) $this->request->query->get('post', isset($args['post']) ? $args['post'] : null);
-            $start = (int) $this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
+            $topicId = (int)$this->request->query->get('topic', isset($args['topic']) ? $args['topic'] : null);
+            $post_id = (int)$this->request->query->get('post', isset($args['post']) ? $args['post'] : null);
+            $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
             $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
                 $managedPost = new Dizkus_Manager_Post($post_id);
@@ -194,12 +194,12 @@ use DataUtil;
             $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canWrite', array('forum_id' => $forum_id)));
             $this->checkCsrfToken();
             // get the input
-            $topic_id = (int) $this->request->request->get('topic', null);
-            $post_id = (int) $this->request->request->get('post', null);
+            $topic_id = (int)$this->request->request->get('topic', null);
+            $post_id = (int)$this->request->request->get('post', null);
             $returnurl = $this->request->request->get('returnurl', null);
             $message = $this->request->request->get('message', '');
-            $attach_signature = (int) $this->request->request->get('attach_signature', 0);
-            $subscribe_topic = (int) $this->request->request->get('subscribe_topic', 0);
+            $attach_signature = (int)$this->request->request->get('attach_signature', 0);
+            $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
             // convert form submit buttons to boolean
             $isPreview = $this->request->request->get('preview', null);
             $isPreview = isset($isPreview) ? true : false;
@@ -235,7 +235,10 @@ use DataUtil;
                 }
             }
             if ($submit && !$isPreview) {
-                $data = array('topic_id' => $topic_id, 'post_text' => $message, 'attachSignature' => $attach_signature);
+                $data = array(
+                    'topic_id' => $topic_id,
+                    'post_text' => $message,
+                    'attachSignature' => $attach_signature);
                 $managedPost = new Dizkus_Manager_Post();
                 $managedPost->create($data);
                 // handle subscription
@@ -245,7 +248,9 @@ use DataUtil;
                     ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic' => $topic_id));
                 }
                 $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
-                $params = array('topic' => $topic_id, 'start' => $start);
+                $params = array(
+                    'topic' => $topic_id,
+                    'start' => $start);
                 $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
                 $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
                 // notify topic & forum subscribers
@@ -268,8 +273,21 @@ use DataUtil;
                 $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
                 $managedTopic = new Dizkus_Manager_Topic($topic_id);
                 $managedPoster = new Dizkus_Manager_ForumUser();
-                $reply = array('topic_id' => $topic_id, 'post_id' => $post_id, 'attach_signature' => $attach_signature, 'subscribe_topic' => $subscribe_topic, 'topic' => $managedTopic->toArray(), 'message' => $message);
-                $post = array('post_id' => 0, 'topic_id' => $topic_id, 'poster' => $managedPoster->toArray(), 'post_time' => time(), 'attachSignature' => $attach_signature, 'post_text' => $message, 'userAllowedToEdit' => false);
+                $reply = array(
+                    'topic_id' => $topic_id,
+                    'post_id' => $post_id,
+                    'attach_signature' => $attach_signature,
+                    'subscribe_topic' => $subscribe_topic,
+                    'topic' => $managedTopic->toArray(),
+                    'message' => $message);
+                $post = array(
+                    'post_id' => 0,
+                    'topic_id' => $topic_id,
+                    'poster' => $managedPoster->toArray(),
+                    'post_time' => time(),
+                    'attachSignature' => $attach_signature,
+                    'post_text' => $message,
+                    'userAllowedToEdit' => false);
                 // Do not show edit link
                 $permissions = array();
                 list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
@@ -349,7 +367,7 @@ use DataUtil;
         public function viewIpDataAction()
         {
             $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canModerate'));
-            $post_id = (int) $this->request->query->filter('post', 0, FILTER_VALIDATE_INT);
+            $post_id = (int)$this->request->query->filter('post', 0, FILTER_VALIDATE_INT);
             if ($post_id == 0) {
                 return LogUtil::registerArgsError();
             }
@@ -446,7 +464,9 @@ use DataUtil;
          */
         public function modifyForumAction()
         {
-            $params = array('action' => $this->request->query->get('action'), 'forum_id' => (int) $this->request->query->get('forum'));
+            $params = array(
+                'action' => $this->request->query->get('action'),
+                'forum_id' => (int)$this->request->query->get('forum'));
             ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $params['forum_id'])));
@@ -459,7 +479,7 @@ use DataUtil;
         {
             $params = array();
             $params['action'] = $this->request->query->get('action');
-            $params['topic_id'] = (int) $this->request->query->get('topic');
+            $params['topic_id'] = (int)$this->request->query->get('topic');
             ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
             return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $params['topic_id'])));
@@ -505,10 +525,10 @@ use DataUtil;
             }
             // get the input
             $params['selorder'] = $this->request->query->get('selorder', $this->request->request->get('selorder', isset($args['selorder']) ? $args['selorder'] : 1));
-            $params['nohours'] = (int) $this->request->request->get('nohours', isset($args['nohours']) ? $args['nohours'] : null);
-            $params['unanswered'] = (int) $this->request->query->get('unanswered', isset($args['unanswered']) ? $args['unanswered'] : 0);
-            $params['amount'] = (int) $this->request->query->get('amount', isset($args['amount']) ? $args['amount'] : null);
-            $params['last_visit_unix'] = (int) $this->request->query->get('last_visit_unix', isset($args['last_visit_unix']) ? $args['last_visit_unix'] : time());
+            $params['nohours'] = (int)$this->request->request->get('nohours', isset($args['nohours']) ? $args['nohours'] : null);
+            $params['unanswered'] = (int)$this->request->query->get('unanswered', isset($args['unanswered']) ? $args['unanswered'] : 0);
+            $params['amount'] = (int)$this->request->query->get('amount', isset($args['amount']) ? $args['amount'] : null);
+            $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', isset($args['last_visit_unix']) ? $args['last_visit_unix'] : time());
             $this->view->assign($params);
             list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
             $this->view->assign('posts', $posts);
@@ -606,7 +626,7 @@ use DataUtil;
         public function feedAction()
         {
             $forum_id = $this->request->query->get('forum_id', null);
-            $count = (int) $this->request->query->get('count', 10);
+            $count = (int)$this->request->query->get('count', 10);
             $feed = $this->request->query->get('feed', 'rss20');
             $user = $this->request->query->get('user', null);
             // get the module info

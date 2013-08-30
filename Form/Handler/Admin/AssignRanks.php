@@ -32,7 +32,7 @@ class Dizkus_Form_Handler_Admin_AssignRanks extends Zikula_Form_AbstractHandler
 
         $letter = $this->request->query->get('letter');
         $lastletter = $this->request->query->get('lastletter');
-        $page = (int) $this->request->query->get('page', 1);
+        $page = (int)$this->request->query->get('page', 1);
 
         // check for a letter parameter
         if (!empty($lastletter)) {

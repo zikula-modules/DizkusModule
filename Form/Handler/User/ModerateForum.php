@@ -33,7 +33,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
      */
     public function initialize(Zikula_Form_View $view)
     {
-        $forum_id = (int) $this->request->query->get('forum', null);
+        $forum_id = (int)$this->request->query->get('forum', null);
         if (!isset($forum_id)) {
             return LogUtil::registerArgsError();
         }
@@ -53,26 +53,48 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
         $this->view->assign('forum', $this->_managedForum->get());
         $topics = $this->_managedForum->getTopics();
         $topicSelect = array(
-            array('value' => '', 'text' => "<< " . $this->__("Choose target topic") . " >>"),
+            array(
+                'value' => '',
+                'text' => "<< " . $this->__("Choose target topic") . " >>"),
         );
         foreach ($topics as $topic) {
-            $topicSelect[] = array('value' => $topic->getTopic_id(), 'text' => $topic->getTitle());
+            $topicSelect[] = array(
+                'value' => $topic->getTopic_id(),
+                'text' => $topic->getTitle());
         }
         $this->view->assign('topicSelect', $topicSelect);
         $actions = array(
-            array('value' => '', 'text' => "<< " . $this->__("Choose action") . " >>"),
-            array('value' => 'sticky', 'text' => $this->__("Give selected topics 'sticky' status")),
-            array('value' => 'unsticky', 'text' => $this->__("Remove 'sticky' status from selected topics")),
-            array('value' => 'lock', 'text' => $this->__("Lock selected topics")),
-            array('value' => 'unlock', 'text' => $this->__("Unlock selected topics")),
-            array('value' => 'delete', 'text' => $this->__("Delete selected topics")),
-            array('value' => 'move', 'text' => $this->__("Move selected topics")),
-            array('value' => 'join', 'text' => $this->__("Join topics")),
+            array(
+                'value' => '',
+                'text' => "<< " . $this->__("Choose action") . " >>"),
+            array(
+                'value' => 'sticky',
+                'text' => $this->__("Give selected topics 'sticky' status")),
+            array(
+                'value' => 'unsticky',
+                'text' => $this->__("Remove 'sticky' status from selected topics")),
+            array(
+                'value' => 'lock',
+                'text' => $this->__("Lock selected topics")),
+            array(
+                'value' => 'unlock',
+                'text' => $this->__("Unlock selected topics")),
+            array(
+                'value' => 'delete',
+                'text' => $this->__("Delete selected topics")),
+            array(
+                'value' => 'move',
+                'text' => $this->__("Move selected topics")),
+            array(
+                'value' => 'join',
+                'text' => $this->__("Join topics")),
         );
         $this->view->assign('actions', $actions);
         // For Movetopic
         $forums = ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren');
-        array_unshift($forums, array('value' => '', 'text' => "<< " . $this->__("Select target forum") . " >>"));
+        array_unshift($forums, array(
+            'value' => '',
+            'text' => "<< " . $this->__("Select target forum") . " >>"));
         $this->view->assign('forums', $forums);
 
         return true;
@@ -134,7 +156,9 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
                 case 'sticky':
                 case 'unsticky':
                     foreach ($topic_ids as $topic_id) {
-                        ModUtil::apiFunc('Dizkus', 'topic', 'changeStatus', array('topic_id' => $topic_id, 'action' => $mode));
+                        ModUtil::apiFunc('Dizkus', 'topic', 'changeStatus', array(
+                            'topic_id' => $topic_id,
+                            'action' => $mode));
                     }
                     break;
                     $this->entityManager->flush();

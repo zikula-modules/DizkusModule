@@ -35,7 +35,8 @@ function smarty_function_readtopposters($params, Zikula_View $view)
     $topposters = array();
     if (!empty($forumUsers)) {
         foreach ($forumUsers as $forumUser) {
-            $topposters[] = array('user_name' => DataUtil::formatForDisplay($forumUser->getUser()->getUname()),
+            $topposters[] = array(
+                'user_name' => DataUtil::formatForDisplay($forumUser->getUser()->getUname()),
                 // for BC reasons
                 'postCount' => DataUtil::formatForDisplay($forumUser->getPostCount()),
                 'user_id' => DataUtil::formatForDisplay($forumUser->getUser_id()));

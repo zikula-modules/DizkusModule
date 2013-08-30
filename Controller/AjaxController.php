@@ -112,7 +112,10 @@ use System;
             $start = 1;
             $this->checkMessageLength($message);
             if ($preview == false) {
-                $data = array('topic_id' => $topic_id, 'post_text' => $message, 'attachSignature' => $attach_signature);
+                $data = array(
+                    'topic_id' => $topic_id,
+                    'post_text' => $message,
+                    'attachSignature' => $attach_signature);
                 $managedPost = new Dizkus_Manager_Post();
                 $managedPost->create($data);
                 if ($subscribe_topic) {
@@ -131,7 +134,15 @@ use System;
             } else {
                 // preview == true, create fake post
                 $managedPoster = new Dizkus_Manager_ForumUser();
-                $post = array('post_id' => 0, 'topic_id' => $topic_id, 'poster' => $managedPoster->toArray(), 'post_time' => time(), 'attachSignature' => $attach_signature, 'post_text' => $message, 'subscribe_topic' => $subscribe_topic, 'userAllowedToEdit' => false);
+                $post = array(
+                    'post_id' => 0,
+                    'topic_id' => $topic_id,
+                    'poster' => $managedPoster->toArray(),
+                    'post_time' => time(),
+                    'attachSignature' => $attach_signature,
+                    'post_text' => $message,
+                    'subscribe_topic' => $subscribe_topic,
+                    'userAllowedToEdit' => false);
                 // Do not show edit link
                 $permissions = array();
             }
@@ -145,7 +156,9 @@ use System;
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
 
-            return new Zikula_Response_Ajax(array('data' => $this->view->fetch('user/post/single.tpl'), 'post_id' => $post['post_id']));
+            return new Zikula_Response_Ajax(array(
+                'data' => $this->view->fetch('user/post/single.tpl'),
+                'post_id' => $post['post_id']));
         }
 
         /**
@@ -226,9 +239,13 @@ use System;
                     $managedOriginalPost->delete();
                     $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $managedOriginalPost->getId()));
                 } else {
-                    $data = array('title' => $title, 'post_text' => $message, 'attachSignature' => $attach_signature);
+                    $data = array(
+                        'title' => $title,
+                        'post_text' => $message,
+                        'attachSignature' => $attach_signature);
                     $managedOriginalPost->update($data);
-                    $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
+                    $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array(
+                        'topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
                     $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
                     if ($attach_signature && $this->getVar('removesignature') == 'no') {
                         // include signature in response text
@@ -236,7 +253,9 @@ use System;
                         $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
                     }
                     // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
-                    $response = array('action' => 'updated', 'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
+                    $response = array(
+                        'action' => 'updated',
+                        'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
                 }
 
                 return new Zikula_Response_Ajax($response);
@@ -310,7 +329,9 @@ use System;
             $reply['query'] = $fragment;
             $reply['suggestions'] = array();
             foreach ($users as $user) {
-                $reply['suggestions'][] = array('value' => htmlentities(stripslashes($user->getUname())), 'data' => $user->getUid());
+                $reply['suggestions'][] = array(
+                    'value' => htmlentities(stripslashes($user->getUname())),
+                    'data' => $user->getUid());
             }
 
             return new Zikula_Response_Ajax_Plain(json_encode($reply));
@@ -328,7 +349,9 @@ use System;
             if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'no') {
                 return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
             }
-            $params = array('forum_id' => FormUtil::getPassedValue('forum', 'POST'), 'action' => FormUtil::getPassedValue('action', 'POST'));
+            $params = array(
+                'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
+                'action' => FormUtil::getPassedValue('action', 'POST'));
             if (empty($params['forum_id'])) {
                 return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
             }

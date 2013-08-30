@@ -38,7 +38,7 @@ class Dizkus_Form_Handler_User_EditPost extends Zikula_Form_AbstractHandler
         }
 
         // get the input
-        $id = (int) $this->request->query->get('post');
+        $id = (int)$this->request->query->get('post');
 
         if (!isset($id)) {
             return LogUtil::registerError(

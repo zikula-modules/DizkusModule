@@ -33,7 +33,10 @@ class SearchApi extends \Zikula_AbstractApi
      */
     public function info()
     {
-        return array('title' => $this->__('Dizkus'), 'functions' => array('Dizkus' => 'search'));
+        return array(
+            'title' => $this->__('Dizkus'),
+            'functions' => array(
+                'Dizkus' => 'search'));
     }
 
     /**
@@ -49,7 +52,8 @@ class SearchApi extends \Zikula_AbstractApi
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
             $view = Zikula_View::getInstance('Dizkus', false, null, true);
             $view->assign('active', isset($args['active']) && isset($args['active']['Dizkus']) || !isset($args['active']));
-            $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
+            $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array(
+                        'includeRoot' => false)));
 
             return $view->fetch('search/options.tpl');
         }
@@ -168,7 +172,7 @@ class SearchApi extends \Zikula_AbstractApi
             $whereforums = 't.forum IN (' . DataUtil::formatForStore(implode($userforums, ',')) . ') ';
         } else {
             // filter out forums we are not allowed to read
-            $args['forums'] = array_intersect($userforums, (array) $args['forums']);
+            $args['forums'] = array_intersect($userforums, (array)$args['forums']);
             if (count($args['forums']) == 0) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
@@ -184,7 +188,14 @@ class SearchApi extends \Zikula_AbstractApi
         // Process the result set and insert into search result table
         foreach ($topics as $topic) {
             $posts = $topic->getPosts();
-            $record = array('title' => $topic->getTitle(), 'text' => $showtextinsearchresults == 'yes' ? $posts[0]->getPost_text() : '', 'created' => $topic->getTopic_time()->format('Y-m-d H:i:s'), 'module' => 'Dizkus', 'session' => $sessionId, 'extra' => ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id())));
+            $record = array(
+                'title' => $topic->getTitle(),
+                'text' => $showtextinsearchresults == 'yes' ? $posts[0]->getPost_text() : '',
+                'created' => $topic->getTopic_time()->format('Y-m-d H:i:s'),
+                'module' => 'Dizkus',
+                'session' => $sessionId,
+                'extra' => ModUtil::url('Dizkus', 'user', 'viewtopic', array(
+                    'topic' => $topic->getTopic_id())));
             if (!DBUtil::insertObject($record, 'search_result')) {
                 return LogUtil::registerError($this->__('Error! Could not save the search results.'));
             }
@@ -272,7 +283,7 @@ class SearchApi extends \Zikula_AbstractApi
             $whereforums = 'p.forum_id IN (' . DataUtil::formatForStore(implode($userforums, ',')) . ') ';
         } else {
             // filter out forums we are not allowed to read
-            $args['forums'] = array_intersect($userforums, (array) $args['forums']);
+            $args['forums'] = array_intersect($userforums, (array)$args['forums']);
             if (count($args['forums']) == 0) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access

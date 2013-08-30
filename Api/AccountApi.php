@@ -43,7 +43,10 @@ class AccountApi extends \Zikula_AbstractApi
             // user does not exist
             return $items;
         }
-        $items[] = array('url' => ModUtil::url('Dizkus', 'user', 'prefs'), 'title' => $this->__('Forum'), 'icon' => 'icon_forumprefs.gif');
+        $items[] = array(
+            'url' => ModUtil::url('Dizkus', 'user', 'prefs'),
+            'title' => $this->__('Forum'),
+            'icon' => 'icon_forumprefs.gif');
         // Return the items
         return $items;
     }

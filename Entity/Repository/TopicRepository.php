@@ -59,7 +59,10 @@ class TopicRepository extends \EntityRepository
     {
         $dql = 'SELECT a FROM Dizkus_Entity_Topic a ' . 'WHERE a.hookedModule = :modulename ' . 'AND a.hookedObjectId = :objectid ' . 'AND a.hookedAreaId = :area ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameters(array('modulename' => $hook->getCaller(), 'objectid' => $hook->getId(), 'area' => $hook->getAreaId()));
+        $query->setParameters(array(
+            'modulename' => $hook->getCaller(),
+            'objectid' => $hook->getId(),
+            'area' => $hook->getAreaId()));
         try {
             $result = $query->getOneOrNullResult();
         } catch (Exception $e) {

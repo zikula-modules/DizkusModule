@@ -91,7 +91,9 @@ class PostApi extends \Zikula_AbstractApi
         }
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
-        $pager = array('numitems' => count($topics), 'itemsperpage' => 10);
+        $pager = array(
+            'numitems' => count($topics),
+            'itemsperpage' => 10);
 
         return array($topics, $text, $pager);
     }
@@ -137,7 +139,9 @@ class PostApi extends \Zikula_AbstractApi
         $qb->setParameter('uid', $args['uid']);
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
-        $pager = array('numitems' => count($topics), 'itemsperpage' => 10);
+        $pager = array(
+            'numitems' => count($topics),
+            'itemsperpage' => 10);
 
         return array($topics, $text, $pager);
     }
@@ -169,8 +173,12 @@ class PostApi extends \Zikula_AbstractApi
         $managedDestinationTopic->incrementRepliesCount();
         $managedPost->get()->updatePost_time();
         $this->entityManager->flush();
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedOriginTopic->get(), 'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
+        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array(
+            'topic' => $managedOriginTopic->get(),
+            'flush' => false));
+        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array(
+            'topic' => $managedDestinationTopic->get(),
+            'flush' => true));
 
         return $managedDestinationTopic->getPostCount();
     }

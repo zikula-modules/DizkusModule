@@ -109,7 +109,15 @@ class Pop3Connection
      */
     public function getConnection()
     {
-        return array('server' => $this->server, 'port' => $this->port, 'login' => $this->login, 'password' => $this->password, 'interval' => $this->interval, 'lastconnect' => $this->lastconnect, 'coreUser' => $this->coreUser, 'matchstring' => $this->matchstring);
+        return array(
+            'server' => $this->server,
+            'port' => $this->port,
+            'login' => $this->login,
+            'password' => $this->password,
+            'interval' => $this->interval,
+            'lastconnect' => $this->lastconnect,
+            'coreUser' => $this->coreUser,
+            'matchstring' => $this->matchstring);
     }
 
     /**

@@ -33,7 +33,7 @@ class CronApi extends \Zikula_AbstractApi
         if (ModUtil::getVar('Dizkus', 'm2f_enabled') != 'yes') {
             return;
         }
-        $force = isset($args['force']) ? (bool) $args['force'] : false;
+        $force = isset($args['force']) ? (bool)$args['force'] : false;
         $managedForum = new Dizkus_Manager_Forum($args['forum']);
         $forum = $managedForum->get();
         $pop3conn = $forum->getPop3Connection()->getConnection();
@@ -133,14 +133,25 @@ class CronApi extends \Zikula_AbstractApi
                                                     } else {
                                                         $topic_id = $topic->getTopic_id();
                                                         // topic_id found, add this posting as a reply there
-                                                        list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array('topic_id' => $topic_id, 'message' => $message, 'attach_signature' => 1, 'subscribe_topic' => 0, 'msgid' => $msgid));
+                                                        list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array(
+                                                                    'topic_id' => $topic_id,
+                                                                    'message' => $message,
+                                                                    'attach_signature' => 1,
+                                                                    'subscribe_topic' => 0,
+                                                                    'msgid' => $msgid));
                                                         $this->mailcronecho("added new post '{$subject}' (post={$post_id}) to topic {$topic_id}\n", $args['debug']);
                                                     }
                                                 }
                                                 // check again for replyto and create a new topic
                                                 if (empty($replyto)) {
                                                     // store message in forum
-                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array('subject' => $subject, 'message' => $message, 'forum_id' => $forum['forum_id'], 'attach_signature' => 1, 'subscribe_topic' => 0, 'msgid' => $msgid));
+                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array(
+                                                                'subject' => $subject,
+                                                                'message' => $message,
+                                                                'forum_id' => $forum['forum_id'],
+                                                                'attach_signature' => 1,
+                                                                'subscribe_topic' => 0,
+                                                                'msgid' => $msgid));
                                                     $this->mailcronecho("Added new topic '{$subject}' (topic ID {$topic_id}) to '" . $forum['name'] . '\' forum.
 ', $args['debug']);
                                                 }
