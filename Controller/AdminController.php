@@ -31,7 +31,7 @@ class AdminController extends \Zikula_AbstractController
      * the main administration function
      *
      */
-    public function mainAction()
+    public function indexAction()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
 
