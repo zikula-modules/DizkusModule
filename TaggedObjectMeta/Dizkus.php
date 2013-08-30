@@ -11,11 +11,11 @@
 
 namespace Dizkus\TaggedObjectMeta;
 
+use DateUtil;
+use ModUtil;
+use ZLanguage;
 use Dizkus\Manager\TopicManager;
 use Dizkus\Manager\ForumManager;
-use DateUtil;
-use ZLanguage;
-use ModUtil;
 
 class Dizkus extends \Tag_AbstractTaggedObjectMeta
 {

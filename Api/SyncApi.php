@@ -12,8 +12,8 @@
 namespace Dizkus\Api;
 
 use LogUtil;
-use Dizkus\Entity\ForumEntity;
 use ModUtil;
+use Dizkus\Entity\ForumEntity;
 use Dizkus\Entity\TopicEntity;
 use Dizkus\Entity\ForumUserEntity;
 

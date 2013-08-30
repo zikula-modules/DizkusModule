@@ -17,11 +17,11 @@
 namespace Dizkus\Manager;
 
 use ServiceUtil;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Dizkus\Entity\ForumEntity;
 use ModUtil;
 use UserUtil;
 use SecurityUtil;
+use Dizkus\Entity\ForumEntity;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ForumManager
 {

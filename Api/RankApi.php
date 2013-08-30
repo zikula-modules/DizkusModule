@@ -11,9 +11,9 @@
 
 namespace Dizkus\Api;
 
-use Dizkus\Entity\RankEntity;
 use LogUtil;
 use SecurityUtil;
+use Dizkus\Entity\RankEntity;
 use Dizkus\Manager\ForumUserManager;
 
 /**

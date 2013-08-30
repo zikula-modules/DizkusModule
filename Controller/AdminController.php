@@ -16,7 +16,6 @@ use System;
 use LogUtil;
 use SecurityUtil;
 use FormUtil;
-use Dizkus_Form_Handler_Admin_Prefs;
 use Dizkus\Entity\RankEntity;
 
 class AdminController extends \Zikula_AbstractController

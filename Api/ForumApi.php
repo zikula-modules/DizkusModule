@@ -11,11 +11,11 @@
 
 namespace Dizkus\Api;
 
-use Dizkus\Entity\ForumEntity;
 use SecurityUtil;
 use UserUtil;
 use LogUtil;
 use ModUtil;
+use Dizkus\Entity\ForumEntity;
 use Dizkus\Manager\ForumUserManager;
 use Dizkus\Manager\ForumManager;
 

@@ -11,12 +11,12 @@
 
 namespace Dizkus\Needles;
 
-use Dizkus\Manager\ForumManager;
 use ModUtil;
 use DataUtil;
 use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\ForumManager;
 
-class DizkusNeedles extends \Zikula_AbstractHelper
+class Dizkus extends \Zikula_AbstractHelper
 {
 
     public function info()

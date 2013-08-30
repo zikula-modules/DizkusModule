@@ -12,8 +12,8 @@
 namespace Dizkus\Api;
 
 use LogUtil;
-use Dizkus\Entity\ForumEntity;
 use SecurityUtil;
+use Dizkus\Entity\ForumEntity;
 
 class PermissionApi extends \Zikula_AbstractApi
 {

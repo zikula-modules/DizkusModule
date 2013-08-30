@@ -12,10 +12,10 @@
 namespace Dizkus\Api;
 
 use ModUtil;
-use Dizkus\Manager\ForumManager;
-use pop3_class;
 use UserUtil;
 use DataUtil;
+use Dizkus\Manager\ForumManager;
+use pop3_class;
 
 class CronApi extends \Zikula_AbstractApi
 {

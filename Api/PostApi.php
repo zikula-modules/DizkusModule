@@ -20,9 +20,9 @@ use DataUtil;
 use DateUtil;
 use UserUtil;
 use LogUtil;
+use ModUtil;
 use Dizkus\Manager\TopicManager;
 use Dizkus\Manager\PostManager;
-use ModUtil;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostApi extends \Zikula_AbstractApi

@@ -18,26 +18,26 @@
 
 namespace Dizkus;
 
-use Zikula_View;
 use ServiceUtil;
-use ZLanguage;
 use SecurityUtil;
-use Dizkus\Manager\TopicManager;
-use Dizkus\Entity\RankEntity;
 use ModUtil;
 use PageUtil;
-use Dizkus_Version;
+use HookUtil;
+use LogUtil;
+use System;
+use ZLanguage;
+use Zikula_View;
 use Zikula_Response_DisplayHook;
-use Dizkus\Manager\ForumManager;
+use Zikula_Exception_Forbidden;
+use Zikula\Core\Event\GenericEvent;
+use Dizkus\Version;
+use Dizkus\Entity\RankEntity;
 use Dizkus\Entity\ForumEntity;
 use Dizkus\Entity\TopicEntity;
-use LogUtil;
-use Zikula_Exception_Forbidden;
-use HookUtil;
-use System;
+use Dizkus\Manager\ForumManager;
+use Dizkus\Manager\TopicManager;
 use Dizkus\AbstractHookedTopicMeta;
 use Dizkus\HookedTopicMeta\Generic;
-use Zikula\Core\Event\GenericEvent;
 
 class HookHandlers extends \Zikula_Hook_AbstractHandler
 {
@@ -112,7 +112,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
-        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
     /**
@@ -143,7 +143,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $forum = $this->_em->getRepository('Dizkus\Entity\ForumEntity')->find($forumId);
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
-        $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
 
     /**
@@ -162,7 +162,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
+            $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
 

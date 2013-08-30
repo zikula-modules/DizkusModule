@@ -11,14 +11,14 @@
 
 namespace Dizkus\Api;
 
-use Zikula_View;
 use ModUtil;
 use SecurityUtil;
 use LogUtil;
 use UserUtil;
 use DataUtil;
-use Search_Api_User;
 use DBUtil;
+use Zikula_View;
+use Search_Api_User;
 
 /**
  * This class provides the search api functions

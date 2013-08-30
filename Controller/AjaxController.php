@@ -11,28 +11,28 @@
 
 namespace Dizkus\Controller;
 
-use Zikula_Exception_Forbidden;
-use Zikula_Exception_Fatal;
 use ModUtil;
-use Dizkus\Manager\TopicManager;
-use Dizkus\Manager\PostManager;
-use ZLanguage;
-use Zikula_ModUrl;
-use Zikula_ProcessHook;
-use Dizkus\Manager\ForumUserManager;
-use Dizkus\Entity\RankEntity;
-use Zikula_Response_Ajax;
 use UserUtil;
-use Dizkus\Manager\ForumManager;
 use LogUtil;
-use Zikula_Response_Ajax_Unavailable;
-use Zikula_Response_Ajax_BadData;
 use DataUtil;
 use FormUtil;
 use SessionUtil;
-use Zikula_Response_Ajax_Plain;
 use SecurityUtil;
 use System;
+use ZLanguage;
+use Zikula_Exception_Forbidden;
+use Zikula_Exception_Fatal;
+use Zikula_Response_Ajax;
+use Zikula_Response_Ajax_Unavailable;
+use Zikula_Response_Ajax_BadData;
+use Zikula_Response_Ajax_Plain;
+use Zikula_ModUrl;
+use Zikula_ProcessHook;
+use Dizkus\Entity\RankEntity;
+use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\PostManager;
+use Dizkus\Manager\ForumUserManager;
+use Dizkus\Manager\ForumManager;
 
 /**
  * Ajax controller functions.

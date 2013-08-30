@@ -11,16 +11,16 @@
 
 namespace Dizkus\Api;
 
-use Zikula_View;
 use UserUtil;
 use ModUtil;
 use LogUtil;
 use System;
 use CookieUtil;
-use Dizkus\Manager\PostManager;
 use DateTime;
-use Dizkus\Manager\TopicManager;
 use DataUtil;
+use Zikula_View;
+use Dizkus\Manager\PostManager;
+use Dizkus\Manager\TopicManager;
 use Doctrine;
 
 class UserApi extends \Zikula_AbstractApi

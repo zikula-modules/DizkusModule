@@ -17,13 +17,13 @@
 namespace Dizkus\Manager;
 
 use ServiceUtil;
-use Dizkus\Entity\TopicEntity;
 use ModUtil;
-use Dizkus\Manager\ForumUserManager;
 use UserUtil;
-use Dizkus\Manager\ForumManager;
-use Dizkus\Entity\PostEntity;
 use DataUtil;
+use Dizkus\Entity\PostEntity;
+use Dizkus\Entity\TopicEntity;
+use Dizkus\Manager\ForumUserManager;
+use Dizkus\Manager\ForumManager;
 use Dizkus\Entity\ForumUserEntity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 

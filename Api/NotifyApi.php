@@ -13,12 +13,12 @@ namespace Dizkus\Api;
 
 use System;
 use ModUtil;
-use Zikula_View;
 use DateUtil;
 use UserUtil;
 use SecurityUtil;
 use DataUtil;
 use LogUtil;
+use Zikula_View;
 
 class NotifyApi extends \Zikula_AbstractApi
 {

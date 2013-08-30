@@ -12,8 +12,8 @@
 namespace Dizkus\Api;
 
 use ModUtil;
-use Dizkus\Entity\RankEntity;
 use SecurityUtil;
+use Dizkus\Entity\RankEntity;
 
 class AdminApi extends \Zikula_AbstractApi
 {

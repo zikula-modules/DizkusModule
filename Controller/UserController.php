@@ -11,25 +11,25 @@
 
 namespace Dizkus\Controller;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use SecurityUtil;
 use ModUtil;
 use UserUtil;
 use LogUtil;
+use FormUtil;
+use DataUtil;
+use System;
+use ZLanguage;
+use Zikula_Hook_ValidationProviders;
+use Zikula_ValidationHook;
+use Zikula_ModUrl;
+use Zikula_ProcessHook;
+use Dizkus\Entity\RankEntity;
+use Dizkus\Entity\ForumUserEntity;
 use Dizkus\Manager\ForumUserManager;
 use Dizkus\Manager\ForumManager;
 use Dizkus\Manager\PostManager;
-use System;
 use Dizkus\Manager\TopicManager;
-use Dizkus\Entity\RankEntity;
-use Zikula_Hook_ValidationProviders;
-use Zikula_ValidationHook;
-use ZLanguage;
-use Zikula_ModUrl;
-use Zikula_ProcessHook;
-use FormUtil;
-use Dizkus\Entity\ForumUserEntity;
-use DataUtil;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserController extends \Zikula_AbstractController
 {

@@ -11,13 +11,13 @@
 
 namespace Dizkus\Entity;
 
+use ServiceUtil;
 use ZLanguage;
 use Dizkus\Entity\Moderator\UserEntity;
-use Dizkus\Manager\ForumUserManager;
 use Dizkus\Entity\Moderator\GroupEntity;
-use ServiceUtil;
 use Dizkus\Entity\Moderator\UserEntity as ModeratorUserEntity;
 use Dizkus\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
+use Dizkus\Manager\ForumUserManager;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;

@@ -11,18 +11,18 @@
 
 namespace Dizkus;
 
-use DoctrineHelper;
 use LogUtil;
 use HookUtil;
 use EventUtil;
-use Dizkus\Entity\ForumEntity;
-use Dizkus\Entity\RankEntity;
+use ModUtil;
 use ZLanguage;
 use System;
-use ModUtil;
+use Dizkus\Entity\ForumEntity;
+use Dizkus\Entity\RankEntity;
 use Dizkus\Entity\ForumUserEntity;
 use Dizkus\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
 use Dizkus\Connection\Pop3Connection;
+use DoctrineHelper;
 
 class DizkusInstaller extends \Zikula_AbstractInstaller
 {

@@ -12,10 +12,10 @@
 namespace Dizkus\Entity;
 
 use ServiceUtil;
-use System;
 use ModUtil;
 use DateTime;
 use UserUtil;
+use System;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 

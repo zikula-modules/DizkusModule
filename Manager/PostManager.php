@@ -17,14 +17,14 @@
 namespace Dizkus\Manager;
 
 use ServiceUtil;
-use Dizkus\Manager\TopicManager;
-use Dizkus\Entity\PostEntity;
 use DataUtil;
-use Zikula_Exception_Fatal;
-use UserUtil;
-use Dizkus\Entity\ForumUserEntity;
-use Dizkus\Manager\ForumManager;
 use ModUtil;
+use UserUtil;
+use Zikula_Exception_Fatal;
+use Dizkus\Entity\ForumUserEntity;
+use Dizkus\Entity\PostEntity;
+use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\ForumManager;
 
 class PostManager
 {
