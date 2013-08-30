@@ -164,7 +164,7 @@ class CronApi extends \Zikula_AbstractApi
                                 }
                             } else {
                                 $this->mailcronecho("Error! Could not log user '" . $pop3conn['coreUser']->getUname() . "' in.\n");
-
+                            }
                             // close pop3 connection and finally delete messages
                             if ($error == '' && ($error = $pop3->Close()) == '') {
                                 $this->mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
@@ -176,8 +176,7 @@ class CronApi extends \Zikula_AbstractApi
                 }
             }
             if (!empty($error)) {
-                $this->mailcronecho('error: ', htmlspecialchars($error) . '
-');
+                $this->mailcronecho('error: ', htmlspecialchars($error) . "\n");
             }
             // store the timestamp of the last connection to the database
             $managedForum->get()->getPop3Connection()->updateConnectTime();
