@@ -9,6 +9,8 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\ForumManager;
+use Dizkus\Manager\TopicManager;
 /**
  * This class provides a handler to create a new topic.
  */
@@ -44,7 +46,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
             return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
         }
 
-        $managedforum = new Dizkus_Manager_Forum($this->_forumId);
+        $managedforum = new ForumManager($this->_forumId);
         if ($managedforum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
             return LogUtil::registerError($this->__('Error! This forum is locked. New topics cannot be created.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId)));
@@ -98,7 +100,7 @@ class Dizkus_Form_Handler_User_NewTopic extends Zikula_Form_AbstractHandler
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
           } */
 
-        $newManagedTopic = new Dizkus_Manager_Topic();
+        $newManagedTopic = new TopicManager();
         $newManagedTopic->prepare($data);
 
         // show preview

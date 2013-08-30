@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\TopicManager;
 /**
  * This class provides a handler to email a topic.
  */
@@ -39,7 +40,7 @@ class Dizkus_Form_Handler_User_EmailTopic extends Zikula_Form_AbstractHandler
 
         $this->topic_id = (int)$this->request->query->get('topic');
 
-        $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
+        $managedTopic = new TopicManager($this->topic_id);
 
         $view->assign($managedTopic->get());
         $view->assign('emailsubject', $managedTopic->get()->getTitle());

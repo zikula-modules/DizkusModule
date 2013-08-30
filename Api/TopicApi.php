@@ -11,14 +11,14 @@
 
 namespace Dizkus\Api;
 
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 use LogUtil;
 use UserUtil;
 use SecurityUtil;
 use ModUtil;
-use Dizkus_Manager_ForumUser;
+use Dizkus\Manager\ForumUserManager;
 use Dizkus\Entity\TopicEntity;
-use Dizkus_Manager_Post;
+use Dizkus\Manager\PostManager;
 
 /**
  * This class provides the topic api functions
@@ -28,7 +28,7 @@ class TopicApi extends \Zikula_AbstractApi
 
     public function changeStatus($args)
     {
-        $managedTopic = new Dizkus_Manager_Topic($args['topic_id']);
+        $managedTopic = new TopicManager($args['topic_id']);
         if ($args['action'] == 'subscribe') {
             $this->subscribe(array('topic' => $managedTopic->get()));
         } else {
@@ -83,7 +83,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
             'topic' => $args['topic'],
             'forumUser' => $managedForumUser->get());
@@ -115,7 +115,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['topic'])) {
             $topicSubscription = $this->entityManager->getRepository('Dizkus\Entity\TopicSubscriptionEntity')->findOneBy(array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeTopicSubscription($topicSubscription);
@@ -138,7 +138,7 @@ class TopicApi extends \Zikula_AbstractApi
         if (empty($args['uid'])) {
             $args['uid'] = UserUtil::getVar('uid');
         }
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+        $managedForumUser = new ForumUserManager($args['uid']);
 
         return $managedForumUser->get()->getTopicSubscriptions();
     }
@@ -256,7 +256,7 @@ class TopicApi extends \Zikula_AbstractApi
             }
             $args['topicObj'] = $this->entityManager->find('Dizkus\Entity\TopicEntity', $args['topic_id']);
         }
-        $managedTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
+        $managedTopic = new TopicManager(null, $args['topicObj']);
         if ($managedTopic->getForumId() != $args['forum_id']) {
             // set new forum
             $oldForumId = $managedTopic->getForumId();
@@ -264,7 +264,7 @@ class TopicApi extends \Zikula_AbstractApi
             $managedTopic->get()->setForum($forum);
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
-                $managedShadowTopic = new Dizkus_Manager_Topic();
+                $managedShadowTopic = new TopicManager();
                 $topicData = array(
                     'title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
                     'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url('Dizkus', 'user', 'viewtopic', array(
@@ -300,17 +300,17 @@ class TopicApi extends \Zikula_AbstractApi
     /**
      * split the topic at the provided post
      *
-     * @params Dizkus_Manager_Post $args['post']
+     * @params PostManager $args['post']
      * @params Array $args['data']
      *
      * @return Integer id of the new topic
      */
     public function split($args)
     {
-        if (!isset($args['post']) || !$args['post'] instanceof Dizkus_Manager_Post || !isset($args['data']['newsubject'])) {
+        if (!isset($args['post']) || !$args['post'] instanceof PostManager || !isset($args['data']['newsubject'])) {
             return LogUtil::registerArgsError();
         }
-        $managedTopic = new Dizkus_Manager_Topic(null, $args['post']->get()->getTopic());
+        $managedTopic = new TopicManager(null, $args['post']->get()->getTopic());
         // create new topic
         $newTopic = new TopicEntity();
         $newTopic->setPoster($args['post']->get()->getPoster());
@@ -374,9 +374,9 @@ class TopicApi extends \Zikula_AbstractApi
             // unset the id and use the Object
             $args['from_topic_id'] = null;
         }
-        $managedOriginTopic = new Dizkus_Manager_Topic($args['from_topic_id'], $args['topicObj']);
+        $managedOriginTopic = new TopicManager($args['from_topic_id'], $args['topicObj']);
         // one param will be null
-        $managedDestinationTopic = new Dizkus_Manager_Topic($args['to_topic_id']);
+        $managedDestinationTopic = new TopicManager($args['to_topic_id']);
         if ($managedDestinationTopic->get() === null) {
             // can't use isset() and ->get() at the same time
             LogUtil::registerError($this->__('Destination topic does not exist.'));

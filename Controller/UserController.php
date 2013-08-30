@@ -16,11 +16,11 @@ use SecurityUtil;
 use ModUtil;
 use UserUtil;
 use LogUtil;
-use Dizkus_Manager_ForumUser;
-use Dizkus_Manager_Forum;
-use Dizkus_Manager_Post;
+use Dizkus\Manager\ForumUserManager;
+use Dizkus\Manager\ForumManager;
+use Dizkus\Manager\PostManager;
 use System;
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 use Dizkus\Entity\RankEntity;
 use Zikula_Hook_ValidationProviders;
 use Zikula_ValidationHook;
@@ -86,7 +86,7 @@ class UserController extends \Zikula_AbstractController
         if (count($forums) < 1) {
             if ($showOnlyFavorites) {
                 LogUtil::registerError($this->__('You have not selected any favorite forums. Please select some and try again.'));
-                $managedForumUser = new Dizkus_Manager_ForumUser($uid);
+                $managedForumUser = new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
                 $this->redirect(ModUtil::url($this->name, 'user', 'index'));
             } else {
@@ -121,7 +121,7 @@ class UserController extends \Zikula_AbstractController
         $this->throwNotFoundUnless($forumId > 0, $this->__('That forum doesn\'t exist!'));
         $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
         $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-        $managedForum = new Dizkus_Manager_Forum($forumId);
+        $managedForum = new ForumManager($forumId);
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
         // filter the forum children by permissions
@@ -149,14 +149,14 @@ class UserController extends \Zikula_AbstractController
         $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
-            $managedPost = new Dizkus_Manager_Post($post_id);
+            $managedPost = new PostManager($post_id);
             $topic_id = $managedPost->getTopicId();
             if ($topic_id != false) {
                 // redirect instad of continue, better for SEO
                 return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id)));
             }
         }
-        $managedTopic = new Dizkus_Manager_Topic($topicId);
+        $managedTopic = new TopicManager($topicId);
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum()));
         if (!$managedTopic->exists()) {
@@ -239,7 +239,7 @@ class UserController extends \Zikula_AbstractController
                 'topic_id' => $topic_id,
                 'post_text' => $message,
                 'attachSignature' => $attach_signature);
-            $managedPost = new Dizkus_Manager_Post();
+            $managedPost = new PostManager();
             $managedPost->create($data);
             // handle subscription
             if ($subscribe_topic) {
@@ -271,8 +271,8 @@ class UserController extends \Zikula_AbstractController
             return $this->redirect($url->getUrl());
         } else {
             $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
-            $managedTopic = new Dizkus_Manager_Topic($topic_id);
-            $managedPoster = new Dizkus_Manager_ForumUser();
+            $managedTopic = new TopicManager($topic_id);
+            $managedPoster = new ForumUserManager();
             $reply = array(
                 'topic_id' => $topic_id,
                 'post_id' => $post_id,
@@ -666,7 +666,7 @@ class UserController extends \Zikula_AbstractController
          * check for forum_id
          */
         if (!empty($forum_id)) {
-            $managedForum = new Dizkus_Manager_Forum($forum_id);
+            $managedForum = new ForumManager($forum_id);
             $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id)));
             $where = array('t.forum', (int) DataUtil::formatForStore($forum_id), '=');
             $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);

@@ -14,7 +14,7 @@ namespace Dizkus\Api;
 use Dizkus\Entity\RankEntity;
 use LogUtil;
 use SecurityUtil;
-use Dizkus_Manager_ForumUser;
+use Dizkus\Manager\ForumUserManager;
 
 /**
  * This class provides the rank api functions
@@ -100,7 +100,7 @@ class RankApi extends \Zikula_AbstractApi
         if (is_array($args['setrank'])) {
             foreach ($args['setrank'] as $userId => $rankId) {
                 $rankId = $rankId == 0 ? null : $rankId;
-                $managedForumUser = new Dizkus_Manager_ForumUser($userId);
+                $managedForumUser = new ForumUserManager($userId);
                 if (isset($rankId)) {
                     $rank = $this->entityManager->find('Dizkus\Entity\RankEntity', $rankId);
                     $managedForumUser->get()->setRank($rank);

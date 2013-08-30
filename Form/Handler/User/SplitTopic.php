@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to delete a topic.
  */
@@ -38,7 +39,7 @@ class Dizkus_Form_Handler_User_SplitTopic extends Zikula_Form_AbstractHandler
         }
 
         $postId = (int) $this->request->query->get('post');
-        $this->post = new Dizkus_Manager_Post($postId);
+        $this->post = new PostManager($postId);
 
         $this->view->assign($this->post->toArray());
         $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());

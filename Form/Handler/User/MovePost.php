@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to move a post.
  */
@@ -49,7 +50,7 @@ class Dizkus_Form_Handler_User_MovePost extends Zikula_Form_AbstractHandler
 
         $this->post_id = $id;
 
-        $managedPost = new Dizkus_Manager_Post($id);
+        $managedPost = new PostManager($id);
 
         $this->old_topic_id = $managedPost->getTopicId();
 

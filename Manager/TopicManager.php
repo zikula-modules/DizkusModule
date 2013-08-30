@@ -19,9 +19,9 @@ namespace Dizkus\Manager;
 use ServiceUtil;
 use Dizkus\Entity\TopicEntity;
 use ModUtil;
-use Dizkus_Manager_ForumUser;
+use Dizkus\Manager\ForumUserManager;
 use UserUtil;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use Dizkus\Entity\PostEntity;
 use DataUtil;
 use Dizkus\Entity\ForumUserEntity;
@@ -152,7 +152,7 @@ class TopicManager
     public function getPosts($startNumber = 1)
     {
         if (UserUtil::isLoggedIn()) {
-            $managedForumUser = new Dizkus_Manager_ForumUser();
+            $managedForumUser = new ForumUserManager();
             $postSortOrder = $managedForumUser->getPostOrder();
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
@@ -187,7 +187,7 @@ class TopicManager
      */
     public function getBreadcrumbs()
     {
-        $managedForum = new Dizkus_Manager_Forum(null, $this->get()->getForum());
+        $managedForum = new ForumManager(null, $this->get()->getForum());
 
         return $managedForum->getBreadcrumbs(false);
     }
@@ -252,7 +252,7 @@ class TopicManager
         $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
         $this->_forumId = $data['forum_id'];
-        $managedForum = new Dizkus_Manager_Forum($this->_forumId);
+        $managedForum = new ForumManager($this->_forumId);
         $this->_topic->setForum($managedForum->get());
         unset($data['forum_id']);
         $this->_topic->setLast_post($this->_firstPost);
@@ -301,7 +301,7 @@ class TopicManager
     //        $this->entityManager->flush();
     //
     //        // increment forum post count
-    //        $managedForum = new Dizkus_Manager_Forum($this->getForumId());
+    //        $managedForum = new ForumManager($this->getForumId());
     //        $managedForum->incrementPostCount();
     //        $managedForum->incrementTopicCount();
     //        $managedForum->setLastPost($this->_firstPost);
@@ -326,7 +326,7 @@ class TopicManager
     {
         // add first post to topic
         $this->_firstPost->settopic($this->_topic);
-        $managedForum = new Dizkus_Manager_Forum($this->_forumId);
+        $managedForum = new ForumManager($this->_forumId);
         // add topic to forum
         $this->_topic->setForum($managedForum->get());
         // write topic

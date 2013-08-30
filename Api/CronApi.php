@@ -12,7 +12,7 @@
 namespace Dizkus\Api;
 
 use ModUtil;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use pop3_class;
 use UserUtil;
 use DataUtil;
@@ -34,7 +34,7 @@ class CronApi extends \Zikula_AbstractApi
             return;
         }
         $force = isset($args['force']) ? (bool)$args['force'] : false;
-        $managedForum = new Dizkus_Manager_Forum($args['forum']);
+        $managedForum = new ForumManager($args['forum']);
         $forum = $managedForum->get();
         $pop3conn = $forum->getPop3Connection()->getConnection();
         // array of connection details

@@ -22,13 +22,13 @@ use Zikula_View;
 use ServiceUtil;
 use ZLanguage;
 use SecurityUtil;
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 use Dizkus\Entity\RankEntity;
 use ModUtil;
 use PageUtil;
 use Dizkus_Version;
 use Zikula_Response_DisplayHook;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use Dizkus\Entity\ForumEntity;
 use Dizkus\Entity\TopicEntity;
 use LogUtil;
@@ -84,7 +84,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $start = (int)$request->query->get('start', 1);
         $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
-            $managedTopic = new Dizkus_Manager_Topic(null, $topic);
+            $managedTopic = new TopicManager(null, $topic);
         } else {
             return;
         }
@@ -128,7 +128,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $forumId = $hookconfig[$hook->getAreaId()]['forum'];
         if (!isset($forumId)) {
             // admin didn't choose a forum, so create one and set as choice
-            $managedForum = new Dizkus_Manager_Forum();
+            $managedForum = new ForumManager();
             $data = array(
                 'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
                 'status' => ForumEntity::STATUS_LOCKED,
@@ -215,7 +215,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             'subscribe_topic' => false,
             'attachSignature' => false);
         // create the new topic
-        $newManagedTopic = new Dizkus_Manager_Topic(null, $topic);
+        $newManagedTopic = new TopicManager(null, $topic);
         // inject new topic into manager
         $newManagedTopic->prepare($data);
         // add hook data to topic

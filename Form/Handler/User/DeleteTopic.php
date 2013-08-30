@@ -9,6 +9,8 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\PostManager;
+use Dizkus\Manager\TopicManager;
 /**
  * This class provides a handler to delete a topic.
  */
@@ -51,11 +53,11 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
             if (empty($post_id)) {
                 return LogUtil::registerArgsError();
             }
-            $managedPost = new Dizkus_Manager_Post($post_id);
+            $managedPost = new PostManager($post_id);
             $this->topic_id = $managedPost->getTopicId();
         }
 
-        $topic = new Dizkus_Manager_Topic($this->topic_id);
+        $topic = new TopicManager($this->topic_id);
 
         $this->topic_poster = $topic->get()->getPoster();
         $topicPerms = $topic->getPermissions();

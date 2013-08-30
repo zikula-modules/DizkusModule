@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\TopicManager;
 /**
  * This class provides a handler to move a post.
  */
@@ -44,7 +45,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
         }
 
         $this->topic_id = (int) $this->request->query->get('topic', null);
-        $managedTopic = new Dizkus_Manager_Topic($this->topic_id);
+        $managedTopic = new TopicManager($this->topic_id);
         $this->topic = $managedTopic->get();
         $view->assign('topic', $this->topic_id);
         $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));

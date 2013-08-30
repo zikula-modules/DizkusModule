@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to edit forums.
  */
@@ -18,7 +19,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
     /**
      * forum
      *
-     * @var Dizkus_Manager_Forum
+     * @var ForumManager
      */
     private $_forum;
 
@@ -59,7 +60,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
             $this->_action = 'c';
         }
 
-        $this->_forum = new Dizkus_Manager_Forum($id);
+        $this->_forum = new ForumManager($id);
 
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if (!$this->_forum->exists()) {

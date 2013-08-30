@@ -17,13 +17,13 @@
 namespace Dizkus\Manager;
 
 use ServiceUtil;
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 use Dizkus\Entity\PostEntity;
 use DataUtil;
 use Zikula_Exception_Fatal;
 use UserUtil;
 use Dizkus\Entity\ForumUserEntity;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use ModUtil;
 
 class PostManager
@@ -37,7 +37,7 @@ class PostManager
 
     /**
      * Post topic
-     * @var Dizkus_Manager_Topic
+     * @var TopicManager
      */
     private $_topic;
     protected $entityManager;
@@ -52,7 +52,7 @@ class PostManager
         $this->name = 'Dizkus';
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Dizkus\Entity\PostEntity', $id);
-            $this->_topic = new Dizkus_Manager_Topic(null, $this->_post->getTopic());
+            $this->_topic = new TopicManager(null, $this->_post->getTopic());
         } else {
             $this->_post = new PostEntity();
         }
@@ -123,7 +123,7 @@ class PostManager
     public function create($data = null)
     {
         if (!is_null($data)) {
-            $this->_topic = new Dizkus_Manager_Topic($data['topic_id']);
+            $this->_topic = new TopicManager($data['topic_id']);
             $this->_post->setTopic($this->_topic->get());
             unset($data['topic_id']);
             $this->prepare($data);
@@ -145,7 +145,7 @@ class PostManager
         // update topic time to last post time
         $this->_topic->get()->setTopic_time($this->_post->getPost_time());
         // increment forum posts
-        $managedForum = new Dizkus_Manager_Forum(null, $this->_topic->get()->getForum());
+        $managedForum = new ForumManager(null, $this->_topic->get()->getForum());
         $managedForum->incrementPostCount();
         $managedForum->setLastPost($this->_post);
         $this->_post->setPoster($forumUser);
@@ -163,7 +163,7 @@ class PostManager
         // preserve post_id
         $id = $this->_post->getPost_id();
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
-        $managedForum = new Dizkus_Manager_Forum($this->_topic->getForumId());
+        $managedForum = new ForumManager($this->_topic->getForumId());
         $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();

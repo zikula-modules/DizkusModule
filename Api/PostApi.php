@@ -20,8 +20,8 @@ use DataUtil;
 use DateUtil;
 use UserUtil;
 use LogUtil;
-use Dizkus_Manager_Topic;
-use Dizkus_Manager_Post;
+use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\PostManager;
 use ModUtil;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -162,9 +162,9 @@ class PostApi extends \Zikula_AbstractApi
         if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
             return LogUtil::registerArgsError();
         }
-        $managedOriginTopic = new Dizkus_Manager_Topic($old_topic_id);
-        $managedDestinationTopic = new Dizkus_Manager_Topic($to_topic_id);
-        $managedPost = new Dizkus_Manager_Post($post_id);
+        $managedOriginTopic = new TopicManager($old_topic_id);
+        $managedDestinationTopic = new TopicManager($to_topic_id);
+        $managedPost = new PostManager($post_id);
         $managedOriginTopic->get()->getPosts()->removeElement($managedPost->get());
         $managedPost->get()->setTopic($managedDestinationTopic->get());
         $managedDestinationTopic->get()->addPost($managedPost->get());

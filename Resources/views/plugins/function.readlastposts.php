@@ -36,7 +36,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $whereforum = array();
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
         // get the forum and check permissions
-        $managedForum = new Dizkus_Manager_Forum($params['forum_id']);
+        $managedForum = new Dizkus\Manager\ForumManager($params['forum_id']);
         if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $managedForum->get())) {
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
@@ -66,7 +66,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
     if (isset($params['favorites']) && $params['favorites'] && empty($whereforum) && $loggedIn) {
         // get the favorites
-        $managedForumUser = new Dizkus_Manager_ForumUser($uid);
+        $managedForumUser = new Dizkus\Manager\ForumUserManager($uid);
         $favoriteForums = $managedForumUser->get()->getFavoriteForums();
         foreach ($favoriteForums as $forum) {
             if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $forum)) {

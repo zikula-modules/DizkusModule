@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\ForumUserManager;
 /**
  * This class provides a handler to create a new topic.
  */
@@ -39,7 +40,7 @@ class Dizkus_Form_Handler_User_Prefs extends Zikula_Form_AbstractHandler
         }
 
         // get the input
-        $this->_forumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
+        $this->_forumUser = new ForumUserManager(UserUtil::getVar('uid'));
 
         $view->assign($this->_forumUser->toArray());
         $orders = array(

@@ -11,10 +11,10 @@
 
 namespace Dizkus\Needles;
 
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use ModUtil;
 use DataUtil;
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 
 class DizkusNeedles extends \Zikula_AbstractHelper
 {
@@ -59,7 +59,7 @@ class DizkusNeedles extends \Zikula_AbstractHelper
                     }
                     switch ($type) {
                         case 'F':
-                            $managedForum = new Dizkus_Manager_Forum($id);
+                            $managedForum = new ForumManager($id);
                             if (!empty($managedForum)) {
                                 if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
                                     $url = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
@@ -73,7 +73,7 @@ class DizkusNeedles extends \Zikula_AbstractHelper
                             }
                             break;
                         case 'T':
-                            $managedTopic = new Dizkus_Manager_Topic($id);
+                            $managedTopic = new TopicManager($id);
                             if (!empty($managedTopic)) {
                                 if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
                                     $url = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));

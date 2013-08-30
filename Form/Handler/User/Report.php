@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\PostManager;
 /**
  * This class provides a handler to report posts.
  */
@@ -18,7 +19,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
     /**
      * post
      *
-     * @var Dizkus_Manager_Post
+     * @var PostManager
      */
     private $_post;
 
@@ -43,7 +44,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
             return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
         }
 
-        $this->_post = new Dizkus_Manager_Post($id);
+        $this->_post = new PostManager($id);
         $view->assign('post', $this->_post->get());
         $view->assign('notify', true);
         list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));

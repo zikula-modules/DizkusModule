@@ -17,9 +17,9 @@ use ModUtil;
 use LogUtil;
 use System;
 use CookieUtil;
-use Dizkus_Manager_Post;
+use Dizkus\Manager\PostManager;
 use DateTime;
-use Dizkus_Manager_Topic;
+use Dizkus\Manager\TopicManager;
 use DataUtil;
 use Doctrine;
 
@@ -201,7 +201,7 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function get_viewip_data($args)
     {
-        $managedPost = new Dizkus_Manager_Post($args['post_id']);
+        $managedPost = new PostManager($args['post_id']);
         $pip = $managedPost->get()->getPoster_ip();
         $viewip = array(
             'poster_ip' => $pip,
@@ -281,7 +281,7 @@ class UserApi extends \Zikula_AbstractApi
                 // create message
                 $message = '<strong>' . $this->__('Summary') . ' :</strong>\\n\\n' . $item->get_description() . '\\n\\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\\n\\n';
                 // store message
-                $newManagedTopic = new Dizkus_Manager_Topic();
+                $newManagedTopic = new TopicManager();
                 $data = array(
                     'title' => $subject,
                     'message' => $message,

@@ -16,8 +16,8 @@ use SecurityUtil;
 use UserUtil;
 use LogUtil;
 use ModUtil;
-use Dizkus_Manager_ForumUser;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumUserManager;
+use Dizkus\Manager\ForumManager;
 
 class ForumApi extends \Zikula_AbstractApi
 {
@@ -152,7 +152,7 @@ class ForumApi extends \Zikula_AbstractApi
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
             'forum' => $args['forum'],
             'forumUser' => $managedForumUser->get());
@@ -186,7 +186,7 @@ class ForumApi extends \Zikula_AbstractApi
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
+        $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['forum'])) {
             $forumSubscription = $this->entityManager->getRepository('Dizkus\Entity\ForumSubscriptionEntity')->findOneBy(array(
                 'forum' => $args['forum'],
@@ -210,7 +210,7 @@ class ForumApi extends \Zikula_AbstractApi
         if (empty($args['uid'])) {
             $args['uid'] = UserUtil::getVar('uid');
         }
-        $managedForumUser = new Dizkus_Manager_ForumUser($args['uid']);
+        $managedForumUser = new ForumUserManager($args['uid']);
 
         return $managedForumUser->get()->getForumSubscriptions();
     }
@@ -226,8 +226,8 @@ class ForumApi extends \Zikula_AbstractApi
         if (empty($args['forum_id'])) {
             return LogUtil::registerArgsError();
         }
-        $managedForumUser = new Dizkus_Manager_ForumUser(UserUtil::getVar('uid'));
-        $managedForum = new Dizkus_Manager_Forum($args['forum_id']);
+        $managedForumUser = new ForumUserManager(UserUtil::getVar('uid'));
+        $managedForum = new ForumManager($args['forum_id']);
         switch ($args['action']) {
             case 'addToFavorites':
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());

@@ -14,16 +14,16 @@ namespace Dizkus\Controller;
 use Zikula_Exception_Forbidden;
 use Zikula_Exception_Fatal;
 use ModUtil;
-use Dizkus_Manager_Topic;
-use Dizkus_Manager_Post;
+use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\PostManager;
 use ZLanguage;
 use Zikula_ModUrl;
 use Zikula_ProcessHook;
-use Dizkus_Manager_ForumUser;
+use Dizkus\Manager\ForumUserManager;
 use Dizkus\Entity\RankEntity;
 use Zikula_Response_Ajax;
 use UserUtil;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\ForumManager;
 use LogUtil;
 use Zikula_Response_Ajax_Unavailable;
 use Zikula_Response_Ajax_BadData;
@@ -108,7 +108,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $subscribe_topic = $this->request->request->get('subscribe_topic', 0) == '1' ? true : false;
         $preview = $this->request->request->get('preview', 0) == '1' ? true : false;
         $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
-        $managedTopic = new Dizkus_Manager_Topic($topic_id);
+        $managedTopic = new TopicManager($topic_id);
         $start = 1;
         $this->checkMessageLength($message);
         if ($preview == false) {
@@ -116,7 +116,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 'topic_id' => $topic_id,
                 'post_text' => $message,
                 'attachSignature' => $attach_signature);
-            $managedPost = new Dizkus_Manager_Post();
+            $managedPost = new PostManager();
             $managedPost->create($data);
             if ($subscribe_topic) {
                 ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic' => $topic_id));
@@ -133,7 +133,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $permissions = ModUtil::apiFunc($this->name, 'permission', 'get', array('forum_id' => $managedPost->get()->getTopic()->getForum()->getForum_id()));
         } else {
             // preview == true, create fake post
-            $managedPoster = new Dizkus_Manager_ForumUser();
+            $managedPoster = new ForumUserManager();
             $post = array(
                 'post_id' => 0,
                 'topic_id' => $topic_id,
@@ -180,9 +180,9 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $post_id = $this->request->request->get('post', null, 'POST');
         $currentUserId = UserUtil::getVar('uid');
         if (!empty($post_id)) {
-            $managedPost = new Dizkus_Manager_Post($post_id);
+            $managedPost = new PostManager($post_id);
             $forum = $managedPost->get()->getTopic()->getForum();
-            $managedForum = new Dizkus_Manager_Forum(null, $forum);
+            $managedForum = new ForumManager(null, $forum);
             if ($managedPost->get()->getPoster()->getUser_id() == $currentUserId || $managedForum->isModerator()) {
                 $this->view->setCaching(false);
                 $this->view->assign('post', $managedPost->get());
@@ -229,7 +229,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if (!empty($post_id)) {
             $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
             $this->checkMessageLength($message);
-            $managedOriginalPost = new Dizkus_Manager_Post($post_id);
+            $managedOriginalPost = new PostManager($post_id);
             if ($delete) {
                 if ($managedOriginalPost->get()->isFirst()) {
                     throw new Zikula_Exception_Forbidden($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));

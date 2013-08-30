@@ -9,6 +9,7 @@
  * @package Dizkus
  */
 
+use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to move a post.
  */
@@ -18,7 +19,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
     /**
      * forum
      *
-     * @var Dizkus_Manager_Forum
+     * @var ForumManager
      */
     private $_managedForum;
 
@@ -38,7 +39,7 @@ class Dizkus_Form_Handler_User_ModerateForum extends Zikula_Form_AbstractHandler
             return LogUtil::registerArgsError();
         }
         // Get the Forum and Permission-Check
-        $this->_managedForum = new Dizkus_Manager_Forum($forum_id);
+        $this->_managedForum = new ForumManager($forum_id);
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->_managedForum->get())) {
             // user is not allowed to moderate this forum
             return LogUtil::registerPermissionError();

@@ -8,7 +8,7 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
-
+use Dizkus\Manager\ForumManager;
 /**
  * This class provides a handler to edit forums.
  */
@@ -102,7 +102,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $data = $view->getValues();
 
         if ($data['action'] == self::MOVE_CHILDREN) {
-            $managedDestinationForum = new Dizkus_Manager_Forum($data['destination']);
+            $managedDestinationForum = new ForumManager($data['destination']);
 
             if (($managedDestinationForum->get()->getLvl() < 2) && (count($this->forum->getTopics()) > 0)) {
                 return LogUtil::registerError($this->__('You cannot move topics into this location, only forums. Delete the topics or choose a different destination.'));

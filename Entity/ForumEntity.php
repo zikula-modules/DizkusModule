@@ -13,7 +13,7 @@ namespace Dizkus\Entity;
 
 use ZLanguage;
 use Dizkus\Entity\Moderator\UserEntity;
-use Dizkus_Manager_ForumUser;
+use Dizkus\Manager\ForumUserManager;
 use Dizkus\Entity\Moderator\GroupEntity;
 use ServiceUtil;
 use Dizkus\Entity\Moderator\UserEntity as ModeratorUserEntity;
@@ -415,7 +415,7 @@ class ForumEntity extends \Zikula_EntityAccess
         // add users
         foreach ($users as $uid) {
             $moderator = new ModeratorUserEntity();
-            $managedForumUser = new Dizkus_Manager_ForumUser($uid);
+            $managedForumUser = new ForumUserManager($uid);
             $moderator->setForumUser($managedForumUser->get());
             $moderator->setForum($this);
             $this->moderatorUsers->add($moderator);

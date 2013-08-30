@@ -11,8 +11,8 @@
 
 namespace Dizkus\TaggedObjectMeta;
 
-use Dizkus_Manager_Topic;
-use Dizkus_Manager_Forum;
+use Dizkus\Manager\TopicManager;
+use Dizkus\Manager\ForumManager;
 use DateUtil;
 use ZLanguage;
 use ModUtil;
@@ -30,7 +30,7 @@ class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
         if ($action == 'viewtopic') {
             // item is post or topic
             if (isset($args['topic'])) {
-                $managedTopic = new Dizkus_Manager_Topic($args['topic']);
+                $managedTopic = new TopicManager($args['topic']);
                 // get forum for perm check
                 $perms = $managedTopic->getPermissions();
                 if ($perms['see']) {
@@ -45,7 +45,7 @@ class DizkusTaggedObjectMeta extends \Tag_AbstractTaggedObjectMeta
                 $forumid = isset($args['viewcat']) ? $args['viewcat'] : null;
             }
             if (isset($forumid)) {
-                $managedForum = new Dizkus_Manager_Forum($forumid);
+                $managedForum = new ForumManager($forumid);
                 // perm check
                 $perms = $managedForum->getPermissions();
                 if ($perms['see']) {
