@@ -143,7 +143,7 @@ class Dizkus_Form_Handler_Admin_ModifyForum extends Zikula_Form_AbstractHandler
         $data = $view->getValues();
 
         // convert parent id to object
-        $data['parent'] = $this->entityManager->find('Dizkus_Entity_Forum', $data['parent']);
+        $data['parent'] = $this->entityManager->find('Dizkus\Entity\ForumEntity', $data['parent']);
 
         if ($data['extsource'] == 'mail2forum') {
             if ($data['passwordconfirm'] != $data['password']) {

@@ -37,7 +37,7 @@ class FavoritesApi extends \Zikula_AbstractApi
         if (isset($this->_displayOnlyFavorites[$uid])) {
             return $this->_displayOnlyFavorites[$uid];
         }
-        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             return false;
         }
@@ -49,7 +49,7 @@ class FavoritesApi extends \Zikula_AbstractApi
     /**
      * Get forum subscription status
      *
-     * @params $args['forum'] Dizkus_Entity_Forum
+     * @params $args['forum'] Dizkus\Entity\ForumEntity
      * @params $args['user_id'] int the users uid (optional)
      * @return boolean - true if the forum is user favorite or false if not
      */
@@ -61,7 +61,7 @@ class FavoritesApi extends \Zikula_AbstractApi
         if (empty($args['user_id'])) {
             $args['user_id'] = UserUtil::getVar('uid');
         }
-        $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorite')->findOneBy(array('forum' => $args['forum'], 'forumUser' => $args['user_id']));
+        $forumUserFavorite = $this->entityManager->getRepository('Dizkus\Entity\ForumUserFavoriteEntity')->findOneBy(array('forum' => $args['forum'], 'forumUser' => $args['user_id']));
 
         return isset($forumUserFavorite);
     }

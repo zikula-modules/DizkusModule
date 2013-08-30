@@ -24,14 +24,14 @@ use ServiceUtil;
 use ZLanguage;
 use SecurityUtil;
 use Dizkus_Manager_Topic;
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\RankEntity;
 use ModUtil;
 use PageUtil;
 use Dizkus_Version;
 use Zikula_Response_DisplayHook;
 use Dizkus_Manager_Forum;
-use Dizkus_Entity_Forum;
-use Dizkus_Entity_Topic;
+use Dizkus\Entity\ForumEntity;
+use Dizkus\Entity\TopicEntity;
 use LogUtil;
 use Zikula_Exception_Forbidden;
 use HookUtil;
@@ -82,7 +82,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         }
         $request = ServiceUtil::getService('request');
         $start = (int)$request->query->get('start', 1);
-        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new Dizkus_Manager_Topic(null, $topic);
         } else {
@@ -97,7 +97,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         }
         $returnurlparams = htmlspecialchars(serialize($urlParameters));
         $this->view->assign('returnurl', $returnurlparams);
-        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());
@@ -131,16 +131,16 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             $managedForum = new Dizkus_Manager_Forum();
             $data = array(
                 'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
-                'status' => Dizkus_Entity_Forum::STATUS_LOCKED,
-                'parent' => $this->_em->getRepository('Dizkus_Entity_Forum')->findOneBy(array(
-                    'name' => Dizkus_Entity_Forum::ROOTNAME)));
+                'status' => Dizkus\Entity\ForumEntity::STATUS_LOCKED,
+                'parent' => $this->_em->getRepository('Dizkus\Entity\ForumEntity')->findOneBy(array(
+                    'name' => Dizkus\Entity\ForumEntity::ROOTNAME)));
             $managedForum->store($data);
             // cannot notify hooks in non-controller
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
             ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
             $forumId = $managedForum->getId();
         }
-        $forum = $this->_em->getRepository('Dizkus_Entity_Forum')->find($forumId);
+        $forum = $this->_em->getRepository('Dizkus\Entity\ForumEntity')->find($forumId);
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
         $hook->setResponse(new Zikula_Response_DisplayHook(Dizkus_Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
@@ -155,7 +155,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      */
     public function uiDelete(Zikula_DisplayHook $hook)
     {
-        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $this->view->assign('forum', $topic->getForum()->getName());
             $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
@@ -201,9 +201,9 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
         // create new topic in selected forum
-        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (!isset($topic)) {
-            $topic = new Dizkus_Entity_Topic();
+            $topic = new Dizkus\Entity\TopicEntity();
         }
         // use Meta class to create topic data
         $topicMetaInstance = $this->getClassInstance($hook);
@@ -242,7 +242,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
         // lock or remove
-        $topic = $this->_em->getRepository('Dizkus_Entity_Topic')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Dizkus\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             switch ($deleteHookAction) {
                 case 'remove':
@@ -352,7 +352,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $_em = ServiceUtil::getService('doctrine.entitymanager');
         $deleteHookAction = ModUtil::getVar('Dizkus', 'deletehookaction');
         // lock or remove
-        $topics = $_em->getRepository('Dizkus_Entity_Topic')->findBy(array('hookedModule' => $module));
+        $topics = $_em->getRepository('Dizkus\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {

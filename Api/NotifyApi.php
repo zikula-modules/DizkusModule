@@ -28,7 +28,7 @@ class NotifyApi extends \Zikula_AbstractApi
      *
      * Sending notify e-mail to users subscribed to the topic or the forum
      *
-     * @params $args['post'] Dizkus_Entity_Post
+     * @params $args['post'] Dizkus\Entity\PostEntity
      *
      * @returns boolean
      */
@@ -38,7 +38,7 @@ class NotifyApi extends \Zikula_AbstractApi
         $dizkusModuleInfo = ModUtil::getInfoFromName('Dizkus');
         $dizkusFrom = ModUtil::getVar('Dizkus', 'email_from');
         $fromAddress = !empty($dizkusFrom) ? $dizkusFrom : System::getVar('adminmail');
-        /* @var $post Dizkus_Entity_Post */
+        /* @var $post Dizkus\Entity\PostEntity */
         $post = $args['post'];
         $subject = $post->isFirst() ? '' : 'Re: ';
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
@@ -84,7 +84,7 @@ class NotifyApi extends \Zikula_AbstractApi
     /**
      * notify moderators
      *
-     * @params $args['post'] Dizkus_Entity_Post
+     * @params $args['post'] Dizkus\Entity\PostEntity
      * @params $args['comment'] string
      * @returns void
      */

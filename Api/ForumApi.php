@@ -11,7 +11,7 @@
 
 namespace Dizkus\Api;
 
-use Dizkus_Entity_Forum;
+use Dizkus\Entity\ForumEntity;
 use SecurityUtil;
 use UserUtil;
 use LogUtil;
@@ -37,9 +37,9 @@ class ForumApi extends \Zikula_AbstractApi
         if ($includeRoot) {
             $forumRoot = null;
         } else {
-            $forumRoot = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findOneBy(array('name' => Dizkus_Entity_Forum::ROOTNAME));
+            $forumRoot = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findOneBy(array('name' => Dizkus\Entity\ForumEntity::ROOTNAME));
         }
-        $parents = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy($forumRoot);
+        $parents = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;
@@ -53,8 +53,8 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function getAllChildren()
     {
-        $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
-        $query = $this->entityManager->createQueryBuilder()->select('node')->from('Dizkus_Entity_Forum', 'node')->orderBy('node.root, node.lft', 'ASC')->where('node.lvl > 0')->getQuery();
+        $repo = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity');
+        $query = $this->entityManager->createQueryBuilder()->select('node')->from('Dizkus\Entity\ForumEntity', 'node')->orderBy('node.root, node.lft', 'ASC')->where('node.lvl > 0')->getQuery();
         $tree = $repo->buildTree($query->getArrayResult());
 
         return $this->getNode($tree, null);
@@ -75,8 +75,8 @@ class ForumApi extends \Zikula_AbstractApi
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
                 // only include results if
-                if ($i['status'] == Dizkus_Entity_Forum::STATUS_LOCKED && $includeLocked || $i['status'] == Dizkus_Entity_Forum::STATUS_UNLOCKED) {
-                    if ($i['name'] == Dizkus_Entity_Forum::ROOTNAME) {
+                if ($i['status'] == Dizkus\Entity\ForumEntity::STATUS_LOCKED && $includeLocked || $i['status'] == Dizkus\Entity\ForumEntity::STATUS_UNLOCKED) {
+                    if ($i['name'] == Dizkus\Entity\ForumEntity::ROOTNAME) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
                     $output[] = array(
@@ -104,7 +104,7 @@ class ForumApi extends \Zikula_AbstractApi
         $parent = isset($args['parent']) ? $args['parent'] : null;
         $userId = isset($args['userId']) ? $args['userId'] : null;
         $ids = array();
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findAll();
+        $forums = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findAll();
         foreach ($forums as $forum) {
             $parent = $forum->getParent();
             $parentId = isset($parent) ? $parent->getForum_id() : null;
@@ -127,7 +127,7 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function isSubscribed($args)
     {
-        $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+        $forumSubscription = $this->entityManager->getRepository('Dizkus\Entity\ForumSubscriptionEntity')->findOneBy(array(
             'forum' => $args['forum'],
             'forumUser' => UserUtil::getVar('uid')));
 
@@ -156,7 +156,7 @@ class ForumApi extends \Zikula_AbstractApi
         $searchParams = array(
             'forum' => $args['forum'],
             'forumUser' => $managedForumUser->get());
-        $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy($searchParams);
+        $forumSubscription = $this->entityManager->getRepository('Dizkus\Entity\ForumSubscriptionEntity')->findOneBy($searchParams);
         if (!$forumSubscription) {
             $managedForumUser->get()->addForumSubscription($args['forum']);
             $this->entityManager->flush();
@@ -188,7 +188,7 @@ class ForumApi extends \Zikula_AbstractApi
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         if (isset($args['forum'])) {
-            $forumSubscription = $this->entityManager->getRepository('Dizkus_Entity_ForumSubscription')->findOneBy(array(
+            $forumSubscription = $this->entityManager->getRepository('Dizkus\Entity\ForumSubscriptionEntity')->findOneBy(array(
                 'forum' => $args['forum'],
                 'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeForumSubscription($forumSubscription);
@@ -203,7 +203,7 @@ class ForumApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns Dizkus_Entity_ForumSubscription collection, may be empty
+     * @returns Dizkus\Entity\ForumSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {
@@ -233,7 +233,7 @@ class ForumApi extends \Zikula_AbstractApi
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());
                 break;
             case 'removeFromFavorites':
-                $forumUserFavorite = $this->entityManager->getRepository('Dizkus_Entity_ForumUserFavorite')->findOneBy(array('forum' => $managedForum->get(), 'forumUser' => $managedForumUser->get()));
+                $forumUserFavorite = $this->entityManager->getRepository('Dizkus\Entity\ForumUserFavoriteEntity')->findOneBy(array('forum' => $managedForum->get(), 'forumUser' => $managedForumUser->get()));
                 $managedForumUser->get()->removeFavoriteForum($forumUserFavorite);
                 break;
             case 'subscribe':

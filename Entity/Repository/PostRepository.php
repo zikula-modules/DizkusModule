@@ -24,7 +24,7 @@ class PostRepository extends \EntityRepository
      */
     public function manualDelete($id)
     {
-        $dql = 'DELETE Dizkus_Entity_Post p
+        $dql = 'DELETE Dizkus\Entity\PostEntity p
             WHERE p.post_id = :id';
         $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }

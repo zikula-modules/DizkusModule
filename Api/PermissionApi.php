@@ -12,7 +12,7 @@
 namespace Dizkus\Api;
 
 use LogUtil;
-use Dizkus_Entity_Forum;
+use Dizkus\Entity\ForumEntity;
 use SecurityUtil;
 
 class PermissionApi extends \Zikula_AbstractApi
@@ -108,19 +108,19 @@ class PermissionApi extends \Zikula_AbstractApi
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
-        // ensure always working with an Dizkus_Entity_Forum object or null
+        // ensure always working with an Dizkus\Entity\ForumEntity object or null
         if (empty($args)) {
             $forum = null;
         } else {
-            if ($args instanceof Dizkus_Entity_Forum) {
+            if ($args instanceof Dizkus\Entity\ForumEntity) {
                 $forum = $args;
             } else {
                 if (is_numeric($args)) {
-                    $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args);
+                    $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $args);
                 } else {
                     if (is_array($args)) {
                         // reconsititute object
-                        $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
+                        $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $args['forum_id']);
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
                     } else {
                         return LogUtil::registerArgsError();
@@ -174,9 +174,9 @@ class PermissionApi extends \Zikula_AbstractApi
 
     /**
      * check and filter child forums for READ permissions
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus\Entity\ForumEntity $forum
      */
-    public function filterForumChildrenByPermission(Dizkus_Entity_Forum $forum)
+    public function filterForumChildrenByPermission(Dizkus\Entity\ForumEntity $forum)
     {
         $subforums = $forum->getChildren();
         foreach ($subforums as $subforum) {

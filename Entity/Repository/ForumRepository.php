@@ -17,7 +17,7 @@ class ForumRepository extends \NestedTreeRepository
 
     public function getRssForums()
     {
-        $dql = 'SELECT f FROM Dizkus_Entity_Forum f
+        $dql = 'SELECT f FROM Dizkus\Entity\ForumEntity f
                 WHERE f.pop3Connection IS NOT NULL';
         $query = $this->_em->createQuery($dql);
         try {

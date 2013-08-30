@@ -24,7 +24,7 @@ class Dizkus_Form_Handler_User_MoveTopic extends Zikula_Form_AbstractHandler
 
     /**
      *
-     * @var Dizkus_Entity_Topic
+     * @var Dizkus\Entity\TopicEntity
      */
     private $topic;
 

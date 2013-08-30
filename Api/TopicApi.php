@@ -17,7 +17,7 @@ use UserUtil;
 use SecurityUtil;
 use ModUtil;
 use Dizkus_Manager_ForumUser;
-use Dizkus_Entity_Topic;
+use Dizkus\Entity\TopicEntity;
 use Dizkus_Manager_Post;
 
 /**
@@ -79,7 +79,7 @@ class TopicApi extends \Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         if (!is_object($args['topic'])) {
-            $args['topic'] = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('topic_id' => $args['topic']));
+            $args['topic'] = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findOneBy(array('topic_id' => $args['topic']));
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
@@ -87,7 +87,7 @@ class TopicApi extends \Zikula_AbstractApi
         $searchParams = array(
             'topic' => $args['topic'],
             'forumUser' => $managedForumUser->get());
-        $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy($searchParams);
+        $topicSubscription = $this->entityManager->getRepository('Dizkus\Entity\TopicSubscriptionEntity')->findOneBy($searchParams);
         if (!$topicSubscription) {
             $managedForumUser->get()->addTopicSubscription($args['topic']);
             $this->entityManager->flush();
@@ -111,13 +111,13 @@ class TopicApi extends \Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         if (!is_object($args['topic'])) {
-            $args['topic'] = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('topic_id' => $args['topic']));
+            $args['topic'] = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findOneBy(array('topic_id' => $args['topic']));
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
         $managedForumUser = new Dizkus_Manager_ForumUser($args['user_id']);
         if (isset($args['topic'])) {
-            $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy(array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get()));
+            $topicSubscription = $this->entityManager->getRepository('Dizkus\Entity\TopicSubscriptionEntity')->findOneBy(array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeTopicSubscription($topicSubscription);
         } else {
             // not used in the code...
@@ -131,7 +131,7 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns Dizkus_Entity_TopicSubscription collection, may be empty
+     * @returns Dizkus\Entity\TopicSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {
@@ -158,7 +158,7 @@ class TopicApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
 
-        return $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('reference' => $reference))->toArray();
+        return $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findOneBy(array('reference' => $reference))->toArray();
     }
 
     /**
@@ -204,8 +204,8 @@ class TopicApi extends \Zikula_AbstractApi
     public function delete($args)
     {
         if (is_numeric($args['topic'])) {
-            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->find($args['topic']);
-        } elseif ($args['topic'] instanceof Dizkus_Entity_Topic) {
+            $topic = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->find($args['topic']);
+        } elseif ($args['topic'] instanceof Dizkus\Entity\TopicEntity) {
             $topic = $args['topic'];
         } else {
             LogUtil::registerArgsError();
@@ -224,11 +224,11 @@ class TopicApi extends \Zikula_AbstractApi
         // update the db
         $this->entityManager->flush();
         // remove all posts in topic
-        $this->entityManager->getRepository('Dizkus_Entity_Topic')->manualDeletePosts($topic->getTopic_id());
+        $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->manualDeletePosts($topic->getTopic_id());
         // remove topic subscriptions
-        $this->entityManager->getRepository('Dizkus_Entity_Topic')->deleteTopicSubscriptions($topic->getTopic_id());
+        $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->deleteTopicSubscriptions($topic->getTopic_id());
         // delete the topic (manual dql to avoid cascading deletion errors)
-        $this->entityManager->getRepository('Dizkus_Entity_Topic')->manualDelete($topic->getTopic_id());
+        $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
         // sync the forum up with the changes
         ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
         ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
@@ -244,23 +244,23 @@ class TopicApi extends \Zikula_AbstractApi
      * @params $args['topic_id'] int the topics id
      * @params $args['forum_id'] int the destination forums id
      * @params $args['createshadowtopic']   boolean true = create shadow topic
-     * @params $args['topicObj'] Dizkus_Entity_Topic
+     * @params $args['topicObj'] Dizkus\Entity\TopicEntity
      *
      * @returns void
      */
     public function move($args)
     {
-        if (!isset($args['topicObj']) || !$args['topicObj'] instanceof Dizkus_Entity_Topic) {
+        if (!isset($args['topicObj']) || !$args['topicObj'] instanceof Dizkus\Entity\TopicEntity) {
             if (!isset($args['topic_id'])) {
                 return LogUtil::registerArgsError();
             }
-            $args['topicObj'] = $this->entityManager->find('Dizkus_Entity_Topic', $args['topic_id']);
+            $args['topicObj'] = $this->entityManager->find('Dizkus\Entity\TopicEntity', $args['topic_id']);
         }
         $managedTopic = new Dizkus_Manager_Topic(null, $args['topicObj']);
         if ($managedTopic->getForumId() != $args['forum_id']) {
             // set new forum
             $oldForumId = $managedTopic->getForumId();
-            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $args['forum_id']);
+            $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $args['forum_id']);
             $managedTopic->get()->setForum($forum);
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
@@ -279,7 +279,7 @@ class TopicApi extends \Zikula_AbstractApi
             }
             $this->entityManager->flush();
             // re-sync all forum counts and last posts
-            $previousForumLocation = $this->entityManager->find('Dizkus_Entity_Forum', $oldForumId);
+            $previousForumLocation = $this->entityManager->find('Dizkus\Entity\ForumEntity', $oldForumId);
             ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array(
                 'forum' => $previousForumLocation,
                 'flush' => false));
@@ -312,7 +312,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         $managedTopic = new Dizkus_Manager_Topic(null, $args['post']->get()->getTopic());
         // create new topic
-        $newTopic = new Dizkus_Entity_Topic();
+        $newTopic = new Dizkus\Entity\TopicEntity();
         $newTopic->setPoster($args['post']->get()->getPoster());
         $newTopic->setTitle($args['data']['newsubject']);
         $newTopic->setForum($managedTopic->get()->getForum());
@@ -321,12 +321,12 @@ class TopicApi extends \Zikula_AbstractApi
         $this->entityManager->persist($newTopic);
         $this->entityManager->flush();
         // update posts
-        $dql = 'SELECT p from Dizkus_Entity_Post p
+        $dql = 'SELECT p from Dizkus\Entity\PostEntity p
             WHERE p.topic = :topic
             AND p.post_id >= :post
             ORDER BY p.post_id';
         $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $args['post']->get()->getPost_id());
-        /* @var $posts Array of Dizkus_Entity_Post */
+        /* @var $posts Array of Dizkus\Entity\PostEntity */
         $posts = $query->getResult();
         // update the topic_id in the postings
         foreach ($posts as $post) {
@@ -355,14 +355,14 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * @params $args['to_topic_id'] int the target topic that will contain the post from from_topic (destination)
      * @params $args['from_topic_id'] int this topic get integrated into to_topic (origin)
-     * @params $args['topicObj'] Dizkus_Entity_Topic The (origin) topic as object
+     * @params $args['topicObj'] Dizkus\Entity\TopicEntity The (origin) topic as object
      *              must have *either* topicObj or from_topic_id
      *
      * @return Integer Destination topic ID
      */
     public function join($args)
     {
-        if (!$args['topicObj'] instanceof Dizkus_Entity_Topic && !isset($args['from_topic_id'])) {
+        if (!$args['topicObj'] instanceof Dizkus\Entity\TopicEntity && !isset($args['from_topic_id'])) {
             LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
 
             return LogUtil::registerArgsError();
@@ -384,7 +384,7 @@ class TopicApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // move posts from Origin to Destination topic
-        $posts = $this->entityManager->getRepository('Dizkus_Entity_Post')->findBy(array('topic' => $managedOriginTopic->get()));
+        $posts = $this->entityManager->getRepository('Dizkus\Entity\PostEntity')->findBy(array('topic' => $managedOriginTopic->get()));
         $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
         foreach ($posts as $post) {
             $post->setTopic($managedDestinationTopic->get());
@@ -396,7 +396,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         $this->entityManager->flush();
         // remove the originTopic from the DB (manual dql to avoid cascading deletion errors)
-        $this->entityManager->getRepository('Dizkus_Entity_Topic')->manualDelete($managedOriginTopic->getId());
+        $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->manualDelete($managedOriginTopic->getId());
         $managedDestinationTopic->setLastPost($post);
         $managedDestinationTopic->get()->setTopic_time($previousPostTime);
         // resync destination topic and all forums

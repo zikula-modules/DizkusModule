@@ -126,7 +126,7 @@ class CronApi extends \Zikula_AbstractApi
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
                                                     // and store this mail in the same thread
-                                                    $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('msgid', $replyto));
+                                                    $topic = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findOneBy(array('msgid', $replyto));
                                                     if (!isset($topic)) {
                                                         // msgid not found, we clear replyto to create a new topic
                                                         $replyto = '';

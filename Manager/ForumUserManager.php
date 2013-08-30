@@ -18,14 +18,14 @@ namespace Dizkus\Manager;
 
 use ServiceUtil;
 use UserUtil;
-use Dizkus_Entity_ForumUser;
+use Dizkus\Entity\ForumUserEntity;
 
 class ForumUserManager
 {
 
     /**
      * managed forum user
-     * @var Dizkus_Entity_ForumUser
+     * @var Dizkus\Entity\ForumUserEntity
      */
     private $_forumUser;
     protected $entityManager;
@@ -42,9 +42,9 @@ class ForumUserManager
         if (empty($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        $this->_forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        $this->_forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$this->_forumUser) {
-            $this->_forumUser = new Dizkus_Entity_ForumUser();
+            $this->_forumUser = new Dizkus\Entity\ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $this->_forumUser->setUser($coreUser);
             $this->entityManager->persist($this->_forumUser);
@@ -81,7 +81,7 @@ class ForumUserManager
     /**
      * return topic as doctrine2 object
      *
-     * @return Dizkus_Entity_ForumUser
+     * @return Dizkus\Entity\ForumUserEntity
      */
     public function get()
     {

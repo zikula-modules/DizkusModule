@@ -18,7 +18,7 @@ namespace Dizkus\Manager;
 
 use ServiceUtil;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Dizkus_Entity_Forum;
+use Dizkus\Entity\ForumEntity;
 use ModUtil;
 use UserUtil;
 use SecurityUtil;
@@ -28,7 +28,7 @@ class ForumManager
 
     /**
      * managed forum
-     * @var Dizkus_Entity_Forum
+     * @var Dizkus\Entity\ForumEntity
      */
     private $_forum;
     private $_itemsPerPage;
@@ -39,7 +39,7 @@ class ForumManager
     /**
      * construct
      */
-    public function __construct($id = null, Dizkus_Entity_Forum $forum = null)
+    public function __construct($id = null, Dizkus\Entity\ForumEntity $forum = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
@@ -47,9 +47,9 @@ class ForumManager
             // forum has been injected
             $this->_forum = $forum;
         } elseif ($id > 0) {
-            $this->_forum = $this->entityManager->find('Dizkus_Entity_Forum', $id);
+            $this->_forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $id);
         } else {
-            $this->_forum = new Dizkus_Entity_Forum();
+            $this->_forum = new Dizkus\Entity\ForumEntity();
         }
     }
 
@@ -90,7 +90,7 @@ class ForumManager
     /**
      * return forum as doctrine2 object
      *
-     * @return Dizkus_Entity_Forum
+     * @return Dizkus\Entity\ForumEntity
      */
     public function get()
     {
@@ -115,7 +115,7 @@ class ForumManager
             // already root
             return array();
         }
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->getPath($this->_forum);
+        $forums = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->getPath($this->_forum);
         $output = array();
         foreach ($forums as $key => $forum) {
             if ($key == 0) {
@@ -143,7 +143,7 @@ class ForumManager
     {
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'topics_per_page');
         $id = $this->_forum->getForum_id();
-        $query = $this->entityManager->createQueryBuilder()->select('p')->from('Dizkus_Entity_Topic', 'p')->where('p.forum = :forumId')->setParameter('forumId', $id)->leftJoin('p.last_post', 'l')->orderBy('p.sticky', 'DESC')->addOrderBy('l.post_time', 'DESC')->getQuery();
+        $query = $this->entityManager->createQueryBuilder()->select('p')->from('Dizkus\Entity\TopicEntity', 'p')->where('p.forum = :forumId')->setParameter('forumId', $id)->leftJoin('p.last_post', 'l')->orderBy('p.sticky', 'DESC')->addOrderBy('l.post_time', 'DESC')->getQuery();
         $query->setFirstResult($startNumber - 1)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
@@ -209,7 +209,7 @@ class ForumManager
     /**
      * recursive method to modify parent forum's post or topic count
      */
-    private function modifyParentCount(Dizkus_Entity_Forum $parentForum, $direction = 'increment', $entity = 'Post')
+    private function modifyParentCount(Dizkus\Entity\ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
     {
         $direction = in_array($direction, array('increment', 'decrement')) ? $direction : 'increment';
         $entity = in_array($entity, array('Post', 'Topic')) ? $entity : 'Post';
@@ -274,10 +274,10 @@ class ForumManager
     /**
      * Is this forum a child of the provided forum?
      *
-     * @param  Dizkus_Entity_Forum $forum
+     * @param  Dizkus\Entity\ForumEntity $forum
      * @return boolean
      */
-    public function isChildOf(Dizkus_Entity_Forum $forum)
+    public function isChildOf(Dizkus\Entity\ForumEntity $forum)
     {
         return $this->get()->getLft() > $forum->getLft() && $this->get()->getRgt() < $forum->getRgt();
     }

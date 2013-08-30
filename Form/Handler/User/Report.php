@@ -46,7 +46,7 @@ class Dizkus_Form_Handler_User_Report extends Zikula_Form_AbstractHandler
         $this->_post = new Dizkus_Manager_Post($id);
         $view->assign('post', $this->_post->get());
         $view->assign('notify', true);
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
         return true;

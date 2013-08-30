@@ -18,11 +18,11 @@ namespace Dizkus\Manager;
 
 use ServiceUtil;
 use Dizkus_Manager_Topic;
-use Dizkus_Entity_Post;
+use Dizkus\Entity\PostEntity;
 use DataUtil;
 use Zikula_Exception_Fatal;
 use UserUtil;
-use Dizkus_Entity_ForumUser;
+use Dizkus\Entity\ForumUserEntity;
 use Dizkus_Manager_Forum;
 use ModUtil;
 
@@ -31,7 +31,7 @@ class PostManager
 
     /**
      * managed post
-     * @var Dizkus_Entity_Post
+     * @var Dizkus\Entity\PostEntity
      */
     private $_post;
 
@@ -51,10 +51,10 @@ class PostManager
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
         if ($id > 0) {
-            $this->_post = $this->entityManager->find('Dizkus_Entity_Post', $id);
+            $this->_post = $this->entityManager->find('Dizkus\Entity\PostEntity', $id);
             $this->_topic = new Dizkus_Manager_Topic(null, $this->_post->getTopic());
         } else {
-            $this->_post = new Dizkus_Entity_Post();
+            $this->_post = new Dizkus\Entity\PostEntity();
         }
     }
 
@@ -88,7 +88,7 @@ class PostManager
     /**
      * get the Post entity
      *
-     * @return Dizkus_Entity_Post
+     * @return Dizkus\Entity\PostEntity
      */
     public function get()
     {
@@ -132,9 +132,9 @@ class PostManager
         }
         // increment poster posts
         $uid = UserUtil::getVar('uid');
-        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new Dizkus_Entity_ForumUser();
+            $forumUser = new Dizkus\Entity\ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
@@ -168,7 +168,7 @@ class PostManager
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();
         // remove the post
-        $this->entityManager->getRepository('Dizkus_Entity_Post')->manualDelete($id);
+        $this->entityManager->getRepository('Dizkus\Entity\PostEntity')->manualDelete($id);
         // decrement forum post count
         $managedForum->decrementPostCount();
         // decrement replies count

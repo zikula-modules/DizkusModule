@@ -34,13 +34,13 @@ class UserEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorUsers")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumEntity", inversedBy="moderatorUsers")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
@@ -48,7 +48,7 @@ class UserEntity extends \Zikula_EntityAccess
     /**
      * get ForumUser
      *
-     * @return Dizkus_Entity_ForumUser
+     * @return Dizkus\Entity\ForumUserEntity
      */
     public function getForumUser()
     {
@@ -58,9 +58,9 @@ class UserEntity extends \Zikula_EntityAccess
     /**
      * set ForumUser
      *
-     * @param Dizkus_Entity_ForumUser $user
+     * @param Dizkus\Entity\ForumUserEntity $user
      */
-    public function setForumUser(Dizkus_Entity_ForumUser $user)
+    public function setForumUser(Dizkus\Entity\ForumUserEntity $user)
     {
         $this->forumUser = $user;
     }
@@ -68,7 +68,7 @@ class UserEntity extends \Zikula_EntityAccess
     /**
      * get Forum
      *
-     * @return Dizkus_Entity_Forum
+     * @return Dizkus\Entity\ForumEntity
      */
     public function getForum()
     {
@@ -77,9 +77,9 @@ class UserEntity extends \Zikula_EntityAccess
 
     /**
      * set Forum
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus\Entity\ForumEntity $forum
      */
-    public function setForum(Dizkus_Entity_Forum $forum)
+    public function setForum(Dizkus\Entity\ForumEntity $forum)
     {
         $this->forum = $forum;
     }

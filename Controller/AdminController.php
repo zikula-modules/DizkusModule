@@ -17,7 +17,7 @@ use LogUtil;
 use SecurityUtil;
 use FormUtil;
 use Dizkus_Form_Handler_Admin_Prefs;
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\RankEntity;
 use Dizkus_Form_Handler_Admin_AssignRanks;
 use Dizkus_Form_Handler_Admin_ModifyForum;
 use Dizkus_Form_Handler_Admin_DeleteForum;
@@ -56,7 +56,7 @@ use Dizkus_Form_Handler_Admin_ManageSubscriptions;
             if (empty($forumId)) {
                 return LogUtil::registerArgsError();
             }
-            $repo = $this->entityManager->getRepository('Dizkus_Entity_Forum');
+            $repo = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity');
             $forum = $repo->find($forumId);
             if ($action == 'moveUp') {
                 $repo->moveUp($forum, true);
@@ -124,7 +124,7 @@ use Dizkus_Form_Handler_Admin_ManageSubscriptions;
                 return LogUtil::registerPermissionError();
             }
             $submit = $this->request->getPost()->filter('submit', 2);
-            $ranktype = $this->request->getGet()->filter('ranktype', Dizkus_Entity_Rank::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
+            $ranktype = $this->request->getGet()->filter('ranktype', Dizkus\Entity\RankEntity::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
             if ($submit == 2) {
                 list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
                 $this->view->assign('ranks', $ranks);
@@ -168,7 +168,7 @@ use Dizkus_Form_Handler_Admin_ManageSubscriptions;
             if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
                 return LogUtil::registerPermissionError();
             }
-            $tree = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenHierarchy(null, false);
+            $tree = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->childrenHierarchy(null, false);
 
             return $this->view->assign('tree', $tree)->fetch('admin/tree.tpl');
         }

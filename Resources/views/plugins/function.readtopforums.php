@@ -18,7 +18,7 @@ function smarty_function_readtopforums($params, Zikula_View $view)
     /* @var $qb Doctrine\ORM\QueryBuilder */
     $qb = $em->createQueryBuilder();
     $qb->select('f')
-            ->from('Dizkus_Entity_Forum', 'f')
+            ->from('Dizkus\Entity\ForumEntity', 'f')
             ->orderBy('f.postCount', 'DESC');
     $qb->setMaxResults($forummax);
     $forums = $qb->getQuery()->getResult();

@@ -12,10 +12,10 @@
 namespace Dizkus\Api;
 
 use LogUtil;
-use Dizkus_Entity_Forum;
+use Dizkus\Entity\ForumEntity;
 use ModUtil;
-use Dizkus_Entity_Topic;
-use Dizkus_Entity_ForumUser;
+use Dizkus\Entity\TopicEntity;
+use Dizkus\Entity\ForumUserEntity;
 
 class SyncApi extends \Zikula_AbstractApi
 {
@@ -40,10 +40,10 @@ class SyncApi extends \Zikula_AbstractApi
     public function forums()
     {
         // reset count to zero
-        $dql = 'UPDATE Dizkus_Entity_Forum f SET f.topicCount = 0, f.postCount = 0';
+        $dql = 'UPDATE Dizkus\Entity\ForumEntity f SET f.topicCount = 0, f.postCount = 0';
         $this->entityManager->createQuery($dql)->execute();
         // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
-        $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy(array(), array('lvl' => 'ASC'));
+        $forums = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findBy(array(), array('lvl' => 'ASC'));
         foreach ($forums as $forum) {
             $this->forum(array('forum' => $forum));
         }
@@ -54,7 +54,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * recalculate topicCount and postCount counts
      *
-     * @param Dizkus_Entity_Forum $args['forum']
+     * @param Dizkus\Entity\ForumEntity $args['forum']
      * @param Boolean             $args['flush']
      *
      * @return boolean
@@ -64,11 +64,11 @@ class SyncApi extends \Zikula_AbstractApi
         if (!isset($args['forum'])) {
             return LogUtil::registerArgsError();
         }
-        if ($args['forum'] instanceof Dizkus_Entity_Forum) {
+        if ($args['forum'] instanceof Dizkus\Entity\ForumEntity) {
             $id = $args['forum']->getForum_id();
         } else {
             $id = $args['forum'];
-            $args['forum'] = $this->entityManager->find('Dizkus_Entity_Forum', $id);
+            $args['forum'] = $this->entityManager->find('Dizkus\Entity\ForumEntity', $id);
         }
         // count topics of a forum
         $topicCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array(
@@ -91,10 +91,10 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * recursive function to add counts to parents
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus\Entity\ForumEntity $forum
      * @param string              $entity
      */
-    private function addToParentForumCount(Dizkus_Entity_Forum $forum, $entity = 'Post')
+    private function addToParentForumCount(Dizkus\Entity\ForumEntity $forum, $entity = 'Post')
     {
         $parent = $forum->getParent();
         if (!isset($parent)) {
@@ -120,7 +120,7 @@ class SyncApi extends \Zikula_AbstractApi
      */
     public function topics()
     {
-        $topics = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findAll();
+        $topics = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findAll();
         foreach ($topics as $topic) {
             $this->topic(array(
                 'topic' => $topic,
@@ -133,7 +133,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * recalcluate Topic replies for one topic
      *
-     * @param Dizkus_Entity_Topic $args['topic']
+     * @param Dizkus\Entity\TopicEntity $args['topic']
      * @param Boolean             $args['flush']
      *
      * @return boolean
@@ -143,16 +143,16 @@ class SyncApi extends \Zikula_AbstractApi
         if (!isset($args['topic'])) {
             return LogUtil::registerArgsError();
         }
-        if ($args['topic'] instanceof Dizkus_Entity_Topic) {
+        if ($args['topic'] instanceof Dizkus\Entity\TopicEntity) {
             $id = $args['topic']->getTopic_id();
         } else {
             $id = $args['topic'];
-            $args['topic'] = $this->entityManager->find('Dizkus_Entity_Topic', $id);
+            $args['topic'] = $this->entityManager->find('Dizkus\Entity\TopicEntity', $id);
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // count posts of a topic
         $qb = $this->entityManager->createQueryBuilder();
-        $replies = $qb->select('COUNT(p)')->from('Dizkus_Entity_Post', 'p')->where('p.topic = :id')->setParameter('id', $id)->getQuery()->getSingleScalarResult();
+        $replies = $qb->select('COUNT(p)')->from('Dizkus\Entity\PostEntity', 'p')->where('p.topic = :id')->setParameter('id', $id)->getQuery()->getSingleScalarResult();
         $replies = (int)$replies - 1;
         $args['topic']->setReplyCount($replies);
         if ($flush) {
@@ -170,11 +170,11 @@ class SyncApi extends \Zikula_AbstractApi
     public function posters()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')->from('Dizkus_Entity_Post', 'p')->leftJoin('p.poster', 'd')->groupBy('d.user')->getQuery()->getArrayResult();
+        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')->from('Dizkus\Entity\PostEntity', 'p')->leftJoin('p.poster', 'd')->groupBy('d.user')->getQuery()->getArrayResult();
         foreach ($posts as $post) {
-            $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $post['user_id']);
+            $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $post['user_id']);
             if (!$forumUser) {
-                $forumUser = new Dizkus_Entity_ForumUser();
+                $forumUser = new Dizkus\Entity\ForumUserEntity();
                 $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['user_id']);
                 $forumUser->setUser($coreUser);
             }
@@ -187,19 +187,19 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * reset the last post in a forum due to movement
-     * @param Dizkus_Entity_Forum $args['forum']
+     * @param Dizkus\Entity\ForumEntity $args['forum']
      * @param Boolean             $args['flush'] default: true
      *
      * @return void
      */
     public function forumLastPost($args)
     {
-        if (!isset($args['forum']) || !$args['forum'] instanceof Dizkus_Entity_Forum) {
+        if (!isset($args['forum']) || !$args['forum'] instanceof Dizkus\Entity\ForumEntity) {
             return LogUtil::registerArgsError();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // get the most recent post in the forum
-        $dql = 'SELECT t FROM Dizkus_Entity_Topic t
+        $dql = 'SELECT t FROM Dizkus\Entity\TopicEntity t
             WHERE t.forum = :forum
             ORDER BY t.topic_time DESC';
         $query = $this->entityManager->createQuery($dql);
@@ -223,19 +223,19 @@ class SyncApi extends \Zikula_AbstractApi
 
     /**
      * reset the last post in a topic due to movement
-     * @param Dizkus_Entity_Topic $args['topic']
+     * @param Dizkus\Entity\TopicEntity $args['topic']
      * @param Boolean             $args['flush']
      *
      * @return void
      */
     public function topicLastPost($args)
     {
-        if (!isset($args['topic']) || !$args['topic'] instanceof Dizkus_Entity_Topic) {
+        if (!isset($args['topic']) || !$args['topic'] instanceof Dizkus\Entity\TopicEntity) {
             return LogUtil::registerArgsError();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // get the most recent post in the topic
-        $dql = 'SELECT p FROM Dizkus_Entity_Post p
+        $dql = 'SELECT p FROM Dizkus\Entity\PostEntity p
             WHERE p.topic = :topic
             ORDER BY p.post_time DESC';
         $query = $this->entityManager->createQuery($dql);

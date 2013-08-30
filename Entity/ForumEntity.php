@@ -18,16 +18,16 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_ForumRepository")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_ForumRepositoryEntity")
  */
 
 namespace Dizkus\Entity;
 
 use ArrayCollection;
 use ZLanguage;
-use Dizkus_Entity_Moderator_User;
+use Dizkus\Entity\Moderator\UserEntity;
 use Dizkus_Manager_ForumUser;
-use Dizkus_Entity_Moderator_Group;
+use Dizkus\Entity\Moderator\GroupEntity;
 use ServiceUtil;
 
 class ForumEntity extends \Zikula_EntityAccess
@@ -100,19 +100,19 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumEntity", inversedBy="children")
      * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Forum", mappedBy="parent", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\ForumEntity", mappedBy="parent", cascade={"remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Dizkus\Entity\PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
@@ -132,32 +132,32 @@ class ForumEntity extends \Zikula_EntityAccess
     private $moduleref = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumUserFavorite", mappedBy="forum", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\ForumUserFavoriteEntity", mappedBy="forum", cascade={"remove"})
      */
     private $favorites;
 
     /**
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Topic", mappedBy="forum", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\TopicEntity", mappedBy="forum", cascade={"remove"})
      */
     private $topics;
 
     /**
-     * Dizkus_Entity_Moderator_User collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_User", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
+     * Dizkus\Entity\Moderator\UserEntity collection
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\Moderator\UserEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorUsers;
 
     /**
-     * Dizkus_Entity_Moderator_Group collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Moderator_Group", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
+     * Dizkus\Entity\Moderator\GroupEntity collection
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\Moderator\GroupEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorGroups;
 
     /**
      * Subscriptions
      *
-     * Dizkus_Entity_ForumSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_ForumSubscription", mappedBy="forum", cascade={"remove"})
+     * Dizkus\Entity\ForumSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\ForumSubscriptionEntity", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
 
@@ -289,14 +289,14 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Forum parent
      *
-     * @return Dizkus_Entity_Forum
+     * @return Dizkus\Entity\ForumEntity
      */
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function setParent(Dizkus_Entity_Forum $parent = null)
+    public function setParent(Dizkus\Entity\ForumEntity $parent = null)
     {
         $this->parent = $parent;
     }
@@ -304,7 +304,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Children
      *
-     * @return ArrayCollection Dizkus_Entity_Forum
+     * @return ArrayCollection Dizkus\Entity\ForumEntity
      */
     public function getChildren()
     {
@@ -322,14 +322,14 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get last post in Forum
      *
-     * @return Dizkus_Entity_Post
+     * @return Dizkus\Entity\PostEntity
      */
     public function getLast_post()
     {
         return $this->last_post;
     }
 
-    public function setLast_post(Dizkus_Entity_Post $post)
+    public function setLast_post(Dizkus\Entity\PostEntity $post)
     {
         return $this->last_post = $post;
     }
@@ -361,7 +361,7 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * get ForumUsers that have marked this forum as favorite
-     * @return ArrayCollection Dizkus_Entity_ForumUserFavorites
+     * @return ArrayCollection Dizkus\Entity\ForumUserFavoritesEntity
      */
     public function getFavorites()
     {
@@ -371,7 +371,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get forum Topics
      *
-     * @return ArrayCollection Dizkus_Entity_Topic
+     * @return ArrayCollection Dizkus\Entity\TopicEntity
      */
     public function getTopics()
     {
@@ -381,7 +381,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Moderators
      *
-     * @return ArrayCollection Dizkus_Entity_Moderator_User
+     * @return ArrayCollection Dizkus\Entity\Moderator\UserEntity
      */
     public function getModeratorUsers()
     {
@@ -414,7 +414,7 @@ class ForumEntity extends \Zikula_EntityAccess
         $this->moderatorUsers->clear();
         // add users
         foreach ($users as $uid) {
-            $moderator = new Dizkus_Entity_Moderator_User();
+            $moderator = new Dizkus\Entity\Moderator\UserEntity();
             $managedForumUser = new Dizkus_Manager_ForumUser($uid);
             $moderator->setForumUser($managedForumUser->get());
             $moderator->setForum($this);
@@ -425,7 +425,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get forum moderator groups
      *
-     * @return ArrayCollection Dizkus_Entity_Moderator_Group
+     * @return ArrayCollection Dizkus\Entity\Moderator\GroupEntity
      */
     public function getModeratorGroups()
     {
@@ -458,7 +458,7 @@ class ForumEntity extends \Zikula_EntityAccess
         $this->moderatorGroups->clear();
         // add moderators
         foreach ($gids as $gid) {
-            $moderatorGroup = new Dizkus_Entity_Moderator_Group();
+            $moderatorGroup = new Dizkus\Entity\Moderator\GroupEntity();
             $em = ServiceUtil::getService('doctrine.entitymanager');
             $group = $em->find('Zikula\\Module\\GroupsModule\\Entity\\GroupEntity', $gid);
             $moderatorGroup->setGroup($group);
@@ -469,7 +469,7 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum Subscriptions
-     * @return ArrayCollection Dizkus_Entity_ForumSubscription
+     * @return ArrayCollection Dizkus\Entity\ForumSubscriptionEntity
      */
     public function getSubscriptions()
     {

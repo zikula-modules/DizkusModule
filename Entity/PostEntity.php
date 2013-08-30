@@ -16,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
- * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_PostRepository")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_PostRepositoryEntity")
  */
 
 namespace Dizkus\Entity;
@@ -90,13 +90,13 @@ class PostEntity extends \Zikula_EntityAccess
     private $title = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\TopicEntity", inversedBy="posts")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      * */
     private $topic;
@@ -206,7 +206,7 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * Get User who made post
      *
-     * @return Dizkus_Entity_ForumUser
+     * @return Dizkus\Entity\ForumUserEntity
      */
     public function getPoster()
     {
@@ -216,9 +216,9 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * set user who made the post
      *
-     * @param Dizkus_Entity_ForumUser $poster
+     * @param Dizkus\Entity\ForumUserEntity $poster
      */
-    public function setPoster(Dizkus_Entity_ForumUser $poster)
+    public function setPoster(Dizkus\Entity\ForumUserEntity $poster)
     {
         $this->poster = $poster;
     }
@@ -250,7 +250,7 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * get Post topic
      *
-     * @return Dizkus_Entity_Topic
+     * @return Dizkus\Entity\TopicEntity
      */
     public function getTopic()
     {
@@ -260,9 +260,9 @@ class PostEntity extends \Zikula_EntityAccess
     /**
      * Set post Topic
      *
-     * @param Dizkus_Entity_Topic $topic
+     * @param Dizkus\Entity\TopicEntity $topic
      */
-    public function setTopic(Dizkus_Entity_Topic $topic)
+    public function setTopic(Dizkus\Entity\TopicEntity $topic)
     {
         $this->topic = $topic;
     }

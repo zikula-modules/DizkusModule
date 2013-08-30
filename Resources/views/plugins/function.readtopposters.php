@@ -27,7 +27,7 @@ function smarty_function_readtopposters($params, Zikula_View $view)
     /* @var $qb Doctrine\ORM\QueryBuilder */
     $qb = $em->createQueryBuilder();
     $qb->select('u')
-            ->from('Dizkus_Entity_ForumUser', 'u')
+            ->from('Dizkus\Entity\ForumUserEntity', 'u')
             ->orderBy('u.postCount', 'DESC');
     $qb->setMaxResults($postermax);
     $forumUsers = $qb->getQuery()->getResult();

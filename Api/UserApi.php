@@ -101,10 +101,10 @@ class UserApi extends \Zikula_AbstractApi
             case 'forumposts':
                 if ($force || !isset($cache[$type][$id])) {
                     $dql = 'SELECT count(p)
-                        FROM Dizkus_Entity_Post p
+                        FROM Dizkus\Entity\PostEntity p
                         WHERE p.topic IN (
                             SELECT t.topic_id
-                            FROM Dizkus_Entity_Topic t
+                            FROM Dizkus\Entity\TopicEntity t
                             WHERE t.forum = :forum)';
                     $query = $this->entityManager->createQuery($dql)->setParameter('forum', $id);
                     $cache[$type][$id] = $query->getSingleScalarResult();
@@ -137,7 +137,7 @@ class UserApi extends \Zikula_AbstractApi
             case 'lastuser':
                 if (!isset($cache[$type])) {
                     $qb = $this->entityManager->createQueryBuilder();
-                    $qb->select('u')->from('Dizkus_Entity_ForumUser', 'u')->orderBy('u.user', 'DESC')->setMaxResults(1);
+                    $qb->select('u')->from('Dizkus\Entity\ForumUserEntity', 'u')->orderBy('u.user', 'DESC')->setMaxResults(1);
                     $user = $qb->getQuery()->getSingleResult();
                     $cache[$type] = $user->getUser()->getUname();
                 }
@@ -207,7 +207,7 @@ class UserApi extends \Zikula_AbstractApi
             'poster_ip' => $pip,
             'poster_host' => gethostbyaddr($pip));
         $dql = 'SELECT p, fu, u
-            FROM Dizkus_Entity_Post p
+            FROM Dizkus\Entity\PostEntity p
             JOIN p.poster fu
             JOIN fu.user u
             WHERE p.poster_ip = :pip
@@ -215,7 +215,7 @@ class UserApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql)->setParameter('pip', $pip);
         $posts = $query->getResult();
         foreach ($posts as $post) {
-            /* @var $post Dizkus_Entity_Post */
+            /* @var $post Dizkus\Entity\PostEntity */
             $viewip['users'][] = array(
                 'uid' => $post->getPoster()->getUser_id(),
                 'uname' => $post->getPoster()->getUser()->getUname(),
@@ -274,7 +274,7 @@ class UserApi extends \Zikula_AbstractApi
             }
             $topicTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimestamp);
             // Checking if the forum already has that news.
-            $topic = $this->entityManager->getRepository('Dizkus_Entity_Topic')->findOneBy(array('reference' => $reference));
+            $topic = $this->entityManager->getRepository('Dizkus\Entity\TopicEntity')->findOneBy(array('reference' => $reference));
             if (!isset($topic)) {
                 // Not found, add the feed item
                 $subject = $item->get_title();

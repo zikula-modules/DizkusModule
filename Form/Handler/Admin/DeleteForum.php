@@ -21,7 +21,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
     /**
      * forum
      *
-     * @var Dizkus_Entity_Forum
+     * @var Dizkus\Entity\ForumEntity
      */
     private $forum;
 
@@ -43,7 +43,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         $id = $this->request->query->get('id', null);
 
         if ($id) {
-            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $id);
+            $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $id);
             if ($forum) {
                 $this->view->assign($forum->toArray());
             } else {
@@ -142,7 +142,7 @@ class Dizkus_Form_Handler_Admin_DeleteForum extends Zikula_Form_AbstractHandler
         }
 
         // repair the tree
-        $this->entityManager->getRepository('Dizkus_Entity_Forum')->recover();
+        $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->recover();
         $this->entityManager->clear();
 
         // resync all forums, topics & posters

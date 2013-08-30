@@ -25,7 +25,7 @@ class Dizkus_Form_Handler_User_DeleteTopic extends Zikula_Form_AbstractHandler
     /**
      * topic poster
      *
-     * @var Dizkus_Entity_ForumUser
+     * @var Dizkus\Entity\ForumUserEntity
      */
     private $topic_poster;
 

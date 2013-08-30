@@ -18,22 +18,22 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 namespace Dizkus\Manager;
 
 use ServiceUtil;
-use Dizkus_Entity_Topic;
+use Dizkus\Entity\TopicEntity;
 use ModUtil;
 use Dizkus_Manager_ForumUser;
 use UserUtil;
 use Paginator;
 use Dizkus_Manager_Forum;
-use Dizkus_Entity_Post;
+use Dizkus\Entity\PostEntity;
 use DataUtil;
-use Dizkus_Entity_ForumUser;
+use Dizkus\Entity\ForumUserEntity;
 
 class TopicManager
 {
 
     /**
      * managed topic
-     * @var Dizkus_Entity_Topic
+     * @var Dizkus\Entity\TopicEntity
      */
     private $_topic;
     private $_itemsPerPage;
@@ -42,7 +42,7 @@ class TopicManager
 
     /**
      * first post in topic
-     * @var Dizkus_Entity_Post
+     * @var Dizkus\Entity\PostEntity
      */
     private $_firstPost = null;
     private $_subscribe = false;
@@ -53,7 +53,7 @@ class TopicManager
     /**
      * construct
      */
-    public function __construct($id = null, Dizkus_Entity_Topic $topic = null)
+    public function __construct($id = null, Dizkus\Entity\TopicEntity $topic = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
         $this->name = 'Dizkus';
@@ -62,10 +62,10 @@ class TopicManager
             $this->_topic = $topic;
         } elseif ($id > 0) {
             // find existing topic
-            $this->_topic = $this->entityManager->find('Dizkus_Entity_Topic', $id);
+            $this->_topic = $this->entityManager->find('Dizkus\Entity\TopicEntity', $id);
         } else {
             // create new topic
-            $this->_topic = new Dizkus_Entity_Topic();
+            $this->_topic = new Dizkus\Entity\TopicEntity();
         }
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'posts_per_page');
         $this->_defaultPostSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
@@ -161,7 +161,7 @@ class TopicManager
         // do not allow negative first result
         $startNumber = $startNumber > 0 ? $startNumber : 0;
         // Do a new query in order to limit maxresults, firstresult, order, etc.
-        $query = $this->entityManager->createQueryBuilder()->select('p, u, r')->from('Dizkus_Entity_Post', 'p')->where('p.topic = :topicId')->setParameter('topicId', $this->_topic->getTopic_id())->leftJoin('p.poster', 'u')->leftJoin('u.rank', 'r')->orderBy('p.post_time', $postSortOrder)->getQuery();
+        $query = $this->entityManager->createQueryBuilder()->select('p, u, r')->from('Dizkus\Entity\PostEntity', 'p')->where('p.topic = :topicId')->setParameter('topicId', $this->_topic->getTopic_id())->leftJoin('p.poster', 'u')->leftJoin('u.rank', 'r')->orderBy('p.post_time', $postSortOrder)->getQuery();
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
@@ -202,7 +202,7 @@ class TopicManager
         $this->entityManager->flush();
     }
 
-    public function setLastPost(Dizkus_Entity_Post $lastPost)
+    public function setLastPost(Dizkus\Entity\PostEntity $lastPost)
     {
         $this->_topic->setLast_post($lastPost);
     }
@@ -242,7 +242,7 @@ class TopicManager
     public function prepare($data)
     {
         // prepare first post
-        $this->_firstPost = new Dizkus_Entity_Post();
+        $this->_firstPost = new Dizkus\Entity\PostEntity();
         $this->_firstPost->setPost_text(DataUtil::formatForStore($data['message']));
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
@@ -260,9 +260,9 @@ class TopicManager
         $this->_topic->merge($data);
         // prepare poster data
         $uid = UserUtil::getVar('uid');
-        $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+        $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new Dizkus_Entity_ForumUser();
+            $forumUser = new Dizkus\Entity\ForumUserEntity();
             $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
@@ -437,7 +437,7 @@ class TopicManager
         if (!UserUtil::isLoggedIn()) {
             return false;
         }
-        $topicSubscription = $this->entityManager->getRepository('Dizkus_Entity_TopicSubscription')->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
+        $topicSubscription = $this->entityManager->getRepository('Dizkus\Entity\TopicSubscriptionEntity')->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
 
         return isset($topicSubscription);
     }
@@ -447,7 +447,7 @@ class TopicManager
      */
     public function resetLastPost($flush = false)
     {
-        $dql = 'SELECT p FROM Dizkus_Entity_Post p
+        $dql = 'SELECT p FROM Dizkus\Entity\PostEntity p
             WHERE p.topic = :topic
             ORDER BY p.post_time DESC';
         $query = $this->entityManager->createQuery($dql);
@@ -496,7 +496,7 @@ class TopicManager
      */
     private function getAdjacent($oper, $dir)
     {
-        $dql = "SELECT t.topic_id FROM Dizkus_Entity_Topic t\r\n            WHERE t.topic_time {$oper} :time\r\n            AND t.forum = :forum\r\n            AND t.sticky = 0\r\n            ORDER BY t.topic_time {$dir}";
+        $dql = "SELECT t.topic_id FROM Dizkus\Entity\TopicEntity t\r\n            WHERE t.topic_time {$oper} :time\r\n            AND t.forum = :forum\r\n            AND t.sticky = 0\r\n            ORDER BY t.topic_time {$dir}";
         $result = $this->entityManager->createQuery($dql)->setParameter('time', $this->_topic->getTopic_time())->setParameter('forum', $this->_topic->getForum())->setMaxResults(1)->getScalarResult();
         if ($result) {
             return $result[0]['topic_id'];

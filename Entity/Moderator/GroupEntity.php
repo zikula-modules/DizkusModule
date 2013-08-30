@@ -38,7 +38,7 @@ class GroupEntity extends \Zikula_EntityAccess
     private $group;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="moderatorGroups")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumEntity", inversedBy="moderatorGroups")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
@@ -63,7 +63,7 @@ class GroupEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum
-     * @return Dizkus_Entity_Forum
+     * @return Dizkus\Entity\ForumEntity
      */
     public function getForum()
     {
@@ -72,9 +72,9 @@ class GroupEntity extends \Zikula_EntityAccess
 
     /**
      * set Forum
-     * @param Dizkus_Entity_Forum $forum
+     * @param Dizkus\Entity\ForumEntity $forum
      */
-    public function setForum(Dizkus_Entity_Forum $forum)
+    public function setForum(Dizkus\Entity\ForumEntity $forum)
     {
         $this->forum = $forum;
     }

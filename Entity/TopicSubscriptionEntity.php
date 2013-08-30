@@ -34,7 +34,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * topic
      *
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Topic")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\TopicEntity")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      */
     private $topic;
@@ -42,17 +42,17 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
 
     /**
      * constructor
-     * @param Dizkus_Entity_ForumUser $forumUser
-     * @param Dizkus_Entity_Topic     $topic
+     * @param Dizkus\Entity\ForumUserEntity $forumUser
+     * @param Dizkus\Entity\TopicEntity     $topic
      */
-    public function __construct(Dizkus_Entity_ForumUser $forumUser, Dizkus_Entity_Topic $topic)
+    public function __construct(Dizkus\Entity\ForumUserEntity $forumUser, Dizkus\Entity\TopicEntity $topic)
     {
         $this->forumUser = $forumUser;
         $this->topic = $topic;
@@ -70,21 +70,21 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * get topic
      *
-     * @return Dizkus_Entity_Topic
+     * @return Dizkus\Entity\TopicEntity
      */
     public function getTopic()
     {
         return $this->topic;
     }
 
-    public function setTopic(Dizkus_Entity_Topic $topic)
+    public function setTopic(Dizkus\Entity\TopicEntity $topic)
     {
         return $this->topic = $topic;
     }
 
     /**
      * get the forumUser
-     * @return Dizkus_Entity_ForumUser
+     * @return Dizkus\Entity\ForumUserEntity
      */
     public function getForumUser()
     {
@@ -93,9 +93,9 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
 
     /**
      * set the forumUser
-     * @param Dizkus_Entity_ForumUser $forumUser
+     * @param Dizkus\Entity\ForumUserEntity $forumUser
      */
-    public function setUser(Dizkus_Entity_ForumUser $forumUser)
+    public function setUser(Dizkus\Entity\ForumUserEntity $forumUser)
     {
         $this->forumUser = $forumUser;
     }

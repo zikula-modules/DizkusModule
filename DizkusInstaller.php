@@ -15,29 +15,29 @@ use DoctrineHelper;
 use LogUtil;
 use HookUtil;
 use EventUtil;
-use Dizkus_Entity_Forum;
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\ForumEntity;
+use Dizkus\Entity\RankEntity;
 use ZLanguage;
 use System;
 use ModUtil;
-use Dizkus_Entity_ForumUser;
-use Dizkus_Entity_Moderator_Group;
+use Dizkus\Entity\ForumUserEntity;
+use Dizkus\Entity\Moderator\GroupEntity;
 use Dizkus_Connection_Pop3;
 
 class DizkusInstaller extends \Zikula_AbstractInstaller
 {
 
     private $_entities = array(
-        'Dizkus_Entity_Forum',
-        'Dizkus_Entity_Post',
-        'Dizkus_Entity_Topic',
-        'Dizkus_Entity_ForumUserFavorite',
-        'Dizkus_Entity_ForumUser',
-        'Dizkus_Entity_Moderator_User',
-        'Dizkus_Entity_Moderator_Group',
-        'Dizkus_Entity_ForumSubscription',
-        'Dizkus_Entity_TopicSubscription',
-        'Dizkus_Entity_Rank');
+        'Dizkus\Entity\ForumEntity',
+        'Dizkus\Entity\PostEntity',
+        'Dizkus\Entity\TopicEntity',
+        'Dizkus\Entity\ForumUserFavoriteEntity',
+        'Dizkus\Entity\ForumUserEntity',
+        'Dizkus\Entity\Moderator\UserEntity',
+        'Dizkus\Entity\Moderator\GroupEntity',
+        'Dizkus\Entity\ForumSubscriptionEntity',
+        'Dizkus\Entity\TopicSubscriptionEntity',
+        'Dizkus\Entity\RankEntity');
 
     /**
      *  Initialize a new install of the Dizkus module
@@ -63,8 +63,8 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfig'));
         EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Dizkus_HookHandlers', 'dizkushookconfigprocess'));
         // set up forum root (required)
-        $forumRoot = new Dizkus_Entity_Forum();
-        $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot = new Dizkus\Entity\ForumEntity();
+        $forumRoot->setName(Dizkus\Entity\ForumEntity::ROOTNAME);
         $forumRoot->lock();
         $this->entityManager->persist($forumRoot);
         // set up EXAMPLE forums
@@ -80,20 +80,20 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
      */
     private function setUpExampleForums($forumRoot)
     {
-        $food = new Dizkus_Entity_Forum();
+        $food = new Dizkus\Entity\ForumEntity();
         $food->setName('Food');
         $food->setParent($forumRoot);
         $food->lock();
         $this->entityManager->persist($food);
-        $fruits = new Dizkus_Entity_Forum();
+        $fruits = new Dizkus\Entity\ForumEntity();
         $fruits->setName('Fruits');
         $fruits->setParent($food);
         $this->entityManager->persist($fruits);
-        $vegetables = new Dizkus_Entity_Forum();
+        $vegetables = new Dizkus\Entity\ForumEntity();
         $vegetables->setName('Vegetables');
         $vegetables->setParent($food);
         $this->entityManager->persist($vegetables);
-        $carrots = new Dizkus_Entity_Forum();
+        $carrots = new Dizkus\Entity\ForumEntity();
         $carrots->setName('Carrots');
         $carrots->setParent($vegetables);
         $this->entityManager->persist($carrots);
@@ -109,59 +109,59 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
                 'description' => 'New forum user',
                 'minimumCount' => 1,
                 'maximumCount' => 9,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'zerostar.gif'),
             array(
                 'title' => 'Level 2',
                 'description' => 'Basic forum user',
                 'minimumCount' => 10,
                 'maximumCount' => 49,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'onestar.gif'),
             array(
                 'title' => 'Level 3',
                 'description' => 'Moderate forum user',
                 'minimumCount' => 50,
                 'maximumCount' => 99,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'twostars.gif'),
             array(
                 'title' => 'Level 4',
                 'description' => 'Advanced forum user',
                 'minimumCount' => 100,
                 'maximumCount' => 199,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'threestars.gif'),
             array(
                 'title' => 'Level 5',
                 'description' => 'Expert forum user',
                 'minimumCount' => 200,
                 'maximumCount' => 499,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'fourstars.gif'),
             array(
                 'title' => 'Level 6',
                 'description' => 'Superior forum user',
                 'minimumCount' => 500,
                 'maximumCount' => 999,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'fivestars.gif'),
             array(
                 'title' => 'Level 7',
                 'description' => 'Senior forum user',
                 'minimumCount' => 1000,
                 'maximumCount' => 4999,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'spezstars.gif'),
             array(
                 'title' => 'Legend',
                 'description' => 'Legend forum user',
                 'minimumCount' => 5000,
                 'maximumCount' => 1000000,
-                'type' => Dizkus_Entity_Rank::TYPE_POSTCOUNT,
+                'type' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT,
                 'image' => 'adminstars.gif'));
         foreach ($ranks as $rank) {
-            $r = new Dizkus_Entity_Rank();
+            $r = new Dizkus\Entity\RankEntity();
             $r->merge($rank);
             $this->entityManager->persist($r);
         }
@@ -412,8 +412,8 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     private function upgrade_to_4_0_0_migrateCategories()
     {
         // set up forum root
-        $forumRoot = new Dizkus_Entity_Forum();
-        $forumRoot->setName(Dizkus_Entity_Forum::ROOTNAME);
+        $forumRoot = new Dizkus\Entity\ForumEntity();
+        $forumRoot->setName(Dizkus\Entity\ForumEntity::ROOTNAME);
         $forumRoot->lock();
         $this->entityManager->persist($forumRoot);
         $this->entityManager->flush();
@@ -423,14 +423,14 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         $categories = $connection->fetchAll($sql);
         foreach ($categories as $category) {
             // create new category forum with old name
-            $newCatForum = new Dizkus_Entity_Forum();
+            $newCatForum = new Dizkus\Entity\ForumEntity();
             $newCatForum->setName($category['cat_title']);
             $newCatForum->setParent($forumRoot);
             $newCatForum->lock();
             $this->entityManager->persist($newCatForum);
             // set parent of existing forums to new category forum
             $where = array('root' => $category['cat_id']);
-            $forums = $this->entityManager->getRepository('Dizkus_Entity_Forum')->findBy($where);
+            $forums = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->findBy($where);
             foreach ($forums as $forum) {
                 $forum->setParent($newCatForum);
                 $this->entityManager->persist($forum);
@@ -453,14 +453,14 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     {
         // get all the old posts
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')->from('Dizkus_Entity_Post', 'p')->groupBy('p.poster');
+        $qb->select('p')->from('Dizkus\Entity\PostEntity', 'p')->groupBy('p.poster');
         $posts = $qb->getQuery()->getArrayResult();
         foreach ($posts as $post) {
             if ($post['poster_id'] > 0) {
-                $forumUser = $this->entityManager->getRepository('Dizkus_Entity_ForumUser')->find($post['poster_id']);
+                $forumUser = $this->entityManager->getRepository('Dizkus\Entity\ForumUserEntity')->find($post['poster_id']);
                 // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
-                    $forumUser = new Dizkus_Entity_ForumUser();
+                    $forumUser = new Dizkus\Entity\ForumUserEntity();
                     $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['poster_id']);
                     $forumUser->setUser($coreUser);
                     $this->entityManager->persist($forumUser);
@@ -484,11 +484,11 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         $groups = $connection->fetchAll($sql);
         foreach ($groups as $group) {
             $groupId = $group['user_id'] - 1000000;
-            $modGroup = new Dizkus_Entity_Moderator_Group();
+            $modGroup = new Dizkus\Entity\Moderator\GroupEntity();
             $coreGroup = $this->entityManager->find('Zikula\\Module\\GroupsModule\\Entity\\GroupEntity', $groupId);
             if ($coreGroup) {
                 $modGroup->setGroup($coreGroup);
-                $forum = $this->entityManager->find('Dizkus_Entity_Forum', $group['forum_id']);
+                $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $group['forum_id']);
                 $modGroup->setForum($forum);
                 $this->entityManager->persist($modGroup);
             }
@@ -512,7 +512,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
         foreach ($connections as $connectionData) {
             $connectionData['coreUser'] = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
             $connection = new Dizkus_Connection_Pop3($connectionData);
-            $forum = $this->entityManager->find('Dizkus_Entity_Forum', $connectionData['id']);
+            $forum = $this->entityManager->find('Dizkus\Entity\ForumEntity', $connectionData['id']);
             $forum->setPop3Connection($connection);
         }
         $this->entityManager->flush();
@@ -537,7 +537,7 @@ class DizkusInstaller extends \Zikula_AbstractInstaller
     {
         $count = 0;
         foreach ($rows as $row) {
-            $topic = $this->entityManager->find('Dizkus_Entity_Topic', $row['topic_id']);
+            $topic = $this->entityManager->find('Dizkus\Entity\TopicEntity', $row['topic_id']);
             if (isset($topic)) {
                 if (strpos($row['topic_reference'], '_') !== false) {
                     // reference contains an unsupported underscore, lock the topic

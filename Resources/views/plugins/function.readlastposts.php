@@ -93,7 +93,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $em = $view->getContainer()->get('doctrine.entitymanager');
     $qb = $em->createQueryBuilder();
     $qb->select(array('t', 'f', 'p', 'fu'))
-            ->from('Dizkus_Entity_Topic', 't')
+            ->from('Dizkus\Entity\TopicEntity', 't')
             ->innerJoin('t.forum', 'f')
             ->innerJoin('t.last_post', 'p')
             ->innerJoin('p.poster', 'fu');
@@ -122,7 +122,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     $lastposts = array();
     if (!empty($topics)) {
         $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
-        /* @var $topic Dizkus_Entity_Topic */
+        /* @var $topic Dizkus\Entity\TopicEntity */
         foreach ($topics as $topic) {
             $lastpost = array();
             $lastpost['title'] = DataUtil::formatforDisplay($topic->getTitle());

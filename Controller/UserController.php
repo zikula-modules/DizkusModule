@@ -21,7 +21,7 @@ use Dizkus_Manager_Forum;
 use Dizkus_Manager_Post;
 use System;
 use Dizkus_Manager_Topic;
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\RankEntity;
 use Zikula_Hook_ValidationProviders;
 use Zikula_ValidationHook;
 use ZLanguage;
@@ -35,7 +35,7 @@ use Dizkus_Form_Handler_User_MoveTopic;
 use Dizkus_Form_Handler_User_Prefs;
 use Dizkus_Form_Handler_User_ForumSubscriptions;
 use Dizkus_Form_Handler_User_TopicSubscriptions;
-use Dizkus_Entity_ForumUser;
+use Dizkus\Entity\ForumUserEntity;
 use Dizkus_Form_Handler_User_SignatureManagement;
 use Dizkus_Form_Handler_User_EmailTopic;
 use Dizkus_Form_Handler_User_SplitTopic;
@@ -69,7 +69,7 @@ use DataUtil;
             $showOnlyFavorites = ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus');
             $siteFavoritesAllowed = ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes';
             $uid = UserUtil::getVar('uid');
-            $qb = $this->entityManager->getRepository('Dizkus_Entity_Forum')->childrenQueryBuilder();
+            $qb = $this->entityManager->getRepository('Dizkus\Entity\ForumEntity')->childrenQueryBuilder();
             if (UserUtil::isLoggedIn() && $siteFavoritesAllowed && $showOnlyFavorites) {
                 // display only favorite forums
                 $qb->join('node.favorites', 'fa');
@@ -162,7 +162,7 @@ use DataUtil;
             if (!$managedTopic->exists()) {
                 return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url('Dizkus', 'user', 'index'));
             }
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
             $this->view->assign('start', $start);
             $this->view->assign('topic', $managedTopic->get());
@@ -290,7 +290,7 @@ use DataUtil;
                     'userAllowedToEdit' => false);
                 // Do not show edit link
                 $permissions = array();
-                list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+                list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
                 $this->view->assign('ranks', $ranks);
                 $this->view->assign('post', $post);
                 $this->view->assign('reply', $reply);
@@ -445,9 +445,9 @@ use DataUtil;
                 return System::redirect($url);
             }
             $uid = UserUtil::getVar('uid');
-            $forumUser = $this->entityManager->find('Dizkus_Entity_ForumUser', $uid);
+            $forumUser = $this->entityManager->find('Dizkus\Entity\ForumUserEntity', $uid);
             if (!$forumUser) {
-                $forumUser = new Dizkus_Entity_ForumUser();
+                $forumUser = new Dizkus\Entity\ForumUserEntity();
                 $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
                 $forumUser->setUser($coreUser);
             }
@@ -686,7 +686,7 @@ use DataUtil;
             $this->view->assign('current_date', date(DATE_RSS));
             $this->view->assign('current_language', ZLanguage::getLocale());
             $qb = $this->entityManager->createQueryBuilder();
-            $qb->select('t, f, p, fu')->from('Dizkus_Entity_Topic', 't')->join('t.forum', 'f')->join('t.last_post', 'p')->join('p.poster', 'fu');
+            $qb->select('t, f, p, fu')->from('Dizkus\Entity\TopicEntity', 't')->join('t.forum', 'f')->join('t.last_post', 'p')->join('p.poster', 'fu');
             if (!empty($where)) {
                 if ($where[2] == 'IN') {
                     $qb->expr()->in($where[0], $where[1]);
@@ -700,7 +700,7 @@ use DataUtil;
             $posts = array();
             $i = 0;
             foreach ($topics as $topic) {
-                /* @var $topic Dizkus_Entity_Topic */
+                /* @var $topic Dizkus\Entity\TopicEntity */
                 $posts[$i]['title'] = $topic->getTitle();
                 $posts[$i]['parenttitle'] = $topic->getForum()->getParent()->getName();
                 $posts[$i]['forum_name'] = $topic->getForum()->getName();

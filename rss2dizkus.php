@@ -38,7 +38,7 @@ if (!ModUtil::available('Feeds')) {
 //
 // Getting All forums where RSS2DIZKUS is SET...
 //
-$forums = $em->getRepository('Dizkus_Entity_Forum')->getRssForums();
+$forums = $em->getRepository('Dizkus\Entity\ForumEntity')->getRssForums();
 // this may return some forums intented for mail2forum cron stuff... I don't know.
 if (!$forums) {
     return;

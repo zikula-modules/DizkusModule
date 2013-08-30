@@ -20,7 +20,7 @@ use ZLanguage;
 use Zikula_ModUrl;
 use Zikula_ProcessHook;
 use Dizkus_Manager_ForumUser;
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\RankEntity;
 use Zikula_Response_Ajax;
 use UserUtil;
 use Dizkus_Manager_Forum;
@@ -153,7 +153,7 @@ use System;
             $this->view->assign('start', $start);
             $this->view->assign('preview', $preview);
             $this->view->assign('permissions', $permissions);
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus_Entity_Rank::TYPE_POSTCOUNT));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Dizkus\Entity\RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
 
             return new Zikula_Response_Ajax(array(

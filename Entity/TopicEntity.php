@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
- * @ORM\Entity(repositoryClass="Dizkus_Entity_Repository_TopicRepository")
+ * @ORM\Entity(repositoryClass="Dizkus\Entity\Repository_TopicRepositoryEntity")
  */
 
 namespace Dizkus\Entity;
@@ -40,7 +40,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * poster
      *
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_ForumUser", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="poster", referencedColumnName="user_id")
      */
     private $poster;
@@ -89,13 +89,13 @@ class TopicEntity extends \Zikula_EntityAccess
     private $sticky = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Dizkus_Entity_Forum", inversedBy="topics")
+     * @ORM\ManyToOne(targetEntity="Dizkus\Entity\ForumEntity", inversedBy="topics")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
 
     /**
-     * @ORM\OneToOne(targetEntity="Dizkus_Entity_Post", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Dizkus\Entity\PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
@@ -110,7 +110,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * posts
      *
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_Post", mappedBy="topic", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\PostEntity", mappedBy="topic", cascade={"remove"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
@@ -118,8 +118,8 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * Subscriptions
      *
-     * Dizkus_Entity_TopicSubscription collection
-     * @ORM\OneToMany(targetEntity="Dizkus_Entity_TopicSubscription", mappedBy="topic", cascade={"remove"})
+     * Dizkus\Entity\TopicSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="Dizkus\Entity\TopicSubscriptionEntity", mappedBy="topic", cascade={"remove"})
      */
     private $subscriptions;
 
@@ -193,14 +193,14 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * get Forum
-     * @return Dizkus_Entity_Forum
+     * @return Dizkus\Entity\ForumEntity
      */
     public function getForum()
     {
         return $this->forum;
     }
 
-    public function setForum(Dizkus_Entity_Forum $forum)
+    public function setForum(Dizkus\Entity\ForumEntity $forum)
     {
         $this->forum = $forum;
     }
@@ -210,7 +210,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->last_post;
     }
 
-    public function setLast_post(Dizkus_Entity_Post $post)
+    public function setLast_post(Dizkus\Entity\PostEntity $post)
     {
         return $this->last_post = $post;
     }
@@ -218,7 +218,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * get the topic poster
      *
-     * @return Dizkus_Entity_ForumUser
+     * @return Dizkus\Entity\ForumUserEntity
      */
     public function getPoster()
     {
@@ -293,9 +293,9 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * set the Topic poster
      *
-     * @param Dizkus_Entity_ForumUser $poster
+     * @param Dizkus\Entity\ForumUserEntity $poster
      */
-    public function setPoster(Dizkus_Entity_ForumUser $poster)
+    public function setPoster(Dizkus\Entity\ForumUserEntity $poster)
     {
         $this->poster = $poster;
     }
@@ -318,7 +318,7 @@ class TopicEntity extends \Zikula_EntityAccess
         $this->posts = null;
     }
 
-    public function addPost(Dizkus_Entity_Post $post)
+    public function addPost(Dizkus\Entity\PostEntity $post)
     {
         $this->posts[] = $post;
     }
@@ -338,7 +338,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * get Topic Subscriptions
-     * @return Dizkus_Entity_TopicSubscription collection
+     * @return Dizkus\Entity\TopicSubscriptionEntity collection
      */
     public function getSubscriptions()
     {

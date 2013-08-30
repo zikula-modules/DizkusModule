@@ -42,7 +42,7 @@ class PostApi extends \Zikula_AbstractApi
     public function getLatest($args)
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t', 'l')->from('Dizkus_Entity_Topic', 't')->leftJoin('t.last_post', 'l')->orderBy('l.post_time', 'DESC');
+        $qb->select('t', 'l')->from('Dizkus\Entity\TopicEntity', 't')->leftJoin('t.last_post', 'l')->orderBy('l.post_time', 'DESC');
         // sql part per selected time frame
         switch ($args['selorder']) {
             case '2':
@@ -120,7 +120,7 @@ class PostApi extends \Zikula_AbstractApi
             $args['action'] = 'posts';
         }
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t', 'l')->from('Dizkus_Entity_Topic', 't')->leftJoin('t.last_post', 'l')->leftJoin('t.posts', 'p')->orderBy('l.post_time', 'DESC');
+        $qb->select('t', 'l')->from('Dizkus\Entity\TopicEntity', 't')->leftJoin('t.last_post', 'l')->leftJoin('t.posts', 'p')->orderBy('l.post_time', 'DESC');
         if ($args['action'] == 'topics') {
             $qb->where('t.poster = :uid');
             if ($own) {

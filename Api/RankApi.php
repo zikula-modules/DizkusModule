@@ -11,7 +11,7 @@
 
 namespace Dizkus\Api;
 
-use Dizkus_Entity_Rank;
+use Dizkus\Entity\RankEntity;
 use LogUtil;
 use SecurityUtil;
 use Dizkus_Manager_ForumUser;
@@ -44,12 +44,12 @@ class RankApi extends \Zikula_AbstractApi
             }
         }
         asort($filelist);
-        if ($args['ranktype'] == Dizkus_Entity_Rank::TYPE_POSTCOUNT) {
+        if ($args['ranktype'] == Dizkus\Entity\RankEntity::TYPE_POSTCOUNT) {
             $orderby = 'minimumCount';
         } else {
             $orderby = 'title';
         }
-        $ranks = $this->entityManager->getRepository('Dizkus_Entity_Rank')->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
+        $ranks = $this->entityManager->getRepository('Dizkus\Entity\RankEntity')->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
     }
@@ -69,11 +69,11 @@ class RankApi extends \Zikula_AbstractApi
         //title, description, minimumCount, maximumCount, type, image
         foreach ($args['ranks'] as $rankid => $rank) {
             if ($rankid == '-1') {
-                $r = new Dizkus_Entity_Rank();
+                $r = new Dizkus\Entity\RankEntity();
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {
-                $r = $this->entityManager->find('Dizkus_Entity_Rank', $rankid);
+                $r = $this->entityManager->find('Dizkus\Entity\RankEntity', $rankid);
                 if ($rank['rank_delete'] == '1') {
                     $this->entityManager->remove($r);
                 } else {
@@ -102,7 +102,7 @@ class RankApi extends \Zikula_AbstractApi
                 $rankId = $rankId == 0 ? null : $rankId;
                 $managedForumUser = new Dizkus_Manager_ForumUser($userId);
                 if (isset($rankId)) {
-                    $rank = $this->entityManager->find('Dizkus_Entity_Rank', $rankId);
+                    $rank = $this->entityManager->find('Dizkus\Entity\RankEntity', $rankId);
                     $managedForumUser->get()->setRank($rank);
                 } else {
                     $managedForumUser->get()->clearRank();
@@ -140,7 +140,7 @@ class RankApi extends \Zikula_AbstractApi
             return $this->_userRanks[$uid];
         }
         // get rank by number of post
-        $userRank = $this->entityManager->createQueryBuilder()->select('r')->from('Dizkus_Entity_Rank', 'r')->where('r.minimumCount <= :posts and r.maximumCount >= :posts')->setParameter('posts', $args['poster']->getPostCount())->getQuery()->setMaxResults(1)->getArrayResult();
+        $userRank = $this->entityManager->createQueryBuilder()->select('r')->from('Dizkus\Entity\RankEntity', 'r')->where('r.minimumCount <= :posts and r.maximumCount >= :posts')->setParameter('posts', $args['poster']->getPostCount())->getQuery()->setMaxResults(1)->getArrayResult();
         if (isset($userRank[0])) {
             $data = $this->addImageAndLink($userRank[0]);
         }

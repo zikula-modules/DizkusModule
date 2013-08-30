@@ -181,7 +181,7 @@ class SearchApi extends \Zikula_AbstractApi
             $whereforums = 't.forum IN (' . DataUtil::formatForStore(implode($args['forums'], ',')) . ') ';
         }
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t')->from('Dizkus_Entity_Topic', 't')->leftJoin('t.posts', 'p')->where($where)->andWhere($whereforums);
+        $qb->select('t')->from('Dizkus\Entity\TopicEntity', 't')->leftJoin('t.posts', 'p')->where($where)->andWhere($whereforums);
         $topics = $qb->getQuery()->getResult();
         $sessionId = session_id();
         $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');
