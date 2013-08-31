@@ -21,7 +21,7 @@ use Dizkus\Entity\RankEntity;
 class AdminController extends \Zikula_AbstractController
 {
 
-    public function postInitializeAction()
+    public function postInitialize()
     {
         $this->view->setCaching(false)->add_core_data();
     }
