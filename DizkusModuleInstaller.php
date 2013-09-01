@@ -24,7 +24,7 @@ use Dizkus\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
 use Dizkus\Connection\Pop3Connection;
 use DoctrineHelper;
 
-class DizkusInstaller extends \Zikula_AbstractInstaller
+class DizkusModuleInstaller extends \Zikula_AbstractInstaller
 {
 
     private $_entities = array(

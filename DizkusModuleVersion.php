@@ -19,7 +19,7 @@ use Zikula_HookManager_ProviderBundle;
 /**
  * Provides metadata for this module to the Extensions module.
  */
-class DizkusVersion extends \Zikula_AbstractVersion
+class DizkusModuleVersion extends \Zikula_AbstractVersion
 {
 
     const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';
