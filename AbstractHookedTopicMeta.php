@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Dizkus;
+namespace Zikula\DizkusModule;
 
 abstract class AbstractHookedTopicMeta
 {

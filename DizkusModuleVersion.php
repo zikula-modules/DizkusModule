@@ -9,7 +9,7 @@
  * @link https://github.com/zikula-modules/Dizkus
  */
 
-namespace Dizkus;
+namespace Zikula\DizkusModule;
 
 use HookUtil;
 use ModUtil;

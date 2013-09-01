@@ -16,7 +16,7 @@
  * EZComments Hooks Handlers.
  */
 
-namespace Dizkus;
+namespace Zikula\DizkusModule;
 
 use ServiceUtil;
 use SecurityUtil;

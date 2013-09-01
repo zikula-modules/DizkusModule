@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus;
+namespace Zikula\DizkusModule;
 
 use LogUtil;
 use HookUtil;
