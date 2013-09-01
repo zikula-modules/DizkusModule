@@ -1,6 +1,7 @@
 {
-    "name": "zikula/dizkus",
+    "name": "zikula/dizkus-module",
     "description": "An integrated discussion forum for Zikula.",
+    "keywords": ["zikula", "module", "forum", "discussion", "bundle"],
     "type": "zikula-module",
     "license": "LGPL-3.0+",
     "authors": [
