@@ -13,6 +13,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 
 use ServiceUtil;
 use ZLanguage;
+use Zikula\Module\DizkusModule\Connection\Pop3Connection;
 use Zikula\Module\DizkusModule\Entity\Moderator\UserEntity;
 use Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity;
 use Zikula\Module\DizkusModule\Entity\Moderator\UserEntity as ModeratorUserEntity;
@@ -339,7 +340,7 @@ class ForumEntity extends \Zikula_EntityAccess
         return $this->pop3Connection;
     }
 
-    public function setPop3Connection(Zikula\Module\DizkusModule\Connection\Pop3Connection $connection)
+    public function setPop3Connection(Pop3Connection $connection)
     {
         $this->pop3Connection = $connection;
     }

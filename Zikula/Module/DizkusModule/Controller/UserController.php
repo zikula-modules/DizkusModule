@@ -29,6 +29,19 @@ use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\Module\DizkusModule\Form\Handler\User\NewTopic;
+use Zikula\Module\DizkusModule\Form\Handler\User\EditPost;
+use Zikula\Module\DizkusModule\Form\Handler\User\DeleteTopic;
+use Zikula\Module\DizkusModule\Form\Handler\User\MoveTopic;
+use Zikula\Module\DizkusModule\Form\Handler\User\Prefs;
+use Zikula\Module\DizkusModule\Form\Handler\User\ForumSubscriptions;
+use Zikula\Module\DizkusModule\Form\Handler\User\TopicSubscriptions;
+use Zikula\Module\DizkusModule\Form\Handler\User\SignatureManagement;
+use Zikula\Module\DizkusModule\Form\Handler\User\EmailTopic;
+use Zikula\Module\DizkusModule\Form\Handler\User\SplitTopic;
+use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
+use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
+use Zikula\Module\DizkusModule\Form\Handler\User\Report;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserController extends \Zikula_AbstractController
@@ -100,6 +113,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewforumAction($args = array())
     {
+        echo 1;
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');
         }
@@ -301,7 +315,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/new.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\NewTopic());
+        return $form->execute('user/topic/new.tpl', new NewTopic());
     }
 
     /**
@@ -315,7 +329,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/post/edit.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\EditPost());
+        return $form->execute('user/post/edit.tpl', new EditPost());
     }
 
     /**
@@ -329,7 +343,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/delete.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\DeleteTopic());
+        return $form->execute('user/topic/delete.tpl', new DeleteTopic());
     }
 
     /**
@@ -343,7 +357,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/move.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\MoveTopic());
+        return $form->execute('user/topic/move.tpl', new MoveTopic());
     }
 
     /**
@@ -374,7 +388,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/prefs.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\Prefs());
+        return $form->execute('user/prefs/prefs.tpl', new Prefs());
     }
 
     /**
@@ -386,7 +400,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/manageForumSubscriptions.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\ForumSubscriptions());
+        return $form->execute('user/prefs/manageForumSubscriptions.tpl', new ForumSubscriptions());
     }
 
     /**
@@ -398,7 +412,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\TopicSubscriptions());
+        return $form->execute('user/prefs/manageTopicSubscriptions.tpl', new TopicSubscriptions());
     }
 
     /**
@@ -481,7 +495,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/prefs/signaturemanagement.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\SignatureManagement());
+        return $form->execute('user/prefs/signaturemanagement.tpl', new SignatureManagement());
     }
 
     /**
@@ -493,7 +507,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/email.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\EmailTopic());
+        return $form->execute('user/topic/email.tpl', new EmailTopic());
     }
 
     /**
@@ -563,7 +577,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/topic/split.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\SplitTopic());
+        return $form->execute('user/topic/split.tpl', new SplitTopic());
     }
 
     /**
@@ -575,7 +589,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/post/move.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\MovePost());
+        return $form->execute('user/post/move.tpl', new MovePost());
     }
 
     /**
@@ -589,7 +603,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/forum/moderate.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum());
+        return $form->execute('user/forum/moderate.tpl', new ModerateForum());
     }
 
     /**
@@ -603,7 +617,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('user/notifymod.tpl', new Zikula\Module\DizkusModule\Form\Handler\User\Report());
+        return $form->execute('user/notifymod.tpl', new Report());
     }
 
     /**

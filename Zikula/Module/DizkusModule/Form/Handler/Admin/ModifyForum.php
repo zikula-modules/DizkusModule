@@ -12,6 +12,8 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\Module\DizkusModule\Connection\Pop3Connection;
+
 /**
  * This class provides a handler to edit forums.
  */
@@ -162,7 +164,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
                     'matchstring' => $data['matchstring'],
                 );
                 $connectionData['coreUser'] = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $data['coreUser']);
-                $connection = new Zikula\Module\DizkusModule\Connection\Pop3Connection($connectionData);
+                $connection = new Pop3Connection($connectionData);
                 $this->_forum->get()->setPop3Connection($connection);
 
                 if ($data['pop3_test']) {
