@@ -1,0 +1,23 @@
+{
+    "name": "zikula/dizkus-module",
+    "description": "An integrated discussion forum for Zikula",
+    "type": "zikula-module",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Dizkus Team",
+            "homepage": "https://github.com/zikula-modules/DizkusModule"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Zikula\\Module\\DizkusModule\\": "" }
+    },
+    "require": {
+        "php": ">5.3.3"
+    },
+    "extra": {
+        "zikula": {
+            "class": "Zikula\\Module\\DizkusModule\\ZikulaDizkusModule"
+        }
+    }
+}
