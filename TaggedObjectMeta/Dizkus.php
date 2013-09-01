@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\TaggedObjectMeta;
+namespace Zikula\DizkusModule\TaggedObjectMeta;
 
 use DateUtil;
 use ModUtil;

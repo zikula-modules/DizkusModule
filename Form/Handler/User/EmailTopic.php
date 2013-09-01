@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 use Dizkus\Manager\TopicManager;
 /**

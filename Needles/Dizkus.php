@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Needles;
+namespace Zikula\DizkusModule\Needles;
 
 use ModUtil;
 use DataUtil;

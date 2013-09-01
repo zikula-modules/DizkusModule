@@ -13,7 +13,7 @@
  * This class provides the post api functions
  */
 
-namespace Dizkus\Api;
+namespace Zikula\DizkusModule\Api;
 
 use DateTime;
 use DataUtil;

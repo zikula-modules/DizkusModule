@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Controller;
+namespace Zikula\DizkusModule\Controller;
 
 use ModUtil;
 use System;

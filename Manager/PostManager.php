@@ -14,7 +14,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Dizkus\Manager;
+namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
 use DataUtil;

@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Block;
+namespace Zikula\DizkusModule\Block;
 
 use SecurityUtil;
 use ModUtil;

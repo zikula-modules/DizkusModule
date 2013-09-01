@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Api;
+namespace Zikula\DizkusModule\Api;
 
 /**
  * This class provides the moderators api functions

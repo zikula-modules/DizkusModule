@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Entity\Moderator;
+namespace Zikula\DizkusModule\Entity\Moderator;
 
 use Doctrine\ORM\Mapping as ORM;
 

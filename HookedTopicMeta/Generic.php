@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Dizkus\HookedTopicMeta;
+namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use ZLanguage;
 

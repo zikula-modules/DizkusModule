@@ -14,7 +14,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Dizkus\Connection;
+namespace Zikula\DizkusModule\Connection;
 
 /**
  * Class to define a connection to a pop3 server

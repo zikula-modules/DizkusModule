@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Entity\Repository;
+namespace Zikula\DizkusModule\Entity\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 

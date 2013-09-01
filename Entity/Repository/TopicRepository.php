@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Entity\Repository;
+namespace Zikula\DizkusModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Zikula\Component\HookDispatcher\Hook;

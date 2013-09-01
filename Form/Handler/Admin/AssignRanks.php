@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
 /**
  * This class provides a handler to Assign ranks

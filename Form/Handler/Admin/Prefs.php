@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
 class Prefs extends \Zikula_Form_AbstractHandler
 {

@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use ServiceUtil;
 use ModUtil;

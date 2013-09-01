@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Dizkus\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 /**
  * This class provides a handler to manage topic subscriptions.
