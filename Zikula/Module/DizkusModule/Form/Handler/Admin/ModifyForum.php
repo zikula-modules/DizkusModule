@@ -162,7 +162,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
                     'matchstring' => $data['matchstring'],
                 );
                 $connectionData['coreUser'] = $this->entityManager->find('Zikula\Module\UsersModule\Entity\UserEntity', $data['coreUser']);
-                $connection = new Dizkus_Connection_Pop3($connectionData);
+                $connection = new Zikula\Module\DizkusModule\Connection\Pop3Connection($connectionData);
                 $this->_forum->get()->setPop3Connection($connection);
 
                 if ($data['pop3_test']) {

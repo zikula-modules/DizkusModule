@@ -47,7 +47,7 @@ function smarty_modifier_viewtopiclink($topic_id = null, $subject = null, $forum
         $url .= '#pid' . (int) $last_post_id;
     }
 
-    $title = DataUtil::formatForDisplay(Dizkus_Api_User::truncate(strip_tags($subject), 60));
+    $title = DataUtil::formatForDisplay(Zikula\Module\DizkusModule\Api\UserApi::truncate(strip_tags($subject), 60));
 
     return "<a $class href='" . DataUtil::formatForDisplay($url) . "' title='go to topic'>$title</a>";
 }

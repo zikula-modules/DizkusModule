@@ -91,7 +91,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
             $this->setVars($data);
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
         } elseif ($args['commandName'] == 'restore') {
-            $this->setVars(Dizkus_Installer::getDefaultVars());
+            $this->setVars(Zikula\Module\DizkusModule\DizkusModuleInstaller::getDefaultVars());
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 

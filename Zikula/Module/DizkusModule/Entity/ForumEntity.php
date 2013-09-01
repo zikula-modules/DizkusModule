@@ -339,7 +339,7 @@ class ForumEntity extends \Zikula_EntityAccess
         return $this->pop3Connection;
     }
 
-    public function setPop3Connection(Dizkus_Connection_Pop3 $connection)
+    public function setPop3Connection(Zikula\Module\DizkusModule\Connection\Pop3Connection $connection)
     {
         $this->pop3Connection = $connection;
     }

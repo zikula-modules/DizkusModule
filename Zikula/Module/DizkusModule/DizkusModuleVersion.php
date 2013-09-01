@@ -118,13 +118,13 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $this->registerHookSubscriberBundle($bundle3);
         // Topic Provider Hooks
         $bundle5 = new Zikula_HookManager_ProviderBundle($this->name, self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
-        $bundle5->addServiceHandler('display_view', 'Dizkus_HookHandlers', 'uiView', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('form_edit', 'Dizkus_HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('form_delete', 'Dizkus_HookHandlers', 'uiDelete', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('validate_edit', 'Dizkus_HookHandlers', 'validateEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('validate_delete', 'Dizkus_HookHandlers', 'validateDelete', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('process_edit', 'Dizkus_HookHandlers', 'processEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('process_delete', 'Dizkus_HookHandlers', 'processDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('display_view', 'Zikula\Module\DizkusModule\HookHandlers', 'uiView', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('form_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('form_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'uiDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('validate_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'validateEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('validate_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'validateDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('process_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'processEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('process_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'processDelete', 'dizkus.hooks.topic');
         $this->registerHookProviderBundle($bundle5);
     }
 

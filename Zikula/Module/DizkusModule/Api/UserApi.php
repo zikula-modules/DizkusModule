@@ -152,7 +152,7 @@ class UserApi extends \Zikula_AbstractApi
     private function countEntity($entityname, $where = null, $parameter = null)
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('count(a)')->from('Dizkus_Entity_' . $entityname, 'a');
+        $qb->select('count(a)')->from("Zikula\\Module\\DizkusModule\\Entity\\$entityname", 'a');
         if (isset($where) && isset($parameter)) {
             $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
         }
