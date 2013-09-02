@@ -32,7 +32,7 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
 
-        $subscriptions = ModUtil::apiFunc('Dizkus', 'Forum', 'getSubscriptions');
+        $subscriptions = ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptions');
         $view->assign('subscriptions', $subscriptions);
 
         return true;
@@ -56,7 +56,7 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
         if (count($data['forumIds']) > 0) {
             foreach (array_keys($data['forumIds']) as $forumId) {
                 if ($forumId) {
-                    ModUtil::apiFunc('Dizkus', 'Forum', 'unsubscribe', array('forum' => $forumId));
+                    ModUtil::apiFunc($this->name, 'Forum', 'unsubscribe', array('forum' => $forumId));
                 }
             }
         }

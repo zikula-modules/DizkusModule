@@ -16,8 +16,9 @@ namespace Zikula\Module\DizkusModule\HookedTopicMeta;
 
 use ModUtil;
 use News_Api_User;
+use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 
-class News extends Zikula\Module\DizkusModule\AbstractHookedTopicMeta
+class News extends AbstractHookedTopicMeta
 {
 
     private $newsItem = null;

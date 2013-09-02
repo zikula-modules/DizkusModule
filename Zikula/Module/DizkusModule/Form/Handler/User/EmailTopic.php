@@ -46,7 +46,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
 
         $view->assign($managedTopic->get());
         $view->assign('emailsubject', $managedTopic->get()->getTitle());
-        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
+        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
 
         return true;
     }
@@ -63,7 +63,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -72,12 +72,12 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        ModUtil::apiFunc('Dizkus', 'notify', 'email', array(
+        ModUtil::apiFunc($this->name, 'notify', 'email', array(
             'sendto_email' => $data['sendto_email'],
             'message' => $data['message'],
             'subject' => $data['emailsubject']
         ));
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
         return $view->redirect($url);
     }

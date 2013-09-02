@@ -63,11 +63,11 @@ class UserController extends \Zikula_AbstractController
         }
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
-        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
         // get the forms to display
-        $showOnlyFavorites = ModUtil::apiFunc('Dizkus', 'Favorites', 'getStatus');
-        $siteFavoritesAllowed = ModUtil::getVar('Dizkus', 'favorites_enabled') == 'yes';
+        $showOnlyFavorites = ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
+        $siteFavoritesAllowed = $this->getVar('favorites_enabled') == 'yes';
         $uid = UserUtil::getVar('uid');
         $qb = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
         if (UserUtil::isLoggedIn() && $siteFavoritesAllowed && $showOnlyFavorites) {
@@ -94,7 +94,7 @@ class UserController extends \Zikula_AbstractController
             }
         }
         $this->view->assign('forums', $forums);
-        $numposts = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => '0', 'type' => 'all'));
+        $numposts = ModUtil::apiFunc($this->name, 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
 
         return $this->view->fetch('user/main.tpl');
@@ -113,7 +113,6 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewforumAction($args = array())
     {
-        echo 1;
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');
         }
@@ -121,7 +120,7 @@ class UserController extends \Zikula_AbstractController
         $forumId = (int)$this->request->query->get('forum', isset($args['forum']) ? $args['forum'] : null);
         $this->throwNotFoundUnless($forumId > 0, $this->__('That forum doesn\'t exist!'));
         $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
-        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $managedForum = new ForumManager($forumId);
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
@@ -161,7 +160,7 @@ class UserController extends \Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum()));
         if (!$managedTopic->exists()) {
-            return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url('Dizkus', 'user', 'index'));
+            return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url($this->name, 'user', 'index'));
         }
         list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
@@ -212,9 +211,9 @@ class UserController extends \Zikula_AbstractController
          * if cancel is submitted move to topic-view
          */
         if ($cancel) {
-            return $this->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic_id)));
+            return $this->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id)));
         }
-        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
+        $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         // check for maximum message size
         if (strlen($message) + strlen('[addsig]') > 65535) {
             LogUtil::registerStatus($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
@@ -248,14 +247,14 @@ class UserController extends \Zikula_AbstractController
             } else {
                 ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic' => $topic_id));
             }
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
+            $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start);
-            $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
             // notify topic & forum subscribers
-            $notified = ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
+            $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             // if viewed in hooked state, redirect back to hook subscriber
             if (isset($returnurl)) {
                 $urlParams = unserialize(htmlspecialchars_decode($returnurl));
@@ -271,7 +270,7 @@ class UserController extends \Zikula_AbstractController
 
             return $this->redirect($url->getUrl());
         } else {
-            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+            $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $managedTopic = new TopicManager($topic_id);
             $managedPoster = new ForumUserManager();
             $reply = array(
@@ -372,7 +371,7 @@ class UserController extends \Zikula_AbstractController
         if ($post_id == 0) {
             return LogUtil::registerArgsError();
         }
-        $this->view->assign('viewip', ModUtil::apiFunc('Dizkus', 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
+        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
 
         return $this->view->fetch('user/viewip.tpl');
     }
@@ -439,7 +438,7 @@ class UserController extends \Zikula_AbstractController
      */
     private function changeViewSetting($setting)
     {
-        $url = ModUtil::url('Dizkus', 'user', 'index');
+        $url = ModUtil::url($this->name, 'user', 'index');
         if (!UserUtil::isLoggedIn()) {
             LogUtil::registerPermissionError();
 
@@ -470,7 +469,7 @@ class UserController extends \Zikula_AbstractController
             'forum_id' => (int)$this->request->query->get('forum'));
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $params['forum_id'])));
+        return System::redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id'])));
     }
 
     /**
@@ -483,7 +482,7 @@ class UserController extends \Zikula_AbstractController
         $params['topic_id'] = (int)$this->request->query->get('topic');
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return System::redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $params['topic_id'])));
+        return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id'])));
     }
 
     /**
@@ -522,7 +521,7 @@ class UserController extends \Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
+            return System::redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         // get the input
         $params['selorder'] = $this->request->query->get('selorder', $this->request->request->get('selorder', isset($args['selorder']) ? $args['selorder'] : 1));
@@ -531,11 +530,11 @@ class UserController extends \Zikula_AbstractController
         $params['amount'] = (int)$this->request->query->get('amount', isset($args['amount']) ? $args['amount'] : null);
         $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', isset($args['last_visit_unix']) ? $args['last_visit_unix'] : time());
         $this->view->assign($params);
-        list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'getLatest', $params);
+        list($posts, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'getLatest', $params);
         $this->view->assign('posts', $posts);
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
-        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->view->fetch('user/post/latest.tpl');
@@ -553,16 +552,16 @@ class UserController extends \Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url('Dizkus', 'user', 'index'));
+            return System::redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         $params = array();
         $params['action'] = $this->request->query->get('action', isset($args['action']) ? $args['action'] : 'posts');
         $params['uid'] = $this->request->query->get('user', isset($args['user']) ? $args['user'] : null);
-        list($posts, $text, $pager) = ModUtil::apiFunc('Dizkus', 'post', 'search', $params);
+        list($posts, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
         $this->view->assign('posts', $posts);
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
-        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->view->fetch('user/post/mine.tpl');
@@ -631,7 +630,7 @@ class UserController extends \Zikula_AbstractController
         $feed = $this->request->query->get('feed', 'rss20');
         $user = $this->request->query->get('user', null);
         // get the module info
-        $dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName('Dizkus'));
+        $dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName($this->name));
         $dzkname = $dzkinfo['displayname'];
         $mainUrl = ModUtil::url($this->name, 'user', 'index');
         if (isset($forum_id) && !is_numeric($forum_id)) {
@@ -659,7 +658,7 @@ class UserController extends \Zikula_AbstractController
          * set some defaults
          */
         // form the url
-        $link = ModUtil::url('Dizkus', 'user', 'index', array(), null, null, true);
+        $link = ModUtil::url($this->name, 'user', 'index', array(), null, null, true);
         $forumname = DataUtil::formatForDisplay($dzkname);
         // default where clause => no where clause
         $where = array();
@@ -670,12 +669,12 @@ class UserController extends \Zikula_AbstractController
             $managedForum = new ForumManager($forum_id);
             $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id)));
             $where = array('t.forum', (int) DataUtil::formatForStore($forum_id), '=');
-            $link = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
+            $link = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
             $forumname = $managedForum->get()->getName();
         } elseif (isset($uid) && $uid != false) {
             $where = array('p.poster', ' $uid', '=');
         } else {
-            $allowedforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
+            $allowedforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
             if (count($allowedforums) > 0) {
                 $where = array('f.forum', DataUtil::formatForStore($allowedforums), 'IN');
             }
@@ -697,7 +696,7 @@ class UserController extends \Zikula_AbstractController
         }
         $qb->orderBy('t.topic_time', 'DESC')->setMaxResults($count);
         $topics = $qb->getQuery()->getResult();
-        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $posts_per_page = $this->getVar('posts_per_page');
         $posts = array();
         $i = 0;
         foreach ($topics as $topic) {
@@ -708,8 +707,8 @@ class UserController extends \Zikula_AbstractController
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');
             $start = (int) ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
-            $posts[$i]['post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, null, true);
-            $posts[$i]['last_post_url'] = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, 'pid' . $topic->getLast_post()->getPost_id(), true);
+            $posts[$i]['post_url'] = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, null, true);
+            $posts[$i]['last_post_url'] = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, 'pid' . $topic->getLast_post()->getPost_id(), true);
             $posts[$i]['rsstime'] = $topic->getTopic_time()->format(DATE_RSS);
             $i++;
         }

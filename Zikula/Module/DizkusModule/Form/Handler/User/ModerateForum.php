@@ -47,7 +47,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             return LogUtil::registerPermissionError();
         }
 
-        $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+        $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
         $this->view->assign('forum_id', $forum_id);
         $this->view->assign('mode', '');
@@ -114,7 +114,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
 
             return $view->redirect($url);
         }
@@ -139,16 +139,16 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'del':
                 case 'delete':
                     foreach ($topic_ids as $topic_id) {
-                        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', array('topic' => $topic_id));
+                        $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $topic_id));
                     }
                     break;
 
                 case 'move':
                     if (empty($moveto)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
+                        return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
                     }
                     foreach ($topic_ids as $topic_id) {
-                        ModUtil::apiFunc('Dizkus', 'topic', 'move', array('topic_id' => $topic_id,
+                        ModUtil::apiFunc($this->name, 'topic', 'move', array('topic_id' => $topic_id,
                             'forum_id' => $moveto,
                             'createshadowtopic' => $shadow));
                     }
@@ -159,7 +159,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'sticky':
                 case 'unsticky':
                     foreach ($topic_ids as $topic_id) {
-                        ModUtil::apiFunc('Dizkus', 'topic', 'changeStatus', array(
+                        ModUtil::apiFunc($this->name, 'topic', 'changeStatus', array(
                             'topic_id' => $topic_id,
                             'action' => $mode));
                     }
@@ -168,7 +168,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
+                        return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
                     }
                     // text input overrides select box
                     if (empty($jointo) && !empty($jointo_select)) {
@@ -182,7 +182,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                         $topic_ids = array_flip($fliparray);
                     }
                     foreach ($topic_ids as $from_topic_id) {
-                        ModUtil::apiFunc('Dizkus', 'topic', 'join', array('from_topic_id' => $from_topic_id,
+                        ModUtil::apiFunc($this->name, 'topic', 'join', array('from_topic_id' => $from_topic_id,
                             'to_topic_id' => $jointo));
                     }
                     break;
@@ -191,7 +191,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             }
         }
 
-        $url = ModUtil::url('Dizkus', 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
+        $url = ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
 
         return $view->redirect($url);
     }

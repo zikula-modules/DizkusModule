@@ -107,7 +107,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $attach_signature = $this->request->request->get('attach_signature', 0) == '1' ? true : false;
         $subscribe_topic = $this->request->request->get('subscribe_topic', 0) == '1' ? true : false;
         $preview = $this->request->request->get('preview', 0) == '1' ? true : false;
-        $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
+        $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         $managedTopic = new TopicManager($topic_id);
         $start = 1;
         $this->checkMessageLength($message);
@@ -123,12 +123,12 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             } else {
                 ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', array('topic' => $topic_id));
             }
-            $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
+            $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array('topic' => $topic_id, 'start' => $start);
-            $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
             // notify topic & forum subscribers
-            ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
+            ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             $post = $managedPost->get()->toArray();
             $permissions = ModUtil::apiFunc($this->name, 'permission', 'get', array('forum_id' => $managedPost->get()->getTopic()->getForum()->getForum_id()));
         } else {
@@ -227,7 +227,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $delete = $this->request->request->get('delete_post', 0) == '1' ? true : false;
         $attach_signature = $this->request->request->get('attach_signature', 0) == '1' ? true : false;
         if (!empty($post_id)) {
-            $message = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $message);
+            $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
             $this->checkMessageLength($message);
             $managedOriginalPost = new PostManager($post_id);
             if ($delete) {
@@ -244,7 +244,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                     'post_text' => $message,
                     'attachSignature' => $attach_signature);
                 $managedOriginalPost->update($data);
-                $url = new Zikula_ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), array(
+                $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array(
                     'topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
                 $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
                 if ($attach_signature && $this->getVar('removesignature') == 'no') {
@@ -255,7 +255,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
                 $response = array(
                     'action' => 'updated',
-                    'newText' => ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $message));
+                    'newText' => ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message));
             }
 
             return new Zikula_Response_Ajax($response);
@@ -323,7 +323,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $this->checkAjaxToken();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             $fragment = $this->request->query->get('fragment', null);
-            $users = ModUtil::apiFunc('Dizkus', 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
+            $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
         }
         $reply = array();
         $reply['query'] = $fragment;
@@ -346,7 +346,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if ($this->getVar('forum_enabled') == 'no') {
             return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-        if (ModUtil::getVar('Dizkus', 'favorites_enabled') == 'no') {
+        if ($this->getVar('favorites_enabled') == 'no') {
             return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(

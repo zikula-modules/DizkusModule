@@ -145,7 +145,7 @@ class UserApi extends \Zikula_AbstractApi
                 return $cache[$type];
                 break;
             default:
-                return LogUtil::registerError($this->__('Error! Wrong parameters in countstats().'), null, ModUtil::url('Dizkus', 'user', 'index'));
+                return LogUtil::registerError($this->__('Error! Wrong parameters in countstats().'), null, ModUtil::url($this->name, 'user', 'index'));
         }
     }
 
@@ -239,8 +239,8 @@ class UserApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // get some enviroment
-        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
-        $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
+        $posts_per_page = ModUtil::getVar($this->name, 'posts_per_page');
+        $post_sort_order = ModUtil::getVar($this->name, 'post_sort_order');
         $last_page = 0;
         if ($post_sort_order == 'ASC') {
             // +1 for the initial posting
@@ -371,7 +371,7 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function dzkstriptags($text = '')
     {
-        if (!empty($text) && ModUtil::getVar('Dizkus', 'striptags') == 'yes') {
+        if (!empty($text) && ModUtil::getVar($this->name, 'striptags') == 'yes') {
             // save code tags
             $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
             for ($i = 0; $i < $codecount; $i++) {

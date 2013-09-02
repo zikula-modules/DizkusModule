@@ -15,15 +15,16 @@
 namespace Zikula\Module\DizkusModule\HookedTopicMeta;
 
 use ZLanguage;
+use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 
-class Generic extends Zikula\Module\DizkusModule\AbstractHookedTopicMeta
+class Generic extends AbstractHookedTopicMeta
 {
 
     private $dom;
 
     public function setup()
     {
-        $this->dom = ZLanguage::getModuleDomain('Dizkus');
+        $this->dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
     }
 
     public function setTitle()

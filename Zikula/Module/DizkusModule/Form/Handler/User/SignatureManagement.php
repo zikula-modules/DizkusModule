@@ -32,7 +32,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'signaturemanagement')));
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar('Dizkus', 'signaturemanagement') == 'yes'))) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {
             return LogUtil::registerPermissionError();
         }
 
@@ -69,7 +69,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             LogUtil::registerStatus($this->__('Done! Signature has been updated.'));
 
             // redirect to user preferences page
-            $url = ModUtil::url('Dizkus', 'user', 'prefs');
+            $url = ModUtil::url($this->name, 'user', 'prefs');
 
             return $view->redirect($url);
         }

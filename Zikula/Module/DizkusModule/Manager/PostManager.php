@@ -49,7 +49,7 @@ class PostManager
     public function __construct($id = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-        $this->name = 'Dizkus';
+        $this->name = 'ZikulaDizkusModule';
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\PostEntity', $id);
             $this->_topic = new TopicManager(null, $this->_post->getTopic());
@@ -179,7 +179,7 @@ class PostManager
             $this->_topic->resetLastPost(true);
         }
         if ($id == $forumLastPostId) {
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
+            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
     }
 

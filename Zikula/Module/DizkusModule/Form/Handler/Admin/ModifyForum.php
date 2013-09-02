@@ -53,7 +53,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         // disallow editing of root forum
         if ($id == 1) {
             LogUtil::registerError($this->__("Editing of root forum is disallowed", 403));
-            System::redirect(ModUtil::url('Dizkus', 'admin', 'tree'));
+            System::redirect(ModUtil::url($this->name, 'admin', 'tree'));
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -129,7 +129,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url('Dizkus', 'admin', 'tree');
+        $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }

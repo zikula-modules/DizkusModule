@@ -38,7 +38,7 @@ class ForumUserManager
     public function __construct($uid = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-        $this->name = 'Dizkus';
+        $this->name = 'ZikulaDizkusModule';
         if (empty($uid)) {
             $uid = UserUtil::getVar('uid');
         }

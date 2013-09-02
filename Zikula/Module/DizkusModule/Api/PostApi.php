@@ -172,10 +172,10 @@ class PostApi extends \Zikula_AbstractApi
         $managedDestinationTopic->incrementRepliesCount();
         $managedPost->get()->updatePost_time();
         $this->entityManager->flush();
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array(
+        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', array(
             'topic' => $managedOriginTopic->get(),
             'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array(
+        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', array(
             'topic' => $managedDestinationTopic->get(),
             'flush' => true));
 

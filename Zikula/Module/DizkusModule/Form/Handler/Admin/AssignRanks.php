@@ -46,7 +46,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         }
         $letter = strtolower($letter);
 
-        list($rankimages, $ranks) = ModUtil::apiFunc('Dizkus', 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_HONORARY));
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_HONORARY));
 
         $perpage = 20;
 
@@ -103,9 +103,9 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
 //        unset($_POST['submit']);
 //        unset($_REQUEST['submit']);
         $setrank = $this->request->request->get('setrank');
-        ModUtil::apiFunc('Dizkus', 'Rank', 'assign', array('setrank' => $setrank));
+        ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
         unset($data['setrank']);
-        $url = new Zikula_ModUrl('Dizkus', 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
+        $url = new Zikula_ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
 
         return $view->redirect($url->getUrl());
     }

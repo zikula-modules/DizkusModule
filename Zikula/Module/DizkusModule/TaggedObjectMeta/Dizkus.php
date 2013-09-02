@@ -81,12 +81,12 @@ class Dizkus extends \Tag_AbstractTaggedObjectMeta
         $date = $this->getDate();
         $link = null;
         if (!empty($title)) {
-            $dom = ZLanguage::getModuleDomain('Dizkus');
+            $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
             $topiclabel = __('topic', $dom);
             $forumlabel = __('forum', $dom);
             $urlObject = $this->getUrlObject();
             $label = $urlObject->getAction() == 'viewtopic' ? $topiclabel : $forumlabel;
-            $modinfo = ModUtil::getInfoFromName('Dizkus');
+            $modinfo = ModUtil::getInfoFromName('ZikulaDizkusModule');
             $link = "{$modinfo['displayname']} {$label}: <a href='{$urlObject->getUrl()}'>{$title}</a> ({$date})";
         }
 

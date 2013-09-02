@@ -39,7 +39,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'module' => 'Dizkus',
+            'module' => $this->name,
             'text_type' => $this->__('Dizkus recent'),
             'text_type_long' => $this->__('Dizkus recent posts'),
             'allow_multiple' => true,
@@ -57,7 +57,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function display($blockinfo)
     {
-        if (!ModUtil::available('Dizkus')) {
+        if (!ModUtil::available($this->name)) {
             return false;
         }
         // check for Permission
@@ -69,7 +69,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             return BlockUtil::themesideblock($blockinfo);
         }
         // return immediately if no post exist
-        if (ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'all')) == 0) {
+        if (ModUtil::apiFunc($this->name, 'user', 'countstats', array('type' => 'all')) == 0) {
             return false;
         }
         // Break out options from our content field

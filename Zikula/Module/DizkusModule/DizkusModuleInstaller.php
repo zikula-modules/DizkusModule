@@ -59,10 +59,10 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVars(self::getDefaultVars());
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Zikula\Module\DizkusModule\HookHandlers', 'moduleDelete'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'installer.module.uninstalled', array('Zikula\Module\DizkusModule\HookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -186,7 +186,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         // remove module vars
         $this->delVars();
         // unregister handlers
-        EventUtil::unregisterPersistentModuleHandlers('Dizkus');
+        EventUtil::unregisterPersistentModuleHandlers($this->name);
         // unregister hooks
         HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::unregisterProviderBundles($this->version->getHookProviderBundles());
@@ -220,7 +220,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     public static function getDefaultVars()
     {
-        $dom = ZLanguage::getModuleDomain('Dizkus');
+        $dom = ZLanguage::getModuleDomain($this->name);
 
         return array(
             'posts_per_page' => 15,
@@ -324,10 +324,10 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         // register new hooks and event handlers
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'installer.module.uninstalled', array('Zikula\Module\DizkusModule\HookHandlers', 'moduleDelete'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
-        EventUtil::registerPersistentModuleHandler('Dizkus', 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'installer.module.uninstalled', array('Zikula\Module\DizkusModule\HookHandlers', 'moduleDelete'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
         LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
 
         return true;
@@ -469,7 +469,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             }
         }
         $this->entityManager->flush();
-        ModUtil::apiFunc('Dizkus', 'Sync', 'all');
+        ModUtil::apiFunc($this->name, 'Sync', 'all');
 
         return;
     }

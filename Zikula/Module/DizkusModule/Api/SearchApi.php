@@ -34,9 +34,9 @@ class SearchApi extends \Zikula_AbstractApi
     public function info()
     {
         return array(
-            'title' => $this->__('Dizkus'),
+            'title' => $this->__($this->name),
             'functions' => array(
-                'Dizkus' => 'search'));
+                $this->name => 'search'));
     }
 
     /**
@@ -50,8 +50,8 @@ class SearchApi extends \Zikula_AbstractApi
     public function options($args)
     {
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            $view = Zikula_View::getInstance('Dizkus', false, null, true);
-            $view->assign('active', isset($args['active']) && isset($args['active']['Dizkus']) || !isset($args['active']));
+            $view = Zikula_View::getInstance($this->name, false, null, true);
+            $view->assign('active', isset($args['active']) && isset($args['active'][$this->name]) || !isset($args['active']));
             $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array(
                         'includeRoot' => false)));
 
@@ -142,7 +142,7 @@ class SearchApi extends \Zikula_AbstractApi
             return true;
         }
         // get all forums the user is allowed to read
-        $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
+        $userforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
@@ -192,9 +192,9 @@ class SearchApi extends \Zikula_AbstractApi
                 'title' => $topic->getTitle(),
                 'text' => $showtextinsearchresults == 'yes' ? $posts[0]->getPost_text() : '',
                 'created' => $topic->getTopic_time()->format('Y-m-d H:i:s'),
-                'module' => 'Dizkus',
+                'module' => $this->name,
                 'session' => $sessionId,
-                'extra' => ModUtil::url('Dizkus', 'user', 'viewtopic', array(
+                'extra' => ModUtil::url($this->name, 'user', 'viewtopic', array(
                     'topic' => $topic->getTopic_id())));
             if (!DBUtil::insertObject($record, 'search_result')) {
                 return LogUtil::registerError($this->__('Error! Could not save the search results.'));
@@ -232,7 +232,7 @@ class SearchApi extends \Zikula_AbstractApi
             return true;
         }
         // get all forums the user is allowed to read
-        $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
+        $userforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             // return empty result set without even doing a db access
@@ -308,7 +308,7 @@ class SearchApi extends \Zikula_AbstractApi
     {
         ModUtil::dbInfoLoad('Search');
         $ztable = DBUtil::getTables();
-        $topicurl = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => '%%%'));
+        $topicurl = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => '%%%'));
         $sessionid = DataUtil::formatForStore(session_id());
         $now = time();
         $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');

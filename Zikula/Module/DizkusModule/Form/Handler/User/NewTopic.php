@@ -45,13 +45,13 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $this->_forumId = (int) $this->request->query->get('forum');
 
         if (!isset($this->_forumId)) {
-            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
+            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url($this->name, 'user', 'index'));
         }
 
         $managedforum = new ForumManager($this->_forumId);
         if ($managedforum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
-            return LogUtil::registerError($this->__('Error! This forum is locked. New topics cannot be created.'), null, ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId)));
+            return LogUtil::registerError($this->__('Error! This forum is locked. New topics cannot be created.'), null, ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId)));
         }
         $view->assign('forum', $managedforum->get());
         $view->assign('breadcrumbs', $managedforum->getBreadcrumbs(false));
@@ -71,7 +71,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $this->_forumId));
+            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId));
 
             return $view->redirect($url);
         }
@@ -95,8 +95,8 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
         $data['forum_id'] = $this->_forumId;
-        $data['message'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['message']);
-        $data['title'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['title']);
+        $data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
+        $data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
 
         /* if ($this->isSpam($args['message'])) {
           return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
@@ -114,7 +114,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
             $post['topic_id'] = 0;
             $post['subscribe_topic'] = $data['subscribe_topic'];
             $view->assign('post', $post);
-            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+            $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_POSTCOUNT));
@@ -131,7 +131,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newManagedTopic->getId(), $url));
 
         // notify topic & forum subscribers
-        ModUtil::apiFunc('Dizkus', 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
+        ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
         return $view->redirect($url->getUrl());

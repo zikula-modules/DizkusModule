@@ -39,7 +39,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     public function info()
     {
         return array(
-            'module' => 'Dizkus',
+            'module' => $this->name,
             'text_type' => $this->__('Dizkus statistic'),
             'text_type_long' => $this->__('Dizkus Statistics Block'),
             'allow_multiple' => true,
@@ -57,7 +57,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function display($blockinfo)
     {
-        if (!ModUtil::available('Dizkus')) {
+        if (!ModUtil::available($this->name)) {
             return false;
         }
         //check for Permission
@@ -132,7 +132,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
             $vars['sb_template'] = 'statisticsblock/display.tpl';
         }
-        //$render = Zikula_View::getInstance('Dizkus', false, null, true);
+        //$render = Zikula_View::getInstance($this->name, false, null, true);
         return $this->view->assign('vars', $vars)->fetch('statisticsblock/config.tpl');
     }
 

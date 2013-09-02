@@ -44,7 +44,7 @@ class AccountApi extends \Zikula_AbstractApi
             return $items;
         }
         $items[] = array(
-            'url' => ModUtil::url('Dizkus', 'user', 'prefs'),
+            'url' => ModUtil::url($this->name, 'user', 'prefs'),
             'title' => $this->__('Forum'),
             'icon' => 'icon_forumprefs.gif');
         // Return the items

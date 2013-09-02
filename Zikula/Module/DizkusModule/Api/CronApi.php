@@ -30,7 +30,7 @@ class CronApi extends \Zikula_AbstractApi
      */
     public function mail($args)
     {
-        if (ModUtil::getVar('Dizkus', 'm2f_enabled') != 'yes') {
+        if (ModUtil::getVar($this->name, 'm2f_enabled') != 'yes') {
             return;
         }
         $force = isset($args['force']) ? (bool)$args['force'] : false;
@@ -127,7 +127,7 @@ class CronApi extends \Zikula_AbstractApi
                                                     } else {
                                                         $topic_id = $topic->getTopic_id();
                                                         // topic_id found, add this posting as a reply there
-                                                        list($start, $post_id) = ModUtil::apiFunc('Dizkus', 'user', 'storereply', array(
+                                                        list($start, $post_id) = ModUtil::apiFunc($this->name, 'user', 'storereply', array(
                                                                     'topic_id' => $topic_id,
                                                                     'message' => $message,
                                                                     'attach_signature' => 1,
@@ -139,7 +139,7 @@ class CronApi extends \Zikula_AbstractApi
                                                 // check again for replyto and create a new topic
                                                 if (empty($replyto)) {
                                                     // store message in forum
-                                                    $topic_id = ModUtil::apiFunc('Dizkus', 'user', 'storenewtopic', array(
+                                                    $topic_id = ModUtil::apiFunc($this->name, 'user', 'storenewtopic', array(
                                                                 'subject' => $subject,
                                                                 'message' => $message,
                                                                 'forum_id' => $forum['forum_id'],

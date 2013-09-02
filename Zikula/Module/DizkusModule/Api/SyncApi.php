@@ -71,13 +71,13 @@ class SyncApi extends \Zikula_AbstractApi
             $args['forum'] = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $id);
         }
         // count topics of a forum
-        $topicCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array(
+        $topicCount = ModUtil::apiFunc($this->name, 'user', 'countstats', array(
                     'type' => 'forumtopics',
                     'id' => $id,
                     'force' => true));
         $args['forum']->setTopicCount($topicCount);
         // count posts of a forum
-        $postCount = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array(
+        $postCount = ModUtil::apiFunc($this->name, 'user', 'countstats', array(
                     'type' => 'forumposts',
                     'id' => $id,
                     'force' => true));

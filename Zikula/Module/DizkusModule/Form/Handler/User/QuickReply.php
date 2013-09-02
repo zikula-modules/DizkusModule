@@ -44,7 +44,7 @@ class QuickReply extends \Zikula_Form_AbstractHandler
         $id = (int) $this->request->query->get('post');
 
         if (!isset($id)) {
-            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
+            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url($this->name, 'user', 'index'));
         }
 
         $this->_post = new PostManager($id);
@@ -93,7 +93,7 @@ class QuickReply extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
             $view->assign('post', $this->_post->toArray());
-            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+            $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
 

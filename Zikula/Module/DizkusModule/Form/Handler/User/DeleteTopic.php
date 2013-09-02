@@ -85,7 +85,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
             return $view->redirect($url);
         }
@@ -100,7 +100,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 
-        $forum_id = ModUtil::apiFunc('Dizkus', 'topic', 'delete', array('topic' => $this->topic_id));
+        $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
         $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_delete', $this->topic_id));
 
         $data = $view->getValues();
@@ -117,7 +117,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $url = ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $forum_id));
+        $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id));
 
         return $view->redirect($url);
     }

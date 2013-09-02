@@ -64,7 +64,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
             return $view->redirect($url);
         }
@@ -87,9 +87,9 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             }
             $data['topicObj'] = $this->topic;
 
-            ModUtil::apiFunc('Dizkus', 'topic', 'move', $data);
+            ModUtil::apiFunc($this->name, 'topic', 'move', $data);
 
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id));
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
             return $view->redirect($url);
         }
@@ -102,15 +102,15 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
                 // user wants to copy topic to itself
-                return LogUtil::registerError($this->__('Error! The original topic cannot be set as the target topic.'), null, ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id())));
+                return LogUtil::registerError($this->__('Error! The original topic cannot be set as the target topic.'), null, ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id())));
             }
 
             $data['from_topic_id'] = $this->topic_id;
             $data['topicObj'] = $this->topic;
 
-            ModUtil::apiFunc('Dizkus', 'topic', 'join', $data);
+            ModUtil::apiFunc($this->name, 'topic', 'join', $data);
 
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
 
             return $view->redirect($url);
         }

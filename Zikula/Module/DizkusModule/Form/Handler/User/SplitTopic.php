@@ -61,7 +61,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id)));
         }
 
         // check for valid form and get data
@@ -70,9 +70,9 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
 
-        $newtopic_id = ModUtil::apiFunc('Dizkus', 'topic', 'split', array('post' => $this->post, 'data' => $data));
+        $newtopic_id = ModUtil::apiFunc($this->name, 'topic', 'split', array('post' => $this->post, 'data' => $data));
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $newtopic_id));
+        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $newtopic_id));
 
         return $view->redirect($url);
     }

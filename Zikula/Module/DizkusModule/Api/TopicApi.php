@@ -179,7 +179,7 @@ class TopicApi extends \Zikula_AbstractApi
         $sender_email = UserUtil::getVar('email');
         if (!UserUtil::isLoggedIn()) {
             $sender_name = ModUtil::getVar('Users', 'anonymous');
-            $sender_email = ModUtil::getVar('Dizkus', 'email_from');
+            $sender_email = ModUtil::getVar($this->name, 'email_from');
         }
         $params = array(
             'fromname' => $sender_name,
@@ -230,8 +230,8 @@ class TopicApi extends \Zikula_AbstractApi
         // delete the topic (manual dql to avoid cascading deletion errors)
         $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
         // sync the forum up with the changes
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
+        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
 
         return $topic->getForum()->getForum_id();
     }
@@ -267,7 +267,7 @@ class TopicApi extends \Zikula_AbstractApi
                 $managedShadowTopic = new TopicManager();
                 $topicData = array(
                     'title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
-                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url('Dizkus', 'user', 'viewtopic', array(
+                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url($this->name, 'user', 'viewtopic', array(
                         'topic' => $managedTopic->getId())) . '">' . $this->__('here') . '</a>.',
                     'forum_id' => $oldForumId,
                     'topic_time' => $managedTopic->get()->getTopic_time(),
@@ -280,16 +280,16 @@ class TopicApi extends \Zikula_AbstractApi
             $this->entityManager->flush();
             // re-sync all forum counts and last posts
             $previousForumLocation = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $oldForumId);
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array(
+            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array(
                 'forum' => $previousForumLocation,
                 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array(
+            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array(
                 'forum' => $forum,
                 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array(
+            ModUtil::apiFunc($this->name, 'sync', 'forum', array(
                 'forum' => $oldForumId,
                 'flush' => false));
-            ModUtil::apiFunc('Dizkus', 'sync', 'forum', array(
+            ModUtil::apiFunc($this->name, 'sync', 'forum', array(
                 'forum' => $forum,
                 'flush' => true));
         }
@@ -336,7 +336,7 @@ class TopicApi extends \Zikula_AbstractApi
         $this->entityManager->flush();
         // last iteration of `$post` used below
         // update old topic
-        ModUtil::apiFunc('Dizkus', 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', array('topic' => $managedTopic->get(), 'flush' => true));
         $oldReplyCount = $managedTopic->get()->getReplyCount();
         $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
         // update new topic with post data
@@ -344,7 +344,7 @@ class TopicApi extends \Zikula_AbstractApi
         $newTopic->setReplyCount(count($posts) - 1);
         $newTopic->setTopic_time($post->getPost_time());
         // resync topic totals, etc
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $newTopic->getForum(), 'flush' => false));
+        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $newTopic->getForum(), 'flush' => false));
         $this->entityManager->flush();
 
         return $newTopic->getTopic_id();
@@ -400,11 +400,11 @@ class TopicApi extends \Zikula_AbstractApi
         $managedDestinationTopic->setLastPost($post);
         $managedDestinationTopic->get()->setTopic_time($previousPostTime);
         // resync destination topic and all forums
-        ModUtil::apiFunc('Dizkus', 'sync', 'topic', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => true));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forum', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false));
-        ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'topic', array('topic' => $managedDestinationTopic->get(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedOriginTopic->get()->getForum(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false));
+        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true));
 
         return $managedDestinationTopic->getId();
     }

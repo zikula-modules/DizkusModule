@@ -86,7 +86,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url('Dizkus', 'admin', 'tree');
+        $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
@@ -141,7 +141,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
 
         if (isset($managedDestinationForum)) {
             // sync last post in destination
-            ModUtil::apiFunc('Dizkus', 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get()));
+            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedDestinationForum->get()));
         }
 
         // repair the tree
@@ -149,7 +149,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         $this->entityManager->clear();
 
         // resync all forums, topics & posters
-        ModUtil::apiFunc('Dizkus', 'sync', 'all');
+        ModUtil::apiFunc($this->name, 'sync', 'all');
 
         return $view->redirect($url);
     }

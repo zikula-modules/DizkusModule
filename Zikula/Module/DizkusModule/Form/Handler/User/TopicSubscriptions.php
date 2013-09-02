@@ -40,7 +40,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageTopicSubscriptions')));
         }
 
-        $subscriptions = ModUtil::apiFunc('Dizkus', 'topic', 'getSubscriptions');
+        $subscriptions = ModUtil::apiFunc($this->name, 'topic', 'getSubscriptions');
         $view->assign('subscriptions', $subscriptions);
 
         return true;
@@ -66,7 +66,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
         if (count($data['topicIds']) > 0) {
             foreach (array_keys($data['topicIds']) as $topicId) {
                 if ($topicId) {
-                    ModUtil::apiFunc('Dizkus', 'Topic', 'unsubscribe', array('topic' => $topicId));
+                    ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic' => $topicId));
                 }
             }
         }

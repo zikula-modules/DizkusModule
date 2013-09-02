@@ -35,8 +35,8 @@ class NotifyApi extends \Zikula_AbstractApi
     public function emailSubscribers($args)
     {
         setlocale(LC_TIME, System::getVar('locale'));
-        $dizkusModuleInfo = ModUtil::getInfoFromName('Dizkus');
-        $dizkusFrom = ModUtil::getVar('Dizkus', 'email_from');
+        $dizkusModuleInfo = ModUtil::getInfoFromName($this->name);
+        $dizkusFrom = ModUtil::getVar($this->name, 'email_from');
         $fromAddress = !empty($dizkusFrom) ? $dizkusFrom : System::getVar('adminmail');
         /* @var $post Zikula\Module\DizkusModule\Entity\PostEntity */
         $post = $args['post'];
@@ -44,8 +44,8 @@ class NotifyApi extends \Zikula_AbstractApi
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
-        $view->assign('sitename', System::getVar('sitename'))->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())->assign('name', $post->getTopic()->getForum()->getName())->assign('topic_subject', $post->getTopic()->getTitle())->assign('poster_name', $post->getPoster()->getUser()->getUname())->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())->assign('forum_id', $post->getTopic()->getForum()->getForum_id())->assign('topic_url', ModUtil::url('Dizkus', 'user', 'viewtopic', array(
-                    'topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))->assign('subscription_url', ModUtil::url('Dizkus', 'user', 'prefs', array(
+        $view->assign('sitename', System::getVar('sitename'))->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())->assign('name', $post->getTopic()->getForum()->getName())->assign('topic_subject', $post->getTopic()->getTitle())->assign('poster_name', $post->getPoster()->getUser()->getUname())->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())->assign('forum_id', $post->getTopic()->getForum()->getForum_id())->assign('topic_url', ModUtil::url($this->name, 'user', 'viewtopic', array(
+                    'topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))->assign('subscription_url', ModUtil::url($this->name, 'user', 'prefs', array(
                         ), null, null, true))->assign('base_url', System::getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
         $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
@@ -91,9 +91,9 @@ class NotifyApi extends \Zikula_AbstractApi
     public function notify_moderator($args)
     {
         setlocale(LC_TIME, System::getVar('locale'));
-        $mods = ModUtil::apiFunc('Dizkus', 'moderators', 'get', array('forum_id' => $args['post']->getTopic()->getForum()->getForum_id()));
+        $mods = ModUtil::apiFunc($this->name, 'moderators', 'get', array('forum_id' => $args['post']->getTopic()->getForum()->getForum_id()));
         // generate the mailheader
-        $email_from = ModUtil::getVar('Dizkus', 'email_from');
+        $email_from = ModUtil::getVar($this->name, 'email_from');
         if ($email_from == '') {
             // nothing in forumwide-settings, use adminmail
             $email_from = System::getVar('adminmail');
@@ -152,7 +152,7 @@ class NotifyApi extends \Zikula_AbstractApi
             $reporting_username = $this->__('Guest');
         }
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('replyCount' => $args['post']->getTopic()->getReplyCount()));
-        $linkToTopic = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true);
+        $linkToTopic = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true);
         $posttext = $this->getVar('striptagsfromemail') ? strip_tags($args['post']->getPost_text()) : $args['post']->getPost_text();
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . '
 ' . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . '
@@ -167,7 +167,7 @@ class NotifyApi extends \Zikula_AbstractApi
 
 ' . $this->__('Link to topic') . ": {$linkToTopic}\n" . '
 ';
-        $modinfo = ModUtil::getInfoFromName('Dizkus');
+        $modinfo = ModUtil::getInfoFromName($this->name);
         if (count($recipients) > 0) {
             foreach ($recipients as $recipient) {
                 ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
@@ -203,7 +203,7 @@ class NotifyApi extends \Zikula_AbstractApi
         $sender_email = UserUtil::getVar('email');
         if (!UserUtil::isLoggedIn()) {
             $sender_name = ModUtil::getVar('Users', 'anonymous');
-            $sender_email = ModUtil::getVar('Dizkus', 'email_from');
+            $sender_email = ModUtil::getVar($this->name, 'email_from');
         }
         $args2 = array(
             'fromname' => $sender_name,

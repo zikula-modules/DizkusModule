@@ -55,7 +55,7 @@ class TopicManager
     public function __construct($id = null, TopicEntity $topic = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-        $this->name = 'Dizkus';
+        $this->name = 'ZikulaDizkusModule';
         if (isset($topic)) {
             // topic has been injected
             $this->_topic = $topic;

@@ -42,7 +42,7 @@ class ForumManager
     public function __construct($id = null, ForumEntity $forum = null)
     {
         $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
-        $this->name = 'Dizkus';
+        $this->name = 'ZikulaDizkusModule';
         if (isset($forum)) {
             // forum has been injected
             $this->_forum = $forum;
@@ -251,7 +251,7 @@ class ForumManager
             $uid = UserUtil::getVar('uid');
         }
         // all admins are moderators
-        if (SecurityUtil::checkPermission('Dizkus', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission($this->name, '::', ACCESS_ADMIN)) {
             return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);

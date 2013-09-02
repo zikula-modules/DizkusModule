@@ -96,7 +96,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to compensate for trouble with `databound`
-        $this->view->redirect(ModUtil::url('Dizkus', 'admin', 'tree'));
+        $this->view->redirect(ModUtil::url($this->name, 'admin', 'tree'));
 
         return true;
     }

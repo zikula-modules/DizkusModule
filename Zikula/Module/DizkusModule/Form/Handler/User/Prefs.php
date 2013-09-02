@@ -71,7 +71,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'prefs');
+            $url = ModUtil::url($this->name, 'user', 'prefs');
 
             return $view->redirect($url);
         }

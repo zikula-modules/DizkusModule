@@ -43,7 +43,7 @@ class Report extends \Zikula_Form_AbstractHandler
         $id = (int) $this->request->query->get('post');
 
         if (!isset($id)) {
-            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index'));
+            return LogUtil::registerError($this->__('Error! Missing post id.'), null, ModUtil::url($this->name, 'user', 'index'));
         }
 
         $this->_post = new PostManager($id);
@@ -66,7 +66,7 @@ class Report extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
+            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
 
             return $view->redirect($url);
         }
@@ -93,12 +93,12 @@ class Report extends \Zikula_Form_AbstractHandler
             }
         }
 
-        ModUtil::apiFunc('Dizkus', 'notify', 'notify_moderator', array('post' => $this->_post->get(),
+        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', array('post' => $this->_post->get(),
             'comment' => $data['comment']));
 
-        $start = ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
+        $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
 
-        $url = ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
+        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
                     'start' => $start));
 
         return $view->redirect($url);

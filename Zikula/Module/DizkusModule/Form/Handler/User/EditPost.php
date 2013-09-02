@@ -45,7 +45,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             return LogUtil::registerError(
-                            $this->__('Error! Missing post id.'), null, ModUtil::url('Dizkus', 'user', 'index')
+                            $this->__('Error! Missing post id.'), null, ModUtil::url($this->name, 'user', 'index')
             );
         }
 
@@ -102,7 +102,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         }
         unset($data['delete']);
 
-        $data['post_text'] = ModUtil::apiFunc('Dizkus', 'user', 'dzkstriptags', $data['post_text']);
+        $data['post_text'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['post_text']);
 
         $this->_post->prepare($data);
 
@@ -110,7 +110,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'preview') {
             $view->assign('preview', true);
             $view->assign('post', $this->_post->toArray());
-            $lastVisitUnix = ModUtil::apiFunc('Dizkus', 'user', 'setcookies');
+            $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
 

@@ -26,7 +26,7 @@ $em = ServiceUtil::getService('doctrine.entitymanager');
 //
 // Checking if RSS2Forum is enabled
 //
-if (!ModUtil::getVar('Dizkus', 'rss2f_enabled') == 'no') {
+if (!ModUtil::getVar('ZikulaDizkusModule', 'rss2f_enabled') == 'no') {
     return;
 }
 //
@@ -84,7 +84,7 @@ foreach ($forums as $forum) {
         // Important information is in the $dump->items
         $items = $dump['feed']->get_items();
         // See the function below...
-        $insert = ModUtil::apiFunc('Dizkus', 'user', 'insertrss', array(
+        $insert = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'insertrss', array(
                     'items' => $items,
                     'forum' => $forum));
         if (!$insert) {

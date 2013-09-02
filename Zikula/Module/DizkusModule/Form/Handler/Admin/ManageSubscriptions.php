@@ -54,8 +54,8 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
 
         if (!empty($this->_uid)) {
             $params = array('uid' => $this->_uid);
-            $topicsubscriptions = ModUtil::apiFunc('Dizkus', 'Topic', 'getSubscriptions', $params);
-            $forumsubscriptions = ModUtil::apiFunc('Dizkus', 'Forum', 'getSubscriptions', $params);
+            $topicsubscriptions = ModUtil::apiFunc($this->name, 'Topic', 'getSubscriptions', $params);
+            $forumsubscriptions = ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptions', $params);
         }
 
         $view->assign('username', $this->_username);
@@ -86,17 +86,17 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
 
         foreach ($data['forumsubscriptions'] as $id => $selected) {
             if ($selected) {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_forum_by_id', $id);
+                ModUtil::apiFunc($this->name, 'user', 'unsubscribe_forum_by_id', $id);
             }
         }
 
         foreach ($data['topicsubscriptions'] as $id => $selected) {
             if ($selected) {
-                ModUtil::apiFunc('Dizkus', 'user', 'unsubscribe_TopicById', $id);
+                ModUtil::apiFunc($this->name, 'user', 'unsubscribe_TopicById', $id);
             }
         }
 
-        $url = ModUtil::url('Dizkus', 'admin', 'managesubscriptions', array('username' => $this->_username));
+        $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('username' => $this->_username));
 
         return $view->redirect($url);
     }
