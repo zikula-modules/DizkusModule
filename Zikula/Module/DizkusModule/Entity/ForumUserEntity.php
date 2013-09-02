@@ -17,6 +17,7 @@ use Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Zikula\Module\UsersModule\Entity\UserEntity as ZikulaUser;
 
 /**
  * ForumUser entity class
@@ -124,7 +125,7 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * Core User Entity
-     * @return Zikula\Module\UsersModule\Entity\UserEntity
+     * @return ZikulaUser
      */
     public function getUser()
     {
@@ -133,9 +134,9 @@ class ForumUserEntity extends \Zikula_EntityAccess
 
     /**
      * set the user
-     * @param Zikula\Module\UsersModule\Entity\UserEntity $user
+     * @param ZikulaUser $user
      */
-    public function setUser(Zikula\Module\UsersModule\Entity\UserEntity $user)
+    public function setUser(ZikulaUser $user)
     {
         $this->user = $user;
     }
