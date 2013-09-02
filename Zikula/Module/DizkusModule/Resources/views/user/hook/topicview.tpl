@@ -50,7 +50,7 @@
             <div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.status eq 1} style='display:none'{/if}>
                 <div class="inner">
                     <div class="dzk_subcols z-clearfix">
-                        <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
+                        <form id="quickreplyform" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
                             <div>
                                 <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                                 <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />

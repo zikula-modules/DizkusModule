@@ -61,7 +61,7 @@
                         <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}">{img modname='Dizkus' src='icon_post_pn.gif' __alt='Send a private message'}</a>
                     {/if}
                     {*if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
-                    <a title="{gt text="View IP address"}" href="{modurl modname='Dizkus' type='user' func='viewIpData' post=$post.post_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
+                    <a title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}">{img modname='Dizkus' src='icon_post_ip.gif' __alt='View IP address'}</a>
                     {/if*}
                     &nbsp;
                 </li>
@@ -71,7 +71,7 @@
 
     <div class="postbody dzk_colpost_right">
         <div class="postinfo">
-        {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
+        {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname='Dizkus' src='target.gif' __alt='Link to this post'}</a>{/if}
         <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
     </div>
     <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
@@ -100,8 +100,8 @@
             <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist z-clearfix" style="float:right;">
                 {if $permissions.moderate eq true}
                     {if (isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)}
-                        <li><a class="movepostlink tooltips" title="{gt text="Move post"}" href="{modurl modname='Dizkus' type='user' func='movepost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_move.gif' __alt='Move post' }</a></li>
-                        <li><a class="splittopiclink tooltips" title="{gt text="Split topic"}" href="{modurl modname='Dizkus' type='user' func='splittopic' post=$post.post_id}">{img modname='Dizkus' src='icon_post_split.gif' __alt='Split topic' }</a></li>
+                        <li><a class="movepostlink tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_move.gif' __alt='Move post' }</a></li>
+                        <li><a class="splittopiclink tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}">{img modname='Dizkus' src='icon_post_split.gif' __alt='Split topic' }</a></li>
                                 {/if}
                                     {/if}
 
@@ -112,14 +112,14 @@
                         </li>
                                             {/if}
                                             {if $permissions.edit eq 1 OR $post.userAllowedToEdit}
-                        <li><a class="editpostlink tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname='Dizkus' type='user' func='editpost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
+                        <li><a class="editpostlink tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}">{img modname='Dizkus' src='icon_post_edit.gif' __alt='Edit'}</a></li>
                                             {/if}
                                         {elseif isset($topic)}
                         <li>{img modname='Dizkus' src="icon_post_close.gif" class="tooltips" __alt="Topic locked" }</li>
                                             {/if}
                                                 {if !isset($notify) OR $notify eq false}
                                                     {if $permissions.comment eq true}
-                        <li><a class="notifymoderatorlink tooltips" href="{modurl modname='Dizkus' type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{img modname='Dizkus' src='icon_topic_mod.gif' __alt='Notify moderator' }</a></li>
+                        <li><a class="notifymoderatorlink tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{img modname='Dizkus' src='icon_topic_mod.gif' __alt='Notify moderator' }</a></li>
                                                         {/if}
                         <li><a class="dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;{img modname='Dizkus' src="icon_up.gif" __alt="Top" }</a></li>
                                                             {/if}

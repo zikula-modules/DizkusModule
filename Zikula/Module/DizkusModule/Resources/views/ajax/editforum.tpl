@@ -18,7 +18,7 @@
                     <span id="forum_info">
                         {boardstats type='forumtopics' id=$forum.forum_id assign='topiccount'}
                         {boardstats type='forumposts' id=$forum.forum_id assign='postcount'}
-                        <a title="{gt text="Visit this forum"}" href="{modurl modname='Dizkus' type='user' func='viewforum forum=$forum.forum_id}">
+                        <a title="{gt text="Visit this forum"}" href="{modurl modname=$module type='user' func='viewforum forum=$forum.forum_id}">
                     {$topiccount}&nbsp;{if $topiccount eq 1}{gt text="Topic"}{else}{gt text="Topics"}{/if}&nbsp;/&nbsp;
             {$postcount}&nbsp;{if $postcount eq 1}{gt text="Post"}{else}{gt text="Posts"}{/if}
         </a>

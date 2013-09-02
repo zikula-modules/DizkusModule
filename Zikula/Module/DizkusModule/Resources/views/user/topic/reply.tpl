@@ -14,7 +14,7 @@
 
         <div class="dzk_subcols z-clearfix">
 
-            <form id="post" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
+            <form id="post" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
                 <div>
                     <input type="hidden" name="topic" value="{$reply.topic.topic_id}" />
                     <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />

@@ -48,15 +48,15 @@
         <div id="dzk_javascriptareatopic">
             <ul class="dzk_topicoptions linklist z-clearfix">
                 {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}
-                    <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
+                    <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
                     {/if}
 
                 {if $permissions.comment}
-                    <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$topic.forum.forum_id}">{gt text="New topic"}</a></li>
+                    <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">{gt text="New topic"}</a></li>
                     {/if}
 
                 {if $userloggedin}
-                    <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname='Dizkus' type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                    <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
                     {/if}
 
                 <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
@@ -64,10 +64,10 @@
                 {if $userloggedin}
                     <li>
                         {if $isSubscribed}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
                             {gt text="Unsubscribe from topic" assign='msg'}
                         {else}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
                             {gt text="Subscribe to topic" assign='msg'}
                         {/if}
                         <a id="toggletopicsubscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
@@ -75,10 +75,10 @@
                     {if ($modvars.Dizkus.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
                         <li>
                             {if $topic.solved}
-                                {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
+                                {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
                                 {gt text="Mark as unsolved" assign='msg'}
                             {else}
-                                {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
+                                {modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
                                 {gt text="Mark as solved" assign='msg'}
                             {/if}
                             <a id="toggletopicsolve" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
@@ -88,7 +88,7 @@
 
                 {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}
                     <li>
-                        <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$nextTopic}">
+                        <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}">
                             &nbsp;
                         </a>
                     </li>
@@ -99,10 +99,10 @@
                 <ul class="dzk_topicoptions linklist z-clearfix">
                     <li>
                         {if $topic.status eq 0}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
                             {gt text="Lock topic" assign='msg'}
                         {else}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
                             {gt text="Unlock topic" assign='msg'}
                         {/if}
                         <a id="toggletopiclock" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
@@ -110,17 +110,17 @@
 
                     <li>
                         {if $topic.sticky eq 0}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
                             {gt text="Give this topic 'sticky' status" assign='msg'}
                         {else}
-                            {modurl modname='Dizkus' type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
+                            {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
                             {gt text="Remove 'sticky' status" assign='msg'}
                         {/if}
                         <a id="toggletopicsticky" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
                     </li>
 
-                    <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname='Dizkus' type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
-                    <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname='Dizkus' type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                    <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
+                    <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
                 </ul>
             {/if}
             <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a></span>
@@ -152,7 +152,7 @@
         <div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.status eq 1} style='display:none'{/if}>
             <div class="inner">
                 <div class="dzk_subcols z-clearfix">
-                    <form id="quickreplyform" class="dzk_form" action="{modurl modname='Dizkus' type='user' func='reply'}" method="post" enctype="multipart/form-data">
+                    <form id="quickreplyform" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
                         <div>
                             <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                             <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />

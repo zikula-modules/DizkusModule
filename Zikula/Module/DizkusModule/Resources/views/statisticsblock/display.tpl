@@ -7,7 +7,7 @@
     <ul class="dzk_forumlist">
         {foreach item='topforum' from=$topforums}
             <li>
-                <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
+                <a href="{modurl modname=$module type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
                 ({$topforum.topicCount}/{$topforum.postCount})
             </li>
         {/foreach}

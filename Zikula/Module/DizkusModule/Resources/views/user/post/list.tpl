@@ -29,8 +29,8 @@
                         {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
                             {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                         {/if}
-                        <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.title|truncate:70}">{$topic.title|truncate:70}</a>
-                        <span>{gt text="Forum"}: <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$topic.forum.forum_id}" title="{$topic.forum.name|truncate:70}">{$topic.forum.name|truncate:70}</a></span>
+                        <a href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.title|truncate:70}">{$topic.title|truncate:70}</a>
+                        <span>{gt text="Forum"}: <a href="{modurl modname=$module type='user' func='viewforum' forum=$topic.forum.forum_id}" title="{$topic.forum.name|truncate:70}">{$topic.forum.name|truncate:70}</a></span>
                         </dt>
                         <dd class="posts">{$topic.replyCount|safetext}</dd>
                         <dd class="lastpost">

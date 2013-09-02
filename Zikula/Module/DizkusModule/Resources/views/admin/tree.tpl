@@ -8,12 +8,12 @@
 
     <ul class="z-menulinks">
         <li>
-            <a href="{modurl modname='Dizkus' type='admin' func='modifyForum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
+            <a href="{modurl modname=$module type='admin' func='modifyForum'}" title="Create a new forum" class="z-iconlink z-icon-es-new">
                 {gt text='Create a new forum'}
             </a>
         </li>
         <li>
-            <a href="{modurl modname='Dizkus' type='admin' func='syncforums'}" title="Recalculate post and topics totals" class="z-iconlink z-icon-es-gears">
+            <a href="{modurl modname=$module type='admin' func='syncforums'}" title="Recalculate post and topics totals" class="z-iconlink z-icon-es-gears">
                 {gt text='Recalculate post and topics totals'}
             </a>
         </li>

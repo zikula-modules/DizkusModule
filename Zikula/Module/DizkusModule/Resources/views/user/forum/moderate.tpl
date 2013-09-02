@@ -10,7 +10,7 @@
     {form cssClass="z-form"}
     {formvalidationsummary}
 
-    <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
+    <p><a href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
         {dzkpager total=$forum.topicCount}
 
     <div class="forumbg dzk_rounded">
@@ -68,7 +68,7 @@
 
         </div>
     </div>
-    <p><a href="{modurl modname="Dizkus" type="user" func="viewforum" forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
+    <p><a href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a></p>
                                                                     {dzkpager total=$forum.topicCount}
 
     <div class="z-warningmsg">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>

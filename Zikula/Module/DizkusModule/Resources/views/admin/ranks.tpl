@@ -10,7 +10,7 @@
 
     <p class="z-informationmsg">{gt text="In this page, you can create, delete and edit user ranks for that users acquire automatically after a certain number of posts in the forums. To create a new rank, simply type entries in the fields of the 'Create new user rank' section and click on the 'Create' button. To edit a rank, edit the fields of a rank in the ranks list, and then click on 'Save rank changes'. To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the desired rank, and then click on the 'Save rank changes' button."}</p>
 
-    <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='ranks' ranktype='0'}" method="post">
+    <form class="z-form" action="{modurl modname=$module type='admin' func='ranks' ranktype='0'}" method="post">
         <div>
             <input type="hidden" name="ranks[-1][type]" value="0" />
             <input type="hidden" id="rankImagesPath" value="{$modvars.Dizkus.url_ranks_images}" />
@@ -53,7 +53,7 @@
         </div>
     </form>
 
-    <form class="z-form" action="{modurl modname='Dizkus' type='admin' func='ranks' ranktype='0'}" method="post">
+    <form class="z-form" action="{modurl modname=$module type='admin' func='ranks' ranktype='0'}" method="post">
         <table class="z-admintable">
             <thead>
                 <tr>

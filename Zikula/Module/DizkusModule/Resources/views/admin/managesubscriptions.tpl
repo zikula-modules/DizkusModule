@@ -86,7 +86,7 @@
                                 {formcheckbox id=$subscription.msg_id group='forumsubscriptions' cssClass="forumsubscriptions"}
                             </td>
                             <td>
-                                <a href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name}">{$subscription.forum.name|safetext}</a>
+                                <a href="{modurl modname=$module type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name}">{$subscription.forum.name|safetext}</a>
                             </td>
                         </tr>
                     {/foreach}

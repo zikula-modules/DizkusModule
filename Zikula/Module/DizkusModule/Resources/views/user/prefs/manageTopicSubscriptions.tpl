@@ -29,7 +29,7 @@
                         <li class="row">
                             <dl class="icon">
                                 <dt class='ctheme-topic-title'>
-                                <a href="{modurl modname='Dizkus' type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
+                                <a href="{modurl modname=$module type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
                                 <span>{gt text="Topic"}: {$subscription.topic.title|truncate:70}</span>
                                 </dt>
                                 <dd class="lastpost">

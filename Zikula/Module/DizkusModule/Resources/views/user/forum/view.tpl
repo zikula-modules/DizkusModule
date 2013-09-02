@@ -36,7 +36,7 @@
                             <dl class="icon">
                                 {datecompare date1=$subforum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                                 <dt class='{if $comp}new-posts{else}no-new-posts{/if}'>
-                                <a title="{gt text="Go to subforum"} '{$subforum.name|safetext}'" href="{modurl modname='Dizkus' type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.name|safetext}</a><br />
+                                <a title="{gt text="Go to subforum"} '{$subforum.name|safetext}'" href="{modurl modname=$module type='user' func='viewforum' forum=$subforum.forum_id}">{$subforum.name|safetext}</a><br />
                             {if $subforum.description neq ''}{$subforum.description|safehtml}<br />{/if}
                             </dt>
                             <dd class="subforums">{$subforum.children|count}</dd>
@@ -63,17 +63,17 @@
             <div class="inner">
                 <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
                     {if $permissions.comment && !$forum->isLocked()}
-                        <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname='Dizkus' type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
+                        <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">{gt text="New topic"}</a></li>
                         {/if}
 
                     {if $coredata.logged_in}
                         <li>
                             {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
                             {if !$isSubscribed}
-                                {modurl modname='Dizkus' type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
+                                {modurl modname=$module type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
                                 {gt text="Subscribe to forum" assign='msg'}
                             {else}
-                                {modurl modname='Dizkus' type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
+                                {modurl modname=$module type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
                                 {gt text="Unsubscribe from forum" assign='msg'}
                             {/if}
                             <a id="forum-subscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
@@ -82,10 +82,10 @@
                             <li>
                                 {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                                 {if $isFavorite}
-                                    {modurl modname='Dizkus' type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
+                                    {modurl modname=$module type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
                                     {gt text="Remove forum from favourites" assign='msg'}
                                 {else}
-                                    {modurl modname='Dizkus' type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
+                                    {modurl modname=$module type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
                                     {gt text="Add forum to favourites" assign='msg'}
                                 {/if}
                                 <a id="forum-favourite" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
@@ -94,7 +94,7 @@
                     {/if}
 
                     {if $isModerator OR $permissions.moderate}
-                        <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname='Dizkus' type='user' func='moderateforum' forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
+                        <li><a class="dzk_arrow moderatelink tooltips" title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">{gt text="Moderate"}</a></li>
                         {/if}
                 </ul>
             </div>
