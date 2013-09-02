@@ -21,7 +21,7 @@
     <br />
     {formlabel for="message" __text="Message" class='z-hide'}
     {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLength="65527" mandatory=true}
-    {if $modvars.Dizkus.striptags == 'yes'}
+    {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
         <p>
             {gt text="No HTML tags allowed (except inside [code][/code] tags)"}
         </p>

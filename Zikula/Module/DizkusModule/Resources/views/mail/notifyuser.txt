@@ -5,7 +5,7 @@
 ---------------------------------------------------------------------
 
 {assign value=$post_message|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter' var='message'}
-{if $modvars.Dizkus.striptagsfromemail}{$message|strip_tags}{else}{$message}{/if}
+{if $modvars.ZikulaDizkusModule.striptagsfromemail}{$message|strip_tags}{else}{$message}{/if}
 
 ---------------------------------------------------------------------
 {gt text="Browse thread and reply: %s \n\n" tag1=$topic_url}

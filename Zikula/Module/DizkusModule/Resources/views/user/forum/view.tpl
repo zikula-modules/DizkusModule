@@ -1,7 +1,7 @@
 {assign var='templatetitle' value=$forum.name}
 {include file='user/header.tpl' parent=$forum}
 
-{if isset($modvars.Dizkus.ajax) && $modvars.Dizkus.ajax}
+{if isset($modvars.ZikulaDizkusModule.ajax) && $modvars.ZikulaDizkusModule.ajax}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewForum.js'}
     <input id="forum_id" type="hidden" value={$forum.forum_id}>
@@ -78,7 +78,7 @@
                             {/if}
                             <a id="forum-subscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                         </li>
-                        {if $modvars.Dizkus.favorites_enabled eq "yes"}
+                        {if $modvars.ZikulaDizkusModule.favorites_enabled eq "yes"}
                             <li>
                                 {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                                 {if $isFavorite}
@@ -151,7 +151,7 @@
                                     {else}
                                         {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
                                     {/if}
-                                    {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
+                                    {if $topic.replyCount >= $modvars.ZikulaDizkusModule.hot_threshold}
                                         {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
                                     {/if}
                                     {$topic.topic_id|viewtopiclink:$topic.title}

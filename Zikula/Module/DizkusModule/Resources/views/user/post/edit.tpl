@@ -27,7 +27,7 @@
                         <div>
                             {formlabel for="post_text" __text="Message body"}<br />
                             {formtextinput textMode="multiline" id="post_text" rows="10" cols="60"}
-                            {if $modvars.Dizkus.striptags == 'yes'}
+                            {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
                                 <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                             {/if}
                             {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}

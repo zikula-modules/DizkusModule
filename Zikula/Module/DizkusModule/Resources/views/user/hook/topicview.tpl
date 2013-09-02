@@ -12,7 +12,7 @@
 <div id="dizkus">
 
     <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-    {if $modvars.Dizkus.ajax}
+    {if $modvars.ZikulaDizkusModule.ajax}
         {* JS files not loaded via header like other templates*}
         {pageaddvar name='javascript' value='jQuery'}
         {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
@@ -65,7 +65,7 @@
                                         <div id="dizkusinformation"></div>
                                         <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
-                                        {if $modvars.Dizkus.striptags == 'yes'}
+                                        {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
                                             <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                         {/if}
 

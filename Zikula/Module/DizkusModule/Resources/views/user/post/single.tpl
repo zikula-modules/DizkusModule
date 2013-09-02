@@ -79,13 +79,13 @@
     {if $preview eq 1}<div class='z-warningmsg z-bold'>{gt text='PREVIEW'}</div>{/if}
     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
-    {if $post.attachSignature AND ($modvars.Dizkus.removesignature == 'no')}
+    {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
         {usergetvar name='signature' assign="signature"}
         {if !empty($signature)}
             <div class='dzk_postSignature'>
-                {$modvars.Dizkus.signature_start}
+                {$modvars.ZikulaDizkusModule.signature_start}
                 <br />{$signature|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
-                <br />{$modvars.Dizkus.signature_end}
+                <br />{$modvars.ZikulaDizkusModule.signature_end}
             </div>
         {/if}
     {/if}

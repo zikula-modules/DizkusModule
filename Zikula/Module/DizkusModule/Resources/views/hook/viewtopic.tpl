@@ -145,7 +145,7 @@
                                 <div id="dizkusinformation"></div>
                                 <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
-                                {if $modvars.Dizkus.striptags == 'yes'}
+                                {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
                                     <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
 

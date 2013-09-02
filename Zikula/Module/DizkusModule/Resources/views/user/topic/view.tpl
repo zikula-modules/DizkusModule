@@ -2,7 +2,7 @@
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-{if $modvars.Dizkus.ajax}
+{if $modvars.ZikulaDizkusModule.ajax}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
     {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
 {/if}
@@ -11,7 +11,7 @@
 
 <h2>
     <span id="edittopicsubjectbutton" title="">
-        <span id="topic_solved" {if !$topic.solved or !$modvars.Dizkus.solved_enabled}class="z-hide"{/if}>
+        <span id="topic_solved" {if !$topic.solved or !$modvars.ZikulaDizkusModule.solved_enabled}class="z-hide"{/if}>
             [{gt text="Solved"}]
         </span>
         <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span>
@@ -21,7 +21,7 @@
 
 {* add inline edit *}
 {usergetvar name='uid' assign='currentUser'}
-{if ($modvars.Dizkus.ajax && ($permissions.moderate eq 1 || $topic->userAllowedToEdit()))}
+{if ($modvars.ZikulaDizkusModule.ajax && ($permissions.moderate eq 1 || $topic->userAllowedToEdit()))}
     {include file='ajax/edittopicsubject.tpl'}
     <script type="text/javascript">
         jQuery(document).ready(function() {
@@ -72,7 +72,7 @@
                         {/if}
                         <a id="toggletopicsubscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
                     </li>
-                    {if ($modvars.Dizkus.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
+                    {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
                         <li>
                             {if $topic.solved}
                                 {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
@@ -166,7 +166,7 @@
                                     <div id="dizkusinformation"></div>
                                     <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
-                                    {if $modvars.Dizkus.striptags == 'yes'}
+                                    {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
                                         <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                     {/if}
 

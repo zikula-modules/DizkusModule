@@ -16,7 +16,7 @@
             {formlabel for="postOrder" __text="Post order"}
             {formdropdownlist id="postOrder" items=$orders}
         </div>
-        {if $modvars.Dizkus.favorites_enabled eq 'yes'}
+        {if $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
             <div class="z-formrow">
                 {formlabel for="displayOnlyFavorites" __text="Display only favorite forums"}
                 {formcheckbox id="displayOnlyFavorites"}

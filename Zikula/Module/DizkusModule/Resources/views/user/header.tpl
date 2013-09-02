@@ -1,4 +1,4 @@
-{if $modvars.Dizkus.ajax}
+{if $modvars.ZikulaDizkusModule.ajax}
     {pageaddvar name='javascript' value='jQuery'}
     {pageaddvar name='javascript' value='jQuery-ui'}
     {pageaddvar name="stylesheet" value="javascript/jquery-ui/themes/base/jquery-ui.css"}

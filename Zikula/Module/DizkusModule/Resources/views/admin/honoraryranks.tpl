@@ -12,7 +12,7 @@
     <form class="z-form" action="{modurl modname=$module type='admin' func='ranks' ranktype='1'}" method="post">
         <div>
             <input type="hidden" name="ranks[-1][type]" value="1" />
-            <input type="hidden" id="rankImagesPath" value="{$modvars.Dizkus.url_ranks_images}" />
+            <input type="hidden" id="rankImagesPath" value="{$modvars.ZikulaDizkusModule.url_ranks_images}" />
             <fieldset>
                 <legend>{gt text="Create new rank"}</legend>
                 <div class="z-formrow">
@@ -27,7 +27,7 @@
                                 <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
                         </select>
-                        <img id="newimage" src="{$modvars.Dizkus.url_ranks_images}/{$selectedimage}" alt="rankimage" />
+                        <img id="newimage" src="{$modvars.ZikulaDizkusModule.url_ranks_images}/{$selectedimage}" alt="rankimage" />
                     </div>
                 </div>
                 <div class="z-formrow">
@@ -65,7 +65,7 @@
                                 {foreach item='rankimage' from=$rankimages}
                                     <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
                                 {/foreach}
-                            </select><img id="image{$num}" src="{$modvars.Dizkus.url_ranks_images}/{$rank.image}" alt="rankimage" />
+                            </select><img id="image{$num}" src="{$modvars.ZikulaDizkusModule.url_ranks_images}/{$rank.image}" alt="rankimage" />
                         </td>
                         <td><input type="text" name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
                         <td>

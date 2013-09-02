@@ -1,4 +1,4 @@
-{if $modvars.Dizkus.ajax}
+{if $modvars.ZikulaDizkusModule.ajax}
     {pageaddvar name="javascript" value="modules/Dizkus/javascript/Zikula.Dizkus.User.TopicDelete.js"}
 {/if}
 {gt text="Delete this topic" assign='templatetitle'}

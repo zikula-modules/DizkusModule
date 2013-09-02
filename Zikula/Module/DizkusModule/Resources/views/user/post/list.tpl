@@ -26,7 +26,7 @@
                         {if $topic.status eq 1}
                             {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                         {/if}
-                        {if $topic.replyCount >= $modvars.Dizkus.hot_threshold}
+                        {if $topic.replyCount >= $modvars.ZikulaDizkusModule.hot_threshold}
                             {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                         {/if}
                         <a href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.title|truncate:70}">{$topic.title|truncate:70}</a>

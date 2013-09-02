@@ -20,34 +20,34 @@
         </p>
         <div class="z-formrow">
             {formlabel for="forum_disabled_info" __text="Message displayed if forums are disabled"}
-            {formtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$modvars.Dizkus.forum_disabled_info}
+            {formtextinput id="forum_disabled_info" textMode="multiline" rows="3" cols="40" text=$modvars.ZikulaDizkusModule.forum_disabled_info}
         </div>
         <div class="z-formrow">
             {formlabel for="indexTo" __text="Redirect forum index to forum id"}
-            {formtextinput id="indexTo" text=$modvars.Dizkus.indexTo size="5" maxLength="10"}
+            {formtextinput id="indexTo" text=$modvars.ZikulaDizkusModule.indexTo size="5" maxLength="10"}
         </div>
         <p class="z-formnote z-informationmsg">
             {gt text="Leave blank to use standard forum index."}
         </p>
         <div class="z-formrow">
             {formlabel for="email_from" __text="Sender address for e-mail messages from forums"}
-            {formemailinput id="email_from" text=$modvars.Dizkus.email_from size="30" maxLength="100"}
+            {formemailinput id="email_from" text=$modvars.ZikulaDizkusModule.email_from size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
             {formlabel for="hot_threshold" __text="'Hot topic' threshold (default: 20)"}
-            {formintinput id="hot_threshold" text=$modvars.Dizkus.hot_threshold size="3" maxLength="3" minValue=2 maxValue=100}
+            {formintinput id="hot_threshold" text=$modvars.ZikulaDizkusModule.hot_threshold size="3" maxLength="3" minValue=2 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="posts_per_page" __text="Posts per page in topic index (default: 15)"}
-            {formintinput id="posts_per_page" text=$modvars.Dizkus.posts_per_page size="3" maxLength="3" minValue=1 maxValue=100}
+            {formintinput id="posts_per_page" text=$modvars.ZikulaDizkusModule.posts_per_page size="3" maxLength="3" minValue=1 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="topics_per_page" __text="Topics per page in forum index (default: 15)"}
-            {formintinput id="topics_per_page" text=$modvars.Dizkus.topics_per_page size="3" maxLength="3" minValue=5 maxValue=100}
+            {formintinput id="topics_per_page" text=$modvars.ZikulaDizkusModule.topics_per_page size="3" maxLength="3" minValue=5 maxValue=100}
         </div>
         <div class="z-formrow">
             {formlabel for="url_ranks_images" __text="Path to rank images"}
-            {formtextinput id="url_ranks_images" text=$modvars.Dizkus.url_ranks_images size="30" maxLength="100"}
+            {formtextinput id="url_ranks_images" text=$modvars.ZikulaDizkusModule.url_ranks_images size="30" maxLength="100"}
         </div>
         <div class="z-formrow">
             {formlabel for="ajax" __text="Enable user-side ajax"}
@@ -80,12 +80,12 @@
         </div>
         <div class="z-formrow">
             {formlabel for="minsearchlength" __text="Minimum number of characters in search query string (1 minimum)"}
-            {formintinput id="minsearchlength" text=$modvars.Dizkus.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+            {formintinput id="minsearchlength" text=$modvars.ZikulaDizkusModule.minsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
         </div>
 
         <div class="z-formrow">
             {formlabel for="maxsearchlength" __text="Maximum number of characters in search query string (50 maximum)"}
-            {formintinput id="maxsearchlength" text=$modvars.Dizkus.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
+            {formintinput id="maxsearchlength" text=$modvars.ZikulaDizkusModule.maxsearchlength size="2" maxLength="2" minValue=1 maxValue=50}
         </div>
     </fieldset>
 
@@ -93,15 +93,15 @@
         <legend>{gt text="User-related settings"}</legend>
         <div class="z-formrow">
             {formlabel for="post_sort_order" __text="Default sort order for posts"}
-            {formdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$modvars.Dizkus.post_sort_order}
+            {formdropdownlist id="post_sort_order" items=$post_sort_order_options selectedValue=$modvars.ZikulaDizkusModule.post_sort_order}
         </div>
         <div class="z-formrow">
             {formlabel for="signature_start" __text="Beginning of signature"}
-            {formtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$modvars.Dizkus.signature_start|default:''}
+            {formtextinput id="signature_start" textMode="multiline" rows="3" cols="40" text=$modvars.ZikulaDizkusModule.signature_start|default:''}
         </div>
         <div class="z-formrow">
             {formlabel for="signature_end" __text="End of signature"}
-            {formtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$modvars.Dizkus.signature_end|default:''}
+            {formtextinput id="signature_end" textMode="multiline" rows="3" cols="40" text=$modvars.ZikulaDizkusModule.signature_end|default:''}
         </div>
         <div class="z-formrow">
             {formlabel for="signaturemanagement" __text="Enable signature management via forum user settings"}
@@ -128,7 +128,7 @@
         <div class="z-formrow">
             {formlabel for="timespanforchanges" __text="Number of hours during which non-moderators are allowed to edit their post (leave blank for unlimited)"}
             <span>
-                {formintinput id="timespanforchanges" text=$modvars.Dizkus.timespanforchanges size="3" maxLength="3"}
+                {formintinput id="timespanforchanges" text=$modvars.ZikulaDizkusModule.timespanforchanges size="3" maxLength="3"}
                 {gt text="hours"}
             </span>
         </div>
@@ -139,7 +139,7 @@
         </div>
         <div class="z-formrow">
             {formlabel for="notifyAdminAsMod" __text="Admin to notify with Moderator notifications"}
-            {formdropdownlist id="notifyAdminAsMod" items=$admins selectedValue=$modvars.Dizkus.notifyAdminAsMod}
+            {formdropdownlist id="notifyAdminAsMod" items=$admins selectedValue=$modvars.ZikulaDizkusModule.notifyAdminAsMod}
         </div>
     </fieldset>
 
@@ -159,7 +159,7 @@
         </div>
         <div class="z-formrow">
             {formlabel for="deletehookaction" __text="Action to be performed when 'delete' hook is called"}
-            {formdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$modvars.Dizkus.deletehookaction}
+            {formdropdownlist id="deletehookaction" items=$deletehook_options selectedValue=$modvars.ZikulaDizkusModule.deletehookaction}
         </div>
     </fieldset>
 

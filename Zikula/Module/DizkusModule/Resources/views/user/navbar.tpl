@@ -39,7 +39,7 @@
 
 
         <ul class="linklist z-clearfix" style="float:right;">
-            {if $coredata.logged_in eq 1 AND $func eq 'index' AND $modvars.Dizkus.favorites_enabled eq 'yes'}
+            {if $coredata.logged_in eq 1 AND $func eq 'index' AND $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
                 {if $favorites}
                     <li><a class="dzk_arrow showallforumslink tooltips" href="{modurl modname=$module type='user' func='showallforums'}" title="{gt text="Show all forums"}">{gt text="Show all forums"}</a></li>
                     {else}

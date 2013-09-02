@@ -28,7 +28,7 @@
 
                                 <textarea id="message" name="message" rows="10" cols="60">{$reply.message}</textarea>
 
-                                {if $modvars.Dizkus.striptags == 'yes'}
+                                {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
                                     <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                 {/if}
                             </div>
