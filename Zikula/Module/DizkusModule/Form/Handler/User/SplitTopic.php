@@ -12,6 +12,11 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
+use ModUtil;
+use LogUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+
 /**
  * This class provides a handler to delete a topic.
  */
@@ -21,7 +26,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
     /**
      * post data
      *
-     * @var arrat
+     * @var array
      */
     private $post;
 

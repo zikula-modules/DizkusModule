@@ -12,6 +12,15 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
+use ModUtil;
+use LogUtil;
+use UserUtil;
+use DataUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use Zikula\Module\DizkusModule\Entity\RankEntity;
+use System;
+
 /**
  * This class provides a handler to report posts.
  */
@@ -49,7 +58,7 @@ class Report extends \Zikula_Form_AbstractHandler
         $this->_post = new PostManager($id);
         $view->assign('post', $this->_post->get());
         $view->assign('notify', true);
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_POSTCOUNT));
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
         return true;
@@ -172,27 +181,26 @@ class Report extends \Zikula_Form_AbstractHandler
      */
     private function dzk_getip()
     {
-        if (dzk_validip(System::serverGetVar("HTTP_CLIENT_IP"))) {
+        if ($this->dzk_validip(System::serverGetVar("HTTP_CLIENT_IP"))) {
             return System::serverGetVar("HTTP_CLIENT_IP");
         }
 
         foreach (explode(',', System::serverGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
-            if (dzk_validip(trim($ip))) {
+            if ($this->dzk_validip(trim($ip))) {
                 return $ip;
             }
         }
 
-        if (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+        if ($this->dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
             return System::serverGetVar("HTTP_X_FORWARDED");
-        } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED_FOR"))) {
+        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_FORWARDED_FOR"))) {
             return System::serverGetVar("HTTP_FORWARDED_FOR");
-        } elseif (dzk_validip(System::serverGetVar("HTTP_FORWARDED"))) {
+        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_FORWARDED"))) {
             return System::serverGetVar("HTTP_FORWARDED");
-        } elseif (dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
+        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
             return System::serverGetVar("HTTP_X_FORWARDED");
         } else {
             return System::serverGetVar("REMOTE_ADDR");
         }
     }
-
 }

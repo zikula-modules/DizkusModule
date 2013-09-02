@@ -11,6 +11,12 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use UserUtil;
+use Zikula_Form_View;
+
 /**
  * This class provides a handler to manage subscriptions.
  */

@@ -12,6 +12,10 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use ModUtil;
+use LogUtil;
+use Zikula_Form_View;
+
 /**
  * This class provides a handler to move a post.
  */

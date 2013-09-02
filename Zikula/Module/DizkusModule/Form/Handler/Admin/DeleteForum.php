@@ -12,6 +12,16 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula_ValidationHook;
+use Zikula_ProcessHook;
+use Zikula_Hook_ValidationProviders;
+
 /**
  * This class provides a handler to edit forums.
  */
@@ -24,7 +34,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
     /**
      * forum
      *
-     * @var Zikula\Module\DizkusModule\Entity\ForumEntity
+     * @var ForumEntity
      */
     private $forum;
 

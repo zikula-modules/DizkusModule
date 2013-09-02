@@ -12,6 +12,16 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
+use ModUtil;
+use LogUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use Zikula_ModUrl;
+use ZLanguage;
+use Zikula_ValidationHook;
+use Zikula_ProcessHook;
+use Zikula_Hook_ValidationProviders;
+
 /**
  * This class provides a handler to create a new topic.
  */

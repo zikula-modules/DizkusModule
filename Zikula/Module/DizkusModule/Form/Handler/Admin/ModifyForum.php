@@ -13,6 +13,19 @@ namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Connection\Pop3Connection;
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use UserUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use System;
+use Zikula_View;
+use Zikula_ModUrl;
+use ZLanguage;
+use Zikula_ValidationHook;
+use Zikula_Hook_ValidationProviders;
+use Zikula_ProcessHook;
 
 /**
  * This class provides a handler to edit forums.

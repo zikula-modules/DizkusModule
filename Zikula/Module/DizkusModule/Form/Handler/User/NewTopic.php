@@ -13,6 +13,17 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use ModUtil;
+use LogUtil;
+use ZLanguage;
+use Zikula_Form_View;
+use Zikula_ModUrl;
+use Zikula_ValidationHook;
+use Zikula_ProcessHook;
+use Zikula_Hook_ValidationProviders;
+use Zikula_Exception_Forbidden;
+use Zikula\Module\DizkusModule\Entity\RankEntity;
+
 /**
  * This class provides a handler to create a new topic.
  */
@@ -117,7 +128,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
             $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_POSTCOUNT));
+            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
 
             return true;

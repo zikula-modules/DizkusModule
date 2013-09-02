@@ -12,6 +12,12 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use ModUtil;
+use LogUtil;
+use DataUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+
 /**
  * This class provides a handler to email a topic.
  */

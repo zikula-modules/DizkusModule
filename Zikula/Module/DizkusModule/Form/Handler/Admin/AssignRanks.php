@@ -11,6 +11,15 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use DataUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Zikula_ModUrl;
+use ZLanguage;
 /**
  * This class provides a handler to Assign ranks
  */
@@ -46,7 +55,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         }
         $letter = strtolower($letter);
 
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => Zikula\Module\DizkusModule\Entity\RankEntity::TYPE_HONORARY));
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_HONORARY));
 
         $perpage = 20;
 

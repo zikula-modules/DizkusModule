@@ -11,6 +11,13 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use UserUtil;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+
 /**
  * This class provides a handler to manage topic subscriptions.
  */

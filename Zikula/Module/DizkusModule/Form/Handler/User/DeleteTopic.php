@@ -13,6 +13,15 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use ModUtil;
+use LogUtil;
+use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Zikula_Form_View;
+use Zikula_Exception_Forbidden;
+use Zikula_ValidationHook;
+use Zikula_ProcessHook;
+use Zikula_Hook_ValidationProviders;
+
 /**
  * This class provides a handler to delete a topic.
  */
@@ -29,7 +38,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
     /**
      * topic poster
      *
-     * @var Zikula\Module\DizkusModule\Entity\ForumUserEntity
+     * @var ForumUserEntity
      */
     private $topic_poster;
 

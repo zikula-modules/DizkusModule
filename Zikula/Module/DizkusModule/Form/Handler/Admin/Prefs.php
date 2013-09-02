@@ -11,6 +11,13 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
+use ModUtil;
+use LogUtil;
+use SecurityUtil;
+use UserUtil;
+use Zikula_Form_View;
+use Zikula\Module\DizkusModule\DizkusModuleInstaller;
+
 class Prefs extends \Zikula_Form_AbstractHandler
 {
     /**
@@ -91,7 +98,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
             $this->setVars($data);
             LogUtil::registerStatus($this->__('Done! Updated configuration.'));
         } elseif ($args['commandName'] == 'restore') {
-            $this->setVars(Zikula\Module\DizkusModule\DizkusModuleInstaller::getDefaultVars());
+            $this->setVars(DizkusModuleInstaller::getDefaultVars());
             LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
         }
 
