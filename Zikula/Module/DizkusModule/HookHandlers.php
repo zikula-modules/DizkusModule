@@ -283,12 +283,12 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        $view = Zikula_View::getInstance($this->name, false);
+        $view = Zikula_View::getInstance('ZikulaDizkusModule', false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
         $classname = $moduleName . '_Version';
         $moduleVersionObj = new $classname();
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, $this->name);
+        $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'ZikulaDizkusModule');
         foreach ($bindingsBetweenOwners as $k => $binding) {
             $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
@@ -299,7 +299,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $view->assign('areas', $bindingsBetweenOwners);
         $view->assign('dizkushookconfig', $hookconfig);
         $view->assign('ActiveModule', $moduleName);
-        $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeLocked' => false)));
+        $view->assign('forums', ModUtil::apiFunc('ZikulaDizkusModule', 'Forum', 'getParents', array('includeLocked' => false)));
         $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
         $z_event->stop();
     }
@@ -316,7 +316,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         if (!($z_event['method'] == 'dizkushookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
             return;
         }
-        $dom = ZLanguage::getModuleDomain($this->name);
+        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
         $request = ServiceUtil::getService('request');
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
@@ -354,16 +354,16 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     public static function moduleDelete(Zikula_Event $z_event)
     {
         $module = $z_event['name'];
-        $dom = ZLanguage::getModuleDomain($this->name);
+        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $deleteHookAction = ModUtil::getVar($this->name, 'deletehookaction');
+        $deleteHookAction = ModUtil::getVar('ZikulaDizkusModule', 'deletehookaction');
         // lock or remove
         $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc($this->name, 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc('ZikulaDizkusModule', 'Topic', 'delete', array('topic' => $topic));
                     break;
                 case 'lock':
                 default:
@@ -389,10 +389,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      */
     public static function servicelinks(GenericEvent $event)
     {
-        $dom = ZLanguage::getModuleDomain($this->name);
+        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
         $module = ModUtil::getName();
-        $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, $this->name));
-        if ($bindingCount > 0 && $module != $this->name && (empty($event->data) || is_array($event->data) && !in_array(array(
+        $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'ZikulaDizkusModule'));
+        if ($bindingCount > 0 && $module != 'ZikulaDizkusModule' && (empty($event->data) || is_array($event->data) && !in_array(array(
                     'url' => ModUtil::url($module, 'admin', 'dizkushookconfig'),
                     'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
             $event->data[] = array(

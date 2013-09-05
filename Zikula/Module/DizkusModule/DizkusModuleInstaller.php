@@ -220,7 +220,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     public static function getDefaultVars()
     {
-        $dom = ZLanguage::getModuleDomain($this->name);
+        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
 
         return array(
             'posts_per_page' => 15,
