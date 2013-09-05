@@ -27,10 +27,14 @@ use LogUtil;
 use System;
 use ZLanguage;
 use Zikula_View;
+use Zikula_DisplayHook;
+use Zikula_ProcessHook;
 use Zikula_Response_DisplayHook;
+use Zikula_ValidationHook;
 use Zikula_Exception_Forbidden;
+use Zikula_Event;
 use Zikula\Core\Event\GenericEvent;
-use Zikula\Module\DizkusModule\Version;
+use Zikula\Module\DizkusModule\DizkusModuleVersion;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
@@ -118,7 +122,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
-        $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
     /**
@@ -149,7 +153,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forumId);
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
-        $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
+        $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
 
     /**
@@ -168,7 +172,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new Zikula_Response_DisplayHook(Version::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
+            $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
 
