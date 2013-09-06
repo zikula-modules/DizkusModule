@@ -179,15 +179,15 @@ class PostEntity extends \Zikula_EntityAccess
         return $this->post_time;
     }
 
-    public function setPost_time(DateTime $time)
+    public function setPost_time(\DateTime $time)
     {
         $this->post_time = $time;
     }
 
-    public function updatePost_time(DateTime $time = null)
+    public function updatePost_time(\DateTime $time = null)
     {
         if (!isset($time)) {
-            $time = new DateTime();
+            $time = new \DateTime();
         }
         $this->post_time = $time;
     }
@@ -290,7 +290,7 @@ class PostEntity extends \Zikula_EntityAccess
         // in hours
         $postTime = clone $this->post_time;
         $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
-        $now = new DateTime();
+        $now = new \DateTime();
         if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
             return true;
         }

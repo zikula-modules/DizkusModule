@@ -144,7 +144,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * url object
-     * @var Zikula_ModUrl
+     * @var \Zikula_ModUrl
      *
      * @ORM\Column(type="object", nullable=true)
      */
@@ -238,7 +238,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->topic_time;
     }
 
-    public function setTopic_time(DateTime $time)
+    public function setTopic_time(\DateTime $time)
     {
         $this->topic_time = $time;
     }
@@ -378,7 +378,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->hookedUrlObject;
     }
 
-    public function setHookedUrlObject(Zikula_ModUrl $hookedUrlObject)
+    public function setHookedUrlObject(\Zikula_ModUrl $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
     }
