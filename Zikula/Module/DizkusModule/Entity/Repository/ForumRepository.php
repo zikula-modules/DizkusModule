@@ -23,7 +23,7 @@ class ForumRepository extends NestedTreeRepository
         $query = $this->_em->createQuery($dql);
         try {
             $result = $query->getResult();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             echo '<pre>';
             var_dump($e->getMessage());
             var_dump($query->getDQL());

@@ -12,6 +12,8 @@
 namespace Zikula\Module\DizkusModule\Entity\Moderator;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 
 /**
  * Moderator_User entity class

@@ -197,7 +197,7 @@ class ForumEntity extends \Zikula_EntityAccess
     {
         if ($this->name == self::ROOTNAME) {
             // do not display actual rootname
-            $dom = ZLanguage::getModuleDomain('Dizkus');
+            $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
 
             return __('Forum Index', $dom);
         }

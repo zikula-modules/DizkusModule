@@ -138,7 +138,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @return string
      */
-    public function viewtopicAction($args = array())
+    public function viewtopicAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');
