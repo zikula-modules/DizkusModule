@@ -13,7 +13,7 @@
  */
 
 /**
- * EZComments Hooks Handlers.
+ * Hooks Handlers.
  */
 
 namespace Zikula\Module\DizkusModule;
@@ -62,7 +62,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      * Module name
      * @var string
      */
-    private $name = 'ZikulaDizkusModule';
+    const MODULENAME = 'ZikulaDizkusModule';
 
     /**
      * Post constructor hook.
@@ -71,10 +71,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      */
     public function setup()
     {
-        $this->view = Zikula_View::getInstance($this->name, false);
+        $this->view = Zikula_View::getInstance(self::MODULENAME, false);
         // set caching off
         $this->_em = ServiceUtil::getService('doctrine.entitymanager');
-        $this->domain = ZLanguage::getModuleDomain($this->name);
+        $this->domain = ZLanguage::getModuleDomain(self::MODULENAME);
     }
 
     /**
@@ -107,7 +107,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         }
         $returnurlparams = htmlspecialchars(serialize($urlParameters));
         $this->view->assign('returnurl', $returnurlparams);
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list($rankimages, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());
@@ -168,7 +168,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $this->view->assign('forum', $topic->getForum()->getName());
-            $deleteHookAction = ModUtil::getVar($this->name, 'deletehookaction');
+            $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
@@ -234,7 +234,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $newManagedTopic->create();
         // cannot notify hooks in non-controller
         // notify topic & forum subscribers
-        ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array(
+        ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
             'post' => $newManagedTopic->getFirstPost()));
         LogUtil::registerStatus($this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 
@@ -250,13 +250,13 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      */
     public function processDelete(Zikula_ProcessHook $hook)
     {
-        $deleteHookAction = ModUtil::getVar($this->name, 'deletehookaction');
+        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
         // lock or remove
         $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc($this->name, 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc(self::MODULENAME, 'Topic', 'delete', array('topic' => $topic));
                     break;
                 case 'lock':
                 default:
@@ -287,12 +287,12 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
         }
-        $view = Zikula_View::getInstance('ZikulaDizkusModule', false);
+        $view = Zikula_View::getInstance(self::MODULENAME, false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
         $classname = $moduleName . '_Version';
         $moduleVersionObj = new $classname();
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, 'ZikulaDizkusModule');
+        $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, self::MODULENAME);
         foreach ($bindingsBetweenOwners as $k => $binding) {
             $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
@@ -303,7 +303,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $view->assign('areas', $bindingsBetweenOwners);
         $view->assign('dizkushookconfig', $hookconfig);
         $view->assign('ActiveModule', $moduleName);
-        $view->assign('forums', ModUtil::apiFunc('ZikulaDizkusModule', 'Forum', 'getParents', array('includeLocked' => false)));
+        $view->assign('forums', ModUtil::apiFunc(self::MODULENAME, 'Forum', 'getParents', array('includeLocked' => false)));
         $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
         $z_event->stop();
     }
@@ -320,7 +320,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         if (!($z_event['method'] == 'dizkushookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
             return;
         }
-        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
         $request = ServiceUtil::getService('request');
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
@@ -358,16 +358,16 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     public static function moduleDelete(Zikula_Event $z_event)
     {
         $module = $z_event['name'];
-        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
         $_em = ServiceUtil::getService('doctrine.entitymanager');
-        $deleteHookAction = ModUtil::getVar('ZikulaDizkusModule', 'deletehookaction');
+        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
         // lock or remove
         $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc('ZikulaDizkusModule', 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc(self::MODULENAME, 'Topic', 'delete', array('topic' => $topic));
                     break;
                 case 'lock':
                 default:
@@ -393,10 +393,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
      */
     public static function servicelinks(GenericEvent $event)
     {
-        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
         $module = ModUtil::getName();
-        $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, 'ZikulaDizkusModule'));
-        if ($bindingCount > 0 && $module != 'ZikulaDizkusModule' && (empty($event->data) || is_array($event->data) && !in_array(array(
+        $bindingCount = count(HookUtil::getBindingsBetweenOwners($module, self::MODULENAME));
+        if ($bindingCount > 0 && $module != self::MODULENAME && (empty($event->data) || is_array($event->data) && !in_array(array(
                     'url' => ModUtil::url($module, 'admin', 'dizkushookconfig'),
                     'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
             $event->data[] = array(
@@ -417,7 +417,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             return false;
         }
         $module = $hook->getCaller();
-        $locations = array($module, $this->name);
+        $locations = array($module, self::MODULENAME);
         // locations to search for the class
         foreach ($locations as $location) {
             $classnames = array(

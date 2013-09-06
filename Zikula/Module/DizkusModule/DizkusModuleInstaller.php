@@ -27,6 +27,12 @@ use DoctrineHelper;
 
 class DizkusModuleInstaller extends \Zikula_AbstractInstaller
 {
+    /**
+     * Module name
+     * (needed for static methods)
+     * @var string
+     */
+    const MODULENAME = 'ZikulaDizkusModule';
 
     private $_entities = array(
         'Zikula\Module\DizkusModule\Entity\ForumEntity',
@@ -220,7 +226,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     public static function getDefaultVars()
     {
-        $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
 
         return array(
             'posts_per_page' => 15,
