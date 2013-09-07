@@ -25,6 +25,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class TopicEntity extends \Zikula_EntityAccess
 {
+    /**
+     * Module name
+     * @var string
+     */
+    const MODULENAME = 'ZikulaDizkusModule';
 
     /**
      * topic_id
@@ -328,7 +333,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     public function getHot_topic()
     {
-        $hotThreshold = ModUtil::getVar('Dizkus', 'hot_threshold');
+        $hotThreshold = ModUtil::getVar(self::MODULENAME, 'hot_threshold');
         $totalPosts = $this->getTotal_posts();
 
         return $totalPosts >= $hotThreshold;

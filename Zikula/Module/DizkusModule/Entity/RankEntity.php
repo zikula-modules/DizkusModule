@@ -25,6 +25,11 @@ class RankEntity extends \Zikula_EntityAccess
 
     const TYPE_HONORARY = 1;
     const TYPE_POSTCOUNT = 0;
+    /**
+     * Module name
+     * @var string
+     */
+    const MODULENAME = 'ZikulaDizkusModule';
 
     /**
      * rank_id
@@ -125,7 +130,7 @@ class RankEntity extends \Zikula_EntityAccess
 
     public function getImageLink()
     {
-        return ModUtil::getVar('Dizkus', 'url_ranks_images') . '/' . $this->image;
+        return ModUtil::getVar(self::MODULENAME, 'url_ranks_images') . '/' . $this->image;
     }
 
     public function setRank_id($rank_id)

@@ -28,6 +28,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class PostEntity extends \Zikula_EntityAccess
 {
+    /**
+     * Module name
+     * @var string
+     */
+    const MODULENAME = 'ZikulaDizkusModule';
 
     /**
      * post_id
@@ -105,7 +110,7 @@ class PostEntity extends \Zikula_EntityAccess
      */
     public function __construct()
     {
-        if (ModUtil::getVar('Dizkus', 'log_ip') == 'no') {
+        if (ModUtil::getVar(self::MODULENAME, 'log_ip') == 'no') {
             // for privacy issues ip logging can be deactivated
             $this->poster_ip = 'unrecorded';
         } else {
@@ -286,7 +291,7 @@ class PostEntity extends \Zikula_EntityAccess
     {
         // default to current user
         $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
-        $timeAllowedToEdit = ModUtil::getVar('Dizkus', 'timespanforchanges');
+        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
         // in hours
         $postTime = clone $this->post_time;
         $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
