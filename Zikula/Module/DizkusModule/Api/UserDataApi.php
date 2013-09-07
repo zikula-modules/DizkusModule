@@ -31,7 +31,7 @@ class UserDataApi extends \Zikula_AbstractApi
      */
     private $usersarray = array();
 
-    public function __construct(Zikula_ServiceManager $serviceManager)
+    public function __construct(\Zikula_ServiceManager $serviceManager)
     {
         $this->_online = array();
         parent::__construct($serviceManager);
