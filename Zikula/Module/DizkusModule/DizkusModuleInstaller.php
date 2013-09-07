@@ -21,7 +21,7 @@ use Exception;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
+use Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity;
 use Zikula\Module\DizkusModule\Connection\Pop3Connection;
 use DoctrineHelper;
 
@@ -40,8 +40,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         'Zikula\Module\DizkusModule\Entity\TopicEntity',
         'Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity',
         'Zikula\Module\DizkusModule\Entity\ForumUserEntity',
-        'Zikula\Module\DizkusModule\Entity\Moderator\UserEntity',
-        'Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity',
+        'Zikula\Module\DizkusModule\Entity\ModeratorUserEntity',
+        'Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity',
         'Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity',
         'Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity',
         'Zikula\Module\DizkusModule\Entity\RankEntity');

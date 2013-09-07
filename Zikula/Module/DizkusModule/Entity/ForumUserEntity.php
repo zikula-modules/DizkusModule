@@ -29,9 +29,9 @@ class ForumUserEntity extends \Zikula_EntityAccess
 {
 
     /**
-     * Core user entity
+     * Zikula Core User entity
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
-     * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
+     * @see /system/Zikula/Module/UsersModule/Entity/ModeratorUserEntity.php
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
@@ -85,26 +85,26 @@ class ForumUserEntity extends \Zikula_EntityAccess
     private $postOrder = false;
     // ASC (oldest to newest)
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\RankEntity", cascade={"persist"} )
+     * @ORM\ManyToOne(targetEntity="RankEntity", cascade={"persist"} )
      * @ORM\JoinColumn(name="rank", referencedColumnName="rank_id", nullable=true)
      */
     private $rank;
 
     /**
-     * Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
+     * ForumUserFavoriteEntity collection
+     * @ORM\OneToMany(targetEntity="ForumUserFavoriteEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $favoriteForums;
 
     /**
-     * Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
+     * TopicSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="TopicSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $topicSubscriptions;
 
     /**
-     * Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
+     * ForumSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="ForumSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $forumSubscriptions;
 

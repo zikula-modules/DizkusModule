@@ -94,13 +94,13 @@ class PostEntity extends \Zikula_EntityAccess
     private $title = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\TopicEntity", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="TopicEntity", inversedBy="posts")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      * */
     private $topic;

@@ -14,7 +14,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Favorites entity class.
+ * ForumUserFavorite entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_favorites", indexes={@ORM\Index(name="forum_idx", columns={"forum_id"}), @ORM\Index(name="user_idx", columns={"user_id"})})
@@ -26,14 +26,14 @@ class ForumUserFavoriteEntity extends \Zikula_EntityAccess
      * forumUser
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity", inversedBy="favorites")
+     * @ORM\ManyToOne(targetEntity="ForumEntity", inversedBy="favorites")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;

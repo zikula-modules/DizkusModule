@@ -32,7 +32,7 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
     private $msg_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity")
+     * @ORM\ManyToOne(targetEntity="ForumEntity", inversedBy="subscriptions")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      */
     private $forum;
@@ -40,7 +40,7 @@ class ForumSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;

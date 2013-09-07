@@ -40,7 +40,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
         }
         // get moderator users
         $qb = $em->createQueryBuilder();
-        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\Moderator\UserEntity', 'm')->leftJoin('m.forumUser', 'u');
+        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\ModeratorUserEntity', 'm')->leftJoin('m.forumUser', 'u');
         if (!empty($forum_id)) {
             $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
             // check parents also
@@ -58,7 +58,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
         }
         // get moderator groups
         $qb = $em->createQueryBuilder();
-        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity', 'm')->leftJoin('m.group', 'g');
+        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity', 'm')->leftJoin('m.group', 'g');
         if (!empty($forum_id)) {
             $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
             // check parents also

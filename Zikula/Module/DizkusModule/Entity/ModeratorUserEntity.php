@@ -9,19 +9,19 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity\Moderator;
+namespace Zikula\Module\DizkusModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 
 /**
- * Moderator_User entity class
+ * ModeratorUser entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_mods")
  */
-class UserEntity extends \Zikula_EntityAccess
+class ModeratorUserEntity extends \Zikula_EntityAccess
 {
 
     /**
@@ -36,13 +36,13 @@ class UserEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity", inversedBy="moderatorUsers")
+     * @ORM\ManyToOne(targetEntity="ForumEntity", inversedBy="moderatorUsers")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;

@@ -14,17 +14,15 @@ namespace Zikula\Module\DizkusModule\Entity;
 use ServiceUtil;
 use ZLanguage;
 use Zikula\Module\DizkusModule\Connection\Pop3Connection;
-use Zikula\Module\DizkusModule\Entity\Moderator\UserEntity;
-use Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity;
-use Zikula\Module\DizkusModule\Entity\Moderator\UserEntity as ModeratorUserEntity;
-use Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity as ModeratorGroupEntity;
+use Zikula\Module\DizkusModule\Entity\ModeratorUserEntity;
+use Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Forums entity class
+ * Forum entity class
  *
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
@@ -101,19 +99,19 @@ class ForumEntity extends \Zikula_EntityAccess
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="ForumEntity", inversedBy="children")
      * @ORM\JoinColumn(name="parent", referencedColumnName="forum_id")
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity", mappedBy="parent", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="ForumEntity", mappedBy="parent", cascade={"remove"})
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
 
     /**
-     * @ORM\OneToOne(targetEntity="Zikula\Module\DizkusModule\Entity\PostEntity", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
@@ -133,32 +131,32 @@ class ForumEntity extends \Zikula_EntityAccess
     private $moduleref = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity", mappedBy="forum", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="ForumUserFavoriteEntity", mappedBy="forum", cascade={"remove"})
      */
     private $favorites;
 
     /**
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\TopicEntity", mappedBy="forum", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"})
      */
     private $topics;
 
     /**
-     * Zikula\Module\DizkusModule\Entity\Moderator\UserEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\Moderator\UserEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
+     * ModeratorUserEntity collection
+     * @ORM\OneToMany(targetEntity="ModeratorUserEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorUsers;
 
     /**
-     * Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\Moderator\GroupEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
+     * ModeratorGroupEntity collection
+     * @ORM\OneToMany(targetEntity="ModeratorGroupEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorGroups;
 
     /**
      * Subscriptions
      *
-     * Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity", mappedBy="forum", cascade={"remove"})
+     * ForumSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="ForumSubscriptionEntity", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
 
@@ -382,7 +380,7 @@ class ForumEntity extends \Zikula_EntityAccess
     /**
      * get Moderators
      *
-     * @return ArrayCollection Moderator\UserEntity
+     * @return ArrayCollection ModeratorUserEntity
      */
     public function getModeratorUsers()
     {

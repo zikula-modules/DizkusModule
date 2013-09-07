@@ -14,7 +14,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TopicSubscriptions entity class
+ * TopicSubscription entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topic_subscription")
@@ -34,7 +34,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * topic
      *
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\TopicEntity")
+     * @ORM\ManyToOne(targetEntity="TopicEntity", inversedBy="subscriptions")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
      */
     private $topic;
@@ -42,7 +42,7 @@ class TopicSubscriptionEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", inversedBy="user", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;

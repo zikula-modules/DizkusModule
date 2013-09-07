@@ -17,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Topics entity class
+ * Topic entity class
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
@@ -43,7 +43,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * poster
      *
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumUserEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="poster", referencedColumnName="user_id")
      */
     private $poster;
@@ -92,13 +92,13 @@ class TopicEntity extends \Zikula_EntityAccess
     private $sticky = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\DizkusModule\Entity\ForumEntity", inversedBy="topics")
+     * @ORM\ManyToOne(targetEntity="ForumEntity", inversedBy="topics")
      * @ORM\JoinColumn(name="forum_id", referencedColumnName="forum_id")
      * */
     private $forum;
 
     /**
-     * @ORM\OneToOne(targetEntity="Zikula\Module\DizkusModule\Entity\PostEntity", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
      */
     private $last_post;
@@ -113,7 +113,7 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * posts
      *
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\PostEntity", mappedBy="topic", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="PostEntity", mappedBy="topic", cascade={"remove"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
@@ -121,8 +121,8 @@ class TopicEntity extends \Zikula_EntityAccess
     /**
      * Subscriptions
      *
-     * Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection
-     * @ORM\OneToMany(targetEntity="Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity", mappedBy="topic", cascade={"remove"})
+     * TopicSubscriptionEntity collection
+     * @ORM\OneToMany(targetEntity="TopicSubscriptionEntity", mappedBy="topic", cascade={"remove"})
      */
     private $subscriptions;
 
