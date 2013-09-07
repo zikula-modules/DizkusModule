@@ -6,11 +6,11 @@
             <h3 class="footer_title">{gt text="Posts"}</h3>
             <ul id="ctheme-legenda">
                 <li>
-                    {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit"}
+                    {img modname=$module src='icon_redfolder.gif' __alt='New posts since your last visit'  __title="New posts since your last visit"}
                     {gt text="New posts since your last visit on %s" tag1=$last_visit_unix|dateformat:'datetimebrief'}
                 </li>
                 <li>
-                    {img modname='Dizkus' src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit"}
+                    {img modname=$module src='icon_folder.gif' __alt='No new posts since your last visit'  __title="New posts since your last visit"}
                     {gt text="No new posts since your last visit on %s" tag1=$last_visit_unix|dateformat:'datetimebrief'}
                 </li>
                 <li><strong>{gt text='The time is now'} {$smarty.now|dateformat:'datetimebrief'}</strong></li>
@@ -21,7 +21,7 @@
             <h3 class="footer_title">{gt text="Total"}</h3>
             <ul>
                 <li>
-                    <a title="{gt text="RSS"}" href="{modurl modname=$module type='user' func='feed'}">{img modname='Dizkus' src='icon_rss.gif' __alt='RSS' __title="RSS"}</a>
+                    <a title="{gt text="RSS"}" href="{modurl modname=$module type='user' func='feed'}">{img modname=$module src='icon_rss.gif' __alt='RSS' __title="RSS"}</a>
                     {gt text="Total posts: %s" tag1=$numposts}
                 </li>
             </ul>

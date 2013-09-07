@@ -3,8 +3,8 @@
 
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {if $modvars.ZikulaDizkusModule.ajax}
-    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewTopic.js'}
-    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
+    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
+    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
 {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
 {pageaddvar name='javascript' value='zikula'}
@@ -123,7 +123,7 @@
                     <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
                 </ul>
             {/if}
-            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">{img modname='Dizkus' src="icon_bottom.gif" __alt="Bottom"}</a></span>
+            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">{img modname=$module src="icon_bottom.gif" __alt="Bottom"}</a></span>
         </div>
 
     </div>

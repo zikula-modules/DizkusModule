@@ -16,7 +16,7 @@
     <div>
         <input type="hidden" name="mode" value="{$mode}" />
         <input type="hidden" name="topic" value="{$topic_id}" />
-        <input type="hidden" name="authid" value="{insert name='generateauthkey' module='Dizkus'}" />
+        <input type="hidden" name="authid" value="{insert name='generateauthkey' module=$module}" />
         <fieldset id="dzk_locktopic">
             <legend>{gt text="Confirmation prompt"}</legend>
             <div class="z-formbuttons z-buttons">

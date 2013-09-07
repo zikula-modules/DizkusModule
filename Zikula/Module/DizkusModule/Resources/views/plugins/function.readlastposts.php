@@ -25,6 +25,7 @@
  */
 function smarty_function_readlastposts($params, Zikula_View $view)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     $params = $params['params'];
     $maxposts = (isset($params['maxposts']) && is_numeric($params['maxposts']) && $params['maxposts'] > 0) ? $params['maxposts'] : 5;
     // hard limit maxposts to 100 to be safe
@@ -37,7 +38,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
         // get the forum and check permissions
         $managedForum = new Zikula\Module\DizkusModule\Manager\ForumManager($params['forum_id']);
-        if (!ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $managedForum->get())) {
+        if (!ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $managedForum->get())) {
             $view->assign('lastpostcount', 0);
             $view->assign('lastposts', array());
 
@@ -47,7 +48,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     } elseif (!isset($params['favorites'])) {
         // no special forum_id set, get all forums the user is allowed to read
         // and build the where part of the sql statement
-        $userforums = ModUtil::apiFunc('Dizkus', 'forum', 'getForumIdsByPermission');
+        $userforums = ModUtil::apiFunc($dizkusModuleName, 'forum', 'getForumIdsByPermission');
         if (!is_array($userforums) || count($userforums) == 0) {
             // error or user is not allowed to read any forum at all
             $view->assign('lastpostcount', 0);
@@ -63,13 +64,13 @@ function smarty_function_readlastposts($params, Zikula_View $view)
     // and the user is logged in.
     // (Anonymous doesn't have favorites)
     $managedForumUser = null;
-    $post_sort_order = ModUtil::getVar('Dizkus', 'post_sort_order');
+    $post_sort_order = ModUtil::getVar($dizkusModuleName, 'post_sort_order');
     if (isset($params['favorites']) && $params['favorites'] && empty($whereforum) && $loggedIn) {
         // get the favorites
         $managedForumUser = new Zikula\Module\DizkusModule\Manager\ForumUserManager($uid);
         $favoriteForums = $managedForumUser->get()->getFavoriteForums();
         foreach ($favoriteForums as $forum) {
-            if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $forum)) {
+            if (ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $forum)) {
                 $wherefavorites[] = $forum->getForum()->getForum_id();
             }
         }
@@ -121,7 +122,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
 
     $lastposts = array();
     if (!empty($topics)) {
-        $posts_per_page = ModUtil::getVar('Dizkus', 'posts_per_page');
+        $posts_per_page = ModUtil::getVar($dizkusModuleName, 'posts_per_page');
         /* @var $topic Zikula\Module\DizkusModule\Entity\TopicEntity */
         foreach ($topics as $topic) {
             $lastpost = array();
@@ -149,7 +150,7 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             // @todo see ticket #184 maybe this should be using UserApi::dzkVarPrepHTMLDisplay ????
             $lastpost['post_text'] = DataUtil::formatForDisplay(nl2br($topic->getLast_post()->getPost_text()));
             $lastpost['posted_time'] = DateUtil::formatDatetime($topic->getTopic_time(), 'datetimebrief');
-            $lastpost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
+            $lastpost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
                                 'start' => $start)));
             $lastpost['last_post_url_anchor'] = $lastpost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
 

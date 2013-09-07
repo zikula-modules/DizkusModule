@@ -1,5 +1,5 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Admin.Ranks.js'}
+{pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Admin.Ranks.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="edit" size="small"}

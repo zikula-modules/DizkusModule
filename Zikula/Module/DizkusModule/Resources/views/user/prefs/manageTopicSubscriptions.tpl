@@ -3,7 +3,7 @@
 {include file='user/header.tpl'}
 
 <h2>{$templatetitle}</h2>
-{modulelinks modname='Dizkus' type='prefs'}<br />
+{modulelinks modname=$module type='prefs'}<br />
 
 {if $subscriptions}
     {form id="dzk_topicsubscriptions"}

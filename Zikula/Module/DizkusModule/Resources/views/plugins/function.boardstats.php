@@ -26,10 +26,11 @@
  */
 function smarty_function_boardstats($params, Zikula_View $view)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     $type = (!empty($params['type'])) ? $params['type'] : 'all';
     $id = (!empty($params['id'])) ? $params['id'] : '0';
 
-    $count = ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('id' => $id,
+    $count = ModUtil::apiFunc($dizkusModuleName, 'user', 'countstats', array('id' => $id,
                 'type' => $type));
 
     if (!empty($params['assign'])) {

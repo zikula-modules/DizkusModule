@@ -10,6 +10,7 @@
  */
 function smarty_function_readtopforums($params, Zikula_View $view)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     $params = $params['params'];
     $forummax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
 
@@ -26,7 +27,7 @@ function smarty_function_readtopforums($params, Zikula_View $view)
     $topforums = array();
     if (empty($forums)) {
         foreach ($forums as $topforum) {
-            if (ModUtil::apiFunc('Dizkus', 'Permission', 'canRead', $topforum)) {
+            if (ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $topforum)) {
                 $topforum['name'] = DataUtil::formatForDisplay($topforum->getName());
                 $parent = $topforum->getParent();
                 $parentName = isset($parent) ? $parent->getName() : $view->__('Root');

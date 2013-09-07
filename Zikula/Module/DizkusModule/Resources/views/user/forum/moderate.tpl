@@ -35,19 +35,19 @@
                         <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                             <dt class='ctheme-topic-title'>
                             {if $topic.sticky eq 1}
-                                {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
+                                {img modname=$module src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' }
                                 {/if}
                                     {if $topic.status eq 1}
-                                        {img modname='Dizkus' src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
+                                        {img modname=$module src='icon_post_close.gif' __alt='This topic is locked. No more posts accepted'  __title='Topic locked' }
                                         {/if}
                                             {datecompare date1=$topic.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                                             {if $comp}
-                                                {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
+                                                {img modname=$module src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' }
                                                 {else}
-                                                    {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
+                                                    {img modname=$module src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' }
                                                     {/if}
                                                         {if $topic.hot_topic eq 1}
-                                                            {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
+                                                            {img modname=$module src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' }
                                                             {/if}
                                                                 {$topic.topic_id|viewtopiclink:$topic.title:$forum.name}
                                 <em class="z-sub">({$topic.viewCount} {gt text="Views"})</em>

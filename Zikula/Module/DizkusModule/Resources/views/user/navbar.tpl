@@ -30,7 +30,7 @@
                 </li>
             {/if}
 
-            {modapifunc modname='Dizkus' type='Favorites' func='getStatus' assign="favorites"}
+            {modapifunc modname=$module type='Favorites' func='getStatus' assign="favorites"}
             {if isset($favorites) and $favorites}
                 <li>&nbsp;<em>({gt text="Favorites"})</em></li>
                 {/if}

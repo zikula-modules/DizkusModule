@@ -1,7 +1,7 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/chosen_v0.14.0/chosen.jquery.min.js'}
+{pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/chosen_v0.14.0/chosen.jquery.min.js'}
 {pageaddvar name='stylesheet' value='modules/Dizkus/javascript/chosen_v0.14.0/chosen.css'}
-{pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Admin.ModifyForum.js'}
+{pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Admin.ModifyForum.js'}
 <style>
     /***************
     * Modify chosen css to compesate for z-form styling

@@ -24,9 +24,10 @@
  */
 function smarty_modifier_dzkVarPrepHTMLDisplay($text = null)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     if (!isset($text)) {
         return '';
     }
 
-    return ModUtil::apiFunc('Dizkus', 'user', 'dzkVarPrepHTMLDisplay', $text);
+    return ModUtil::apiFunc($dizkusModuleName, 'user', 'dzkVarPrepHTMLDisplay', $text);
 }

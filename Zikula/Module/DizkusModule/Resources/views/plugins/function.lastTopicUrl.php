@@ -16,12 +16,13 @@
  */
 function smarty_function_lastTopicUrl($params, Zikula_View $view)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     $topic = $params['topic'];
     $params = array(
         'topic' => $topic->getTopic_id(),
-        'start' => ModUtil::apiFunc('Dizkus', 'user', 'getTopicPage', array('replyCount' => $topic->getReplyCount())),
+        'start' => ModUtil::apiFunc($dizkusModuleName, 'user', 'getTopicPage', array('replyCount' => $topic->getReplyCount())),
     );
-    $url = new \Zikula\Core\ModUrl('Dizkus', 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, "pid" . $topic->getLast_post()->getPost_id());
+    $url = new \Zikula\Core\ModUrl($dizkusModuleName, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, "pid" . $topic->getLast_post()->getPost_id());
 
     return $url->getUrl();
 }

@@ -5,7 +5,7 @@
 </div>
 
 <div class="z-admincontainer">
-    <div class="z-adminpageicon">{img modname='Dizkus' src='admin.png'}</div>
+    <div class="z-adminpageicon">{img modname=$module src='admin.png'}</div>
     <h2>{gt text="Diskus settings for %s" tag1=$ActiveModule}</h2>
     <form class="z-form" action="{modurl modname=$ActiveModule type="admin" func="dizkushookconfigprocess"}" method="post" enctype="application/x-www-form-urlencoded">
         <div>

@@ -31,6 +31,7 @@
  */
 function smarty_modifier_viewtopiclink($topic_id = null, $subject = null, $forum_name = null, $class = '', $start = null, $last_post_id = null)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     if (!isset($topic_id)) {
         return '';
     }
@@ -42,7 +43,7 @@ function smarty_modifier_viewtopiclink($topic_id = null, $subject = null, $forum
         $args['start'] = (int) $start;
     }
 
-    $url = ModUtil::url('Dizkus', 'user', 'viewtopic', $args);
+    $url = ModUtil::url($dizkusModuleName, 'user', 'viewtopic', $args);
     if (isset($last_post_id)) {
         $url .= '#pid' . (int) $last_post_id;
     }

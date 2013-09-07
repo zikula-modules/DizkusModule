@@ -2,8 +2,8 @@
 {include file='user/header.tpl' parent=$forum}
 
 {if isset($modvars.ZikulaDizkusModule.ajax) && $modvars.ZikulaDizkusModule.ajax}
-    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.Tools.js'}
-    {pageaddvar name='javascript' value='modules/Dizkus/javascript/Zikula.Dizkus.User.ViewForum.js'}
+    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
+    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.User.ViewForum.js'}
     <input id="forum_id" type="hidden" value={$forum.forum_id}>
 {/if}
 
@@ -68,7 +68,7 @@
 
                     {if $coredata.logged_in}
                         <li>
-                            {modapifunc modname='Dizkus' type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
+                            {modapifunc modname=$module type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
                             {if !$isSubscribed}
                                 {modurl modname=$module type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
                                 {gt text="Subscribe to forum" assign='msg'}
@@ -80,7 +80,7 @@
                         </li>
                         {if $modvars.ZikulaDizkusModule.favorites_enabled eq "yes"}
                             <li>
-                                {modapifunc modname='Dizkus' type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
+                                {modapifunc modname=$module type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                                 {if $isFavorite}
                                     {modurl modname=$module type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
                                     {gt text="Remove forum from favourites" assign='msg'}
@@ -136,10 +136,10 @@
                                 <dl class="icon {if $topic.sticky eq 1}dzk_sticky{/if}">
                                     <dt class='ctheme-topic-title'>
                                     {if $topic.sticky eq 1}
-                                        {img modname='Dizkus' src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' class='tooltips'}
+                                        {img modname=$module src='icon_post_sticky.gif' __alt='Sticky topic'  __title='Topic is sticky (it will always stay at the top of the topics list)' class='tooltips'}
                                     {/if}
                                     {if $topic.status eq 1}
-                                        {img modname='Dizkus' src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' class='tooltips'}
+                                        {img modname=$module src='icon_post_close.gif' __alt='Locked topic'  __title='This topic is locked. No more posts accepted.' class='tooltips'}
                                     {/if}
                                     {if $topic.solved}
                                         {icon type="ok" size="extrasmall" __alt='Solved Topic' __title='This topic is solved.' class='tooltips'}
@@ -147,12 +147,12 @@
 
                                     {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                                     {if $comp}
-                                        {img modname='Dizkus' src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' class='tooltips'}
+                                        {img modname=$module src='icon_redfolder.gif' __alt='New posts since your last visit'  __title='New posts since your last visit' class='tooltips'}
                                     {else}
-                                        {img modname='Dizkus' src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
+                                        {img modname=$module src='icon_folder.gif' __alt='Normal topic'  __title='Normal topic' class='tooltips'}
                                     {/if}
                                     {if $topic.replyCount >= $modvars.ZikulaDizkusModule.hot_threshold}
-                                        {img modname='Dizkus' src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
+                                        {img modname=$module src='icon_hottopic.gif' __alt='Hot topic'  __title='Hot topic' class='tooltips'}
                                     {/if}
                                     {$topic.topic_id|viewtopiclink:$topic.title}
                                     <span>{gt text="Poster: %s" tag1=$topic.poster.user.uid|profilelinkbyuid}</span>

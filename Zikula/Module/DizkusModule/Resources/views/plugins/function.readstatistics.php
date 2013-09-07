@@ -21,10 +21,11 @@
  */
 function smarty_function_readstatistics($params, Zikula_View $view)
 {
-    $view->assign('total_topics', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'alltopics')));
-    $view->assign('total_posts', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'allposts')));
-    $view->assign('total_forums', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'forum')));
-    $view->assign('last_user', ModUtil::apiFunc('Dizkus', 'user', 'countstats', array('type' => 'lastuser')));
+    $dizkusModuleName = "ZikulaDizkusModule";
+    $view->assign('total_topics', ModUtil::apiFunc($dizkusModuleName, 'user', 'countstats', array('type' => 'alltopics')));
+    $view->assign('total_posts', ModUtil::apiFunc($dizkusModuleName, 'user', 'countstats', array('type' => 'allposts')));
+    $view->assign('total_forums', ModUtil::apiFunc($dizkusModuleName, 'user', 'countstats', array('type' => 'forum')));
+    $view->assign('last_user', ModUtil::apiFunc($dizkusModuleName, 'user', 'countstats', array('type' => 'lastuser')));
 
     return;
 }

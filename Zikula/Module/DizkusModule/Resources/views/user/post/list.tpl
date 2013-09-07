@@ -20,14 +20,14 @@
                     <dl class="icon">
                         <dt class='ctheme-topic-title'>
                         {if $topic.sticky eq 1}
-                            {img modname='Dizkus' src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
+                            {img modname=$module src="icon_post_sticky.gif" __alt="Sticky topic"  __title="Topic is sticky (it will always stay at the top of the topics list)"}
                         {/if}
 
                         {if $topic.status eq 1}
-                            {img modname='Dizkus' src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
+                            {img modname=$module src="icon_post_close.gif" __alt="Topic locked"  __title="This topic is locked. No more posts accepted."}
                         {/if}
                         {if $topic.replyCount >= $modvars.ZikulaDizkusModule.hot_threshold}
-                            {img modname='Dizkus' src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
+                            {img modname=$module src="icon_hottopic.gif" __alt="Hot topic"  __title="Hot topic"}
                         {/if}
                         <a href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id}" title="{$topic.title|truncate:70}">{$topic.title|truncate:70}</a>
                         <span>{gt text="Forum"}: <a href="{modurl modname=$module type='user' func='viewforum' forum=$topic.forum.forum_id}" title="{$topic.forum.name|truncate:70}">{$topic.forum.name|truncate:70}</a></span>

@@ -6,7 +6,7 @@
 
     <h2>{gt text="Personal Settings"}</h2>
 
-    {modulelinks modname='Dizkus' type='prefs'}<br />
+    {modulelinks modname=$module type='prefs'}<br />
 
     {form cssClass="z-form"}
     {formvalidationsummary}

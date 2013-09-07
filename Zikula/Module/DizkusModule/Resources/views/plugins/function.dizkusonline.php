@@ -36,6 +36,7 @@
  */
 function smarty_function_dizkusonline($params, Zikula_View $view)
 {
+    $dizkusModuleName = "ZikulaDizkusModule";
     $params['checkgroups'] = (isset($params['checkgroups'])) ? true : false;
 
     // set some defaults
@@ -43,7 +44,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
     $numusers = 0;
     $unames = array();
 
-    $moderators = ModUtil::apiFunc('Dizkus', 'moderators', 'get', array());
+    $moderators = ModUtil::apiFunc($dizkusModuleName, 'moderators', 'get', array());
 
     /** @var $em Doctrine\ORM\EntityManager */
     $em = $view->getContainer()->get('doctrine.entitymanager');

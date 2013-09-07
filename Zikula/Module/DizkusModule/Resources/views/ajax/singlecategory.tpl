@@ -9,13 +9,13 @@
                 {/if}
             </div>
             <div class="z-buttons" style="float: right; width: 30%; text-align: right; padding-right: 1em;">
-                <button id="hidecategory_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Hide category"}">{img modname='Dizkus' src="icon_hide.gif"}</button>
-                <button id="showcategory_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Show category"}">{img modname='Dizkus' src="icon_show.gif"}</button>
-                <button id="hideforumlist_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Hide forums"}">{img modname='Dizkus' src="icon_hideforums.gif"}</button>
-                <button id="showforumlist_{$category.cat_id}" class="z-bt-small" title="{gt text="Show forums"}">{img modname='Dizkus' src="icon_showforums.gif"}</button>
-                <button id="addforum_{$category.cat_id}" class="z-bt-small" title="{gt text="Create forum"}">{img modname='Dizkus' src="icon_addforum.gif" __alt="Create forum" }</button>
+                <button id="hidecategory_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Hide category"}">{img modname=$module src="icon_hide.gif"}</button>
+                <button id="showcategory_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Show category"}">{img modname=$module src="icon_show.gif"}</button>
+                <button id="hideforumlist_{$category.cat_id}" class="z-bt-small" style="display: none;" title="{gt text="Hide forums"}">{img modname=$module src="icon_hideforums.gif"}</button>
+                <button id="showforumlist_{$category.cat_id}" class="z-bt-small" title="{gt text="Show forums"}">{img modname=$module src="icon_showforums.gif"}</button>
+                <button id="addforum_{$category.cat_id}" class="z-bt-small" title="{gt text="Create forum"}">{img modname=$module src="icon_addforum.gif" __alt="Create forum" }</button>
                     {if $newcategory == true}
-                <button id="canceladdcategory_{$category.cat_id}" class="z-bt-small" title="{gt text="Cancel"}">{img modname='Dizkus' src="icon_cancel.gif" __alt="Cancel" }</button>
+                <button id="canceladdcategory_{$category.cat_id}" class="z-bt-small" title="{gt text="Cancel"}">{img modname=$module src="icon_cancel.gif" __alt="Cancel" }</button>
                         {/if}
                 <img id="progresscategoryimage_{$category.cat_id}" style="visibility: hidden; margin-left: 5px;" src="images/ajax/indicator.white.gif" width="16" height="16" alt="{gt text="Working. Please wait..."}" />
             </div>
