@@ -123,8 +123,8 @@ class AdminController extends \Zikula_AbstractController
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return LogUtil::registerPermissionError();
         }
-        $submit = $this->request->getPost()->filter('submit', 2);
-        $ranktype = $this->request->getGet()->filter('ranktype', RankEntity::TYPE_POSTCOUNT, FILTER_SANITIZE_NUMBER_INT);
+        $submit = $this->request->request->get('submit', 2);
+        $ranktype = (int) $this->request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
             $this->view->assign('ranks', $ranks);
