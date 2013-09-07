@@ -104,22 +104,20 @@ class UserController extends \Zikula_AbstractController
      * View forum by id
      *
      * opens a forum and shows the last postings
-     * $args['forum'] int the forum id
-     * $args['start'] int the posting to start with if on page 1+
-     *
-     * @param array $args Arguments array.
+     * @param integer forum (via GET) the forum id
+     * @param uinteger start (via GET) the posting to start with if on page 1+
      *
      * @return string
      */
-    public function viewforumAction($args = array())
+    public function viewforumAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             return $this->view->fetch('dizkus_disabled.tpl');
         }
         // get the input
-        $forumId = (int)$this->request->query->get('forum', isset($args['forum']) ? $args['forum'] : null);
+        $forumId = (int)$this->request->query->get('forum', null);
         $this->throwNotFoundUnless($forumId > 0, $this->__('That forum doesn\'t exist!'));
-        $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
+        $start = (int)$this->request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $managedForum = new ForumManager($forumId);
         // Permission check
@@ -134,7 +132,9 @@ class UserController extends \Zikula_AbstractController
     /**
      * viewtopic
      *
-     * @param array $args Arguments array.
+     * @param integer topic (via GET) the topic ID
+     * @param integer post (via GET) a post ID
+     * @param integer start (via GET) pager value
      *
      * @return string
      */
@@ -144,9 +144,9 @@ class UserController extends \Zikula_AbstractController
             return $this->view->fetch('dizkus_disabled.tpl');
         }
         // get the input
-        $topicId = (int)$this->request->query->get('topic', isset($args['topic']) ? $args['topic'] : null);
-        $post_id = (int)$this->request->query->get('post', isset($args['post']) ? $args['post'] : null);
-        $start = (int)$this->request->query->get('start', isset($args['start']) ? $args['start'] : 1);
+        $topicId = (int)$this->request->query->get('topic', null);
+        $post_id = (int)$this->request->query->get('post', null);
+        $start = (int)$this->request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
             $managedPost = new PostManager($post_id);
@@ -181,9 +181,18 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * reply
+     * reply to a post
      *
-     * @param array $args Arguments array.
+     * @param integer forum (via POST) the forum ID
+     * @param integer topic (via POST) the topic ID
+     * @param integer post (via POST) the post ID
+     * @param string returnurl (via POST) encoded url string
+     * @param string message (via POST) the content of the post
+     * @param integer attach_signature (via POST)
+     * @param integer subscribe_topic (via POST)
+     * @param string preview (via POST) submit button converted to boolean
+     * @param string submit (via POST) submit button converted to boolean
+     * @param string cancel (via POST) submit button converted to boolean
      *
      * @return string
      */
@@ -512,11 +521,14 @@ class UserController extends \Zikula_AbstractController
     /**
      * View latest topics
      *
-     * @param array $args Arguments array.
+     * @param string selorder (via GET)
+     * @param integer nohours (via GET)
+     * @param integer unanswered (via GET)
+     * @param integer last_visit_unix (via get)
      *
      * @return string
      */
-    public function viewlatestAction($args = array())
+    public function viewlatestAction()
     {
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
@@ -524,11 +536,12 @@ class UserController extends \Zikula_AbstractController
             return System::redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         // get the input
-        $params['selorder'] = $this->request->query->get('selorder', $this->request->request->get('selorder', isset($args['selorder']) ? $args['selorder'] : 1));
-        $params['nohours'] = (int)$this->request->request->get('nohours', isset($args['nohours']) ? $args['nohours'] : null);
-        $params['unanswered'] = (int)$this->request->query->get('unanswered', isset($args['unanswered']) ? $args['unanswered'] : 0);
-        $params['amount'] = (int)$this->request->query->get('amount', isset($args['amount']) ? $args['amount'] : null);
-        $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', isset($args['last_visit_unix']) ? $args['last_visit_unix'] : time());
+        $params = array();
+        $params['selorder'] = $this->request->query->get('selorder', 1);
+        $params['nohours'] = (int)$this->request->request->get('nohours', null);
+        $params['unanswered'] = (int)$this->request->query->get('unanswered', 0);
+        $params['amount'] = (int)$this->request->query->get('amount', null);
+        $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', time());
         $this->view->assign($params);
         list($posts, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'getLatest', $params);
         $this->view->assign('posts', $posts);
@@ -543,11 +556,12 @@ class UserController extends \Zikula_AbstractController
     /**
      * Display my posts or topics
      *
-     * @param array $args Arguments array.
+     * @param string action (via GET)
+     * @param number uid (via GET)
      *
      * @return string
      */
-    public function mineAction($args)
+    public function mineAction()
     {
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
@@ -555,8 +569,8 @@ class UserController extends \Zikula_AbstractController
             return System::redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         $params = array();
-        $params['action'] = $this->request->query->get('action', isset($args['action']) ? $args['action'] : 'posts');
-        $params['uid'] = $this->request->query->get('user', isset($args['user']) ? $args['user'] : null);
+        $params['action'] = $this->request->query->get('action', 'posts');
+        $params['uid'] = $this->request->query->get('user', null);
         list($posts, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
         $this->view->assign('posts', $posts);
         $this->view->assign('text', $text);
