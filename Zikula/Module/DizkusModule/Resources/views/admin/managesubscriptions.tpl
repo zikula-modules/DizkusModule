@@ -1,4 +1,4 @@
-{pageaddvar name='javascript' value='zikula'}
+{*pageaddvar name='javascript' value='zikula'}{* @todo I think this is unneeded *}
 {pageaddvar name='javascript' value='jQuery'}
 {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js'}
 {pageaddvar name="javascript" value="modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Admin.ManageSubscriptions.js"}

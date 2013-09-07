@@ -19,7 +19,7 @@
         {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
     {/if}
     {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
-    {pageaddvar name='javascript' value='zikula'}
+    {*pageaddvar name='javascript' value='zikula'}{* @todo may need this for javascript gettext *}
 
     {userloggedin assign='userloggedin'}
 

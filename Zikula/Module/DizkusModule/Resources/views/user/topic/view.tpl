@@ -7,7 +7,7 @@
     {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
 {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
-{pageaddvar name='javascript' value='zikula'}
+{*pageaddvar name='javascript' value='zikula'}{* @todo may need this for javascript gettext *}
 
 <h2>
     <span id="edittopicsubjectbutton" title="">
@@ -25,18 +25,18 @@
     {include file='ajax/edittopicsubject.tpl'}
     <script type="text/javascript">
         jQuery(document).ready(function() {
-                            // toggle visibility of edit icon for topic title
-                            jQuery('#edittopicsubjectbutton').hover(
-                                    function() {jQuery('#edittopicicon').removeClass('z-hide');},
-                                    function() {jQuery('#edittopicicon').addClass('z-hide');}
-                            );
-                            jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', '{{gt text="Click to edit"}}');
-                            jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')}
-                            );
-                            jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')}
-                            );
-                            jQuery("#topicsubjectedit_save").click(changeTopicTitle);
-                        });
+            // toggle visibility of edit icon for topic title
+            jQuery('#edittopicsubjectbutton').hover(
+                    function() {jQuery('#edittopicicon').removeClass('z-hide');},
+                    function() {jQuery('#edittopicicon').addClass('z-hide');}
+            );
+            jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', '{{gt text="Click to edit"}}');
+            jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')}
+            );
+            jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')}
+            );
+            jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+        });
     </script>
 {/if}
 
