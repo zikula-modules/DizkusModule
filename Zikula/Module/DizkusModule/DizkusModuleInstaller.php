@@ -227,13 +227,14 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     public static function getDefaultVars()
     {
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
+        $modulePath = ModUtil::getModuleRelativePath(self::MODULENAME);
 
         return array(
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
             'email_from' => System::getVar('adminmail'),
-            'url_ranks_images' => 'modules/Dizkus/images/ranks',
+            'url_ranks_images' => "$modulePath/Resources/public/images/ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => 'no',
             'extendedsearch' => 'no',
@@ -321,12 +322,13 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->delVar('hideusers');
         $this->delVar('newtopicconfirmation');
         $this->delVar('slimforum');
+        $defaultModuleVars = self::getDefaultVars();
         // remove pn from images/rank folder
-        $this->setVar('url_ranks_images', 'modules/Dizkus/images/ranks');
-        $this->setVar('fulltextindex', 'no');
+        $this->setVar('url_ranks_images', $defaultModuleVars['url_ranks_images']);
+        $this->setVar('fulltextindex', $defaultModuleVars['fulltextindex']);
         // disable until technology catches up with InnoDB
-        $this->setVar('solved_enabled', true);
-        $this->setVar('ajax', true);
+        $this->setVar('solved_enabled', $defaultModuleVars['solved_enabled']);
+        $this->setVar('ajax', $defaultModuleVars['ajax']);
         // register new hooks and event handlers
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
