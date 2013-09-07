@@ -18,6 +18,7 @@ Before you pull:
 
 Your directory structure should look like so:
 
+```
   /modules
     /zikula-dizkus
       /Zikula
@@ -26,3 +27,4 @@ Your directory structure should look like so:
             /Api
             /Block
             etc...
+```
