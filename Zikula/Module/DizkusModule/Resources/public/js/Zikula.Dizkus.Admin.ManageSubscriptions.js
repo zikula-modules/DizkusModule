@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
         paramName: 'fragment',
         onSelect: function(suggestion) {
             console.log(suggestion);
-            window.location.href = Zikula.Config.baseURL + "index.php?module=Dizkus&type=admin&func=managesubscriptions&uid=" + suggestion.data;
+            window.location.href = Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=admin&func=managesubscriptions&uid=" + suggestion.data;
         }
     });
     jQuery('#alltopic').click(function() {
