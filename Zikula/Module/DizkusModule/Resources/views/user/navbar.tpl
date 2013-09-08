@@ -3,7 +3,7 @@
 
         {* bread crumbs menu *}
         <ul class="linklist navlinks z-clearfix">
-            <li class="icon-home">
+            <li>
                 {if ($smarty.get.func neq "index")}
                     <a class="dzk_arrow homelink tooltips" title="{gt text='Go to forums index page'}" href="{modurl modname=$module type='user' func='index'}">{gt text="Forums index page"}</a>
                 {else}
