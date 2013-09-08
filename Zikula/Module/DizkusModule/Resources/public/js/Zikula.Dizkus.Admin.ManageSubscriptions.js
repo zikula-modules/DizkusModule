@@ -6,7 +6,7 @@
 
 jQuery(document).ready(function() {
     jQuery('#username').autocomplete({
-        serviceUrl: Zikula.Config.baseURL + "ajax.php?module=ZikulaDizkusModule&type=ajax&func=getUsers",
+        serviceUrl: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=getUsers",
         paramName: 'fragment',
         onSelect: function(suggestion) {
             console.log(suggestion);

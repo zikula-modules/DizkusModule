@@ -51,7 +51,7 @@ function changeTopicStatus(e) {
             topic: jQuery('#topic_id').val(),
             action: action
         },
-        url: Zikula.Config.baseURL + "ajax.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
+        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'lock') {
@@ -99,7 +99,7 @@ function changeTopicTitle(e) {
             userAllowedToEdit: jQuery('#userAllowedToEdit').val(),
             action: 'setTitle'
         },
-        url: Zikula.Config.baseURL + "ajax.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
+        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
                 jQuery('#topicsubjectedit_editor').addClass('z-hide');
@@ -281,7 +281,7 @@ function quickEdit(id) {
         postEditingChanged = false;
         postId = id;
 
-        jQuery.ajax('ajax.php?module=ZikulaDizkusModule&type=ajax&func=editpost', {
+        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=editpost', {
             data: {post: postId}
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator(postId);
@@ -357,7 +357,7 @@ function quickEditSave() {
     }, errorHandler = function(request, message, detail) {
         DizkusShowAjaxError(request.responseText);
     };
-    jQuery.ajax('ajax.php?module=ZikulaDizkusModule&type=ajax&func=updatepost', {
+    jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=updatepost', {
         data: pars
     }).done(successHandler).fail(errorHandler);
 }
@@ -443,7 +443,7 @@ function createQuickReply() {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
-        jQuery.ajax('ajax.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
+        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
             data: pars
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();
@@ -486,7 +486,7 @@ function previewQuickReply() {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
-        jQuery.ajax('ajax.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
+        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
             data: pars
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();

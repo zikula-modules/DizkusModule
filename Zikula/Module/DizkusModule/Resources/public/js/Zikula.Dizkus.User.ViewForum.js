@@ -33,7 +33,7 @@ function modifyForum(e) {
     jQuery.ajax({
         type: "POST",
         data: pars,
-        url: Zikula.Config.baseURL + "ajax.php?module=ZikulaDizkusModule&type=ajax&func=modifyForum",
+        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=modifyForum",
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {
