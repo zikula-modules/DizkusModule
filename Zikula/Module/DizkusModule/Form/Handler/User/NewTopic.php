@@ -17,10 +17,10 @@ use ModUtil;
 use LogUtil;
 use ZLanguage;
 use Zikula_Form_View;
-use Zikula_ModUrl;
-use Zikula_ValidationHook;
-use Zikula_ProcessHook;
-use Zikula_Hook_ValidationProviders;
+use Zikula\Core\ModUrl;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
 use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 
@@ -92,14 +92,14 @@ class NewTopic extends \Zikula_Form_AbstractHandler
             return false;
         }
         // check hooked modules for validation for POST
-        $postHook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
-        $postHookValidators = $this->notifyHooks($postHook)->getValidators();
+        $postHook = new ValidationHook(new ValidationProviders());
+        $postHookValidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
         // check hooked modules for validation for TOPIC
-        $topicHook = new Zikula_ValidationHook('dizkus.ui_hooks.topic.validate_edit', new Zikula_Hook_ValidationProviders());
-        $topicHookValidators = $this->notifyHooks($topicHook)->getValidators();
+        $topicHook = new ValidationHook(new ValidationProviders());
+        $topicHookValidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
@@ -136,10 +136,10 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         // store new topic
         $newManagedTopic->create();
-        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
         // notify hooks for both POST and TOPIC
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $newManagedTopic->getFirstPost()->getPost_id(), $url));
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_edit', $newManagedTopic->getId(), $url));
+        $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
+        $this->dispatchHooks('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));
 
         // notify topic & forum subscribers
         ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));

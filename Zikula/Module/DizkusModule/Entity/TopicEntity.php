@@ -149,7 +149,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * url object
-     * @var \Zikula_ModUrl
+     * @var \ModUrl
      *
      * @ORM\Column(type="object", nullable=true)
      */
@@ -383,7 +383,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->hookedUrlObject;
     }
 
-    public function setHookedUrlObject(\Zikula_ModUrl $hookedUrlObject)
+    public function setHookedUrlObject(\ModUrl $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
     }

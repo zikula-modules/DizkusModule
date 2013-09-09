@@ -14,6 +14,9 @@
 
 namespace Zikula\Module\DizkusModule;
 
+use Zikula\Core\ModUrl;
+use Zikula\Core\Hook\ProcessHook;
+
 abstract class AbstractHookedTopicMeta
 {
 
@@ -41,7 +44,7 @@ abstract class AbstractHookedTopicMeta
     /**
      * URL for view of hooked object
      *
-     * @var Zikula_ModUrl
+     * @var ModUrl
      */
     private $urlObject;
 
@@ -62,9 +65,9 @@ abstract class AbstractHookedTopicMeta
     /**
      * Constructor
      *
-     * @param Zikula_ProcessHook $hook
+     * @param ProcessHook $hook
      */
-    public function __construct(Zikula_ProcessHook $hook)
+    public function __construct(ProcessHook $hook)
     {
         $this->setObjectId($hook->getId());
         $this->setAreaId($hook->getAreaId());
@@ -105,7 +108,7 @@ abstract class AbstractHookedTopicMeta
         return $this->module;
     }
 
-    private function setUrlObject(Zikula_ModUrl $objectUrlObject)
+    private function setUrlObject(ModUrl $objectUrlObject)
     {
         $this->urlObject = $objectUrlObject;
     }

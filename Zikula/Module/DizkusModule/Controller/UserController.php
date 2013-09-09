@@ -19,10 +19,10 @@ use FormUtil;
 use DataUtil;
 use System;
 use ZLanguage;
-use Zikula_Hook_ValidationProviders;
-use Zikula_ValidationHook;
-use Zikula_ModUrl;
-use Zikula_ProcessHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\ModUrl;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
@@ -42,7 +42,6 @@ use Zikula\Module\DizkusModule\Form\Handler\User\SplitTopic;
 use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
 use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
 use Zikula\Module\DizkusModule\Form\Handler\User\Report;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -236,8 +235,8 @@ class UserController extends \Zikula_AbstractController
         }
         // check hooked modules for validation
         if ($submit) {
-            $hook = new Zikula_ValidationHook('dizkus.ui_hooks.post.validate_edit', new Zikula_Hook_ValidationProviders());
-            $hookvalidators = $this->notifyHooks($hook)->getValidators();
+            $hook = new ValidationHook(new ValidationProviders());
+            $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
             if ($hookvalidators->hasErrors()) {
                 LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
                 $isPreview = true;
@@ -260,8 +259,8 @@ class UserController extends \Zikula_AbstractController
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start);
-            $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
-            $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
             // notify topic & forum subscribers
             $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             // if viewed in hooked state, redirect back to hook subscriber
@@ -274,7 +273,7 @@ class UserController extends \Zikula_AbstractController
                 $func = $urlParams['func'];
                 unset($urlParams['func']);
                 $params = array_merge($params, $urlParams);
-                $url = new Zikula_ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+                $url = new ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             }
 
             return $this->redirect($url->getUrl());

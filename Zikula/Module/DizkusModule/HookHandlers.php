@@ -27,12 +27,12 @@ use LogUtil;
 use System;
 use ZLanguage;
 use Zikula_View;
-use Zikula_DisplayHook;
-use Zikula_ProcessHook;
-use Zikula_Response_DisplayHook;
-use Zikula_ValidationHook;
 use Zikula_Exception_Forbidden;
 use Zikula_Event;
+use Zikula\Core\Hook\DisplayHook;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\Hook\DisplayHookResponse;
+use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\Module\DizkusModule\DizkusModuleVersion;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -43,7 +43,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
 
-class HookHandlers extends \Zikula_Hook_AbstractHandler
+class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
 {
 
     /**
@@ -73,24 +73,24 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         $this->view = Zikula_View::getInstance(self::MODULENAME, false);
         // set caching off
-        $this->_em = ServiceUtil::getService('doctrine.entitymanager');
+        $this->_em = ServiceUtil::get('doctrine.entitymanager');
         $this->domain = ZLanguage::getModuleDomain(self::MODULENAME);
     }
 
     /**
      * Display hook for view.
      *
-     * @param Zikula_DisplayHook $hook The hook.
+     * @param DisplayHook $hook The hook.
      *
      * @return string
      */
-    public function uiView(Zikula_DisplayHook $hook)
+    public function uiView(DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
         if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_COMMENT)) {
             return;
         }
-        $request = ServiceUtil::getService('request');
+        $request = ServiceUtil::get('request');
         $start = (int)$request->query->get('start', 1);
         $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
@@ -122,17 +122,17 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
         PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
-        $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
     /**
      * Display hook for edit.
      *
-     * @param Zikula_DisplayHook $hook The hook.
+     * @param DisplayHook $hook The hook.
      *
      * @return string
      */
-    public function uiEdit(Zikula_DisplayHook $hook)
+    public function uiEdit(DisplayHook $hook)
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
         $forumId = $hookconfig[$hook->getAreaId()]['forum'];
@@ -153,17 +153,17 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forumId);
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
-        $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
     }
 
     /**
      * Display hook for delete.
      *
-     * @param Zikula_DisplayHook $hook The hook.
+     * @param DisplayHook $hook The hook.
      *
      * @return string
      */
-    public function uiDelete(Zikula_DisplayHook $hook)
+    public function uiDelete(DisplayHook $hook)
     {
         $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
@@ -172,18 +172,18 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new Zikula_Response_DisplayHook(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
+            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
         }
     }
 
     /**
      * Validate hook for edit.
      *
-     * @param Zikula_ValidationHook $hook The hook.
+     * @param ValidationHook $hook The hook.
      *
      * @return void (unused)
      */
-    public function validateEdit(Zikula_ValidationHook $hook)
+    public function validateEdit(ValidationHook $hook)
     {
         return;
     }
@@ -191,11 +191,11 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     /**
      * Validate hook for delete.
      *
-     * @param Zikula_ValidationHook $hook The hook.
+     * @param ValidationHook $hook The hook.
      *
      * @return void (unused)
      */
-    public function validateDelete(Zikula_ValidationHook $hook)
+    public function validateDelete(ValidationHook $hook)
     {
         return;
     }
@@ -203,11 +203,11 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     /**
      * Process hook for edit.
      *
-     * @param Zikula_ProcessHook $hook The hook.
+     * @param ProcessHook $hook The hook.
      *
      * @return boolean
      */
-    public function processEdit(Zikula_ProcessHook $hook)
+    public function processEdit(ProcessHook $hook)
     {
         $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
         // create new topic in selected forum
@@ -244,11 +244,11 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     /**
      * Process hook for delete.
      *
-     * @param Zikula_ProcessHook $hook The hook.
+     * @param ProcessHook $hook The hook.
      *
      * @return boolean
      */
-    public function processDelete(Zikula_ProcessHook $hook)
+    public function processDelete(ProcessHook $hook)
     {
         $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
         // lock or remove
@@ -321,7 +321,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
             return;
         }
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
-        $request = ServiceUtil::getService('request');
+        $request = ServiceUtil::get('request');
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
@@ -344,7 +344,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
         $z_event->setData(true);
         $z_event->stop();
 
-        return System::redirect(ModUtil::url($moduleName, 'admin', 'main'));
+        return System::redirect(ModUtil::url($moduleName, 'admin', 'main')); // use Zikula_Exception_Redirect ?
     }
 
     /**
@@ -359,7 +359,7 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     {
         $module = $z_event['name'];
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
-        $_em = ServiceUtil::getService('doctrine.entitymanager');
+        $_em = ServiceUtil::get('doctrine.entitymanager');
         $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
         // lock or remove
         $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
@@ -408,10 +408,10 @@ class HookHandlers extends \Zikula_Hook_AbstractHandler
     /**
      * Find Meta Class and instantiate
      *
-     * @param  Zikula_ProcessHook $hook
+     * @param  ProcessHook $hook
      * @return instantiated       object of found class
      */
-    private function getClassInstance(Zikula_ProcessHook $hook)
+    private function getClassInstance(ProcessHook $hook)
     {
         if (empty($hook)) {
             return false;

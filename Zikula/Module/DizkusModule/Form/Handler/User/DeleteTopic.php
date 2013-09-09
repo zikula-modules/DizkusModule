@@ -11,16 +11,16 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
 use LogUtil;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 use Zikula_Form_View;
 use Zikula_Exception_Forbidden;
-use Zikula_ValidationHook;
-use Zikula_ProcessHook;
-use Zikula_Hook_ValidationProviders;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Zikula\Module\DizkusModule\Manager\PostManager;
+use Zikula\Module\DizkusModule\Manager\TopicManager;
 
 /**
  * This class provides a handler to delete a topic.
@@ -103,14 +103,14 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
-        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.topic.validate_delete', new Zikula_Hook_ValidationProviders());
-        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 
         $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.topic.process_delete', $this->topic_id));
+        $this->dispatchHooks('dizkus.ui_hooks.topic.process_delete', new ProcessHook($this->topic_id));
 
         $data = $view->getValues();
 

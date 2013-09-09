@@ -18,7 +18,7 @@ use DataUtil;
 use Zikula_Form_View;
 use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula_ModUrl;
+use Zikula\Core\ModUrl;
 use ZLanguage;
 /**
  * This class provides a handler to Assign ranks
@@ -114,7 +114,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $setrank = $this->request->request->get('setrank');
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
         unset($data['setrank']);
-        $url = new Zikula_ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
+        $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
 
         return $view->redirect($url->getUrl());
     }

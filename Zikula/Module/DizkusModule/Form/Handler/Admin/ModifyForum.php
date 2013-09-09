@@ -21,11 +21,11 @@ use Zikula_Form_View;
 use Zikula_Exception_Forbidden;
 use System;
 use Zikula_View;
-use Zikula_ModUrl;
+use Zikula\Core\ModUrl;
 use ZLanguage;
-use Zikula_ValidationHook;
-use Zikula_Hook_ValidationProviders;
-use Zikula_ProcessHook;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
 
 /**
  * This class provides a handler to edit forums.
@@ -152,8 +152,8 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
             return false;
         }
         // check hooked modules for validation
-        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_edit', new Zikula_Hook_ValidationProviders());
-        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
@@ -198,8 +198,8 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         $this->_forum->store($data);
 
         // notify hooks
-        $hookUrl = new Zikula_ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forum->getId()));
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_edit', $this->_forum->getId(), $hookUrl));
+        $hookUrl = new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forum->getId()));
+        $this->dispatchHooks('dizkus.ui_hooks.forum.process_edit', new ProcessHook($this->_forum->getId(), $hookUrl));
 
         if ($this->_action == 'e') {
             LogUtil::registerStatus($this->__('Forum successfully updated.'));

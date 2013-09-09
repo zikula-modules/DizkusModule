@@ -16,11 +16,12 @@ use ModUtil;
 use ZLanguage;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\Core\ModUrl;
 
 class Dizkus extends \Tag_AbstractTaggedObjectMeta
 {
 
-    public function __construct($objectId, $areaId, $module, $urlString = null, Zikula_ModUrl $urlObject = null)
+    public function __construct($objectId, $areaId, $module, $urlString = null, ModUrl $urlObject = null)
     {
         parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
         $this->setObjectTitle('');

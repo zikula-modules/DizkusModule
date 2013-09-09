@@ -18,9 +18,9 @@ use SecurityUtil;
 use Zikula_Form_View;
 use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula_ValidationHook;
-use Zikula_ProcessHook;
-use Zikula_Hook_ValidationProviders;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
 
 /**
  * This class provides a handler to edit forums.
@@ -106,8 +106,8 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
             return false;
         }
         // check hooked modules for validation
-        $hook = new Zikula_ValidationHook('dizkus.ui_hooks.forum.validate_delete', new Zikula_Hook_ValidationProviders());
-        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.forum.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
             return LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
         }
@@ -147,7 +147,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         $this->entityManager->remove($this->forum);
         $this->entityManager->flush();
 
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.forum.process_delete', $this->forum->getForum_id()));
+        $this->dispatchHooks('dizkus.ui_hooks.forum.process_delete', new ProcessHook($this->forum->getForum_id()));
 
         if (isset($managedDestinationForum)) {
             // sync last post in destination

@@ -26,8 +26,8 @@ use Zikula_Response_Ajax;
 use Zikula_Response_Ajax_Unavailable;
 use Zikula_Response_Ajax_BadData;
 use Zikula_Response_Ajax_Plain;
-use Zikula_ModUrl;
-use Zikula_ProcessHook;
+use Zikula\Core\ModUrl;
+use Zikula\Core\Hook\ProcessHook;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
@@ -125,8 +125,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             }
             $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $managedPost->get()->getTopic()->getReplyCount()));
             $params = array('topic' => $topic_id, 'start' => $start);
-            $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
-            $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedPost->getId(), $url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
             // notify topic & forum subscribers
             ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             $post = $managedPost->get()->toArray();
@@ -237,16 +237,16 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                     $response = array('action' => 'deleted');
                 }
                 $managedOriginalPost->delete();
-                $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $managedOriginalPost->getId()));
+                $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($managedOriginalPost->getId()));
             } else {
                 $data = array(
                     'title' => $title,
                     'post_text' => $message,
                     'attachSignature' => $attach_signature);
                 $managedOriginalPost->update($data);
-                $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array(
+                $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array(
                     'topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
-                $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $managedOriginalPost->getId(), $url));
+                $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedOriginalPost->getId(), $url));
                 if ($attach_signature && $this->getVar('removesignature') == 'no') {
                     // include signature in response text
                     $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
@@ -294,8 +294,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // Get title parameter if action == setTitle
         if ($params['action'] == 'setTitle') {
-            $params['title'] = FormUtil::getPassedValue('title', '', 'POST');
-            $params['title'] = trim($params['title']);
+            $params['title'] = trim($this->request->request->get('title', ''));
             if (empty($params['title'])) {
                 return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The post has no subject line.'));
             }
@@ -350,8 +349,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(
-            'forum_id' => FormUtil::getPassedValue('forum', 'POST'),
-            'action' => FormUtil::getPassedValue('action', 'POST'));
+            'forum_id' => $this->request->request->get('forum'),
+            'action' => $this->request->request->get('action'));
         if (empty($params['forum_id'])) {
             return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
         }

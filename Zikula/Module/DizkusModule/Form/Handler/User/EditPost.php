@@ -16,11 +16,14 @@ use ModUtil;
 use LogUtil;
 use Zikula_Form_View;
 use Zikula_Exception_Forbidden;
-use Zikula_ModUrl;
+use Zikula\Core\ModUrl;
 use ZLanguage;
 use Zikula_ValidationHook;
 use Zikula_ProcessHook;
 use Zikula_Hook_ValidationProviders;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
 
 /**
  * This class provides a handler to create a new topic.
@@ -79,7 +82,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $data = $view->getValues();
         $deleting = (isset($data['delete']) && $data['delete'] === true);
         $fragment = $deleting ? null : 'pid' . $this->_post->getId();
-        $url = new Zikula_ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
 
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url->getUrl());
@@ -91,8 +94,8 @@ class EditPost extends \Zikula_Form_AbstractHandler
         }
         // check hooked modules for validation
         $hookarea = $deleting ? 'dizkus.ui_hooks.post.validate_delete' : 'dizkus.ui_hooks.post.validate_edit';
-        $hook = new Zikula_ValidationHook($hookarea, new Zikula_Hook_ValidationProviders());
-        $hookvalidators = $this->notifyHooks($hook)->getValidators();
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->dispatchHooks($hookarea, $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
@@ -106,7 +109,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
                 return $this->view->registerError($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
             }
             $this->_post->delete();
-            $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_delete', $this->_post->getId()));
+            $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($this->_post->getId()));
 
             return $view->redirect($url->getUrl());
         }
@@ -129,7 +132,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         // store post
         $this->_post->update();
-        $this->notifyHooks(new Zikula_ProcessHook('dizkus.ui_hooks.post.process_edit', $this->_post->getId(), $url));
+        $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $url));
 
         // redirect to the new topic
         return $view->redirect($url->getUrl());
