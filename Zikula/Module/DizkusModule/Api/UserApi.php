@@ -14,6 +14,7 @@ namespace Zikula\Module\DizkusModule\Api;
 use UserUtil;
 use ModUtil;
 use LogUtil;
+use ServiceUtil;
 use System;
 use CookieUtil;
 use DateTime;
