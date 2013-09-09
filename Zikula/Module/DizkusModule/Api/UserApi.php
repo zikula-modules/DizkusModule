@@ -21,46 +21,11 @@ use DataUtil;
 use Zikula_View;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Doctrine;
 
 class UserApi extends \Zikula_AbstractApi
 {
 
-    /**
-     * Instance of Zikula_View.
-     *
-     * @var Zikula_View
-     */
-    protected $view;
-
-    /**
-     * Initialize.
-     *
-     * @return void
-     */
-    protected function initialize()
-    {
-        $this->setView();
-    }
-
-    /**
-     * Set view property.
-     *
-     * @param Zikula_View $view Default null means new Render instance for this module name.
-     *
-     * @return Zikula_AbstractController
-     */
-    protected function setView(Zikula_View $view = null)
-    {
-        if (is_null($view)) {
-            $view = Zikula_View::getInstance($this->getName());
-        }
-        $this->view = $view;
-
-        return $this;
-    }
-
-    /**
+     /**
      * Counts posts in forums, topics
      * or counts forum users
      *
@@ -175,7 +140,8 @@ class UserApi extends \Zikula_AbstractApi
          * set last visit cookies and get last visit time
          * set LastVisit cookie, which always gets the current time and lasts one year
          */
-        $path = System::getBaseUri();
+        $request = ServiceUtil::getManager()->get('request');
+        $path = $request->getBasePath();
         if (empty($path)) {
             $path = '/';
         } elseif (substr($path, -1, 1) != '/') {
@@ -403,7 +369,7 @@ class UserApi extends \Zikula_AbstractApi
         if (empty($fragments)) {
             return array();
         }
-        $rsm = new Doctrine\ORM\Query\ResultSetMapping();
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
         $rsm->addEntityResult('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
         $rsm->addFieldResult('u', 'uname', 'uname');
         $rsm->addFieldResult('u', 'uid', 'uid');
