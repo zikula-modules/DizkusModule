@@ -15,6 +15,7 @@ use ModUtil;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zikula\Core\ModUrl;
 
 /**
  * Topic entity class
@@ -149,7 +150,7 @@ class TopicEntity extends \Zikula_EntityAccess
 
     /**
      * url object
-     * @var \ModUrl
+     * @var ModUrl
      *
      * @ORM\Column(type="object", nullable=true)
      */
@@ -383,7 +384,7 @@ class TopicEntity extends \Zikula_EntityAccess
         return $this->hookedUrlObject;
     }
 
-    public function setHookedUrlObject(\ModUrl $hookedUrlObject)
+    public function setHookedUrlObject(ModUrl $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
     }
