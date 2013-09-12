@@ -22,10 +22,10 @@ use System;
 use ZLanguage;
 use Zikula_Exception_Forbidden;
 use Zikula_Exception_Fatal;
-use Zikula_Response_Ajax;
-use Zikula_Response_Ajax_Unavailable;
-use Zikula_Response_Ajax_BadData;
-use Zikula_Response_Ajax_Plain;
+use Zikula\Core\Response\Ajax\AjaxResponse;
+use Zikula\Core\Response\Ajax\UnavailableResponse;
+use Zikula\Core\Response\Ajax\BadDataResponse;
+use Zikula\Core\Response\PlainResponse;
 use Zikula\Core\ModUrl;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -96,7 +96,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @throws Zikula_Exception_Fatal
      *
-     * @return Zikula_Response_Ajax
+     * @return AjaxResponse
      */
     public function replyAction()
     {
@@ -156,7 +156,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
-        return new Zikula_Response_Ajax(array(
+        return new AjaxResponse(array(
             'data' => $this->view->fetch('user/post/single.tpl'),
             'post_id' => $post['post_id']));
     }
@@ -171,7 +171,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * @throws Zikula_Exception_Fatal
      * @throws Zikula_Exception_Forbidden
      *
-     * @return Zikula_Response_Ajax
+     * @return AjaxResponse
      */
     public function editpostAction()
     {
@@ -190,7 +190,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
                 $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
 
-                return new Zikula_Response_Ajax($this->view->fetch('ajax/editpost.tpl'));
+                return new AjaxResponse($this->view->fetch('ajax/editpost.tpl'));
             } else {
                 LogUtil::registerPermissionError(null, true);
                 throw new Zikula_Exception_Forbidden();
@@ -215,7 +215,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * @throws Zikula_Exception_Fatal
      * @throws Zikula_Exception_Forbidden If the user tries to delete the only post of a topic.
      *
-     * @return Zikula_Response_Ajax
+     * @return AjaxResponse
      */
     public function updatepostAction()
     {
@@ -258,7 +258,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                     'newText' => ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message));
             }
 
-            return new Zikula_Response_Ajax($response);
+            return new AjaxResponse($response);
         }
         throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
     }
@@ -274,7 +274,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     {
         // Check if forum is disabled
         if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         // Get common parameters
         $params = array();
@@ -285,18 +285,18 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $userAllowedToEdit = in_array($params['action'], array('subscribe', 'unsubscribe', 'solve', 'unsolve')) ? 1 : $userAllowedToEdit;
         // Check if topic is is set
         if (empty($params['topic_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No topic ID in \'Dizkus/Ajax/changeTopicStatus()\'.'));
+            return new BadDataResponse(array(), $this->__('Error! No topic ID in \'Dizkus/Ajax/changeTopicStatus()\'.'));
         }
         // Check if action is legal
         $allowedActions = array('lock', 'unlock', 'sticky', 'unsticky', 'subscribe', 'unsubscribe', 'solve', 'unsolve', 'setTitle');
         if (empty($params['action']) || !in_array($params['action'], $allowedActions)) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus/Ajax/changeTopicStatus()\'.', DataUtil::formatForDisplay($params['action'])));
+            return new BadDataResponse(array(), $this->__f('Error! No mode or illegal mode parameter (%s) in \'Dizkus/Ajax/changeTopicStatus()\'.', DataUtil::formatForDisplay($params['action'])));
         }
         // Get title parameter if action == setTitle
         if ($params['action'] == 'setTitle') {
             $params['title'] = trim($this->request->request->get('title', ''));
             if (empty($params['title'])) {
-                return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! The post has no subject line.'));
+                return new BadDataResponse(array(), $this->__('Error! The post has no subject line.'));
             }
         }
         SessionUtil::setVar('zk_ajax_call', 'ajax');
@@ -306,7 +306,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return new Zikula_Response_Ajax_Plain('successful');
+        return new PlainResponse('successful');
     }
 
     /**
@@ -315,7 +315,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * Parameters passed via GET:
      * @param string $fragment A partial user name entered by the user.
      *
-     * @return string Zikula_Response_Ajax_Plain with json_encoded object of users matching the criteria.
+     * @return string PlainResponse with json_encoded object of users matching the criteria.
      */
     public function getUsersAction()
     {
@@ -333,7 +333,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 'data' => $user->getUid());
         }
 
-        return new Zikula_Response_Ajax_Plain(json_encode($reply));
+        return new PlainResponse(json_encode($reply));
     }
 
     /**
@@ -343,16 +343,16 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function modifyForumAction()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         if ($this->getVar('favorites_enabled') == 'no') {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! Favourites have been disabled.'));
+            return new BadDataResponse(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(
             'forum_id' => $this->request->request->get('forum'),
             'action' => $this->request->request->get('action'));
         if (empty($params['forum_id'])) {
-            return new Zikula_Response_Ajax_BadData(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
+            return new BadDataResponse(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
         }
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             // only need read perms to make a favorite
@@ -367,7 +367,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return new Zikula_Response_Ajax_Plain('successful');
+        return new PlainResponse('successful');
     }
 
     /**
@@ -379,7 +379,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function forumusersAction()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         $this->view->add_core_data();
         $this->view->setCaching(false);
@@ -400,7 +400,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function newpostsAction()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-            return new Zikula_Response_Ajax_Unavailable(array(), strip_tags($this->getVar('forum_disabled_info')));
+            return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         $this->view->add_core_data();
         $this->view->setCaching(false);
