@@ -301,6 +301,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                 FROM dizkus_topics
                 WHERE topic_reference <> \'\'';
         $hookedTopicData = $connection->fetchAll($sql);
+        // @todo ?? should do ->? 'ALTER TABLE  `dizkus_forum_favorites` ADD  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST';
         // update all the tables to 4.0.0
         try {
             DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
@@ -323,10 +324,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->delVar('newtopicconfirmation');
         $this->delVar('slimforum');
         $defaultModuleVars = self::getDefaultVars();
-        // remove pn from images/rank folder
         $this->setVar('url_ranks_images', $defaultModuleVars['url_ranks_images']);
-        $this->setVar('fulltextindex', $defaultModuleVars['fulltextindex']);
-        // disable until technology catches up with InnoDB
+        $this->setVar('fulltextindex', $defaultModuleVars['fulltextindex']); // disable until technology catches up with InnoDB
         $this->setVar('solved_enabled', $defaultModuleVars['solved_enabled']);
         $this->setVar('ajax', $defaultModuleVars['ajax']);
         // register new hooks and event handlers

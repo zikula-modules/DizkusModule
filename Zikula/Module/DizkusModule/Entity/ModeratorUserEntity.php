@@ -12,6 +12,7 @@
 namespace Zikula\Module\DizkusModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 
@@ -21,7 +22,7 @@ use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_forum_mods")
  */
-class ModeratorUserEntity extends \Zikula_EntityAccess
+class ModeratorUserEntity extends EntityAccess
 {
 
     /**
@@ -36,7 +37,7 @@ class ModeratorUserEntity extends \Zikula_EntityAccess
     /**
      * forumUser
      *
-     * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="user", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;

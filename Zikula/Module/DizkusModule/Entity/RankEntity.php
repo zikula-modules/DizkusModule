@@ -13,6 +13,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 
 use ModUtil;
 use Doctrine\ORM\Mapping as ORM;
+use Zikula\Core\Doctrine\EntityAccess;
 
 /**
  * Rank entity class
@@ -20,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_ranks")
  */
-class RankEntity extends \Zikula_EntityAccess
+class RankEntity extends EntityAccess
 {
 
     const TYPE_HONORARY = 1;

@@ -16,6 +16,7 @@ use ModUtil;
 use DateTime;
 use UserUtil;
 use System;
+use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -26,7 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="dizkus_posts")
  * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\PostRepository")
  */
-class PostEntity extends \Zikula_EntityAccess
+class PostEntity extends EntityAccess
 {
     /**
      * Module name

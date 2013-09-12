@@ -11,6 +11,7 @@
 
 namespace Zikula\Module\DizkusModule\Entity;
 
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity;
 use Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity;
 use Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity;
@@ -25,13 +26,13 @@ use Zikula\Module\UsersModule\Entity\UserEntity as ZikulaUser;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")
  */
-class ForumUserEntity extends \Zikula_EntityAccess
+class ForumUserEntity extends EntityAccess
 {
 
     /**
      * Zikula Core User entity
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
-     * @see /system/Zikula/Module/UsersModule/Entity/ModeratorUserEntity.php
+     * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")

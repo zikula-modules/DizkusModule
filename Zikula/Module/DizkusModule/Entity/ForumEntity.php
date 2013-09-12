@@ -13,6 +13,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 
 use ServiceUtil;
 use ZLanguage;
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\Module\DizkusModule\Connection\Pop3Connection;
 use Zikula\Module\DizkusModule\Entity\ModeratorUserEntity;
 use Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity;
@@ -29,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="dizkus_forums")
  * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\ForumRepository")
  */
-class ForumEntity extends \Zikula_EntityAccess
+class ForumEntity extends EntityAccess
 {
 
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';

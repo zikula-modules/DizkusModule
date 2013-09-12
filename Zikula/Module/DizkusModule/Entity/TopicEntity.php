@@ -12,6 +12,7 @@
 namespace Zikula\Module\DizkusModule\Entity;
 
 use ModUtil;
+use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,7 +25,7 @@ use Zikula\Core\ModUrl;
  * @ORM\Table(name="dizkus_topics")
  * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\TopicRepository")
  */
-class TopicEntity extends \Zikula_EntityAccess
+class TopicEntity extends EntityAccess
 {
     /**
      * Module name
