@@ -96,7 +96,7 @@ class UserController extends \Zikula_AbstractController
         $numposts = ModUtil::apiFunc($this->name, 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
 
-        return $this->view->fetch('user/main.tpl');
+        return $this->response($this->view->fetch('user/main.tpl'));
     }
 
     /**
@@ -125,7 +125,7 @@ class UserController extends \Zikula_AbstractController
         $forum = ModUtil::apiFunc($this->name, 'Permission', 'filterForumChildrenByPermission', $managedForum->get());
         $this->view->assign('forum', $forum)->assign('topics', $managedForum->getTopics($start))->assign('pager', $managedForum->getPager())->assign('permissions', $managedForum->getPermissions())->assign('isModerator', $managedForum->isModerator())->assign('breadcrumbs', $managedForum->getBreadcrumbs())->assign('hot_threshold', $this->getVar('hot_threshold'))->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->view->fetch('user/forum/view.tpl');
+        return $this->response($this->view->fetch('user/forum/view.tpl'));
     }
 
     /**
@@ -176,7 +176,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('preview', false);
         $managedTopic->incrementViewsCount();
 
-        return $this->view->fetch('user/topic/view.tpl');
+        return $this->response($this->view->fetch('user/topic/view.tpl'));
     }
 
     /**
@@ -307,7 +307,7 @@ class UserController extends \Zikula_AbstractController
             $this->view->assign('last_visit_unix', $lastVisitUnix);
             $this->view->assign('permissions', $permissions);
 
-            return $this->view->fetch('user/topic/reply.tpl');
+            return $this->response($this->view->fetch('user/topic/reply.tpl'));
         }
     }
 
@@ -381,7 +381,7 @@ class UserController extends \Zikula_AbstractController
         }
         $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
 
-        return $this->view->fetch('user/viewip.tpl');
+        return $this->response($this->view->fetch('user/viewip.tpl'));
     }
 
     /**
@@ -450,7 +450,7 @@ class UserController extends \Zikula_AbstractController
         if (!UserUtil::isLoggedIn()) {
             LogUtil::registerPermissionError();
 
-            return System::redirect($url);
+            return $this->redirect($url);
         }
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
@@ -464,7 +464,7 @@ class UserController extends \Zikula_AbstractController
         $this->entityManager->persist($forumUser);
         $this->entityManager->flush();
 
-        return System::redirect($url);
+        return $this->redirect($url);
     }
 
     /**
@@ -477,7 +477,7 @@ class UserController extends \Zikula_AbstractController
             'forum_id' => (int)$this->request->query->get('forum'));
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return System::redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id'])));
+        return $this->redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id'])));
     }
 
     /**
@@ -490,7 +490,7 @@ class UserController extends \Zikula_AbstractController
         $params['topic_id'] = (int)$this->request->query->get('topic');
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id'])));
+        return $this->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id'])));
     }
 
     /**
@@ -532,7 +532,7 @@ class UserController extends \Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url($this->name, 'user', 'index'));
+            return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         // get the input
         $params = array();
@@ -549,7 +549,7 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->view->fetch('user/post/latest.tpl');
+        return $this->response($this->view->fetch('user/post/latest.tpl'));
     }
 
     /**
@@ -565,7 +565,7 @@ class UserController extends \Zikula_AbstractController
         // Permission check
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return System::redirect(ModUtil::url($this->name, 'user', 'index'));
+            return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
         }
         $params = array();
         $params['action'] = $this->request->query->get('action', 'posts');
@@ -577,7 +577,7 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->view->fetch('user/post/mine.tpl');
+        return $this->response($this->view->fetch('user/post/mine.tpl'));
     }
 
     /**
@@ -729,7 +729,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('dizkusinfo', $dzkinfo);
         header('Content-Type: text/xml');
 
-        return $this->view->display($templatefile);
+        return $this->view->display($templatefile); // using plainresponse here isn't working
     }
 
 }
