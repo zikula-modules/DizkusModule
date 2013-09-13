@@ -417,19 +417,15 @@ class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
         if (empty($hook)) {
             return false;
         }
-        $module = $hook->getCaller();
-        $locations = array($module, self::MODULENAME);
-        // locations to search for the class
+        $moduleName = $hook->getCaller();
+        $locations = array($moduleName, self::MODULENAME); // locations to search for the class
         foreach ($locations as $location) {
-            $classnames = array(
-                $location . '_HookedTopicMeta_' . $module,
-                "$location\\HookedTopicMeta\\$module");
-            foreach ($classnames as $classname) {
-                if (class_exists($classname)) {
-                    $instance = new $classname($hook);
-                    if ($instance instanceof AbstractHookedTopicMeta) {
-                        return $instance;
-                    }
+            $moduleObj = ModUtil::getModule($location);
+            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
+            if (class_exists($classname)) {
+                $instance = new $classname($hook);
+                if ($instance instanceof AbstractHookedTopicMeta) {
+                    return $instance;
                 }
             }
         }
