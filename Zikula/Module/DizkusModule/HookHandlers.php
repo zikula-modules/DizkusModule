@@ -121,7 +121,8 @@ class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
-        PageUtil::addVar('stylesheet', 'modules/Dizkus/style/style.css');
+        $modInfo = ModUtil::getInfoFromName(self::MODULENAME);
+        PageUtil::addVar('stylesheet', "modules/{$modInfo['directory']}/Resources/public/css/style.css");
         $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
