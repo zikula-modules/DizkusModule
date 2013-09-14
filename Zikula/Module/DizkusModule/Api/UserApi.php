@@ -182,7 +182,7 @@ class UserApi extends \Zikula_AbstractApi
         $query = $this->entityManager->createQuery($dql)->setParameter('pip', $pip);
         $posts = $query->getResult();
         foreach ($posts as $post) {
-            /* @var $post PostEntity */
+            /* @var $post \Zikula\Module\DizkusModule\Entity\PostEntity */
             $viewip['users'][] = array(
                 'uid' => $post->getPoster()->getUser_id(),
                 'uname' => $post->getPoster()->getUser()->getUname(),

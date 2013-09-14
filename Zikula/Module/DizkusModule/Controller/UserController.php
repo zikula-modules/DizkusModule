@@ -161,7 +161,7 @@ class UserController extends \Zikula_AbstractController
         if (!$managedTopic->exists()) {
             return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url($this->name, 'user', 'index'));
         }
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get());
@@ -182,16 +182,16 @@ class UserController extends \Zikula_AbstractController
     /**
      * reply to a post
      *
-     * @param integer forum (via POST) the forum ID
-     * @param integer topic (via POST) the topic ID
-     * @param integer post (via POST) the post ID
-     * @param string returnurl (via POST) encoded url string
-     * @param string message (via POST) the content of the post
-     * @param integer attach_signature (via POST)
-     * @param integer subscribe_topic (via POST)
-     * @param string preview (via POST) submit button converted to boolean
-     * @param string submit (via POST) submit button converted to boolean
-     * @param string cancel (via POST) submit button converted to boolean
+     * @param integer 'forum' (via POST) the forum ID
+     * @param integer 'topic' (via POST) the topic ID
+     * @param integer 'post' (via POST) the post ID
+     * @param string 'returnurl' (via POST) encoded url string
+     * @param string 'message' (via POST) the content of the post
+     * @param integer 'attach_signature' (via POST)
+     * @param integer 'subscribe_topic' (via POST)
+     * @param string 'preview' (via POST) submit button converted to boolean
+     * @param string 'submit' (via POST) submit button converted to boolean
+     * @param string 'cancel' (via POST) submit button converted to boolean
      *
      * @return string
      */
@@ -298,7 +298,7 @@ class UserController extends \Zikula_AbstractController
                 'userAllowedToEdit' => false);
             // Do not show edit link
             $permissions = array();
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+            list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
             $this->view->assign('post', $post);
             $this->view->assign('reply', $reply);
@@ -713,7 +713,7 @@ class UserController extends \Zikula_AbstractController
         $posts = array();
         $i = 0;
         foreach ($topics as $topic) {
-            /* @var $topic TopicEntity */
+            /* @var $topic \Zikula\Module\DizkusModule\Entity\TopicEntity */
             $posts[$i]['title'] = $topic->getTitle();
             $posts[$i]['parenttitle'] = $topic->getForum()->getParent()->getName();
             $posts[$i]['forum_name'] = $topic->getForum()->getName();

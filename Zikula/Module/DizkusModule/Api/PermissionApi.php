@@ -153,6 +153,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * check and filter and array of forums and their children for READ permissions
      * @param array $forums
+     * @return array
      */
     public function filterForumArrayByPermission(array $forums)
     {
@@ -175,6 +176,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * check and filter child forums for READ permissions
      * @param ForumEntity $forum
+     * @return \Zikula\Module\DizkusModule\Entity\ForumEntity
      */
     public function filterForumChildrenByPermission(ForumEntity $forum)
     {

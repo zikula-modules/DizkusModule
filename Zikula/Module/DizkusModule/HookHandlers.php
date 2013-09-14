@@ -292,7 +292,7 @@ class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
         $classname = $moduleName . '_Version';
         $moduleVersionObj = new $classname();
-        $_em = ServiceUtil::getService('doctrine.entitymanager');
+        $_em = ServiceUtil::get('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, self::MODULENAME);
         foreach ($bindingsBetweenOwners as $k => $binding) {
             $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();

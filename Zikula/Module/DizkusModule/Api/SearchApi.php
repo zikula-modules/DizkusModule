@@ -187,6 +187,7 @@ class SearchApi extends \Zikula_AbstractApi
         $showtextinsearchresults = $this->getVar('showtextinsearchresults', 'no');
         // Process the result set and insert into search result table
         foreach ($topics as $topic) {
+            /** @var $topic \Zikula\Module\DizkusModule\Entity\TopicEntity */
             $posts = $topic->getPosts();
             $record = array(
                 'title' => $topic->getTitle(),

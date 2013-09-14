@@ -41,7 +41,7 @@ class ForumManager
      */
     public function __construct($id = null, ForumEntity $forum = null)
     {
-        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
         if (isset($forum)) {
             // forum has been injected

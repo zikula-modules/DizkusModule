@@ -49,8 +49,9 @@ class FavoritesApi extends \Zikula_AbstractApi
     /**
      * Get forum subscription status
      *
-     * @params $args['forum'] Zikula\Module\DizkusModule\Entity\ForumEntity
-     * @params $args['user_id'] int the users uid (optional)
+     * @param $args
+     *      'forum' Zikula\Module\DizkusModule\Entity\ForumEntity
+     *      'user_id' int the users uid (optional)
      * @return boolean - true if the forum is user favorite or false if not
      */
     public function isFavorite($args)

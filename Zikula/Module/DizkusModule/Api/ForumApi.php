@@ -63,9 +63,10 @@ class ForumApi extends \Zikula_AbstractApi
     /**
      * Format ArrayResult for usage in {formdropdownlist}
      *
-     * @param  ArrayAccess $input
-     * @param  integer     $id
-     * @param  integer     $level
+     * @param  \ArrayAccess $input
+     * @param  integer $id
+     * @param  integer $level
+     * @param bool $includeLocked
      * @return array
      */
     private function getNode($input, $id, $level = 0, $includeLocked = true)
@@ -105,6 +106,7 @@ class ForumApi extends \Zikula_AbstractApi
         $userId = isset($args['userId']) ? $args['userId'] : null;
         $ids = array();
         $forums = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findAll();
+        /** @var $forum ForumEntity */
         foreach ($forums as $forum) {
             $parent = $forum->getParent();
             $parentId = isset($parent) ? $parent->getForum_id() : null;
@@ -203,7 +205,7 @@ class ForumApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns ForumSubscriptionEntity collection, may be empty
+     * @returns \Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {

@@ -35,8 +35,7 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $meta['displayname'] = $this->__('Dizkus forums');
         $meta['description'] = $this->__('An integrated discussion forum for Zikula.');
         $meta['url'] = $this->__('forums');
-        $meta['version'] = '3.2.0';
-        // will be 4.0.0 on release
+        $meta['version'] = '4.0.0';
         $meta['core_min'] = '1.3.6';
         // Fixed to 1.3.x range
         $meta['core_max'] = '1.3.99';

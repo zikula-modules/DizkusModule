@@ -189,7 +189,7 @@ class CronApi extends \Zikula_AbstractApi
     /**
      * mailcronecho
      */
-    private function mailcronecho($text, $debug)
+    private function mailcronecho($text, $debug = false)
     {
         echo $text;
         if ($debug == true) {

@@ -132,7 +132,6 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
             $vars['sb_template'] = 'statisticsblock/display.tpl';
         }
-        //$render = Zikula_View::getInstance($this->name, false, null, true);
         return $this->view->assign('vars', $vars)->fetch('statisticsblock/config.tpl');
     }
 

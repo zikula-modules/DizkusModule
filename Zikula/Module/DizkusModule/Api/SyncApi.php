@@ -190,7 +190,7 @@ class SyncApi extends \Zikula_AbstractApi
      * @param ForumEntity $args['forum']
      * @param Boolean             $args['flush'] default: true
      *
-     * @return void
+     * @return boolean|void
      */
     public function forumLastPost($args)
     {
@@ -226,7 +226,7 @@ class SyncApi extends \Zikula_AbstractApi
      * @param TopicEntity $args['topic']
      * @param Boolean             $args['flush']
      *
-     * @return void
+     * @return boolean|void
      */
     public function topicLastPost($args)
     {

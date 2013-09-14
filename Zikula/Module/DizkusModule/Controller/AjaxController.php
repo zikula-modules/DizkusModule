@@ -153,7 +153,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $this->view->assign('start', $start);
         $this->view->assign('preview', $preview);
         $this->view->assign('permissions', $permissions);
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
         return new AjaxResponse(array(
@@ -313,20 +313,25 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * Performs a user search based on the user name fragment entered so far.
      *
      * Parameters passed via GET:
-     * @param string $fragment A partial user name entered by the user.
+     *  string $fragment A partial user name entered by the user.
      *
+     *
+     * @throws Zikula_Exception_Forbidden
      * @return string PlainResponse with json_encoded object of users matching the criteria.
      */
     public function getUsersAction()
     {
         $this->checkAjaxToken();
         if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            $fragment = $this->request->query->get('fragment', null);
-            $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
+            LogUtil::registerPermissionError();
+            throw new Zikula_Exception_Forbidden();
         }
+        $fragment = $this->request->query->get('fragment', null);
+        $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
         $reply = array();
         $reply['query'] = $fragment;
         $reply['suggestions'] = array();
+        /** @var $user \Zikula\Module\UsersModule\Entity\UserEntity */
         foreach ($users as $user) {
             $reply['suggestions'][] = array(
                 'value' => htmlentities(stripslashes($user->getUname())),
@@ -342,6 +347,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      */
     public function modifyForumAction()
     {
+        $this->checkAjaxToken();
         if ($this->getVar('forum_enabled') == 'no') {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
@@ -359,11 +365,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             LogUtil::registerPermissionError();
             throw new Zikula_Exception_Forbidden();
         }
-        /* if (!SecurityUtil::confirmAuthKey()) {
-          LogUtil::registerAuthidError();
-
-          return AjaxUtil::error(null, array(), true, true);
-          } */
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 

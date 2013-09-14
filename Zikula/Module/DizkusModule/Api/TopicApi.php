@@ -69,7 +69,7 @@ class TopicApi extends \Zikula_AbstractApi
      *        int|object $args['topic'] Topic id or object.
      *        int $args['user_id'] User id (optional: needs ACCESS_ADMIN).
      *
-     * @return void
+     * @return boolean|void
      */
     public function subscribe($args)
     {
@@ -131,7 +131,7 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * @params $args['uid'] User id (optional)
      *
-     * @returns TopicSubscriptionEntity collection, may be empty
+     * @returns \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {

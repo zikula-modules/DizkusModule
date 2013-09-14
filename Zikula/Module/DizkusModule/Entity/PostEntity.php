@@ -115,8 +115,8 @@ class PostEntity extends EntityAccess
             // for privacy issues ip logging can be deactivated
             $this->poster_ip = 'unrecorded';
         } else {
-            $request = ServiceUtil::getService('request');
-            if (System::serverGetVar('HTTP_X_FORWARDED_FOR')) {
+            $request = ServiceUtil::get('request');
+            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
                 $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
             } else {
                 $this->poster_ip = $request->server->get('REMOTE_ADDR');

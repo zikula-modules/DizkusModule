@@ -21,8 +21,8 @@ chdir('/opt/webdev/htdocs/z121');
 include 'lib/ZLoader.php';
 ZLoader::register();
 System::init();
-/* @var $em Doctrine\ORM\EntityManager */
-$em = ServiceUtil::getService('doctrine.entitymanager');
+/* @var $em \Doctrine\ORM\EntityManager */
+$em = ServiceUtil::get('doctrine.entitymanager');
 //
 // Checking if RSS2Forum is enabled
 //

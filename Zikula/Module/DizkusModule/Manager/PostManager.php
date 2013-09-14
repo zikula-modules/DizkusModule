@@ -48,7 +48,7 @@ class PostManager
      */
     public function __construct($id = null)
     {
-        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\PostEntity', $id);

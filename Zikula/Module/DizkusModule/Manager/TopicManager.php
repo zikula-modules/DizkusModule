@@ -20,6 +20,7 @@ use ServiceUtil;
 use ModUtil;
 use UserUtil;
 use DataUtil;
+use Zikula\Core\Hook\ProcessHook;
 use Zikula\Module\DizkusModule\Entity\PostEntity;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
@@ -54,7 +55,7 @@ class TopicManager
      */
     public function __construct($id = null, TopicEntity $topic = null)
     {
-        $this->entityManager = ServiceUtil::getService('doctrine.entitymanager');
+        $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
         if (isset($topic)) {
             // topic has been injected
@@ -232,11 +233,11 @@ class TopicManager
 
     /**
      *
-     * @param type $data['forum_id']
-     * @param type $data['message']
-     * @param type $data['attachSignature']
-     * @param type $data['title']
-     * @param type $data['subscribe_topic']
+     * @param integer $data['forum_id']
+     * @param string $data['message']
+     * @param boolean $data['attachSignature']
+     * @param string $data['title']
+     * @param boolean $data['subscribe_topic']
      */
     public function prepare($data)
     {
@@ -273,9 +274,9 @@ class TopicManager
     /**
      * Add hook data to topic
      *
-     * @param Zikula_ProcessHook $hook
+     * @param ProcessHook $hook
      */
-    public function setHookData(Zikula_ProcessHook $hook)
+    public function setHookData(ProcessHook $hook)
     {
         $this->_topic->setHookedModule($hook->getCaller());
         $this->_topic->setHookedObjectId($hook->getId());
@@ -288,35 +289,6 @@ class TopicManager
         return $this->_firstPost;
     }
 
-    /**
-     * persist the topic
-     *
-     * @return boolean
-     */
-    //    public function store()
-    //    {
-    //        // write topic & first post
-    //        $this->entityManager->persist($this->_topic);
-    //        $this->entityManager->persist($this->_firstPost);
-    //        $this->entityManager->flush();
-    //
-    //        // increment forum post count
-    //        $managedForum = new ForumManager($this->getForumId());
-    //        $managedForum->incrementPostCount();
-    //        $managedForum->incrementTopicCount();
-    //        $managedForum->setLastPost($this->_firstPost);
-    //
-    //        // subscribe
-    //        if ($this->_subscribe) {
-    //            $params = array(
-    //                'topic_id' => $this->_topic->getTopic_id(),
-    //                'action' => 'subscribe'
-    //            );
-    //            ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
-    //        }
-    //
-    //        return $this->_topic->getTopic_id();
-    //    }
     /**
      * create topic and post
      *

@@ -38,7 +38,7 @@ class NotifyApi extends \Zikula_AbstractApi
         $dizkusModuleInfo = ModUtil::getInfoFromName($this->name);
         $dizkusFrom = ModUtil::getVar($this->name, 'email_from');
         $fromAddress = !empty($dizkusFrom) ? $dizkusFrom : System::getVar('adminmail');
-        /* @var $post Zikula\Module\DizkusModule\Entity\PostEntity */
+        /* @var $post \Zikula\Module\DizkusModule\Entity\PostEntity */
         $post = $args['post'];
         $subject = $post->isFirst() ? '' : 'Re: ';
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
@@ -55,7 +55,7 @@ class NotifyApi extends \Zikula_AbstractApi
         $notified = array($post->getPoster_id());
         foreach ($subscriptions as $subscription) {
             // check permissions
-            /* @var $subscriber Zikula\Module\UsersModule\Entity\UserEntity */
+            /* @var $subscriber \Zikula\Module\UsersModule\Entity\UserEntity */
             $subscriber = $subscription->getForumUser()->getUser();
             $subscriberEmail = $subscriber->getEmail();
             if (in_array($subscriber->getUid(), $notified) || empty($subscriberEmail)) {
