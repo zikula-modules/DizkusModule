@@ -213,17 +213,17 @@
     {include file='user/moderatedBy.tpl' forum=$topic.forum}
 
     <script type="text/javascript">
-                        // @TODO Replace by Zikula.__() and remove this vars.
-                        // <![CDATA[
-                        var subscribeTopic = "{{gt text='Subscribe to topic'}}";
-                        var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
-                        var lockTopic = "{{gt text='Lock topic'}}";
-                        var unlockTopic = "{{gt text='Unlock topic'}}";
-                        var stickyTopic = "{{gt text="Give this topic 'sticky' status"}}";
-                        var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
-                        var solveTopic = "{{gt text="Mark as solved"}}";
-                        var unsolveTopic = "{{gt text="Mark as unsolved"}}";
-                        // ]]>
+        // @TODO Replace by Zikula.__() and remove this vars.
+        // <![CDATA[
+        var subscribeTopic = "{{gt text='Subscribe to topic'}}";
+        var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
+        var lockTopic = "{{gt text='Lock topic'}}";
+        var unlockTopic = "{{gt text='Unlock topic'}}";
+        var stickyTopic = "{{gt text="Give this topic 'sticky' status"}}";
+        var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
+        var solveTopic = "{{gt text="Mark as solved"}}";
+        var unsolveTopic = "{{gt text="Mark as unsolved"}}";
+        // ]]>
     </script>
     <a id="bottom" accesskey="b"></a>
     {include file='user/footer.tpl'}
