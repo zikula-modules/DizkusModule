@@ -28,7 +28,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
     public function get($args)
     {
         $forum_id = isset($args['forum_id']) ? $args['forum_id'] : null;
-        $em = $this->getService('doctrine.entitymanager'); // @todo getService() is deprecated but changing to get() throws errors
+        $em = parent::get('doctrine.entitymanager');
         $mods = array('users' => array(), 'groups' => array());
         if (isset($forum_id)) {
             // get array of parents
