@@ -339,9 +339,11 @@ class ForumEntity extends EntityAccess
         return $this->pop3Connection;
     }
 
-    public function setPop3Connection(Pop3Connection $connection)
+    public function setPop3Connection($connection)
     {
-        $this->pop3Connection = $connection;
+        if (is_null($connection) || $connection instanceof Pop3Connection) {
+            $this->pop3Connection = $connection;
+        }
     }
 
     public function removePop3Connection()
