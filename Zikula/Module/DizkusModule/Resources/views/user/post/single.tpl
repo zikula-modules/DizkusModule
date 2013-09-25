@@ -100,7 +100,7 @@
         <div class="dzk_colpost_right">
             <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist z-clearfix" style="float:right;">
             {if isset($permissions.moderate) AND $permissions.moderate eq true}
-                {if (isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)}
+                {if ((isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)) AND !$post.isFirstPost}
                 <li><a class="icon-arrow-right icon-150x tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}"></a></li>
                 <li><a class="icon-cut icon-150x tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}"></a></li>
                 {/if}
