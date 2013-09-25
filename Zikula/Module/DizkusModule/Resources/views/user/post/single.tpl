@@ -77,7 +77,7 @@
     </div>
     <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
     <div class="content" id="postingtext_{$post.post_id}">
-    {if $preview eq 1}<div class='z-warningmsg z-bold'>{gt text='PREVIEW'}</div>{/if}
+    {if isset($preview) AND ($preview eq 1)}<div class='z-warningmsg z-bold'>{gt text='PREVIEW'}</div>{/if}
     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
@@ -99,24 +99,24 @@
     {if !isset($preview) OR $preview neq true}
         <div class="dzk_colpost_right">
             <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist z-clearfix" style="float:right;">
-            {if $permissions.moderate eq true}
+            {if isset($permissions.moderate) AND $permissions.moderate eq true}
                 {if (isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)}
                 <li><a class="icon-arrow-right icon-150x tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}"></a></li>
                 <li><a class="icon-cut icon-150x tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}"></a></li>
                 {/if}
             {/if}
             {if isset($topic) AND $topic.status neq 1}
-                {if $permissions.comment eq true}
+                {if isset($permissions.comment) AND $permissions.comment eq true}
                 <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
                 {/if}
-                {if $permissions.edit eq 1 OR $post.userAllowedToEdit}
+                {if isset($permissions.edit) AND $permissions.edit eq 1 OR $post.userAllowedToEdit}
                 <li><a class="icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
                 {/if}
             {elseif isset($topic)}
                 <li><i class='icon-lock icon-150x tooltips' title='{gt text='This topic is locked'}'></i></li>
             {/if}
             {if !isset($notify) OR $notify eq false}
-                {if $permissions.comment eq true}
+                {if isset($permissions.comment) AND $permissions.comment eq true}
                 <li><a class="icon-bell icon-150x tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}"></a></li>
                 {/if}
                 <li><a class="icon-chevron-sign-up icon-150x dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;</a></li>
