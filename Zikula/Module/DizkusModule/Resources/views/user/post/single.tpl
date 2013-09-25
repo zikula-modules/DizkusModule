@@ -72,7 +72,7 @@
 
     <div class="postbody dzk_colpost_right">
         <div class="postinfo">
-        {if isset($topic)}<a class="linktopostlink tooltips" href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}">{img modname=$module src='target.gif' __alt='Link to this post'}</a>{/if}
+        {if isset($topic)}<a class="tooltips" href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class='icon-file-alt'></i></a>{/if}
         <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
     </div>
     <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
@@ -99,36 +99,33 @@
     {if !isset($preview) OR $preview neq true}
         <div class="dzk_colpost_right">
             <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist z-clearfix" style="float:right;">
-                {if $permissions.moderate eq true}
-                    {if (isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)}
-                        <li><a class="movepostlink tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}">{img modname=$module src='icon_post_move.gif' __alt='Move post' }</a></li>
-                        <li><a class="splittopiclink tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}">{img modname=$module src='icon_post_split.gif' __alt='Split topic' }</a></li>
-                                {/if}
-                                    {/if}
-
-                                        {if isset($topic) AND $topic.status neq 1}
-                                            {if $permissions.comment eq true}
-                        <li>
-                            <a class="quotepostlink tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');">{img modname=$module src='icon_post_quote.gif' __alt='Quote'}</a>
-                        </li>
-                                            {/if}
-                                            {if $permissions.edit eq 1 OR $post.userAllowedToEdit}
-                        <li><a class="editpostlink tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}">{img modname=$module src='icon_post_edit.gif' __alt='Edit'}</a></li>
-                                            {/if}
-                                        {elseif isset($topic)}
-                        <li>{img modname=$module src="icon_post_close.gif" class="tooltips" __alt="Topic locked" }</li>
-                                            {/if}
-                                                {if !isset($notify) OR $notify eq false}
-                                                    {if $permissions.comment eq true}
-                        <li><a class="notifymoderatorlink tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}">{img modname=$module src='icon_topic_mod.gif' __alt='Notify moderator' }</a></li>
-                                                        {/if}
-                        <li><a class="dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;{img modname=$module src="icon_up.gif" __alt="Top" }</a></li>
-                                                            {/if}
-                    </ul>
-                </div>
-                                                                {/if}
-            </div>
+            {if $permissions.moderate eq true}
+                {if (isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)}
+                <li><a class="icon-arrow-right icon-150x tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}"></a></li>
+                <li><a class="icon-cut icon-150x tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}"></a></li>
+                {/if}
+            {/if}
+            {if isset($topic) AND $topic.status neq 1}
+                {if $permissions.comment eq true}
+                <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
+                {/if}
+                {if $permissions.edit eq 1 OR $post.userAllowedToEdit}
+                <li><a class="icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
+                {/if}
+            {elseif isset($topic)}
+                <li><i class='icon-lock icon-150x tooltips' title='{gt text='This topic is locked'}'></i></li>
+            {/if}
+            {if !isset($notify) OR $notify eq false}
+                {if $permissions.comment eq true}
+                <li><a class="icon-bell icon-150x tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}"></a></li>
+                {/if}
+                <li><a class="icon-chevron-sign-up icon-150x dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;</a></li>
+            {/if}
+            </ul>
         </div>
+    {/if}
+    </div>
+</div>
 
     </div>
 </div>

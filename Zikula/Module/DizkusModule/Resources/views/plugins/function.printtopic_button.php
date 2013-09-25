@@ -24,7 +24,7 @@ function smarty_function_printtopic_button($params, Zikula_View $view)
     if (ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $params['forum'])) {
         $themeinfo = ThemeUtil::getInfo(ThemeUtil::getIDFromName('Printer'));
         if ($themeinfo['state'] == ThemeUtil::STATE_ACTIVE) {
-            return '<a class="dzk_arrow printlink tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
+            return '<a class="tooltips icon-chevron-sign-right" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', 'viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']))) . '">&nbsp;' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '</a>';
         }
     }
 

@@ -5,34 +5,31 @@
  */
 
 jQuery(document).ready(function() {
-    // toggle forum favorite state
     jQuery("#forum-favourite").click(modifyForum);
-    // toggle forum subscription
     jQuery("#forum-subscription").click(modifyForum);
 });
 
 function modifyForum(e) {
-    var id = jQuery('#forum_id').val(), action, i = jQuery(this);
-    if (i.text() == favouriteForum) {
-        action = 'addToFavorites';
-    } else if (i.text() == unfavouriteForum) {
-        action = 'removeFromFavorites';
-    } else if (i.text() == subscribeForum) {
-        action = 'subscribe';
-    } else if (i.text() == unsubscribeForum) {
-        action = 'unsubscribe';
-    }
-
-
-    this.favouritestatus = true;
-    var pars = {
-        forum: id,
-        action: action
+    var action;
+    var i = jQuery(this);
+    switch(i.attr('id')) {
+        case 'forum-subscription':
+            action = i.data('status') == 0 ? 'subscribe' : 'unsubscribe';
+            break;
+        case 'forum-favourite':
+            action = i.data('status') == 0 ? 'addToFavorites' : 'removeFromFavorites';
+            break;
+        default:
+            console.log('Wrong action');
+            return;
     }
 
     jQuery.ajax({
         type: "POST",
-        data: pars,
+        data: {
+            forum: jQuery('#forum_id').val(),
+            action: action
+        },
         url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=modifyForum",
         success: function(result) {
             if (result == 'successful') {

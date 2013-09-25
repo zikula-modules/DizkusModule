@@ -48,15 +48,15 @@
         <div id="dzk_javascriptareatopic">
             <ul class="dzk_topicoptions linklist z-clearfix">
                 {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}
-                    <li><a class="dzk_arrow previoustopiclink tooltips" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
+                    <li><a class="tooltips icon-chevron-left" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
                     {/if}
 
                 {if $permissions.comment}
-                    <li><a class="dzk_arrow newtopiclink tooltips" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">{gt text="New topic"}</a></li>
+                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
                     {/if}
 
                 {if $userloggedin}
-                    <li><a class="dzk_arrow mailtolink tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">{gt text="Send as e-mail"}</a></li>
+                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">&nbsp;{gt text="Send as e-mail"}</a></li>
                     {/if}
 
                 <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
@@ -70,7 +70,7 @@
                             {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
                             {gt text="Subscribe to topic" assign='msg'}
                         {/if}
-                        <a id="toggletopicsubscription" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
+                        <a id="toggletopicsubscription" class="tooltips icon-chevron-sign-right" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                     </li>
                     {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
                         <li>
@@ -81,14 +81,14 @@
                                 {modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
                                 {gt text="Mark as solved" assign='msg'}
                             {/if}
-                            <a id="toggletopicsolve" class="dzk_arrow tooltips" href="{$url}" title="{$msg}">{$msg}</a>
+                            <a id="toggletopicsolve" class="tooltips icon-chevron-sign-right" data-status="{if $topic.solved}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                         </li>
                     {/if}
                 {/if}
 
                 {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}
                     <li>
-                        <a class="dzk_arrow nexttopiclink tooltips" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}">
+                        <a class="tooltips icon-chevron-right" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}">
                             &nbsp;
                         </a>
                     </li>
@@ -105,7 +105,7 @@
                             {modurl modname=$module type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
                             {gt text="Unlock topic" assign='msg'}
                         {/if}
-                        <a id="toggletopiclock" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
+                        <a id="toggletopiclock" class="tooltips icon-chevron-sign-right" title="{$msg}" data-status="{if $topic.status}1{else}0{/if}" href="{$url}">&nbsp;{$msg}</a>
                     </li>
 
                     <li>
@@ -116,14 +116,14 @@
                             {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
                             {gt text="Remove 'sticky' status" assign='msg'}
                         {/if}
-                        <a id="toggletopicsticky" class="dzk_arrow tooltips" title="{$msg}" href="{$url}">{$msg}</a>
+                        <a id="toggletopicsticky" class="tooltips icon-chevron-sign-right" title="{$msg}" data-status="{if $topic.sticky}1{else}0{/if}" href="{$url}">&nbsp;{$msg}</a>
                     </li>
 
-                    <li><a class="dzk_arrow movetopiclink tooltips" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}">{gt text="Move topic"}</a></li>
-                    <li><a class="dzk_arrow deletetopiclink tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}">{gt text="Delete topic"}</a></li>
+                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}">&nbsp;{gt text="Move topic"}</a></li>
+                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}">&nbsp;{gt text="Delete topic"}</a></li>
                 </ul>
             {/if}
-            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom">{img modname=$module src="icon_bottom.gif" __alt="Bottom"}</a></span>
+            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom"><i class=' icon-chevron-sign-down'></i></a></span>
         </div>
 
     </div>
@@ -215,14 +215,14 @@
     <script type="text/javascript">
         // @TODO Replace by Zikula.__() and remove this vars.
         // <![CDATA[
-        var subscribeTopic = "{{gt text='Subscribe to topic'}}";
-        var unsubscribeTopic = "{{gt text='Unsubscribe from topic'}}";
-        var lockTopic = "{{gt text='Lock topic'}}";
-        var unlockTopic = "{{gt text='Unlock topic'}}";
-        var stickyTopic = "{{gt text="Give this topic 'sticky' status"}}";
-        var unstickyTopic = "{{gt text="Remove 'sticky' status"}}";
-        var solveTopic = "{{gt text="Mark as solved"}}";
-        var unsolveTopic = "{{gt text="Mark as unsolved"}}";
+        var subscribeTopic = " {{gt text='Subscribe to topic'}}";
+        var unsubscribeTopic = " {{gt text='Unsubscribe from topic'}}";
+        var lockTopic = " {{gt text='Lock topic'}}";
+        var unlockTopic = " {{gt text='Unlock topic'}}";
+        var stickyTopic = " {{gt text="Give this topic 'sticky' status"}}";
+        var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
+        var solveTopic = " {{gt text="Mark as solved"}}";
+        var unsolveTopic = " {{gt text="Mark as unsolved"}}";
         // ]]>
     </script>
     <a id="bottom" accesskey="b"></a>

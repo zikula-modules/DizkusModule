@@ -24,25 +24,22 @@ jQuery(document).ready(function() {
 function changeTopicStatus(e) {
     var action;
     var i = jQuery(this);
-    if (i.text() == lockTopic) {
-        action = 'lock';
-    } else if (i.text() == unlockTopic) {
-        action = 'unlock';
-    } else if (i.text() == stickyTopic) {
-        action = 'sticky';
-    } else if (i.text() == unstickyTopic) {
-        action = 'unsticky';
-    } else if (i.text() == subscribeTopic) {
-        action = 'subscribe';
-    } else if (i.text() == unsubscribeTopic) {
-        action = 'unsubscribe';
-    } else if (i.text() == solveTopic) {
-        action = 'solve';
-    } else if (i.text() == unsolveTopic) {
-        action = 'unsolve';
-    } else {
-        console.log('Wrong action');
-        return;
+    switch(i.attr('id')) {
+        case "toggletopiclock":
+            action = i.data('status') == 0 ? 'lock' : 'unlock';
+            break;
+        case "toggletopicsticky":
+            action = i.data('status') == 0 ? 'sticky' : 'unsticky';
+            break;
+        case "toggletopicsubscription":
+            action = i.data('status') == 0 ? 'subscribe' : 'unsubscribe';
+            break;
+        case "toggletopicsolve":
+            action = i.data('status') == 0 ? 'solve' : 'unsolve';
+            break;
+        default:
+            console.log('Wrong action');
+            return;
     }
 
     jQuery.ajax({
