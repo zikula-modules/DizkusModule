@@ -476,6 +476,7 @@ div#editpostoptions ul li {
 #dizkus .forum_post {
     padding: 5px 10px;
     margin: 0 0 15px 0;
+    position: relative;
 }
 #dizkus .post_bg1 {
     background-color: #F2F2F2;
@@ -788,4 +789,57 @@ dl.icon {
 }
 #dizkus .icon-stack-base {
     color:#DCDCDC;
+}
+
+/***********************
+/* CORNER RIBBONS
+/* inspired by http://css-tricks.com/snippets/css/corner-ribbon/
+***********************/
+.ribbon-wrapper-right,
+.ribbon-wrapper-left {
+    width: 85px;
+    height: 88px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.ribbon-wrapper-left {
+    left: 0;
+    right: auto;
+}
+.ribbon-right,
+.ribbon-left {
+    font: bold 10px Sans-Serif;
+    text-align: center;
+    -webkit-transform: rotate(45deg);
+    -moz-transform:    rotate(45deg);
+    -ms-transform:     rotate(45deg);
+    -o-transform:      rotate(45deg);
+    position: relative;
+    padding: 3px 0 3px 3px;
+    top: 15px;
+    width: 120px;
+}
+.ribbon-left {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform:    rotate(-45deg);
+    -ms-transform:     rotate(-45deg);
+    -o-transform:      rotate(-45deg);
+    padding: 3px 3px 3px 0;
+    left: -30px;
+}
+.ribbon-green {
+    background-color: #A4FF9B;
+    color: #25A618;
+    border:1px solid;
+}
+.ribbon-blue {
+    background-color: #73D1FF;
+    color: #0070A6;
+    border: 1px solid;
+}
+.ribbon-red {
+    background-color: #A60400;
+    color: #ffffff;
 }

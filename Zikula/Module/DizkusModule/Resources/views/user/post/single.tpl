@@ -1,16 +1,13 @@
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-{img modname=$module src='icon_user_online.gif' assign='onlineIcon'}
-{assign var="onlinestyle" value="style=\"background-image: url(`$onlineIcon.src`); background-position: top right; background-repeat: no-repeat;\""}
-
-
 {modapifunc modname=$module type='UserData' func='getUserOnlineStatus' uid=$post.poster.user.uid assign='isPosterOnline'}
 
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
-<a id="pid{$post.post_id}" ></a>
+<a id="pid{$post.post_id}"></a>
 
-<div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}" {if $isPosterOnline}{$onlinestyle}{/if}>
+<div id="posting_{$post.post_id}" class="forum_post dzk_rounded {cycle values='post_bg1,post_bg2'}">
+    {if $isPosterOnline}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{gt text="ONLINE"}</div></div>{/if}
+    {if isset($preview) AND ($preview eq 1)}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{gt text="PREVIEW"}</div></div>{/if}
     <div class="inner">
-
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
@@ -77,7 +74,6 @@
     </div>
     <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
     <div class="content" id="postingtext_{$post.post_id}">
-    {if isset($preview) AND ($preview eq 1)}<div class='z-warningmsg z-bold'>{gt text='PREVIEW'}</div>{/if}
     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
 
     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
