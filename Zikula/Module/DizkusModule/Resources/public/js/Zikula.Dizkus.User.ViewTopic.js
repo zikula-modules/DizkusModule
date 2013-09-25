@@ -72,6 +72,8 @@ function changeTopicStatus(e) {
                     i.text(solveTopic);
                     jQuery('#topic_solved').addClass('z-hide');
                 }
+                // invert data-status value
+                i.data('status', i.data('status') == 0 ? 1 : 0);
             } else {
                 console.log(result);
                 alert('Error! Erroneous result from locking/unlocking action.');

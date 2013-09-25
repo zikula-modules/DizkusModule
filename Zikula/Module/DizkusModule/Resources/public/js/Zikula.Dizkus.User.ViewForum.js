@@ -42,6 +42,8 @@ function modifyForum(e) {
                 } else if (action == 'unsubscribe') {
                     i.text(subscribeForum);
                 }
+                // invert data-status value
+                i.data('status', i.data('status') == 0 ? 1 : 0);
             } else {
                 alert('Error! Erroneous result from modifyForum request.');
             }
