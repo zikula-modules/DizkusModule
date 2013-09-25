@@ -26,7 +26,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
     /**
      * post data
      *
-     * @var array
+     * @var PostManager
      */
     private $post;
 
@@ -66,7 +66,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id)));
+            return $view->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->post->getTopicId())));
         }
 
         // check for valid form and get data
