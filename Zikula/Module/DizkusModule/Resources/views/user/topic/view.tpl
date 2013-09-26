@@ -149,8 +149,11 @@
 
 {if ($permissions.comment eq true)}
     <a id="reply">
-        <div id="dzk_quickreply" class="forum_post {cycle values='post_bg1,post_bg2'} dzk_rounded"{if $topic.status eq 1} style='display:none'{/if}>
-            <div class="inner">
+        <div id="dzk_quickreply" class="panel panel-info"{if $topic.status eq 1} style='display:none'{/if}>
+            <div class="panel-heading">
+                <h3>{gt text="Quick reply"}</h3>
+            </div>
+            <div class="panel-body">
                 <div class="dzk_subcols z-clearfix">
                     <form id="quickreplyform" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
                         <div>
@@ -158,16 +161,13 @@
                             <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
                             <input type="hidden" id="quote" name="quote" value="" />
                             <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
-                            <div class="post_header">
-                                <label for="message" class="quickreply_title" style="display:block;">{gt text="Quick reply"}</label>
-                            </div>
                             <div class="post_text_wrap">
                                 <div class="post_text">
                                     <div id="dizkusinformation"></div>
                                     <textarea id="message" name="message" cols="10" rows="60"></textarea>
 
                                     {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-                                        <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                                        <p class='text-info'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                                     {/if}
 
                                     {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
@@ -185,10 +185,10 @@
                                                         <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
                                                     </li>
                                                 {/if}
-                                                <li id="quickreplybuttons" class="z-buttons">
-                                                    <input id="btnSubmitQuickReply" class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                                                    <input id="btnPreviewQuickReply" class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
-                                                    {button type="button" id="btnCancelQuickReply" class="dzk_detachable z-bt-small hidden" src=button_cancel.png set=icons/extrasmall __alt="Cancel" __title="Cancel" __text="Cancel"}
+                                                <li id="quickreplybuttons">
+                                                    <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
+                                                    <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
+                                                    <button id="btnCancelQuickReply" class="btn btn-danger" type="submit" name="cancel">{gt text="Cancel"}</button>
                                                 </li>
                                             </ul>
                                         </div>
