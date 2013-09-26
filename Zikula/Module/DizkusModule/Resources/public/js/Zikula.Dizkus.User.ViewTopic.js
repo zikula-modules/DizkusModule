@@ -229,7 +229,7 @@ var postId = false;
  * @param postId If set, the ajax indicator will be shown for a post, else for a quick reply.
  */
 function showAjaxIndicator(text, postId) {
-    var img = '<img width="16" height="16" class="dzk_ajaxinicator" src="' + Zikula.Config.baseURL + 'modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/images/ajaxindicator.gif" alt="" />';
+    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src="' + Zikula.Config.baseURL + 'modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/images/ajaxindicator.gif" alt="" />';
     if (postId) {
         jQuery('#dizkusinformation_' + postId).html('<span style="color: red;">' + img + text + '</span>').fadeIn();
     } else {
