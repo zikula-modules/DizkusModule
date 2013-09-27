@@ -20,9 +20,6 @@ jQuery(document).ready(function() {
     // Show cancel button.
     jQuery('#btnCancelQuickReply').removeClass('hidden');
 });
-// save the pull path of this script
-var scripts = document.getElementsByTagName("script");
-var thisSrc = scripts[scripts.length-1].src;
 
 function changeTopicStatus(e) {
     var action;
@@ -232,9 +229,8 @@ var postId = false;
  * @param postId If set, the ajax indicator will be shown for a post, else for a quick reply.
  */
 function showAjaxIndicator(text, postId) {
-    var scriptPath = '/js/Zikula.Dizkus.User.ViewTopic.js';
-    var publicPath = thisSrc.substring(0, thisSrc.length - scriptPath.length);
-    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src=publicPath+"/images/ajaxindicator.gif" alt="" />';
+    // @todo this image loads too slowly so it doesn't actually show
+    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src=Zikula.Config.baseURL+"images/ajax/indicator.white.gif" alt="" />';
     if (postId) {
         jQuery('#dizkusinformation_' + postId).html('<span style="color: red;">' + img + text + '</span>').fadeIn();
     } else {
@@ -290,7 +286,7 @@ function quickEdit(id) {
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator(postId);
         });
-        showAjaxIndicator(Zikula.__('Loading post...'), postId);
+        showAjaxIndicator(zLoadingPost+'...', postId);
     }
 }
 
@@ -300,7 +296,7 @@ function quickEdit(id) {
 function quickEditChanged() {
     if (!postEditingChanged) {
         postEditingChanged = true;
-        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Changed') + '</span>');
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + zChanged + '</span>');
     }
 }
 
@@ -322,10 +318,10 @@ function quickEditSave() {
     }
 
     if (jQuery('#postingtext_' + postId + '_delete').prop('checked')) {
-        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Deleting post...') + '</span>');
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + zDeletingPost + '...</span>');
         pars['delete_post'] = 1;
     } else {
-        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + Zikula.__('Updating post...') + '</span>');
+        jQuery('#postingtext_' + postId + '_status').html('<span style="color: red;">' + zUpdatingPost + '...</span>');
     }
 
     var successHandler = function(result, message, request) {
@@ -452,7 +448,7 @@ function createQuickReply() {
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();
         });
-        showAjaxIndicator(Zikula.__('Storing reply...'));
+        showAjaxIndicator(zStoringReply+'...');
 
     }
     return false;
@@ -495,7 +491,7 @@ function previewQuickReply() {
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();
         });
-        showAjaxIndicator(Zikula.__('Preparing preview...'));
+        showAjaxIndicator(zPreparingPreview+'...');
     }
 }
 

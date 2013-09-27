@@ -5,8 +5,6 @@
     {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
     {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
-{pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
-{*pageaddvar name='javascript' value='zikula'}{* @todo may need this for javascript gettext *}
 
 <h2>
     <span id="edittopicsubjectbutton" title="">
@@ -222,6 +220,12 @@
         var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
         var solveTopic = " {{gt text="Mark as solved"}}";
         var unsolveTopic = " {{gt text="Mark as unsolved"}}";
+        var zChanged = "{{gt text="Changed"}}";
+        var zLoadingPost = "{{gt text="Loading post"}}";
+        var zDeletingPost = "{{gt text="Deleting post"}}";
+        var zUpdatingPost = "{{gt text="Updating post"}}";
+        var zStoringReply = "{{gt text="Storing reply"}}";
+        var zPreparingPreview = "{{gt text="Preparing preview"}}";
         // ]]>
     </script>
     <a id="bottom" accesskey="b"></a>

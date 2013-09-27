@@ -110,7 +110,7 @@
                         <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post or selection"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
                     {/if}
                     {if isset($permissions.edit) AND $permissions.edit eq 1 OR $post.userAllowedToEdit}
-                        <li><a class="icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
+                        <li><a class="editpostlink icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
                     {/if}
                 {elseif isset($topic)}
                     <li><i class='icon-lock icon-150x tooltips' title='{gt text='This topic is locked'}'></i></li>
