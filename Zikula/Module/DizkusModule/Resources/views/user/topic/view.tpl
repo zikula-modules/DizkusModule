@@ -2,8 +2,8 @@
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {if $modvars.ZikulaDizkusModule.ajax}
-    {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
-    {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
+    {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
+    {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
 
 <h2>

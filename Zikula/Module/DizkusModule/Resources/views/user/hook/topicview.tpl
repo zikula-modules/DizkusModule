@@ -15,8 +15,8 @@
     {if $modvars.ZikulaDizkusModule.ajax}
         {* JS files not loaded via header like other templates*}
         {pageaddvar name='javascript' value='jQuery'}
-        {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
-        {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
+        {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
+        {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
     {/if}
     {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
     {*pageaddvar name='javascript' value='zikula'}{* @todo may need this for javascript gettext *}
