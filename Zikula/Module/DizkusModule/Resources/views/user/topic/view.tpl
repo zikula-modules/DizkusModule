@@ -1,10 +1,9 @@
 {assign var='templatetitle' value=$topic.title}
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
-
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {if $modvars.ZikulaDizkusModule.ajax}
-    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
-    {pageaddvar name='javascript' value='modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
+    {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
+    {pageaddvar name='javascript' value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
 {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
 {*pageaddvar name='javascript' value='zikula'}{* @todo may need this for javascript gettext *}

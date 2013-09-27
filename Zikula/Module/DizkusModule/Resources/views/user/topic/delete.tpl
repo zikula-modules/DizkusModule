@@ -1,5 +1,5 @@
 {if $modvars.ZikulaDizkusModule.ajax}
-    {pageaddvar name="javascript" value="modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/js/Zikula.Dizkus.User.TopicDelete.js"}
+    {pageaddvar name="javascript" value=$moduleInstance->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.TopicDelete.js'}
 {/if}
 {gt text="Delete this topic" assign='templatetitle'}
 {pagesetvar name=title value=$templatetitle}

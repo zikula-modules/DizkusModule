@@ -20,6 +20,9 @@ jQuery(document).ready(function() {
     // Show cancel button.
     jQuery('#btnCancelQuickReply').removeClass('hidden');
 });
+// save the pull path of this script
+var scripts = document.getElementsByTagName("script");
+var thisSrc = scripts[scripts.length-1].src;
 
 function changeTopicStatus(e) {
     var action;
@@ -229,7 +232,9 @@ var postId = false;
  * @param postId If set, the ajax indicator will be shown for a post, else for a quick reply.
  */
 function showAjaxIndicator(text, postId) {
-    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src="' + Zikula.Config.baseURL + 'modules/zikula-dizkus/Zikula/Module/DizkusModule/Resources/public/images/ajaxindicator.gif" alt="" />';
+    var scriptPath = '/js/Zikula.Dizkus.User.ViewTopic.js';
+    var publicPath = thisSrc.substring(0, thisSrc.length - scriptPath.length);
+    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src=publicPath+"/images/ajaxindicator.gif" alt="" />';
     if (postId) {
         jQuery('#dizkusinformation_' + postId).html('<span style="color: red;">' + img + text + '</span>').fadeIn();
     } else {
