@@ -50,7 +50,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
 
         $managedTopic = new TopicManager($this->topic_id);
 
-        $view->assign($managedTopic->get());
+        $view->assign($managedTopic->get()->toArray());
         $view->assign('emailsubject', $managedTopic->get()->getTitle());
         $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
 
