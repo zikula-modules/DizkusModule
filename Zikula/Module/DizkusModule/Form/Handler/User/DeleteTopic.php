@@ -68,16 +68,16 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
             $this->topic_id = $managedPost->getTopicId();
         }
 
-        $topic = new TopicManager($this->topic_id);
+        $managedTopic = new TopicManager($this->topic_id);
 
-        $this->topic_poster = $topic->get()->getPoster();
-        $topicPerms = $topic->getPermissions();
+        $this->topic_poster = $managedTopic->get()->getPoster();
+        $topicPerms = $managedTopic->getPermissions();
 
         if ($topicPerms['moderate'] <> true) {
             return LogUtil::registerPermissionError();
         }
 
-        $view->assign($topic->toArray());
+        $view->assign($managedTopic->toArray());
 
         return true;
     }
