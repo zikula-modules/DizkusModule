@@ -8,9 +8,6 @@
     {if $isPosterOnline}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{gt text="ONLINE"}</div></div>{/if}
     {if isset($preview) AND ($preview eq 1)}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{gt text="PREVIEW"}</div></div>{/if}
     <div class='panel-heading'>
-        {if isset($post.title)}
-        <h3 class='panel-title'>{$post.title}</h3>
-        {/if}
         <div class="postdate{if $isPosterOnline} padright{/if}">
             {if isset($topic)}<a class="tooltips" href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class='icon-file-alt'></i></a>{/if}
             <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}

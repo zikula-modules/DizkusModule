@@ -19,6 +19,24 @@ jQuery(document).ready(function() {
 
     // Show cancel button.
     jQuery('#btnCancelQuickReply').removeClass('hidden');
+
+    jQuery('a.disabled').click(function(e) {
+        e.preventDefault();
+        //do other stuff when a click happens
+    }).hover(function(){
+        jQuery(this).css('cursor','not-allowed');
+    } , function(){
+        jQuery(this).css('cursor','default');
+    });
+    // toggle visibility of edit icon for topic title
+    jQuery('#edittopicsubjectbutton').hover(
+        function() {jQuery('#edittopicicon').show();},
+        function() {jQuery('#edittopicicon').hide();}
+    );
+    jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
+    jQuery('#edittopicsubjectbutton').click(function() { jQuery('#topicsubjectedit_editor').show() });
+    jQuery('#topicsubjectedit_cancel').click(function() { jQuery('#topicsubjectedit_editor').hide() });
+    jQuery("#topicsubjectedit_save").click(changeTopicTitle);
 });
 
 function changeTopicStatus(e) {
@@ -52,28 +70,30 @@ function changeTopicStatus(e) {
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'lock') {
-                    i.text(unlockTopic);
-                    jQuery('#dzk_quickreply').hide("slow");
+                    i.attr('title', unlockTopic).removeClass('icon-lock').addClass('icon-unlock');
+                    jQuery('#dzk_quickreply').hide("slow"); // hide quickly reply
                 } else if (action == 'unlock') {
-                    i.text(lockTopic);
-                    jQuery('#dzk_quickreply').show("slow");
+                    i.attr('title', lockTopic).removeClass('icon-unlock').addClass('icon-lock');
+                    jQuery('#dzk_quickreply').show("slow"); // show quickly reply
                 } else if (action == 'sticky') {
-                    i.text(unstickyTopic);
+                    i.attr('title', unstickyTopic).empty().html(unstickyTopicIcon);
                 } else if (action == 'unsticky') {
-                    i.text(stickyTopic);
+                    i.attr('title', stickyTopic).empty().html(stickyTopicIcon);
                 } else if (action == 'subscribe') {
-                    i.text(unsubscribeTopic);
+                    i.attr('title', unsubscribeTopic).empty().html(unsubscribeTopicIcon);
                 } else if (action == 'unsubscribe') {
-                    i.text(subscribeTopic);
+                    i.attr('title', subscribeTopic).empty().html(subscribeTopicIcon);
                 } else if (action == 'solve') {
-                    i.text(unsolveTopic);
-                    jQuery('#topic_solved').removeClass('z-hide');
+                    i.attr('title', unsolveTopic).empty().html(unsolveTopicIcon);
+                    jQuery('#topic_solved').show();
                 } else if (action == 'unsolve') {
-                    i.text(solveTopic);
-                    jQuery('#topic_solved').addClass('z-hide');
+                    i.attr('title', solveTopic).empty().html(solveTopicIcon);
+                    jQuery('#topic_solved').hide();
                 }
                 // invert data-status value
                 i.data('status', i.data('status') == 0 ? 1 : 0);
+                // destroy and recreate tooltip
+                i.tooltip('destroy').tooltip();
             } else {
                 console.log(result);
                 alert('Error! Erroneous result from locking/unlocking action.');
@@ -180,9 +200,9 @@ function hookQuickReplyPreview() {
     }
 
     jQuery('#btnPreviewQuickReply').each(
-            function() {
-                jQuery(this).click(previewQuickReplyHandler);
-            }
+        function() {
+            jQuery(this).click(previewQuickReplyHandler);
+        }
     );
 }
 
@@ -190,14 +210,15 @@ function hookQuickReplyPreview() {
  * Hook into cancel quick reply button.
  */
 function hookQuickReplyCancel() {
-    function cancelQuickReplyHandler() {
+    function cancelQuickReplyHandler(event) {
+        event.preventDefault();
         cancelQuickReply();
     }
 
     jQuery('#btnCancelQuickReply').each(
-            function() {
-                jQuery(this).click(cancelQuickReplyHandler);
-            }
+        function() {
+            jQuery(this).click(cancelQuickReplyHandler);
+        }
     );
 }
 

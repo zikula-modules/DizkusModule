@@ -1,3 +1,12 @@
+{* CREATE ICON VARIABLES *}
+{capture assign="unsubscribe_icon"}<span class="icon-stack"><i class="icon-ban-circle icon-stack-base"></i><i class="icon-envelope-alt"></i></span>{/capture}
+{capture assign="subscribe_icon"}<span class="icon-stack"><i class="icon-envelope-alt"></i></span>{/capture}
+{capture assign="unsticky_icon"}<span class="icon-stack"><i class="icon-ban-circle icon-stack-base"></i><i class="icon-bullhorn"></i></span>{/capture}
+{capture assign="sticky_icon"}<span class="icon-stack"><i class="icon-bullhorn"></i></span>{/capture}
+{capture assign="unsolve_icon"}<span class="icon-stack"><i class="icon-ban-circle icon-stack-base"></i><i class="icon-ok"></i></span>{/capture}
+{capture assign="solve_icon"}<span class="icon-stack"><i class="icon-ok"></i></span>{/capture}
+{* ------- *}
+
 {assign var='templatetitle' value=$topic.title}
 {include file='user/header.tpl' parent=$topic.forum.forum_id}
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
@@ -7,124 +16,121 @@
 {/if}
 
 <h2>
+    <span class='text-success' id="topic_solved" {if !$topic.solved or !$modvars.ZikulaDizkusModule.solved_enabled}style='display:none'{/if}>
+        [<span class='icon-ok'>&nbsp;{gt text="Solved"}</span>]
+    </span>
     <span id="edittopicsubjectbutton" title="">
-        <span id="topic_solved" {if !$topic.solved or !$modvars.ZikulaDizkusModule.solved_enabled}class="z-hide"{/if}>
-            [{gt text="Solved"}]
-        </span>
-        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span>
-        {icon id="edittopicicon" type="xedit" size="extrasmall" class="z-hide"}
+        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}<span id='edittopicicon' style='display:none;'>&nbsp;<i class='icon-pencil icon-red'></i></span></span>
     </span>
 </h2>
 
 {* add inline edit *}
-{usergetvar name='uid' assign='currentUser'}
 {if ($modvars.ZikulaDizkusModule.ajax && ($permissions.moderate eq 1 || $topic->userAllowedToEdit()))}
     {include file='ajax/edittopicsubject.tpl'}
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            // toggle visibility of edit icon for topic title
-            jQuery('#edittopicsubjectbutton').hover(
-                    function() {jQuery('#edittopicicon').removeClass('z-hide');},
-                    function() {jQuery('#edittopicicon').addClass('z-hide');}
-            );
-            jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', '{{gt text="Click to edit"}}');
-            jQuery('#edittopicsubjectbutton').click(function() {jQuery('#topicsubjectedit_editor').removeClass('z-hide')}
-            );
-            jQuery('#topicsubjectedit_cancel').click(function() {jQuery('#topicsubjectedit_editor').addClass('z-hide')}
-            );
-            jQuery("#topicsubjectedit_save").click(changeTopicTitle);
-        });
-    </script>
 {/if}
 
-
 {userloggedin assign='userloggedin'}
-
-<div class="dzk_topicoptions roundedbar dzk_rounded" id="topic_{$topic.topic_id}">
-    <div class="inner">
-        <div id="dzk_javascriptareatopic">
-            <ul class="dzk_topicoptions linklist z-clearfix">
-                {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}
-                    <li><a class="tooltips icon-chevron-left" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}">&nbsp;</a></li>
-                    {/if}
-
-                {if $permissions.comment}
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
-                    {/if}
-
-                {if $userloggedin}
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">&nbsp;{gt text="Send as e-mail"}</a></li>
-                    {/if}
-
-                <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
-
-                {if $userloggedin}
-                    <li>
-                        {if $isSubscribed}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
-                            {gt text="Unsubscribe from topic" assign='msg'}
-                        {else}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
-                            {gt text="Subscribe to topic" assign='msg'}
-                        {/if}
-                        <a id="toggletopicsubscription" class="tooltips icon-chevron-sign-right" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
-                    </li>
-                    {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
-                        <li>
-                            {if $topic.solved}
-                                {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
-                                {gt text="Mark as unsolved" assign='msg'}
-                            {else}
-                                {modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
-                                {gt text="Mark as solved" assign='msg'}
-                            {/if}
-                            <a id="toggletopicsolve" class="tooltips icon-chevron-sign-right" data-status="{if $topic.solved}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
-                        </li>
-                    {/if}
-                {/if}
-
-                {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}
-                    <li>
-                        <a class="tooltips icon-chevron-right" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}">
-                            &nbsp;
-                        </a>
-                    </li>
-                {/if}
-            </ul>
-
-            {if $permissions.moderate eq 1}
-                <ul class="dzk_topicoptions linklist z-clearfix">
-                    <li>
-                        {if $topic.status eq 0}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
-                            {gt text="Lock topic" assign='msg'}
-                        {else}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
-                            {gt text="Unlock topic" assign='msg'}
-                        {/if}
-                        <a id="toggletopiclock" class="tooltips icon-chevron-sign-right" title="{$msg}" data-status="{if $topic.status}1{else}0{/if}" href="{$url}">&nbsp;{$msg}</a>
-                    </li>
-
-                    <li>
-                        {if $topic.sticky eq 0}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
-                            {gt text="Give this topic 'sticky' status" assign='msg'}
-                        {else}
-                            {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
-                            {gt text="Remove 'sticky' status" assign='msg'}
-                        {/if}
-                        <a id="toggletopicsticky" class="tooltips icon-chevron-sign-right" title="{$msg}" data-status="{if $topic.sticky}1{else}0{/if}" href="{$url}">&nbsp;{$msg}</a>
-                    </li>
-
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}">&nbsp;{gt text="Move topic"}</a></li>
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}">&nbsp;{gt text="Delete topic"}</a></li>
-                </ul>
-            {/if}
-            <span class="z-clearfix dzk_bottomlink"><a class="dzk_notextdecoration" title="{gt text="Bottom"}" href="#bottom"><i class=' icon-chevron-sign-down'></i></a></span>
-        </div>
-
+<nav class="navbar navbar-topic navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-topic-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand icon-comments" style='font-size:3em;color:mediumseagreen' href="#"></a>
     </div>
-</div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div id="navbar-topic-collapse" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-left">
+            {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}{assign var='disabled' value=''}{else}{assign var='disabled' value=' disabled'}{/if}
+            <li><a class="tooltips icon-chevron-left{$disabled}" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}"></a></li>
+            {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}{assign var='disabled' value=''}{else}{assign var='disabled' value=' disabled'}{/if}
+            <li><a class="tooltips icon-chevron-right{$disabled}" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}"></a></li>
+
+            {if $permissions.comment}
+            <li><a class="icon-comment-alt tooltips" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
+            {/if}
+
+            {if $userloggedin}
+            <li><a class="tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">
+               <span class="icon-stack">
+                   <i class="icon-envelope-alt"></i>
+                   <i class="icon-share-alt icon-overlay-upper-left" style='color:lightblue;'></i>
+               </span>
+            </a></li>
+            {/if}
+
+            <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>
+
+            {if $userloggedin}
+            <li>
+                {if $isSubscribed}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
+                    {gt text="Unsubscribe from topic" assign='msg'}
+                {else}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
+                    {gt text="Subscribe to topic" assign='msg'}
+                {/if}
+                <a id="toggletopicsubscription" class="tooltips" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">
+                    {if $isSubscribed}{$unsubscribe_icon}{else}{$subscribe_icon}{/if}
+                </a>
+            </li>
+                {usergetvar name='uid' assign='currentUser'}
+                {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
+                <li>
+                    {if $topic.solved}
+                        {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
+                        {gt text="Mark as unsolved" assign='msg'}
+                    {else}
+                        {modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
+                        {gt text="Mark as solved" assign='msg'}
+                    {/if}
+                    <a id="toggletopicsolve" class="tooltips" data-status="{if $topic.solved}1{else}0{/if}" href="{$url}" title="{$msg}">
+                        {if $topic.solved}{$unsolve_icon}{else}{$solve_icon}{/if}
+                    </a>
+                </li>
+                {/if}
+            {/if}
+
+        </ul>
+        {if $permissions.moderate eq 1}
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                {if $topic.status eq 0}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
+                    {gt text="Lock topic" assign='msg'}
+                    {assign var="iconclass" value="icon-lock"}
+                {else}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
+                    {gt text="Unlock topic" assign='msg'}
+                    {assign var="iconclass" value="icon-unlock"}
+                {/if}
+                <a id="toggletopiclock" class="{$iconclass} tooltips" title="{$msg}" data-status="{if $topic.status}1{else}0{/if}" href="{$url}"></a>
+            </li>
+
+            <li>
+                {if $topic.sticky eq 0}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
+                    {gt text="Give this topic 'sticky' status" assign='msg'}
+                {else}
+                    {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
+                    {gt text="Remove 'sticky' status" assign='msg'}
+                {/if}
+                <a id="toggletopicsticky" class="tooltips" title="{$msg}" data-status="{if $topic.sticky}1{else}0{/if}" href="{$url}">
+                    {if $topic.sticky eq 0}{$sticky_icon}{else}{$unsticky_icon}{/if}
+                </a>
+            </li>
+
+            <li><a class="icon-arrow-right tooltips" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
+            <li><a class="icon-remove tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}"></a></li>
+            <li><a class="dzk_notextdecoration tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class=' icon-chevron-sign-down'></i></a></li>
+        </ul>
+        {/if}
+    </div><!-- /.navbar-collapse -->
+</nav>
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
@@ -212,14 +218,21 @@
     <script type="text/javascript">
         // @TODO Replace by Zikula.__() and remove this vars.
         // <![CDATA[
+        var clickToEdit = "{{gt text="Click to edit"}}";
         var subscribeTopic = " {{gt text='Subscribe to topic'}}";
+        var subscribeTopicIcon = "{{$subscribe_icon|strip|addslashes}}";
         var unsubscribeTopic = " {{gt text='Unsubscribe from topic'}}";
+        var unsubscribeTopicIcon = "{{$unsubscribe_icon|strip|addslashes}}";
         var lockTopic = " {{gt text='Lock topic'}}";
         var unlockTopic = " {{gt text='Unlock topic'}}";
         var stickyTopic = " {{gt text="Give this topic 'sticky' status"}}";
+        var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";
         var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
+        var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";
         var solveTopic = " {{gt text="Mark as solved"}}";
+        var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";
         var unsolveTopic = " {{gt text="Mark as unsolved"}}";
+        var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";
         var zChanged = "{{gt text="Changed"}}";
         var zLoadingPost = "{{gt text="Loading post"}}";
         var zDeletingPost = "{{gt text="Deleting post"}}";

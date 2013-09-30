@@ -799,6 +799,34 @@ dl.icon {
 #dizkus .icon-stack-base {
     color:#DCDCDC;
 }
+#dizkus .navbar-nav li a {
+    font-size: 1.2em;
+}
+#dizkus .navbar-topic .navbar-nav li a {
+    font-size: 1.8em;
+}
+#dizkus .dizkus-main .navbar-nav li a {
+    font-size: 1.0em;
+}
+
+#dizkus .navbar-nav .icon-stack {
+    width: 1em;
+    height: 1em;
+    line-height: normal;
+    vertical-align: inherit;
+}
+#dizkus .navbar-nav .icon-stack-base {
+    top: -.25em;
+    left: -.2em;
+}
+
+/****
+/* BOOTSTRAP OVERRIDES
+****/
+#dizkus .tooltip-inner {
+    white-space:pre;
+    max-width:none;
+}
 
 /***********************
 /* CORNER RIBBONS

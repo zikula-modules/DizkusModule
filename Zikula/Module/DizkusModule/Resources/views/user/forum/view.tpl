@@ -65,17 +65,27 @@
         </div>
     </div>
     {/if}
-
 {if $permissions.comment eq true}
     {if $forum.lvl > 0}
-        <div class="roundedbar dzk_rounded">
-            <div class="inner">
-                <ul id="dzk_javascriptareaforum" class="linklist z-clearfix">
-                    {if $permissions.comment && !$forum->isLocked()}
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
-                    {/if}
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-forum-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{$forum.name|safetext}</a>
+        </div>
 
-                    {if $coredata.logged_in}
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="navbar-forum-collapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                {if $permissions.comment && !$forum->isLocked()}
+                <li><a class='icon-comment-alt' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
+                {/if}
+                {if $coredata.logged_in}
                     <li>
                         {modapifunc modname=$module type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
                         {if !$isSubscribed}
@@ -85,29 +95,29 @@
                             {modurl modname=$module type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
                             {gt text="Unsubscribe from forum" assign='msg'}
                         {/if}
-                        <a id="forum-subscription" class="tooltips icon-chevron-sign-right" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
+                        <a class='icon-envelope-alt' id="forum-subscription" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                     </li>
                     {if $modvars.ZikulaDizkusModule.favorites_enabled eq "yes"}
-                    <li>
-                        {modapifunc modname=$module type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
-                        {if $isFavorite}
-                            {modurl modname=$module type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
-                            {gt text="Remove forum from favourites" assign='msg'}
-                        {else}
-                            {modurl modname=$module type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
-                            {gt text="Add forum to favourites" assign='msg'}
-                        {/if}
-                        <a id="forum-favourite" class="tooltips icon-chevron-sign-right" data-status="{if $isFavorite}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
-                    </li>
+                        <li>
+                            {modapifunc modname=$module type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
+                            {if $isFavorite}
+                                {modurl modname=$module type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
+                                {gt text="Remove forum from favourites" assign='msg'}
+                            {else}
+                                {modurl modname=$module type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
+                                {gt text="Add forum to favourites" assign='msg'}
+                            {/if}
+                            <a class='icon-heart-empty' id="forum-favourite" data-status="{if $isFavorite}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
+                        </li>
                     {/if}
-                    {/if}
+                {/if}
 
-                    {if $isModerator OR $permissions.moderate}
-                    <li><a class="tooltips icon-chevron-sign-right" title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
-                    {/if}
-                </ul>
-            </div>
-        </div>
+                {if $isModerator OR $permissions.moderate}
+                    <li><a class='icon-wrench' title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
+                {/if}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
     {/if}
 {/if}
 </div>
