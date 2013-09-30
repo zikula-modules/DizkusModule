@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
     hookQuickReplyCancel();
 
     // Show cancel button.
-    jQuery('#btnCancelQuickReply').removeClass('hidden');
+    jQuery('#btnCancelQuickReply').show();
 
     jQuery('a.disabled').click(function(e) {
         e.preventDefault();
@@ -30,13 +30,19 @@ jQuery(document).ready(function() {
     });
     // toggle visibility of edit icon for topic title
     jQuery('#edittopicsubjectbutton').hover(
-        function() {jQuery('#edittopicicon').show();},
+        function() {
+            if (typeof jQuery('#userAllowedToEdit').val() !== "undefined") {
+                jQuery('#edittopicicon').show();
+            }
+        },
         function() {jQuery('#edittopicicon').hide();}
     );
-    jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
-    jQuery('#edittopicsubjectbutton').click(function() { jQuery('#topicsubjectedit_editor').show() });
-    jQuery('#topicsubjectedit_cancel').click(function() { jQuery('#topicsubjectedit_editor').hide() });
-    jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+    if (typeof jQuery('#userAllowedToEdit').val() !== "undefined") {
+        jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
+        jQuery('#edittopicsubjectbutton').click(function() { jQuery('#topicsubjectedit_editor').show() });
+        jQuery('#topicsubjectedit_cancel').click(function() { jQuery('#topicsubjectedit_editor').hide() });
+        jQuery("#topicsubjectedit_save").click(changeTopicTitle);
+    }
 });
 
 function changeTopicStatus(e) {

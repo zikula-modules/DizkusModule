@@ -96,8 +96,8 @@
             {/if}
 
         </ul>
-        {if $permissions.moderate eq 1}
         <ul class="nav navbar-nav navbar-right">
+            {if $permissions.moderate eq 1}
             <li>
                 {if $topic.status eq 0}
                     {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
@@ -126,9 +126,9 @@
 
             <li><a class="icon-arrow-right tooltips" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
             <li><a class="icon-remove tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}"></a></li>
+            {/if}
             <li><a class="dzk_notextdecoration tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class=' icon-chevron-sign-down'></i></a></li>
         </ul>
-        {/if}
     </div><!-- /.navbar-collapse -->
 </nav>
 
@@ -191,7 +191,7 @@
                                                 <li id="quickreplybuttons">
                                                     <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
                                                     <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
-                                                    <button id="btnCancelQuickReply" class="btn btn-danger" type="submit" name="cancel">{gt text="Cancel"}</button>
+                                                    <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
                                                 </li>
                                             </ul>
                                         </div>
