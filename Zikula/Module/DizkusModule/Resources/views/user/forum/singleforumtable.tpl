@@ -54,7 +54,7 @@
         {/foreach}
 
         {assign var='freeTopicsInForum' value=$parent.topics|count}
-        {if $freeTopicsInForum > 0}
+        {if $freeTopicsInForum > 0 && $func eq 'index'}
         <tr>
             <td colspan='6' class='text-center success'>{gt text="There is %s topic not in a subforum." plural="There are %s topics not in a subforum." tag1=$freeTopicsInForum count=$freeTopicsInForum}
                 <a id="forumlink_{$parent.name}" title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname=$module type='user' func='viewforum' forum=$parent.forum_id}">{gt text="Go to forum"} '{$parent.name|safetext}'</a>
