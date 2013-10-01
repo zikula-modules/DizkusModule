@@ -58,7 +58,7 @@
             {foreachelse}
             <tr>
                 <td colspan='6' class='text-center warning'>
-                    {gt text="No child forums available."}
+                    {gt text="No subforums available."}
                 </td>
             </tr>
             {/foreach}
@@ -66,7 +66,7 @@
             {assign var='freeTopicsInForum' value=$parent.topics|count}
             {if $freeTopicsInForum > 0}
             <tr>
-                <td colspan='6' class='text-center success'>{gt text="There is %s topic not in a child forum." plural="There are %s topics not in a subforum." tag1=$freeTopicsInForum count=$freeTopicsInForum}
+                <td colspan='6' class='text-center success'>{gt text="There is %s topic not in a subforum." plural="There are %s topics not in a subforum." tag1=$freeTopicsInForum count=$freeTopicsInForum}
                     <a id="forumlink_{$parent.name}" title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname=$module type='user' func='viewforum' forum=$parent.forum_id}">{gt text="Go to forum"} '{$parent.name|safetext}'</a>
                 </td>
             </tr>
