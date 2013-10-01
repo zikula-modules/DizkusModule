@@ -1,5 +1,4 @@
-{if $modvars.ZikulaDizkusModule.forum_enabled neq 'no'}
-
+    {if $modvars.ZikulaDizkusModule.forum_enabled neq 'no'}
     <div class="dzk_marginbottom">
         {formutil_getpassedvalue name='func' default='index' assign='func'}
         {if ($func eq 'index' OR $func eq 'viewforum') AND isset($forum)}
@@ -22,43 +21,33 @@
                 <li><strong>{gt text='The time is now'} {$smarty.now|dateformat:'datetimebrief'}</strong></li>
             </ul>
         {/if}
-
-        {if $func eq 'index' && $numposts}
-            <h3 class="footer_title">{gt text="Total"}</h3>
-            <ul>
-                <li>
-                    <a title="{gt text="RSS Feed"}" href="{modurl modname=$module type='user' func='feed'}"><i class='icon-rss-sign icon-150x icon-orange'></i></a>
-                    {gt text="Total posts: %s" tag1=$numposts}
-                </li>
-            </ul>
-        {/if}
-
+<!--
         {dizkusonline assign='online'}
         {assign var='anonsessions' value=$modvars.ZConfig.anonymoussessions}
         {assign var='mins' value=$modvars.ZConfig.secinactivemins}
 
         <h3 class="footer_title">{gt text="Users on-line"}</h3>
         <ul id="ctheme_onlinelist" class="z-clearfix">
-            {if $online.numusers > 0}
-                {foreach name='onlineusers' item='user' from=$online.unames}
-                    <li>
-            {if $user.admin == '1'}{$user.uname|profilelinkbyuname}{else}{$user.uname|profilelinkbyuname}{/if}{if !$smarty.foreach.onlineusers.last}, {/if}
-        </li>
-    {/foreach}
-{else}
-    <li>
-        {gt text="0 users"}
-    </li>
-{/if}
+        {if $online.numusers > 0}
+            {foreach name='onlineusers' item='user' from=$online.unames}
+            <li>
+                {if $user.admin == '1'}{$user.uname|profilelinkbyuname}{else}{$user.uname|profilelinkbyuname}{/if}{if !$smarty.foreach.onlineusers.last}, {/if}
+            </li>
+            {/foreach}
+        {else}
+            <li>
+                {gt text="0 users"}
+            </li>
+        {/if}
 
-{if $online.numguests > 0 and $anonsessions == 1}
-    <li>
-        {gt text='and %1$s anonymous guest' plural='and %1$s anonymous guests' count=$online.numguests tag1=$online.numguests}
-    </li>
-{/if}
-</ul>
-<p class="z-sub">{gt text='This list is based on users active over the last %s minutes.' tag1=$mins}</p>
-</div>
-
-{/if}
-</div>
+        {if $online.numguests > 0 and $anonsessions == 1}
+            <li>
+                {gt text='and %1$s anonymous guest' plural='and %1$s anonymous guests' count=$online.numguests tag1=$online.numguests}
+            </li>
+        {/if}
+        </ul>
+        <p class="z-sub">{gt text='This list is based on users active over the last %s minutes.' tag1=$mins}</p>
+    </div>
+    {/if}
+-->
+</div><!-- div opened in user/header.tpl -->

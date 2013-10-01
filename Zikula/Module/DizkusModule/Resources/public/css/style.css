@@ -792,7 +792,9 @@ dl.icon {
     margin-bottom: 1em;
 }
 
-/* FontAwesome additions */
+/***********************
+/* FontAwesome additions
+***********************/
 .icon-150x {
     font-size: 1.5em;
 }
@@ -816,12 +818,13 @@ dl.icon {
     left: -.2em;
 }
 
-/****
+/***********************
 /* BOOTSTRAP OVERRIDES
-****/
+***********************/
 #dizkus .tooltip-inner {
     white-space:pre;
     max-width:none;
+    font-weight: normal;
 }
 
 /***********************
@@ -875,4 +878,31 @@ dl.icon {
 .ribbon-red {
     background-color: #A60400;
     color: #ffffff;
+}
+
+/***********************
+/* THEME CORRECTIONS
+************************/
+#dizkus h2 {
+    background-color: transparent !important;
+}
+
+/***********************
+/* FORUM TABLE
+***********************/
+#dizkus table.table  {
+    border-top: 1px solid #999999;
+}
+#dizkus table.table th {
+    color: #999999;
+}
+#dizkus table.table th a {
+    margin-left: .75em;
+}
+#dizkus table.table .data {
+    width: 6em;
+    text-align: center;
+}
+#dizkus table.table .lastpost {
+    width: 30%;
 }

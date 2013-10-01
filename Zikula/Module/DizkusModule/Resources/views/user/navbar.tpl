@@ -49,11 +49,12 @@
                 {assign value="index.php?"|cat:$smarty.server.QUERY_STRING|urlencode var='redirect'}
                 <li><a title="{gt text="Log-in"}" href="{modurl modname="Users" type="user" func="login" returnpage=$redirect}">{gt text="Log-in"}</a></li>
                 <li><a title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
+                <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='icon-search'></i></a></li>
             {else}
                 <li><a class='icon-comment' title="{gt text="View your posts"}" href="{modurl modname=$module type='user' func='mine'}">&nbsp;{gt text="View your posts"}</a></li>
+                <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='icon-search'></i></a></li>
                 <li><a class='tooltips' title="{gt text="Personal settings"}" href="{modurl modname=$module type='user' func='prefs'}"><i class='icon-user'></i><i class='icon-wrench'></i></a></li>
             {/if}
-            <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='icon-search'></i></a></li>
             {checkpermissionblock component="Dizkus::" instance=".*" level="ACCESS_ADMIN"}
                 <li><a class='tooltips' title="{gt text="Administrate Dizkus"}" href="{modurl modname=$module type='admin' func='index'}"><i class='icon-cogs'></i></a></li>
             {/checkpermissionblock}
