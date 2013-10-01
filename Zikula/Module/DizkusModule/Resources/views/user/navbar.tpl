@@ -22,6 +22,9 @@
         <li>&nbsp;<em>({gt text="Favorites"})</em></li>
     {/if}
 </ol>
+{* ******************************************************
+* MAIN NAVBAR
+******************************************************* *}
 <nav class="navbar navbar-inverse dizkus-main" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
