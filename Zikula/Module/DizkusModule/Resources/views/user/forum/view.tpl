@@ -9,7 +9,15 @@
 
 {if count($forum.children) > 0}
 <div class="panel panel-default">
-    <div class="panel-heading"><h2 class='icon-comments'>&nbsp;{$forum.name|safetext}</h2></div>
+    <div class="panel-heading">
+        <h2>
+            <span class="icon-stack">
+              <i class="icon-comments icon-stack-base"></i>
+              {if $forum->isLocked()}<i class="icon-lock icon-overlay-lower-right"></i>{/if}
+            </span>
+            &nbsp;{$forum.name|safetext}
+        </h2>
+    </div>
     {if $forum.description neq ''}
     <div class="panel-body">{$forum.description|safehtml}</div>
     {/if}
@@ -94,7 +102,7 @@
 {/if}
 
 {if $topics}
-    {if ((count($topics) > 0) || (!$forum->isLocked()))}
+    {if (count($topics) > 0)}
 
         {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
@@ -166,9 +174,9 @@
 
         </div>
         {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
-    {else}
-        <div class="forumbg dzk_message dzk_rounded">
-            <div class="inner"><strong>{gt text="There are no topics in this forum."}</strong></div>
+    {elseif (!$forum->isLocked())}
+        <div class="alert alert-info text-center">
+            {gt text="There are no topics in this forum yet."}&nbsp;<a class='icon-comment-alt btn btn-info btn-sm' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="Start a new topic"}</a>
         </div>
     {/if}
 {/if}
