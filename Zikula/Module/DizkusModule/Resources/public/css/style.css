@@ -886,6 +886,10 @@ dl.icon {
 #dizkus h2 {
     background-color: transparent !important;
 }
+#dizkus .panel-heading h2.dizkus-clean {
+    padding: 0;
+    margin: 0;
+}
 
 /***********************
 /* FORUM TABLE
@@ -905,4 +909,7 @@ dl.icon {
 }
 #dizkus table.table .lastpost {
     width: 30%;
+}
+#dizkus .panel-footer #forum-legend {
+    padding: 1em;
 }
