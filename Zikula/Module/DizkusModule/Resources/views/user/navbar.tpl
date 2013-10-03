@@ -1,4 +1,4 @@
-<ol class="breadcrumb">
+<ol class="breadcrumb clearfix">
     <li>
     {if ($smarty.get.func neq "index")}
         <a class="tooltips icon-home" title="{gt text='Go to forums index page'}" href="{modurl modname=$module type='user' func='index'}">&nbsp;{gt text="Forums index page"}</a>
@@ -9,18 +9,19 @@
 
     {if isset($breadcrumbs)}
     {foreach from=$breadcrumbs item='breadcrumb'}
-    <li><a class="tooltips" href="{$breadcrumb.url}" title="{$breadcrumb.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}">{$breadcrumb.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</a></li>
+    <li><a href="{$breadcrumb.url}"">{$breadcrumb.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</a></li>
     {/foreach}
     {/if}
 
     {if isset($templatetitle)}
-    <li><span class="tooltips">{$templatetitle|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span></li>
+    <li><span>{$templatetitle|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span></li>
     {/if}
 
     {modapifunc modname=$module type='Favorites' func='getStatus' assign="favorites"}
     {if isset($favorites) and $favorites}
-        <li>&nbsp;<em>({gt text="Favorites"})</em></li>
+        <li><em>{gt text="Favorites"}</em></li>
     {/if}
+    <em class='pull-right'>{gt text='Current forum time:'} {$smarty.now|dateformat:'datetimebrief'}</em>
 </ol>
 {* ******************************************************
 * MAIN NAVBAR
