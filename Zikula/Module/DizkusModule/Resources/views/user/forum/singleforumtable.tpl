@@ -23,8 +23,6 @@
                         <i class="icon-comments icon-stack-base"></i>
                     {if $comp}
                         <i class="icon-star icon-overlay-upper-left icon-blue"></i>
-                    {else}
-                        <i class="icon-ok icon-overlay-lower-right icon-green"></i>
                     {/if}
                     </span>
                 </a>
