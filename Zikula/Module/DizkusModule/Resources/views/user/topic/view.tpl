@@ -29,6 +29,9 @@
     {include file='ajax/edittopicsubject.tpl'}
 {/if}
 
+{* ******************************************************
+* TOPIC NAVBAR
+******************************************************* *}
 {userloggedin assign='userloggedin'}
 <nav class="navbar navbar-topic navbar-default" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -132,6 +135,9 @@
     </div><!-- /.navbar-collapse -->
 </nav>
 
+{* ******************************************************
+* TOPIC LIST
+******************************************************* *}
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
 <div id="dzk_postinglist">
@@ -150,96 +156,96 @@
 
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
+{* ******************************************************
+* QUICK REPLY FORM
+******************************************************* *}
 {if ($permissions.comment eq true)}
-    <a id="reply">
-        <div id="dzk_quickreply" class="panel panel-info"{if $topic.status eq 1} style='display:none'{/if}>
-            <div class="panel-heading">
-                <h3>{gt text="Quick reply"}</h3>
-            </div>
-            <div class="panel-body">
-                <div class="dzk_subcols z-clearfix">
-                    <form id="quickreplyform" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
-                        <div>
-                            <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
-                            <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
-                            <input type="hidden" id="quote" name="quote" value="" />
-                            <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
-                            <div class="post_text_wrap">
-                                <div class="post_text">
-                                    <div id="dizkusinformation"></div>
-                                    <textarea id="message" name="message" cols="10" rows="60"></textarea>
+    <a id="reply"></a>
+    <div id="dzk_quickreply" class="panel panel-info"{if $topic.status eq 1} style='display:none'{/if}>
+        <div class="panel-heading">
+            <h3>{gt text="Quick reply"}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="dzk_subcols z-clearfix">
+                <form id="quickreplyform" role='form' action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
+                    <div id="dizkusinformation_0" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
+                    <div class="form-group">
+                        <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
+                        <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
+                        <input type="hidden" id="quote" name="quote" value="" />
+                        <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
+                        <label for="message" class="sr-only">{gt text="Message"}</label>
+                        <textarea id="message" class="form-control" name="message" rows="10"></textarea>
 
-                                    {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-                                        <p class='text-info'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
-                                    {/if}
-
-                                    {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
-                                    <div class="dzk_subcols z-clearfix">
-                                        <div id="quickreplyoptions" class="dzk_col_left">
-                                            <ul>
-                                                <li><strong>{gt text="Options"}</strong></li>
-                                                        {if $userloggedin}
-                                                    <li>
-                                                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                                                        <label for="attach_signature">{gt text="Attach my signature"}</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
-                                                        <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
-                                                    </li>
-                                                {/if}
-                                                <li id="quickreplybuttons">
-                                                    <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
-                                                    <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
-                                                    <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post_footer"></div>
+                        {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
+                            <p class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                        {/if}
+                    </div>
+                    <div class="form-group">
+                        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+                    </div>
+                    <div class="form-group">
+                        <div id="quickreplyoptions">
+                            <ul>
+                                <li><strong>{gt text="Options"}</strong></li>
+                                {if $userloggedin}
+                                    <li>
+                                        <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                                        <label for="attach_signature">{gt text="Attach my signature"}</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
+                                        <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
+                                    </li>
+                                {/if}
+                                <li id="quickreplybuttons">
+                                    <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
+                                    <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
+                                    <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
+                                </li>
+                            </ul>
                         </div>
-                    </form>
-                </div>
-
+                    </div>
+                    <div class="post_footer"></div>
+                </form>
             </div>
         </div>
+    </div>
 
-        <div id="dzk_displayhooks">
-            {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_view' id=$topic.topic_id}
-        </div>
+    <div id="dzk_displayhooks">
+        {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_view' id=$topic.topic_id}
+    </div>
 
-    {/if}
+{/if}
 
 
-    {include file='user/moderatedBy.tpl' forum=$topic.forum}
+{include file='user/moderatedBy.tpl' forum=$topic.forum}
 
-    <script type="text/javascript">
-        // @TODO Replace by Zikula.__() and remove this vars.
-        // <![CDATA[
-        var clickToEdit = "{{gt text="Click to edit"}}";
-        var subscribeTopic = " {{gt text='Subscribe to topic'}}";
-        var subscribeTopicIcon = "{{$subscribe_icon|strip|addslashes}}";
-        var unsubscribeTopic = " {{gt text='Unsubscribe from topic'}}";
-        var unsubscribeTopicIcon = "{{$unsubscribe_icon|strip|addslashes}}";
-        var lockTopic = " {{gt text='Lock topic'}}";
-        var unlockTopic = " {{gt text='Unlock topic'}}";
-        var stickyTopic = " {{gt text="Give this topic 'sticky' status"}}";
-        var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";
-        var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
-        var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";
-        var solveTopic = " {{gt text="Mark as solved"}}";
-        var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";
-        var unsolveTopic = " {{gt text="Mark as unsolved"}}";
-        var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";
-        var zChanged = "{{gt text="Changed"}}";
-        var zLoadingPost = "{{gt text="Loading post"}}";
-        var zDeletingPost = "{{gt text="Deleting post"}}";
-        var zUpdatingPost = "{{gt text="Updating post"}}";
-        var zStoringReply = "{{gt text="Storing reply"}}";
-        var zPreparingPreview = "{{gt text="Preparing preview"}}";
-        // ]]>
-    </script>
-    <a id="bottom" accesskey="b"></a>
-    {include file='user/footer.tpl'}
+<script type="text/javascript">
+    // @TODO Replace by Zikula.__() and remove this vars.
+    // <![CDATA[
+    var clickToEdit = "{{gt text="Click to edit"}}";
+    var subscribeTopic = " {{gt text='Subscribe to topic'}}";
+    var subscribeTopicIcon = "{{$subscribe_icon|strip|addslashes}}";
+    var unsubscribeTopic = " {{gt text='Unsubscribe from topic'}}";
+    var unsubscribeTopicIcon = "{{$unsubscribe_icon|strip|addslashes}}";
+    var lockTopic = " {{gt text='Lock topic'}}";
+    var unlockTopic = " {{gt text='Unlock topic'}}";
+    var stickyTopic = " {{gt text="Give this topic 'sticky' status"}}";
+    var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";
+    var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
+    var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";
+    var solveTopic = " {{gt text="Mark as solved"}}";
+    var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";
+    var unsolveTopic = " {{gt text="Mark as unsolved"}}";
+    var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";
+    var zChanged = "{{gt text="Changed"}}";
+    var zLoadingPost = "{{gt text="Loading post"}}";
+    var zDeletingPost = "{{gt text="Deleting post"}}";
+    var zUpdatingPost = "{{gt text="Updating post"}}";
+    var zStoringReply = "{{gt text="Storing reply"}}";
+    var zPreparingPreview = "{{gt text="Preparing preview"}}";
+    // ]]>
+</script>
+<a id="bottom" accesskey="b"></a>
+{include file='user/footer.tpl'}

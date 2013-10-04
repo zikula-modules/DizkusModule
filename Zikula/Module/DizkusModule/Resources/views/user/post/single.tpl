@@ -74,7 +74,7 @@
             </div>
 
             <div class="postbody dzk_colpost_right">
-                <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;"></div>
+                <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}

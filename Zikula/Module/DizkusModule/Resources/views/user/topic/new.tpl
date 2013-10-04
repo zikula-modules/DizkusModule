@@ -9,50 +9,49 @@
 {/if}
 
 
-{form cssClass="z-form z-linear"}
+{form role="form"}
 {formvalidationsummary}
-<fieldset>
+<fieldset class='well'>
 
-    <div class="z-formrow">
+    <div class="form-group">
         {formlabel for="title" __text="Subject line"}
-        {formtextinput id="title" size="80" maxLength="100" mandatory=true}
+        {formtextinput id="title" size="80" maxLength="100" mandatory=true cssClass="form-control"}
     </div>
 
-    <br />
-    {formlabel for="message" __text="Message" class='z-hide'}
-    {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLength="65527" mandatory=true}
+    <div class="form-group">
+    {formlabel for="message" __text="Message" class='sr-only'}
+    {formtextinput id="message" textMode="multiline" rows="10" cols="60" maxLength="65527" mandatory=true cssClass="form-control"}
     {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-        <p>
-            {gt text="No HTML tags allowed (except inside [code][/code] tags)"}
-        </p>
+        <span class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</span>
     {/if}
+    </div>
+
+    <div class="form-group">
     {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
     {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_edit' id=null}
+    </div>
 
-    <div class="dzk_subcols z-clearfix">
-        <div id="newtopicoptions" class="dzk_col_left">
-            <ul>
-                <li><strong>{gt text="Options"}</strong></li>
-                        {if $coredata.logged_in}
-                    <li>
-                        {formcheckbox id="attachSignature" checked=1}
-                        {formlabel for="attachSignature" __text="Attach my signature"}
-                    </li>
-                    <li>
-                        {formcheckbox id="subscribe_topic" checked=1}
-                        {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
-                    </li>
-                {/if}
-            </ul>
-        </div>
-    </div><br />
+    <div id="newtopicoptions" class="form-group">
+        <ul>
+            <li><strong>{gt text="Options"}</strong></li>
+            {if $coredata.logged_in}
+            <li>
+                {formcheckbox id="attachSignature" checked=1}
+                {formlabel for="attachSignature" __text="Attach my signature"}
+            </li>
+            <li>
+                {formcheckbox id="subscribe_topic" checked=1}
+                {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
+            </li>
+            {/if}
+        </ul>
+    </div>
 
-
-    <div class="z-formbuttons z-buttons">
-        {formbutton class="z-bt-ok"      commandName="save"   __text="Submit"}
-        {formbutton class="z-bt-preview" commandName="preview" __text="Preview"}
-        {formbutton class="z-bt-cancel"  commandName="cancel" __text="Cancel"}
-    </div><br />
+    <div>
+        {formbutton class="btn btn-success" commandName="save"   __text="Submit"}
+        {formbutton class="btn btn-info" commandName="preview" __text="Preview"}
+        {formbutton class="btn btn-danger" commandName="cancel" __text="Cancel"}
+    </div>
 
 </fieldset>
 {/form}

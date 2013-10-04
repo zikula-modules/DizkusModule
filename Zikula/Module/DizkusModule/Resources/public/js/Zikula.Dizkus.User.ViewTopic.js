@@ -252,28 +252,32 @@ var postId = false;
 
 /**
  * Shows an ajax indicator for a post or a quick reply.
+ * spinner icon is located in the template so text is appended then .show() parent div
  * @param text The text to show next to the icon.
  * @param postId If set, the ajax indicator will be shown for a post, else for a quick reply.
  */
 function showAjaxIndicator(text, postId) {
-    // @todo this image loads too slowly so it doesn't actually show
-    var img = '<img width="16" height="16" class="dzk_ajaxindicator" src=Zikula.Config.baseURL+"images/ajax/indicator.white.gif" alt="" />';
     if (postId) {
-        jQuery('#dizkusinformation_' + postId).html('<span style="color: red;">' + img + text + '</span>').fadeIn();
+        text = '<span id="ajaxindicatortext_' + postId + '">&nbsp;' + text + '</span>';
+        jQuery('#dizkusinformation_' + postId).append(text).show();
     } else {
-        jQuery('#dizkusinformation').html(img + text).show();
+        text = '<span id="ajaxindicatortext_0">&nbsp;' + text + '</span>';
+        jQuery('#dizkusinformation_0').append(text).show();
     }
 }
 
 /**
  * Hides an ajax indicator for a post or a quick reply.
+ * removes appended text then .hide() the parent div
  * @param postId If set, the ajax indicator will be hidden for a post, else for a quick reply.
  */
 function hideAjaxIndicator(postId) {
     if (postId) {
-        jQuery('#dizkusinformation_' + postId).html("").hide();
+        jQuery('#ajaxindicatortext_' + postId).remove();
+        jQuery('#dizkusinformation_' + postId).hide();
     } else {
-        jQuery('#dizkusinformation').html("").hide();
+        jQuery('#ajaxindicatortext_0').remove();
+        jQuery('#dizkusinformation_0').hide();
     }
 }
 
