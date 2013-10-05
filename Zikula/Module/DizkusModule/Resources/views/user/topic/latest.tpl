@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    {include file='user/topic/list.tpl'}
+    {include file='user/forum/forumtopicstable.tpl'}
 
 </div>
 

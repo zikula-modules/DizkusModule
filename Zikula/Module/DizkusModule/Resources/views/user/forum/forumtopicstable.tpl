@@ -11,7 +11,11 @@
     {foreach item=topic from=$topics}
         <tr>
             <td class='data'>
-                {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                {if isset($forum)}
+                    {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
+                {else}
+                    {assign value=false var="comp"}
+                {/if}
                 <span class="icon-stack icon-2x">
                     {if $topic.sticky eq 1}
                     <i title='{gt text="Topic is pinned to top of list."}' class="icon-bullhorn tooltips icon-stack-base"></i>
