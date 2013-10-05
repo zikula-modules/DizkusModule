@@ -102,7 +102,7 @@ class RankApi extends \Zikula_AbstractApi
                 $rankId = $rankId == 0 ? null : $rankId;
                 $managedForumUser = new ForumUserManager($userId);
                 if (isset($rankId)) {
-                    $rank = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\RankEntity', $rankId);
+                    $rank = $this->entityManager->getReference('Zikula\Module\DizkusModule\Entity\RankEntity', $rankId);
                     $managedForumUser->get()->setRank($rank);
                 } else {
                     $managedForumUser->get()->clearRank();

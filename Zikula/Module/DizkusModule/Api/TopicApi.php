@@ -260,7 +260,7 @@ class TopicApi extends \Zikula_AbstractApi
         if ($managedTopic->getForumId() != $args['forum_id']) {
             // set new forum
             $oldForumId = $managedTopic->getForumId();
-            $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args['forum_id']);
+            $forum = $this->entityManager->getReference('Zikula\Module\DizkusModule\Entity\ForumEntity', $args['forum_id']);
             $managedTopic->get()->setForum($forum);
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
