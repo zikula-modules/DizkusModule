@@ -71,8 +71,8 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
         $data = $view->getValues();
 
         if (count($data['topicIds']) > 0) {
-            foreach (array_keys($data['topicIds']) as $topicId) {
-                if ($topicId) {
+            foreach ($data['topicIds'] as $topicId => $selected) {
+                if ($selected) {
                     ModUtil::apiFunc($this->name, 'Topic', 'unsubscribe', array('topic' => $topicId));
                 }
             }
