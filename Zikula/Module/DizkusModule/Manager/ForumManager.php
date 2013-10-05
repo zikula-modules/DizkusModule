@@ -115,7 +115,9 @@ class ForumManager
             // already root
             return array();
         }
-        $forums = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->getPath($this->_forum);
+        $forums = $this->entityManager
+            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')
+            ->getPath($this->_forum);
         $output = array();
         foreach ($forums as $key => $forum) {
             if ($key == 0) {
@@ -143,8 +145,18 @@ class ForumManager
     {
         $this->_itemsPerPage = ModUtil::getVar($this->name, 'topics_per_page');
         $id = $this->_forum->getForum_id();
-        $query = $this->entityManager->createQueryBuilder()->select('p')->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 'p')->where('p.forum = :forumId')->setParameter('forumId', $id)->leftJoin('p.last_post', 'l')->orderBy('p.sticky', 'DESC')->addOrderBy('l.post_time', 'DESC')->getQuery();
-        $query->setFirstResult($startNumber - 1)->setMaxResults($this->_itemsPerPage);
+        $query = $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 'p')
+            ->where('p.forum = :forumId')
+            ->setParameter('forumId', $id)
+            ->leftJoin('p.last_post', 'l')
+            ->orderBy('p.sticky', 'DESC')
+            ->addOrderBy('l.post_time', 'DESC')
+            ->getQuery();
+        $query->setFirstResult($startNumber - 1)
+            ->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
 
@@ -266,7 +278,11 @@ class ForumManager
         $dql = 'SELECT m FROM Zikula\\Module\\GroupsModule\\Entity\\GroupMembershipEntity m
             WHERE m.uid = :uid
             AND m.gid IN (:gids)';
-        $groupMembership = $this->entityManager->createQuery($dql)->setParameter('uid', $uid)->setParameter('gids', $gids)->getResult();
+        $groupMembership = $this->entityManager
+            ->createQuery($dql)
+            ->setParameter('uid', $uid)
+            ->setParameter('gids', $gids)
+            ->getResult();
 
         return count($groupMembership) > 0 ? true : false;
     }
