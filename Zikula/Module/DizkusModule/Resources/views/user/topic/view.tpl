@@ -168,7 +168,7 @@
         <div class="panel-body">
             <div class="dzk_subcols z-clearfix">
                 <form id="quickreplyform" role='form' action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
-                    <div id="dizkusinformation_0" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
+                    <div id="dizkusinformation_-1" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                     <div class="form-group">
                         <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                         <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
