@@ -1,4 +1,4 @@
-{gt text="Latest forum posts" assign='templatetitle'}
+{gt text="Your forum posts" assign='templatetitle'}
 {pagesetvar name=title value="`$templatetitle` - `$text`"}
 
 {include file='user/header.tpl'}
