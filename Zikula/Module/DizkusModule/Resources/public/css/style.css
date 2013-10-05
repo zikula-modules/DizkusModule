@@ -641,12 +641,20 @@ div#editpostoptions ul li {
     position:relative;
     width:60%;
 }
-#dizkus #latestposts button {
-    font-size:1em;
-    background: transparent;
-    border: 1px outset #CCCCCC;
-    padding: 2px;
-    line-height: 1em;
+/*#dizkus #latestposts button {*/
+    /*font-size:1em;*/
+    /*background: transparent;*/
+    /*border: 1px outset #CCCCCC;*/
+    /*padding: 2px;*/
+    /*line-height: 1em;*/
+/*}*/
+#dizkus form#nohours-form {
+    margin-top: 10px;
+}
+#dizkus form#nohours-form span {
+    vertical-align: -20%;
+    color:#777;
+    font-size: 1.2em;
 }
 #dizkus .dzk_form label {
     color:#676767;

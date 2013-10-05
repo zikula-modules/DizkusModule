@@ -536,8 +536,8 @@ class UserController extends \Zikula_AbstractController
         }
         // get the input
         $params = array();
-        $params['selorder'] = $this->request->query->get('selorder', 1);
-        $params['nohours'] = (int)$this->request->request->get('nohours', null);
+        $params['selorder'] = $this->request->get('selorder', 1);
+        $params['nohours'] = (int)$this->request->request->get('nohours', 24);
         $params['unanswered'] = (int)$this->request->query->get('unanswered', 0);
         $params['amount'] = (int)$this->request->query->get('amount', null);
         $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', time());

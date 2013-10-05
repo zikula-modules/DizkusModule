@@ -5,31 +5,50 @@
 
 <div id="latestposts">
 
-    <h2>{gt text="Latest forum posts"} ({$text})</h2>
-
-    <div class="roundedbar dzk_rounded">
-        <div class="inner">
-            <form class="dzk_form" method="post" action="{modurl modname=$module type='user' func='viewlatest'}">
-                <ul class="linklist z-clearfix">
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=3}">{gt text="Since Yesterday"}</a></li>
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=2}">{gt text="Today"}</a></li>
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=1}">{gt text="Last 24 hours"}</a></li>
-                    <li><a class="dzk_arrow"></a><input type='hidden' name='selorder' value='5'><button type="submit">{gt text="Last"}</button> <input type="text" name="nohours" id="Dizkus_hours" size="3" value="{$nohours}" maxlength="3" tabindex="0" /> <button type="submit">{gt text="hours"}</button></li>
-                </ul>
-                <ul class="linklist z-clearfix">
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=4}">{gt text="Last week"}</a></li>
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=unanswered}">{gt text="Unanswered"}</a></li>
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=unsolved}">{gt text="Unsolved"}</a></li>
-                        {if $last_visit_unix <> 0}
-                        <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
-                        {/if}
-                </ul>
-            </form>
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {*<a class="navbar-brand" href="#">{gt text='Interval'}</a>*}
         </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <form id="nohours-form" class="navbar-form navbar-right" action="{modurl modname=$module type='user' func='viewlatest'}" method="post">
+                <span>{gt text='Last'}</span>&nbsp;
+                <div class="form-group">
+                    <input type='hidden' name='selorder' value='5'>
+                    <input type="text" class="form-control input-sm" name="nohours" id="Dizkus_hours" size="3" value="{$nohours}" maxlength="3" tabindex="0">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">{gt text="hours"}</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder='unanswered'}">{gt text="Unanswered"}</a></li>
+                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder='unsolved'}">{gt text="Unsolved"}</a></li>
+                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=3}">{gt text="Since Yesterday"}</a></li>
+                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=2}">{gt text="Today"}</a></li>
+                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=4}">{gt text="Last week"}</a></li>
+                {if $last_visit_unix neq 0}
+                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
+                {/if}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{gt text="Latest forum posts"} ({$text})</h2>
+        </div>
+        {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+        {include file='user/forum/forumtopicstable.tpl'}
+        {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+        {include file='user/forum/panelfooter.tpl'}
     </div>
-
-    {include file='user/forum/forumtopicstable.tpl'}
-
 </div>
 
 {include file='user/footer.tpl'}

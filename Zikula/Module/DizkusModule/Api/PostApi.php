@@ -59,6 +59,13 @@ class PostApi extends \Zikula_AbstractApi
                 $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new DateTime('-1 week'));
                 $text = $this->__('In the last week');
                 break;
+            default:
+                // default is case '1'
+                // no break - process as case '1' ...
+            case '1':
+                // last 24 hours
+                $args['nohours'] = 24;
+                // no break - process as case 5 ...
             case '5':
                 // last x hours
                 // maximum two weeks back = 2 * 24 * 7 hours
@@ -81,11 +88,6 @@ class PostApi extends \Zikula_AbstractApi
             case 'unsolved':
                 $qb->where('t.solved = 0');
                 $text = $this->__('Unsolved');
-                break;
-            default:
-                // last 24 hours
-                $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new DateTime('-24 hours'));
-                $text = $this->__('In the last 24 hours');
                 break;
         }
         $qb->setFirstResult(0)->setMaxResults(10);
