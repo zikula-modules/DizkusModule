@@ -39,8 +39,8 @@ jQuery(document).ready(function() {
     );
     if (typeof jQuery('#userAllowedToEdit').val() !== "undefined") {
         jQuery('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
-        jQuery('#edittopicsubjectbutton').click(function() { jQuery('#topicsubjectedit_editor').show() });
-        jQuery('#topicsubjectedit_cancel').click(function() { jQuery('#topicsubjectedit_editor').hide() });
+        jQuery('#edittopicsubjectbutton').click(function() { jQuery('#topicsubjectedit_editor').show(); });
+        jQuery('#topicsubjectedit_cancel').click(function() { jQuery('#topicsubjectedit_editor').hide(); });
         jQuery("#topicsubjectedit_save").click(changeTopicTitle);
     }
 });
@@ -261,8 +261,8 @@ function showAjaxIndicator(text, postId) {
         text = '<span id="ajaxindicatortext_' + postId + '">&nbsp;' + text + '</span>';
         jQuery('#dizkusinformation_' + postId).append(text).show();
     } else {
-        text = '<span id="ajaxindicatortext_0">&nbsp;' + text + '</span>';
-        jQuery('#dizkusinformation_0').append(text).show();
+        text = '<span id="ajaxindicatortext_-1">&nbsp;' + text + '</span>';
+        jQuery('#dizkusinformation_-1').append(text).show();
     }
 }
 
@@ -276,8 +276,8 @@ function hideAjaxIndicator(postId) {
         jQuery('#ajaxindicatortext_' + postId).remove();
         jQuery('#dizkusinformation_' + postId).hide();
     } else {
-        jQuery('#ajaxindicatortext_0').remove();
-        jQuery('#dizkusinformation_0').hide();
+        jQuery('#ajaxindicatortext_-1').remove();
+        jQuery('#dizkusinformation_-1').hide();
     }
 }
 
@@ -312,8 +312,9 @@ function quickEdit(id) {
         postEditingChanged = false;
         postId = id;
 
-        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=editpost', {
-            data: {post: postId}
+        jQuery.ajax({
+            data: {post: postId},
+            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=editpost'
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator(postId);
         });
@@ -388,8 +389,9 @@ function quickEditSave() {
     }, errorHandler = function(request, message, detail) {
         DizkusShowAjaxError(request.responseText);
     };
-    jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=updatepost', {
-        data: pars
+    jQuery.ajax({
+        data: pars,
+        url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=updatepost'
     }).done(successHandler).fail(errorHandler);
 }
 
@@ -474,8 +476,9 @@ function createQuickReply() {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
-        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
-            data: pars
+        jQuery.ajax({
+            data: pars,
+            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();
         });
@@ -517,12 +520,13 @@ function previewQuickReply() {
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
-        jQuery.ajax('index.php?module=ZikulaDizkusModule&type=ajax&func=reply', {
-            data: pars
+        jQuery.ajax({
+            data: pars,
+            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator();
         });
-        showAjaxIndicator(zPreparingPreview+'...');
+        showAjaxIndicator(zPreparingPreview + '...');
     }
 }
 
