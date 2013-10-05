@@ -123,7 +123,14 @@ class UserController extends \Zikula_AbstractController
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
         // filter the forum children by permissions
         $forum = ModUtil::apiFunc($this->name, 'Permission', 'filterForumChildrenByPermission', $managedForum->get());
-        $this->view->assign('forum', $forum)->assign('topics', $managedForum->getTopics($start))->assign('pager', $managedForum->getPager())->assign('permissions', $managedForum->getPermissions())->assign('isModerator', $managedForum->isModerator())->assign('breadcrumbs', $managedForum->getBreadcrumbs())->assign('hot_threshold', $this->getVar('hot_threshold'))->assign('last_visit_unix', $lastVisitUnix);
+        $this->view->assign('forum', $forum)
+            ->assign('topics', $managedForum->getTopics($start))
+            ->assign('pager', $managedForum->getPager())
+            ->assign('permissions', $managedForum->getPermissions())
+            ->assign('isModerator', $managedForum->isModerator())
+            ->assign('breadcrumbs', $managedForum->getBreadcrumbs())
+            ->assign('hot_threshold', $this->getVar('hot_threshold'))
+            ->assign('last_visit_unix', $lastVisitUnix);
 
         return $this->response($this->view->fetch('user/forum/view.tpl'));
     }
