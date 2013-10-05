@@ -8,28 +8,36 @@
 
     {modulelinks modname=$module type='prefs'}<br />
 
-    {form cssClass="z-form"}
+    {form cssClass="form-horizontal" role="form"}
     {formvalidationsummary}
 
     <fieldset>
-        <div class="z-formrow">
-            {formlabel for="postOrder" __text="Post order"}
-            {formdropdownlist id="postOrder" items=$orders}
+        <div class="form-group">
+            {formlabel for="postOrder" __text="Post order" class="col-lg-3 control-label"}
+            <div class="col-lg-9">
+            {formdropdownlist id="postOrder" items=$orders cssClass='form-control'}
+            </div>
         </div>
         {if $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
-            <div class="z-formrow">
-                {formlabel for="displayOnlyFavorites" __text="Display only favorite forums"}
+            <div class="form-group">
+                {formlabel for="displayOnlyFavorites" __text="Display only favorite forums" class="col-lg-3 control-label"}
+                <div class="col-lg-9">
                 {formcheckbox id="displayOnlyFavorites"}
+                </div>
             </div>
         {/if}
-        <div class="z-formrow">
-            {formlabel for="autosubscribe" __text="Autosubscribe to new topics"}
+        <div class="form-group">
+            {formlabel for="autosubscribe" __text="Autosubscribe to new topics" class="col-lg-3 control-label"}
+            <div class="col-lg-9">
             {formcheckbox id="autosubscribe"}
+            </div>
         </div>
 
-        <div class="z-formbuttons z-buttons">
-            {formbutton commandName="save" __text="Save" class="z-bt-ok"}
-            {formbutton commandName="cancel" __text="Cancel" class="z-bt-cancel"}
+        <div class="form-group">
+            <div class="col-lg-offset-3 col-lg-9">
+                {formbutton commandName="save" __text="Save" class="btn btn-success"}
+                {formbutton commandName="cancel" __text="Cancel" class="btn btn-danger"}
+            </div>
         </div>
     </fieldset>
     {/form}
