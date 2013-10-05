@@ -1,3 +1,4 @@
+{if !isset($moderate)}{assign var='moderate' value=false}{/if}
 <table class='table table-condensed'>
     <thead>
     <tr class='active'>
@@ -5,6 +6,7 @@
         <th class='data'>{gt text="Replies"|upper}</th>
         <th class='data'>{gt text="Views"|upper}</th>
         <th class='lastpost'>{gt text="Last post"|upper}</th>
+        {if $moderate}<th class='data'>{gt text='All'|upper}&nbsp;<input type="checkbox" id="alltopic" value="" onclick="jQuery('.topic_checkbox').attr('checked', this.checked);" /></th>{/if}
     </tr>
     </thead>
     <tbody>
@@ -52,10 +54,12 @@
                     {include file='user/lastPostBy.tpl' last_post=$topic.last_post}
                 {/if}
             </td>
+            {if $moderate}<td class='data'><input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{$topic.topic_id}"/></td>{/if}
         </tr>
         {foreachelse}
         <tr>
-            <td colspan='6' class='text-center warning'>
+            {if $moderate}{assign var='cols' value='7'}{else}{assign var='cols' value='6'}{/if}
+            <td colspan='{$cols}' class='text-center warning'>
                 {gt text="No subforums available."}
             </td>
         </tr>

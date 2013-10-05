@@ -11,6 +11,7 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use LogUtil;
@@ -36,7 +37,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -47,8 +48,13 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         // Get the Forum and Permission-Check
         $this->_managedForum = new ForumManager($forum_id);
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->_managedForum->get())) {
-            // user is not allowed to moderate this forum
-            return LogUtil::registerPermissionError();
+            // permission to moderate not granted at Permissions module level
+            if ($this->_managedForum->isModerator()) {
+                // permission has been granted within Dizkus
+            } else {
+                // both zikula perms and Dizkus perms denied
+                throw new AccessDeniedHttpException($this->__('You do not have permission to moderate this forum.'));
+            }
         }
 
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
@@ -77,6 +83,12 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             array(
                 'value' => '',
                 'text' => "<< " . $this->__("Choose action") . " >>"),
+            array(
+                'value' => 'solve',
+                'text' => $this->__("Mark selected topics as 'solved'")),
+            array(
+                'value' => 'unsolve',
+                'text' => $this->__("Remove 'solved' status from selected topics")),
             array(
                 'value' => 'sticky',
                 'text' => $this->__("Give selected topics 'sticky' status")),
@@ -164,6 +176,8 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
                 case 'lock':
                 case 'unlock':
+                case 'solve':
+                case 'unsolve':
                 case 'sticky':
                 case 'unsticky':
                     foreach ($topic_ids as $topic_id) {
@@ -172,7 +186,6 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                             'action' => $mode));
                     }
                     break;
-                    $this->entityManager->flush();
 
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
