@@ -65,9 +65,12 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 'text' => "<< " . $this->__("Choose target topic") . " >>"),
         );
         foreach ($topics as $topic) {
+            $text = substr($topic->getTitle(), 0, 50);
+            $text = strlen($text) < strlen($topic->getTitle()) ? "$text..." : $text;
             $topicSelect[] = array(
                 'value' => $topic->getTopic_id(),
-                'text' => $topic->getTitle());
+                'text' => $text
+            );
         }
         $this->view->assign('topicSelect', $topicSelect);
         $actions = array(
@@ -102,7 +105,8 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         array_unshift($forums, array(
             'value' => '',
             'text' => "<< " . $this->__("Select target forum") . " >>"));
-        $this->view->assign('forums', $forums);
+        $this->view->assign('forums', $forums)
+            ->assign('pager', $this->_managedForum->getPager());
 
         return true;
     }
