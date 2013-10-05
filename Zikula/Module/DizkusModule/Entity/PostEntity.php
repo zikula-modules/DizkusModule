@@ -304,4 +304,11 @@ class PostEntity extends EntityAccess
         return false;
     }
 
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['userAllowedToEdit'] = $this->getUserAllowedToEdit();
+        return $array;
+    }
+
 }
