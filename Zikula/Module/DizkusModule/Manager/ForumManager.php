@@ -43,6 +43,7 @@ class ForumManager
     {
         $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
+        $this->_itemsPerPage = ModUtil::getVar($this->name, 'topics_per_page');
         if (isset($forum)) {
             // forum has been injected
             $this->_forum = $forum;
@@ -143,7 +144,6 @@ class ForumManager
      */
     public function getTopics($startNumber = 1)
     {
-        $this->_itemsPerPage = ModUtil::getVar($this->name, 'topics_per_page');
         $id = $this->_forum->getForum_id();
         $query = $this->entityManager
             ->createQueryBuilder()
