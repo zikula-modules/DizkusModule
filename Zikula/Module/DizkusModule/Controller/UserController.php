@@ -175,6 +175,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('posts', $managedTopic->getPosts(--$start));
         $this->view->assign('pager', $managedTopic->getPager());
         $this->view->assign('permissions', $managedTopic->getPermissions());
+        $this->view->assign('isModerator', $managedTopic->getManagedForum()->isModerator());
         $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
         $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
         $this->view->assign('nextTopic', $managedTopic->getNext());

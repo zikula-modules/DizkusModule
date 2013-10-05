@@ -25,7 +25,7 @@
 </h2>
 
 {* add inline edit *}
-{if ($modvars.ZikulaDizkusModule.ajax && ($permissions.moderate eq 1 || $topic->userAllowedToEdit()))}
+{if ($modvars.ZikulaDizkusModule.ajax && ($isModerator || $topic->userAllowedToEdit()))}
     {include file='ajax/edittopicsubject.tpl'}
 {/if}
 
@@ -82,7 +82,7 @@
                 </a>
             </li>
                 {usergetvar name='uid' assign='currentUser'}
-                {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && (($permissions.moderate eq 1) || ($currentUser == $topic.poster.user.uid))}
+                {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && ($isModerator || ($currentUser == $topic.poster.user.uid))}
                 <li>
                     {if $topic.solved}
                         {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
@@ -100,7 +100,7 @@
 
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            {if $permissions.moderate eq 1}
+            {if $isModerator}
             <li>
                 {if $topic.status eq 0}
                     {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}

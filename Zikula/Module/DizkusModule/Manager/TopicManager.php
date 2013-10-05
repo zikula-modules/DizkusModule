@@ -40,6 +40,8 @@ class TopicManager
     private $_defaultPostSortOrder;
     private $_numberOfItems;
 
+    private $managedForum;
+
     /**
      * first post in topic
      * @var PostEntity
@@ -63,9 +65,11 @@ class TopicManager
         if (isset($topic)) {
             // topic has been injected
             $this->_topic = $topic;
+            $this->managedForum = new ForumManager(null, $this->_topic->getForum());
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\TopicEntity', $id);
+            $this->managedForum = new ForumManager(null, $this->_topic->getForum());
         } else {
             // create new topic
             $this->_topic = new TopicEntity();
@@ -121,7 +125,7 @@ class TopicManager
     /**
      * return topic as doctrine2 object
      *
-     * @return object
+     * @return TopicEntity
      */
     public function get()
     {
@@ -136,6 +140,14 @@ class TopicManager
     public function getForumId()
     {
         return $this->_topic->getForum()->getForum_id();
+    }
+
+    /**
+     * @return ForumManager
+     */
+    public function getManagedForum()
+    {
+        return $this->managedForum;
     }
 
     public function getFirstPost()
@@ -199,9 +211,7 @@ class TopicManager
      */
     public function getBreadcrumbs()
     {
-        $managedForum = new ForumManager(null, $this->get()->getForum());
-
-        return $managedForum->getBreadcrumbs(false);
+        return $this->managedForum->getBreadcrumbs(false);
     }
 
     /**
@@ -264,8 +274,8 @@ class TopicManager
         $this->_subscribe = $data['subscribe_topic'];
         unset($data['subscribe_topic']);
         $this->_forumId = $data['forum_id'];
-        $managedForum = new ForumManager($this->_forumId);
-        $this->_topic->setForum($managedForum->get());
+        $this->managedForum = new ForumManager($this->_forumId);
+        $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
         $this->_topic->setLast_post($this->_firstPost);
         $this->_topic->merge($data);
@@ -309,16 +319,16 @@ class TopicManager
     {
         // add first post to topic
         $this->_firstPost->settopic($this->_topic);
-        $managedForum = new ForumManager($this->_forumId);
+        $this->managedForum = new ForumManager($this->_forumId);
         // add topic to forum
-        $this->_topic->setForum($managedForum->get());
+        $this->_topic->setForum($this->managedForum->get());
         // write topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
         // increment forum post count
-        $managedForum->incrementPostCount();
-        $managedForum->incrementTopicCount();
-        $managedForum->setLastPost($this->_firstPost);
+        $this->managedForum->incrementPostCount();
+        $this->managedForum->incrementTopicCount();
+        $this->managedForum->setLastPost($this->_firstPost);
         $this->entityManager->flush();
         // subscribe
         if ($this->_subscribe) {
