@@ -570,10 +570,11 @@ class UserController extends \Zikula_AbstractController
         $params = array();
         $params['action'] = $this->request->query->get('action', 'posts');
         $params['uid'] = $this->request->query->get('user', null);
-        list($posts, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
-        $this->view->assign('posts', $posts);
+        list($topics, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
+        $this->view->assign('topics', $topics);
         $this->view->assign('text', $text);
         $this->view->assign('pager', $pager);
+        $this->view->assign('action', $params['action']);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
