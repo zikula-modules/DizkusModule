@@ -32,7 +32,7 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => ModUtil::url($this->name, 'admin', 'tree'),
                 'text' => $this->__('Edit forum tree'),
                 'title' => $this->__('Create, delete, edit and re-order forums'),
-                'icon' => 'cogs');
+                'icon' => 'list');
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
                     'ranktype' => RankEntity::TYPE_POSTCOUNT)),
