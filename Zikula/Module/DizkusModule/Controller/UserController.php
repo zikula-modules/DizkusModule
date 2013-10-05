@@ -549,7 +549,7 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->response($this->view->fetch('user/post/latest.tpl'));
+        return $this->response($this->view->fetch('user/topic/latest.tpl'));
     }
 
     /**
