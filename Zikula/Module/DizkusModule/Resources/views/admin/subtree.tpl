@@ -1,21 +1,21 @@
 {foreach from=$tree item="item" name='foo'}
     {if $item.lvl > 0}
         {assign var='lvl' value=$item.lvl*4-4}
-        <tr class="{cycle values="z-odd,z-even"}">
+        <tr>
             <td>{'&nbsp;'|str_repeat:$lvl}{$item.name}</td>
             <td nowrap="nowrap">
-                <a href="{modurl modname=$module type='admin' func='modifyForum' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='xedit.png' alt="Edit"}</a>
-                <a href="{modurl modname=$module type='user' func='viewforum' forum=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='demo.png' alt="View"}</a>
-                <a href="{modurl modname=$module type='admin' func='deleteforum' id=$item.forum_id}">{img modname='core' set='icons/extrasmall' src='14_layer_deletelayer.png' alt="Delete"}</a>
+                <a class="tooltips" href="{modurl modname=$module type='admin' func='modifyForum' id=$item.forum_id}" title="{gt text="edit forum"} '{$item.name}'"><i class='icon-pencil icon-150x'></i></a>
+                <a class="tooltips" href="{modurl modname=$module type='user' func='viewforum' forum=$item.forum_id}" title="{gt text="view forum"} '{$item.name}'"><i class='icon-eye-open icon-blue icon-150x'></i></a>
+                <a class="tooltips" href="{modurl modname=$module type='admin' func='deleteforum' id=$item.forum_id}" title="{gt text="delete forum"} '{$item.name}'"><i class='icon-trash icon-red icon-150x'></i></a>
                 {if !$smarty.foreach.foo.first}
-                    <a href="{modurl modname=$module type='admin' func='changeForumOrder' forum=$item.forum_id action='moveUp'}">
-                        {img modname='core' set='icons/extrasmall' src='up.png' __alt="Up"}
+                    <a class="tooltips" href="{modurl modname=$module type='admin' func='changeForumOrder' forum=$item.forum_id action='moveUp'}" title='{gt text="move up"}'>
+                        <i class='icon-arrow-up icon-150x'></i>
                     </a>
                 {/if}
                 {if !$smarty.foreach.foo.last}
-                    <a href="{modurl modname=$module type='admin' func='changeForumOrder' forum=$item.forum_id action='moveDown'}"
+                    <a class="tooltips" href="{modurl modname=$module type='admin' func='changeForumOrder' forum=$item.forum_id action='moveDown'}"  title='{gt text="move down"}'
                     {if $smarty.foreach.foo.first}style="margin-left:20px{/if}">
-                    {img modname='core' set='icons/extrasmall' src='down.png' __alt="Down"}
+                        <i class='icon-arrow-down icon-150x'></i>
                 </a>
             {/if}
         </td>

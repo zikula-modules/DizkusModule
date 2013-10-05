@@ -1,8 +1,8 @@
 {adminheader}
-<div class="z-admin-content-pagetitle">
-    {icon type="options" size="small"}
-    <h3>{gt text="Forum tree"}</h3>
-</div>
+<h3>
+    <span class="icon-list"></span>
+    {gt text="Forum tree"}
+</h3>
 
 <div id="dizkus_admin">
 
@@ -19,18 +19,20 @@
         </li>
     </ul><br />
 
-    <table class="z-admintable">
-        <thead>
-            <tr>
-                <th width="100%">{gt text="Name"}</th>
-                <th nowrap="">{gt text="Actions"}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {include file='admin/subtree.tpl'}
-        </tbody>
+    <div class="panel panel-default">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th width="100%">{gt text="Name"}</th>
+                    <th nowrap="">{gt text="Actions"}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {include file='admin/subtree.tpl'}
+            </tbody>
 
-    </table>
+        </table>
+    </div>
 
 </div>
 {adminfooter}
