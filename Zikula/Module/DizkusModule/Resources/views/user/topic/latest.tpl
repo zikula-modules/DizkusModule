@@ -14,7 +14,6 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {*<a class="navbar-brand" href="#">{gt text='Interval'}</a>*}
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -28,13 +27,13 @@
                 <button type="submit" class="btn btn-default btn-sm">{gt text="hours"}</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder='unanswered'}">{gt text="Unanswered"}</a></li>
-                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder='unsolved'}">{gt text="Unsolved"}</a></li>
-                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=3}">{gt text="Since Yesterday"}</a></li>
-                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=2}">{gt text="Today"}</a></li>
-                <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=4}">{gt text="Last week"}</a></li>
+                <li{if $selorder eq "unanswered"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder='unanswered'}">{gt text="Unanswered"}</a></li>
+                <li{if $selorder eq "unsolved"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder='unsolved'}">{gt text="Unsolved"}</a></li>
+                <li{if $selorder eq "3"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder=3}">{gt text="Since Yesterday"}</a></li>
+                <li{if $selorder eq "2"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder=2}">{gt text="Today"}</a></li>
+                <li{if $selorder eq "4"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder=4}">{gt text="Last week"}</a></li>
                 {if $last_visit_unix neq 0}
-                    <li><a class="dzk_arrow" href="{modurl modname=$module type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
+                    <li{if $selorder eq "6"} class="active"{/if}><a href="{modurl modname=$module type='user' func='viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
                 {/if}
             </ul>
         </div><!-- /.navbar-collapse -->
