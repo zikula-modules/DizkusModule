@@ -175,7 +175,7 @@ class SyncApi extends \Zikula_AbstractApi
             $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $post['user_id']);
             if (!$forumUser) {
                 $forumUser = new ForumUserEntity();
-                $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['user_id']);
+                $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['user_id']);
                 $forumUser->setUser($coreUser);
             }
             $forumUser->setPostCount($post[1]);

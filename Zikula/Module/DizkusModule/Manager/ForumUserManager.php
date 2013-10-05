@@ -45,7 +45,7 @@ class ForumUserManager
         $this->_forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$this->_forumUser) {
             $this->_forumUser = new ForumUserEntity();
-            $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
+            $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $this->_forumUser->setUser($coreUser);
             $this->entityManager->persist($this->_forumUser);
             $this->entityManager->flush();

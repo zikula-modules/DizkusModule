@@ -469,7 +469,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                 // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
                     $forumUser = new ForumUserEntity();
-                    $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['poster_id']);
+                    $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['poster_id']);
                     $forumUser->setUser($coreUser);
                     $this->entityManager->persist($forumUser);
                 }
@@ -518,7 +518,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     private function upgrade_to_4_0_0_migratePop3Connections($connections)
     {
         foreach ($connections as $connectionData) {
-            $connectionData['coreUser'] = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
+            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
             $connection = new Pop3Connection($connectionData);
             $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $connectionData['id']);
             $forum->setPop3Connection($connection);
