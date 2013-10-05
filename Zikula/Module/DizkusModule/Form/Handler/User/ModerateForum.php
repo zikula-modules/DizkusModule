@@ -47,15 +47,12 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         }
         // Get the Forum and Permission-Check
         $this->_managedForum = new ForumManager($forum_id);
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->_managedForum->get())) {
-            // permission to moderate not granted at Permissions module level
-            if ($this->_managedForum->isModerator()) {
-                // permission has been granted within Dizkus
-            } else {
-                // both zikula perms and Dizkus perms denied
-                throw new AccessDeniedHttpException($this->__('You do not have permission to moderate this forum.'));
-            }
+
+        if (!$this->_managedForum->isModerator()) {
+            // both zikula perms and Dizkus perms denied
+            throw new AccessDeniedHttpException($this->__('You do not have permission to moderate this forum.'));
         }
+
 
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 

@@ -262,8 +262,8 @@ class ForumManager
         if (!isset($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        // all admins are moderators
-        if (SecurityUtil::checkPermission($this->name, '::', ACCESS_ADMIN)) {
+        // check zikula perms
+        if (SecurityUtil::checkPermission($this->name, $this->_forum->getForum_id() . '::', ACCESS_MODERATE)) {
             return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
