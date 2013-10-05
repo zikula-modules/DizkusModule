@@ -322,7 +322,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function getUsersAction()
     {
         $this->checkAjaxToken();
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             LogUtil::registerPermissionError();
             throw new Zikula_Exception_Forbidden();
         }
