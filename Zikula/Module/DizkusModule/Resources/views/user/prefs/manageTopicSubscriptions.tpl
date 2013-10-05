@@ -24,7 +24,7 @@
         {if count($subscriptions) > 0}
             <tr class='warning'>
                 <td></td>
-                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.z-form-checkbox').attr('checked', this.checked);"/>&nbsp;{gt text="Remove all topic subscriptions"}</label></td>
+                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.topic_checkbox').attr('checked', this.checked);" />&nbsp;{gt text="Remove all topic subscriptions"}</label></td>
                 <td></td>
             </tr>
         {/if}
@@ -33,7 +33,7 @@
                 <td>
                     <a href="{modurl modname=$module type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
                 </td>
-                <td>{formcheckbox class="topic_checkbox" id=$subscription.topic.topic_id group="topicIds"}</td>
+                <td>{formcheckbox cssClass="topic_checkbox" id=$subscription.topic.topic_id group="topicIds"}</td>
                 <td>{include file='user/lastPostBy.tpl' last_post=$subscription.topic.last_post}</td>
             </tr>
             {foreachelse}

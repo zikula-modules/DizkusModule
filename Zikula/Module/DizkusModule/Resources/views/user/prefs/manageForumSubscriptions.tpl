@@ -24,13 +24,13 @@
             {if count($subscriptions) > 0}
                 <tr class='warning'>
                     <td></td>
-                    <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.z-form-checkbox').attr('checked', this.checked);"/>&nbsp;{gt text="Remove all forum subscriptions"}</label></td>
+                    <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{gt text="Remove all forum subscriptions"}</label></td>
                 </tr>
             {/if}
             {foreach item='subscription' from=$subscriptions}
                 <tr>
                     <td><a href="{modurl modname=$module type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a></td>
-                    <td>{formcheckbox class="topic_checkbox" id=$subscription.forum.forum_id group="forumIds"}</td>
+                    <td>{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}</td>
                 </tr>
                 {foreachelse}
                 <tr>
