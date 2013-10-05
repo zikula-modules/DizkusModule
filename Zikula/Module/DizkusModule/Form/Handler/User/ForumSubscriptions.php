@@ -61,8 +61,8 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
         }
         $data = $view->getValues();
         if (count($data['forumIds']) > 0) {
-            foreach (array_keys($data['forumIds']) as $forumId) {
-                if ($forumId) {
+            foreach ($data['forumIds'] as $forumId => $selected) {
+                if ($selected) {
                     ModUtil::apiFunc($this->name, 'Forum', 'unsubscribe', array('forum' => $forumId));
                 }
             }

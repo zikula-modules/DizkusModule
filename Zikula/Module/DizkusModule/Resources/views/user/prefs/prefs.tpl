@@ -4,9 +4,9 @@
 
 <div id="dzk_userprefs">
 
-    <h2>{gt text="Personal Settings"}</h2>
-
     {modulelinks modname=$module type='prefs'}<br />
+
+    <h2>{gt text="Personal Settings"}</h2>
 
     {form cssClass="form-horizontal" role="form"}
     {formvalidationsummary}
