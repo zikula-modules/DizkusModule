@@ -31,7 +31,7 @@ function smarty_function_dzkquote($params, Zikula_View $view)
 
     // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
     // and therefore cannot have multiple lines.
-    $params['text'] = str_replace(array("\r", "\n"), '_____LINEFEED_DIZKUS_____', $params['text']);
+    $params['text'] = str_replace(array("\r", "\n"), '_____LINEFEED_DIZKUS_____', addslashes($params['text']));
 
     return '[quote' . $user . ']' . $params['text'] . '[/quote]';
 }
