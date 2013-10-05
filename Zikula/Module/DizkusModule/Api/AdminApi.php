@@ -32,12 +32,12 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => ModUtil::url($this->name, 'admin', 'tree'),
                 'text' => $this->__('Edit forum tree'),
                 'title' => $this->__('Create, delete, edit and re-order forums'),
-                'class' => 'z-icon-es-options');
+                'icon' => 'cogs');
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
                     'ranktype' => RankEntity::TYPE_POSTCOUNT)),
                 'text' => $this->__('Edit user ranks'),
-                'class' => 'z-icon-es-group',
+                'icon' => 'star-half-empty',
                 'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
                 'links' => array(
                     array(
@@ -58,12 +58,12 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => ModUtil::url($this->name, 'admin', 'manageSubscriptions'),
                 'text' => $this->__('Manage subscriptions'),
                 'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
-                'class' => 'z-icon-es-mail');
+                'icon' => 'envelope-alt');
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'preferences'),
                 'text' => $this->__('Settings'),
                 'title' => $this->__('Edit general forum-wide settings'),
-                'class' => 'z-icon-es-config');
+                'icon' => 'wrench');
         }
 
         return $links;
