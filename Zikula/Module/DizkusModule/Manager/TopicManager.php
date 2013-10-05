@@ -47,6 +47,9 @@ class TopicManager
     private $_firstPost = null;
     private $_subscribe = false;
     private $_forumId;
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     protected $entityManager;
     protected $name;
 
@@ -161,7 +164,15 @@ class TopicManager
         // do not allow negative first result
         $startNumber = $startNumber > 0 ? $startNumber : 0;
         // Do a new query in order to limit maxresults, firstresult, order, etc.
-        $query = $this->entityManager->createQueryBuilder()->select('p, u, r')->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')->where('p.topic = :topicId')->setParameter('topicId', $this->_topic->getTopic_id())->leftJoin('p.poster', 'u')->leftJoin('u.rank', 'r')->orderBy('p.post_time', $postSortOrder)->getQuery();
+        $query = $this->entityManager->createQueryBuilder()
+            ->select('p, u, r')
+            ->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')
+            ->where('p.topic = :topicId')
+            ->setParameter('topicId', $this->_topic->getTopic_id())
+            ->leftJoin('p.poster', 'u')
+            ->leftJoin('u.rank', 'r')
+            ->orderBy('p.post_time', $postSortOrder)
+            ->getQuery();
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query);
         $this->_numberOfItems = count($paginator);
@@ -263,7 +274,7 @@ class TopicManager
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity();
-            $coreUser = $this->entityManager->find('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
+            $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
         $forumUser->incrementPostCount();
@@ -408,7 +419,9 @@ class TopicManager
         if (!UserUtil::isLoggedIn()) {
             return false;
         }
-        $topicSubscription = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
+        $topicSubscription = $this->entityManager
+            ->getRepository('Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity')
+            ->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
 
         return isset($topicSubscription);
     }
@@ -467,8 +480,16 @@ class TopicManager
      */
     private function getAdjacent($oper, $dir)
     {
-        $dql = "SELECT t.topic_id FROM Zikula\Module\DizkusModule\Entity\TopicEntity t\r\n            WHERE t.topic_time {$oper} :time\r\n            AND t.forum = :forum\r\n            AND t.sticky = 0\r\n            ORDER BY t.topic_time {$dir}";
-        $result = $this->entityManager->createQuery($dql)->setParameter('time', $this->_topic->getTopic_time())->setParameter('forum', $this->_topic->getForum())->setMaxResults(1)->getScalarResult();
+        $dql = "SELECT t.topic_id FROM Zikula\Module\DizkusModule\Entity\TopicEntity t
+            WHERE t.topic_time {$oper} :time
+            AND t.forum = :forum
+            AND t.sticky = 0
+            ORDER BY t.topic_time {$dir}";
+        $result = $this->entityManager->createQuery($dql)
+            ->setParameter('time', $this->_topic->getTopic_time())
+            ->setParameter('forum', $this->_topic->getForum())
+            ->setMaxResults(1)
+            ->getScalarResult();
         if ($result) {
             return $result[0]['topic_id'];
         } else {
