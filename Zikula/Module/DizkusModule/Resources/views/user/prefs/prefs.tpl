@@ -32,12 +32,9 @@
             {formcheckbox id="autosubscribe"}
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-lg-offset-3 col-lg-9">
-                {formbutton commandName="save" __text="Save" class="btn btn-success"}
-                {formbutton commandName="cancel" __text="Cancel" class="btn btn-danger"}
-            </div>
+        <div class="col-lg-offset-3 col-lg-9">
+            {formbutton commandName="save" __text="Save" class="btn btn-success"}
+            {formbutton commandName="cancel" __text="Cancel" class="btn btn-danger"}
         </div>
     </fieldset>
     {/form}
