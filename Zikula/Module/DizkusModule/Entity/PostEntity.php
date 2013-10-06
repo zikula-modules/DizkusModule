@@ -290,6 +290,9 @@ class PostEntity extends EntityAccess
      */
     public function getUserAllowedToEdit($uid = null)
     {
+        if (!isset($this->post_time)) {
+            return false;
+        }
         // default to current user
         $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
         $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
