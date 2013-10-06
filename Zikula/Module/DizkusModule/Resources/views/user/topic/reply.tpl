@@ -8,61 +8,52 @@
         {include file='user/post/single.tpl'}
     </div>
 {/if}
-
-<div id="dzk_quickreply" class="forum_post post_bg2 dzk_rounded">
-    <div class="inner">
-
-        <div class="dzk_subcols z-clearfix">
-
-            <form id="post" class="dzk_form" action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
-                <div>
-                    <input type="hidden" name="topic" value="{$reply.topic.topic_id}" />
-                    <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
-                    <fieldset>
-                        <legend class="post_header">{$templatetitle}</legend>
-                        <div class="post_text_wrap">
-                            <div id="dizkusinformation" style="visibility: hidden;">&nbsp;</div>
-
-                            <div>
-                                <label for="message">{gt text="Message body"}</label><br />
-
-                                <textarea id="message" name="message" rows="10" cols="60">{$reply.message}</textarea>
-
-                                {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-                                    <p>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
-                                {/if}
-                            </div>
-
-                            {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
-                            <div class="dzk_subcols z-clearfix">
-                                <div id="replyoptions" class="dzk_col_left">
-                                    <ul>
-                                        <li><strong>{gt text="Options"}</strong></li>
-                                                {if $coredata.logged_in}
-                                            <li>
-                                                <input type="checkbox" id="attach_signature" name="attach_signature" {if $reply.attach_signature eq true}checked="checked"{/if} value="1" />
-                                                <label for="attach_signature">{gt text="Attach my signature"}</label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $reply.subscribe_topic eq true}checked="checked"{/if} value="1" />
-                                                <label for="subscribe_topic">{gt text="Notify me when a reply is posted"}</label>
-                                            </li>
-                                        {/if}
-                                        <li id="nonajaxreplybuttons" class="z-buttons">
-                                            <input class="z-bt-ok z-bt-small" type="submit" name="submit" value="{gt text="Submit"}" />
-                                            <input class="z-bt-preview z-bt-small" type="submit" name="preview" value="{gt text="Preview"}" />
-                                            <input class="z-bt-cancel z-bt-small" type="submit" name="cancel" value="{gt text="Cancel"}" />
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </form>
-        </div>
-
+<div id="dzk_quickreply" class="panel panel-info">
+    <div class="panel-heading">
+        <h3>{$templatetitle}</h3>
     </div>
+    <div class="panel-body">
+        <form id="quickreplyform" role='form' action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
+            <div id="dizkusinformation_-1" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
+            <div class="form-group">
+                <input type="hidden" id="forum" name="forum" value="{$reply.topic.forum.forum_id}" />
+                <input type="hidden" id="topic" name="topic" value="{$reply.topic.topic_id}" />
+                <input type="hidden" id="quote" name="quote" value="" />
+                <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
+                <label for="message" class="sr-only">{gt text="Message"}</label>
+                <textarea id="message" class="form-control" name="message" rows="10">{$reply.message}</textarea>
+
+                {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
+                    <p class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                {/if}
+            </div>
+            <div class="form-group">
+                {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+            </div>
+            {if $coredata.logged_in}
+                <div><strong>{gt text="Options"}</strong></div>
+                <div class="checkbox">
+                    <label for="attach_signature">
+                        <input type="checkbox" id="attach_signature" name="attach_signature" {if $reply.attach_signature eq true}checked="checked"{/if} value="1" />
+                        {gt text="Attach my signature"}</label>
+                </div>
+                <div class="checkbox">
+                    <label for="subscribe_topic">
+                        <input type="checkbox" id="subscribe_topic" name="subscribe_topic" {if $reply.subscribe_topic eq true}checked="checked"{/if} value="1" />
+                        {gt text="Notify me when a reply is posted"}</label>
+                </div>
+            {/if}
+            <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
+            <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
+            <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
+
+            <div class="post_footer"></div>
+        </form>
+    </div>
+</div>
+
+<div id="dzk_displayhooks">
+    {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_view' id=$reply.topic.topic_id}
 </div>
 
 {include file='user/footer.tpl'}

@@ -31,27 +31,21 @@
     {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_edit' id=null}
     </div>
 
-    <div id="newtopicoptions" class="form-group">
-        <ul>
-            <li><strong>{gt text="Options"}</strong></li>
-            {if $coredata.logged_in}
-            <li>
-                {formcheckbox id="attachSignature" checked=1}
-                {formlabel for="attachSignature" __text="Attach my signature"}
-            </li>
-            <li>
-                {formcheckbox id="subscribe_topic" checked=1}
-                {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
-            </li>
-            {/if}
-        </ul>
+    {if $coredata.logged_in}
+    <div><strong>{gt text="Options"}</strong></div>
+    <div class="checkbox">
+        {formcheckbox id="attachSignature" checked=1}
+        {formlabel for="attachSignature" __text="Attach my signature"}
     </div>
+    <div class="checkbox">
+        {formcheckbox id="subscribe_topic" checked=1}
+        {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
+    </div>
+    {/if}
 
-    <div>
-        {formbutton class="btn btn-success" commandName="save"   __text="Submit"}
-        {formbutton class="btn btn-info" commandName="preview" __text="Preview"}
-        {formbutton class="btn btn-danger" commandName="cancel" __text="Cancel"}
-    </div>
+    {formbutton class="btn btn-success" commandName="save"   __text="Submit"}
+    {formbutton class="btn btn-info" commandName="preview" __text="Preview"}
+    {formbutton class="btn btn-danger" commandName="cancel" __text="Cancel"}
 
 </fieldset>
 {/form}
