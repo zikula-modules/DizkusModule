@@ -1,7 +1,8 @@
 {if (count($forum.moderatorUsers) > 0) OR (count($forum.moderatorGroups) > 0)}
-<div id='dzk_moderatedby'>
+<div id='dzk_moderatedby' class='text-muted{if isset($well) && $well} well well-sm{/if}'>
     <em>{gt text="Moderated by"}:</em>
 {/if}
+
 {if count($forum.moderatorUsers) > 0}
 <span>
     {foreach name='moderators' item='mod' key='modid' from=$forum.moderatorUsers}
@@ -17,6 +18,7 @@
     {/foreach}
 </span>
 {/if}
+
 {if (count($forum.moderatorUsers) > 0) OR (count($forum.moderatorGroups) > 0)}
 </div>
 {/if}

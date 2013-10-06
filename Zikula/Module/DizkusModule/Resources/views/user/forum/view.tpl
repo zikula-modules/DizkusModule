@@ -112,8 +112,7 @@
 <div id="dzk_displayhooks">
     {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_view' id=$forum.forum_id}
 </div>
-
-{include file='user/moderatedBy.tpl' forum=$forum}
+{include file='user/moderatedBy.tpl' forum=$forum well=true}
 
 <script type="text/javascript">
     // <![CDATA[

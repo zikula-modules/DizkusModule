@@ -211,8 +211,7 @@
 
 {/if}
 
-
-{include file='user/moderatedBy.tpl' forum=$topic.forum}
+{include file='user/moderatedBy.tpl' forum=$topic.forum well=true}
 
 <script type="text/javascript">
     // @TODO Replace by Zikula.__() and remove this vars.
