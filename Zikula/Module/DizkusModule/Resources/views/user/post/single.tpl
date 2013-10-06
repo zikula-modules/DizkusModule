@@ -103,7 +103,7 @@
                     {/if}
                 {/if}
                 {if isset($topic) AND $topic.status neq 1}
-                    {if isset($permissions.comment) AND $permissions.comment eq true}
+                    {if isset($permissions.comment) AND $permissions.comment eq true AND $modvars.ZikulaDizkusModule.ajax}
                         <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
                     {/if}
                     {if isset($permissions.edit) AND $permissions.edit eq 1 OR $post.userAllowedToEdit}
