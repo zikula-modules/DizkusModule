@@ -127,7 +127,7 @@
                 </a>
             </li>
 
-            <li><a class="icon-arrow-right tooltips" title="{gt text="Move topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
+            <li><a class="icon-arrow-right tooltips" title="{gt text="Move or join topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
             <li><a class="icon-remove tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}"></a></li>
             {/if}
             <li><a class="dzk_notextdecoration tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class=' icon-chevron-sign-down'></i></a></li>
