@@ -33,8 +33,8 @@ class Prefs extends \Zikula_Form_AbstractHandler
         'removesignature',
         'striptags',
         'forum_enabled',
-        'fulltextindex',
-        'extendedsearch',
+//        'fulltextindex',
+//        'extendedsearch',
         'showtextinsearchresults'
     );
 
