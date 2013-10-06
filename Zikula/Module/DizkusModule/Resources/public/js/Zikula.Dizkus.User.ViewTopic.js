@@ -261,8 +261,8 @@ function showAjaxIndicator(text, postId) {
         text = '<span id="ajaxindicatortext_' + postId + '">&nbsp;' + text + '</span>';
         jQuery('#dizkusinformation_' + postId).append(text).show();
     } else {
-        text = '<span id="ajaxindicatortext_-1">&nbsp;' + text + '</span>';
-        jQuery('#dizkusinformation_-1').append(text).show();
+        text = '<span id="ajaxindicatortext_0">&nbsp;' + text + '</span>';
+        jQuery('#dizkusinformation_0').append(text).show();
     }
 }
 
@@ -276,8 +276,8 @@ function hideAjaxIndicator(postId) {
         jQuery('#ajaxindicatortext_' + postId).remove();
         jQuery('#dizkusinformation_' + postId).hide();
     } else {
-        jQuery('#ajaxindicatortext_-1').remove();
-        jQuery('#dizkusinformation_-1').hide();
+        jQuery('#ajaxindicatortext_0').remove();
+        jQuery('#dizkusinformation_0').hide();
     }
 }
 
