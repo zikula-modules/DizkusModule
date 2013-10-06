@@ -317,11 +317,6 @@ class TopicManager
      */
     public function create()
     {
-        // add first post to topic
-        $this->_firstPost->settopic($this->_topic);
-        $this->managedForum = new ForumManager($this->_forumId);
-        // add topic to forum
-        $this->_topic->setForum($this->managedForum->get());
         // write topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
