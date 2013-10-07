@@ -47,11 +47,9 @@
     </table>
 </div>
 {if count($subscriptions) > 0}
-    <div class="form-group">
-        <div class="col-lg-offset-3 col-lg-9">
-            {formbutton class="btn btn-success" commandName="save" __text="Submit"}
-        </div>
-    </div>
+<div class="col-lg-offset-3 col-lg-9">
+    {formbutton class="btn btn-success" commandName="save" __text="Submit"}
+</div>
 {/if}
 {/form}
 

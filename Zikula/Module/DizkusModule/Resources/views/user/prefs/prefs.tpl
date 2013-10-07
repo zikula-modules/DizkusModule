@@ -15,7 +15,7 @@
         <div class="form-group">
             {formlabel for="postOrder" __text="Post order" class="col-lg-3 control-label"}
             <div class="col-lg-9">
-            {formdropdownlist id="postOrder" items=$orders cssClass='form-control'}
+                {formdropdownlist id="postOrder" items=$orders cssClass='form-control'}
             </div>
         </div>
         {if $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
@@ -29,7 +29,7 @@
         <div class="form-group">
             {formlabel for="autosubscribe" __text="Autosubscribe to new topics" class="col-lg-3 control-label"}
             <div class="col-lg-9">
-            {formcheckbox id="autosubscribe"}
+                {formcheckbox id="autosubscribe"}
             </div>
         </div>
         <div class="col-lg-offset-3 col-lg-9">
