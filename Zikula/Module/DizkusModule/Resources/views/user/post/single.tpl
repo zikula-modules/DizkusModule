@@ -60,7 +60,7 @@
                 {if $coredata.logged_in eq true}
                     <li>
                         {capture assign="profileIcon"}<i class='icon-user icon-150x'></i>{/capture}
-                        {$post.poster.user.uname|userprofilelink:'tooltips':$profileIcon}
+                        {$post.poster.user.uname|profilelinkbyuname:'tooltips':$profileIcon}
                         {if $msgmodule}
                             <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}"><i class='icon-envelope-alt icon-150x'></i></a>
                         {/if}
