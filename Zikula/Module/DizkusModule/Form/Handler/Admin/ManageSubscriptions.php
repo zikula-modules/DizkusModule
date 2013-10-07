@@ -102,10 +102,16 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
                 }
             }
 
-            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('username' => $this->_username));
+            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
         } else {
-            LogUtil::registerError($this->__('Could not find that username. Please try again.'));
-            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
+            $this->_username = $this->request->request->get('username', '');
+            $this->_uid = UserUtil::getIdFromName($this->_username);
+            if ($this->_uid) {
+                $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
+            } else {
+                LogUtil::registerError($this->__f('Could not find username "%s". Please try again.', $this->_username));
+                $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
+            }
         }
         return $view->redirect($url);
     }
