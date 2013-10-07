@@ -60,12 +60,12 @@
                 {if $coredata.logged_in eq true}
                     <li>
                         {capture assign="profileIcon"}<i class='icon-user icon-150x'></i>{/capture}
-                        {$post.poster.user.uname|profilelinkbyuname:'':$profileIcon}
+                        {$post.poster.user.uname|userprofilelink:'tooltips':$profileIcon}
                         {if $msgmodule}
-                            <a href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}"><i class='icon-envelope-alt icon-150x'></i></a>
+                            <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}"><i class='icon-envelope-alt icon-150x'></i></a>
                         {/if}
                         {if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
-                        <a title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}"><i class='icon-info-sign icon-150x'></i></a>
+                        <a class='tooltips' title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}"><i class='icon-info-sign icon-150x'></i></a>
                         {/if}
                         &nbsp;
                     </li>
