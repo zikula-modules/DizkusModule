@@ -54,7 +54,7 @@ class UserController extends \Zikula_AbstractController
     public function indexAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('dizkus_disabled.tpl');
+            return $this->view->fetch('user/dizkus_disabled.tpl');
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
@@ -111,7 +111,7 @@ class UserController extends \Zikula_AbstractController
     public function viewforumAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('dizkus_disabled.tpl');
+            return $this->view->fetch('user/dizkus_disabled.tpl');
         }
         // get the input
         $forumId = (int)$this->request->query->get('forum', null);
@@ -147,7 +147,7 @@ class UserController extends \Zikula_AbstractController
     public function viewtopicAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('dizkus_disabled.tpl');
+            return $this->view->fetch('user/dizkus_disabled.tpl');
         }
         // get the input
         $topicId = (int)$this->request->query->get('topic', null);
