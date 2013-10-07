@@ -82,7 +82,6 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-
         // check for valid form
         if (!$view->isValid()) {
             return false;
@@ -90,20 +89,24 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
 
         $data = $view->getValues();
 
-        foreach ($data['forumsubscriptions'] as $id => $selected) {
-            if ($selected) {
-                ModUtil::apiFunc($this->name, 'user', 'unsubscribe_forum_by_id', $id);
+        if (!empty($data)) {
+            foreach ($data['forumsubscriptions'] as $id => $selected) {
+                if ($selected) {
+                    ModUtil::apiFunc($this->name, 'user', 'unsubscribe_forum_by_id', $id);
+                }
             }
-        }
 
-        foreach ($data['topicsubscriptions'] as $id => $selected) {
-            if ($selected) {
-                ModUtil::apiFunc($this->name, 'user', 'unsubscribe_TopicById', $id);
+            foreach ($data['topicsubscriptions'] as $id => $selected) {
+                if ($selected) {
+                    ModUtil::apiFunc($this->name, 'user', 'unsubscribe_TopicById', $id);
+                }
             }
+
+            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('username' => $this->_username));
+        } else {
+            LogUtil::registerError($this->__('Could not find that username. Please try again.'));
+            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
         }
-
-        $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('username' => $this->_username));
-
         return $view->redirect($url);
     }
 
