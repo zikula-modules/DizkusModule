@@ -1,26 +1,36 @@
 {include file='user/header.tpl'}
 
-<h2>{gt text="User IP and account information"}</h2>
-
-<div class="z-form">
-    <div class="z-formrow">
-        <strong class="z-label">{gt text="IP address"}</strong>
-        <span>{$viewip.poster_ip}</span>
+<div class="panel panel-default">
+    <div class='panel-heading'>
+        <h2>{gt text="User IP and account information"}</h2>
     </div>
-    <div class="z-formrow">
-        <strong class="z-label">{gt text="Host"}</strong>
-        <span>{$viewip.poster_host}</span>
-    </div>
-    <div class="z-formrow">
-        <strong class="z-label">{gt text="User names of users who posted from this IP, plus post counts"}</strong>
-        {foreach item='user' from=$viewip.users}
-            <div class="z-formnote">{$user.uname|profilelinkbyuname}&nbsp;({gt text="%s posts" tag1=$user.postcount})</div>
-        {/foreach}
+    <table class="table table-bordered table-striped">
+        <thead>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{gt text="IP address"}</td>
+            <td width="100%">{$viewip.poster_ip}</td>
+        </tr>
+        <tr>
+            <td>{gt text="Host"}</td>
+            <td>{$viewip.poster_host}</td>
+        </tr>
+        <tr>
+            <td style='white-space:nowrap;'>{gt text="Usernames posting from same IP"}</td>
+            <td>
+                <ul>
+                {foreach item='user' from=$viewip.users}
+                <li>{$user.uname|profilelinkbyuname}&nbsp;({gt text="%s posts" tag1=$user.postcount})</li>
+                {/foreach}
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class='panel-footer'>
+        <a class="btn btn-warning" href="{modurl modname=$module type='user' func='viewtopic' post=$post_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
     </div>
 </div>
-
-<p class="gobacklink">
-    <a class="previoustopiclink" href="{modurl modname=$module type='user' func='viewtopic' post=$post_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
-</p>
 
 {include file='user/footer.tpl'}

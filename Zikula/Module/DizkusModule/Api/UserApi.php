@@ -164,7 +164,7 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args The argument array.
      *        int $args['post_id] The postings id.
      *
-     * @return array with informstion.
+     * @return array with information.
      */
     public function get_viewip_data($args)
     {
@@ -172,11 +172,10 @@ class UserApi extends \Zikula_AbstractApi
         $pip = $managedPost->get()->getPoster_ip();
         $viewip = array(
             'poster_ip' => $pip,
-            'poster_host' => gethostbyaddr($pip));
-        $dql = 'SELECT p, fu, u
+            'poster_host' => ($pip <> 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown')
+        );
+        $dql = 'SELECT p
             FROM Zikula\Module\DizkusModule\Entity\PostEntity p
-            JOIN p.poster fu
-            JOIN fu.user u
             WHERE p.poster_ip = :pip
             GROUP BY p.poster';
         $query = $this->entityManager->createQuery($dql)->setParameter('pip', $pip);
@@ -188,7 +187,6 @@ class UserApi extends \Zikula_AbstractApi
                 'uname' => $post->getPoster()->getUser()->getUname(),
                 'postcount' => $post->getPoster()->getPostCount());
         }
-
         return $viewip;
     }
 
