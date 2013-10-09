@@ -290,7 +290,12 @@ class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
         }
         $view = Zikula_View::getInstance(self::MODULENAME, false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
-        $classname = $moduleName . '_Version';
+        $module = ModUtil::getModule($moduleName);
+        if (isset($module)) {
+            $classname = $module->getVersionClass();
+        } else {
+            $classname = $moduleName . '_Version';
+        }
         $moduleVersionObj = new $classname();
         $_em = ServiceUtil::get('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, self::MODULENAME);
