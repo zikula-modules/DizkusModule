@@ -111,7 +111,7 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error synchronizing posts counter.'));
         }
 
-        return $this->redirect(ModUtil::url($this->name, 'admin', 'main'));
+        return $this->redirect(ModUtil::url($this->name, 'admin', 'tree'));
     }
 
     /**
