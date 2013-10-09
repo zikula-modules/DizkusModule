@@ -64,7 +64,7 @@
                         {if $msgmodule}
                             <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}"><i class='icon-envelope-alt icon-150x'></i></a>
                         {/if}
-                        {if isset($topic) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
+                        {if isset($topic) AND isset($post.poster_data) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
                         <a class='tooltips' title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}"><i class='icon-info-sign icon-150x'></i></a>
                         {/if}
                         &nbsp;

@@ -2,19 +2,19 @@
     // <![CDATA[
     var clickToEdit = "{{gt text="Click to edit"}}";
     var subscribeTopic = " {{gt text='Subscribe to topic'}}";
-    var subscribeTopicIcon = "{{$subscribe_icon|strip|addslashes}}";
+    {{if isset($subscribe_icon)}}var subscribeTopicIcon = "{{$subscribe_icon|strip|addslashes}}";{{/if}}
     var unsubscribeTopic = " {{gt text='Unsubscribe from topic'}}";
-    var unsubscribeTopicIcon = "{{$unsubscribe_icon|strip|addslashes}}";
+    {{if isset($unsubscribe_icon)}}var unsubscribeTopicIcon = "{{$unsubscribe_icon|strip|addslashes}}";{{/if}}
     var lockTopic = " {{gt text='Lock topic'}}";
     var unlockTopic = " {{gt text='Unlock topic'}}";
     var stickyTopic = " {{gt text="Give this topic 'sticky' status"}}";
-    var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";
+    {{if isset($sticky_icon)}}var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";{{/if}}
     var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
-    var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";
+    {{if isset($unsticky_icon)}}var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";{{/if}}
     var solveTopic = " {{gt text="Mark as solved"}}";
-    var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";
+    {{if isset($solve_icon)}}var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";{{/if}}
     var unsolveTopic = " {{gt text="Mark as unsolved"}}";
-    var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";
+    {{if isset($unsolve_icon)}}var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";{{/if}}
     var zChanged = "{{gt text="Changed"}}";
     var zLoadingPost = "{{gt text="Loading post"}}";
     var zDeletingPost = "{{gt text="Deleting post"}}";
