@@ -125,7 +125,9 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="pop3_test" __text="Perform POP3 test after saving"}
             <div class="col-lg-9">
-                {formcheckbox id="pop3_test" cssClass='form-control'}
+                <div class="checkbox">
+                    {formcheckbox id="pop3_test"}
+                </div>
             </div>
         </div>
         <div class="form-group">

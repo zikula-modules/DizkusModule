@@ -12,7 +12,9 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="forum_enabled" __text='Forums are accessible to visitors'}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="forum_enabled"}
+                <div class="checkbox">
+                    {formcheckbox id="forum_enabled"}
+                </div>
                 <p class="help-block alert alert-info">
                     {gt text="If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance."}
                 </p>
@@ -66,13 +68,17 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="ajax" __text="Enable user-side ajax"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="ajax"}
+                <div class="checkbox">
+                    {formcheckbox id="ajax"}
+                </div>
             </div>
         </div>
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="solved_enabled" __text="Enable solved option in topics"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="solved_enabled"}
+                <div class="checkbox">
+                    {formcheckbox id="solved_enabled"}
+                </div>
             </div>
         </div>
     </fieldset>
@@ -82,19 +88,25 @@
         {* fulltext disabled until technology available
         <div class="form-group">
         {formlabel class="col-lg-3 control-label" for="fulltextindex" __text="Enable full-text index field searching"}
-        {formcheckbox cssClass='form-control' id="fulltextindex"}
+            <div class="checkbox">
+                {formcheckbox id="fulltextindex"}
+            </div>
         <p class="help-block alert alert-info">{gt text="Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
         </div>
         <div class="form-group">
         {formlabel class="col-lg-3 control-label" for="extendedsearch" __text="Enable extended full-text search in internal search"}
-        {formcheckbox cssClass='form-control' id="extendedsearch"}
+            <div class="checkbox">
+                {formcheckbox id="extendedsearch"}
+            </div>
         <p class="help-block alert alert-info">{gt text="Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."}</p>
         </div>
         *}
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="showtextinsearchresults" __text="Show text in search results"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="showtextinsearchresults"}
+                <div class="checkbox">
+                    {formcheckbox id="showtextinsearchresults"}
+                </div>
                 <p class="help-block alert alert-info">{gt text="Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table."}</p>
             </div>
         </div>
@@ -136,13 +148,17 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="signaturemanagement" __text="Enable signature management via forum user settings"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="signaturemanagement"}
+                <div class="checkbox">
+                    {formcheckbox id="signaturemanagement"}
+                </div>
             </div>
         </div>
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="removesignature" __text="Strip user signatures from posts"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="removesignature"}
+                <div class="checkbox">
+                    {formcheckbox id="removesignature"}
+                </div>
             </div>
         </div>
     </fieldset>
@@ -152,13 +168,17 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="log_ip" __text="Log IP addresses"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="log_ip"}
+                <div class="checkbox">
+                    {formcheckbox id="log_ip"}
+                </div>
             </div>
         </div>
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="striptags" __text="Strip HTML tags from new posts"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="striptags"}
+                <div class="checkbox">
+                    {formcheckbox id="striptags"}
+                </div>
                 <p class="help-block alert alert-info">{gt text="Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags."}</p>
             </div>
         </div>
@@ -175,7 +195,9 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="striptagsfromemail" __text="Strip HTML tags from outgoing email post content"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="striptagsfromemail"}
+                <div class="checkbox">
+                    {formcheckbox id="striptagsfromemail"}
+                </div>
                 <p class="help-block alert alert-info">{gt text="Strip action occurs post filter hook action."}</p>
             </div>
         </div>
@@ -192,19 +214,25 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="m2f_enabled" __text="Enable Mail2Forum"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="m2f_enabled" disabled=true}
+                <div class="checkbox">
+                    {formcheckbox id="m2f_enabled" disabled=true}
+                </div>
             </div>
         </div>
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="rss2f_enabled" __text="Enable RSS2Forum"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="rss2f_enabled" disabled=true}
+                <div class="checkbox">
+                    {formcheckbox id="rss2f_enabled" disabled=true}
+                </div>
             </div>
         </div>
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="favorites_enabled" __text="Enable favourites"}
             <div class="col-lg-9">
-                {formcheckbox cssClass='form-control' id="favorites_enabled"}
+                <div class="checkbox">
+                    {formcheckbox id="favorites_enabled"}
+                </div>
             </div>
         </div>
         <div class="form-group">

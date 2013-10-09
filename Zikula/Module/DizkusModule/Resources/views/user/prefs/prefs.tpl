@@ -22,14 +22,18 @@
             <div class="form-group">
                 {formlabel for="displayOnlyFavorites" __text="Display only favorite forums" class="col-lg-3 control-label"}
                 <div class="col-lg-9">
-                {formcheckbox id="displayOnlyFavorites"}
+                    <div class="checkbox">
+                        {formcheckbox id="displayOnlyFavorites"}
+                    </div>
                 </div>
             </div>
         {/if}
         <div class="form-group">
             {formlabel for="autosubscribe" __text="Autosubscribe to new topics" class="col-lg-3 control-label"}
             <div class="col-lg-9">
-                {formcheckbox id="autosubscribe"}
+                <div class="checkbox">
+                    {formcheckbox id="autosubscribe"}
+                </div>
             </div>
         </div>
         <div class="col-lg-offset-3 col-lg-9">

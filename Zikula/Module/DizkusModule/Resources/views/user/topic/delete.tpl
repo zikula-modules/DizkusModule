@@ -18,7 +18,9 @@
         <div class="form-group">
             {formlabel for="sendReason" __text='Send a reason to the poster' class="col-lg-3 control-label"}
             <div class="col-lg-9">
-                {formcheckbox id="sendReason" value=false cssClass='form-control'}
+                <div class="checkbox">
+                    {formcheckbox id="sendReason" value=false}
+                </div>
             </div>
         </div>
         <div class="form-group" id="diskus_reason_container" {if $modvars.ZikulaDizkusModule.ajax}style="display:none"{/if}>

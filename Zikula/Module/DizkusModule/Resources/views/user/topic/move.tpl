@@ -24,7 +24,9 @@
             <div class="form-group">
                 {formlabel for="createshadowtopic" __text="Create shadow topic" class="col-lg-3 control-label"}
                 <div class="col-lg-9">
-                    {formcheckbox id="createshadowtopic"}
+                    <div class="checkbox">
+                        {formcheckbox id="createshadowtopic"}
+                    </div>
                 </div>
             </div>
             <div class="col-lg-offset-3 col-lg-9">
