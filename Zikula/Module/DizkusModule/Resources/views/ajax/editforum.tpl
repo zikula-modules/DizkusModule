@@ -18,7 +18,7 @@
                     <span id="forum_info">
                         {boardstats type='forumtopics' id=$forum.forum_id assign='topiccount'}
                         {boardstats type='forumposts' id=$forum.forum_id assign='postcount'}
-                        <a title="{gt text="Visit this forum"}" href="{modurl modname=$module type='user' func='viewforum forum=$forum.forum_id}">
+                        <a title="{gt text="Visit this forum"}" href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">
                     {$topiccount}&nbsp;{if $topiccount eq 1}{gt text="Topic"}{else}{gt text="Topics"}{/if}&nbsp;/&nbsp;
             {$postcount}&nbsp;{if $postcount eq 1}{gt text="Post"}{else}{gt text="Posts"}{/if}
         </a>
@@ -130,7 +130,7 @@
         <label for="rssfeed">{gt text="Select RSS feed"}</label>
         <select name="rssfeed" size="1">
             <option value="0">{gt text="None"}</option>
-            {foreach item='feed from=$rssfeeds}
+            {foreach item='feed' from=$rssfeeds}
                 <option value="{$feed.fid}" {if $feed.fid == $forum.externalsourceurl}selected="selected"{/if}>{$feed.name|safetext} ({$feed.url})</option>
             {/foreach}
         </select>
