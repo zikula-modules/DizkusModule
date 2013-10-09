@@ -6,7 +6,9 @@
 
 jQuery(document).ready(function() {
     // set up chosen lib
-    jQuery('.chzn-select').chosen();
+    jQuery('.chzn-select').chosen({
+        width: '100%'
+    });
     // on click handlers
     jQuery('#noexternal').click(function() {
         jQuery('#mail2forumField').hide("slow");
