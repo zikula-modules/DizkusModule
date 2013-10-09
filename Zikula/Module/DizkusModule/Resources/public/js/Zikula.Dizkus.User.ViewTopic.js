@@ -127,7 +127,7 @@ function changeTopicTitle(e) {
         url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
-                jQuery('#topicsubjectedit_editor').addClass('z-hide');
+                jQuery('#topicsubjectedit_editor').hide();
                 jQuery('#topic_title').text(jQuery('#topicsubjectedit_subject').val());
             } else {
                 console.log(result);
