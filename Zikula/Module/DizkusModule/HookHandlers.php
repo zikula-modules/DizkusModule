@@ -29,6 +29,7 @@ use ZLanguage;
 use Zikula_View;
 use Zikula_Exception_Forbidden;
 use Zikula_Event;
+use Zikula\Core\Hook\AbstractHookListener;
 use Zikula\Core\Hook\DisplayHook;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\DisplayHookResponse;
@@ -43,7 +44,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
 
-class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
+class HookHandlers extends AbstractHookListener
 {
 
     /**
@@ -121,8 +122,8 @@ class HookHandlers extends \Zikula\Core\Hook\AbstractHookListener
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
-        $modInfo = ModUtil::getInfoFromName(self::MODULENAME);
-        PageUtil::addVar('stylesheet', "modules/{$modInfo['directory']}/Resources/public/css/style.css");
+        $module = ModUtil::getModule(self::MODULENAME);
+        PageUtil::addVar('stylesheet', $module->getRelativePath() . "/Resources/public/css/style.css");
         $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
     }
 
