@@ -38,10 +38,12 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="status" __text="Lock Forum"}
             <div class="col-lg-9">
-                {formcheckbox id="status" cssClass='form-control'}
-                <p class="help-block alert alert-info">
+                <div class="checkbox">
+                    {formcheckbox id="status"}
+                </div>
+                <div class="help-block alert alert-info">
                     <em>{gt text="Locking a forum prevents new <strong>topics</strong> from being created in the forum."}</em>
-                </p>
+                </div>
             </div>
         </div>
 
@@ -84,7 +86,7 @@
 
 
         <div id="extsource" class="form-group">
-            {formlabel class="col-lg-3 control-label" for="pop3_active" __text="External source"}
+            <strong class="col-lg-3 control-label">{gt text="External source"}</strong>
             <div class="col-lg-9">
                 <div class="radio">
                     {formlabel for="noexternal" __text='No external source'}
@@ -100,7 +102,7 @@
                     {if $feeds}
                     {formradiobutton id="rss2forum" dataField='extsource'}
                     {else}
-                    {formradiobutton id="rss2forum" dataField='extsource' disabled=true}
+                    {formradiobutton id="rss2forum" dataField='extsource' disabled='disabled'}
                         &nbsp;<span class='text-danger'>{gt text="'Feeds' module is not available."}</span>
                     {/if}
                 </div>
@@ -190,7 +192,7 @@
 
     <div class="col-lg-offset-3 col-lg-9">
         {formbutton id="submit" commandName="submit" __text="Save" class="btn btn-success"}
-        {formbutton id="restore" commandName="cancel" __text="Cancel" class="btn btn-danger"}
+        {formbutton id="cancel" commandName="cancel" __text="Cancel" class="btn btn-danger"}
     </div>
 
     {/form}
