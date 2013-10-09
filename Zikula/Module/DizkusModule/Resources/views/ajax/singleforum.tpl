@@ -18,10 +18,10 @@
         </div>
     </div>
     <div id="editforumcontent_{$forum.forum_id}" style="{if $newforum <> true}display: none; {/if}margin: 0 1em;">
-                        {if $newforum eq true}
-                            {include file='ajax/editforum.tpl'}
-                        {else}
-        &nbsp;
-                        {/if}
+        {if $newforum eq true}
+            {include file='ajax/editforum.tpl'}
+        {else}
+            &nbsp;
+        {/if}
     </div>
 </li>
