@@ -20,7 +20,7 @@
         [<span class='icon-ok'>&nbsp;{gt text="Solved"}</span>]
     </span>
     <span id="edittopicsubjectbutton" title="">
-        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}<span id='edittopicicon' style='display:none;'>&nbsp;<i class='icon-pencil icon-red'></i></span></span>
+        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span><span id='edittopicicon' style='display:none;'>&nbsp;<i class='icon-pencil icon-red'></i></span>
     </span>
 </h2>
 
