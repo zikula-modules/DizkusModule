@@ -36,7 +36,7 @@
                     <label class="col-lg-3 control-label" for="newrank_image">{gt text="Internal Dizkus image"}</label>
                     <div class="col-lg-9">
                         <div class='col-lg-3'>
-                            <select name="ranks[-1][image]" id="newrank_image" class='form-control'>
+                            <select name="ranks[-1][image]" id="newrank_image" class='form-control input-sm'>
                                 {foreach name='availableranks' item='rankimage' from=$rankimages}
                                 <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                                 {/foreach}
