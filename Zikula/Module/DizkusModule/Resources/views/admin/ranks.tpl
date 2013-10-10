@@ -51,9 +51,6 @@
                         <input id="description" type="text" class='form-control' name="ranks[-1][description]" value="" maxlength="255" size="60" />
                     </div>
                 </div>
-                <p class="alert alert-info">
-                    {gt text="Notice: For the rank image, you can either choose one of the standardly-supplied Dizkus rank images, or you can use an external image of your choice. To use an internal Dizkus image, select the desired image from the 'Internal Dizkus image' dropdown list. If you want to use an external image, enter the path to the image within the file system in the 'External image' box. Alternatively, you can use an image that can be found on the Internet: if your entry in the 'External image' box starts with 'http://' then the graphic will fetched from the link entered."}
-                </p>
                 <div class="col-lg-offset-3 col-lg-9">
                     {button class="btn btn-success" __alt="Create" __title="Create" __text="Create"}
                 </div>
