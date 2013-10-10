@@ -20,6 +20,8 @@ use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Core\ModUrl;
 use ZLanguage;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * This class provides a handler to Assign ranks
  */
@@ -60,25 +62,20 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $perpage = 20;
 
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('cu.uid, cu.uname, r.rank_id')
+        $qb->select('u, cu')
                 ->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')
                 ->leftJoin('u.user', 'cu')
-                ->leftJoin('u.rank', 'r')
                 ->orderBy('cu.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
             $qb->andWhere('cu.uname LIKE :letter')
-                    ->setParameter('letter', DataUtil::formatForStore($letter) . '%');
+                ->setParameter('letter', $letter . '%');
         }
         $query = $qb->getQuery();
+        $query->setFirstResult(($page - 1) * $perpage)
+            ->setMaxResults($perpage);
 
         // Paginator
-        // this isn't working at the moment - Jan 26 2013
-//            $startnum = ($page - 1) * $perpage;
-//            $count = \DoctrineExtensions\Paginate\Paginate::getTotalQueryResults($query);
-//            $paginateQuery = \DoctrineExtensions\Paginate\Paginate::getPaginateQuery($query, $startnum, $perpage); // Step 2 and 3
-//            $allusers = $paginateQuery->getArrayResult();
-
-        $allusers = $query->getArrayResult();
+        $allusers = new Paginator($query);
 
         $this->view->assign('ranks', $ranks);
         $this->view->assign('rankimages', $rankimages);
@@ -86,7 +83,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $this->view->assign('letter', $letter);
         $this->view->assign('page', $page);
         $this->view->assign('perpage', $perpage);
-//            $this->view->assign('usercount', $count);
+        $this->view->assign('usercount', count($allusers));
         return true;
     }
 
@@ -104,17 +101,12 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
+        $queryParams = $this->request->query->all();
+        unset($queryParams['module'], $queryParams['type'], $queryParams['func']);
 
-        $data = $view->getValues();
-
-        // avoid some vars in the url of the pager
-//        unset($_GET['submit']);
-//        unset($_POST['submit']);
-//        unset($_REQUEST['submit']);
         $setrank = $this->request->request->get('setrank');
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
-        unset($data['setrank']);
-        $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $data);
+        $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
 
         return $view->redirect($url->getUrl());
     }
