@@ -10,6 +10,8 @@ jQuery(document).ready(function() {
         jQuery('#newimage').attr('src', rankImagePath + '/' + jQuery(this).val());
     });
     jQuery('.rankimageselect').change(function() {
-        jQuery(this).next("img").attr('src', rankImagePath + '/' + jQuery(this).val());
+        var id = '#image' + jQuery(this).data('id');
+        console.log(id);
+        jQuery(id).attr('src', rankImagePath + '/' + jQuery(this).val());
     });
 });

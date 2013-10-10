@@ -74,7 +74,7 @@ class RankApi extends \Zikula_AbstractApi
                 $this->entityManager->persist($r);
             } else {
                 $r = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\RankEntity', $rankid);
-                if ($rank['rank_delete'] == '1') {
+                if ((isset($rank['rank_delete'])) && ($rank['rank_delete'] == '1')) {
                     $this->entityManager->remove($r);
                 } else {
                     $r->merge($rank);
