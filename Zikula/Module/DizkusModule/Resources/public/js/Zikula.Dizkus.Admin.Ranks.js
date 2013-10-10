@@ -11,7 +11,6 @@ jQuery(document).ready(function() {
     });
     jQuery('.rankimageselect').change(function() {
         var id = '#image' + jQuery(this).data('id');
-        console.log(id);
         jQuery(id).attr('src', rankImagePath + '/' + jQuery(this).val());
     });
 });
