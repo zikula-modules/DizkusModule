@@ -48,27 +48,25 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
                 'enabled' => true),
             HookUtil::PROVIDER_CAPABLE => array(
                 'enabled' => true));
-        // module depedencies
+        // module dependencies
         $meta['dependencies'] = array(
-            array(
-                'modname' => 'LuMicuLa',
-                'minversion' => '0.1.0',
-                'maxversion' => '',
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
             array(
                 'modname' => 'Scribite',
                 'minversion' => '5.0.0',
                 'maxversion' => '',
+                'reason' => $this->__('Scribite adds WYSIWYG editors to add html markup to post text.'),
                 'status' => ModUtil::DEPENDENCY_RECOMMENDED),
             array(
                 'modname' => 'BBCode',
                 'minversion' => '3.0.0',
                 'maxversion' => '',
+                'reason' => $this->__('BBCode allows bracket-tag markup in post text.'),
                 'status' => ModUtil::DEPENDENCY_RECOMMENDED),
             array(
                 'modname' => 'BBSmile',
                 'minversion' => '3.0.0',
                 'maxversion' => '',
+                'reason' => $this->__('BBSmile allows addition of smilies to post text.'),
                 'status' => ModUtil::DEPENDENCY_RECOMMENDED));
 
         return $meta;
