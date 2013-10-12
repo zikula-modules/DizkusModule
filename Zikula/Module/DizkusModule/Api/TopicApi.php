@@ -117,7 +117,9 @@ class TopicApi extends \Zikula_AbstractApi
         $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['topic'])) {
-            $topicSubscription = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy(array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get()));
+            $topicSubscription = $this->entityManager
+                ->getRepository('Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity')
+                ->findOneBy(array('topic' => $args['topic'], 'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeTopicSubscription($topicSubscription);
         } else {
             // not used in the code...

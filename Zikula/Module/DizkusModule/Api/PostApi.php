@@ -41,7 +41,10 @@ class PostApi extends \Zikula_AbstractApi
     public function getLatest($args)
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t', 'l')->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')->leftJoin('t.last_post', 'l')->orderBy('l.post_time', 'DESC');
+        $qb->select('t', 'l')
+            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->leftJoin('t.last_post', 'l')
+            ->orderBy('l.post_time', 'DESC');
         // sql part per selected time frame
         switch ($args['selorder']) {
             case '2':
@@ -72,13 +75,15 @@ class PostApi extends \Zikula_AbstractApi
                 if (isset($args['nohours']) && $args['nohours'] > 336) {
                     $args['nohours'] = 336;
                 }
-                $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new DateTime('-' . $args['nohours'] . ' hours'));
+                $qb->where('l.post_time > :wheretime')
+                    ->setParameter('wheretime', new DateTime('-' . $args['nohours'] . ' hours'));
                 $text = DataUtil::formatForDisplay($this->__f('In the last %s hours', $args['nohours']));
                 break;
             case '6':
                 // last visit
                 $lastVisit = DateTime::createFromFormat('U', $args['last_visit_unix']);
-                $qb->where('l.post_time > :wheretime')->setParameter('wheretime', $lastVisit);
+                $qb->where('l.post_time > :wheretime')
+                    ->setParameter('wheretime', $lastVisit);
                 $text = DataUtil::formatForDisplay($this->__f('Since your last visit on %s', DateUtil::formatDatetime($args['last_visit_unix'], 'datetimebrief')));
                 break;
             case 'unanswered':
@@ -121,7 +126,11 @@ class PostApi extends \Zikula_AbstractApi
             $args['action'] = 'posts';
         }
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t', 'l')->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')->leftJoin('t.last_post', 'l')->leftJoin('t.posts', 'p')->orderBy('l.post_time', 'DESC');
+        $qb->select('t', 'l')
+            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->leftJoin('t.last_post', 'l')
+            ->leftJoin('t.posts', 'p')
+            ->orderBy('l.post_time', 'DESC');
         if ($args['action'] == 'topics') {
             $qb->where('t.poster = :uid');
             if ($own) {

@@ -43,7 +43,9 @@ class SyncApi extends \Zikula_AbstractApi
         $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumEntity f SET f.topicCount = 0, f.postCount = 0';
         $this->entityManager->createQuery($dql)->execute();
         // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
-        $forums = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findBy(array(), array('lvl' => 'ASC'));
+        $forums = $this->entityManager
+            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')
+            ->findBy(array(), array('lvl' => 'ASC'));
         foreach ($forums as $forum) {
             $this->forum(array('forum' => $forum));
         }
@@ -152,7 +154,12 @@ class SyncApi extends \Zikula_AbstractApi
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // count posts of a topic
         $qb = $this->entityManager->createQueryBuilder();
-        $replies = $qb->select('COUNT(p)')->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')->where('p.topic = :id')->setParameter('id', $id)->getQuery()->getSingleScalarResult();
+        $replies = $qb->select('COUNT(p)')
+            ->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')
+            ->where('p.topic = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleScalarResult();
         $replies = (int)$replies - 1;
         $args['topic']->setReplyCount($replies);
         if ($flush) {
@@ -170,7 +177,12 @@ class SyncApi extends \Zikula_AbstractApi
     public function posters()
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')->leftJoin('p.poster', 'd')->groupBy('d.user')->getQuery()->getArrayResult();
+        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')
+            ->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')
+            ->leftJoin('p.poster', 'd')
+            ->groupBy('d.user')
+            ->getQuery()
+            ->getArrayResult();
         foreach ($posts as $post) {
             $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $post['user_id']);
             if (!$forumUser) {

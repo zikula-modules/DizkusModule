@@ -49,7 +49,8 @@ class RankApi extends \Zikula_AbstractApi
         } else {
             $orderby = 'title';
         }
-        $ranks = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\RankEntity')->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
+        $ranks = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\RankEntity')
+            ->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
     }
@@ -140,7 +141,15 @@ class RankApi extends \Zikula_AbstractApi
             return $this->_userRanks[$uid];
         }
         // get rank by number of post
-        $userRank = $this->entityManager->createQueryBuilder()->select('r')->from('Zikula\Module\DizkusModule\Entity\RankEntity', 'r')->where('r.minimumCount <= :posts and r.maximumCount >= :posts')->setParameter('posts', $args['poster']->getPostCount())->getQuery()->setMaxResults(1)->getArrayResult();
+        $userRank = $this->entityManager
+            ->createQueryBuilder()
+            ->select('r')
+            ->from('Zikula\Module\DizkusModule\Entity\RankEntity', 'r')
+            ->where('r.minimumCount <= :posts and r.maximumCount >= :posts')
+            ->setParameter('posts', $args['poster']->getPostCount())
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getArrayResult();
         if (isset($userRank[0])) {
             $data = $this->addImageAndLink($userRank[0]);
         }

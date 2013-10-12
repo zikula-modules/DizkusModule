@@ -44,9 +44,21 @@ class NotifyApi extends \Zikula_AbstractApi
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
-        $view->assign('sitename', System::getVar('sitename'))->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())->assign('name', $post->getTopic()->getForum()->getName())->assign('topic_subject', $post->getTopic()->getTitle())->assign('poster_name', $post->getPoster()->getUser()->getUname())->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())->assign('forum_id', $post->getTopic()->getForum()->getForum_id())->assign('topic_url', ModUtil::url($this->name, 'user', 'viewtopic', array(
-                    'topic' => $post->getTopic_id()), null, 'dzk_quickreply', true))->assign('subscription_url', ModUtil::url($this->name, 'user', 'prefs', array(
-                        ), null, null, true))->assign('base_url', System::getBaseUrl());
+        $view->assign('sitename', System::getVar('sitename'))
+            ->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())
+            ->assign('name', $post->getTopic()->getForum()->getName())
+            ->assign('topic_subject', $post->getTopic()->getTitle())
+            ->assign('poster_name', $post->getPoster()->getUser()->getUname())
+            ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
+            ->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())
+            ->assign('forum_id', $post->getTopic()->getForum()->getForum_id())
+            ->assign('topic_url', ModUtil::url($this->name, 'user', 'viewtopic', array(
+                        'topic' => $post->getTopic_id()),
+                        null,
+                        'dzk_quickreply',
+                        true))
+            ->assign('subscription_url', ModUtil::url($this->name, 'user', 'prefs', array(), null, null, true))
+            ->assign('base_url', System::getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
         $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
         $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions()->toArray();
