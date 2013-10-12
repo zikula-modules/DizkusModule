@@ -19,6 +19,7 @@ use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * This class provides the topic api functions
@@ -82,7 +83,9 @@ class TopicApi extends \Zikula_AbstractApi
             $args['topic'] = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findOneBy(array('topic_id' => $args['topic']));
         }
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum())) {
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+        }
         $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
             'topic' => $args['topic'],
@@ -114,7 +117,9 @@ class TopicApi extends \Zikula_AbstractApi
             $args['topic'] = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findOneBy(array('topic_id' => $args['topic']));
         }
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum()));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum())) {
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+        }
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['topic'])) {
             $topicSubscription = $this->entityManager

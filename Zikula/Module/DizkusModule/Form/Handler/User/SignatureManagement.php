@@ -16,7 +16,7 @@ use LogUtil;
 use UserUtil;
 use SecurityUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * This class provides a handler for the signature management.
@@ -31,7 +31,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -40,7 +40,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
         }
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
 
         $view->assign('signature', UserUtil::getVar('signature'));

@@ -61,8 +61,8 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         //check for Permission
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', "{$blockinfo['bid']}::", ACCESS_READ)) {
-            return false;
+        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
+            throw $this->createAccessDeniedHttpException();
         }
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
@@ -102,8 +102,8 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock:', "{$blockinfo['bid']}::", ACCESS_ADMIN)) {
-            return false;
+        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+            throw $this->createAccessDeniedHttpException();
         }
         $sb_template = $this->request->request->get('sb_template', 'statisticsblock/display.tpl');
         $sb_parameters = $this->request->request->get('sb_parameters', 'maxposts=5');
@@ -121,8 +121,8 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', "{$blockinfo['bid']}::", ACCESS_ADMIN)) {
-            return false;
+        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+            throw $this->createAccessDeniedHttpException();
         }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);

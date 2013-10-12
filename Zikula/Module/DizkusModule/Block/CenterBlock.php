@@ -61,7 +61,9 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         // check for Permission
-        $this->throwForbiddenUnless(SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_READ));
+        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
+            throw $this->createAccessDeniedHttpException();
+        }
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
             $blockinfo['content'] = $this->getVar('forum_disabled_info');
@@ -104,7 +106,9 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockinfo)
     {
-        $this->throwForbiddenUnless(SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_ADMIN));
+        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+            throw $this->createAccessDeniedHttpException();
+        }
         $cb_template = $this->request->request->get('cb_template', 'centerblock/display.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
@@ -121,7 +125,9 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockinfo)
     {
-        $this->throwForbiddenUnless(SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo[bid] . '::', ACCESS_ADMIN));
+        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+            throw $this->createAccessDeniedHttpException();
+        }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         if (!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) {

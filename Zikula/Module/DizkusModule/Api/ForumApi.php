@@ -18,6 +18,7 @@ use ModUtil;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ForumApi extends \Zikula_AbstractApi
 {
@@ -162,7 +163,9 @@ class ForumApi extends \Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum'])) {
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+        }
         $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
             'forum' => $args['forum'],
@@ -198,7 +201,9 @@ class ForumApi extends \Zikula_AbstractApi
             return LogUtil::registerArgsError();
         }
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum']));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum'])) {
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+        }
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['forum'])) {
             $forumSubscription = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy(array(

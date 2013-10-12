@@ -16,7 +16,7 @@ use ModUtil;
 use LogUtil;
 use UserUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * This class provides a handler to create a new topic.
@@ -38,13 +38,13 @@ class Prefs extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
 
         if (!UserUtil::isLoggedIn()) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
 
         // get the input

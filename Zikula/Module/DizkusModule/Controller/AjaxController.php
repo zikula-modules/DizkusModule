@@ -20,8 +20,7 @@ use SessionUtil;
 use SecurityUtil;
 use System;
 use ZLanguage;
-use Zikula_Exception_Forbidden;
-use Zikula_Exception_Fatal;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Zikula\Core\Response\Ajax\AjaxResponse;
 use Zikula\Core\Response\Ajax\UnavailableResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
@@ -44,13 +43,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     /**
      * Checks if the forum is disabled.
      *
-     * @throws Zikula_Exception_Forbidden
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return void
      */
     private function errorIfForumDisabled()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-            throw new Zikula_Exception_Forbidden(strip_tags($this->getVar('forum_disabled_info')));
+            throw $this->createAccessDeniedHttpException(strip_tags($this->getVar('forum_disabled_info')));
         }
     }
 
@@ -59,13 +58,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @param string $message The message to check.
      *
-     * @throws Zikula_Exception_Fatal
+     * @throws FatalErrorException
      * @return void
      */
     private function checkMessageLength($message)
     {
         if (!ModUtil::apiFunc($this->name, 'post', 'checkMessageLength', array('message' => $message))) {
-            throw new Zikula_Exception_Fatal($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+            throw new FatalErrorException($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
         }
     }
 
@@ -94,8 +93,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * RETURN: $data The rendered post.
      *         $post_id The post id.
-     *
-     * @throws Zikula_Exception_Fatal
      *
      * @return AjaxResponse
      */
@@ -169,8 +166,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * RETURN: The edit post form.
      *
-     * @throws Zikula_Exception_Fatal
-     * @throws Zikula_Exception_Forbidden
+     * @throws FatalErrorException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      *
      * @return AjaxResponse
      */
@@ -194,10 +191,10 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 return new AjaxResponse($this->view->fetch('ajax/editpost.tpl'));
             } else {
                 LogUtil::registerPermissionError(null, true);
-                throw new Zikula_Exception_Forbidden();
+                throw $this->createAccessDeniedHttpException();
             }
         }
-        throw new Zikula_Exception_Fatal($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
+        throw new FatalErrorException($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
     }
 
     /**
@@ -213,8 +210,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *         $redirect The page to redirect to (can be empty).
      *
      *
-     * @throws Zikula_Exception_Fatal
-     * @throws Zikula_Exception_Forbidden If the user tries to delete the only post of a topic.
+     * @throws FatalErrorException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException If the user tries to delete the only post of a topic.
      *
      * @return AjaxResponse
      */
@@ -233,7 +230,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $managedOriginalPost = new PostManager($post_id);
             if ($delete) {
                 if ($managedOriginalPost->get()->isFirst()) {
-                    throw new Zikula_Exception_Forbidden($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
+                    throw $this->createAccessDeniedHttpException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
                 } else {
                     $response = array('action' => 'deleted');
                 }
@@ -266,13 +263,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
             return new AjaxResponse($response);
         }
-        throw new Zikula_Exception_Fatal($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
+        throw new FatalErrorException($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
     }
 
     /**
      * changeTopicStatus
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      *
      * @return string
      */
@@ -308,7 +305,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate') && !($userAllowedToEdit == 1)) {
             LogUtil::registerPermissionError(null, true);
-            throw new Zikula_Exception_Forbidden();
+            throw $this->createAccessDeniedHttpException();
         }
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
@@ -322,7 +319,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *  string $fragment A partial user name entered by the user.
      *
      *
-     * @throws Zikula_Exception_Forbidden
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @return string PlainResponse with json_encoded object of users matching the criteria.
      */
     public function getUsersAction()
@@ -330,7 +327,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             LogUtil::registerPermissionError();
-            throw new Zikula_Exception_Forbidden();
+            throw $this->createAccessDeniedHttpException();
         }
         $fragment = $this->request->query->get('fragment', null);
         $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
@@ -369,7 +366,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             // only need read perms to make a favorite
             LogUtil::registerPermissionError();
-            throw new Zikula_Exception_Forbidden();
+            throw $this->createAccessDeniedHttpException();
         }
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);

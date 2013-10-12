@@ -15,7 +15,7 @@ use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
 use LogUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * This class provides a handler to delete a topic.
@@ -37,12 +37,12 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
 
         $postId = (int) $this->request->query->get('post');

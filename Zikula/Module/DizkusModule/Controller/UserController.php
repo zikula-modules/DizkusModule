@@ -61,7 +61,9 @@ class UserController extends \Zikula_AbstractController
             $this->redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => (int) $indexTo)));
         }
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw $this->createAccessDeniedHttpException();
+        }
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
         // get the forms to display
@@ -120,7 +122,9 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $managedForum = new ForumManager($forumId);
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get()));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
+            throw $this->createAccessDeniedHttpException();
+        }
         // filter the forum children by permissions
         $forum = ModUtil::apiFunc($this->name, 'Permission', 'filterForumChildrenByPermission', $managedForum->get());
         $this->view->assign('forum', $forum)
@@ -164,7 +168,9 @@ class UserController extends \Zikula_AbstractController
         }
         $managedTopic = new TopicManager($topicId);
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum()));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
+            throw $this->createAccessDeniedHttpException();
+        }
         if (!$managedTopic->exists()) {
             return LogUtil::registerError($this->__f('Error! The topic you selected (ID: %s) was not found. Please go back and try again.', array($topicId)), null, ModUtil::url($this->name, 'user', 'index'));
         }
@@ -207,7 +213,9 @@ class UserController extends \Zikula_AbstractController
     {
         // Comment Permission check
         $forum_id = (int) $this->request->request->get('forum', null);
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canWrite', array('forum_id' => $forum_id)));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', array('forum_id' => $forum_id))) {
+            throw $this->createAccessDeniedHttpException();
+        }
         $this->checkCsrfToken();
         // get the input
         $topic_id = (int)$this->request->request->get('topic', null);
@@ -382,7 +390,9 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewIpDataAction()
     {
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canModerate'));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+            throw $this->createAccessDeniedHttpException();
+        }
         $post_id = (int)$this->request->query->filter('post', 0, FILTER_VALIDATE_INT);
         if ($post_id == 0) {
             return LogUtil::registerArgsError();
@@ -538,7 +548,9 @@ class UserController extends \Zikula_AbstractController
     public function viewlatestAction()
     {
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw $this->createAccessDeniedHttpException();
+        }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
         }
@@ -571,7 +583,9 @@ class UserController extends \Zikula_AbstractController
     public function mineAction()
     {
         // Permission check
-        $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead'));
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw $this->createAccessDeniedHttpException();
+        }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
         }
@@ -689,7 +703,9 @@ class UserController extends \Zikula_AbstractController
          */
         if (!empty($forum_id)) {
             $managedForum = new ForumManager($forum_id);
-            $this->throwForbiddenUnless(ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id)));
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id))) {
+                throw $this->createAccessDeniedHttpException();
+            }
             $where = array('t.forum', (int) DataUtil::formatForStore($forum_id), '=');
             $link = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
             $forumname = $managedForum->get()->getName();

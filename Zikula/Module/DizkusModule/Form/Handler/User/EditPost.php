@@ -15,12 +15,9 @@ use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
 use LogUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Core\ModUrl;
 use ZLanguage;
-use Zikula_ValidationHook;
-use Zikula_ProcessHook;
-use Zikula_Hook_ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
@@ -45,12 +42,12 @@ class EditPost extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
 
         // get the input

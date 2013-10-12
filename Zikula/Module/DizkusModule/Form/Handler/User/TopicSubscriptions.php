@@ -16,7 +16,7 @@ use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * This class provides a handler to manage topic subscriptions.
@@ -31,20 +31,16 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ)) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
-
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
-        }
-
         if (!UserUtil::isLoggedIn()) {
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageTopicSubscriptions')));
+        }
+
+        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
 
         $subscriptions = ModUtil::apiFunc($this->name, 'topic', 'getSubscriptions');
