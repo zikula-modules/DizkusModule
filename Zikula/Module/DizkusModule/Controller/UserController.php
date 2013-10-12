@@ -42,6 +42,7 @@ use Zikula\Module\DizkusModule\Form\Handler\User\SplitTopic;
 use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
 use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
 use Zikula\Module\DizkusModule\Form\Handler\User\Report;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -117,7 +118,9 @@ class UserController extends \Zikula_AbstractController
         }
         // get the input
         $forumId = (int)$this->request->query->get('forum', null);
-        $this->throwNotFoundUnless($forumId > 0, $this->__('That forum doesn\'t exist!'));
+        if (!($forumId > 0)) {
+            throw new NotFoundHttpException($this->__('That forum doesn\'t exist!'));
+        }
         $start = (int)$this->request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $managedForum = new ForumManager($forumId);
