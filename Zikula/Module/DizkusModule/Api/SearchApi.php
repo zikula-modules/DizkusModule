@@ -22,6 +22,10 @@ use Search_Api_User;
 
 /**
  * This class provides the search api functions
+ *
+ ******************** 12 OCTOBER 2013 NOTE:
+ * The entire search API and function must be remodeled at the core level,
+ * so this class will not be refactored until those changes are done.
  */
 class SearchApi extends \Zikula_AbstractApi
 {
