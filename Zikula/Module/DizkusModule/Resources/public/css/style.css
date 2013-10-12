@@ -842,6 +842,10 @@ dl.icon {
     border-color: #DDD;
     border-style: solid;
 }
+#dizkus .pagination {
+    /* override of theme setting */
+    padding: 1em 0;
+}
 /***********************
 /* CORNER RIBBONS
 /* inspired by http://css-tricks.com/snippets/css/corner-ribbon/
