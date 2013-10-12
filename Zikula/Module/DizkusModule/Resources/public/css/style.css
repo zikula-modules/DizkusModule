@@ -928,3 +928,48 @@ dl.icon {
 #dizkus .panel-footer #forum-legend {
     padding: 1em;
 }
+
+
+/***********************
+/* STYLING FOR QUOTES AND CODE
+***********************/
+div.dz-quoteheader,
+div.dz-codeheader {
+    font-size: 1em;
+    font-weight: bold;
+}
+.dz-code {
+    margin: 1em 0;
+}
+.dz-codetext .pre-scrollable {
+    padding: .5em;
+    overflow-y: auto;
+    word-wrap: normal;
+    white-space: pre;
+}
+.dz-quote {
+    background-color: #f5f5f5;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius-bottomright: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    border-radius: 5px;
+    position: relative;
+    padding: 3px;
+    margin-bottom: 1em;
+}
+.dz-quote .inner {
+    padding: 9px;
+    position: relative;
+    z-index: 1;
+}
+.dz-quote i.icon-quote-right {
+    position: absolute;
+    bottom: 0;
+    right: 3px;
+}
+.dz-quote i.icon-quote-left {
+    position: absolute;
+    top: 0;
+    left: 3px;
+}

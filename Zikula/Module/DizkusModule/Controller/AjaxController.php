@@ -28,6 +28,7 @@ use Zikula\Core\Response\Ajax\BadDataResponse;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\Core\ModUrl;
 use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\Hook\FilterHook;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
@@ -252,10 +253,15 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                     $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
                     $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
                 }
-                // must dzkVarPrepHTMLDisplay the message content here becuase the template modifies cannot be run in ajax
+                // must dzkVarPrepHTMLDisplay the message content here because the template modifies cannot be run in ajax
+                $newText = ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message);
+                // process hooks
+                $newText = $this->dispatchHooks('dizkus.filter_hooks.post.filter', new FilterHook($newText))->getData();
+                // process internal quotes/hooks
+                $newText = ModUtil::apiFunc($this->name, 'ParseTags', 'transform', array('message' => $newText));
                 $response = array(
                     'action' => 'updated',
-                    'newText' => ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message));
+                    'newText' => $newText);
             }
 
             return new AjaxResponse($response);
