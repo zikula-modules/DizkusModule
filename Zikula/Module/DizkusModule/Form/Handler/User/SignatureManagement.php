@@ -15,8 +15,10 @@ use ModUtil;
 use LogUtil;
 use UserUtil;
 use SecurityUtil;
+use System;
 use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler for the signature management.
@@ -77,8 +79,9 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
 
             // redirect to user preferences page
             $url = ModUtil::url($this->name, 'user', 'prefs');
-
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         return true;

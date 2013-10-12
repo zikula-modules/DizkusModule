@@ -16,6 +16,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
 use LogUtil;
 use ZLanguage;
+use System;
 use Zikula_Form_View;
 use Zikula\Core\ModUrl;
 use Zikula\Core\Hook\ValidationHook;
@@ -23,6 +24,7 @@ use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to create a new topic.
@@ -84,7 +86,9 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId));
 
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form
@@ -145,7 +149,9 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
-        return $view->redirect($url->getUrl());
+        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+        $response->send();
+        exit;
     }
 
 }

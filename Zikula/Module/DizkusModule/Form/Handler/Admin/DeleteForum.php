@@ -14,13 +14,14 @@ namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use LogUtil;
+use System;
 use SecurityUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to edit forums.
@@ -44,8 +45,6 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
      *
      * @return boolean
-     *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -99,6 +98,9 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form and get data
@@ -161,7 +163,9 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         // resync all forums, topics & posters
         ModUtil::apiFunc($this->name, 'sync', 'all');
 
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }

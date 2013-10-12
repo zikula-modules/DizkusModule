@@ -15,7 +15,9 @@ use ModUtil;
 use LogUtil;
 use SecurityUtil;
 use UserUtil;
+use System;
 use Zikula_Form_View;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to manage subscriptions.
@@ -113,7 +115,9 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
                 $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
             }
         }
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }

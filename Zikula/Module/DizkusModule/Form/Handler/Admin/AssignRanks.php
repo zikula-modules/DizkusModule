@@ -15,12 +15,13 @@ use ModUtil;
 use LogUtil;
 use SecurityUtil;
 use DataUtil;
+use System;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Core\ModUrl;
 use ZLanguage;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to Assign ranks
@@ -34,8 +35,6 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
      *
      * @return boolean
-     *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -108,7 +107,9 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
         $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
 
-        return $view->redirect($url->getUrl());
+        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+        $response->send();
+        exit;
     }
 
 }

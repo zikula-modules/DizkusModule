@@ -14,6 +14,7 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
 use LogUtil;
+use System;
 use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Core\ModUrl;
@@ -21,6 +22,7 @@ use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to create a new topic.
@@ -82,7 +84,9 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
 
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect($url->getUrl());
+            $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+            $response->send();
+            exit;
         }
 
         // check for valid form
@@ -108,7 +112,9 @@ class EditPost extends \Zikula_Form_AbstractHandler
             $this->_post->delete();
             $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($this->_post->getId()));
 
-            return $view->redirect($url->getUrl());
+            $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+            $response->send();
+            exit;
         }
         unset($data['delete']);
 
@@ -132,7 +138,9 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $url));
 
         // redirect to the new topic
-        return $view->redirect($url->getUrl());
+        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+        $response->send();
+        exit;
     }
 
 }

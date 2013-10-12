@@ -18,7 +18,6 @@ use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use Zikula_Form_View;
-use Zikula_Exception_Forbidden;
 use System;
 use Zikula_View;
 use Zikula\Core\ModUrl;
@@ -26,6 +25,7 @@ use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to edit forums.
@@ -53,8 +53,6 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
      *
      * @return boolean
-     *
-     * @throws Zikula_Exception_Forbidden If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -66,7 +64,9 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         // disallow editing of root forum
         if ($id == 1) {
             LogUtil::registerError($this->__("Editing of root forum is disallowed", 403));
-            System::redirect(ModUtil::url($this->name, 'admin', 'tree'));
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+            $response->send();
+            exit;
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -144,7 +144,9 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form and get data
@@ -208,7 +210,9 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to the admin forum overview
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }

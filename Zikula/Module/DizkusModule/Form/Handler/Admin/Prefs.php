@@ -15,8 +15,10 @@ use ModUtil;
 use LogUtil;
 use SecurityUtil;
 use UserUtil;
+use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\DizkusModuleInstaller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Prefs extends \Zikula_Form_AbstractHandler
 {
@@ -103,9 +105,9 @@ class Prefs extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to compensate for trouble with `databound`
-        $this->view->redirect(ModUtil::url($this->name, 'admin', 'tree'));
-
-        return true;
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+        $response->send();
+        exit;
     }
 
 }

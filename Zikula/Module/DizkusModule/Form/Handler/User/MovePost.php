@@ -17,6 +17,7 @@ use LogUtil;
 use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to move a post.
@@ -66,7 +67,9 @@ class MovePost extends \Zikula_Form_AbstractHandler
             LogUtil::registerError('You can not move the first post of a topic!');
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $managedPost->getTopicId()));
 
-            return System::redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         return true;
@@ -85,7 +88,9 @@ class MovePost extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), null, 'pid' . $this->post_id);
 
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form
@@ -102,7 +107,9 @@ class MovePost extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), null, 'pid' . $this->post_id);
 
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }

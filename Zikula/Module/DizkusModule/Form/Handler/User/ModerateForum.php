@@ -15,7 +15,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use LogUtil;
+use System;
 use Zikula_Form_View;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to move a post.
@@ -133,7 +135,9 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
 
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form
@@ -211,7 +215,9 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
 
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }

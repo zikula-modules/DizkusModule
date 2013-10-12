@@ -20,6 +20,7 @@ use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to report posts.
@@ -77,7 +78,9 @@ class Report extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
 
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form
@@ -110,7 +113,9 @@ class Report extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
                     'start' => $start));
 
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
     /**

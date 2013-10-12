@@ -13,6 +13,7 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use ModUtil;
 use LogUtil;
+use System;
 use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Core\Hook\ValidationHook;
@@ -21,6 +22,7 @@ use Zikula\Core\Hook\ProcessHook;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to delete a topic.
@@ -96,7 +98,9 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
-            return $view->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
 
         // check for valid form and get data
@@ -128,7 +132,9 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         // redirect to the forum of the deleted topic
         $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id));
 
-        return $view->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
 }
