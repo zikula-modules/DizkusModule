@@ -358,8 +358,8 @@ function quickEditSave() {
 
     var successHandler = function(result, message, request) {
         var action = result.data.action,
-                redirect = result.data.redirect,
-                newText = result.data.newText;
+            redirect = result.data.redirect,
+            newText = result.data.newText;
 
         postEditing = false;
         postEditingChanged = false;
@@ -480,9 +480,9 @@ function createQuickReply() {
             data: pars,
             url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
         }).done(successHandler).fail(errorHandler).always(function() {
-            hideAjaxIndicator();
+            hideAjaxIndicator('quickreply');
         });
-        showAjaxIndicator(zStoringReply+'...');
+        showAjaxIndicator(zStoringReply+'...', 'quickreply');
 
     }
     return false;
@@ -524,9 +524,9 @@ function previewQuickReply() {
             data: pars,
             url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
         }).done(successHandler).fail(errorHandler).always(function() {
-            hideAjaxIndicator();
+            hideAjaxIndicator('quickreply');
         });
-        showAjaxIndicator(zPreparingPreview + '...');
+        showAjaxIndicator(zPreparingPreview + '...', 'quickreply');
     }
 }
 
