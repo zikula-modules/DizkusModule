@@ -43,6 +43,7 @@ use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
 use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
 use Zikula\Module\DizkusModule\Form\Handler\User\Report;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -59,7 +60,9 @@ class UserController extends \Zikula_AbstractController
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
-            $this->redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => (int) $indexTo)));
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => (int) $indexTo))));
+            $response->send();
+            exit;
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -90,7 +93,9 @@ class UserController extends \Zikula_AbstractController
                 LogUtil::registerError($this->__('You have not selected any favorite forums. Please select some and try again.'));
                 $managedForumUser = new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
-                $this->redirect(ModUtil::url($this->name, 'user', 'index'));
+                $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+                $response->send();
+                exit;
             } else {
                 LogUtil::registerError($this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
             }
@@ -166,7 +171,9 @@ class UserController extends \Zikula_AbstractController
             $topic_id = $managedPost->getTopicId();
             if ($topic_id != false) {
                 // redirect instad of continue, better for SEO
-                return System::redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id)));
+                $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
+                $response->send();
+                exit;
             }
         }
         $managedTopic = new TopicManager($topicId);
@@ -238,7 +245,9 @@ class UserController extends \Zikula_AbstractController
          * if cancel is submitted move to topic-view
          */
         if ($cancel) {
-            return $this->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id)));
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
+            $response->send();
+            exit;
         }
         $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         // check for maximum message size
@@ -295,7 +304,9 @@ class UserController extends \Zikula_AbstractController
                 $url = new ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
             }
 
-            return $this->redirect($url->getUrl());
+            $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
+            $response->send();
+            exit;
         } else {
             $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $managedTopic = new TopicManager($topic_id);
@@ -498,7 +509,9 @@ class UserController extends \Zikula_AbstractController
             'forum_id' => (int)$this->request->query->get('forum'));
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return $this->redirect(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id'])));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id']))));
+        $response->send();
+        exit;
     }
 
     /**
@@ -511,7 +524,9 @@ class UserController extends \Zikula_AbstractController
         $params['topic_id'] = (int)$this->request->query->get('topic');
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return $this->redirect(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id'])));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id']))));
+        $response->send();
+        exit;
     }
 
     /**
@@ -555,7 +570,9 @@ class UserController extends \Zikula_AbstractController
             throw $this->createAccessDeniedHttpException();
         }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            $response->send();
+            exit;
         }
         // get the input
         $params = array();
@@ -590,7 +607,9 @@ class UserController extends \Zikula_AbstractController
             throw $this->createAccessDeniedHttpException();
         }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return $this->redirect(ModUtil::url($this->name, 'user', 'index'));
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            $response->send();
+            exit;
         }
         $params = array();
         $params['action'] = $this->request->query->get('action', 'posts');
@@ -675,7 +694,9 @@ class UserController extends \Zikula_AbstractController
         if (isset($forum_id) && !is_numeric($forum_id)) {
             LogUtil::registerError($this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
 
-            return $this->redirect($mainUrl);
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($mainUrl)));
+            $response->send();
+            exit;
         }
         /**
          * check if template for feed exists
@@ -685,7 +706,9 @@ class UserController extends \Zikula_AbstractController
             // silently stop working
             LogUtil::registerError($this->__f('Error! Could not find a template for an %s-type feed.', $feed));
 
-            return $this->redirect($mainUrl);
+            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($mainUrl)));
+            $response->send();
+            exit;
         }
         /**
          * get user id

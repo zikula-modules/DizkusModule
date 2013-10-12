@@ -38,8 +38,9 @@ class AdminController extends \Zikula_AbstractController
     public function indexAction()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
-
-        return $this->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
     /**
@@ -66,7 +67,9 @@ class AdminController extends \Zikula_AbstractController
         $this->entityManager->flush();
         $url = ModUtil::url($this->name, 'admin', 'tree');
 
-        return $this->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
     /**
@@ -111,7 +114,9 @@ class AdminController extends \Zikula_AbstractController
             return LogUtil::registerError($this->__('Error synchronizing posts counter.'));
         }
 
-        return $this->redirect(ModUtil::url($this->name, 'admin', 'tree'));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+        $response->send();
+        exit;
     }
 
     /**
@@ -139,7 +144,9 @@ class AdminController extends \Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 
-        return $this->redirect(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype)));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype)));
+        $response->send();
+        exit;
     }
 
     /**
