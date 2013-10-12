@@ -27,7 +27,7 @@ use LogUtil;
 use System;
 use ZLanguage;
 use Zikula_View;
-use Zikula_Exception_Forbidden;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula_Event;
 use Zikula\Core\Hook\AbstractHookListener;
 use Zikula\Core\Hook\DisplayHook;
@@ -43,6 +43,7 @@ use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HookHandlers extends AbstractHookListener
 {
@@ -287,7 +288,7 @@ class HookHandlers extends AbstractHookListener
         }
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
         $view = Zikula_View::getInstance(self::MODULENAME, false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
@@ -312,7 +313,7 @@ class HookHandlers extends AbstractHookListener
         $view->assign('ActiveModule', $moduleName);
         $view->assign('forums', ModUtil::apiFunc(self::MODULENAME, 'Forum', 'getParents', array('includeLocked' => false)));
         $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
-        $z_event->stop();
+        $z_event->stopPropagation();
     }
 
     /**
@@ -332,12 +333,12 @@ class HookHandlers extends AbstractHookListener
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
-            throw new Zikula_Exception_Forbidden(__('Security token validation failed', $dom));
+            throw new AccessDeniedHttpException(__('Security token validation failed', $dom));
         }
         unset($hookdata['dizkus_csrftoken']);
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
-            throw new Zikula_Exception_Forbidden(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
         }
         foreach ($hookdata as $area => $data) {
             if (!isset($data['forum']) || empty($data['forum'])) {
@@ -349,9 +350,11 @@ class HookHandlers extends AbstractHookListener
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
         LogUtil::registerStatus(__('Dizkus: Hook option settings updated.', $dom));
         $z_event->setData(true);
-        $z_event->stop();
+        $z_event->stopPropagation();
 
-        return System::redirect(ModUtil::url($moduleName, 'admin', 'main')); // use Zikula_Exception_Redirect ?
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
+        $response->send();
+        exit;
     }
 
     /**

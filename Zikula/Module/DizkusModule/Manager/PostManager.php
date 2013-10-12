@@ -97,7 +97,7 @@ class PostManager
 
     public function prepare($data)
     {
-        $this->_post->merge(DataUtil::formatForStore($data));
+        $this->_post->merge($data);
     }
 
     /**
@@ -128,7 +128,7 @@ class PostManager
             unset($data['topic_id']);
             $this->prepare($data);
         } else {
-            throw new Zikula_Exception_Fatal('Cannot create Post, no data provided.');
+            throw new \Symfony\Component\Debug\Exception\FatalErrorException('Cannot create Post, no data provided.');
         }
         // increment poster posts
         $uid = UserUtil::getVar('uid');

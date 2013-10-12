@@ -481,8 +481,9 @@ class UserController extends \Zikula_AbstractController
         $url = ModUtil::url($this->name, 'user', 'index');
         if (!UserUtil::isLoggedIn()) {
             LogUtil::registerPermissionError();
-
-            return $this->redirect($url);
+            $response = new RedirectResponse(System::normalizeUrl($url));
+            $response->send();
+            exit;
         }
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
@@ -496,7 +497,9 @@ class UserController extends \Zikula_AbstractController
         $this->entityManager->persist($forumUser);
         $this->entityManager->flush();
 
-        return $this->redirect($url);
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
     }
 
     /**

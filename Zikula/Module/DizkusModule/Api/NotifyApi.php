@@ -58,7 +58,7 @@ class NotifyApi extends \Zikula_AbstractApi
                         'dzk_quickreply',
                         true))
             ->assign('subscription_url', ModUtil::url($this->name, 'user', 'prefs', array(), null, null, true))
-            ->assign('base_url', System::getBaseUrl());
+            ->assign('base_url', $view->getRequest()->getBaseUrl());
         $message = $view->fetch('mail/notifyuser.txt');
         $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
         $forumSubscriptions = $post->getTopic()->getForum()->getSubscriptions()->toArray();

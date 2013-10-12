@@ -295,7 +295,8 @@ class UserApi extends \Zikula_AbstractApi
             'msnbot',
             'jeeves',
             'lycos');
-        $useragent = System::serverGetVar('HTTP_USER_AGENT');
+        $request = ServiceUtil::get('request');
+        $useragent = $request->server->get('HTTP_USER_AGENT');
         for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
             if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
                 return true;

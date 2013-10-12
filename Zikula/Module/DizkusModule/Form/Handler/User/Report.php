@@ -16,6 +16,7 @@ use ModUtil;
 use LogUtil;
 use UserUtil;
 use DataUtil;
+use ServiceUtil;
 use Zikula_Form_View;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -59,7 +60,7 @@ class Report extends \Zikula_Form_AbstractHandler
         $this->_post = new PostManager($id);
         $view->assign('post', $this->_post->get());
         $view->assign('notify', true);
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
         return true;
@@ -126,17 +127,18 @@ class Report extends \Zikula_Form_AbstractHandler
     {
         $ztemp = System::getVar('temp');
         $blacklistfile = $ztemp . '/Dizkus_spammer.txt';
+        $request = ServiceUtil::get('request');
 
         $fh = fopen($blacklistfile, 'a');
         if ($fh) {
             $ip = $this->dzk_getip();
             $line = implode(',', array(strftime('%Y-%m-%d %H:%M:%S'),
                 $ip,
-                System::serverGetVar('REQUEST_METHOD'),
-                System::serverGetVar('REQUEST_URI'),
-                System::serverGetVar('SERVER_PROTOCOL'),
-                System::serverGetVar('HTTP_REFERRER'),
-                System::serverGetVar('HTTP_USER_AGENT')));
+                $request->server->get('REQUEST_METHOD'),
+                $request->server->get('REQUEST_URI'),
+                $request->server->get('SERVER_PROTOCOL'),
+                $request->server->get('HTTP_REFERRER'),
+                $request->server->get('HTTP_USER_AGENT')));
             fwrite($fh, DataUtil::formatForStore($line) . "\n");
             fclose($fh);
         }
@@ -186,26 +188,27 @@ class Report extends \Zikula_Form_AbstractHandler
      */
     private function dzk_getip()
     {
-        if ($this->dzk_validip(System::serverGetVar("HTTP_CLIENT_IP"))) {
-            return System::serverGetVar("HTTP_CLIENT_IP");
+        $request = ServiceUtil::get('request');
+        if ($this->dzk_validip($request->server->get("HTTP_CLIENT_IP"))) {
+            return $request->server->get("HTTP_CLIENT_IP");
         }
 
-        foreach (explode(',', System::serverGetVar("HTTP_X_FORWARDED_FOR")) as $ip) {
+        foreach (explode(',', $request->server->get("HTTP_X_FORWARDED_FOR")) as $ip) {
             if ($this->dzk_validip(trim($ip))) {
                 return $ip;
             }
         }
 
-        if ($this->dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
-            return System::serverGetVar("HTTP_X_FORWARDED");
-        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_FORWARDED_FOR"))) {
-            return System::serverGetVar("HTTP_FORWARDED_FOR");
-        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_FORWARDED"))) {
-            return System::serverGetVar("HTTP_FORWARDED");
-        } elseif ($this->dzk_validip(System::serverGetVar("HTTP_X_FORWARDED"))) {
-            return System::serverGetVar("HTTP_X_FORWARDED");
+        if ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+            return $request->server->get("HTTP_X_FORWARDED");
+        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED_FOR"))) {
+            return $request->server->get("HTTP_FORWARDED_FOR");
+        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED"))) {
+            return $request->server->get("HTTP_FORWARDED");
+        } elseif ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+            return $request->server->get("HTTP_X_FORWARDED");
         } else {
-            return System::serverGetVar("REMOTE_ADDR");
+            return $request->server->get("REMOTE_ADDR");
         }
     }
 }
