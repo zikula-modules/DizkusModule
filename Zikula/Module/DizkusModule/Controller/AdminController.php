@@ -22,6 +22,7 @@ use Zikula\Module\DizkusModule\Form\Handler\Admin\AssignRanks;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\ModifyForum;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdminController extends \Zikula_AbstractController
 {
@@ -144,7 +145,7 @@ class AdminController extends \Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype)));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype))));
         $response->send();
         exit;
     }
