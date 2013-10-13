@@ -30,27 +30,32 @@
             {/if}
         </div>
         <div class="form-group">
-            {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}
+            <div class='col-md-4'>
+            {if $moderate eq true}
+                <div><strong>{gt text="Options"}</strong></div>
+                {if !$isFirstPost}
+                    <div class="checkbox">
+                        {formcheckbox id="delete"}
+                        {formlabel for="delete" __text="Delete post"}
+                        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_delete' id=$post_id}
+                    </div>
+                {/if}
+                <div class="checkbox">
+                    {formcheckbox id="attachSignature"}
+                    {formlabel for="attachSignature" __text="Attach my signature"}
+                </div>
+            {/if}
+
+                {formbutton id="submit"  commandName="submit"  __text="Save"    class="btn btn-success"}
+                {formbutton id="preview" commandName="preview" __text="Preview" class="btn btn-info"}
+                {formbutton id="cancel"  commandName="cancel"  __text="Cancel"  class="btn btn-danger"}
+            </div>
+            <div class='col-md-8'>
+                {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}
+            </div>
         </div>
 
-        {if $moderate eq true}
-            <div><strong>{gt text="Options"}</strong></div>
-            {if !$isFirstPost}
-            <div class="checkbox">
-                {formcheckbox id="delete"}
-                {formlabel for="delete" __text="Delete post"}
-                {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_delete' id=$post_id}
-            </div>
-            {/if}
-            <div class="checkbox">
-                {formcheckbox id="attachSignature"}
-                {formlabel for="attachSignature" __text="Attach my signature"}
-            </div>
-        {/if}
 
-        {formbutton id="submit"  commandName="submit"  __text="Save"    class="btn btn-success"}
-        {formbutton id="preview" commandName="preview" __text="Preview" class="btn btn-info"}
-        {formbutton id="cancel"  commandName="cancel"  __text="Cancel"  class="btn btn-danger"}
         {/form}
     </div>
  </div>

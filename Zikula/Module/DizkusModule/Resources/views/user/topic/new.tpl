@@ -28,27 +28,34 @@
             <span class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</span>
         {/if}
         </div>
-
         <div class="form-group">
-            {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
             {notifydisplayhooks eventname='dizkus.ui_hooks.topic.ui_edit' id=null}
         </div>
 
-        {if $coredata.logged_in}
-        <div><strong>{gt text="Options"}</strong></div>
-        <div class="checkbox">
-            {formcheckbox id="attachSignature" checked=1}
-            {formlabel for="attachSignature" __text="Attach my signature"}
-        </div>
-        <div class="checkbox">
-            {formcheckbox id="subscribe_topic" checked=1}
-            {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
-        </div>
-        {/if}
+        <div class="form-group">
+            <div class='col-md-4'>
+                {if $coredata.logged_in}
+                    <div><strong>{gt text="Options"}</strong></div>
+                    <div class="checkbox">
+                        {formcheckbox id="attachSignature" checked=1}
+                        {formlabel for="attachSignature" __text="Attach my signature"}
+                    </div>
+                    <div class="checkbox">
+                        {formcheckbox id="subscribe_topic" checked=1}
+                        {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
+                    </div>
+                {/if}
 
-        {formbutton class="btn btn-success" commandName="save"   __text="Submit"}
-        {formbutton class="btn btn-info" commandName="preview" __text="Preview"}
-        {formbutton class="btn btn-danger" commandName="cancel" __text="Cancel"}
+                {formbutton class="btn btn-success" commandName="save"   __text="Submit"}
+                {formbutton class="btn btn-info" commandName="preview" __text="Preview"}
+                {formbutton class="btn btn-danger" commandName="cancel" __text="Cancel"}
+            </div>
+            <div class='col-md-8'>
+                {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+            </div>
+        </div>
+
+
     </div>
 </div>
 {/form}

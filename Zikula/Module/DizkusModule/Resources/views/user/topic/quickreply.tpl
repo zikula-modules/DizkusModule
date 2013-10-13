@@ -18,25 +18,29 @@
                         <p class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                     {/if}
                 </div>
-                <div class="form-group">
-                    {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+                <div class='form-group'>
+                    <div class='col-md-4'>
+                        {if $userloggedin}
+                        <div><strong>{gt text="Options"}</strong></div>
+                        <div class="checkbox">
+                            <label for="attach_signature">
+                            <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
+                            {gt text="Attach my signature"}</label>
+                        </div>
+                        <div class="checkbox">
+                            <label for="subscribe_topic">
+                            <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
+                            {gt text="Notify me when a reply is posted"}</label>
+                        </div>
+                        {/if}
+                        <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
+                        <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
+                        <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
+                    </div>
+                    <div class='col-md-8'>
+                        {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
+                    </div>
                 </div>
-                {if $userloggedin}
-                <div><strong>{gt text="Options"}</strong></div>
-                <div class="checkbox">
-                    <label for="attach_signature">
-                    <input type="checkbox" id="attach_signature" name="attach_signature" checked="checked" value="1" />
-                    {gt text="Attach my signature"}</label>
-                </div>
-                <div class="checkbox">
-                    <label for="subscribe_topic">
-                    <input type="checkbox" id="subscribe_topic" name="subscribe_topic" checked="checked" value="1" />
-                    {gt text="Notify me when a reply is posted"}</label>
-                </div>
-                {/if}
-                <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
-                <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
-                <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
 
                 <div class="post_footer"></div>
             </form>
