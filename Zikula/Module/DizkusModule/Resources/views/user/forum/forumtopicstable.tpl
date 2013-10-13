@@ -36,7 +36,7 @@
                     {$topic.topic_id|viewtopiclink:$topic.title}
                 </h4>
                 <div class='text-muted'>
-                    <small>{gt text="by %s" tag1=$topic.poster.user.uid|profilelinkbyuid} {gt text='on'} {$topic.topic_time|dateformat:'datetimebrief'}</small>
+                    <small>{gt text="by %s" tag1=$topic.poster.user.uid|profilelinkbyuid} {gt text='on'} {$topic.firstPostTime|dateformat:'datetimebrief'}</small>
                     {assign var='total_posts' value=$topic.replyCount+1}
                     {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="div"}
                 </div>

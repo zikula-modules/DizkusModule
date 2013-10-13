@@ -395,4 +395,9 @@ class TopicEntity extends EntityAccess
         return $this->posts->first()->getUserAllowedToEdit($uid);
     }
 
+    public function getFirstPostTime()
+    {
+        return $this->posts->first()->getPost_time();
+    }
+
 }
