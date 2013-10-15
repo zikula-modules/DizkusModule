@@ -119,7 +119,7 @@ class PermissionApi extends \Zikula_AbstractApi
                     $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args);
                 } else {
                     if (is_array($args)) {
-                        // reconsititute object
+                        // reconstitute object
                         $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args['forum_id']);
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
                     } else {
