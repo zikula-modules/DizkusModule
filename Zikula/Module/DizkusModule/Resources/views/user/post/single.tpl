@@ -78,7 +78,7 @@
                 <div class="content" id="postingtext_{$post.post_id}">
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
-                        {usergetvar name='signature' assign="signature"}
+                        {usergetvar name='signature' assign="signature" uid=$post.poster.user.uid}
                         {if !empty($signature)}
                             <div class='dzk_postSignature'>
                                 {$modvars.ZikulaDizkusModule.signature_start}
