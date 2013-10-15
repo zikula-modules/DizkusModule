@@ -6,7 +6,7 @@
 {if count($forum.moderatorUsers) > 0}
 <span>
     {foreach name='moderators' item='mod' key='modid' from=$forum.moderatorUsers}
-        {$mod.forumUser.user.uid|profilelinkbyuid}{if !$smarty.foreach.moderators.last}, {/if}
+        {$mod.forumUser.user.uname|profilelinkbyuname}{if !$smarty.foreach.moderators.last}, {/if}
     {/foreach}
     {if count($forum.moderatorGroups) > 0}, {/if}
 </span>
