@@ -395,7 +395,6 @@ class TopicApi extends \Zikula_AbstractApi
         $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
         foreach ($posts as $post) {
             $post->setTopic($managedDestinationTopic->get());
-            $post->setForum_id($managedDestinationTopic->getForumId());
             if ($post->getPost_time() <= $previousPostTime) {
                 $post->setPost_time($previousPostTime->modify('+1 minute'));
             }

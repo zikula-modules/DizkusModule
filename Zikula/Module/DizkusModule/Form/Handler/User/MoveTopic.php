@@ -88,8 +88,8 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
         if ($args['commandName'] == 'move') {
             // require perms for both subject topic and destination forum
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $this->topic->getForum()))
-                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('forum' => $args['forum_id']))) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
+                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('forum_id' => $data['forum_id']))) {
                 return LogUtil::registerPermissionError();
             }
 
@@ -108,9 +108,10 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
         }
 
         if ($args['commandName'] == 'join') {
+            $managedDestinationTopic = new TopicManager($data['to_topic_id']);
             // require perms for both subject topic and destination topic
-            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $this->topic->getForum()))
-                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('topic' => $args['to_topic_id']))) {
+            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
+                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedDestinationTopic->get()->getForum())) {
                 return LogUtil::registerPermissionError();
             }
 
