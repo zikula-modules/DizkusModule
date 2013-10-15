@@ -52,7 +52,7 @@
                             {*<a href="{$subscription.last_post_url_anchor|safetext}" title="{$subscription.name|safetext} :: {$subscription.title|safetext}">{$subscription.title|safetext}</a>*}
                         </td>
                         <td>
-                            {$subscription.topic.poster.user.uid|profilelinkbyuid}
+                            {$subscription.topic.poster.user.uname|profilelinkbyuname}
                         </td>
                     </tr>
                     {/foreach}

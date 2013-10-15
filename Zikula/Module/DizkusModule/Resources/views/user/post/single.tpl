@@ -17,7 +17,7 @@
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$post.poster.user.uid|profilelinkbyuid}</strong>
+                    <strong>{$post.poster.user.uname|profilelinkbyuid|profilelinkbyuname}</strong>
                     <br />
                     {* TODO: this is temp to show the data is here w/o another DB call
                     <p>{$post.poster.user.uname}</p>
@@ -78,7 +78,7 @@
                 <div class="content" id="postingtext_{$post.post_id}">
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
-                        {usergetvar name='signature' assign="signature"}
+                        {usergetvar name='signature' assign="signature" uid=$post.poster.user.uid}
                         {if !empty($signature)}
                             <div class='dzk_postSignature'>
                                 {$modvars.ZikulaDizkusModule.signature_start}
