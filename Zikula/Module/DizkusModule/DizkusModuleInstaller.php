@@ -69,6 +69,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler($this->name, 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
         EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
         EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
+        EventUtil::registerPersistentModuleHandler($this->name, 'user.account.delete', array('Zikula\Module\DizkusModule\EventHandlers\SystemListeners', 'deleteUser'));
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
