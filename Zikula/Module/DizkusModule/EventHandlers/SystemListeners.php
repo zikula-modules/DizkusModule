@@ -22,7 +22,7 @@ class SystemListeners
      *
      * @return void
      */
-    public function deleteUser(GenericEvent $event)
+    public static function deleteUser(GenericEvent $event)
     {
         $em = \ServiceUtil::get('doctrine.entitymanager');
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
