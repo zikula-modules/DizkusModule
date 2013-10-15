@@ -115,6 +115,14 @@ class UserApi extends \Zikula_AbstractApi
         }
     }
 
+    /**
+     * Count the number of items in a provided entity
+     *
+     * @param $entityname
+     * @param null $where
+     * @param null $parameter
+     * @return int
+     */
     private function countEntity($entityname, $where = null, $parameter = null)
     {
         $qb = $this->entityManager->createQueryBuilder();
