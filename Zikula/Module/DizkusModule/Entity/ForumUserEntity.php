@@ -29,6 +29,8 @@ use Zikula\Module\UsersModule\Entity\UserEntity as ZikulaUser;
 class ForumUserEntity extends EntityAccess
 {
     const FAKE_USER_ID = 999999999999999999;
+    const USER_LEVEL_NORMAL = 1;
+    const USER_LEVEL_DELETED = -1;
 
     /**
      * Zikula Core User entity
@@ -36,7 +38,7 @@ class ForumUserEntity extends EntityAccess
      * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
+     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity", cascade={"Persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
     private $user;
@@ -60,7 +62,7 @@ class ForumUserEntity extends EntityAccess
      *
      * @ORM\Column(type="integer")
      */
-    private $level = 1;
+    private $level = self::USER_LEVEL_NORMAL;
 
     /**
      * lastvisit
