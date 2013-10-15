@@ -11,6 +11,7 @@
 namespace Zikula\Module\DizkusModule\EventHandlers;
 
 use Zikula\Core\Event\GenericEvent;
+use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 
 class SystemListeners
 {
@@ -23,10 +24,31 @@ class SystemListeners
      */
     public function deleteUser(GenericEvent $event)
     {
-        // remove subscriptions - topic & forum
+        $em = \ServiceUtil::get('doctrine.entitymanager');
+        $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
+        // remove subscriptions - topic
+        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity u
+            WHERE u.forumUser = :uid';
+        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        // remove subscriptions - forum
+        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity u
+            WHERE u.forumUser = :uid';
+        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove favorites
+        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity u
+            WHERE u.forumUser = :uid';
+        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove moderators
-        // mark forumUser somehow?
-        // change rank?
+        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ModeratorUserEntity u
+            WHERE u.forumUser = :uid';
+        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        // change user level - unused at the moment
+        $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumUserEntity u
+            SET u.level = :level
+            WHERE u.forumUser = :uid';
+        $em->createQuery($dql)
+            ->setParameter('uid', $user['uid'])
+            ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
+            ->execute();
     }
 }
