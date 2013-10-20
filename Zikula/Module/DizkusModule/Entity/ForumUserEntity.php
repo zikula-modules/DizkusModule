@@ -28,7 +28,6 @@ use Zikula\Module\UsersModule\Entity\UserEntity as ZikulaUser;
  */
 class ForumUserEntity extends EntityAccess
 {
-    const FAKE_USER_ID = 999999999999999999;
     const USER_LEVEL_NORMAL = 1;
     const USER_LEVEL_DELETED = -1;
 
@@ -38,7 +37,7 @@ class ForumUserEntity extends EntityAccess
      * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity", cascade={"Persist"})
+     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
     private $user;
@@ -133,18 +132,6 @@ class ForumUserEntity extends EntityAccess
      */
     public function getUser()
     {
-        try {
-            $uname = $this->user->getUname();
-        } catch (\Exception $e) {
-            $dom = \ZLanguage::getModuleDomain('ZikulaDizkusModule');
-            $uname = __('Deleted user', $dom);
-
-            // construct 'fake user'
-            $this->user = new ZikulaUser();
-            $this->user->setUid(self::FAKE_USER_ID);
-            $this->user->setUname($uname);
-            $this->user->setActivated(\Users_Constant::ACTIVATED_INACTIVE);
-        }
         return $this->user;
     }
 

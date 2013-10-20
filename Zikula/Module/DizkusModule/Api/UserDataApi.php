@@ -40,9 +40,6 @@ class UserDataApi extends \Zikula_AbstractApi
      */
     public function getUserOnlineStatus($args)
     {
-        if ($args['uid'] == \Zikula\Module\DizkusModule\Entity\ForumUserEntity::FAKE_USER_ID) {
-            return false;
-        }
         //int $uid The users id
         if (empty($args['uid'])) {
             $args['uid'] = UserUtil::getVar('uid');
