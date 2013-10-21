@@ -301,6 +301,14 @@ function quickEdit(id) {
         jQuery('#postingtext_' + postId + '_save').click(quickEditSave);
         jQuery('#postingtext_' + postId + '_cancel').click(quickEditCancel);
 
+        // notify bbSmile & bbCode (uncomfortably tight coupling)
+        if (typeof bbsmileLastFocus !== "undefined") {
+            bbsmileLastFocus = jQuery('#postingtext_' + postId + '_edit');
+        }
+        if (typeof bbcodeLastFocus !== "undefined") {
+            bbcodeLastFocus = jQuery('#postingtext_' + postId + '_edit');
+        }
+
     }, errorHandler = function(request, message, detail) {
         postEditing = false;
         postId = false;
