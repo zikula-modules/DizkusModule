@@ -99,13 +99,13 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $postHook = new ValidationHook(new ValidationProviders());
         $postHookValidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
-            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+            return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
         }
         // check hooked modules for validation for TOPIC
         $topicHook = new ValidationHook(new ValidationProviders());
         $topicHookValidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
-            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+            return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
         }
 
         $data = $view->getValues();
@@ -132,7 +132,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
             $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);
             $view->assign('data', $data);
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+            list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
             $this->view->assign('ranks', $ranks);
 
             return true;
