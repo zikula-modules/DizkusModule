@@ -99,17 +99,17 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $postHook = new ValidationHook(new ValidationProviders());
         $postHookValidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
-//            $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
-            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
-            return false;
+            return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
+//            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+//            return false;
         }
         // check hooked modules for validation for TOPIC
         $topicHook = new ValidationHook(new ValidationProviders());
         $topicHookValidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
-//            $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
-            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
-            return false;
+            return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
+//            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+//            return false;
         }
 
         $data = $view->getValues();
