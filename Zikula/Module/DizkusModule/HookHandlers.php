@@ -374,6 +374,7 @@ class HookHandlers extends AbstractHookListener
         // lock or remove
         $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
+        $total = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {
                 case 'remove':
@@ -389,11 +390,14 @@ class HookHandlers extends AbstractHookListener
                     }
                     break;
             }
+            $total++;
         }
         // clear last remaining batch
         $_em->flush();
         $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
-        LogUtil::registerStatus(__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
+        if ($total > 0) {
+            LogUtil::registerStatus(__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
+        }
     }
 
     /**
