@@ -22,6 +22,7 @@ use DataUtil;
 use Zikula_View;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\Module\DizkusModule\Entity\PostEntity;
 
 class UserApi extends \Zikula_AbstractApi
 {
@@ -275,13 +276,16 @@ class UserApi extends \Zikula_AbstractApi
         return true;
     }
 
-    public function isSpam($message)
+    public function isSpam(PostEntity $post)
     {
+        $args = array(
+            'author' => $post->getPoster()->getUser()->getUname(), // use 'viagra-test-123' to test
+            'authoremail' => $post->getPoster()->getUser()->getEmail(),
+            'content' => $post->getPost_text()
+        );
         // Akismet
-        if (ModUtil::available('Akismet') && $this->getVar('spam_protector') == 'Akismet') {
-            if (ModUtil::apiFunc('Akismet', 'user', 'isspam', array('content' => $message))) {
-                return true;
-            }
+        if (ModUtil::available('Akismet')) {
+            return ModUtil::apiFunc('Akismet', 'user', 'isspam', $args);
         }
 
         return false;

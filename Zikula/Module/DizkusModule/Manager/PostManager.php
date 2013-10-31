@@ -95,11 +95,6 @@ class PostManager
         return $this->_post;
     }
 
-    public function prepare($data)
-    {
-        $this->_post->merge($data);
-    }
-
     /**
      * update the post
      *
@@ -108,7 +103,7 @@ class PostManager
     public function update($data = null)
     {
         if (!is_null($data)) {
-            $this->prepare($data);
+            $this->_post->merge($data);
         }
         // update topic
         $this->entityManager->persist($this->_post);
@@ -116,9 +111,7 @@ class PostManager
     }
 
     /**
-     * create a post from provided data
-     *
-     * @return boolean
+     * create a post from provided data but do not yet persist
      */
     public function create($data = null)
     {
@@ -126,7 +119,7 @@ class PostManager
             $this->_topic = new TopicManager($data['topic_id']);
             $this->_post->setTopic($this->_topic->get());
             unset($data['topic_id']);
-            $this->prepare($data);
+            $this->_post->merge($data);
         } else {
             throw new \Symfony\Component\Debug\Exception\FatalErrorException('Cannot create Post, no data provided.');
         }
@@ -138,7 +131,15 @@ class PostManager
             $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
             $forumUser->setUser($coreUser);
         }
-        $forumUser->incrementPostCount();
+        $this->_post->setPoster($forumUser);
+    }
+
+    /**
+     * persist the post and update related entities to reflect new post
+     */
+    public function persist()
+    {
+        $this->_post->getPoster()->incrementPostCount();
         // increment topic posts
         $this->_topic->setLastPost($this->_post);
         $this->_topic->incrementRepliesCount();
@@ -148,7 +149,6 @@ class PostManager
         $managedForum = new ForumManager(null, $this->_topic->get()->getForum());
         $managedForum->incrementPostCount();
         $managedForum->setLastPost($this->_post);
-        $this->_post->setPoster($forumUser);
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
     }

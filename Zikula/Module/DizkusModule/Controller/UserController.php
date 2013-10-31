@@ -266,7 +266,7 @@ class UserController extends \Zikula_AbstractController
             $hook = new ValidationHook(new ValidationProviders());
             $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
             if ($hookvalidators->hasErrors()) {
-                LogUtil::registerStatus($this->__('Error! Hooked content does not validate.'));
+                LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
                 $isPreview = true;
             }
         }
@@ -277,6 +277,12 @@ class UserController extends \Zikula_AbstractController
                 'attachSignature' => $attach_signature);
             $managedPost = new PostManager();
             $managedPost->create($data);
+            // check to see if the post contains spam
+            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost)) {
+                LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+                return false;
+            }
+            $managedPost->persist();
             // handle subscription
             if ($subscribe_topic) {
                 ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic' => $topic_id));

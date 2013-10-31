@@ -117,12 +117,13 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
         $data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
 
-        /* if ($this->isSpam($args['message'])) {
-          return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
-          } */
-
         $newManagedTopic = new TopicManager();
         $newManagedTopic->prepare($data);
+
+        // check to see if the post contains spam
+        if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
+            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }
 
         // show preview
         if ($args['commandName'] == 'preview') {

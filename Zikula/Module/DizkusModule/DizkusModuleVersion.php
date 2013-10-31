@@ -65,8 +65,13 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
                 'minversion' => '3.0.0',
                 'maxversion' => '',
                 'reason' => $this->__('BBSmile allows addition of smilies to post text.'),
+                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
+            array(
+                'modname' => 'Akismet',
+                'minversion' => '2.1.0',
+                'maxversion' => '',
+                'reason' => $this->__('Detect and block Spam from forum posts.'),
                 'status' => ModUtil::DEPENDENCY_RECOMMENDED));
-
         return $meta;
     }
 

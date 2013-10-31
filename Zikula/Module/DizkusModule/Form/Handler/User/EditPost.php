@@ -101,9 +101,10 @@ class EditPost extends \Zikula_Form_AbstractHandler
             return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 
-        /* if ($this->isSpam($args['message'])) {
-          return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
-          } */
+        // check to see if the post contains spam
+        if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $this->_post->get())) {
+            return $this->view->registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+        }
 
         if ($deleting) {
             if ($this->_post->get()->isFirst()) {

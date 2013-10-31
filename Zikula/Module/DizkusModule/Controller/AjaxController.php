@@ -116,6 +116,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 'attachSignature' => $attach_signature);
             $managedPost = new PostManager();
             $managedPost->create($data);
+            // @todo must process validation hooks here
+            // check to see if the post contains spam
+            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost)) {
+                // @todo not sure this is proper return value in ajax
+                return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            }
+            $managedPost->persist();
             if ($subscribe_topic) {
                 ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic' => $topic_id));
             } else {
