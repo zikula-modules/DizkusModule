@@ -162,7 +162,7 @@ class ForumEntity extends EntityAccess
     private $subscriptions;
 
     /**
-     * Forum status locked/unlocked
+     * Forum status locked (1)/unlocked (0)
      * locking a forum prevents new TOPICS from being created within
      *
      * @ORM\Column(type="boolean")

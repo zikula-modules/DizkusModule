@@ -66,7 +66,8 @@ class TopicEntity extends EntityAccess
     private $topic_time;
 
     /**
-     * status
+     * Topic status locked (1)/unlocked (0)
+     * locking a topic prevents new POSTS from being created within
      *
      * @ORM\Column(type="integer")
      */
