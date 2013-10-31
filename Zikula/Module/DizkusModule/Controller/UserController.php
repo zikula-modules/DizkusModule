@@ -278,7 +278,7 @@ class UserController extends \Zikula_AbstractController
             $managedPost = new PostManager();
             $managedPost->create($data);
             // check to see if the post contains spam
-            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost)) {
+            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
                 LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
                 return false;
             }

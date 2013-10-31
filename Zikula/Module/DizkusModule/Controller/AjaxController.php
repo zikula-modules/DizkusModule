@@ -118,7 +118,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $managedPost->create($data);
             // @todo must process validation hooks here
             // check to see if the post contains spam
-            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost)) {
+            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
                 // @todo not sure this is proper return value in ajax
                 return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
             }
