@@ -113,7 +113,7 @@
                         <li><a class="editpostlink icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
                     {/if}
                     {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR $topic.poster.user_id eq $current_userid) AND ($modvars.ZikulaDizkusModule.solved_enabled|default:0) AND !$post.isFirstPost}
-                    {if $topic.solved lt 1}
+                    {if $topic.solved lt 0}
                         {assign var='stylestmt' value=''}
                     {else}
                         {assign var='stylestmt' value='style="display:none" '}
