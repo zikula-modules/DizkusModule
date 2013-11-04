@@ -107,12 +107,11 @@ function changeTopicStatus(e) {
                 // destroy and recreate tooltip
                 i.tooltip('destroy').tooltip();
             } else {
-                console.log(result);
-                alert('Error! Erroneous result from locking/unlocking action.');
+                alert('Error! Erroneous result from changing topic status action.');
             }
         },
         error: function(result) {
-            DizkusShowAjaxError(result);
+            DizkusShowAjaxError(result.responseText);
             return;
         }
     });
@@ -140,7 +139,7 @@ function changeTopicTitle(e) {
             }
         },
         error: function(result) {
-            DizkusShowAjaxError(result);
+            DizkusShowAjaxError(result.responseText);
             return;
         }
     });
