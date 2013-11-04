@@ -494,9 +494,7 @@ class UserController extends \Zikula_AbstractController
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new ForumUserEntity();
-            $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
-            $forumUser->setUser($coreUser);
+            $forumUser = new ForumUserEntity($uid);
         }
         $method = $setting == 'favorites' ? 'showFavoritesOnly' : 'showAllForums';
         $forumUser->{$method}();

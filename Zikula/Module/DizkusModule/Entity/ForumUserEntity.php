@@ -18,7 +18,7 @@ use Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zikula\Module\UsersModule\Entity\UserEntity as ZikulaUser;
+use UserUtil;
 
 /**
  * ForumUser entity class
@@ -32,15 +32,10 @@ class ForumUserEntity extends EntityAccess
     const USER_LEVEL_DELETED = -1;
 
     /**
-     * Zikula Core User entity
-     * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/composite-primary-keys.html
-     * @see /system/Zikula/Module/UsersModule/Entity/UserEntity.php
-     *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Zikula\Module\UsersModule\Entity\UserEntity")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
+     * @ORM\Column(type="integer")
      */
-    private $user;
+    private $user_id;
 
     /**
      * postCount
@@ -112,36 +107,51 @@ class ForumUserEntity extends EntityAccess
     private $forumSubscriptions;
 
     /**
-     * constructor
+     * NON-PERSISTED property
+     * array of core vars for user
+     * @var array $user
      */
-    public function __construct()
+    private $user = array();
+
+    /**
+     * constructor
+     * @param integer $uid the core user id
+     */
+    public function __construct($uid)
     {
+        $this->user_id = $uid;
+        $this->user = $this->getUser();
         $this->favoriteForums = new ArrayCollection();
         $this->topicSubscriptions = new ArrayCollection();
         $this->forumSubscriptions = new ArrayCollection();
     }
 
-    public function getUser_id()
+    /**
+     * @param mixed $user_id
+     */
+    public function setUser_id($user_id)
     {
-        return $this->getUser()->getUid();
+        $this->user_id = $user_id;
     }
 
     /**
-     * Core User Entity
-     * @return ZikulaUser
+     * @return mixed
+     */
+    public function getUser_id()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * Core user vars
+     * @return array|boolean (if core user doesn't exist, method returns false)
      */
     public function getUser()
     {
+        if (empty($this->user)) {
+            $this->user = UserUtil::getVars($this->user_id);
+        }
         return $this->user;
-    }
-
-    /**
-     * set the user
-     * @param ZikulaUser $user
-     */
-    public function setUser(ZikulaUser $user)
-    {
-        $this->user = $user;
     }
 
     public function getPostCount()

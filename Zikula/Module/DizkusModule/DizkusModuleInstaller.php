@@ -469,9 +469,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                 $forumUser = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserEntity')->find($post['poster_id']);
                 // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
-                    $forumUser = new ForumUserEntity();
-                    $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $post['poster_id']);
-                    $forumUser->setUser($coreUser);
+                    $forumUser = new ForumUserEntity($post['poster_id']);
                     $this->entityManager->persist($forumUser);
                 }
             }

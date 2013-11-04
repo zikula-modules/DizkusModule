@@ -138,10 +138,11 @@ function smarty_function_readlastposts($params, Zikula_View $view)
             }
 
             if ($topic->getPoster()->getUser_id() != 1) {
-                $user_name = $topic->getPoster()->getUser()->getUname();
-                if ($user_name == "") {
+                $coreUser = $topic->getPoster()->getUser();
+                $user_name = $coreUser['uname'];
+                if (empty($user_name)) {
                     // user deleted from the db?
-                    $user_name = ModUtil::getVar('Users', 'anonymous');
+                    $user_name = ModUtil::getVar('Users', 'anonymous'); // @todo replace with "deleted user"?
                 }
             } else {
                 $user_name = ModUtil::getVar('Users', 'anonymous');

@@ -127,9 +127,7 @@ class PostManager
         $uid = UserUtil::getVar('uid');
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
-            $forumUser = new ForumUserEntity();
-            $coreUser = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $uid);
-            $forumUser->setUser($coreUser);
+            $forumUser = new ForumUserEntity($uid);
         }
         $this->_post->setPoster($forumUser);
     }

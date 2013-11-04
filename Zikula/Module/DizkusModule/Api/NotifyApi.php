@@ -44,11 +44,12 @@ class NotifyApi extends \Zikula_AbstractApi
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
+        $poster = $post->getPoster()->getUser();
         $view->assign('sitename', System::getVar('sitename'))
             ->assign('parent_forum_name', $post->getTopic()->getForum()->getParent()->getName())
             ->assign('name', $post->getTopic()->getForum()->getName())
             ->assign('topic_subject', $post->getTopic()->getTitle())
-            ->assign('poster_name', $post->getPoster()->getUser()->getUname())
+            ->assign('poster_name', $poster['uname'])
             ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
             ->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())
             ->assign('forum_id', $post->getTopic()->getForum()->getForum_id())
@@ -67,18 +68,16 @@ class NotifyApi extends \Zikula_AbstractApi
         $notified = array($post->getPoster_id());
         foreach ($subscriptions as $subscription) {
             // check permissions
-            /* @var $subscriber \Zikula\Module\UsersModule\Entity\UserEntity */
             $subscriber = $subscription->getForumUser()->getUser();
-            $subscriberEmail = $subscriber->getEmail();
-            if (in_array($subscriber->getUid(), $notified) || empty($subscriberEmail)) {
+            if (in_array($subscriber['uid'], $notified) || empty($subscriber['email'])) {
                 continue;
             }
-            if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber->getUid())) {
+            if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber['uid'])) {
                 $args = array(
                     'fromname' => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,
-                    'toname' => $subscriber->getUname(),
-                    'toaddress' => $subscriberEmail,
+                    'toname' => $subscriber['uname'],
+                    'toaddress' => $subscriber['email'],
                     'subject' => $subject,
                     'body' => $message,
                     'headers' => array(
@@ -86,7 +85,7 @@ class NotifyApi extends \Zikula_AbstractApi
                         'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'],
                         'X-DizkusTopicID: ' . $post->getTopic_id()));
                 ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
-                $notified[] = $subscriber->getUid();
+                $notified[] = $subscriber['uid'];
             }
         }
 

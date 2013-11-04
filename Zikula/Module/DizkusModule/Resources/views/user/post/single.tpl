@@ -20,10 +20,6 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
-                    {* TODO: this is temp to show the data is here w/o another DB call
-                    <p>{$post.poster.user.uname}</p>
-                    <p>{$post.poster.user.email}</p>
-                    *}
                     <div>{useravatar uid=$post.poster.user.uid class='gravatar'}</div>
 
                     {if !empty($post.poster.rank.image)}

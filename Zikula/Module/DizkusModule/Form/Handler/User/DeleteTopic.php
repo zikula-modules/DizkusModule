@@ -120,8 +120,9 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
 
         // send the poster a reason why his/her post was deleted
         if ($data['sendReason'] && !empty($data['reason'])) {
+            $poster = $this->topic_poster->getUser();
             ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
-                'toaddress' => $this->topic_poster->getUser()->getEmail(),
+                'toaddress' => $poster['email'],
                 'subject' => $this->__('Post deleted'),
                 'body' => $data['reason'],
                 'html' => true)

@@ -105,8 +105,9 @@ class UserApi extends \Zikula_AbstractApi
                 if (!isset($cache[$type])) {
                     $qb = $this->entityManager->createQueryBuilder();
                     $qb->select('u')->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user', 'DESC')->setMaxResults(1);
-                    $user = $qb->getQuery()->getSingleResult();
-                    $cache[$type] = $user->getUser()->getUname();
+                    $forumUser = $qb->getQuery()->getSingleResult();
+                    $user = $forumUser->getUser();
+                    $cache[$type] = $user['uname'];
                 }
 
                 return $cache[$type];
@@ -191,9 +192,10 @@ class UserApi extends \Zikula_AbstractApi
         $posts = $query->getResult();
         foreach ($posts as $post) {
             /* @var $post \Zikula\Module\DizkusModule\Entity\PostEntity */
+            $coreUser = $post->getPoster()->getUser();
             $viewip['users'][] = array(
                 'uid' => $post->getPoster()->getUser_id(),
-                'uname' => $post->getPoster()->getUser()->getUname(),
+                'uname' => $coreUser['uname'],
                 'postcount' => $post->getPoster()->getPostCount());
         }
         return $viewip;
@@ -278,9 +280,10 @@ class UserApi extends \Zikula_AbstractApi
 
     public function isSpam(PostEntity $post)
     {
+        $user = $post->getPoster()->getUser();
         $args = array(
-            'author' => $post->getPoster()->getUser()->getUname(), // use 'viagra-test-123' to test
-            'authoremail' => $post->getPoster()->getUser()->getEmail(),
+            'author' => $user['uname'], // use 'viagra-test-123' to test
+            'authoremail' => $user['email'],
             'content' => $post->getPost_text()
         );
         // Akismet

@@ -53,7 +53,8 @@ class ModeratorsApi extends \Zikula_AbstractApi
         $moderatorUserCollection = $qb->getQuery()->getResult();
         if (is_array($moderatorUserCollection) && !empty($moderatorUserCollection)) {
             foreach ($moderatorUserCollection as $moderatorUser) {
-                $mods['users'][$moderatorUser->getForumUser()->getUser()->getUid()] = $moderatorUser->getForumUser()->getUser()->getUname();
+                $coreUser = $moderatorUser->getForumUser()->getUser();
+                $mods['users'][$coreUser['uid']] = $coreUser['uname'];
             }
         }
         // get moderator groups
