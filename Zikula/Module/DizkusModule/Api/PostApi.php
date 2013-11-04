@@ -91,7 +91,8 @@ class PostApi extends \Zikula_AbstractApi
                 $text = $this->__('Unanswered');
                 break;
             case 'unsolved':
-                $qb->where('t.solved = 0');
+                $qb->where('t.solved = :status')
+                    ->setParameter('status', -1);
                 $text = $this->__('Unsolved');
                 break;
         }
