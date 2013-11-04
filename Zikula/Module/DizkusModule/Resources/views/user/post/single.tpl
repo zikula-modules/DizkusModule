@@ -1,3 +1,4 @@
+{usergetvar name='uid' assign='current_userid'}
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
 {modapifunc modname=$module type='UserData' func='getUserOnlineStatus' uid=$post.poster.user.uid assign='isPosterOnline'}
 
@@ -77,7 +78,9 @@
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
                     <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if $topic.solved neq $post.post_id} style="display:none;"{/if}>
-                        <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
+                        {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR $topic.poster.user_id eq $current_userid)}
+                            <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
+                        {/if}
                         <i class='icon-ok icon-2x'></i> {gt text='This post has been marked as the solution.'}
                     </div>
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
@@ -110,14 +113,20 @@
                     {if isset($permissions.comment) AND $permissions.comment eq true AND $modvars.ZikulaDizkusModule.ajax}
                         <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
                     {/if}
-                    {if isset($permissions.edit) AND $permissions.edit eq 1 OR $post.userAllowedToEdit}
+                    {if (isset($permissions.edit) AND $permissions.edit eq 1) OR $post.userAllowedToEdit}
                         <li><a class="editpostlink icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
-                        {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && ($topic.solved lt 1) && !$post.isFirstPost}{assign var='stylestmt' value=''}{else}{assign var='stylestmt' value='style="display:none" '}{/if}
-                        <li>
-                            <a {$stylestmt}class="solvetopic tooltips" data-post="{$post.post_id}" data-action="solve" href="{modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id post=$post.post_id}" title="{gt text="Mark as solved by this post"}">
-                                <i class="icon-ok icon-150x"></i>
-                            </a>
-                        </li>
+                    {/if}
+                    {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR $topic.poster.user_id eq $current_userid) AND ($modvars.ZikulaDizkusModule.solved_enabled|default:0) AND !$post.isFirstPost}
+                    {if $topic.solved lt 1}
+                        {assign var='stylestmt' value=''}
+                    {else}
+                        {assign var='stylestmt' value='style="display:none" '}
+                    {/if}
+                    <li>
+                        <a {$stylestmt}class="solvetopic tooltips" data-post="{$post.post_id}" data-action="solve" href="{modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id post=$post.post_id}" title="{gt text="Mark as solved by this post"}">
+                            <i class="icon-ok icon-150x"></i>
+                        </a>
+                    </li>
                     {/if}
                 {elseif isset($topic)}
                     <li><i class='icon-lock icon-150x tooltips' title='{gt text='This topic is locked'}'></i></li>

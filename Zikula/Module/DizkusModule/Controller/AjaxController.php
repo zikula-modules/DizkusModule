@@ -289,7 +289,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         // Get common parameters
         $params = array();
         $params['topic_id'] = $this->request->request->get('topic', '');
-        $params['post'] = $this->request->request->get('post', null);
+        $params['post_id'] = $this->request->request->get('post', null);
         $params['action'] = $this->request->request->get('action', '');
         $userAllowedToEdit = $this->request->request->get('userAllowedToEdit', 0);
         // certain actions a user is always allowed
