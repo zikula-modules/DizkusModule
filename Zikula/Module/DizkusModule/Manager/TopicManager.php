@@ -277,6 +277,9 @@ class TopicManager
         $this->managedForum = new ForumManager($this->_forumId);
         $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
+        $solveStatus = $data['solveStatus'] == 1 ? -1 : 0; // -1 = support request
+        $this->_topic->setSolved($solveStatus);
+        unset($data['solveStatus']);
         $this->_topic->setLast_post($this->_firstPost);
         $this->_topic->merge($data);
         // prepare poster data
@@ -391,11 +394,12 @@ class TopicManager
     /**
      * set topic solved
      *
+     * @param integer $postid
      * @return boolean
      */
-    public function solve()
+    public function solve($postid)
     {
-        $this->_topic->setSolved(true);
+        $this->_topic->setSolved($postid);
         $this->entityManager->flush();
 
         return true;
@@ -408,7 +412,7 @@ class TopicManager
      */
     public function unsolve()
     {
-        $this->_topic->setSolved(false);
+        $this->_topic->setSolved(-1);
         $this->entityManager->flush();
 
         return true;

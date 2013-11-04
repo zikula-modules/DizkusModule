@@ -8,7 +8,8 @@ jQuery(document).ready(function() {
     jQuery("#toggletopiclock").click(changeTopicStatus);
     jQuery("#toggletopicsticky").click(changeTopicStatus);
     jQuery("#toggletopicsubscription").click(changeTopicStatus);
-    jQuery("#toggletopicsolve").click(changeTopicStatus);
+    jQuery(".solvetopic").click(changeTopicStatus);
+    jQuery(".unsolvetopic").click(changeTopicStatus);
     // POST EDIT
     hookEditLinks();
 
@@ -46,58 +47,63 @@ jQuery(document).ready(function() {
 });
 
 function changeTopicStatus(e) {
+    e.preventDefault();
+
     var action;
     var i = jQuery(this);
-    switch(i.attr('id')) {
-        case "toggletopiclock":
-            action = i.data('status') == 0 ? 'lock' : 'unlock';
-            break;
-        case "toggletopicsticky":
-            action = i.data('status') == 0 ? 'sticky' : 'unsticky';
-            break;
-        case "toggletopicsubscription":
-            action = i.data('status') == 0 ? 'subscribe' : 'unsubscribe';
-            break;
-        case "toggletopicsolve":
-            action = i.data('status') == 0 ? 'solve' : 'unsolve';
-            break;
-        default:
-            console.log('Wrong action');
-            return;
-    }
+    action = i.data('action');
 
     jQuery.ajax({
         type: "POST",
         data: {
             topic: jQuery('#topic_id').val(),
+            post: i.data('post'),
             action: action
         },
         url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
         success: function(result) {
             if (result == 'successful') {
-                if (action == 'lock') {
-                    i.attr('title', unlockTopic).removeClass('icon-lock').addClass('icon-unlock');
-                    jQuery('#dzk_quickreply').hide("slow"); // hide quickly reply
-                } else if (action == 'unlock') {
-                    i.attr('title', lockTopic).removeClass('icon-unlock').addClass('icon-lock');
-                    jQuery('#dzk_quickreply').show("slow"); // show quickly reply
-                } else if (action == 'sticky') {
-                    i.attr('title', unstickyTopic).empty().html(unstickyTopicIcon);
-                } else if (action == 'unsticky') {
-                    i.attr('title', stickyTopic).empty().html(stickyTopicIcon);
-                } else if (action == 'subscribe') {
-                    i.attr('title', unsubscribeTopic).empty().html(unsubscribeTopicIcon);
-                } else if (action == 'unsubscribe') {
-                    i.attr('title', subscribeTopic).empty().html(subscribeTopicIcon);
-                } else if (action == 'solve') {
-                    i.attr('title', unsolveTopic).empty().html(unsolveTopicIcon);
-                    jQuery('#topic_solved').show();
-                } else if (action == 'unsolve') {
-                    i.attr('title', solveTopic).empty().html(solveTopicIcon);
-                    jQuery('#topic_solved').hide();
+                switch (action) {
+                    case 'lock':
+                        i.attr('title', unlockTopic).removeClass('icon-lock').addClass('icon-unlock');
+                        i.data('action', 'unlock');
+                        jQuery('#dzk_quickreply').hide("slow"); // hide quick reply
+                        break;
+                    case 'unlock':
+                        i.attr('title', lockTopic).removeClass('icon-unlock').addClass('icon-lock');
+                        i.data('action', 'lock');
+                        jQuery('#dzk_quickreply').show("slow"); // show quick reply
+                        break;
+                    case 'sticky':
+                        i.attr('title', unstickyTopic).empty().html(unstickyTopicIcon);
+                        i.data('action', 'unsticky');
+                        break;
+                    case 'unsticky':
+                        i.attr('title', stickyTopic).empty().html(stickyTopicIcon);
+                        i.data('action', 'sticky');
+                        break;
+                    case 'subscribe':
+                        i.attr('title', unsubscribeTopic).empty().html(unsubscribeTopicIcon);
+                        i.data('action', 'unsubscribe');
+                        break;
+                    case 'unsubscribe':
+                        i.attr('title', subscribeTopic).empty().html(subscribeTopicIcon);
+                        i.data('action', 'subscribe');
+                        break;
+                    case 'solve':
+                        jQuery('#solutionPost_' + i.data('post')).show();
+                        jQuery('.solvetopic').hide();
+                        jQuery('#topic_solved').show();
+                        jQuery('#topic_unsolved').hide();
+                        break;
+                    case 'unsolve':
+                        jQuery('#solutionPost_' + i.data('post')).hide();
+                        jQuery('.solvetopic').show();
+                        jQuery('#topic_solved').hide();
+                        jQuery('#topic_unsolved').show();
+                        break;
                 }
-                // invert data-status value
-                i.data('status', i.data('status') == 0 ? 1 : 0);
+
                 // destroy and recreate tooltip
                 i.tooltip('destroy').tooltip();
             } else {
@@ -110,7 +116,6 @@ function changeTopicStatus(e) {
             return;
         }
     });
-    e.preventDefault();
 }
 
 

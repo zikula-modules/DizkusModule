@@ -30,8 +30,10 @@
             </td>
             <td class='description'>
                 <h4>
-                    {if $topic.solved}
+                    {if $topic.solved gt 0}
                     <i title='{gt text="This topic is solved."}' class="icon-ok icon-green tooltips"></i>
+                    {elseif $topic.solved eq -1}
+                    <i title='{gt text="This topic is a support request."}' class="icon-question icon-red tooltips"></i>
                     {/if}
                     {$topic.topic_id|viewtopiclink:$topic.title}
                 </h4>

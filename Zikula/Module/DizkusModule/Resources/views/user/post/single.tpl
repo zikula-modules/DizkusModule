@@ -17,7 +17,7 @@
         <div class="dzk_subcols z-clearfix">
             <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
                 <div class="dzk_avatar">
-                    <strong>{$post.poster.user.uname|profilelinkbyuid|profilelinkbyuname}</strong>
+                    <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
                     {* TODO: this is temp to show the data is here w/o another DB call
                     <p>{$post.poster.user.uname}</p>
@@ -76,6 +76,10 @@
             <div class="postbody dzk_colpost_right">
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
+                    <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if $topic.solved neq $post.post_id} style="display:none;"{/if}>
+                        <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
+                        <i class='icon-ok icon-2x'></i> {gt text='This post has been marked as the solution.'}
+                    </div>
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
                         {usergetvar name='signature' assign="signature" uid=$post.poster.user.uid}
@@ -108,6 +112,12 @@
                     {/if}
                     {if isset($permissions.edit) AND $permissions.edit eq 1 OR $post.userAllowedToEdit}
                         <li><a class="editpostlink icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
+                        {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && ($topic.solved lt 1) && !$post.isFirstPost}{assign var='stylestmt' value=''}{else}{assign var='stylestmt' value='style="display:none" '}{/if}
+                        <li>
+                            <a {$stylestmt}class="solvetopic tooltips" data-post="{$post.post_id}" data-action="solve" href="{modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id post=$post.post_id}" title="{gt text="Mark as solved by this post"}">
+                                <i class="icon-ok icon-150x"></i>
+                            </a>
+                        </li>
                     {/if}
                 {elseif isset($topic)}
                     <li><i class='icon-lock icon-150x tooltips' title='{gt text='This topic is locked'}'></i></li>

@@ -50,7 +50,7 @@ class TopicApi extends \Zikula_AbstractApi
                         $managedTopic->unlock();
                         break;
                     case 'solve':
-                        $managedTopic->solve();
+                        $managedTopic->solve($args['post_id']);
                         break;
                     case 'unsolve':
                         $managedTopic->unsolve();

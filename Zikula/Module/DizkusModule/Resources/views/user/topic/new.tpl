@@ -38,11 +38,15 @@
                     <div><strong>{gt text="Options"}</strong></div>
                     <div class="checkbox">
                         {formcheckbox id="attachSignature" checked=1}
-                        {formlabel for="attachSignature" __text="Attach my signature"}
+                        <i class='icon-user'></i> {formlabel for="attachSignature" __text="Attach my signature"}
+                    </div>
+                    <div class="checkbox">
+                        {formcheckbox id="solveStatus" checked=0}
+                        <i class='icon-question icon-red'></i> {formlabel for="solveStatus" __text="Mark as support question"}
                     </div>
                     <div class="checkbox">
                         {formcheckbox id="subscribe_topic" checked=1}
-                        {formlabel for="subscribe_topic" __text="Notify me when a reply is posted"}
+                        <i class='icon-envelope-alt icon-green'></i> {formlabel for="subscribe_topic" __text="Email me when a reply is posted"}
                     </div>
                 {/if}
 

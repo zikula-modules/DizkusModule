@@ -3,8 +3,6 @@
 {capture assign="subscribe_icon"}<span class="icon-stack"><i class="icon-envelope-alt"></i></span>{/capture}
 {capture assign="unsticky_icon"}<span class="icon-stack"><i class="icon-ban-circle icon-stack-base"></i><i class="icon-bullhorn"></i></span>{/capture}
 {capture assign="sticky_icon"}<span class="icon-stack"><i class="icon-bullhorn"></i></span>{/capture}
-{capture assign="unsolve_icon"}<span class="icon-stack"><i class="icon-ban-circle icon-stack-base"></i><i class="icon-ok"></i></span>{/capture}
-{capture assign="solve_icon"}<span class="icon-stack"><i class="icon-ok"></i></span>{/capture}
 {* ------- *}
 
 {assign var='templatetitle' value=$topic.title}
@@ -15,8 +13,21 @@
     {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {/if}
 
+{if $modvars.ZikulaDizkusModule.solved_enabled && $topic.solved eq -1}
+    {assign var='topic_unsolved_style' value=' style="display:inline;"'}
+    {assign var='topic_solved_style' value=' style="display:none;"'}
+{elseif $modvars.ZikulaDizkusModule.solved_enabled && $topic.solved gt 0}
+    {assign var='topic_unsolved_style' value=' style="display:none;"'}
+    {assign var='topic_solved_style' value=' style="display:inline;"'}
+{else}
+    {assign var='topic_unsolved_style' value=' style="display:none;"'}
+    {assign var='topic_solved_style' value=' style="display:none;"'}
+{/if}
 <h2>
-    <span class='text-success' id="topic_solved" {if !$topic.solved or !$modvars.ZikulaDizkusModule.solved_enabled}style='display:none'{/if}>
+    <span class='text-danger' id="topic_unsolved"{$topic_unsolved_style}>
+        [<span class='icon-question'>&nbsp;{gt text="Support request"}</span>]
+    </span>
+    <span class='text-success' id="topic_solved"{$topic_solved_style}>
         [<span class='icon-ok'>&nbsp;{gt text="Solved"}</span>]
     </span>
     <span id="edittopicsubjectbutton" title="">
@@ -77,25 +88,10 @@
                     {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
                     {gt text="Subscribe to topic" assign='msg'}
                 {/if}
-                <a id="toggletopicsubscription" class="tooltips" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">
+                <a id="toggletopicsubscription" class="tooltips" data-action="{if $isSubscribed}unsubscribe{else}subscribe{/if}" href="{$url}" title="{$msg}">
                     {if $isSubscribed}{$unsubscribe_icon}{else}{$subscribe_icon}{/if}
                 </a>
             </li>
-                {usergetvar name='uid' assign='currentUser'}
-                {if ($modvars.ZikulaDizkusModule.solved_enabled|default:0) && ($isModerator || ($currentUser == $topic.poster.user.uid))}
-                <li>
-                    {if $topic.solved}
-                        {modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id assign='url'}
-                        {gt text="Mark as unsolved" assign='msg'}
-                    {else}
-                        {modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id assign='url'}
-                        {gt text="Mark as solved" assign='msg'}
-                    {/if}
-                    <a id="toggletopicsolve" class="tooltips" data-status="{if $topic.solved}1{else}0{/if}" href="{$url}" title="{$msg}">
-                        {if $topic.solved}{$unsolve_icon}{else}{$solve_icon}{/if}
-                    </a>
-                </li>
-                {/if}
             {/if}
 
         </ul>
@@ -111,7 +107,7 @@
                     {gt text="Unlock topic" assign='msg'}
                     {assign var="iconclass" value="icon-unlock"}
                 {/if}
-                <a id="toggletopiclock" class="{$iconclass} tooltips" title="{$msg}" data-status="{if $topic.status}1{else}0{/if}" href="{$url}"></a>
+                <a id="toggletopiclock" class="{$iconclass} tooltips" title="{$msg}" data-action="{if $topic.status}unlock{else}lock{/if}" href="{$url}"></a>
             </li>
 
             <li>
@@ -122,7 +118,7 @@
                     {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
                     {gt text="Remove 'sticky' status" assign='msg'}
                 {/if}
-                <a id="toggletopicsticky" class="tooltips" title="{$msg}" data-status="{if $topic.sticky}1{else}0{/if}" href="{$url}">
+                <a id="toggletopicsticky" class="tooltips" title="{$msg}" data-action="{if $topic.sticky}unsticky{else}sticky{/if}" href="{$url}">
                     {if $topic.sticky eq 0}{$sticky_icon}{else}{$unsticky_icon}{/if}
                 </a>
             </li>

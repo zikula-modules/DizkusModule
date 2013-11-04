@@ -531,6 +531,7 @@ class UserController extends \Zikula_AbstractController
         $params = array();
         $params['action'] = $this->request->query->get('action');
         $params['topic_id'] = (int)$this->request->query->get('topic');
+        $params['post_id'] = (int)$this->request->query->get('post', null);
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id']))));

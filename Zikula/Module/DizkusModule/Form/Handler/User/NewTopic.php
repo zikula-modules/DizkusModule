@@ -132,7 +132,9 @@ class NewTopic extends \Zikula_Form_AbstractHandler
             $post['post_id'] = 0;
             $post['post_time'] = time();
             $post['topic_id'] = 0;
+            $post['attachSignature'] = $data['attachSignature'];
             $post['subscribe_topic'] = $data['subscribe_topic'];
+            $post['solveStatus'] = $data['solveStatus'];
             $view->assign('post', $post);
             $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
             $view->assign('last_visit_unix', $lastVisitUnix);

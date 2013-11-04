@@ -11,7 +11,7 @@
     {{if isset($sticky_icon)}}var stickyTopicIcon = "{{$sticky_icon|strip|addslashes}}";{{/if}}
     var unstickyTopic = " {{gt text="Remove 'sticky' status"}}";
     {{if isset($unsticky_icon)}}var unstickyTopicIcon = "{{$unsticky_icon|strip|addslashes}}";{{/if}}
-    var solveTopic = " {{gt text="Mark as solved"}}";
+    var solveTopic = " {{gt text="Mark as solved by this post"}}";
     {{if isset($solve_icon)}}var solveTopicIcon = "{{$solve_icon|strip|addslashes}}";{{/if}}
     var unsolveTopic = " {{gt text="Mark as unsolved"}}";
     {{if isset($unsolve_icon)}}var unsolveTopicIcon = "{{$unsolve_icon|strip|addslashes}}";{{/if}}

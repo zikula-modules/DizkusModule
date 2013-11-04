@@ -108,10 +108,13 @@ class TopicEntity extends EntityAccess
 
     /**
      * solved
+     * -1 = support request
+     * 0 = standard topic
+     * int = post_id of answer to support request
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer")
      */
-    private $solved = false;
+    private $solved = 0;
 
     /**
      * posts
