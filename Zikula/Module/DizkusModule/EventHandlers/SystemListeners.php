@@ -45,7 +45,7 @@ class SystemListeners
         // change user level - unused at the moment
         $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumUserEntity u
             SET u.level = :level
-            WHERE u.forumUser = :uid';
+            WHERE u.user_id = :uid';
         $em->createQuery($dql)
             ->setParameter('uid', $user['uid'])
             ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
