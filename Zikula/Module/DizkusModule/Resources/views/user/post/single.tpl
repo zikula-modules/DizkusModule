@@ -1,11 +1,11 @@
 {usergetvar name='uid' assign='current_userid'}
 {assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-{modapifunc modname=$module type='UserData' func='getUserOnlineStatus' uid=$post.poster.user.uid assign='isPosterOnline'}
+{modapifunc modname=$module type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
 
 {if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
 <a id="pid{$post.post_id}"></a>
 
-<div id="posting_{$post.post_id}" class="panel panel-default {*cycle values='post_bg1,post_bg2'*}">
+<div id="posting_{$post.post_id}" class="panel panel-default">
     {if $isPosterOnline}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{gt text="ONLINE"}</div></div>{/if}
     {if isset($preview) AND ($preview eq 1)}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{gt text="PREVIEW"}</div></div>{/if}
     <div class='panel-heading'>
@@ -20,7 +20,7 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
-                    <div>{useravatar uid=$post.poster.user.uid class='gravatar'}</div>
+                    <div>{useravatar uid=$post.poster.user_id class='gravatar'}</div>
 
                     {if !empty($post.poster.rank.image)}
                         {if $post.poster.rank.rank_link neq ''}
@@ -81,7 +81,7 @@
                     </div>
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
-                        {usergetvar name='signature' assign="signature" uid=$post.poster.user.uid}
+                        {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}
                         {if !empty($signature)}
                             <div class='dzk_postSignature'>
                                 {$modvars.ZikulaDizkusModule.signature_start}
@@ -107,7 +107,7 @@
                 {/if}
                 {if isset($topic) AND $topic.status neq 1}
                     {if isset($permissions.comment) AND $permissions.comment eq true AND $modvars.ZikulaDizkusModule.ajax}
-                        <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user.uid}');"></a></li>
+                        <li><a class="icon-quote-left icon-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"></a></li>
                     {/if}
                     {if (isset($permissions.edit) AND $permissions.edit eq 1) OR $post.userAllowedToEdit}
                         <li><a class="editpostlink icon-edit icon-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
