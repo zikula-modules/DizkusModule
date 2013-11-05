@@ -26,6 +26,8 @@ use Zikula\Core\Response\Ajax\UnavailableResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\Core\ModUrl;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\FilterHook;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -109,19 +111,26 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $managedTopic = new TopicManager($topic_id);
         $start = 1;
         $this->checkMessageLength($message);
+        $data = array(
+            'topic_id' => $topic_id,
+            'post_text' => $message,
+            'attachSignature' => $attach_signature);
+        $managedPost = new PostManager();
+        $managedPost->create($data);
+        // process validation hooks
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+            $preview = true;
+        }
+        // check to see if the post contains spam
+        if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
+            // @todo not sure this is proper return value in ajax
+            LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            $preview = true;
+        }
         if ($preview == false) {
-            $data = array(
-                'topic_id' => $topic_id,
-                'post_text' => $message,
-                'attachSignature' => $attach_signature);
-            $managedPost = new PostManager();
-            $managedPost->create($data);
-            // @todo must process validation hooks here
-            // check to see if the post contains spam
-            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-                // @todo not sure this is proper return value in ajax
-                return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
-            }
             $managedPost->persist();
             if ($subscribe_topic) {
                 ModUtil::apiFunc($this->name, 'topic', 'subscribe', array('topic' => $topic_id));
@@ -140,7 +149,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             // preview == true, create fake post
             $managedPoster = new ForumUserManager();
             $post = array(
-                'post_id' => 0,
+                'post_id' => 99999999999,
                 'topic_id' => $topic_id,
                 'poster' => $managedPoster->toArray(),
                 'post_time' => time(),
