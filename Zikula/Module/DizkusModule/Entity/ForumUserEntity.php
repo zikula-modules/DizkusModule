@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use UserUtil;
+use ZLanguage;
 
 /**
  * ForumUser entity class
@@ -150,6 +151,10 @@ class ForumUserEntity extends EntityAccess
     {
         if (empty($this->user)) {
             $this->user = UserUtil::getVars($this->user_id);
+            if (empty($this->user['uname'])) {
+                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+                $this->user['uname'] = __('Deleted user', $dom);
+            }
         }
         return $this->user;
     }
