@@ -37,7 +37,7 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
                     'ranktype' => RankEntity::TYPE_POSTCOUNT)),
                 'text' => $this->__('Edit user ranks'),
-                'icon' => 'star-half-empty',
+                'icon' => 'star-half-o',
                 'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
                 'links' => array(
                     array(
@@ -58,7 +58,7 @@ class AdminApi extends \Zikula_AbstractApi
                 'url' => ModUtil::url($this->name, 'admin', 'manageSubscriptions'),
                 'text' => $this->__('Manage subscriptions'),
                 'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
-                'icon' => 'envelope-alt');
+                'icon' => 'envelope-o');
             $links[] = array(
                 'url' => ModUtil::url($this->name, 'admin', 'preferences'),
                 'text' => $this->__('Settings'),

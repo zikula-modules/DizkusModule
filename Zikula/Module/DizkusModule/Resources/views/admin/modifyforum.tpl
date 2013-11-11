@@ -6,7 +6,7 @@
 
 {adminheader}
 <h3>
-    <span class="icon-edit"></span>&nbsp;
+    <span class="fa fa-pencil-square-o"></span>&nbsp;
     {if $name}
         {gt text="Edit forum"}
     {else}

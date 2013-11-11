@@ -1,6 +1,6 @@
 {adminheader}
 <h3>
-    <span class="icon-trophy"></span>&nbsp;{gt text="Assign honorary rank"}
+    <span class="fa fa-trophy"></span>&nbsp;{gt text="Assign honorary rank"}
 </h3>
 
 <div id="dizkus_admin">

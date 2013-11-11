@@ -1,6 +1,6 @@
 {adminheader}
 <h3>
-    <span class="icon-wrench"></span>&nbsp;{gt text="Settings"}
+    <span class="fa fa-wrench"></span>&nbsp;{gt text="Settings"}
 </h3>
 <div id="dizkus_admin">
 

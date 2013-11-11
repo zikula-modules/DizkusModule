@@ -69,12 +69,12 @@ class ParseTagsApi extends \Zikula_AbstractApi
 
         $quotebody = '
 <div class="dz-quote">
-    <i class="icon-quote-left icon-4x icon-light"></i>
+    <i class="fa fa-quote-left fa-4x text-more-muted"></i>
     <div class="inner">
         <div class="dz-quoteheader">%u</div>
         <blockquote class="dz-quotetext">%t</blockquote>
     </div>
-    <i class="icon-quote-right icon-4x icon-light"></i>
+    <i class="fa fa-quote-right fa-4x text-more-muted"></i>
 </div>';
 
         $stack = array();

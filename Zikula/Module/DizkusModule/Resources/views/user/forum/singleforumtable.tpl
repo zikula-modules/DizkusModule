@@ -4,7 +4,7 @@
             <th colspan='2'>
                 {if !isset($forum)}
                 <a id="forumlink_{$parent.name}" class='tooltips' title="{gt text="Go to forum"} '{$parent.name|safetext}'" href="{modurl modname=$module type='user' func='viewforum' forum=$parent.forum_id}">
-                    <i class='icon-comments'></i>&nbsp;{$parent.name|safetext|upper}</a>
+                    <i class='fa fa-comments'></i>&nbsp;{$parent.name|safetext|upper}</a>
                 {/if}
             </th>
             <th class='data'>{gt text="Subforums"|upper}</th>
@@ -19,10 +19,10 @@
             <td class='data'>
                 {datecompare date1=$forum.last_post.post_time date2=$last_visit_unix comp=">" assign='comp'}
                 <a class='tooltips' title="{gt text="Go to forum"} '{$forum.name|safetext}'" href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">
-                    <span class="icon-stack icon-2x">
-                        <i class="icon-comments icon-stack-base"></i>
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-comments fa-stack-2x"></i>
                     {if $comp}
-                        <i class="icon-star icon-overlay-upper-left icon-blue"></i>
+                        <i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>
                     {/if}
                     </span>
                 </a>

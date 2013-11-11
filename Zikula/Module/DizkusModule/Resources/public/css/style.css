@@ -179,10 +179,10 @@ div#editpostoptions ul li {
     margin-right: 5px;
     line-height: 2.2em;
 }
-#dizkus ul.linklist li .icon-home {
+#dizkus ul.linklist li .fa-home {
     margin-left: 10px;
 }
-#dizkus ul.linklist li a.icon-chevron-sign-right {
+#dizkus ul.linklist li a.fa-chevron-sign-right {
     margin-left: 10px;
     text-decoration: none;
     font-size: 1em;
@@ -803,10 +803,10 @@ dl.icon {
 /***********************
 /* FontAwesome additions
 ***********************/
-.icon-150x {
+.fa-150x {
     font-size: 1.5em;
 }
-#dizkus .icon-stack-base {
+#dizkus .fa-stack-2x {
     color:#DCDCDC;
 }
 #dizkus .navbar-nav li a {
@@ -815,13 +815,13 @@ dl.icon {
 #dizkus .navbar-topic .navbar-nav li a {
     font-size: 1.8em;
 }
-#dizkus .navbar-nav .icon-stack {
+#dizkus .navbar-nav .fa-stack {
     width: 1em;
     height: 1em;
     line-height: normal;
     vertical-align: inherit;
 }
-#dizkus .navbar-nav .icon-stack-base {
+#dizkus .navbar-nav .fa-stack-2x {
     top: -.25em;
     left: -.2em;
 }
@@ -967,12 +967,12 @@ div.dz-codeheader {
     position: relative;
     z-index: 1;
 }
-.dz-quote i.icon-quote-right {
+.dz-quote i.fa-quote-right {
     position: absolute;
     bottom: 0;
     right: 3px;
 }
-.dz-quote i.icon-quote-left {
+.dz-quote i.fa-quote-left {
     position: absolute;
     top: 0;
     left: 3px;

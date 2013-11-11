@@ -27,7 +27,7 @@
         <div id="navbar-forum-collapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 {if $permissions.comment && !$forum->isLocked()}
-                    <li><a class='icon-comment-alt' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
+                    <li><a class='fa fa-comment-o' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
                 {/if}
                 {if $coredata.logged_in}
                     <li>
@@ -39,7 +39,7 @@
                             {modurl modname=$module type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
                             {gt text="Unsubscribe from forum" assign='msg'}
                         {/if}
-                        <a class='icon-envelope-alt' id="forum-subscription" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
+                        <a class='fa fa-envelope-o' id="forum-subscription" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                     </li>
                     {if $modvars.ZikulaDizkusModule.favorites_enabled eq "yes"}
                         <li>
@@ -51,13 +51,13 @@
                                 {modurl modname=$module type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
                                 {gt text="Add forum to favourites" assign='msg'}
                             {/if}
-                            <a class='icon-heart-empty' id="forum-favourite" data-status="{if $isFavorite}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
+                            <a class='fa fa-heart-o' id="forum-favourite" data-status="{if $isFavorite}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                         </li>
                     {/if}
                 {/if}
 
                 {if $isModerator OR $permissions.moderate}
-                    <li><a class='icon-wrench' title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
+                    <li><a class='fa fa-wrench' title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
                 {/if}
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -71,9 +71,9 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h2 class='dizkus-clean pull-left'>
-            <span class="icon-stack">
-              <i class="icon-comments icon-stack-base"></i>
-              {if $forum->isLocked()}<i class="icon-lock icon-overlay-lower-right"></i>{/if}
+            <span class="fa-stack">
+              <i class="fa fa-comments fa-stack-2x"></i>
+              {if $forum->isLocked()}<i class="fa fa-lock fa-stack-1x fa-overlay-lower-right"></i>{/if}
             </span>
             &nbsp;{$forum.name|safetext}&nbsp;{gt text='subforums'}
         </h2>
@@ -104,7 +104,7 @@
 </div>
 {elseif (!$forum->isLocked())}
 <div class="alert alert-info text-center">
-    {gt text="There are no topics in this forum yet."}&nbsp;<a class='icon-comment-alt btn btn-info btn-sm' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="Start a new topic"}</a>
+    {gt text="There are no topics in this forum yet."}&nbsp;<a class='fa fa-comment-o btn btn-info btn-sm' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="Start a new topic"}</a>
 </div>
 {/if}
 {/if}

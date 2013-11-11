@@ -2,7 +2,7 @@
 {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Admin.Ranks.js'}
 {adminheader}
 <h3>
-    <span class="icon-edit"></span>&nbsp;{gt text="Edit user ranks"}
+    <span class="fa fa-pencil-square-o"></span>&nbsp;{gt text="Edit user ranks"}
 </h3>
 <div id="dizkus_admin">
 

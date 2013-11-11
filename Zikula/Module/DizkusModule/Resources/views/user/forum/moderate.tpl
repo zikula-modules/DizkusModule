@@ -8,7 +8,7 @@
         </p>
         <div class="panel panel-warning">
             <div class="panel-heading">
-                <h2><i class='icon-wrench'></i>&nbsp;{gt text='Moderating'}&nbsp;{$forum.name|safetext}&nbsp;{gt text='topics'}</h2>
+                <h2><i class='fa fa-wrench'></i>&nbsp;{gt text='Moderating'}&nbsp;{$forum.name|safetext}&nbsp;{gt text='topics'}</h2>
             </div>
             {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
             {include file='user/forum/forumtopicstable.tpl' topics=$forum.topics moderate=true}

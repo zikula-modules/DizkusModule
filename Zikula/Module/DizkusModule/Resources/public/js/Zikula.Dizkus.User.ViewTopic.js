@@ -65,12 +65,12 @@ function changeTopicStatus(e) {
             if (result == 'successful') {
                 switch (action) {
                     case 'lock':
-                        i.attr('title', unlockTopic).removeClass('icon-lock').addClass('icon-unlock');
+                        i.attr('title', unlockTopic).removeClass('fa-lock').addClass('fa-unlock');
                         i.data('action', 'unlock');
                         jQuery('#dzk_quickreply').hide("slow"); // hide quick reply
                         break;
                     case 'unlock':
-                        i.attr('title', lockTopic).removeClass('icon-unlock').addClass('icon-lock');
+                        i.attr('title', lockTopic).removeClass('fa-unlock').addClass('fa-lock');
                         i.data('action', 'lock');
                         jQuery('#dzk_quickreply').show("slow"); // show quick reply
                         break;
@@ -372,6 +372,9 @@ function quickEditSave() {
         var action = result.data.action,
             redirect = result.data.redirect,
             newText = result.data.newText;
+        if (message.length > 0) {
+            alert(message);
+        }
 
         postEditing = false;
         postEditingChanged = false;

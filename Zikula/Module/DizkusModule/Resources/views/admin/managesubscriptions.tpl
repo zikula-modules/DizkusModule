@@ -15,7 +15,7 @@
     {/pageaddvarblock}
 {/strip}
 <h3>
-    <span class="icon-envelope"></span>&nbsp;{gt text="Manage subscriptions"}
+    <span class="fa fa-envelope"></span>&nbsp;{gt text="Manage subscriptions"}
 </h3>
 
 <div id="dizkus_admin">

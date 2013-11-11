@@ -1,6 +1,6 @@
 {adminheader}
 <h3>
-    <span class="icon-list"></span>
+    <span class="fa fa-list"></span>
     {gt text="Forum tree"}
 </h3>
 
@@ -9,12 +9,12 @@
     <ul class="navbar navbar-default navbar-modulelinks navbar-modulelinks-main">
         <li>
             <a href="{modurl modname=$module type='admin' func='modifyForum'}" title="Create a new forum">
-                <span class="icon-comments"></span>&nbsp;{gt text='Create a new forum'}
+                <span class="fa fa-comments"></span>&nbsp;{gt text='Create a new forum'}
             </a>
         </li>
         <li>
             <a href="{modurl modname=$module type='admin' func='syncforums'}" title="Recalculate post and topics totals">
-                <span class="icon-cogs"></span>&nbsp;{gt text='Recalculate post and topics totals'}
+                <span class="fa fa-cogs"></span>&nbsp;{gt text='Recalculate post and topics totals'}
             </a>
         </li>
     </ul><br />

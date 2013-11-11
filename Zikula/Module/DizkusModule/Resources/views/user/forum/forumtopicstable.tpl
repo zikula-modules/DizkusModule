@@ -18,22 +18,22 @@
                 {else}
                     {assign value=false var="comp"}
                 {/if}
-                <span class="icon-stack icon-2x">
+                <span class="fa-stack fa-2x">
                     {if $topic.sticky eq 1}
-                    <i title='{gt text="Topic is pinned to top of list."}' class="icon-bullhorn tooltips icon-stack-base"></i>
+                    <i title='{gt text="Topic is pinned to top of list."}' class="fa fa-bullhorn fa-stack-2x tooltips"></i>
                     {else}
-                    <i class="icon-comment-alt icon-stack-base"></i>
+                    <i class="fa fa-comment-o fa-stack-2x"></i>
                     {/if}
-                    {if $topic.status eq 1}<i title='{gt text="This topic is locked."}' class="icon-lock icon-black icon-overlay-lower-right tooltips"></i>{/if}
-                    {if $comp}<i class="icon-star icon-overlay-upper-left icon-blue"></i>{/if}
+                    {if $topic.status eq 1}<i title='{gt text="This topic is locked."}' class="fa fa-lock fa-stack-1x fa-black fa-overlay-lower-right tooltips"></i>{/if}
+                    {if $comp}<i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>{/if}
                 </span>
             </td>
             <td class='description'>
                 <h4>
                     {if $topic.solved gt 0}
-                    <i title='{gt text="This topic is solved."}' class="icon-ok icon-green tooltips"></i>
+                    <i title='{gt text="This topic is solved."}' class="fa fa-check fa-green tooltips"></i>
                     {elseif $topic.solved eq -1}
-                    <i title='{gt text="This topic is a support request."}' class="icon-question icon-red tooltips"></i>
+                    <i title='{gt text="This topic is a support request."}' class="fa fa-question fa-red tooltips"></i>
                     {/if}
                     {$topic.topic_id|viewtopiclink:$topic.title}
                 </h4>
@@ -45,7 +45,7 @@
             </td>
             <td class='data'>
                 {if $topic.replyCount >= $modvars.ZikulaDizkusModule.hot_threshold}
-                    <span title='{gt text="Hot topic"}' class='icon-red tooltips'><i class='icon-fire'></i>&nbsp;{$topic.replyCount|safetext}</span>
+                    <span title='{gt text="Hot topic"}' class='fa-red tooltips'><i class='fa fa-fire'></i>&nbsp;{$topic.replyCount|safetext}</span>
                 {else}
                     {$topic.replyCount|safetext}
                 {/if}

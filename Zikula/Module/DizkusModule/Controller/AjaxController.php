@@ -126,7 +126,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // check to see if the post contains spam
         if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-            // @todo not sure this is proper return value in ajax
             LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
             $preview = true;
         }
@@ -172,7 +171,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
         return new AjaxResponse(array(
             'data' => $this->view->fetch('user/post/single.tpl'),
-            'post_id' => $post['post_id']));
+            'post_id' => $post['post_id']), LogUtil::getStatusMessages());
     }
 
     /**
