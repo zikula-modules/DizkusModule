@@ -33,6 +33,20 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * The main administration function.
+     *
+     * @return string HTML output string.
+     * @deprecated
+     */
+    public function mainAction()
+    {
+        $url = ModUtil::url($this->name, 'admin', 'tree');
+        $response = new RedirectResponse(System::normalizeUrl($url));
+        $response->send();
+        exit;
+    }
+
+    /**
      * the main administration function
      *
      */
