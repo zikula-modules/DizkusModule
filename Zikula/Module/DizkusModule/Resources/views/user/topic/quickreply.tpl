@@ -35,7 +35,7 @@
                         {/if}
                         <input id="btnSubmitQuickReply" class="btn btn-success" type="submit" name="submit" value="{gt text="Submit"}" />
                         <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
-                        <button id="btnCancelQuickReply" class="btn btn-danger" style='display:hidden' type="submit" name="cancel">{gt text="Cancel"}</button>
+                        <button id="btnCancelQuickReply" class="btn btn-danger" style='display:none' type="submit" name="cancel">{gt text="Cancel"}</button>
                     </div>
                     <div class='col-md-8'>
                         {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
