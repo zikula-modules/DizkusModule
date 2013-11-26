@@ -15,8 +15,8 @@
         </div>
     </div>
     <div class="panel-body">
-        <div class="dzk_subcols z-clearfix">
-            <div id="posting_{$post.post_id}_userinfo" class="post_author dzk_colpost_left">
+        <div class="row">
+            <div id="posting_{$post.post_id}_userinfo" class="post_author col-md-3">
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
@@ -70,7 +70,7 @@
                 </ul>
             </div>
 
-            <div class="postbody dzk_colpost_right">
+            <div class="postbody col-md-9">
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
                     <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if $topic.solved neq $post.post_id} style="display:none;"{/if}>
@@ -98,7 +98,7 @@
     <div class="panel-footer">
         {if !isset($preview) OR $preview neq true}
         <div class="pull-right">
-            <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions linklist">
+            <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions list-inline">
                 {if isset($permissions.moderate) AND $permissions.moderate eq true}
                     {if ((isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)) AND !$post.isFirstPost}
                         <li><a class="fa fa-arrow-right fa-150x tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}"></a></li>
@@ -107,7 +107,7 @@
                 {/if}
                 {if isset($topic) AND $topic.status neq 1}
                     {if isset($permissions.comment) AND $permissions.comment eq true AND $modvars.ZikulaDizkusModule.ajax}
-                        <li><a class="fa fa-quote-left fa-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"></a></li>
+                        <li><a class="quotepostlink fa fa-quote-left fa-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"></a></li>
                     {/if}
                     {if (isset($permissions.edit) AND $permissions.edit eq 1) OR $post.userAllowedToEdit}
                         <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
@@ -131,7 +131,7 @@
                     {if isset($permissions.comment) AND $permissions.comment eq true}
                         <li><a class="fa fa-bell-o fa-150x tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}"></a></li>
                     {/if}
-                    <li><a class="fa fa-chevron-circle-up fa-150x dzk_notextdecoration tooltips" title="{gt text="Top"}" href="#top">&nbsp;</a></li>
+                    <li><a class="fa fa-chevron-circle-up fa-150x tooltips" title="{gt text="Top"}" href="#top">&nbsp;</a></li>
                 {/if}
             </ul>
         </div>

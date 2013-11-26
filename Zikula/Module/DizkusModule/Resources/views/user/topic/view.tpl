@@ -126,7 +126,7 @@
             <li><a class="fa fa-arrow-right tooltips" title="{gt text="Move or join topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
             <li><a class="fa fa-times tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}"></a></li>
             {/if}
-            <li><a class="dzk_notextdecoration tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class=' fa fa-chevron-circle-down'></i></a></li>
+            <li><a class="tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class='fa fa-chevron-circle-down'></i></a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
 </nav>
