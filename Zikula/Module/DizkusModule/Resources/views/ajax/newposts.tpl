@@ -1,12 +1,12 @@
 {readlastposts params=$params}
 
 {if $lastpostcount > 0}
-    <dl>
-        <dt><strong>{$lastpostcount}&nbsp;{gt text="Recent postings:"}</strong></dt>
+    <ul>
+        <li><strong>{$lastpostcount}&nbsp;{gt text="Recent postings:"}</strong></li>
         {foreach item='lastpost' from=$lastposts}
-            <dd>{$lastpost.posted_time} <a href="{$lastpost.last_post_url_anchor}">{$lastpost.title|truncate:42}</a> ({$lastpost.poster_name})</dd>
+            <li>{$lastpost.posted_time} <a href="{$lastpost.last_post_url_anchor}">{$lastpost.title|truncate:42}</a> ({$lastpost.poster_name})</li>
         {/foreach}
-    </dl>
+    </ul>
 
 {else}
     {gt text="No posts"}
