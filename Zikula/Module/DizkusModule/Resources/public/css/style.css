@@ -2,9 +2,6 @@
 * Dizkus Stylesheet
 /*******************************************************************************/
 
-#dizkus dl,
-#dizkus dt,
-#dizkus dd,
 #dizkus ul,
 #dizkus ul li {
     background:none;
@@ -13,33 +10,24 @@
     padding:0;
     list-style: none;
 }
-
-div#quickreplyoptions ul li,
-div#newtopicoptions ul li,
-div#replyoptions ul li,
-div#editpostoptions ul li {
-    list-style: none;
-}
-
 #dizkus h2 .editabletopicheader {
     display: inline;
     cursor: pointer;
 }
-
-#dizkus ul.list-inline li a { /* bootstrap override */
+#dizkus ul.list-inline li a {
     margin-right: 5px;
 }
-
 #dizkus ul.list-inline a.fa {
     text-decoration: none;
 }
-
 #dizkus .quotepostlink:hover {
     cursor: hand;
     cursor: pointer;
 }
 
-/* Post body styles */
+/***********************
+/* Post body styles
+***********************/
 #dizkus .panel {
     position: relative;
 }
@@ -49,7 +37,6 @@ div#editpostoptions ul li {
 #dizkus .panel .padright {
     padding-right: 4em;
 }
-
 #dizkus .panel .post_author {
     font-size:0.9em;
 }
@@ -64,14 +51,12 @@ div#editpostoptions ul li {
     -webkit-border-bottom-right-radius: 10px;
     border-radius: 5px;
 }
-
 #dizkus .panel .postbody .content ul {
     padding-left:40px;
 }
 #dizkus .panel .postbody .content ul li {
     list-style:square;
 }
-
 #dizkus .panel .postbody .dizkusinformation_post {
     margin: 10px;
 }
@@ -79,7 +64,6 @@ div#editpostoptions ul li {
     font-style: italic;
     padding: 1em 0 0 1em;
 }
-
 #dizkusinformation {
     color: red;
     text-align: center;
@@ -93,7 +77,6 @@ div#editpostoptions ul li {
     font-weight:bold;
     padding:5px 0;
 }
-
 #dizkus form#nohours-form {
     margin-top: 10px;
 }
@@ -232,7 +215,6 @@ div#editpostoptions ul li {
     margin: 0;
 }
 #dizkus .pagination {
-    /* override of theme setting */
     padding: 1em 0;
 }
 
