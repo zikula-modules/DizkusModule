@@ -2,39 +2,6 @@
 * Dizkus Stylesheet
 /*******************************************************************************/
 
-#dizkus .dzk_col_left {
-    width:47%;
-    float:left;
-}
-#dizkus .dzk_col_right {
-    width:53%;
-    float:right;
-    margin-left:-5px;
-}
-#dizkus .dzk_colpost_left {
-    width:25%;
-    float:left;
-}
-#dizkus .dzk_colpost_right {
-    width:75%;
-    float:right;
-    margin-left:-5px;
-}
-#dizkus .hidden,
-#dizkus_admin .hidden {
-    display:none !important;
-}
-#dizkus .visible,
-#dizkus_admin .visible {
-    visibility: visible !important;
-}
-#dizkus .invisible,
-#dizkus_admin .invisible {
-    visibility: hidden !important;
-}
-.dzk_handle {
-    cursor: move;
-}
 #dizkus dl,
 #dizkus dt,
 #dizkus dd,
@@ -46,425 +13,25 @@
     padding:0;
     list-style: none;
 }
-#dizkus table {
-    width: 100%;
-}
+
 div#quickreplyoptions ul li,
 div#newtopicoptions ul li,
 div#replyoptions ul li,
 div#editpostoptions ul li {
     list-style: none;
 }
-#dizkus .dzk_navbar,
-#dizkus .roundedbar,
-#dizkus .forumbg,
-#dizkus .forum_post {
-    color: #444444;
-}
-#dizkus ul.topiclist li {
-    color: #777777;
-}
-#dizkus .forum_post .postbody .postinfo {
-    color: inherit;
-}
-/*#dizkus a.dzk_top {*/
-    /*background-image: url("../images/icon_up.gif");*/
-/*}*/
-#dizkus span.dzk_bottomlink {
-    float: right;
-    position: relative;
-    top: -1.2em;
-    margin-bottom: -1.2em;
-    margin-right: .5em;
-}
 
-/* links */
-
-#dizkus a.dzk_notextdecoration,
-#dizkus .dzk_navbar a,
-#dizkus .roundedbar a,
-#dizkus .forumbg a {
-    text-decoration : none;
-}
-
-#dizkus .dzk_navbar a:hover,
-#dizkus .roundedbar a:hover {
-    /*text-decoration : underline;*/
-}
-#dizkus a.forumtitle {
-    /*font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;*/
-    font-weight: bold;
-    color: #898989;
-    text-decoration: none;
-}
-#dizkus a.topictitle {
-    /*font-family: "Trebuchet MS", Helvetica, Arial, Sans-serif;*/
-    font-weight: bold;
-    color: #898989;
-    text-decoration: none;
-}
-
-/* titles */
-
-#dizkus h2 {
-    text-align: left;
-}
 #dizkus h2 .editabletopicheader {
     display: inline;
     cursor: pointer;
 }
-#dizkus h2 .noneditabletopicheader {
-    display: inline;
-}
-#dizkus h3.footer_title {
-    border:none;
-    border-bottom:1px solid #CCCCCC;
-    /*clear:both;*/
-    color:inherit;
-    font-size:1.05em;
-    font-weight:bold;
-    margin:1em 0 0.5em;
-    padding-top:1em;
-    text-transform:uppercase;
-}
 
-/* elements */
-
-#dizkus hr {
-    border: 0 none #FFFFFF;
-    border-top: 1px solid #CCCCCC;
-    height: 1px;
-    margin: 5px 0;
-    display: block;
-    clear: both;
-}
-
-/* Rounded Corners */
-
-#dizkus .dzk_rounded {
-    border-radius: 6px;
-    -webkit-border-radius: 6px;    /* for Safari */
-    -moz-border-radius: 6px;       /* for Firefox */
-    overflow: hidden;              /* for MSIE8 */
-}
-
-#dizkus .dzk_navbar,
-#dizkus .roundedbar {
-    background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;
-    padding: 5px;
-    margin-bottom: 1.5em;
-}
-#dizkus .roundedbar {
-    margin-bottom: 0.8em;
-}
-#dizkus .forabg,
-#dizkus .forumbg {
-    margin-bottom: 4px;
-    padding: 5px;
-    /*clear: both;*/
-    background: #616161 url('../images/forabg.gif') repeat-x scroll 0 0;
-}
-
-/* Horizontal List */
-
-#dizkus ul.linklist {
-    display: block;
-    margin: 0;
-}
-#dizkus ul.linklist li {
-    display: block;
-    list-style-type: none;
-    float: left;
-    width: auto;
+#dizkus ul.list-inline li a { /* bootstrap override */
     margin-right: 5px;
-    line-height: 2.2em;
 }
-#dizkus ul.linklist li .fa-home {
-    margin-left: 10px;
-}
-#dizkus ul.linklist li a.fa-chevron-sign-right {
-    margin-left: 10px;
+
+#dizkus ul.list-inline a.fa {
     text-decoration: none;
-    font-size: 1em;
-}
-/*#dizkus ul.linklist li .dzk_arrow {*/
-    /*background: url('../images/arrow.png') no-repeat 1px 50%;*/
-    /*margin-left: 10px;*/
-    /*padding-left: 15px;*/
-/*}*/
-/*#dizkus ul.linklist li .homelink{*/
-    /*background: url("../images/icon_home.gif") no-repeat 1px 1px;*/
-    /*padding-left: 20px;*/
-    /*margin-right:0;*/
-/*}*/
-/*#dizkus ul.linklist li .previoustopiclink{*/
-    /*background: url("../images/arrow_left.gif") no-repeat 1px 50%;*/
-    /*padding-left: 10px;*/
-/*}*/
-/*#dizkus ul.linklist li .nexttopiclink{*/
-    /*background: url("../images/arrow_right.gif") no-repeat 1px 50%;*/
-    /*padding-left: 10px;*/
-/*}*/
-#dizkus ul.linklist li.rightside,
-#dizkus p.rightside {
-    float: right;
-    margin-right: 0;
-    margin-left: 5px;
-    text-align: right;
-}
-#dizkus ul.navlinks {
-    padding-bottom: 1px;
-    margin-bottom: 1px;
-    border-bottom: 1px solid #FFFFFF;
-    font-weight: bold;
-    font-family: FontAwesome;
-}
-#dizkus ul.navlinks li {
-    margin-right: 0px;
-}
-#dizkus ul.leftside {
-    float: left;
-    margin-left: 0;
-    margin-right: 5px;
-    text-align: left;
-}
-#dizkus ul.rightside {
-    float: right;
-    margin-left: 5px;
-    margin-right: -5px;
-    text-align: right;
-}
-
-/*#dizkus a.latesttopicimage {*/
-    /*background: url(../images/icon_topic_latest.gif) no-repeat 0 50%;*/
-    /*padding: 2px 0 2px 15px;*/
-/*}*/
-
-/* topics list screen */
-
-#dizkus .dzk_empty,
-#dizkus .dzk_message strong {
-    padding: 0.75em;
-    text-align: center;
-}
-#dizkus .dzk_message strong {
-    color: #fff;
-    display: block;
-}
-
-#dizkus ul.topiclist {
-    display: block;
-    list-style-type: none;
-    margin: 0;
-}
-#dizkus ul.topiclist li {
-    display: block;
-    list-style-type: none;
-    margin: 0;
-}
-#dizkus ul.topiclist dl {
-    position: relative;
-}
-#dizkus ul.topiclist li.row dl {
-    padding: 5px;
-    min-height: 5em;
-}
-#dizkus ul.topiclist dt {
-    display: block;
-    float: left;
-    width: 43.5%;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-#dizkus ul.topiclist dt p {
-    font-weight: normal;
-    margin-left:4.6em;
-}
-#dizkus ul.topiclist dd {
-    display: block;
-    float: left;
-    border-left: 1px solid #FFFFFF;
-    padding: 4px 0;
-}
-#dizkus ul.topiclist li.dzk_header dt {
-    width: 49%;
-}
-#dizkus ul.topiclist li.dzk_header dt.forumlist {
-    width: 40%;
-}
-#dizkus ul.topiclist li dt {
-    width: 43%;
-}
-
-/* Forum list styles */
-
-#dizkus ul.forums {
-    background: #f9f9f9 none repeat-x 0 0;
-}
-#dizkus li.row {
-    border-top: 1px solid #FFFFFF;
-    border-bottom: 1px solid #8f8f8f;
-}
-#dizkus li.row strong {
-    font-weight: normal;
-    color: #000000;
-}
-#dizkus li.row:hover {
-    background-color: #f6f6f6;
-}
-#dizkus li.categorytitle {
-    background: #ddd;
-    padding: 5px;
-    font-weight: bold;
-}
-#dizkus li.dzk_header dt a {
-    font-weight: bold;
-    color: white !important;
-    margin-left: 20px;
-}
-#dizkus li.dzk_header dd {
-    margin-left: 1px;
-}
-#dizkus li.dzk_header dl dt,
-#dizkus li.dzk_header dl dd {
-    border-left-width:0;
-    margin: 0.1em 0;
-    padding: 0.1em 0;
-}
-#dizkus li.dzk_header dl dt span,
-#dizkus li.dzk_header dl dd span {
-    color: #FFFFFF;
-    display: block;
-    line-height: 1em;
-    /*font-family: Arial, Helvetica, sans-serif;*/
-    margin: 2px 0 4px 0;
-    padding: 2px 0;
-    text-transform: uppercase;
-}
-#dizkus li.dzk_header dl.icon {
-    min-height: 0;
-}
-#dizkus li.dzk_header dl.icon dt span {
-    display: block;
-    /* Tweak for headers alignment when folder icon used */
-    padding-left: 0;
-    padding-right: 50px;
-}
-
-/* Forum list column styles */
-
-#dizkus li.nonewtopics {
-    line-height: 35px;
-    text-align: center;
-}
-#dizkus dl.icon {
-    clear: both;
-    min-height: 35px;
-}
-#dizkus dl.dzk_sticky {
-    background:#eee;
-}
-#dizkus dl.icon dt {
-    padding-left: 45px;
-    min-height:26px;
-}
-#dizkus dl.icon dt.ctheme-topic-title {
-    font-weight: normal;
-    padding-left: 10px;
-    /*text-indent: -20px;*/
-    width: 45%;
-}
-#dizkus dl.icon dt.ctheme-topic-title span {
-    display:block;
-    font-size: inherit;
-    margin: 0;
-    padding:0 0 0 2px;
-    text-indent:0;
-}
-/*#dizkus dl.icon dt.new-posts {*/
-    /*background: url('../images/red_folder.gif') no-repeat 5px 50%;*/
-    /*font-weight: normal;*/
-    /*width: 35%;*/
-/*}*/
-/*#dizkus dl.icon dt.no-new-posts {*/
-    /*background:transparent url(../images/folder.gif) no-repeat scroll 5px 50%;*/
-    /*font-weight:normal;*/
-    /*width:35%;*/
-/*}*/
-#dizkus dl.icon dt.ctheme-topic-title a,
-#dizkus dl.icon dt.new-posts a,
-#dizkus dl.icon dt.no-new-posts a {
-    font-weight: bold;
-}
-#dizkus dd.posts,
-#dizkus dd.topics,
-#dizkus dd.subforums,
-#dizkus dd.views {
-    text-align: center;
-    width: 8%;
-}
-#dizkus li.row dd.posts,
-#dizkus li.row dd.topics,
-#dizkus li.row dd.subforums,
-#dizkus li.row dd.views {
-    line-height: 2.2em;
-}
-#dizkus dd.lastpost {
-    /*width: 21%;*/
-}
-#dizkus dd.favorites {
-    width: 23.5%;
-}
-#dizkus dd.redirect {
-    line-height: 2.5em;
-}
-#dizkus dd.moderation {
-}
-#dizkus dd.lastpost span,
-#dizkus ul.topiclist dd.searchby span,
-#dizkus ul.topiclist dd.info span,
-#dizkus ul.topiclist dd.time span,
-#dizkus dd.redirect span,
-#dizkus dd.moderation span {
-    display: block;
-    padding-left: 5px!important;
-}
-#dizkus dd.time {
-    width: auto;
-    line-height: 200%;
-}
-#dizkus dd.extra {
-    width: 12%;
-    line-height: 200%;
-    text-align: center;
-}
-#dizkus dd.mark {
-    float: right !important;
-    width: 9%;
-    text-align: center;
-}
-#dizkus dd.info {
-    width: 30%;
-}
-#dizkus dd.option {
-    width: 15%;
-    line-height: 200%;
-    text-align: center;
-}
-#dizkus dd.searchby {
-    width: 47%;
-    line-height: 1em;
-}
-
-/* Container for post/reply buttons and pagination */
-
-#dizkus .topic-actions {
-    margin-bottom: 3px;
-    height: 28px;
-    min-height: 28px;
-}
-#dizkus div[class].topic-actions {
-    height: auto;
 }
 
 #dizkus .quotepostlink:hover {
@@ -473,11 +40,6 @@ div#editpostoptions ul li {
 }
 
 /* Post body styles */
-/*#dizkus .forum_post {*/
-    /*padding: 5px 10px;*/
-    /*margin: 0 0 15px 0;*/
-    /*position: relative;*/
-/*}*/
 #dizkus .panel {
     position: relative;
 }
@@ -487,14 +49,8 @@ div#editpostoptions ul li {
 #dizkus .panel .padright {
     padding-right: 4em;
 }
-#dizkus .post_bg1 {
-    background-color: #F2F2F2;
-}
-#dizkus .post_bg2 {
-    background-color: #EAEAEA;
-}
+
 #dizkus .panel .post_author {
-    /*border-right: 1px solid white;*/
     font-size:0.9em;
 }
 #dizkus .panel .post_author .dzk_avatar {
@@ -508,38 +64,12 @@ div#editpostoptions ul li {
     -webkit-border-bottom-right-radius: 10px;
     border-radius: 5px;
 }
-#dizkus .panel .post_author ul li {
-    list-style: none;
-}
-#dizkus .panel .postbody {
-    background: inherit;
-    border: none;
-    padding: 0;
-    color: #333333;
-}
-/*#dizkus .panel .postbody .postinfo {*/
-    /*border-bottom: 1px solid white;*/
-    /*height: 20px;*/
-    /*margin-right: 50px;*/
-    /*padding: 2px 0 2px 7px;*/
-    /*text-align: right;*/
-/*}*/
-#dizkus .panel .postbody .content {
-    height: auto !important;
-    /* height: 4em; */
-    min-height: 4em;
-    overflow: hidden;
-    padding: 10px;
-}
+
 #dizkus .panel .postbody .content ul {
     padding-left:40px;
 }
 #dizkus .panel .postbody .content ul li {
     list-style:square;
-}
-#dizkus .panel .postlink {
-    clear: both;
-    line-height: 30px;
 }
 
 #dizkus .panel .postbody .dizkusinformation_post {
@@ -549,105 +79,21 @@ div#editpostoptions ul li {
     font-style: italic;
     padding: 1em 0 0 1em;
 }
-/* Quick preview styles */
-
-/*#quickreplypreview .post_bg1 {*/
-    /*background-color: #e5e5e5;*/
-/*}*/
-
-/* Post/Reply form styles */
 
 #dizkusinformation {
     color: red;
     text-align: center;
     font-weight: bold;
-    margin: 0px 0;
+    margin: 0;
     padding: 2px 0;
 }
-#dizkus #dzk_quickreply,
-#dizkus #dzk_newtopic {
-    margin-top: 1.3em;
-}
-#dizkus #dzk_quickreply,
-#dizkus #dzk_newtopic {
-    /*background: #f2f3f3 url('../images/innerbox_bg.gif') repeat-x scroll 0 0;*/
-}
-#dizkus .dzk_ajaxeditpost {
-    padding: 10px;
-}
-#dizkus #dzk_quickreply .post_header,
-#dizkus #dzk_newtopic .post_header,
 #dizkus .ajaxeditpoststatusbox {
     display:block;
     font-size:110%;
     font-weight:bold;
     padding:5px 0;
 }
-#dizkus #dzk_quickreply .post_text_wrap textarea,
-#dizkus #dzk_newtopic .post_text_wrap textarea,
-#dizkus .dzk_ajaxeditpost textarea {
-    height: 10em;
-    margin-bottom: 7px;
-    width: 98%;
-}
-#dizkus #quickreplybuttons,
-#dizkus #newtopicbuttons,
-#dizkus #nonajaxnewtopicbuttons,
-#dizkus #nonajaxquickreplybuttons {
-    margin: 1em 0;
-}
 
-/*******************************************************************************/
-/* General form styles
-/*******************************************************************************/
-
-#dizkus .dzk_ajaxinicator {
-    display: inline;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-#dizkus .dzk_form fieldset {
-    border-width: 0;
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-}
-#dizkus .dzk_form legend {
-    font-weight: bold;
-    border:none;
-    padding: 0 10px;
-}
-#dizkus .dzk_form select {
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-    font-weight: normal;
-    cursor: pointer;
-    vertical-align: middle;
-    border: 1px solid #666666;
-    padding: 1px;
-    background-color: #FAFAFA;
-}
-#dizkus .dzk_form option {
-    padding-right: 1em;
-}
-#dizkus .dzk_form option.disabled-option {
-    color: graytext;
-}
-#dizkus .dzk_form input#subject,
-#dizkus .dzk_form textarea {
-    display:block;
-    font-family:"Lucida Grande",Verdana,Helvetica,Arial,sans-serif;
-    font-size:1em;
-    line-height:1.4em;
-    max-width:none;
-    padding:3px;
-    position:relative;
-    width:60%;
-}
-/*#dizkus #latestposts button {*/
-    /*font-size:1em;*/
-    /*background: transparent;*/
-    /*border: 1px outset #CCCCCC;*/
-    /*padding: 2px;*/
-    /*line-height: 1em;*/
-/*}*/
 #dizkus form#nohours-form {
     margin-top: 10px;
 }
@@ -655,149 +101,6 @@ div#editpostoptions ul li {
     vertical-align: -20%;
     color:#777;
     font-size: 1.2em;
-}
-#dizkus .dzk_form label {
-    color:#676767;
-    cursor:default;
-    display:inline;
-    padding-right:5px;
-}
-#dizkus .dzk_form label input {
-    vertical-align: middle;
-}
-#dizkus .dzk_form label img {
-    vertical-align: middle;
-}
-
-/*#dizkus #message {*/
-    /*width: 96%;*/
-/*}*/
-
-/*******************************************************************************/
-/* These style definitions are mainly IE specific tweaks required due to its poor CSS support.
-/*******************************************************************************/
-
-* html table,
-* html select,
-* html input { font-size: 100%; }
-
-* html hr { margin: 0; }
-
-* html ul.topiclist li { position: relative; }
-
-* html .forum_postbody h3 img { vertical-align: middle; }
-
-/* Form styles */
-html>body dd label input { vertical-align: text-bottom; }  /* Align checkboxes/radio buttons nicely */
-
-* html input.button1,
-* html input.button2 {
-    padding-bottom: 0;
-    margin-bottom: 1px;
-}
-
-/* Misc layout styles */
-* html .column1,
-* html .column2 { width: 45%; }
-
-#tabs,
-#minitabs,
-fieldset dl,
-ul.topiclist dl,
-dl.polls {
-    height: 1%;
-    overflow: hidden;
-}
-
-/* viewtopic fix */
-* html .forum_post {
-    height: 25%;
-    overflow: hidden;
-}
-
-/* dzk_navbar fix */
-* html .dzk_navbar, ul.linklist {
-    height: 4%;
-    /*overflow: hidden;*/
-}
-
-/* Simple fix so forum and topic lists always have a min-height set, even in IE6
-From http://www.dustindiaz.com/min-height-fast-hack */
-dl.icon {
-    min-height: 35px;
-    /*height: auto !important;*/
-    /*height: 35px;*/
-}
-
-/* Correctly clear floating for details on profile view */
-*:first-child+html dl.details dd {
-    margin-left: 30%;
-    float: none;
-}
-
-* html dl.details dd {
-    margin-left: 30%;
-    float: none;
-}
-
-#dizkus ul#ctheme_onlinelist li {
-    float: left;
-    list-style: none;
-    margin-left: 3px;
-}
-
-#dizkus ul#ctheme-legenda li {
-    list-style: none;
-}
-
-/*******************************************************************************/
-/* Admin Panel
-/*******************************************************************************/
-
-.category {
-    /* */
-}
-
-.forum {
-    /* */
-}
-
-#dizkus_admin .dzk_treeforumlist {
-    /* don't remove this - needed for Ajax! */
-}
-
-#dizkus_admin #category,
-#dizkus_admin #category li {
-    list-style: none;
-}
-
-#dizkus_admin .dzk_newcategory {
-    width: 95%;
-    margin: 0.2em 0 0.2em 2em;
-}
-
-#dizkus_admin ul#category,
-#dizkus_admin .dzk_treeforumlist {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    overflow: hidden;
-}
-#dizkus_admin .catline {
-    border: 1px solid #aaa;
-    margin: 1em 0;
-    padding: 0.5em;
-    overflow: hidden;
-}
-#dizkus_admin .forumline {
-    border: 1px solid #999;
-    margin: 0.5em 0;
-    padding: 0.4em;
-    overflow: hidden;
-}
-
-#dizkus .dzk_marginbottom {
-    margin-bottom: 1em;
 }
 
 /***********************
@@ -842,10 +145,29 @@ dl.icon {
     border-color: #DDD;
     border-style: solid;
 }
-#dizkus .pagination {
-    /* override of theme setting */
-    padding: 1em 0;
+/***********************
+/* FORUM TABLE - modifying bootstrap
+***********************/
+#dizkus table.table  {
+    border-top: 1px solid #999999;
 }
+#dizkus table.table th {
+    color: #999999;
+}
+#dizkus table.table th a {
+    margin-left: .75em;
+}
+#dizkus table.table .data {
+    width: 6em;
+    text-align: center;
+}
+#dizkus table.table .lastpost {
+    width: 30%;
+}
+#dizkus .panel-footer #forum-legend {
+    padding: 1em;
+}
+
 /***********************
 /* CORNER RIBBONS
 /* inspired by http://css-tricks.com/snippets/css/corner-ribbon/
@@ -909,30 +231,10 @@ dl.icon {
     padding: 0;
     margin: 0;
 }
-
-/***********************
-/* FORUM TABLE
-***********************/
-#dizkus table.table  {
-    border-top: 1px solid #999999;
+#dizkus .pagination {
+    /* override of theme setting */
+    padding: 1em 0;
 }
-#dizkus table.table th {
-    color: #999999;
-}
-#dizkus table.table th a {
-    margin-left: .75em;
-}
-#dizkus table.table .data {
-    width: 6em;
-    text-align: center;
-}
-#dizkus table.table .lastpost {
-    width: 30%;
-}
-#dizkus .panel-footer #forum-legend {
-    padding: 1em;
-}
-
 
 /***********************
 /* STYLING FOR QUOTES AND CODE
