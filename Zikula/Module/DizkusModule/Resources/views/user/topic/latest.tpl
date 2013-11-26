@@ -8,7 +8,7 @@
     <nav class="navbar navbar-default" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-latest-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -17,7 +17,7 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <div class="collapse navbar-collapse" id="navbar-latest-collapse">
             <form id="nohours-form" class="navbar-form navbar-right" action="{modurl modname=$module type='user' func='viewlatest'}" method="post">
                 <span>{gt text='Last'}</span>&nbsp;
                 <div class="form-group">
