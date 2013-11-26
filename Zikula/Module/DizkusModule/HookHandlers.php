@@ -283,7 +283,7 @@ class HookHandlers extends AbstractHookListener
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'dizkushookconfig' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
+        if (!($z_event['method'] == 'dizkushookconfig' && (strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController')))) {
             return;
         }
         $moduleName = $subject->getName();
@@ -325,7 +325,7 @@ class HookHandlers extends AbstractHookListener
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
-        if (!($z_event['method'] == 'dizkushookconfigprocess' && strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController'))) {
+        if (!($z_event['method'] == 'dizkushookconfigprocess' && (strrpos(get_class($subject), '_Controller_Admin') || strrpos(get_class($subject), '\\AdminController')))) {
             return;
         }
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
