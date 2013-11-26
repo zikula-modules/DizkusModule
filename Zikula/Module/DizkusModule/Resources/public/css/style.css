@@ -14,11 +14,9 @@
     display: inline;
     cursor: pointer;
 }
-#dizkus ul.list-inline li a {
-    margin-right: 5px;
-}
-#dizkus ul.list-inline a.fa {
+#dizkus .panel-footer a.fa {
     text-decoration: none;
+    margin-right: 5px;
 }
 #dizkus .quotepostlink:hover {
     cursor: hand;
