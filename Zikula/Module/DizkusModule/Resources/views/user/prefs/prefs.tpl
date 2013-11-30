@@ -4,7 +4,7 @@
 
 <div id="dzk_userprefs">
 
-    {modulelinks modname=$module type='prefs'}<br />
+    {modulelinks modname=$module type='prefs'}
 
     <h2>{gt text="Personal Settings"}</h2>
 
