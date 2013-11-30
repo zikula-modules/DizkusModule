@@ -137,11 +137,11 @@
 {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
 
 <div id="dzk_postinglist">
-    <ul>
+    <ul class="post_list">
         {counter start=0 print=false assign='post_counter'}
         {foreach key='num' item='post' from=$posts}
             {counter}
-            <li class="post_{$post.post_id}">
+            <li class="post post_{$post.post_id}">
                 {include file='user/post/single.tpl'}
             </li>
         {/foreach}

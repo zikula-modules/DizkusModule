@@ -2,8 +2,10 @@
 * Dizkus Stylesheet
 /*******************************************************************************/
 
-#dizkus ul,
-#dizkus ul li {
+#dizkus ul.post_list,
+#dizkus .post_author ul,
+#dizkus ul.post_list li.post,
+#dizkus .post_author ul li {
     background:none;
     border:none;
     margin:0;
