@@ -159,7 +159,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             // Do not show edit link
             $permissions = array();
         }
-        $this->view->add_core_data();
         $this->view->setCaching(false);
         $this->view->assign('topic', $managedTopic->get());
         $this->view->assign('post', $post);
@@ -401,7 +400,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if ($this->getVar('forum_enabled') == 'no') {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-        $this->view->add_core_data();
         $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
             $this->view->_get_plugin_filepath('outputfilter', 'shorturls');
@@ -422,7 +420,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         if ($this->getVar('forum_enabled') == 'no') {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-        $this->view->add_core_data();
         $this->view->setCaching(false);
         if (System::getVar('shorturls')) {
             $this->view->_get_plugin_filepath('outputfilter', 'shorturls');

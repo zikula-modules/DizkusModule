@@ -29,7 +29,7 @@ class AdminController extends \Zikula_AbstractController
 
     public function postInitialize()
     {
-        $this->view->setCaching(false)->add_core_data();
+        $this->view->setCaching(false);
     }
 
     /**
