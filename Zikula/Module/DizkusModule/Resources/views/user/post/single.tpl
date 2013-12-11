@@ -20,7 +20,7 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
-                    <div>{useravatar uid=$post.poster.user_id class='gravatar'}</div>
+                    <div>{useravatar uid=$post.poster.user_id class='img-rounded'}</div>
 
                     {if !empty($post.poster.rank.image)}
                         {if $post.poster.rank.rank_link neq ''}

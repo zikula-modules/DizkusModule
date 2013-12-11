@@ -44,13 +44,6 @@
     text-align: center;
     padding: 1em 0 0.5em 0;
 }
-#dizkus .panel .post_author .dzk_avatar .gravatar {
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius-bottomright: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    border-radius: 5px;
-}
 #dizkus .panel .postbody .content ul {
     padding-left:40px;
 }
