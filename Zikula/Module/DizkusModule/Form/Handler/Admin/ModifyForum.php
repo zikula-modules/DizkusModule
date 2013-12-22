@@ -210,7 +210,6 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         // redirect to the admin forum overview
         $response = new RedirectResponse(System::normalizeUrl($url));
         return $response;
-        exit;
     }
 
 }

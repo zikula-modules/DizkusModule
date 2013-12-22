@@ -354,7 +354,6 @@ class HookHandlers extends AbstractHookListener
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
         return $response;
-        exit;
     }
 
     /**

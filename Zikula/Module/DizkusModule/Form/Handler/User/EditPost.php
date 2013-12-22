@@ -139,7 +139,6 @@ class EditPost extends \Zikula_Form_AbstractHandler
         // redirect to the new topic
         $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
         return $response;
-        exit;
     }
 
 }

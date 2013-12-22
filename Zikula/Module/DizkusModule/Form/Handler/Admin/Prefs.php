@@ -107,7 +107,6 @@ class Prefs extends \Zikula_Form_AbstractHandler
         // redirect to compensate for trouble with `databound`
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
         return $response;
-        exit;
     }
 
 }

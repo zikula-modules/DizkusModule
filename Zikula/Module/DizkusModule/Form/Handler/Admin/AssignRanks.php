@@ -109,7 +109,6 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
 
         $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
         return $response;
-        exit;
     }
 
 }

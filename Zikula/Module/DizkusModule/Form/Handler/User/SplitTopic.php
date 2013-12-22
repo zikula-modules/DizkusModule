@@ -85,7 +85,6 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
 
         $response = new RedirectResponse(System::normalizeUrl($url));
         return $response;
-        exit;
     }
 
 }

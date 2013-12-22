@@ -94,7 +94,6 @@ class UserController extends \Zikula_AbstractController
                 $managedForumUser->displayFavoriteForumsOnly(false);
                 $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
                 return $response;
-                exit;
             } else {
                 LogUtil::registerError($this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
             }
@@ -172,7 +171,6 @@ class UserController extends \Zikula_AbstractController
                 // redirect instad of continue, better for SEO
                 $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
                 return $response;
-                exit;
             }
         }
         $managedTopic = new TopicManager($topicId);
@@ -499,7 +497,6 @@ class UserController extends \Zikula_AbstractController
 
         $response = new RedirectResponse(System::normalizeUrl($url));
         return $response;
-        exit;
     }
 
     /**
@@ -514,7 +511,6 @@ class UserController extends \Zikula_AbstractController
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id']))));
         return $response;
-        exit;
     }
 
     /**
@@ -530,7 +526,6 @@ class UserController extends \Zikula_AbstractController
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id']))));
         return $response;
-        exit;
     }
 
     /**
