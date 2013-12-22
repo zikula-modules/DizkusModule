@@ -75,8 +75,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form
@@ -103,8 +102,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         if ($args['commandName'] == 'join') {
@@ -128,8 +126,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         return true;

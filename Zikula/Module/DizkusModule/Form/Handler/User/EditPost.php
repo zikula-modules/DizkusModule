@@ -85,8 +85,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         if ($args['commandName'] == 'cancel') {
             $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form
@@ -114,8 +113,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
             $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($this->_post->getId()));
 
             $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-            $response->send();
-            exit;
+            return $response;
         }
         unset($data['delete']);
 
@@ -140,7 +138,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         // redirect to the new topic
         $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-        $response->send();
+        return $response;
         exit;
     }
 

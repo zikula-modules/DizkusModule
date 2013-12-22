@@ -136,8 +136,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form
@@ -216,7 +215,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

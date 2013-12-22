@@ -42,8 +42,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
-        exit;
+        return $response;
     }
 
     /**
@@ -54,8 +53,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
-        exit;
+        return $response;
     }
 
     /**
@@ -83,8 +81,7 @@ class AdminController extends \Zikula_AbstractController
         $url = ModUtil::url($this->name, 'admin', 'tree');
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
-        exit;
+        return $response;
     }
 
     /**
@@ -130,8 +127,7 @@ class AdminController extends \Zikula_AbstractController
         }
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
-        $response->send();
-        exit;
+        return $response;
     }
 
     /**
@@ -160,8 +156,7 @@ class AdminController extends \Zikula_AbstractController
         }
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype))));
-        $response->send();
-        exit;
+        return $response;
     }
 
     /**

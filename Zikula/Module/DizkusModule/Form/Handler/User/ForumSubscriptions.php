@@ -76,7 +76,7 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'user', 'manageForumSubscriptions');
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

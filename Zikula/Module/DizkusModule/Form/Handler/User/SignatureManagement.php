@@ -80,8 +80,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             // redirect to user preferences page
             $url = ModUtil::url($this->name, 'user', 'prefs');
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         return true;

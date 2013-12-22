@@ -65,8 +65,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         if ($id == 1) {
             LogUtil::registerError($this->__("Editing of root forum is disallowed", 403));
             $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
-            $response->send();
-            exit;
+            return $response;
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -145,8 +144,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form and get data
@@ -211,7 +209,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
         // redirect to the admin forum overview
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

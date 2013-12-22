@@ -99,8 +99,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form and get data
@@ -164,7 +163,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'sync', 'all');
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

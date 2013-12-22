@@ -116,7 +116,7 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
             }
         }
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

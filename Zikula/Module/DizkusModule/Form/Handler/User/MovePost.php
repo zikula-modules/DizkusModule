@@ -68,8 +68,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $managedPost->getTopicId()));
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         return true;
@@ -89,8 +88,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), null, 'pid' . $this->post_id);
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form
@@ -108,7 +106,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), null, 'pid' . $this->post_id);
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

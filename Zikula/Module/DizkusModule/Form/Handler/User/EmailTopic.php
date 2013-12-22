@@ -72,8 +72,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id))));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form and get data
@@ -90,7 +89,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

@@ -4,7 +4,7 @@
         {assign var='anonsessions' value=$modvars.ZConfig.anonymoussessions}
         {assign var='mins' value=$modvars.ZConfig.secinactivemins}
         <h3>{gt text="Users on-line"}</h3>
-        <ul id="ctheme_onlinelist" class="z-clearfix">
+        <ul id="ctheme_onlinelist" class="z-clearfix list-inline">
             {if $online.numusers > 0}
                 {foreach name='onlineusers' item='user' from=$online.unames}
                     <li>{if $user.admin == '1'}{$user.uname|profilelinkbyuname}{else}{$user.uname|profilelinkbyuname}{/if}{if !$smarty.foreach.onlineusers.last}, {/if}</li>

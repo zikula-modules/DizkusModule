@@ -80,8 +80,7 @@ class Report extends \Zikula_Form_AbstractHandler
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
 
             $response = new RedirectResponse(System::normalizeUrl($url));
-            $response->send();
-            exit;
+            return $response;
         }
 
         // check for valid form
@@ -115,7 +114,7 @@ class Report extends \Zikula_Form_AbstractHandler
                     'start' => $start));
 
         $response = new RedirectResponse(System::normalizeUrl($url));
-        $response->send();
+        return $response;
         exit;
     }
 

@@ -108,7 +108,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
 
         $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-        $response->send();
+        return $response;
         exit;
     }
 

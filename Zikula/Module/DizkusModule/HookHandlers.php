@@ -353,7 +353,7 @@ class HookHandlers extends AbstractHookListener
         $z_event->stopPropagation();
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
-        $response->send();
+        return $response;
         exit;
     }
 
