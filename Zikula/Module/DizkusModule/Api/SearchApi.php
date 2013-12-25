@@ -13,7 +13,6 @@ namespace Zikula\Module\DizkusModule\Api;
 
 use ModUtil;
 use SecurityUtil;
-use LogUtil;
 use UserUtil;
 use DataUtil;
 use DBUtil;
@@ -107,7 +106,8 @@ class SearchApi extends \Zikula_AbstractApi
         $minlen = $this->getVar('minsearchlength', 3);
         $maxlen = $this->getVar('maxsearchlength', 30);
         if (strlen($args['q']) < $minlen || strlen($args['q']) > $maxlen) {
-            return LogUtil::registerStatus($this->__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minlen, $maxlen)));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minlen, $maxlen)));
+            return false;
         }
         if (!is_array($args['forums']) || count($args['forums']) == 0) {
             // set default
@@ -206,7 +206,8 @@ class SearchApi extends \Zikula_AbstractApi
                 'extra' => ModUtil::url($this->name, 'user', 'viewtopic', array(
                     'topic' => $topic->getTopic_id())));
             if (!DBUtil::insertObject($record, 'search_result')) {
-                return LogUtil::registerError($this->__('Error! Could not save the search results.'));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Could not save the search results.'));
+                return false;
             }
         }
 

@@ -13,11 +13,10 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use ModUtil;
-use LogUtil;
 use UserUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -40,13 +39,13 @@ class Prefs extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
 
         if (!UserUtil::isLoggedIn()) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         // get the input
@@ -81,8 +80,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'prefs');
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form

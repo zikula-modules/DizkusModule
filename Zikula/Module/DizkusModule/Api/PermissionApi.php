@@ -11,7 +11,6 @@
 
 namespace Zikula\Module\DizkusModule\Api;
 
-use LogUtil;
 use SecurityUtil;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 
@@ -105,6 +104,8 @@ class PermissionApi extends \Zikula_AbstractApi
      * @param int          $level Level.
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
@@ -123,13 +124,14 @@ class PermissionApi extends \Zikula_AbstractApi
                         $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args['forum_id']);
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
                     } else {
-                        return LogUtil::registerArgsError();
+                        throw new \InvalidArgumentException();
                     }
                 }
             }
         }
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerError($this->getVar('forum_disabled_info'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->getVar('forum_disabled_info'));
+            return false;
         }
         if (empty($userId)) {
             $userId = null;

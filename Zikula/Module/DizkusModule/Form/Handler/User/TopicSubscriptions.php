@@ -12,12 +12,11 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use ModUtil;
-use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -33,7 +32,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -42,7 +41,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
         }
 
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         $subscriptions = ModUtil::apiFunc($this->name, 'topic', 'getSubscriptions');
@@ -78,8 +77,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

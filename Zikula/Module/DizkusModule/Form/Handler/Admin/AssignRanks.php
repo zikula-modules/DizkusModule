@@ -12,9 +12,7 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
-use LogUtil;
 use SecurityUtil;
-use DataUtil;
 use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -22,6 +20,7 @@ use Zikula\Core\ModUrl;
 use ZLanguage;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides a handler to Assign ranks
@@ -39,7 +38,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
 
         $letter = $this->request->query->get('letter');
@@ -63,7 +62,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('u, cu')
                 ->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')
-                ->leftJoin('u.user', 'cu')
+                ->leftJoin('Zikula\Module\UsersModule\Entity\UserEntity', 'cu', 'WITH', 'u.user_id = cu.uid')
                 ->orderBy('cu.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
             $qb->andWhere('cu.uname LIKE :letter')
@@ -107,8 +106,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
         $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
 
-        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url->getUrl()));
     }
 
 }

@@ -14,7 +14,6 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
-use LogUtil;
 use ZLanguage;
 use System;
 use Zikula_Form_View;
@@ -22,7 +21,7 @@ use Zikula\Core\ModUrl;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -46,25 +45,27 @@ class NewTopic extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         // get the input
         $this->_forumId = (int) $this->request->query->get('forum');
 
         if (!isset($this->_forumId)) {
-            return LogUtil::registerError($this->__('Error! Missing forum id.'), null, ModUtil::url($this->name, 'user', 'index'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing forum id.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
         }
 
         $managedforum = new ForumManager($this->_forumId);
         if ($managedforum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
-            return LogUtil::registerError($this->__('Error! This forum is locked. New topics cannot be created.'), null, ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId)));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId))));
         }
         $view->assign('forum', $managedforum->get());
         $view->assign('breadcrumbs', $managedforum->getBreadcrumbs(false));
@@ -86,8 +87,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form
@@ -99,7 +99,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $postHookValidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
-//            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+//            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
 //            return false;
         }
         // check hooked modules for validation for TOPIC
@@ -107,7 +107,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $topicHookValidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
             return $view->setErrorMsg($this->__('Error! Hooked content does not validate.'));
-//            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+//            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
 //            return false;
         }
 
@@ -121,7 +121,8 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         // check to see if the post contains spam
         if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
-            return LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            return false;
         }
 
         // show preview
@@ -155,8 +156,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
-        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url->getUrl()));
     }
 
 }

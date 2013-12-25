@@ -12,7 +12,6 @@
 namespace Zikula\Module\DizkusModule\Api;
 
 use UserUtil;
-use LogUtil;
 
 class FavoritesApi extends \Zikula_AbstractApi
 {
@@ -53,11 +52,13 @@ class FavoritesApi extends \Zikula_AbstractApi
      *      'forum' Zikula\Module\DizkusModule\Entity\ForumEntity
      *      'user_id' int the users uid (optional)
      * @return boolean - true if the forum is user favorite or false if not
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function isFavorite($args)
     {
         if (empty($args['forum'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (empty($args['user_id'])) {
             $args['user_id'] = UserUtil::getVar('uid');

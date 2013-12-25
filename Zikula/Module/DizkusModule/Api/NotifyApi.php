@@ -17,7 +17,6 @@ use DateUtil;
 use UserUtil;
 use SecurityUtil;
 use DataUtil;
-use LogUtil;
 use Zikula_View;
 
 class NotifyApi extends \Zikula_AbstractApi
@@ -192,9 +191,9 @@ class NotifyApi extends \Zikula_AbstractApi
                         'X-UserID: ' . $reporting_userid,
                         'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'])));
             }
-            LogUtil::registerStatus($this->__('The moderator has been contacted about this post. Thank you.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('The moderator has been contacted about this post. Thank you.'));
         } else {
-            LogUtil::registerError($this->__('There were no moderators set to be notified. Consider manually contacting the site admin.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('There were no moderators set to be notified. Consider manually contacting the site admin.'));
         }
 
         return;

@@ -19,7 +19,6 @@ use DateTime;
 use DataUtil;
 use DateUtil;
 use UserUtil;
-use LogUtil;
 use ModUtil;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
@@ -164,7 +163,9 @@ class PostApi extends \Zikula_AbstractApi
      * @params $args['old_topic_id']
      * @params $args['to_topic_id']
      *
-     * @returns count of posts in destination topic
+     * @returns int count of posts in destination topic
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function move($args)
     {
@@ -172,7 +173,7 @@ class PostApi extends \Zikula_AbstractApi
         $to_topic_id = isset($args['to_topic_id']) ? $args['to_topic_id'] : null;
         $post_id = isset($args['post_id']) ? $args['post_id'] : null;
         if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $managedOriginTopic = new TopicManager($old_topic_id);
         $managedDestinationTopic = new TopicManager($to_topic_id);
@@ -200,11 +201,13 @@ class PostApi extends \Zikula_AbstractApi
      * @param $args['message'] The message to check.
      *
      * @return bool False if the message is to long, else true.
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function checkMessageLength($args)
     {
         if (!isset($args['message'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (strlen($args['message']) + 8 > 65535) {
             return false;

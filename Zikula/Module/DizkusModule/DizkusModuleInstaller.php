@@ -11,7 +11,6 @@
 
 namespace Zikula\Module\DizkusModule;
 
-use LogUtil;
 use HookUtil;
 use EventUtil;
 use ModUtil;
@@ -58,7 +57,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         try {
             DoctrineHelper::createSchema($this->entityManager, $this->_entities);
         } catch (\Exception $e) {
-            return LogUtil::registerError($e->getMessage());
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            return false;
         }
         // ToDo: create FULLTEXT index
         // set the module vars
@@ -188,7 +188,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         try {
             DoctrineHelper::dropSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
-            return LogUtil::registerError($e->getMessage());
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            return false;
         }
         // remove module vars
         $this->delVars();
@@ -208,7 +209,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             // Inform user about error, and how he can upgrade to $modversion
             $upgradeToVersion = $this->version->getVersion();
 
-            return LogUtil::registerError($this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
+            return false;
         }
         switch ($oldversion) {
             case '3.1':
@@ -276,7 +278,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         try {
             $stmt->execute();
         } catch (Exception $e) {
-            return LogUtil::registerError($e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
+            return false;
         }
         // remove the legacy hooks
         ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem');
@@ -307,7 +310,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         try {
             DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
         } catch (Exception $e) {
-            return LogUtil::registerError($e->getMessage());
+            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            return false;
         }
         // migrate data from old formats
         $this->upgrade_to_4_0_0_migrateCategories();
@@ -336,7 +340,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         EventUtil::registerPersistentModuleHandler($this->name, 'module_dispatch.service_links', array('Zikula\Module\DizkusModule\HookHandlers', 'servicelinks'));
         EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfig'));
         EventUtil::registerPersistentModuleHandler($this->name, 'controller.method_not_found', array('Zikula\Module\DizkusModule\HookHandlers', 'dizkushookconfigprocess'));
-        LogUtil::registerStatus($this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
+        $this->request->getSession()->getFlashBag()->add('status', $this->__('The permission schemas "Dizkus_Centerblock::" and "Dizkus_Statisticsblock" were changed into "Dizkus::Centerblock" and "Dizkus::Statisticsblock". If you were using them please modify your permission table.'));
 
         return true;
     }
@@ -365,7 +369,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             try {
                 $stmt->execute();
             } catch (Exception $e) {
-                LogUtil::registerError($e);
+                $this->request->getSession()->getFlashBag()->add('error', $e);
             }
         }
     }
@@ -409,7 +413,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             try {
                 $stmt->execute();
             } catch (Exception $e) {
-                LogUtil::registerError($e);
+                $this->request->getSession()->getFlashBag()->add('error', $e);
             }
         }
     }

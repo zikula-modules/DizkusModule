@@ -23,11 +23,10 @@ use SecurityUtil;
 use ModUtil;
 use PageUtil;
 use HookUtil;
-use LogUtil;
 use System;
 use ZLanguage;
 use Zikula_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula_Event;
 use Zikula\Core\Hook\AbstractHookListener;
 use Zikula\Core\Hook\DisplayHook;
@@ -35,13 +34,11 @@ use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\DisplayHookResponse;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Event\GenericEvent;
-use Zikula\Module\DizkusModule\DizkusModuleVersion;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
 use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -239,7 +236,7 @@ class HookHandlers extends AbstractHookListener
         // notify topic & forum subscribers
         ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
             'post' => $newManagedTopic->getFirstPost()));
-        LogUtil::registerStatus($this->__('Dizkus: Hooked discussion topic created.', $this->domain));
+        $this->request->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 
         return true;
     }
@@ -269,7 +266,7 @@ class HookHandlers extends AbstractHookListener
             }
         }
         $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
-        LogUtil::registerStatus($this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
+        $this->request->getSession()->getFlashBag()->add('status', $this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
 
         return true;
     }
@@ -288,7 +285,7 @@ class HookHandlers extends AbstractHookListener
         }
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
         $view = Zikula_View::getInstance(self::MODULENAME, false);
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
@@ -333,27 +330,27 @@ class HookHandlers extends AbstractHookListener
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
-            throw new AccessDeniedHttpException(__('Security token validation failed', $dom));
+            throw new AccessDeniedException();
         }
         unset($hookdata['dizkus_csrftoken']);
         $moduleName = $subject->getName();
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
+        $request = ServiceUtil::get('request');
         foreach ($hookdata as $area => $data) {
             if (!isset($data['forum']) || empty($data['forum'])) {
-                LogUtil::registerError(__f('Error: No forum selected for area \'%s\'', $area, $dom));
+                $request->getSession()->getFlashBag()->add('error', __f('Error: No forum selected for area \'%s\'', $area, $dom));
                 $hookdata[$area]['forum'] = null;
             }
         }
         ModUtil::setVar($moduleName, 'dizkushookconfig', $hookdata);
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
-        LogUtil::registerStatus(__('Dizkus: Hook option settings updated.', $dom));
+        $request->getSession()->getFlashBag()->add('status', __('Dizkus: Hook option settings updated.', $dom));
         $z_event->setData(true);
         $z_event->stopPropagation();
 
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
     }
 
     /**
@@ -395,7 +392,8 @@ class HookHandlers extends AbstractHookListener
         $_em->flush();
         $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
         if ($total > 0) {
-            LogUtil::registerStatus(__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
+            $request = ServiceUtil::get('request');
+            $request->getSession()->getFlashBag()->add('status', __f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
         }
     }
 
@@ -419,10 +417,10 @@ class HookHandlers extends AbstractHookListener
     }
 
     /**
-     * Find Meta Class and instantiate
+     * Factory class to find Meta Class and instantiate
      *
      * @param  ProcessHook $hook
-     * @return instantiated       object of found class
+     * @return object of found class
      */
     private function getClassInstance(ProcessHook $hook)
     {

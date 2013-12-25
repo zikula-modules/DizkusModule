@@ -12,12 +12,12 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
-use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides a handler to manage subscriptions.
@@ -49,7 +49,7 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
 
         $topicsubscriptions = array();
@@ -111,12 +111,11 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
             if ($this->_uid) {
                 $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
             } else {
-                LogUtil::registerError($this->__f('Could not find username "%s". Please try again.', $this->_username));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__f('Could not find username "%s". Please try again.', $this->_username));
                 $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
             }
         }
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

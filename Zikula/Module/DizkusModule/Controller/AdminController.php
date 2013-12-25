@@ -13,7 +13,6 @@ namespace Zikula\Module\DizkusModule\Controller;
 
 use ModUtil;
 use System;
-use LogUtil;
 use SecurityUtil;
 use FormUtil;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
@@ -23,6 +22,7 @@ use Zikula\Module\DizkusModule\Form\Handler\Admin\ModifyForum;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminController extends \Zikula_AbstractController
 {
@@ -41,8 +41,7 @@ class AdminController extends \Zikula_AbstractController
     public function mainAction()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
     /**
@@ -52,8 +51,7 @@ class AdminController extends \Zikula_AbstractController
     public function indexAction()
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
     /**
@@ -62,13 +60,15 @@ class AdminController extends \Zikula_AbstractController
      * Move up or down a forum in the tree
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function changeForumOrderAction()
     {
         $action = $this->request->query->get('action', 'moveUp');
         $forumId = $this->request->query->get('forum', null);
         if (empty($forumId)) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $repo = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity');
         $forum = $repo->find($forumId);
@@ -80,8 +80,7 @@ class AdminController extends \Zikula_AbstractController
         $this->entityManager->flush();
         $url = ModUtil::url($this->name, 'admin', 'tree');
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
     /**
@@ -91,7 +90,7 @@ class AdminController extends \Zikula_AbstractController
     public function preferencesAction()
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         // Create output object
         $form = FormUtil::newForm($this->name, $this);
@@ -105,29 +104,28 @@ class AdminController extends \Zikula_AbstractController
     {
         $showstatus = !$this->request->request->get('silent', 0);
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'forums');
         if ($showstatus && $succesful) {
-            LogUtil::registerStatus($this->__('Done! Synchronized forum index.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forum index.'));
         } else {
-            return LogUtil::registerError($this->__('Error synchronizing forum index'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forum index'));
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'topics');
         if ($showstatus && $succesful) {
-            LogUtil::registerStatus($this->__('Done! Synchronized topics.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized topics.'));
         } else {
-            return LogUtil::registerError($this->__('Error synchronizing topics.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing topics.'));
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'posters');
         if ($showstatus && $succesful) {
-            LogUtil::registerStatus($this->__('Done! Synchronized posts counter.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized posts counter.'));
         } else {
-            return LogUtil::registerError($this->__('Error synchronizing posts counter.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
         }
 
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
     }
 
     /**
@@ -136,7 +134,7 @@ class AdminController extends \Zikula_AbstractController
     public function ranksAction()
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $submit = $this->request->request->get('submit', 2);
         $ranktype = (int) $this->request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
@@ -155,8 +153,7 @@ class AdminController extends \Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype))));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype))));
     }
 
     /**
@@ -165,7 +162,7 @@ class AdminController extends \Zikula_AbstractController
     public function assignranksAction()
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $form = FormUtil::newForm($this->name, $this);
 
@@ -182,7 +179,7 @@ class AdminController extends \Zikula_AbstractController
     public function treeAction()
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $tree = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
 

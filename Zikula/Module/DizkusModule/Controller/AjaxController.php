@@ -13,9 +13,7 @@ namespace Zikula\Module\DizkusModule\Controller;
 
 use ModUtil;
 use UserUtil;
-use LogUtil;
 use DataUtil;
-use FormUtil;
 use SessionUtil;
 use SecurityUtil;
 use System;
@@ -35,6 +33,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Ajax controller functions.
@@ -45,13 +44,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     /**
      * Checks if the forum is disabled.
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws AccessDeniedException
      * @return void
      */
     private function errorIfForumDisabled()
     {
         if ($this->getVar('forum_enabled') == 'no') {
-            throw $this->createAccessDeniedHttpException(strip_tags($this->getVar('forum_disabled_info')));
+            throw new AccessDeniedException(strip_tags($this->getVar('forum_disabled_info')));
         }
     }
 
@@ -121,12 +120,12 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
             $preview = true;
         }
         // check to see if the post contains spam
         if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-            LogUtil::registerError($this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
             $preview = true;
         }
         if ($preview == false) {
@@ -170,7 +169,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
         return new AjaxResponse(array(
             'data' => $this->view->fetch('user/post/single.tpl'),
-            'post_id' => $post['post_id']), LogUtil::getStatusMessages());
+            'post_id' => $post['post_id']), $this->request->getSession()->getFlashBag()->all());
     }
 
     /**
@@ -181,7 +180,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * RETURN: The edit post form.
      *
      * @throws FatalErrorException
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws AccessDeniedException
      *
      * @return AjaxResponse
      */
@@ -204,8 +203,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
                 return new AjaxResponse($this->view->fetch('ajax/editpost.tpl'));
             } else {
-                LogUtil::registerPermissionError(null, true);
-                throw $this->createAccessDeniedHttpException();
+                throw new AccessDeniedException();
             }
         }
         throw new FatalErrorException($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
@@ -225,7 +223,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      *
      * @throws FatalErrorException
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException If the user tries to delete the only post of a topic.
+     * @throws AccessDeniedException If the user tries to delete the only post of a topic.
      *
      * @return AjaxResponse
      */
@@ -244,7 +242,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $managedOriginalPost = new PostManager($post_id);
             if ($delete) {
                 if ($managedOriginalPost->get()->isFirst()) {
-                    throw $this->createAccessDeniedHttpException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
+                    throw new AccessDeniedException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
                 } else {
                     $response = array('action' => 'deleted');
                 }
@@ -283,7 +281,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     /**
      * changeTopicStatus
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      *
      * @return string
      */
@@ -319,8 +317,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate') && !($userAllowedToEdit == 1)) {
-            LogUtil::registerPermissionError(null, true);
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
@@ -334,15 +331,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *  string $fragment A partial user name entered by the user.
      *
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws AccessDeniedException
      * @return string PlainResponse with json_encoded object of users matching the criteria.
      */
     public function getUsersAction()
     {
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            LogUtil::registerPermissionError();
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         $fragment = $this->request->query->get('fragment', null);
         $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
@@ -380,8 +376,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             // only need read perms to make a favorite
-            LogUtil::registerPermissionError();
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         SessionUtil::setVar('zk_ajax_call', 'ajax');
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);

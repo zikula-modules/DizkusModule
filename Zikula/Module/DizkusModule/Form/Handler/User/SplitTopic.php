@@ -13,10 +13,9 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
-use LogUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -39,12 +38,12 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         $postId = (int) $this->request->query->get('post');
@@ -69,8 +68,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->post->getTopicId()));
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form and get data
@@ -83,8 +81,7 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $newtopic_id));
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

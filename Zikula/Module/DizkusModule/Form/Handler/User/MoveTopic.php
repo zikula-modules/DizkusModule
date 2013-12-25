@@ -13,10 +13,9 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
-use LogUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -46,12 +45,12 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         $this->topic_id = (int) $this->request->query->get('topic', null);
@@ -74,8 +73,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form
@@ -89,11 +87,12 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             // require perms for both subject topic and destination forum
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
                     || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('forum_id' => $data['forum_id']))) {
-                return LogUtil::registerPermissionError();
+                throw new AccessDeniedException();
             }
 
             if ($data['forum_id'] == $this->topic->getForum()->getForum_id()) {
-                return LogUtil::registerError($this->__('Error! The original forum cannot be the same as the target forum.'));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The original forum cannot be the same as the target forum.'));
+                return false;
             }
             $data['topicObj'] = $this->topic;
 
@@ -101,8 +100,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         if ($args['commandName'] == 'join') {
@@ -110,12 +108,13 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             // require perms for both subject topic and destination topic
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
                     || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedDestinationTopic->get()->getForum())) {
-                return LogUtil::registerPermissionError();
+                throw new AccessDeniedException();
             }
 
             if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
                 // user wants to copy topic to itself
-                return LogUtil::registerError($this->__('Error! The original topic cannot be set as the target topic.'), null, ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id())));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The original topic cannot be set as the target topic.'));
+                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id()))));
             }
 
             $data['from_topic_id'] = $this->topic_id;
@@ -125,8 +124,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         return true;

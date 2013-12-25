@@ -13,13 +13,11 @@ namespace Zikula\Module\DizkusModule\Api;
 
 use UserUtil;
 use ModUtil;
-use LogUtil;
 use ServiceUtil;
 use System;
 use CookieUtil;
 use DateTime;
 use DataUtil;
-use Zikula_View;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Entity\PostEntity;
@@ -27,7 +25,7 @@ use Zikula\Module\DizkusModule\Entity\PostEntity;
 class UserApi extends \Zikula_AbstractApi
 {
 
-     /**
+    /**
      * Counts posts in forums, topics
      * or counts forum users
      *
@@ -35,6 +33,8 @@ class UserApi extends \Zikula_AbstractApi
      * @params $args['type'] string, defines the id parameter
      * @params $args['force'] boolean, default false, if true, do not use cached
      * @returns int (depending on type and id)
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function countstats($args)
     {
@@ -113,7 +113,7 @@ class UserApi extends \Zikula_AbstractApi
                 return $cache[$type];
                 break;
             default:
-                return LogUtil::registerError($this->__('Error! Wrong parameters in countstats().'), null, ModUtil::url($this->name, 'user', 'index'));
+                throw new \InvalidArgumentException($this->__('Error! Wrong parameters in countstats().'));
         }
     }
 
@@ -208,11 +208,13 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @params $args['replyCount'] int number of topic replies
      * @return int page number of last posting in the thread
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function getTopicPage($args)
     {
         if (!isset($args['replyCount']) || !is_numeric($args['replyCount']) || $args['replyCount'] < 0) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // get some enviroment
         $posts_per_page = ModUtil::getVar($this->name, 'posts_per_page');

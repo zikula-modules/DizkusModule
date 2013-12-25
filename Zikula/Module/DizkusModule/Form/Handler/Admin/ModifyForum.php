@@ -14,7 +14,6 @@ namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Connection\Pop3Connection;
 use ModUtil;
-use LogUtil;
 use SecurityUtil;
 use UserUtil;
 use Zikula_Form_View;
@@ -26,6 +25,7 @@ use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides a handler to edit forums.
@@ -57,15 +57,14 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
 
         $id = $this->request->query->get('id', null);
         // disallow editing of root forum
         if ($id == 1) {
-            LogUtil::registerError($this->__("Editing of root forum is disallowed", 403));
-            $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
-            return $response;
+            $this->request->getSession()->getFlashBag()->add('error', $this->__("Editing of root forum is disallowed", 403));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -80,7 +79,8 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if (!$this->_forum->exists()) {
-            return LogUtil::registerError($this->__f('Item with id %s not found', $id), null, $url);
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Item with id %s not found', $id), null, $url);
+            return false;
         }
 
         $t = $this->_forum->toArray();
@@ -143,8 +143,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form and get data
@@ -165,7 +164,8 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
         if ($data['extsource'] == 'mail2forum') {
             if ($data['passwordconfirm'] != $data['password']) {
-                return LogUtil::registerError('Pop3 passwords are not matching!');
+                $this->request->getSession()->getFlashBag()->add('error', 'Pop3 passwords are not matching!');
+                return false;
             } else {
                 //create connection object
                 $connectionData = array(
@@ -182,7 +182,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
                 if ($data['pop3_test']) {
                     // @todo perform test
-                    LogUtil::registerStatus($this->__("Pop3 test successful."));
+                    $this->request->getSession()->getFlashBag()->add('status', $this->__("Pop3 test successful."));
                 }
             }
         } elseif ($data['extsource'] == 'rss2forum') {
@@ -202,14 +202,13 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         $this->dispatchHooks('dizkus.ui_hooks.forum.process_edit', new ProcessHook($this->_forum->getId(), $hookUrl));
 
         if ($this->_action == 'e') {
-            LogUtil::registerStatus($this->__('Forum successfully updated.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Forum successfully updated.'));
         } else {
-            LogUtil::registerStatus($this->__('Forum successfully created.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Forum successfully created.'));
         }
 
         // redirect to the admin forum overview
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

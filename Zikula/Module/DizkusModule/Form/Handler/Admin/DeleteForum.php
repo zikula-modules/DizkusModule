@@ -13,7 +13,6 @@ namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
-use LogUtil;
 use System;
 use SecurityUtil;
 use Zikula_Form_View;
@@ -22,6 +21,7 @@ use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides a handler to edit forums.
@@ -45,11 +45,13 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      * @param Zikula_Form_View $view Current Zikula_Form_View instance.
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
 
         $id = $this->request->query->get('id', null);
@@ -59,10 +61,10 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
             if ($forum) {
                 $this->view->assign($forum->toArray());
             } else {
-                return LogUtil::registerArgsError($this->__f('Forum with id %s not found', $id));
+                throw new \InvalidArgumentException($this->__f('Forum with id %s not found', $id));
             }
         } else {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
 
         $actions = array(
@@ -97,9 +99,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
     {
         $url = ModUtil::url($this->name, 'admin', 'tree');
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect($url);
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form and get data
@@ -110,7 +110,8 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.forum.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            return LogUtil::registerError($this->__('Error! Hooked content does not validate.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+            return false;
         }
 
         $data = $view->getValues();
@@ -119,14 +120,17 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
             $managedDestinationForum = new ForumManager($data['destination']);
 
             if (($managedDestinationForum->get()->getLvl() < 2) && (count($this->forum->getTopics()) > 0)) {
-                return LogUtil::registerError($this->__('You cannot move topics into this location, only forums. Delete the topics or choose a different destination.'));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('You cannot move topics into this location, only forums. Delete the topics or choose a different destination.'));
+                return false;
             }
 
             if ($managedDestinationForum->isChildOf($this->forum)) {
-                return LogUtil::registerError($this->__('You cannot select a descendant forum as a destination.'));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('You cannot select a descendant forum as a destination.'));
+                return false;
             }
             if ($managedDestinationForum->getId() == $this->forum->getForum_id()) {
-                return LogUtil::registerError($this->__('You cannot select the same forum as a destination.'));
+                $this->request->getSession()->getFlashBag()->add('error', $this->__('You cannot select the same forum as a destination.'));
+                return false;
             }
 
             // get the child forums and move them
@@ -162,8 +166,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         // resync all forums, topics & posters
         ModUtil::apiFunc($this->name, 'sync', 'all');
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

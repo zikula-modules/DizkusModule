@@ -11,12 +11,14 @@
 
 /**
  * {getRankByPostCount posts=$post.poster.postCount ranks=$ranks assign='posterRank'}
+ *
+ * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
  */
 function smarty_function_getRankByPostCount($params, Zikula_View $view)
 {
     $posts = !empty($params['posts']) ? $params['posts'] : 0;
     if (!isset($params['ranks'])) {
-        return LogUtil::registerArgsError();
+        throw new \InvalidArgumentException();
     }
 
     $posterRank = null;

@@ -14,6 +14,7 @@ namespace Zikula\Module\DizkusModule\Block;
 use SecurityUtil;
 use ModUtil;
 use BlockUtil;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides the center block.
@@ -62,7 +63,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         }
         // check for Permission
         if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
@@ -107,7 +108,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     public function update($blockinfo)
     {
         if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         $cb_template = $this->request->request->get('cb_template', 'centerblock/display.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
@@ -126,7 +127,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     public function modify($blockinfo)
     {
         if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);

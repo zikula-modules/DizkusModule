@@ -13,10 +13,9 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
-use LogUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\ModUrl;
 use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
@@ -44,21 +43,20 @@ class EditPost extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         // get the input
         $id = (int)$this->request->query->get('post');
 
         if (!isset($id)) {
-            return LogUtil::registerError(
-                            $this->__('Error! Missing post id.'), null, ModUtil::url($this->name, 'user', 'index')
-            );
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
+            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
         }
 
         $this->_post = new PostManager($id);
@@ -84,8 +82,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
 
         if ($args['commandName'] == 'cancel') {
-            $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url->getUrl()));
         }
 
         // check for valid form
@@ -112,8 +109,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
             $this->_post->delete();
             $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($this->_post->getId()));
 
-            $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url->getUrl()));
         }
         unset($data['delete']);
 
@@ -137,8 +133,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $url));
 
         // redirect to the new topic
-        $response = new RedirectResponse(System::normalizeUrl($url->getUrl()));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url->getUrl()));
     }
 
 }

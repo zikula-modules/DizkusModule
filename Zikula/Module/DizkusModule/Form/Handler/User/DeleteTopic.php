@@ -12,10 +12,9 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use ModUtil;
-use LogUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
@@ -51,12 +50,13 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function initialize(Zikula_Form_View $view)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
 
         $this->topic_id = (int)$this->request->query->get('topic');
@@ -64,7 +64,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         if (empty($this->topic_id)) {
             $post_id = (int)$this->request->query->get('post');
             if (empty($post_id)) {
-                return LogUtil::registerArgsError();
+                throw new \InvalidArgumentException();
             }
             $managedPost = new PostManager($post_id);
             $this->topic_id = $managedPost->getTopicId();
@@ -76,7 +76,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         $topicPerms = $managedTopic->getPermissions();
 
         if ($topicPerms['moderate'] <> true) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
 
         $view->assign($managedTopic->toArray());
@@ -98,8 +98,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form and get data
@@ -126,14 +125,13 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
                 'body' => $data['reason'],
                 'html' => true)
             );
-            LogUtil::registerStatus($this->__('Email sent!'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Email sent!'));
         }
 
         // redirect to the forum of the deleted topic
         $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id));
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

@@ -12,7 +12,7 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
-use LogUtil;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use SecurityUtil;
 use UserUtil;
 use System;
@@ -77,7 +77,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
     {
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError('index.php');
+            throw new AccessDeniedException();
         }
 
         if ($args['commandName'] == 'submit') {
@@ -98,15 +98,14 @@ class Prefs extends \Zikula_Form_AbstractHandler
             $this->setVar('extendedsearch', 'no'); // disable until technology catches up with InnoDB
             // set the rest from the array
             $this->setVars($data);
-            LogUtil::registerStatus($this->__('Done! Updated configuration.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Updated configuration.'));
         } elseif ($args['commandName'] == 'restore') {
             $this->setVars(DizkusModuleInstaller::getDefaultVars());
-            LogUtil::registerStatus($this->__('Done! Reset configuration to default values.'));
+            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Reset configuration to default values.'));
         }
 
         // redirect to compensate for trouble with `databound`
-        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
     }
 
 }

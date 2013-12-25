@@ -14,6 +14,7 @@ namespace Zikula\Module\DizkusModule\Block;
 use SecurityUtil;
 use ModUtil;
 use BlockUtil;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides the statistics block.
@@ -62,7 +63,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         }
         //check for Permission
         if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
@@ -103,7 +104,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     public function update($blockinfo)
     {
         if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         $sb_template = $this->request->request->get('sb_template', 'statisticsblock/display.tpl');
         $sb_parameters = $this->request->request->get('sb_parameters', 'maxposts=5');
@@ -122,7 +123,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     public function modify($blockinfo)
     {
         if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw $this->createAccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);

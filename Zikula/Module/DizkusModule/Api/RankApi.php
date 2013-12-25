@@ -11,10 +11,10 @@
 
 namespace Zikula\Module\DizkusModule\Api;
 
-use LogUtil;
 use SecurityUtil;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides the rank api functions
@@ -65,7 +65,7 @@ class RankApi extends \Zikula_AbstractApi
     public function save($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         //title, description, minimumCount, maximumCount, type, image
         foreach ($args['ranks'] as $rankid => $rank) {
@@ -96,7 +96,7 @@ class RankApi extends \Zikula_AbstractApi
     public function assign($args)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         if (is_array($args['setrank'])) {
             foreach ($args['setrank'] as $userId => $rankId) {

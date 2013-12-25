@@ -11,7 +11,6 @@
 
 namespace Zikula\Module\DizkusModule\Api;
 
-use LogUtil;
 use ModUtil;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
@@ -60,11 +59,13 @@ class SyncApi extends \Zikula_AbstractApi
      * @param Boolean             $args['flush']
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function forum($args)
     {
         if (!isset($args['forum'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if ($args['forum'] instanceof ForumEntity) {
             $id = $args['forum']->getForum_id();
@@ -139,11 +140,13 @@ class SyncApi extends \Zikula_AbstractApi
      * @param Boolean             $args['flush']
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function topic($args)
     {
         if (!isset($args['topic'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if ($args['topic'] instanceof TopicEntity) {
             $id = $args['topic']->getTopic_id();
@@ -201,11 +204,13 @@ class SyncApi extends \Zikula_AbstractApi
      * @param Boolean             $args['flush'] default: true
      *
      * @return boolean|void
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function forumLastPost($args)
     {
         if (!isset($args['forum']) || !$args['forum'] instanceof ForumEntity) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // get the most recent post in the forum
@@ -237,11 +242,13 @@ class SyncApi extends \Zikula_AbstractApi
      * @param Boolean             $args['flush']
      *
      * @return boolean|void
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function topicLastPost($args)
     {
         if (!isset($args['topic']) || !$args['topic'] instanceof TopicEntity) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $flush = isset($args['flush']) ? $args['flush'] : true;
         // get the most recent post in the topic

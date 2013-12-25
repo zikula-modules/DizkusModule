@@ -11,10 +11,9 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
-use LogUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -39,20 +38,21 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
      *
      * @return boolean
      *
-     * @throws AccessDeniedHttpException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function initialize(Zikula_Form_View $view)
     {
         $forum_id = (int)$this->request->query->get('forum', null);
         if (!isset($forum_id)) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // Get the Forum and Permission-Check
         $this->_managedForum = new ForumManager($forum_id);
 
         if (!$this->_managedForum->isModerator()) {
             // both zikula perms and Dizkus perms denied
-            throw new AccessDeniedHttpException($this->__('You do not have permission to moderate this forum.'));
+            throw new AccessDeniedException();
         }
 
 
@@ -135,8 +135,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         if ($args['commandName'] == 'cancel') {
             $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
 
-            $response = new RedirectResponse(System::normalizeUrl($url));
-            return $response;
+            return new RedirectResponse(System::normalizeUrl($url));
         }
 
         // check for valid form
@@ -165,7 +164,8 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
                 case 'move':
                     if (empty($moveto)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target forum for the move.'), null, ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
+                        $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
+                        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()))));
                     }
                     foreach ($topic_ids as $topic_id) {
                         ModUtil::apiFunc($this->name, 'topic', 'move', array('topic_id' => $topic_id,
@@ -189,7 +189,8 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
-                        return LogUtil::registerError($this->__('Error! You did not select a target topic to join.'), null, ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId())));
+                        $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target topic to join.'));
+                        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()))));
                     }
                     // text input overrides select box
                     if (empty($jointo) && !empty($jointo_select)) {
@@ -214,8 +215,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
         $url = ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
 
-        $response = new RedirectResponse(System::normalizeUrl($url));
-        return $response;
+        return new RedirectResponse(System::normalizeUrl($url));
     }
 
 }

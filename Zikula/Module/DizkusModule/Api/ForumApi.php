@@ -13,12 +13,11 @@ namespace Zikula\Module\DizkusModule\Api;
 
 use SecurityUtil;
 use UserUtil;
-use LogUtil;
 use ModUtil;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ForumApi extends \Zikula_AbstractApi
 {
@@ -158,13 +157,13 @@ class ForumApi extends \Zikula_AbstractApi
     public function subscribe($args)
     {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum'])) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
         $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
@@ -189,20 +188,22 @@ class ForumApi extends \Zikula_AbstractApi
      *        int $args['user_id'] The user id (optional: needs ACCESS_ADMIN).
      *
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function unsubscribe($args)
     {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
         if (empty($args['forum'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['forum'])) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['forum'])) {
@@ -238,11 +239,13 @@ class ForumApi extends \Zikula_AbstractApi
      *
      * @param  integer $args['forum_id']
      * @return boolean
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function modify($args)
     {
         if (empty($args['forum_id'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $managedForumUser = new ForumUserManager(UserUtil::getVar('uid'));
         $managedForum = new ForumManager($args['forum_id']);

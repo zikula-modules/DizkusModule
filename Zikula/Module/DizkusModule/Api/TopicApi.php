@@ -11,7 +11,6 @@
 
 namespace Zikula\Module\DizkusModule\Api;
 
-use LogUtil;
 use UserUtil;
 use SecurityUtil;
 use ModUtil;
@@ -19,7 +18,7 @@ use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\PostManager;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * This class provides the topic api functions
@@ -75,7 +74,7 @@ class TopicApi extends \Zikula_AbstractApi
     public function subscribe($args)
     {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
@@ -84,7 +83,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum())) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
         $managedForumUser = new ForumUserManager($args['user_id']);
         $searchParams = array(
@@ -109,7 +108,7 @@ class TopicApi extends \Zikula_AbstractApi
     public function unsubscribe($args)
     {
         if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
         }
@@ -118,7 +117,7 @@ class TopicApi extends \Zikula_AbstractApi
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $args['topic']->getForum())) {
-            throw new AccessDeniedHttpException(LogUtil::getErrorMsgPermission());
+            throw new AccessDeniedException();
         }
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['topic'])) {
@@ -158,11 +157,13 @@ class TopicApi extends \Zikula_AbstractApi
      * @param string $reference The reference.
      *
      * @return array Topic data as array
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function getIdByReference($reference)
     {
         if (empty($reference)) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
 
         return $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findOneBy(array('reference' => $reference))->toArray();
@@ -207,6 +208,8 @@ class TopicApi extends \Zikula_AbstractApi
      * @param $args[topic] The topic's id or object
      *
      * @return int the forum's id for redirecting
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function delete($args)
     {
@@ -215,11 +218,11 @@ class TopicApi extends \Zikula_AbstractApi
         } elseif ($args['topic'] instanceof TopicEntity) {
             $topic = $args['topic'];
         } else {
-            LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $params = array('forum_id' => $topic->getForum()->getForum_id());
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $params)) {
-            return LogUtil::registerPermissionError();
+            throw new AccessDeniedException();
         }
         $posts = $topic->getPosts();
         foreach ($posts as $post) {
@@ -254,12 +257,14 @@ class TopicApi extends \Zikula_AbstractApi
      * @params $args['topicObj'] TopicEntity
      *
      * @returns void
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function move($args)
     {
         if (!isset($args['topicObj']) || !$args['topicObj'] instanceof TopicEntity) {
             if (!isset($args['topic_id'])) {
-                return LogUtil::registerArgsError();
+                throw new \InvalidArgumentException();
             }
             $args['topicObj'] = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\TopicEntity', $args['topic_id']);
         }
@@ -311,11 +316,13 @@ class TopicApi extends \Zikula_AbstractApi
      * @params Array $args['data']
      *
      * @return Integer id of the new topic
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function split($args)
     {
         if (!isset($args['post']) || !$args['post'] instanceof PostManager || !isset($args['data']['newsubject'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         $managedTopic = new TopicManager(null, $args['post']->get()->getTopic());
         // create new topic
@@ -366,16 +373,18 @@ class TopicApi extends \Zikula_AbstractApi
      *              must have *either* topicObj or from_topic_id
      *
      * @return Integer Destination topic ID
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function join($args)
     {
         if (!$args['topicObj'] instanceof TopicEntity && !isset($args['from_topic_id'])) {
-            LogUtil::registerError($this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Either "%1$s" or "%2$s" must be set.', array('topicObj', 'from_topic_id')));
 
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (!isset($args['to_topic_id'])) {
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         if (isset($args['topicObj']) && isset($args['from_topic_id'])) {
             // unset the id and use the Object
@@ -386,9 +395,9 @@ class TopicApi extends \Zikula_AbstractApi
         $managedDestinationTopic = new TopicManager($args['to_topic_id']);
         if ($managedDestinationTopic->get() === null) {
             // can't use isset() and ->get() at the same time
-            LogUtil::registerError($this->__('Destination topic does not exist.'));
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Destination topic does not exist.'));
 
-            return LogUtil::registerArgsError();
+            throw new \InvalidArgumentException();
         }
         // move posts from Origin to Destination topic
         $posts = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\PostEntity')->findBy(array('topic' => $managedOriginTopic->get()));
