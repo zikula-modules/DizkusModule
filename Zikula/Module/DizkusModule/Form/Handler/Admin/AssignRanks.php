@@ -16,6 +16,7 @@ use SecurityUtil;
 use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Core\ModUrl;
 use ZLanguage;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -59,12 +60,11 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $perpage = 20;
 
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('u, cu')
-                ->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')
-                ->leftJoin('Zikula\Module\UsersModule\Entity\UserEntity', 'cu', 'WITH', 'u.user_id = cu.uid')
-                ->orderBy('cu.uname', 'ASC');
+        $qb->select('u')
+                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
+                ->orderBy('u.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
-            $qb->andWhere('cu.uname LIKE :letter')
+            $qb->andWhere('u.uname LIKE :letter')
                 ->setParameter('letter', $letter . '%');
         }
         $query = $qb->getQuery();
@@ -74,13 +74,24 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         // Paginator
         $allusers = new Paginator($query);
 
+        // recreate the array of users as ForumUserEntities
+        $userArray = array();
+        /** @var $user \Zikula\Module\UsersModule\Entity\UserEntity */
+        foreach ($allusers as $user) {
+            $managedForumUser = new ForumUserManager($user->getUid(), false);
+            $forumUser = $managedForumUser->get();
+            if (isset($forumUser)) {
+                $userArray[$user->getUid()] = $forumUser;
+            }
+        }
+
         $this->view->assign('ranks', $ranks);
         $this->view->assign('rankimages', $rankimages);
-        $this->view->assign('allusers', $allusers);
+        $this->view->assign('allusers', $userArray);
         $this->view->assign('letter', $letter);
         $this->view->assign('page', $page);
         $this->view->assign('perpage', $perpage);
-        $this->view->assign('usercount', count($allusers));
+        $this->view->assign('usercount', count($userArray));
         return true;
     }
 

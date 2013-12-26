@@ -34,8 +34,9 @@ class ForumUserManager
     /**
      * construct
      * @param integer $uid user id (optional: defaults to current user)
+     * @param boolean $create create the ForumUser if does not exist (default: true)
      */
-    public function __construct($uid = null)
+    public function __construct($uid = null, $create = true)
     {
         $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
@@ -43,7 +44,7 @@ class ForumUserManager
             $uid = UserUtil::getVar('uid');
         }
         $this->_forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
-        if (!$this->_forumUser) {
+        if (!$this->_forumUser && $create) {
             $this->_forumUser = new ForumUserEntity($uid);
             $this->entityManager->persist($this->_forumUser);
             $this->entityManager->flush();
