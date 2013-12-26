@@ -14,16 +14,15 @@ namespace Zikula\Module\DizkusModule\Form\Handler\User;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
-use ZLanguage;
 use System;
 use Zikula_Form_View;
 use Zikula\Core\ModUrl;
+use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to create a new topic.
@@ -58,14 +57,14 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         if (!isset($this->_forumId)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing forum id.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            return $view->redirect(new ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode()));
         }
 
         $managedforum = new ForumManager($this->_forumId);
         if ($managedforum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId))));
+            return $view->redirect(new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forumId)));
         }
         $view->assign('forum', $managedforum->get());
         $view->assign('breadcrumbs', $managedforum->getBreadcrumbs(false));
@@ -85,9 +84,8 @@ class NewTopic extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_forumId));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forumId));
+            return $view->redirect($url);
         }
 
         // check for valid form
@@ -156,7 +154,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
-        return new RedirectResponse(System::normalizeUrl($url->getUrl()));
+        return $view->redirect($url);
     }
 
 }

@@ -16,8 +16,9 @@ use SecurityUtil;
 use UserUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 /**
  * This class provides a handler to manage subscriptions.
@@ -109,13 +110,13 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
             $this->_username = $this->request->request->get('username', '');
             $this->_uid = UserUtil::getIdFromName($this->_username);
             if ($this->_uid) {
-                $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
+                $url = new ModUrl($this->name, 'admin', 'managesubscriptions', ZLanguage::getLanguageCode(), array('uid' => $this->_uid));
             } else {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__f('Could not find username "%s". Please try again.', $this->_username));
-                $url = ModUtil::url($this->name, 'admin', 'managesubscriptions');
+                $url = new ModUrl($this->name, 'admin', 'managesubscriptions', ZLanguage::getLanguageCode());
             }
         }
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect($url);
     }
 
 }

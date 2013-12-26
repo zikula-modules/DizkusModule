@@ -17,7 +17,8 @@ use SecurityUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 /**
  * This class provides a handler for the signature management.
@@ -77,8 +78,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Signature has been updated.'));
 
             // redirect to user preferences page
-            $url = ModUtil::url($this->name, 'user', 'prefs');
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect(new ModUrl($this->name, 'user', 'prefs', ZLanguage::getLanguageCode()));
         }
 
         return true;

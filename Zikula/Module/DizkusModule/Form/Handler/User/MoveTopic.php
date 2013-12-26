@@ -17,7 +17,8 @@ use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use Zlanguage;
 
 /**
  * This class provides a handler to move a post.
@@ -70,10 +71,9 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->topic_id));
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect($url);
         }
 
         // check for valid form
@@ -98,9 +98,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             ModUtil::apiFunc($this->name, 'topic', 'move', $data);
 
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect($url);
         }
 
         if ($args['commandName'] == 'join') {
@@ -113,8 +111,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
                 // user wants to copy topic to itself
-                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The original topic cannot be set as the target topic.'));
-                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id()))));
+                return $view->redirect($url);
             }
 
             $data['from_topic_id'] = $this->topic_id;
@@ -122,9 +119,8 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             ModUtil::apiFunc($this->name, 'topic', 'join', $data);
 
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id']));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $data['to_topic_id']));
+            return $view->redirect($url);
         }
 
         return true;

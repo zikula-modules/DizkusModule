@@ -20,8 +20,9 @@ use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 /**
  * This class provides a handler to edit forums.
@@ -97,9 +98,9 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url($this->name, 'admin', 'tree');
+        $url = new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode());
         if ($args['commandName'] == 'cancel') {
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -166,7 +167,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         // resync all forums, topics & posters
         ModUtil::apiFunc($this->name, 'sync', 'all');
 
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect($url);
     }
 
 }

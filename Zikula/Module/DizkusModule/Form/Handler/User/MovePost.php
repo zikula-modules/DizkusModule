@@ -16,7 +16,8 @@ use ModUtil;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use System;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use Zlanguage;
 
 /**
  * This class provides a handler to move a post.
@@ -64,9 +65,8 @@ class MovePost extends \Zikula_Form_AbstractHandler
 
         if ($managedPost->get()->isFirst()) {
             $this->request->getSession()->getFlashBag()->add('error', 'You can not move the first post of a topic!');
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $managedPost->getTopicId()));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedPost->getTopicId()));
+            return $view->redirect($url);
         }
 
         return true;
@@ -83,9 +83,8 @@ class MovePost extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), null, 'pid' . $this->post_id);
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->old_topic_id, 'start' => 1), 'pid' . $this->post_id);
+            return $view->redirect($url);
         }
 
         // check for valid form
@@ -100,9 +99,8 @@ class MovePost extends \Zikula_Form_AbstractHandler
         $newTopicPostCount = ModUtil::apiFunc($this->name, 'post', 'move', $data);
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar($this->name, 'posts_per_page', 15);
 
-        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), null, 'pid' . $this->post_id);
-
-        return new RedirectResponse(System::normalizeUrl($url));
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $data['to_topic_id'], 'start' => $start), 'pid' . $this->post_id);
+        return $view->redirect($url);
     }
 
 }

@@ -19,7 +19,6 @@ use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Core\ModUrl;
 use ZLanguage;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -106,7 +105,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
         $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
 
-        return new RedirectResponse(System::normalizeUrl($url->getUrl()));
+        return $view->redirect($url);
     }
 
 }

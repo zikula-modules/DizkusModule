@@ -18,7 +18,8 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\DizkusModuleInstaller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 class Prefs extends \Zikula_Form_AbstractHandler
 {
@@ -105,7 +106,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to compensate for trouble with `databound`
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+        return $view->redirect(new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode()));
     }
 
 }

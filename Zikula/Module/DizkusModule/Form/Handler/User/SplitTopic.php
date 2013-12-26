@@ -16,7 +16,8 @@ use ModUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 /**
  * This class provides a handler to delete a topic.
@@ -67,8 +68,8 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->post->getTopicId()));
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->post->getTopicId()));
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -79,9 +80,8 @@ class SplitTopic extends \Zikula_Form_AbstractHandler
 
         $newtopic_id = ModUtil::apiFunc($this->name, 'topic', 'split', array('post' => $this->post, 'data' => $data));
 
-        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $newtopic_id));
-
-        return new RedirectResponse(System::normalizeUrl($url));
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newtopic_id));
+        return $view->redirect($url);
     }
 
 }

@@ -24,7 +24,6 @@ use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -64,7 +63,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         // disallow editing of root forum
         if ($id == 1) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__("Editing of root forum is disallowed", 403));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+            return $view->redirect(new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode()));
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -141,9 +140,9 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = ModUtil::url($this->name, 'admin', 'tree');
+        $url = new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode());
         if ($args['commandName'] == 'cancel') {
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -208,7 +207,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to the admin forum overview
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect($url);
     }
 
 }

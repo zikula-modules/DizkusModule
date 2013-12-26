@@ -16,7 +16,8 @@ use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use Zlanguage;
 
 /**
  * This class provides a handler to move a post.
@@ -132,10 +133,9 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
+        $url = new ModUrl($this->name, 'user', 'moderateforum', ZLanguage::getLanguageCode(), array('forum' => $this->_managedForum->getId()));
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $this->_managedForum->getId()));
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect($url);
         }
 
         // check for valid form
@@ -165,7 +165,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'move':
                     if (empty($moveto)) {
                         $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
-                        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()))));
+                        return $view->redirect($url);
                     }
                     foreach ($topic_ids as $topic_id) {
                         ModUtil::apiFunc($this->name, 'topic', 'move', array('topic_id' => $topic_id,
@@ -190,7 +190,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
                         $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target topic to join.'));
-                        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()))));
+                        return $view->redirect($url);
                     }
                     // text input overrides select box
                     if (empty($jointo) && !empty($jointo_select)) {
@@ -213,9 +213,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             }
         }
 
-        $url = ModUtil::url($this->name, 'user', 'moderateforum', array('forum' => $this->_managedForum->getId()));
-
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect($url);
     }
 
 }

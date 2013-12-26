@@ -17,7 +17,8 @@ use DataUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use Zlanguage;
 
 /**
  * This class provides a handler to email a topic.
@@ -68,9 +69,10 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->topic_id));
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id))));
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -84,9 +86,8 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
             'message' => $data['message'],
             'subject' => $data['emailsubject']
         ));
-        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id));
 
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect($url);
     }
 
 }

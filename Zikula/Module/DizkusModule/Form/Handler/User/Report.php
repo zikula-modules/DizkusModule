@@ -20,7 +20,8 @@ use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use System;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use ZLanguage;
+use Zikula\Core\ModUrl;
 
 /**
  * This class provides a handler to report posts.
@@ -54,7 +55,7 @@ class Report extends \Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            return $view->redirect(new ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode()));
         }
 
         $this->_post = new PostManager($id);
@@ -77,9 +78,8 @@ class Report extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), null, 'pid' . $this->_post->getId());
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId(), 'start' => 1), 'pid' . $this->_post->getId());
+            return $view->redirect($url);
         }
 
         // check for valid form
@@ -109,10 +109,8 @@ class Report extends \Zikula_Form_AbstractHandler
 
         $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
 
-        $url = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->_post->getTopicId(),
-                    'start' => $start));
-
-        return new RedirectResponse(System::normalizeUrl($url));
+        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId(), 'start' => $start));
+        return $view->redirect($url);
     }
 
     /**

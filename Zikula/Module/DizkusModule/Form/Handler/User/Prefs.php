@@ -17,7 +17,6 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * This class provides a handler to create a new topic.
@@ -78,9 +77,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = ModUtil::url($this->name, 'user', 'prefs');
-
-            return new RedirectResponse(System::normalizeUrl($url));
+            return $view->redirect(new ModUrl($this->name, 'user', 'prefs', ZLanguage::getLanguageCode()));
         }
 
         // check for valid form

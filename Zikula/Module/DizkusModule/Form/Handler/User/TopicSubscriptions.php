@@ -17,7 +17,8 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zikula\Core\ModUrl;
+use ZLanguage;
 
 /**
  * This class provides a handler to manage topic subscriptions.
@@ -75,9 +76,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
             }
         }
 
-        $url = ModUtil::url($this->name, 'user', 'manageTopicSubscriptions');
-
-        return new RedirectResponse(System::normalizeUrl($url));
+        return $view->redirect(new ModUrl($this->name, 'user', 'manageTopicSubscriptions', ZLanguage::getLanguageCode()));
     }
 
 }
