@@ -28,7 +28,7 @@
 
 
 
-{*insert name='getstatusmsg'*}
+{insert name='getstatusmsg'}
 
 <div id="dizkus">
 
