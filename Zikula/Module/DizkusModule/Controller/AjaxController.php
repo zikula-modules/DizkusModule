@@ -34,6 +34,7 @@ use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Ajax controller functions.
@@ -95,7 +96,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * RETURN: $data The rendered post.
      *         $post_id The post id.
      *
-     * @return AjaxResponse
+     * @return Response|AjaxResponse
      */
     public function replyAction()
     {
@@ -119,8 +120,11 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         // process validation hooks
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
+        /** @var $hookvalidators \Zikula\Core\Hook\ValidationProviders */
         if ($hookvalidators->hasErrors()) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+            foreach ($hookvalidators->getErrors() as $error) {
+                $this->request->getSession()->getFlashBag()->add('error', "Error! $error");
+            }
             $preview = true;
         }
         // check to see if the post contains spam
@@ -167,9 +171,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
-        return new AjaxResponse(array(
-            'data' => $this->view->fetch('user/post/single.tpl'),
-            'post_id' => $post['post_id']), $this->request->getSession()->getFlashBag()->all());
+        if ($this->request->getSession()->getFlashBag()->has('error')) {
+            $errors = implode('\n', $this->request->getSession()->getFlashBag()->get('error'));
+            return new Response($errors, 500);
+        } else {
+            return new AjaxResponse(array(
+                'data' => $this->view->fetch('user/post/single.tpl'),
+                'post_id' => $post['post_id']));
+        }
     }
 
     /**
