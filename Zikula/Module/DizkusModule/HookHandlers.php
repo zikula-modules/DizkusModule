@@ -89,7 +89,7 @@ class HookHandlers extends AbstractHookListener
         if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_COMMENT)) {
             return;
         }
-        $request = ServiceUtil::get('request');
+        $request = $this->view->getRequest();
         $start = (int)$request->query->get('start', 1);
         $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
@@ -236,7 +236,7 @@ class HookHandlers extends AbstractHookListener
         // notify topic & forum subscribers
         ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
             'post' => $newManagedTopic->getFirstPost()));
-        $this->request->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
+        $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 
         return true;
     }
@@ -266,7 +266,7 @@ class HookHandlers extends AbstractHookListener
             }
         }
         $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
-        $this->request->getSession()->getFlashBag()->add('status', $this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
+        $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
 
         return true;
     }
@@ -337,7 +337,6 @@ class HookHandlers extends AbstractHookListener
         if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $request = ServiceUtil::get('request');
         foreach ($hookdata as $area => $data) {
             if (!isset($data['forum']) || empty($data['forum'])) {
                 $request->getSession()->getFlashBag()->add('error', __f('Error: No forum selected for area \'%s\'', $area, $dom));
