@@ -451,19 +451,33 @@ function createQuickReply() {
         }
 
         quickReplying = true;
-        var pars = {
-            topic: jQuery('#topic').val(),
-            message: message,
-            attach_signature: jQuery('#attach_signature').prop('checked') ? 1 : 0,
-            subscribe_topic: jQuery('#subscribe_topic').prop('checked') ? 1 : 0,
-            preview: 0
-        };
+        var pars = {};
+        // assign all form input to function parameters - allows hooked content to validate from unknown form input
+        jQuery(":input").each(function(){
+            var input = jQuery(this);
+            if (typeof input.attr('name') != undefined) {
+                pars[input.attr('name')] = input.val();
+            } else {
+                pars[input.attr('id')] = input.val();
+            }
+        });
+
+        pars['attach_signature'] = jQuery('#attach_signature').prop('checked') ? 1 : 0;
+        pars['subscribe_topic'] = jQuery('#subscribe_topic').prop('checked') ? 1 : 0;
+        pars['preview'] = 0;
 
         var successHandler = function(result, message, request) {
-            var post = result.data.data;
+            if (result.core.statusmsg.error.length > 0) {
+                // errors in validation
+                DizkusShowAjaxError(result.core.statusmsg.error);
+                // hide old preview if exists
+                jQuery('#quickreplypreview').addClass('hidden');
+            } else {
+                // no errors: clear textarea and reset preview
+                cancelQuickReply();
+            }
 
-            // clear textarea and reset preview
-            cancelQuickReply();
+            var post = result.data.data;
 
             // show new posting
             jQuery('#quickreplyposting').html(post).removeClass('hidden');
