@@ -467,16 +467,7 @@ function createQuickReply() {
         pars['preview'] = 0;
 
         var successHandler = function(result, message, request) {
-            if (result.core.statusmsg.error.length > 0) {
-                // errors in validation
-                DizkusShowAjaxError(result.core.statusmsg.error);
-                // hide old preview if exists
-                jQuery('#quickreplypreview').addClass('hidden');
-            } else {
-                // no errors: clear textarea and reset preview
-                cancelQuickReply();
-            }
-
+            cancelQuickReply();
             var post = result.data.data;
 
             // show new posting
