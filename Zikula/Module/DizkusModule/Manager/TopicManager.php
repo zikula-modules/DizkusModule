@@ -277,7 +277,7 @@ class TopicManager
         $this->managedForum = new ForumManager($this->_forumId);
         $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
-        $solveStatus = $data['solveStatus'] == 1 ? -1 : 0; // -1 = support request
+        $solveStatus = isset($data['solveStatus']) && ($data['solveStatus'] == 1) ? -1 : 0; // -1 = support request
         $this->_topic->setSolved($solveStatus);
         unset($data['solveStatus']);
         $this->_topic->setLast_post($this->_firstPost);
