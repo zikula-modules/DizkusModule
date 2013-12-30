@@ -94,18 +94,24 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         }
         // check hooked modules for validation for POST
         $postHook = new ValidationHook(new ValidationProviders());
+        /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
         $postHookValidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             // do not use $view->setErrorMsg() here so that form is redisplayed
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+            foreach ($postHookValidators->getErrors() as $error) {
+                $this->request->getSession()->getFlashBag()->add('error', "Error! $error");
+            }
             return false;
         }
         // check hooked modules for validation for TOPIC
         $topicHook = new ValidationHook(new ValidationProviders());
+        /** @var $topicHookValidators \Zikula\Core\Hook\ValidationProviders */
         $topicHookValidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
             // do not use $view->setErrorMsg() here so that form is redisplayed
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+            foreach ($postHookValidators->getErrors() as $error) {
+                $this->request->getSession()->getFlashBag()->add('error', "Error! $error");
+            }
             return false;
         }
 
