@@ -3,7 +3,7 @@ Zikula Dizkus Forums
 
 Dizkus is a discussion forum module for the Zikula Application Framework
 
-This version **requires** Zikula Core 1.3.6+
+This version **requires** Zikula Core 1.3.7+
 
 The code is currently under heavy development, but typically is in a functional
 state. Feel free to test and report issues. thank you.
