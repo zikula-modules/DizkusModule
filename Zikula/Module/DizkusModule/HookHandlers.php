@@ -122,11 +122,12 @@ class HookHandlers extends AbstractHookListener
         $managedTopic->incrementViewsCount();
         $module = ModUtil::getModule(self::MODULENAME);
         PageUtil::addVar('stylesheet', $module->getRelativePath() . "/Resources/public/css/style.css");
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/topicview.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/topicview.tpl'));
     }
 
     /**
      * Display hook for edit.
+     * Display a UI interface during the creation of the hooked object.
      *
      * @param DisplayHook $hook The hook.
      *
@@ -153,7 +154,7 @@ class HookHandlers extends AbstractHookListener
         $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forumId);
         // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/edit.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/edit.tpl'));
     }
 
     /**
@@ -172,7 +173,7 @@ class HookHandlers extends AbstractHookListener
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'user/hook/delete.tpl'));
+            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/delete.tpl'));
         }
     }
 
