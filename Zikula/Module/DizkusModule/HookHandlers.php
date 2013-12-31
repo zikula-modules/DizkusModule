@@ -91,7 +91,7 @@ class HookHandlers extends AbstractHookListener
         }
         $request = $this->view->getRequest();
         $start = (int)$request->query->get('start', 1);
-        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new TopicManager(null, $topic);
         } else {
@@ -152,8 +152,17 @@ class HookHandlers extends AbstractHookListener
             $forumId = $managedForum->getId();
         }
         $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forumId);
-        // add this response to the event stack
         $this->view->assign('forum', $forum->getName());
+        $itemId = $hook->getId();
+        if (!empty($itemId)) {
+            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+            $this->view->assign('topic', $topic);
+            $this->view->assign('newTopic', false);
+        } else {
+            $this->view->assign('topic', null);
+            $this->view->assign('newTopic', true);
+        }
+        // add this response to the event stack
         $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/edit.tpl'));
     }
 
@@ -210,34 +219,38 @@ class HookHandlers extends AbstractHookListener
      */
     public function processEdit(ProcessHook $hook)
     {
-        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
-        // create new topic in selected forum
-        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-        if (!isset($topic)) {
-            $topic = new TopicEntity();
+        $data = $this->view->getRequest()->request->get('dizkus', null);
+        $createTopic = isset($data['createTopic']) ? true : false;
+        if ($createTopic) {
+            $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
+            // create new topic in selected forum
+            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+            if (!isset($topic)) {
+                $topic = new TopicEntity();
+            }
+            // use Meta class to create topic data
+            $topicMetaInstance = $this->getClassInstance($hook);
+            // format data for topic creation
+            $data = array(
+                'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
+                'title' => $topicMetaInstance->getTitle(),
+                'message' => $topicMetaInstance->getContent(),
+                'subscribe_topic' => false,
+                'attachSignature' => false);
+            // create the new topic
+            $newManagedTopic = new TopicManager(null, $topic);
+            // inject new topic into manager
+            $newManagedTopic->prepare($data);
+            // add hook data to topic
+            $newManagedTopic->setHookData($hook);
+            // store new topic
+            $newManagedTopic->create();
+            // cannot notify hooks in non-controller
+            // notify topic & forum subscribers
+            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
+                'post' => $newManagedTopic->getFirstPost()));
+            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
         }
-        // use Meta class to create topic data
-        $topicMetaInstance = $this->getClassInstance($hook);
-        // format data for topic creation
-        $data = array(
-            'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
-            'title' => $topicMetaInstance->getTitle(),
-            'message' => $topicMetaInstance->getContent(),
-            'subscribe_topic' => false,
-            'attachSignature' => false);
-        // create the new topic
-        $newManagedTopic = new TopicManager(null, $topic);
-        // inject new topic into manager
-        $newManagedTopic->prepare($data);
-        // add hook data to topic
-        $newManagedTopic->setHookData($hook);
-        // store new topic
-        $newManagedTopic->create();
-        // cannot notify hooks in non-controller
-        // notify topic & forum subscribers
-        ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
-            'post' => $newManagedTopic->getFirstPost()));
-        $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 
         return true;
     }
