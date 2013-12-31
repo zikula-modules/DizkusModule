@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group" id="diskus_reason_container" {if $modvars.ZikulaDizkusModule.ajax}style="display:none"{/if}>
+        <div class="form-group" id="dizkus_reason_container" {if $modvars.ZikulaDizkusModule.ajax}style="display:none"{/if}>
             {formlabel for="reason" text='Write a reason' class="col-lg-3 control-label"}
             {gt text='Your post "%s" was deleted, because ' tag1=$title assign='reason'}
             <div class="col-lg-9">

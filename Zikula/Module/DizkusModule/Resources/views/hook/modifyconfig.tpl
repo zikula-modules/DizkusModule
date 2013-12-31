@@ -1,5 +1,5 @@
 {adminheader}
-<h3><span class="fa fa-comments"></span>&nbsp;{gt text="Diskus settings for %s" tag1=$ActiveModule}</h3>
+<h3><span class="fa fa-comments"></span>&nbsp;{gt text="Dizkus settings for %s" tag1=$ActiveModule}</h3>
 
 <form class="form-horizontal" action="{modurl modname=$ActiveModule type="admin" func="dizkushookconfigprocess"}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
