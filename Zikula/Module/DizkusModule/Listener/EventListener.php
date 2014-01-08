@@ -23,15 +23,18 @@ use Zikula\Core\Event\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Zikula\Module\DizkusModule\ZikulaDizkusModule;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Doctrine\ORM\EntityManager;
 
 class EventListener implements EventSubscriberInterface
 {
-    protected $container;
+    private $entityManager;
+    private $requestStack;
 
-    function __construct(ContainerInterface $container)
+    function __construct(RequestStack $requestStack, EntityManager $entityManager)
     {
-        $this->container = $container;
+        $this->requestStack = $requestStack;
+        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents()
@@ -94,10 +97,9 @@ class EventListener implements EventSubscriberInterface
             $classname = $moduleName . '_Version';
         }
         $moduleVersionObj = new $classname();
-        $_em = $this->container->get('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME);
         foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
+            $areaname = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
             $bindingsBetweenOwners[$k]['areatitle'] = $view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
         }
@@ -125,7 +127,7 @@ class EventListener implements EventSubscriberInterface
             return;
         }
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
-        $request = $this->container->get('request');
+        $request = $this->requestStack->getCurrentRequest();
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
@@ -166,10 +168,9 @@ class EventListener implements EventSubscriberInterface
         $args = $z_event->getArguments(); // $modinfo
         $module = $args['name'];
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
-        $_em = $this->container->get('doctrine.entitymanager');
         $deleteHookAction = ModUtil::getVar(ZikulaDizkusModule::NAME, 'deletehookaction');
         // lock or remove
-        $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
+        $topics = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
         $total = 0;
         foreach ($topics as $topic) {
@@ -182,7 +183,7 @@ class EventListener implements EventSubscriberInterface
                     $topic->lock();
                     $count++;
                     if ($count > 20) {
-                        $_em->flush();
+                        $this->entityManager->flush();
                         $count = 0;
                     }
                     break;
@@ -190,10 +191,10 @@ class EventListener implements EventSubscriberInterface
             $total++;
         }
         // clear last remaining batch
-        $_em->flush();
+        $this->entityManager->flush();
         $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
         if ($total > 0) {
-            $request = $this->container->get('request');
+            $request = $this->requestStack->getCurrentRequest();
             $request->getSession()->getFlashBag()->add('status', __f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
         }
     }
@@ -209,29 +210,28 @@ class EventListener implements EventSubscriberInterface
      */
     public function deleteUser(GenericEvent $event)
     {
-        $_em = $this->container->get('doctrine.entitymanager');
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
         // remove subscriptions - topic
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity u
             WHERE u.forumUser = :uid';
-        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove subscriptions - forum
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity u
             WHERE u.forumUser = :uid';
-        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove favorites
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity u
             WHERE u.forumUser = :uid';
-        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove moderators
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ModeratorUserEntity u
             WHERE u.forumUser = :uid';
-        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // change user level - unused at the moment
         $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumUserEntity u
             SET u.level = :level
             WHERE u.user_id = :uid';
-        $_em->createQuery($dql)
+        $this->entityManager->createQuery($dql)
             ->setParameter('uid', $user['uid'])
             ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
             ->execute();
