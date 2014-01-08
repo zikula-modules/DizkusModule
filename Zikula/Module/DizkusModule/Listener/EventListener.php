@@ -152,6 +152,7 @@ class EventListener implements EventSubscriberInterface
 
         $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
         $response->send();
+        exit;
     }
 
     /**
