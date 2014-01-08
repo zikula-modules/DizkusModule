@@ -41,7 +41,7 @@ class EventListener implements EventSubscriberInterface
     {
         return array(
             'module_dispatch.service_links' => array('serviceLinks'),
-            'controller.method_not_found' => array('dizkusHookConfig', 'dizkusHookConfigProcess'),
+            'controller.method_not_found' => array(array('dizkusHookConfig'), array('dizkusHookConfigProcess')),
             'installer.module.uninstalled' => array('moduleDelete'),
             'user.account.delete' => array('deleteUser'),
         );
@@ -150,7 +150,8 @@ class EventListener implements EventSubscriberInterface
         $z_event->setData(true);
         $z_event->stopPropagation();
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
+        $response = new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'main')));
+        $response->send();
     }
 
     /**
