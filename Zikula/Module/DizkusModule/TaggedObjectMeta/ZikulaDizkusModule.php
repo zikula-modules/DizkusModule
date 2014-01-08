@@ -18,7 +18,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Zikula\Core\ModUrl;
 
-class Dizkus extends \Tag_AbstractTaggedObjectMeta
+class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
 {
 
     public function __construct($objectId, $areaId, $module, $urlString = null, ModUrl $urlObject = null)
