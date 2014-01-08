@@ -12,7 +12,6 @@
 namespace Zikula\Module\DizkusModule\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use ServiceUtil;
 use SecurityUtil;
 use ModUtil;
 use HookUtil;
@@ -24,9 +23,16 @@ use Zikula\Core\Event\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Zikula\Module\DizkusModule\ZikulaDizkusModule;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EventListener implements EventSubscriberInterface
 {
+    protected $container;
+
+    function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public static function getSubscribedEvents()
     {
@@ -46,7 +52,7 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function serviceLinks(GenericEvent $event)
+    public function serviceLinks(GenericEvent $event)
     {
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $module = ModUtil::getName();
@@ -68,7 +74,7 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function dizkusHookConfig(GenericEvent $z_event)
+    public function dizkusHookConfig(GenericEvent $z_event)
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
@@ -88,7 +94,7 @@ class EventListener implements EventSubscriberInterface
             $classname = $moduleName . '_Version';
         }
         $moduleVersionObj = new $classname();
-        $_em = ServiceUtil::get('doctrine.entitymanager');
+        $_em = $this->container->get('doctrine.entitymanager');
         $bindingsBetweenOwners = HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME);
         foreach ($bindingsBetweenOwners as $k => $binding) {
             $areaname = $_em->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
@@ -111,7 +117,7 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void|RedirectResponse
      */
-    public static function dizkusHookConfigProcess(GenericEvent $z_event)
+    public function dizkusHookConfigProcess(GenericEvent $z_event)
     {
         // check if this is for this handler
         $subject = $z_event->getSubject();
@@ -119,7 +125,7 @@ class EventListener implements EventSubscriberInterface
             return;
         }
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
-        $request = ServiceUtil::get('request');
+        $request = $this->container->get('request');
         $hookdata = $request->request->get('dizkus', array());
         $token = isset($hookdata['dizkus_csrftoken']) ? $hookdata['dizkus_csrftoken'] : null;
         if (!SecurityUtil::validateCsrfToken($token)) {
@@ -155,12 +161,12 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function moduleDelete(GenericEvent $z_event)
+    public function moduleDelete(GenericEvent $z_event)
     {
         $args = $z_event->getArguments(); // $modinfo
         $module = $args['name'];
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
-        $_em = ServiceUtil::get('doctrine.entitymanager');
+        $_em = $this->container->get('doctrine.entitymanager');
         $deleteHookAction = ModUtil::getVar(ZikulaDizkusModule::NAME, 'deletehookaction');
         // lock or remove
         $topics = $_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
@@ -187,7 +193,7 @@ class EventListener implements EventSubscriberInterface
         $_em->flush();
         $actionWord = $deleteHookAction == 'lock' ? __('locked', $dom) : __('deleted', $dom);
         if ($total > 0) {
-            $request = ServiceUtil::get('request');
+            $request = $this->container->get('request');
             $request->getSession()->getFlashBag()->add('status', __f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
         }
     }
@@ -201,31 +207,31 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public static function deleteUser(GenericEvent $event)
+    public function deleteUser(GenericEvent $event)
     {
-        $em = \ServiceUtil::get('doctrine.entitymanager');
+        $_em = $this->container->get('doctrine.entitymanager');
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
         // remove subscriptions - topic
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity u
             WHERE u.forumUser = :uid';
-        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove subscriptions - forum
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity u
             WHERE u.forumUser = :uid';
-        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove favorites
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity u
             WHERE u.forumUser = :uid';
-        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove moderators
         $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ModeratorUserEntity u
             WHERE u.forumUser = :uid';
-        $em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
+        $_em->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // change user level - unused at the moment
         $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumUserEntity u
             SET u.level = :level
             WHERE u.user_id = :uid';
-        $em->createQuery($dql)
+        $_em->createQuery($dql)
             ->setParameter('uid', $user['uid'])
             ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
             ->execute();

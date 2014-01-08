@@ -5,12 +5,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="zikuladizkusmodule.hookservicelistener.class">Zikula\Module\DizkusModule\Listener\EventListener</parameter>
+        <parameter key="zikuladizkusmodule.event_listener.class">Zikula\Module\DizkusModule\Listener\EventListener</parameter>
     </parameters>
 
     <services>
-        <service id="zikuladizkusmodule.listener" class="%zikuladizkusmodule.hookservicelistener.class%">
+        <service id="zikuladizkusmodule.event_listener" class="%zikuladizkusmodule.event_listener.class%">
             <tag name="kernel.event_subscriber" />
+            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>
