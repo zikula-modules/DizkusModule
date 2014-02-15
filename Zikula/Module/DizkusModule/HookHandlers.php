@@ -86,7 +86,7 @@ class HookHandlers extends AbstractHookListener
         }
         $request = $this->view->getRequest();
         $start = (int)$request->query->get('start', 1);
-            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new TopicManager(null, $topic);
         } else {
