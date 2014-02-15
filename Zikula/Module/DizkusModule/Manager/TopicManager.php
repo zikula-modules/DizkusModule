@@ -284,6 +284,8 @@ class TopicManager
         $this->_topic->merge($data);
         // prepare poster data
         $uid = UserUtil::getVar('uid');
+        // assign anonymous creations to the admin
+        $uid = !$uid ? 2 : $uid;
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
