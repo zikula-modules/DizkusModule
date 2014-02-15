@@ -253,7 +253,9 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             'ajax' => true,
             'striptagsfromemail' => false,
             'indexTo' => '',
-            'notifyAdminAsMod' => 2);
+            'notifyAdminAsMod' => 2,
+            'defaultPoster' => 2,
+        );
     }
 
     /**
@@ -325,6 +327,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVar('fulltextindex', $defaultModuleVars['fulltextindex']); // disable until technology catches up with InnoDB
         $this->setVar('solved_enabled', $defaultModuleVars['solved_enabled']);
         $this->setVar('ajax', $defaultModuleVars['ajax']);
+        $this->setVar('defaultPoster', $defaultModuleVars['defaultPoster']);
         // register new hooks and event handlers
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());

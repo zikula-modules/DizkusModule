@@ -285,7 +285,7 @@ class TopicManager
         // prepare poster data
         $uid = UserUtil::getVar('uid');
         // assign anonymous creations to the admin
-        $uid = !$uid ? 2 : $uid;
+        $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
         $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);

@@ -42,6 +42,15 @@
             </div>
         </div>
         <div class="form-group">
+            {formlabel class="col-lg-3 control-label" for="defaultPoster" __text="Anonymous posts assigned to UID"}
+            <div class="col-lg-9">
+                {formintinput id="defaultPoster" text=$modvars.ZikulaDizkusModule.defaultPoster|default:2 size="3" minValue=2 cssClass='form-control'}
+                <p class="help-block alert alert-info">
+                    {gt text="Anonymous posts can be created by hooks or RSS feeds. This UID will be used as the 'original poster' of the thread. Default: 2 (admin)."}
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="hot_threshold" __text="'Hot topic' threshold (default: 20)"}
             <div class="col-lg-9">
                 {formintinput id="hot_threshold" text=$modvars.ZikulaDizkusModule.hot_threshold size="3" maxLength="3" minValue=2 maxValue=100 cssClass='form-control'}
