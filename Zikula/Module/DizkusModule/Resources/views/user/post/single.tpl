@@ -70,8 +70,8 @@
             <div class="postbody col-md-9">
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
-                    <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if $topic.solved neq $post.post_id} style="display:none;"{/if}>
-                        {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR $topic.poster.user_id eq $current_userid)}
+                    <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if (!isset($topic.solved) OR ($topic.solved neq $post.post_id))} style="display:none;"{/if}>
+                        {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR (isset($topic.poster.user_id) AND $topic.poster.user_id eq $current_userid))}
                             <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
                         {/if}
                         <i class='fa fa-check fa-2x'></i> {gt text='This post has been marked as the solution.'}
