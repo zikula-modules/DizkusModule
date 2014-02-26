@@ -15,6 +15,7 @@ use HookUtil;
 use ModUtil;
 use Zikula\Component\HookDispatcher\SubscriberBundle;
 use Zikula\Component\HookDispatcher\ProviderBundle;
+use Zikula\Module\SearchModule\AbstractSearchable;
 
 /**
  * Provides metadata for this module to the Extensions module.
@@ -42,10 +43,10 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
             'Dizkus::' => 'ForumID::',
             'Dizkus::CreateForum' => 'ForumID::');
         $meta['capabilities'] = array(
-            HookUtil::SUBSCRIBER_CAPABLE => array(
-                'enabled' => true),
-            HookUtil::PROVIDER_CAPABLE => array(
-                'enabled' => true));
+            HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
+            HookUtil::PROVIDER_CAPABLE => array('enabled' => true),
+            AbstractSearchable::SEARCHABLE => array('class' => 'Zikula\Module\DizkusModule\Helper\SearchHelper'),
+        );
         // module dependencies
         $meta['dependencies'] = array(
             array(
