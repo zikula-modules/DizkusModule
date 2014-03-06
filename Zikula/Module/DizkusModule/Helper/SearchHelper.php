@@ -21,13 +21,14 @@ class SearchHelper extends AbstractSearchable
     /**
      * get the UI options for search form
      *
-     * @param $args
+     * @param boolean $active
+     * @param array|null $modVars
      * @return string
      */
-    public function getOptions($args)
+    public function getOptions($active, $modVars = null)
     {
         if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ)) {
-            $this->view->assign('active', isset($args['active']) && isset($args['active'][$this->name]) || !isset($args['active']));
+            $this->view->assign('active', $active);
             $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
 
             return $this->view->fetch('search/options.tpl');
@@ -39,48 +40,38 @@ class SearchHelper extends AbstractSearchable
     /**
      * Get the search results
      *
-     * @param array $args The arguments array.
-     * q             string the text to search
-     * searchtype    string 'AND', 'OR' or 'EXACT'
-     * searchorder   string 'newest', 'oldest' or 'alphabetical'
-     * numlimit      int    limit for search, defaults to 10
-     * page          int    number of page to show
-     * startnum      int    the first item to show
-     * from Dizkus:
-     * searchwhere   string 'posts' or 'author'
-     * forums        array of forum IDs to search
-     *     
-     * @param $args
+     * @param array $words array of words to search for
+     * @param string $searchType AND|OR|EXACT
+     * @param array|null $modVars module form vars passed though
      * @return array
      */
-    public function getResults($args)
+    public function getResults(array $words, $searchType = 'AND', $modVars = null)
     {
         if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ)) {
             return array();
         }
-        // only use the first term in the array
-        $searchedTerm = $args['q'][0];
 
-        $request = $this->getContainer()->get("request");
-        $forums = $request->get('Dizkus_forum', null);
-        $searchWhere = $request->get('Dizkus_searchwhere', 'post');
+        $forums = isset($modVars['forum']) ? $modVars['forum'] : null;
+        $location = isset($modVars['location']) ? $modVars['location'] : 'post';
 
         $minLength = ModUtil::getVar($this->name, 'minsearchlength', 3);
         $maxLength = ModUtil::getVar($this->name, 'maxsearchlength', 30);
-        if (strlen($searchedTerm) < $minLength || strlen($searchedTerm) > $maxLength) {
-            $request->getSession()->getFlashBag()->add('status', $this->__f('Error! For forum searches, the search string must be between %1$s and %2$s characters in length.', array($minLength, $maxLength)));
-            return array();
+        foreach ($words as $word) {
+            if (strlen($word) < $minLength || strlen($word) > $maxLength) {
+                $this->addError($this->__f('For forum searches, each search term must be between %1$s and %2$s characters in length.', array($minLength, $maxLength)));
+                return array();
+            }
         }
         if (!is_array($forums) || count($forums) == 0) {
             // set default
             $forums[0] = -1;
         }
-        $searchWhere = (in_array($searchWhere, array('post', 'author'))) ? $searchWhere : 'post';
+        $location = (in_array($location, array('post', 'author'))) ? $location : 'post';
 
         // get all forums the user is allowed to read
         $allowedForums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
         if (!is_array($allowedForums) || count($allowedForums) == 0) {
-            $request->getSession()->getFlashBag()->add('danger', $this->__('Error: You do not have permission to search any of the forums.'));
+            $this->addError($this->__('You do not have permission to search any of the forums.'));
             return array();
         }
 
@@ -89,9 +80,9 @@ class SearchHelper extends AbstractSearchable
             ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
             ->leftJoin('t.posts', 'p');
 
-        switch ($searchWhere) {
+        switch ($location) {
             case 'author':
-                $authorId = \UserUtil::getIDFromName($searchedTerm);
+                $authorId = \UserUtil::getIDFromName($words[0]); // only use the first term in the array
                 if ($authorId > 0) {
                     $qb->andWhere('p.poster = :authorId')
                         ->setParameter('authorId', $authorId);
@@ -101,7 +92,7 @@ class SearchHelper extends AbstractSearchable
                 break;
             case 'post':
             default:
-                $whereExpr = $this->formatWhere($qb, $args, array('t.title', 'p.post_text'));
+                $whereExpr = $this->formatWhere($qb, $words, array('t.title', 'p.post_text'), $searchType);
                 $qb->andWhere($whereExpr);
         }
         // check forums (multiple selection is possible!)
@@ -114,7 +105,7 @@ class SearchHelper extends AbstractSearchable
             if (count($forums) == 0) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
-                $request->getSession()->getFlashBag()->add('danger', $this->__('Error: You do not have permission to search the requested forums.'));
+                $this->addError($this->__('You do not have permission to search the requested forums.'));
                 return array();
             }
             $qb->andWhere($qb->expr()->in('t.forum', $forums));
