@@ -31,7 +31,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
     /**
      * PostManager
      *
-     * @var integer
+     * @var PostManager
      */
     private $_post;
 
@@ -114,7 +114,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         $data['post_text'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['post_text']);
 
-        $this->_post->prepare($data);
+        $this->_post->update($data);
 
         // show preview
         if ($args['commandName'] == 'preview') {
@@ -128,7 +128,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         }
 
         // store post
-        $this->_post->update();
+        $this->_post->persist();
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $url));
 
         // redirect to the new topic
