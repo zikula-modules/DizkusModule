@@ -716,15 +716,15 @@ class UserController extends \Zikula_AbstractController
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', array('forum_id' => $forum_id))) {
                 throw new AccessDeniedException();
             }
-            $where = array('t.forum', (int)$forum_id, '=');
+            $where = array('t.forum', (int)$forum_id);
             $link = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
             $forumname = $managedForum->get()->getName();
         } elseif (isset($uid) && $uid != false) {
-            $where = array('p.poster', $uid, '=');
+            $where = array('p.poster', $uid);
         } else {
             $allowedforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
             if (count($allowedforums) > 0) {
-                $where = array('f.forum', $allowedforums, 'IN');
+                $where = array('f.forum', $allowedforums);
             }
         }
         $this->view->assign('forum_name', $forumname);
@@ -741,9 +741,9 @@ class UserController extends \Zikula_AbstractController
             ->join('p.poster', 'fu');
         if (!empty($where)) {
             if (is_array($where[1])) {
-                $qb->expr()->in($where[0], $where[1]);
+                $qb->where($qb->expr()->in($where[0], ':param'))->setParameter('param', $where[1]);
             } else {
-                $qb->where("{$where['0']} {$where['2']} :param")->setParameter('param', $where[1]);
+                $qb->where($qb->expr()->eq($where[0], ':param'))->setParameter('param', $where[1]);
             }
         }
         $qb->orderBy('t.topic_time', 'DESC')->setMaxResults($count);

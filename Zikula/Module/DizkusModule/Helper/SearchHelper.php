@@ -82,10 +82,16 @@ class SearchHelper extends AbstractSearchable
 
         switch ($location) {
             case 'author':
-                $authorId = \UserUtil::getIDFromName($words[0]); // only use the first term in the array
-                if ($authorId > 0) {
-                    $qb->andWhere('p.poster = :authorId')
-                        ->setParameter('authorId', $authorId);
+                $authorIds = array();
+                foreach($words as $word) {
+                    $authorId = \UserUtil::getIDFromName($word);
+                    if ($authorId > 0) {
+                        $authorIds[] =$authorId;
+                    }
+                }
+                if (count($authorIds) > 0) {
+                    $qb->andWhere($qb->expr()->in('p.poster', ':authorIds'))
+                        ->setParameter('authorIds', $authorIds);
                 } else {
                     return array();
                 }
@@ -98,7 +104,7 @@ class SearchHelper extends AbstractSearchable
         // check forums (multiple selection is possible!)
         if (!is_array($forums) && $forums == -1 || $forums[0] == -1) {
             // search in all forums we are allowed to see
-            $qb->andWhere($qb->expr()->in('t.forum', $allowedForums));
+            $qb->andWhere($qb->expr()->in('t.forum', ':forums'))->setParameter('forums', $allowedForums);
         } else {
             // filter out forums we are not allowed to read
             $forums = array_intersect($allowedForums, (array)$forums);
@@ -108,7 +114,7 @@ class SearchHelper extends AbstractSearchable
                 $this->addError($this->__('You do not have permission to search the requested forums.'));
                 return array();
             }
-            $qb->andWhere($qb->expr()->in('t.forum', $forums));
+            $qb->andWhere($qb->expr()->in('t.forum', ':forums'))->setParameter('forums', $forums);
         }
 
         $topics = $qb->getQuery()->getResult();
