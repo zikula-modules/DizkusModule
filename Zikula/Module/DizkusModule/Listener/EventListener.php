@@ -107,7 +107,7 @@ class EventListener implements EventSubscriberInterface
         $view->assign('dizkushookconfig', $hookconfig);
         $view->assign('ActiveModule', $moduleName);
         $view->assign('forums', ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Forum', 'getParents', array('includeLocked' => true)));
-        $z_event->setData($view->fetch('hook/modifyconfig.tpl'));
+        $z_event->setData($view->fetch('Hook/modifyconfig.tpl'));
         $z_event->stopPropagation();
     }
 

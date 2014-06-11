@@ -31,7 +31,7 @@ class SearchHelper extends AbstractSearchable
             $this->view->assign('active', $active);
             $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
 
-            return $this->view->fetch('search/options.tpl');
+            return $this->view->fetch('Search/options.tpl');
         }
 
         return '';

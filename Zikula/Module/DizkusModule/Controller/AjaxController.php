@@ -176,7 +176,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             return new Response($errors, 500);
         } else {
             return new AjaxResponse(array(
-                'data' => $this->view->fetch('user/post/single.tpl'),
+                'data' => $this->view->fetch('User/post/single.tpl'),
                 'post_id' => $post['post_id']));
         }
     }
@@ -210,7 +210,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
                 $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
 
-                return new AjaxResponse($this->view->fetch('ajax/editpost.tpl'));
+                return new AjaxResponse($this->view->fetch('Ajax/editpost.tpl'));
             } else {
                 throw new AccessDeniedException();
             }
@@ -397,7 +397,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * forumusers
      * update the "users online" section in the footer
      *
-     * used in user/footer_with_ajax.tpl
+     * used in User/footer_with_ajax.tpl
      */
     public function forumusersAction()
     {
@@ -409,7 +409,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $this->view->_get_plugin_filepath('outputfilter', 'shorturls');
             $this->view->register_outputfilter('smarty_outputfilter_shorturls');
         }
-        $this->view->display('ajax/forumusers.tpl');
+        $this->view->display('Ajax/forumusers.tpl');
         System::shutDown();
     }
 
@@ -417,7 +417,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * newposts
      * update the "new posts" block
      *
-     * only user in centerblock/display3.tpl
+     * only user in Centerblock/display3.tpl
      */
     public function newpostsAction()
     {
@@ -429,7 +429,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             $this->view->_get_plugin_filepath('outputfilter', 'shorturls');
             $this->view->register_outputfilter('smarty_outputfilter_shorturls');
         }
-        $out = $this->view->fetch('ajax/newposts.tpl');
+        $out = $this->view->fetch('Ajax/newposts.tpl');
         echo $out;
         System::shutDown();
     }

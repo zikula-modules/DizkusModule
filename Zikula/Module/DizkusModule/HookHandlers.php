@@ -117,7 +117,7 @@ class HookHandlers extends AbstractHookListener
         $managedTopic->incrementViewsCount();
         $module = ModUtil::getModule(self::MODULENAME);
         PageUtil::addVar('stylesheet', $module->getRelativePath() . "/Resources/public/css/style.css");
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/topicview.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/topicview.tpl'));
     }
 
     /**
@@ -158,7 +158,7 @@ class HookHandlers extends AbstractHookListener
             $this->view->assign('newTopic', true);
         }
         // add this response to the event stack
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/edit.tpl'));
+        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
     }
 
     /**
@@ -177,7 +177,7 @@ class HookHandlers extends AbstractHookListener
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'hook/delete.tpl'));
+            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
         }
     }
 

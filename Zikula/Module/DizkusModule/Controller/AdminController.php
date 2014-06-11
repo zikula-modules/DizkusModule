@@ -94,7 +94,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // Create output object
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('admin/preferences.tpl', new Prefs());
+        return $form->execute('Admin/preferences.tpl', new Prefs());
     }
 
     /**
@@ -144,9 +144,9 @@ class AdminController extends \Zikula_AbstractController
             $this->view->assign('ranktype', $ranktype);
             $this->view->assign('rankimages', $rankimages);
             if ($ranktype == 0) {
-                return $this->response($this->view->fetch('admin/ranks.tpl'));
+                return $this->response($this->view->fetch('Admin/ranks.tpl'));
             } else {
-                return $this->response($this->view->fetch('admin/honoraryranks.tpl'));
+                return $this->response($this->view->fetch('Admin/honoraryranks.tpl'));
             }
         } else {
             $ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
@@ -166,7 +166,7 @@ class AdminController extends \Zikula_AbstractController
         }
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('admin/assignranks.tpl', new AssignRanks());
+        return $form->execute('Admin/assignranks.tpl', new AssignRanks());
     }
 
     /**
@@ -183,7 +183,7 @@ class AdminController extends \Zikula_AbstractController
         }
         $tree = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
 
-        return $this->response($this->view->assign('tree', $tree)->fetch('admin/tree.tpl'));
+        return $this->response($this->view->assign('tree', $tree)->fetch('Admin/tree.tpl'));
     }
 
     /**
@@ -193,7 +193,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('admin/modifyforum.tpl', new ModifyForum());
+        return $form->execute('Admin/modifyforum.tpl', new ModifyForum());
     }
 
     /**
@@ -203,7 +203,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('admin/deleteforum.tpl', new DeleteForum());
+        return $form->execute('Admin/deleteforum.tpl', new DeleteForum());
     }
 
     /**
@@ -214,7 +214,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('admin/managesubscriptions.tpl', new ManageSubscriptions());
+        return $form->execute('Admin/managesubscriptions.tpl', new ManageSubscriptions());
     }
 
 }
