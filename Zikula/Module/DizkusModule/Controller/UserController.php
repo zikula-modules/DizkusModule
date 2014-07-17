@@ -51,7 +51,11 @@ class UserController extends \Zikula_AbstractController
 {
 
     /**
+     * @Route("")
+     *
      * Show all forums a user may see
+     *
+     * @throws AccessDeniedException on failed perm check
      *
      * @return string
      */
@@ -109,8 +113,11 @@ class UserController extends \Zikula_AbstractController
      * View forum by id
      *
      * opens a forum and shows the last postings
-     * @param integer forum (via GET) the forum id
-     * @param uinteger start (via GET) the posting to start with if on page 1+
+     * @param integer 'forum' (via GET) the forum id
+     * @param integer 'start' (via GET) the posting to start with if on page 1+
+     *
+     * @throws NotFoundHttpException if forumID <= 0
+     * @throws AccessDeniedException if perm check fails
      *
      * @return string
      */
@@ -148,9 +155,11 @@ class UserController extends \Zikula_AbstractController
     /**
      * viewtopic
      *
-     * @param integer topic (via GET) the topic ID
-     * @param integer post (via GET) a post ID
-     * @param integer start (via GET) pager value
+     * @param integer 'topic' (via GET) the topic ID
+     * @param integer 'post (via GET) a post ID
+     * @param integer 'start' (via GET) pager value
+     *
+     * @throws AccessDeniedException on failed perm check
      *
      * @return string
      */
@@ -168,7 +177,7 @@ class UserController extends \Zikula_AbstractController
             $managedPost = new PostManager($post_id);
             $topic_id = $managedPost->getTopicId();
             if ($topic_id != false) {
-                // redirect instad of continue, better for SEO
+                // redirect instead of continue, better for SEO
                 return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
             }
         }
@@ -213,6 +222,8 @@ class UserController extends \Zikula_AbstractController
      * @param string 'preview' (via POST) submit button converted to boolean
      * @param string 'submit' (via POST) submit button converted to boolean
      * @param string 'cancel' (via POST) submit button converted to boolean
+     *
+     * @throws AccessDeniedException on failed perm check
      *
      * @return string
      */
@@ -401,6 +412,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @return string
      *
+     * @throws AccessDeniedException on failed perm check
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function viewIpDataAction()
@@ -550,10 +562,12 @@ class UserController extends \Zikula_AbstractController
     /**
      * View latest topics
      *
-     * @param string selorder (via GET)
-     * @param integer nohours (via GET)
-     * @param integer unanswered (via GET)
-     * @param integer last_visit_unix (via get)
+     * @param string 'selorder' (via GET)
+     * @param integer 'nohours' (via GET)
+     * @param integer 'unanswered' (via GET)
+     * @param integer 'last_visit_unix' (via GET)
+     *
+     * @throws AccessDeniedException on failed perm check
      *
      * @return string
      */
@@ -587,8 +601,10 @@ class UserController extends \Zikula_AbstractController
     /**
      * Display my posts or topics
      *
-     * @param string action (via GET)
-     * @param number uid (via GET)
+     * @param string 'action' (via GET)
+     * @param number 'uid' (via GET)
+     *
+     * @throws AccessDeniedException on failed perm check
      *
      * @return string
      */
@@ -669,6 +685,9 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * generate and display an RSS feed of recent topics
+     *
+     * @throws AccessDeniedException on failed perm check
+     *
      * @return string
      */
     public function feedAction()
