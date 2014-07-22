@@ -34,6 +34,7 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
     {
         $meta = array();
         $meta['displayname'] = $this->__('Dizkus forums');
+        $meta['oldnames'] = array('Dizkus');
         $meta['description'] = $this->__('An integrated discussion forum for Zikula.');
         $meta['url'] = $this->__('forums');
         $meta['version'] = '4.0.0';

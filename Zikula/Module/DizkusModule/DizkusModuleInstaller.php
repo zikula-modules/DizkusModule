@@ -38,11 +38,12 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         'Zikula\Module\DizkusModule\Entity\TopicEntity',
         'Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity',
         'Zikula\Module\DizkusModule\Entity\ForumUserEntity',
-        'Zikula\Module\DizkusModule\Entity\ModeratorUserEntity',
-        'Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity',
         'Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity',
         'Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity',
-        'Zikula\Module\DizkusModule\Entity\RankEntity');
+        'Zikula\Module\DizkusModule\Entity\RankEntity',
+        'Zikula\Module\DizkusModule\Entity\ModeratorUserEntity',
+        'Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity',
+    );
 
     /**
      *  Initialize a new install of the Dizkus module
@@ -207,7 +208,11 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         switch ($oldversion) {
             case '3.1':
             case '3.1.0':
-                $this->upgrade_to_4_0_0();
+                ini_set('memory_limit', '194M');
+                ini_set('max_execution_time', 86400);
+                if (!$this->upgrade_to_4_0_0()) {
+                    return false;
+                }
                 break;
         }
 
@@ -221,15 +226,15 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     public static function getDefaultVars()
     {
-        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
-        $modulePath = ModUtil::getModuleRelativePath(self::MODULENAME);
+        $module = ModUtil::getModule(self::MODULENAME);
+        $dom = $module->getTranslationDomain();
 
         return array(
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
             'email_from' => System::getVar('adminmail'),
-            'url_ranks_images' => "$modulePath/Resources/public/images/ranks",
+            'url_ranks_images' => $module->getRelativePath() . "/Resources/public/images/ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => 'no',
             'extendedsearch' => 'no',
@@ -276,10 +281,10 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             return false;
         }
         // remove the legacy hooks
-        ModUtil::unregisterHook('item', 'create', 'API', 'Dizkus', 'hook', 'createbyitem');
-        ModUtil::unregisterHook('item', 'update', 'API', 'Dizkus', 'hook', 'updatebyitem');
-        ModUtil::unregisterHook('item', 'delete', 'API', 'Dizkus', 'hook', 'deletebyitem');
-        ModUtil::unregisterHook('item', 'display', 'GUI', 'Dizkus', 'hook', 'showdiscussionlink');
+        $sql = "DELETE FROM hooks WHERE tmodule='Dizkus' OR smodule='Dizkus'";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
         $this->upgrade_to_4_0_0_removeTablePrefixes($prefix);
         // update dizkus_forums to prevent errors in column indexes
         $sql = 'ALTER TABLE dizkus_forums MODIFY forum_last_post_id INT DEFAULT NULL';
@@ -290,7 +295,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $stmt->execute();
         // get all the pop3 connections & hook references for later re-entry
         $sql = 'SELECT forum_id AS id, forum_moduleref as moduleref, forum_pop3_active AS active, forum_pop3_server AS server, forum_pop3_port AS port, forum_pop3_login AS login,
-                forum_pop3_password AS password, forum_pop3_interval AS interval, forum_pop3_lastconnect AS lastconnect, forum_pop3_pnuser as userid
+                forum_pop3_password AS password, forum_pop3_interval AS `interval`, forum_pop3_lastconnect AS lastconnect, forum_pop3_pnuser as userid
                 FROM dizkus_forums
                 WHERE forum_pop3_active = 1';
         $forumdata = $connection->fetchAll($sql);
@@ -299,10 +304,36 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                 FROM dizkus_topics
                 WHERE topic_reference <> \'\'';
         $hookedTopicData = $connection->fetchAll($sql);
+        // delete orphaned topics with no posts to maintain referential integrity
+        $sql = "DELETE from dizkus_topics WHERE topic_last_post_id = 0";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
         // @todo ?? should do ->? 'ALTER TABLE  `dizkus_forum_favorites` ADD  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST';
+        if (!$this->upgrade_to_4_0_0_renameColumns()) {
+            return false;
+        }
         // update all the tables to 4.0.0
         try {
-            DoctrineHelper::updateSchema($this->entityManager, $this->_entities);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[0]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[1]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[2]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[3]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[4]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[5]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[6]));
+            sleep(1);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[7]));
+            sleep(2);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[8]));
+            sleep(2);
+            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[9]));
+            sleep(2);
         } catch (Exception $e) {
             $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
             return false;
@@ -314,7 +345,6 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->upgrade_to_4_0_0_migratePop3Connections($forumdata);
         // @todo use $forumdata to migrate forum modulerefs
         $this->upgrade_to_4_0_0_migrateHookedTopics($hookedTopicData);
-        $this->upgrade_to_4_0_0_renameColumns();
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
@@ -328,6 +358,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVar('solved_enabled', $defaultModuleVars['solved_enabled']);
         $this->setVar('ajax', $defaultModuleVars['ajax']);
         $this->setVar('defaultPoster', $defaultModuleVars['defaultPoster']);
+        $this->setVar('indexTo', $defaultModuleVars['indexTo']);
+        $this->setVar('notifyAdminAsMod', $defaultModuleVars['notifyAdminAsMod']);
         // register new hooks and event handlers
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
@@ -378,7 +410,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_topics topicCount INT UNSIGNED NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_posts postCount INT UNSIGNED NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_moduleref moduleref INT UNSIGNED NOT NULL DEFAULT 0';
-        $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_name name VARCHAR(150) NOT NULL DEFAULT \'\'';
+        $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_name `name` VARCHAR(150) NOT NULL DEFAULT \'\'';
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_last_post_id last_post_id INT DEFAULT NULL';
         $sqls[] = 'ALTER TABLE dizkus_users CHANGE user_posts postCount INT UNSIGNED NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_users CHANGE user_lastvisit lastvisit DATETIME DEFAULT NULL';
@@ -391,7 +423,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sqls[] = 'ALTER TABLE dizkus_ranks CHANGE rank_min minimumCount INT NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_ranks CHANGE rank_max maximumCount INT NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_ranks CHANGE rank_image image VARCHAR(255) NOT NULL';
-        $sqls[] = 'ALTER TABLE dizkus_ranks CHANGE rank_special type INT(2) NOT NULL DEFAULT 0';
+        $sqls[] = 'ALTER TABLE dizkus_ranks CHANGE rank_special `type` INT(2) NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_poster poster INT NOT NULL DEFAULT 0';
         $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_title title VARCHAR(255) NOT NULL';
         $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_status status INT NOT NULL DEFAULT 0';
@@ -405,8 +437,10 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                 $stmt->execute();
             } catch (Exception $e) {
                 $this->request->getSession()->getFlashBag()->add('error', $e);
+                return false;
             }
         }
+        return true;
     }
 
     /**
@@ -425,6 +459,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         // Move old categories into new tree as Forums
         $sql = 'SELECT * FROM dizkus_categories ORDER BY cat_order ASC';
         $categories = $connection->fetchAll($sql);
+        $sqls = array();
         foreach ($categories as $category) {
             // create new category forum with old name
             $newCatForum = new ForumEntity();
@@ -432,21 +467,18 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $newCatForum->setParent($forumRoot);
             $newCatForum->lock();
             $this->entityManager->persist($newCatForum);
-            // set parent of existing forums to new category forum
-            $where = array('root' => $category['cat_id']);
-            $forums = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findBy($where);
-            foreach ($forums as $forum) {
-                $forum->setParent($newCatForum);
-                $this->entityManager->persist($forum);
-            }
+            $this->entityManager->flush();
+            // create sql to update parent on child forums
+            $sqls[] = "UPDATE dizkus_forums SET parent = ".$newCatForum->getForum_id()." WHERE cat_id = ".$category['cat_id'];
         }
-        $this->entityManager->flush();
+        // update child forums
+        foreach ($sqls as $sql) {
+            $connection->executeQuery($sql);
+        }
         // drop the old categories table
         $sql = 'DROP TABLE dizkus_categories';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-
-        return;
     }
 
     /**
@@ -455,24 +487,29 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     private function upgrade_to_4_0_0_updatePosterData()
     {
-        // get all the old posts
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')->groupBy('p.poster');
-        $posts = $qb->getQuery()->getArrayResult();
-        foreach ($posts as $post) {
-            if ($post['poster_id'] > 0) {
-                $forumUser = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserEntity')->find($post['poster_id']);
+        $connection = $this->entityManager->getConnection();
+        $Posters = $connection->executeQuery("SELECT DISTINCT poster_id from dizkus_posts WHERE poster_id NOT IN (SELECT DISTINCT user_id FROM dizkus_users)");
+        $newUserCount = 0;
+        foreach ($Posters as $poster) {
+            $posterId = $poster['poster_id'];
+            if ($posterId > 0) {
+                $forumUser = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserEntity')->find($posterId);
                 // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
-                    $forumUser = new ForumUserEntity($post['poster_id']);
+                    $forumUser = new ForumUserEntity($posterId);
                     $this->entityManager->persist($forumUser);
+                    $newUserCount++;
                 }
             }
+            if ($newUserCount > 20) {
+                $this->entityManager->flush();
+                $newUserCount = 0;
+            }
         }
-        $this->entityManager->flush();
+        if ($newUserCount > 0) {
+            $this->entityManager->flush();
+        }
         ModUtil::apiFunc($this->name, 'Sync', 'all');
-
-        return;
     }
 
     /**
@@ -500,8 +537,6 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sql = 'DELETE FROM dizkus_forum_mods WHERE user_id > 1000000';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-
-        return;
     }
 
     /**
