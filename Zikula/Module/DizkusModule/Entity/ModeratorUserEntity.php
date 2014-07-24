@@ -37,7 +37,7 @@ class ModeratorUserEntity extends EntityAccess
     /**
      * forumUser
      *
-     * @ORM\OneToOne(targetEntity="ForumUserEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     private $forumUser;

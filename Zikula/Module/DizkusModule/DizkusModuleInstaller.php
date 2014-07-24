@@ -226,15 +226,14 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     public static function getDefaultVars()
     {
-        $module = ModUtil::getModule(self::MODULENAME);
-        $dom = $module->getTranslationDomain();
+        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
 
         return array(
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
             'email_from' => System::getVar('adminmail'),
-            'url_ranks_images' => $module->getRelativePath() . "/Resources/public/images/ranks",
+            'url_ranks_images' => "modules/Dizkus/Zikula/Module/DizkusModule/Resources/public/images/ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => 'no',
             'extendedsearch' => 'no',
@@ -360,6 +359,9 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVar('defaultPoster', $defaultModuleVars['defaultPoster']);
         $this->setVar('indexTo', $defaultModuleVars['indexTo']);
         $this->setVar('notifyAdminAsMod', $defaultModuleVars['notifyAdminAsMod']);
+        //add note about url_ranks_images var
+        $this->request->getSession()->getFlashBag()->add('status', $this->__('Double check your path variable setting for rank images in settings!'));
+
         // register new hooks and event handlers
         HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
         HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
@@ -469,12 +471,36 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $this->entityManager->persist($newCatForum);
             $this->entityManager->flush();
             // create sql to update parent on child forums
-            $sqls[] = "UPDATE dizkus_forums SET parent = ".$newCatForum->getForum_id()." WHERE cat_id = ".$category['cat_id'];
+            $sqls[] = "UPDATE dizkus_forums SET parent = ".$newCatForum->getForum_id().", lvl=2 WHERE cat_id = ".$category['cat_id'];
         }
         // update child forums
         foreach ($sqls as $sql) {
             $connection->executeQuery($sql);
         }
+        // correct the forum tree MANUALLY
+        // we know that the forum can only be two levels deep (root -> parent -> child)
+        $count = 1;
+        $sqls = array();
+        $categories = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE lvl = 1");
+        foreach($categories as $category) {
+            $category['l'] = ++$count;
+            $children = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE parent = $category[forum_id]");
+            foreach ($children as $child) {
+                $left = ++$count;
+                $right = ++$count;
+                $sqls[] = "UPDATE dizkus_forums SET forum_order = $left, rgt = $right WHERE forum_id = $child[forum_id]";
+            }
+            $right = ++$count;
+            $sqls[] = "UPDATE dizkus_forums SET forum_order = $category[l], rgt = $right WHERE forum_id = $category[forum_id]";
+        }
+        $right = ++$count;
+        $sqls[] = "UPDATE dizkus_forums SET forum_order = 1, rgt = $right WHERE parent IS NULL";
+        $sqls[] = "UPDATE dizkus_forums SET cat_id = 1 WHERE 1";
+
+        foreach ($sqls as $sql) {
+            $connection->executeQuery($sql);
+        }
+
         // drop the old categories table
         $sql = 'DROP TABLE dizkus_categories';
         $stmt = $connection->prepare($sql);
