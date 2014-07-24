@@ -237,7 +237,13 @@ div.dz-codeheader {
     border-radius: 5px;
     position: relative;
     padding: 3px;
-    margin-bottom: 1em;
+}
+.dz-quotetext {
+    /* compensate for spacelab styles */
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-size: inherit;;
 }
 .dz-quote .inner {
     padding: 9px;
