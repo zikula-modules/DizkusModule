@@ -57,7 +57,7 @@
                 {if $coredata.logged_in eq true}
                     <li>
                         {if $msgmodule}
-                            <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_ui}"><i class='fa fa-envelope-o fa-150x'></i></a>
+                            <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}"><i class='fa fa-envelope-o fa-150x'></i></a>
                         {/if}
                         {if isset($topic) AND isset($post.poster_data) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
                             <a class='tooltips' title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}"><i class='fa fa-info-circle fa-150x'></i></a>
