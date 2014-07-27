@@ -344,6 +344,18 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->upgrade_to_4_0_0_migratePop3Connections($forumdata);
         // @todo use $forumdata to migrate forum modulerefs
         $this->upgrade_to_4_0_0_migrateHookedTopics($hookedTopicData);
+        $sqls = array();
+        $sqls[] = "UPDATE `dizkus_topics` SET `poster`=1 WHERE poster='-1'";
+        $sqls[] = "UPDATE `dizkus_posts` SET `poster_id`=1 WHERE poster_id='-1'";
+        $sqls[] = "DELETE FROM `dizkus_subscription` WHERE `user_id` < 2";
+        $sqls[] = "DELETE FROM `dizkus_topic_subscription` WHERE `user_id` < 2";
+        foreach ($sqls as $sql) {
+            $stmt = $connection->prepare($sql);
+            try {
+                $stmt->execute();
+            } catch (Exception $e) {
+            }
+        }
         $this->delVar('autosubscribe');
         $this->delVar('allowgravatars');
         $this->delVar('gravatarimage');
