@@ -14,13 +14,13 @@ Before you pull:
 
   1. uninstall and delete the module.
   2. delete your local repo and all the files.
-  3. re-clone the repo into `/modules/zikula-dizkus/`
+  3. clone the repo into `/modules/Dizkus/`
 
 Your directory structure should look like so:
 
 ```
   /modules
-    /zikula-dizkus
+    /Dizkus
       /Zikula
         /Module
           /DizkusModule
