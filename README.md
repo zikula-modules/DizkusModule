@@ -5,10 +5,8 @@ Dizkus is a discussion forum module for the Zikula Application Framework
 
 This version **requires** Zikula Core 1.4.0+
 
-The code is currently under heavy development, but typically is in a functional
+The code is currently under development, but typically is in a functional
 state. Feel free to test and report issues. thank you.
-
-**NOTE: As of 7 September 2013 a complete reinstall is required.**
 
 Before you pull:
 
@@ -28,3 +26,15 @@ Your directory structure should look like so:
             /Block
             etc...
 ```
+
+UPGRADING from Dizkus 3.1
+-------------------------
+
+you must add to `personal_config.php`:
+
+`$ZConfig['System']['prefix'] = 'pn';`
+
+(or whatever your table prefix is from your old installation)
+
+note that upgrading can take a long time and may require updating your `.htaccess` or `php.ini` file to increase
+time limits and memory allowed.
