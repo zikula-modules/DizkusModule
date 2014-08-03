@@ -13,10 +13,12 @@ namespace Zikula\Module\DizkusModule\Controller;
 
 use SecurityUtil;
 use ModUtil;
+use Symfony\Component\HttpFoundation\Response;
 use UserUtil;
 use FormUtil;
 use DataUtil;
 use System;
+use Zikula\Core\Response\PlainResponse;
 use ZLanguage;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
@@ -724,7 +726,7 @@ class UserController extends \Zikula_AbstractController
         } else {
             $allowedforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
             if (count($allowedforums) > 0) {
-                $where = array('f.forum', $allowedforums);
+                $where = array('t.forum', $allowedforums);
             }
         }
         $this->view->assign('forum_name', $forumname);
@@ -766,9 +768,8 @@ class UserController extends \Zikula_AbstractController
         }
         $this->view->assign('posts', $posts);
         $this->view->assign('dizkusinfo', $dzkinfo);
-        header('Content-Type: text/xml');
 
-        return $this->view->display($templatefile); // using plainresponse here isn't working
+        return new PlainResponse($this->view->fetch($templatefile), Response::HTTP_OK, array('Content-Type' => 'text/xml'));
     }
 
 }
