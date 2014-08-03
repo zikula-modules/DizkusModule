@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="{charset}"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-        <title>{$sitename|safetext} - {$name|safetext}</title>
+        <title>{$sitename|safetext} - {$forum_name|safetext}</title>
         <link>{$forum_link|htmlentities|safetext}</link>
-        <description>{$sitename|safetext} - {$name|safetext}</description>
+        <description>{$sitename|safetext} - {$forum_name|safetext}</description>
         <language>{$current_language}</language>
         <pubDate>{$current_date}</pubDate>
         <lastBuildDate>{$current_date}</lastBuildDate>
         <docs>http://blogs.law.harvard.edu/tech/rss</docs>
         <generator>Dizkus {$dizkusinfo.version}</generator>
         <webMaster>{$adminmail|safetext} ({$adminmail|safetext})</webMaster>
-            {foreach item='post' from=$posts}
+        {foreach item='post' from=$posts}
             <item>
                 <title>{$post.title|safetext}</title>
                 <link>{$post.last_post_url|htmlentities|safetext}</link>
