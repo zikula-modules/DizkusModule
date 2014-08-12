@@ -311,6 +311,10 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sql = "UPDATE dizkus_users set rank=NULL WHERE rank=0";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
+        // set rank to NULL where rank no longer available
+        $sql = "UPDATE dizkus_users set rank=NULL WHERE rank NOT IN (SELECT DISTINCT rank_id from dizkus_ranks)";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
 
         // @todo ?? should do ->? 'ALTER TABLE  `dizkus_forum_favorites` ADD  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST';
         if (!$this->upgrade_to_4_0_0_renameColumns()) {
