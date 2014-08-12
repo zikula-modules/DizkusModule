@@ -157,7 +157,7 @@ class ForumManager
             ->getQuery();
         $query->setFirstResult($startNumber - 1)
             ->setMaxResults($this->_itemsPerPage);
-        $paginator = new Paginator($query);
+        $paginator = new Paginator($query, false);
         $this->_numberOfItems = count($paginator);
 
         return $paginator;
