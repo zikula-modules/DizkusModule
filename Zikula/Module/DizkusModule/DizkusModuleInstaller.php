@@ -307,8 +307,9 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sql = "DELETE from dizkus_topics WHERE topic_last_post_id = 0";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
+        // NOTE: do not delete users from the dizkus_users table - they must remain for data integrity
         // change default value of rank in dizkus_users from `0` to NULL
-        $sql = "UPDATE dizkus_users set rank=NULL WHERE rank=0";
+        $sql = "UPDATE dizkus_users SET rank=NULL WHERE rank=0";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         // set rank to NULL where rank no longer available
