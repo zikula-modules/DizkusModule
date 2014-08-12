@@ -307,6 +307,11 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sql = "DELETE from dizkus_topics WHERE topic_last_post_id = 0";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
+        // change default value of rank in dizkus_users from `0` to NULL
+        $sql = "UPDATE dizkus_users set rank=NULL WHERE rank=0";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+
         // @todo ?? should do ->? 'ALTER TABLE  `dizkus_forum_favorites` ADD  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST';
         if (!$this->upgrade_to_4_0_0_renameColumns()) {
             return false;
