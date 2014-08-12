@@ -73,6 +73,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
 
         // Paginator
         $allusers = new Paginator($query);
+        $count = $allusers->count();
 
         // recreate the array of users as ForumUserEntities
         $userArray = array();
@@ -82,6 +83,8 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
             $forumUser = $managedForumUser->get();
             if (isset($forumUser)) {
                 $userArray[$user->getUid()] = $forumUser;
+            } else {
+                $count--;
             }
         }
 
@@ -91,7 +94,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $this->view->assign('letter', $letter);
         $this->view->assign('page', $page);
         $this->view->assign('perpage', $perpage);
-        $this->view->assign('usercount', count($userArray));
+        $this->view->assign('usercount', $count);
         return true;
     }
 
