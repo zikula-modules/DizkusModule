@@ -79,7 +79,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // check if cb_template is set, if not, use the default centerblock template
         if (empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'Centerblock/display.tpl';
+            $vars['cb_template'] = 'Block/centerblock.tpl';
         }
         if (empty($vars['cb_parameters'])) {
             $vars['cb_parameters'] = 'maxposts=5';
@@ -110,7 +110,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $cb_template = $this->request->request->get('cb_template', 'Centerblock/display.tpl');
+        $cb_template = $this->request->request->get('cb_template', 'Block/centerblock.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
 
@@ -135,10 +135,10 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             $vars['cb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'Centerblock/display.tpl';
+            $vars['cb_template'] = 'Block/centerblock.tpl';
         }
 
-        return $this->view->assign('vars', $vars)->fetch('Centerblock/config.tpl');
+        return $this->view->assign('vars', $vars)->fetch('Block/centerblock_modify.tpl');
     }
 
 }

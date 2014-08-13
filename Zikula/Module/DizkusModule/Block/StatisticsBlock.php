@@ -73,7 +73,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         }
         // break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
-        // check if cb_template is set, if not, use the default centerblock template
+        // check if cb_template is set, if not, use the default template
         if (empty($vars['sb_template'])) {
             $vars['sb_template'] = 'Statisticsblock/display.tpl';
         }
