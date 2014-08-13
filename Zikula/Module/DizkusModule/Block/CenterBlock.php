@@ -79,7 +79,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // check if cb_template is set, if not, use the default centerblock template
         if (empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'Block/centerblock.tpl';
+            $vars['cb_template'] = 'centerblock.tpl';
         }
         if (empty($vars['cb_parameters'])) {
             $vars['cb_parameters'] = 'maxposts=5';
@@ -93,7 +93,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             }
         }
         $this->view->assign('params', $paramarray);
-        $blockinfo['content'] = $this->view->fetch(trim($vars['cb_template']));
+        $blockinfo['content'] = $this->view->fetch('Block/' . trim($vars['cb_template']));
 
         return BlockUtil::themesideblock($blockinfo);
     }
@@ -110,7 +110,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $cb_template = $this->request->request->get('cb_template', 'Block/centerblock.tpl');
+        $cb_template = $this->request->request->get('cb_template', 'centerblock.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
 
@@ -135,10 +135,11 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             $vars['cb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'Block/centerblock.tpl';
+            $vars['cb_template'] = 'centerblock.tpl';
         }
 
-        return $this->view->assign('vars', $vars)->fetch('Block/centerblock_modify.tpl');
+        return $this->view->assign('vars', $vars)
+            ->fetch('Block/centerblock_modify.tpl');
     }
 
 }
