@@ -75,7 +75,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
         // check if cb_template is set, if not, use the default template
         if (empty($vars['sb_template'])) {
-            $vars['sb_template'] = 'Statisticsblock/display.tpl';
+            $vars['sb_template'] = 'Block/statisticsblock.tpl';
         }
         if (empty($vars['sb_parameters'])) {
             $vars['sb_parameters'] = 'maxposts=5';
@@ -106,7 +106,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $sb_template = $this->request->request->get('sb_template', 'Statisticsblock/display.tpl');
+        $sb_template = $this->request->request->get('sb_template', 'Block/statisticsblock.tpl');
         $sb_parameters = $this->request->request->get('sb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('sb_template', 'sb_parameters'));
 
@@ -131,9 +131,9 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
             $vars['sb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['sb_template']) || empty($vars['sb_template'])) {
-            $vars['sb_template'] = 'Statisticsblock/display.tpl';
+            $vars['sb_template'] = 'Block/statisticsblock.tpl';
         }
-        return $this->view->assign('vars', $vars)->fetch('Statisticsblock/config.tpl');
+        return $this->view->assign('vars', $vars)->fetch('Block/statisticsblock_modify.tpl');
     }
 
 }
