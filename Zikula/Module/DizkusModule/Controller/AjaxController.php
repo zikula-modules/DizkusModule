@@ -413,25 +413,4 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         System::shutDown();
     }
 
-    /**
-     * newposts
-     * update the "new posts" block
-     *
-     * only user in Centerblock/display3.tpl
-     */
-    public function newpostsAction()
-    {
-        if ($this->getVar('forum_enabled') == 'no') {
-            return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
-        }
-        $this->view->setCaching(false);
-        if (System::getVar('shorturls')) {
-            $this->view->_get_plugin_filepath('outputfilter', 'shorturls');
-            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
-        }
-        $out = $this->view->fetch('Ajax/newposts.tpl');
-        echo $out;
-        System::shutDown();
-    }
-
 }
