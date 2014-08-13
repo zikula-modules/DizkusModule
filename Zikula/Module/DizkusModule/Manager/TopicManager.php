@@ -186,8 +186,8 @@ class TopicManager
             ->orderBy('p.post_time', $postSortOrder)
             ->getQuery();
         $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
-        $paginator = new Paginator($query);
-        $this->_numberOfItems = count($paginator);
+        $paginator = new Paginator($query, false);
+        $this->_numberOfItems = $paginator->count();
 
         return $paginator;
     }

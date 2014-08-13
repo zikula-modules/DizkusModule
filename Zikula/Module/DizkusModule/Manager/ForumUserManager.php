@@ -58,13 +58,12 @@ class ForumUserManager
      */
     public function getPostOrder()
     {
-        return $this->_forumUser ? 'ASC' : 'DESC';
+        return ($this->_forumUser->getPostOrder() == 0) ? 'ASC' : 'DESC';
     }
 
     /**
      * set postOrder
-     *
-     * @return string
+     * @param string $sort asc|desc
      */
     public function setPostOrder($sort)
     {
@@ -99,8 +98,7 @@ class ForumUserManager
 
     /**
      * persist and flush
-     *
-     * @return void
+     * @param array $data forum user data
      */
     public function store($data)
     {
