@@ -105,7 +105,7 @@ class UserApi extends \Zikula_AbstractApi
             case 'lastuser':
                 if (!isset($cache[$type])) {
                     $qb = $this->entityManager->createQueryBuilder();
-                    $qb->select('u')->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user', 'DESC')->setMaxResults(1);
+                    $qb->select('u')->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user_id', 'DESC')->setMaxResults(1);
                     $forumUser = $qb->getQuery()->getSingleResult();
                     $user = $forumUser->getUser();
                     $cache[$type] = $user['uname'];
