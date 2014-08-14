@@ -20,6 +20,7 @@ use DateTime;
 use DataUtil;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Entity\PostEntity;
 
 class UserApi extends \Zikula_AbstractApi
@@ -216,11 +217,17 @@ class UserApi extends \Zikula_AbstractApi
         if (!isset($args['replyCount']) || !is_numeric($args['replyCount']) || $args['replyCount'] < 0) {
             throw new \InvalidArgumentException();
         }
-        // get some enviroment
+        // get some environment
         $posts_per_page = ModUtil::getVar($this->name, 'posts_per_page');
-        $post_sort_order = ModUtil::getVar($this->name, 'post_sort_order');
+        if (UserUtil::isLoggedIn()) {
+            $managedForumUser = new ForumUserManager();
+            $postSortOrder = $managedForumUser->getPostOrder();
+        } else {
+            $postSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
+        }
+
         $last_page = 0;
-        if ($post_sort_order == 'ASC') {
+        if ($postSortOrder == 'ASC') {
             // +1 for the initial posting
             $last_page = floor($args['replyCount'] / $posts_per_page) * $posts_per_page + 1;
         }
