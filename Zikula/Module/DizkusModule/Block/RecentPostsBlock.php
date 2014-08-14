@@ -16,10 +16,7 @@ use ModUtil;
 use BlockUtil;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * This class provides the center block.
- */
-class CenterBlock extends \Zikula_Controller_AbstractBlock
+class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
 {
 
     /**
@@ -29,7 +26,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('Dizkus_Centerblock::', 'Block ID::');
+        SecurityUtil::registerPermissionSchema($this->name . '::RecentPostsBlock', 'Block ID::');
     }
 
     /**
@@ -41,8 +38,8 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     {
         return array(
             'module' => $this->name,
-            'text_type' => $this->__('Dizkus recent'),
-            'text_type_long' => $this->__('Dizkus recent posts'),
+            'text_type' => $this->__('Forum recent'),
+            'text_type_long' => $this->__('Recent forum posts'),
             'allow_multiple' => true,
             'form_content' => false,
             'form_refresh' => false,
@@ -50,7 +47,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
     }
 
     /**
-     * Display the center block
+     * Display the block
      *
      * @param array $blockinfo Blockinfo array.
      *
@@ -62,7 +59,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         // check for Permission
-        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // check if forum is turned off
@@ -77,9 +74,9 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
         }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockinfo['content']);
-        // check if cb_template is set, if not, use the default centerblock template
+        // check if cb_template is set, if not, use the default block template
         if (empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'centerblock.tpl';
+            $vars['cb_template'] = 'recentposts.tpl';
         }
         if (empty($vars['cb_parameters'])) {
             $vars['cb_parameters'] = 'maxposts=5';
@@ -107,10 +104,10 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $cb_template = $this->request->request->get('cb_template', 'centerblock.tpl');
+        $cb_template = $this->request->request->get('cb_template', 'recentposts.tpl');
         $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
         $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
 
@@ -126,7 +123,7 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Centerblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         // Break out options from our content field
@@ -135,11 +132,11 @@ class CenterBlock extends \Zikula_Controller_AbstractBlock
             $vars['cb_parameters'] = 'maxposts=5';
         }
         if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'centerblock.tpl';
+            $vars['cb_template'] = 'recentposts.tpl';
         }
 
         return $this->view->assign('vars', $vars)
-            ->fetch('Block/centerblock_modify.tpl');
+            ->fetch('Block/recentposts_modify.tpl');
     }
 
 }

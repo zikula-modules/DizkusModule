@@ -29,7 +29,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('Dizkus::Statisticsblock', 'Block ID::');
+        SecurityUtil::registerPermissionSchema($this->name . '::StatisticsBlock', 'Block ID::');
     }
 
     /**
@@ -41,7 +41,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     {
         return array(
             'module' => $this->name,
-            'text_type' => $this->__('Dizkus statistic'),
+            'text_type' => $this->__('Dizkus statistics'),
             'text_type_long' => $this->__('Dizkus Statistics Block'),
             'allow_multiple' => true,
             'form_content' => false,
@@ -62,7 +62,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
             return false;
         }
         //check for Permission
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockinfo['bid'] . '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // check if forum is turned off
@@ -103,7 +103,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $sb_template = $this->request->request->get('sb_template', 'Block/statisticsblock.tpl');
@@ -122,7 +122,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::Statisticsblock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         // Break out options from our content field
