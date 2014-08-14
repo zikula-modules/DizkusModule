@@ -214,6 +214,9 @@ class TopicEntity extends EntityAccess
         $this->forum = $forum;
     }
 
+    /**
+     * @return PostEntity
+     */
     public function getLast_post()
     {
         return $this->last_post;

@@ -49,91 +49,94 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Display the block
      *
-     * @param array $blockinfo Blockinfo array.
+     * @param array $blockInfo Blockinfo array.
+     *
+     * @throws AccessDeniedException on perm check failure
      *
      * @return array|boolean
      */
-    public function display($blockinfo)
+    public function display($blockInfo)
     {
         if (!ModUtil::available($this->name)) {
             return false;
         }
         // check for Permission
-        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_READ)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_READ)) {
             throw new AccessDeniedException();
         }
         // check if forum is turned off
         if ($this->getVar('forum_enabled') == 'no') {
-            $blockinfo['content'] = $this->getVar('forum_disabled_info');
+            $blockInfo['content'] = $this->getVar('forum_disabled_info');
 
-            return BlockUtil::themesideblock($blockinfo);
+            return BlockUtil::themesideblock($blockInfo);
         }
-        // return immediately if no post exist
+        // return immediately if no posts exist
         if (ModUtil::apiFunc($this->name, 'user', 'countstats', array('type' => 'all')) == 0) {
             return false;
         }
         // Break out options from our content field
-        $vars = BlockUtil::varsFromContent($blockinfo['content']);
-        // check if cb_template is set, if not, use the default block template
-        if (empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'recentposts.tpl';
+        $vars = BlockUtil::varsFromContent($blockInfo['content']);
+        // check if template is set, if not, use the default block template
+        if (empty($vars['template'])) {
+            $vars['template'] = 'recentposts.tpl';
         }
-        if (empty($vars['cb_parameters'])) {
-            $vars['cb_parameters'] = 'maxposts=5';
+        if (empty($vars['params'])) {
+            $vars['params'] = 'maxposts=5';
         }
+        // convert param string to php array
         $paramarray = array();
-        $params = explode(',', $vars['cb_parameters']);
+        $params = explode(',', $vars['params']);
         if (is_array($params) && count($params) > 0) {
             foreach ($params as $param) {
                 $paramdata = explode('=', $param);
                 $paramarray[trim($paramdata[0])] = trim($paramdata[1]);
             }
         }
-        $this->view->assign('params', $paramarray);
-        $blockinfo['content'] = $this->view->fetch('Block/' . trim($vars['cb_template']));
+        $this->view->assign('lastposts', ModUtil::apiFunc($this->name, 'block', 'getLastPosts', $paramarray));
 
-        return BlockUtil::themesideblock($blockinfo);
+        $blockInfo['content'] = $this->view->fetch('Block/' . trim($vars['template']));
+
+        return BlockUtil::themesideblock($blockInfo);
     }
 
     /**
      * Update the block
      *
-     * @param array $blockinfo Blockinfo array.
+     * @param array $blockInfo Blockinfo array.
+     * 
+     * @throws AccessDeniedException on perm check failure
      *
      * @return boolean|array
      */
-    public function update($blockinfo)
+    public function update($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $cb_template = $this->request->request->get('cb_template', 'recentposts.tpl');
-        $cb_parameters = $this->request->request->get('cb_parameters', 'maxposts=5');
-        $blockinfo['content'] = BlockUtil::varsToContent(compact('cb_template', 'cb_parameters'));
+        $params = $this->request->request->get('dizkus');
+        $blockInfo['content'] = BlockUtil::varsToContent($params);
 
-        return $blockinfo;
+        return $blockInfo;
     }
 
     /**
      * Modify the block
      *
-     * @param array $blockinfo Blockinfo array.
+     * @param array $blockInfo Blockinfo array.
+     *
+     * @throws AccessDeniedException on perm check failure
      *
      * @return string|boolean
      */
-    public function modify($blockinfo)
+    public function modify($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockinfo['bid'] . '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        // Break out options from our content field
-        $vars = BlockUtil::varsFromContent($blockinfo['content']);
-        if (!isset($vars['cb_parameters']) || empty($vars['cb_parameters'])) {
-            $vars['cb_parameters'] = 'maxposts=5';
-        }
-        if (!isset($vars['cb_template']) || empty($vars['cb_template'])) {
-            $vars['cb_template'] = 'recentposts.tpl';
-        }
+        $vars = BlockUtil::varsFromContent($blockInfo['content']);
+        // ensure default values
+        $vars['params'] = !empty($vars['params']) ? $vars['params'] : 'maxposts=5';
+        $vars['template'] = !empty($vars['template']) ? $vars['template'] : 'recentposts.tpl';
 
         return $this->view->assign('vars', $vars)
             ->fetch('Block/recentposts_modify.tpl');
