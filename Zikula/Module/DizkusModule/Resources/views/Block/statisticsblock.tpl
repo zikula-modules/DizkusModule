@@ -1,55 +1,36 @@
-{pageaddvar name="stylesheet" value="modules/Dizkus/style/style.css"}
-{readtopforums params=$statparams}
 {if $topforumscount > 0}
-    <br />
-    <strong>{gt text="%s Most-active forum" plural="%s Most-active forums" tag1=$topforumscount count=$topforumscount domain="module_dizkus"}:</strong>
-    <br />
-    <ul class="dzk_forumlist">
+    <h5>{gt text="%s Most-active forum" plural="%s Most-active forums" tag1=$topforumscount count=$topforumscount} <small>(topics/posts)</small>:</h5>
+    <ul class="fa-ul" style="margin-left:0;padding-left:40px;">
         {foreach item='topforum' from=$topforums}
-            <li>
-                <a href="{modurl modname=$module type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
-                ({$topforum.topicCount}/{$topforum.postCount})
-            </li>
+        <li><i class="fa-li fa fa-comments text-muted"></i>
+            <a href="{modurl modname=$module type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
+            <small>({$topforum.topicCount}/{$topforum.postCount})</small>
+        </li>
         {/foreach}
     </ul>
 {/if}
 
-{readlastposts params=$statparams}
 {if $lastpostcount > 0}
-    <br />
-    <strong>{gt text="%s Recent topic" plural="%s Recent topics" tag1=$lastpostcount count=$lastpostcount domain="module_dizkus"}:</strong>
-    <br />
-    <ul class="dzk_postlist">
-        {foreach item='lastpost' from=$lastposts}
-            <li>
-                <a href="{$lastpost.last_post_url_anchor}" title="{$lastpost.cat_title} :: {$lastpost.name} :: {$lastpost.title}">{$lastpost.title|truncate:21}</a><br />
-                {gt text='%s reply' plural='%s replies' tag1=$lastpost.replyCount count=$lastpost.replyCount domain="module_dizkus"}
-                <br />
-                {$lastpost.poster_name|profilelinkbyuname}<br />{$lastpost.posted_time}
-            </li>
+    <h5>{gt text="%s Recent topic" plural="%s Recent topics" tag1=$lastpostcount count=$lastpostcount}:</h5>
+    {include file="Block/recentposts.tpl" lastposts=$lastposts showfooter=false}
+{/if}
+
+{if $toppostercount > 0}
+    <h5>{gt text="%s Most-active poster in last %s months" plural="%s Most-active posters in last %n months" tag1=$toppostercount tag2=$months count=$toppostercount}:</h5>
+    <ul class="fa-ul" style="margin-left:0;padding-left:40px;">
+        {foreach item='topposter' from=$topposters}
+        <li><i class="fa-li fa fa-user text-muted"></i>{$topposter.user_name|profilelinkbyuname}&nbsp;<small>{$topposter.postCount} {gt text="Posts"}</small></li>
         {/foreach}
     </ul>
 {/if}
 
-{readtopposters params=$statparams}
-{if $toppostercount > 0}
-    <br />
-    <strong>{gt text="%s Most-active poster" plural="%s Most-active posters" tag1=$toppostercount count=$toppostercount domain="module_dizkus"}:</strong>
-    <br />
-    <ul class="dzk_posterlist">
-        {foreach item='topposter' from=$topposters}
-            <li>{$topposter.user_name|profilelinkbyuname}<br />({$topposter.postCount} {gt text="Posts" domain="module_dizkus"})</li>
-            {/foreach}
-    </ul>
-{/if}
-
-{readstatistics}{* accepts no parameters *}
-<br />
-<strong>{gt text="Total" domain="module_dizkus"}:</strong>
-<br />
-<ul class="dzk_statslist">
-    <li>{gt text="Forums" domain="module_dizkus"}: {$total_forums}</li>
-    <li>{gt text="Topics" domain="module_dizkus"}: {$total_topics}</li>
-    <li>{gt text="Posts" domain="module_dizkus"}: {$total_posts}</li>
-    <li>{gt text="Last User" domain="module_dizkus"}: {$last_user}</li>
+<h5>{gt text="Total"}:</h5>
+<ul class="fa-ul" style="margin-left:0;padding-left:40px;">
+    <li><i class="fa-li fa fa-check text-muted"></i>{gt text="Forums"}: {$total_forums}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{gt text="Topics"}: {$total_topics}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{gt text="Posts"}: {$total_posts}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{gt text="Last User"}: {$last_user}</li>
 </ul>
+<p class="text-center">
+    <a style="font-size: 0.8em;" href="{modurl modname=$module type='user' func='index'}" title="{gt text="Go to forum"}">{gt text="Go to forum"}</a>
+</p>

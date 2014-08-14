@@ -393,6 +393,9 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $sql = "UPDATE blocks SET bkey='RecentPostsBlock', content='a:0:{}' WHERE bkey='CenterBlock' AND mid=$mid";
             $stmt = $connection->prepare($sql);
             $stmt->execute();
+            $sql = "UPDATE blocks SET content='a:0:{}' WHERE bkey='StatisticsBlock' AND mid=$mid";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
         }
         $repArray = array('Dizkus_Centerblock::', 'Dizkus_Statisticsblock', "{$this->name}::RecentPostsBlock", "{$this->name}::StatisticsBlock");
         $this->request->getSession()->getFlashBag()->add('status', $this->__f('The permission schemas %1$s and %2$s were changed into %3$s and %4$s, respectively. If you were using them please modify your permission table.', $repArray));

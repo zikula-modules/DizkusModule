@@ -166,4 +166,83 @@ class BlockApi extends \Zikula_AbstractApi
         return $lastPosts;
     }
 
+    /**
+     * gets the last $maxforums forums
+     *
+     * @param mixed[] $params {
+     *      @type int maxforums    number of forums to read, default = 5
+     *                      }
+     * 
+     * @return array $topForums
+     */
+    public function getTopForums($params)
+    {
+        $forumMax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('f')
+            ->from('Zikula\Module\DizkusModule\Entity\ForumEntity', 'f')
+            ->orderBy('f.lvl', 'DESC')
+            ->addOrderBy('f.postCount', 'DESC');
+        $qb->setMaxResults($forumMax);
+        $forums = $qb->getQuery()->getResult();
+
+        $topForums = array();
+        if (!empty($forums)) {
+            foreach ($forums as $forum) {
+                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $forum)) {
+                    $topforum = $forum->toArray();
+                    $topforum['name'] = DataUtil::formatForDisplay($forum->getName());
+                    $parent = $forum->getParent();
+                    $parentName = isset($parent) ? $parent->getName() : $this->__('Root');
+                    $topforum['cat_title'] = DataUtil::formatForDisplay($parentName);
+                    array_push($topForums, $topforum);
+                }
+            }
+        }
+
+        return $topForums;
+    }
+
+    /**
+     * gets the top $maxposters users depending on their post count
+     *
+     * @param mixed[] $params {
+     *      @type int maxposters    number of users to read, default = 3
+     *      @type int months        number months back to search, default = 6
+     *                      }
+     *
+     * @return array $topPosters
+     */
+    public function getTopPosters($params)
+    {
+        $posterMax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
+        $months = (!empty($params['months'])) ? $params['months'] : 6;
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $timePeriod = new \DateTime();
+        $timePeriod->modify("-$months months");
+        $qb->select('u')
+            ->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')
+            ->where('u.user_id > 1')
+            ->andWhere('u.lastvisit > :timeperiod')
+            ->setParameter('timeperiod', $timePeriod)
+            ->orderBy('u.postCount', 'DESC');
+        $qb->setMaxResults($posterMax);
+        $forumUsers = $qb->getQuery()->getResult();
+
+        $topPosters = array();
+        if (!empty($forumUsers)) {
+            foreach ($forumUsers as $forumUser) {
+                $coreUser = $forumUser->getUser();
+                $topPosters[] = array(
+                    'user_name' => DataUtil::formatForDisplay($coreUser['uname']),
+                    // for BC reasons
+                    'postCount' => DataUtil::formatForDisplay($forumUser->getPostCount()),
+                    'user_id' => DataUtil::formatForDisplay($forumUser->getUser_id()));
+            }
+        }
+
+        return $topPosters;
+    }
 }
