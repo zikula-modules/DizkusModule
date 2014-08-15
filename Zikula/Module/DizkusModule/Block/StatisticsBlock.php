@@ -88,6 +88,8 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
                 $paramArray[trim($paramData[0])] = trim($paramData[1]);
             }
         }
+        // must set this default
+        $paramArray['months'] = !empty($paramArray['months']) ? $paramArray['months'] : 6;
 
         $topForums = ModUtil::apiFunc($this->name, 'block', 'getTopForums', $paramArray);
         $this->view->assign('topforums', $topForums)
