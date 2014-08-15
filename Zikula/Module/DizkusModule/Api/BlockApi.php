@@ -142,7 +142,7 @@ class BlockApi extends \Zikula_AbstractApi
                 }
 
                 if ($topic->getPoster()->getUser_id() != 1) {
-                    $coreUser = $topic->getPoster()->getUser();
+                    $coreUser = $topic->getLast_post()->getPoster()->getUser();
                     $user_name = $coreUser['uname'];
                     if (empty($user_name)) {
                         // user deleted from the db?
@@ -154,10 +154,11 @@ class BlockApi extends \Zikula_AbstractApi
                 $lastPost['poster_name'] = DataUtil::formatForDisplay($user_name);
                 // @todo see ticket #184 maybe this should be using UserApi::dzkVarPrepHTMLDisplay ????
                 $lastPost['post_text'] = DataUtil::formatForDisplay(nl2br($topic->getLast_post()->getPost_text()));
-                $lastPost['posted_time'] = DateUtil::formatDatetime($topic->getTopic_time(), 'datetimebrief');
+                $lastPost['posted_time'] = DateUtil::formatDatetime($topic->getLast_post()->getPost_time(), 'datetimebrief');
                 $lastPost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
                     'start' => $start)));
                 $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
+                $lastPost['word'] = $topic->getReplyCount() > 1 ? $this->__('Last') : $this->__('New');
 
                 array_push($lastPosts, $lastPost);
             }
