@@ -23,7 +23,14 @@ use Zikula\Module\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/admin")
+ */
 class AdminController extends \Zikula_AbstractController
 {
 
@@ -33,9 +40,11 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/main")
+     *
      * The main administration function.
      *
-     * @return string HTML output string.
+     * @return RedirectResponse
      * @deprecated
      */
     public function mainAction()
@@ -45,8 +54,11 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("")
+     *
      * the main administration function
      *
+     * @return RedirectResponse
      */
     public function indexAction()
     {
@@ -55,18 +67,22 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/order")
+     * @Method("GET")
+     *
      * Change forum order
-     *
      * Move up or down a forum in the tree
+     * 
+     * @param Request $request
      *
-     * @return boolean
+     * @return RedirectResponse
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function changeForumOrderAction()
+    public function changeForumOrderAction(Request $request)
     {
-        $action = $this->request->query->get('action', 'moveUp');
-        $forumId = $this->request->query->get('forum', null);
+        $action = $request->query->get('action', 'moveUp');
+        $forumId = $request->query->get('forum', null);
         if (empty($forumId)) {
             throw new \InvalidArgumentException();
         }
@@ -84,6 +100,8 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/prefs")
+     *
      * preferences
      *
      */
@@ -98,11 +116,16 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/sync")
+     * @Method("POST")
+     *
      * syncforums
+     * 
+     * @param Request $request
      */
-    public function syncforumsAction()
+    public function syncforumsAction(Request $request)
     {
-        $showstatus = !$this->request->request->get('silent', 0);
+        $showstatus = !$request->request->get('silent', 0);
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -129,27 +152,35 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/ranks")
+     *
      * ranks
+     * 
+     * @param Request $request
+     * 
+     * @return Response|RedirectResponse
+     * 
+     * @throws AccessDeniedException
      */
-    public function ranksAction()
+    public function ranksAction(Request $request)
     {
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $submit = $this->request->request->get('submit', 2);
-        $ranktype = (int) $this->request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
+        $submit = $request->request->get('submit', 2);
+        $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
             list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
             $this->view->assign('ranks', $ranks);
             $this->view->assign('ranktype', $ranktype);
             $this->view->assign('rankimages', $rankimages);
             if ($ranktype == 0) {
-                return $this->response($this->view->fetch('Admin/ranks.tpl'));
+                return new Response($this->view->fetch('Admin/ranks.tpl'));
             } else {
-                return $this->response($this->view->fetch('Admin/honoraryranks.tpl'));
+                return new Response($this->view->fetch('Admin/honoraryranks.tpl'));
             }
         } else {
-            $ranks = $this->request->getPost()->filter('ranks', '', FILTER_SANITIZE_STRING);
+            $ranks = $request->request->filter('ranks', '', FILTER_SANITIZE_STRING);
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 
@@ -157,6 +188,8 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/ranks-assign")
+     *
      * ranks
      */
     public function assignranksAction()
@@ -170,11 +203,13 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * tree
+     * @Route("/tree")
      *
      * Show the forum tree.
      *
-     * @return string
+     * @return Response
+     *
+     * @throws AccessDeniedException
      */
     public function treeAction()
     {
@@ -183,10 +218,11 @@ class AdminController extends \Zikula_AbstractController
         }
         $tree = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
 
-        return $this->response($this->view->assign('tree', $tree)->fetch('Admin/tree.tpl'));
+        return new Response($this->view->assign('tree', $tree)->fetch('Admin/tree.tpl'));
     }
 
     /**
+     * @Route("/modify")
      *
      */
     public function modifyForumAction()
@@ -197,6 +233,7 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/delete")
      *
      */
     public function deleteforumAction()
@@ -207,7 +244,7 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * managesubscriptions
+     * @Route("/subscriptions")
      *
      */
     public function manageSubscriptionsAction()

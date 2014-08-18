@@ -35,9 +35,12 @@ use Zikula\Module\DizkusModule\Manager\ForumUserManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Ajax controller functions.
+ * @Route("/ajax")
  */
 class AjaxController extends \Zikula_Controller_AbstractAjax
 {
@@ -46,6 +49,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * Checks if the forum is disabled.
      *
      * @throws AccessDeniedException
+     *
      * @return void
      */
     private function errorIfForumDisabled()
@@ -61,6 +65,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * @param string $message The message to check.
      *
      * @throws FatalErrorException
+     *
      * @return void
      */
     private function checkMessageLength($message)
@@ -85,28 +90,33 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
+     * @Route("/reply", options={"expose"=true})
+     * @Method("POST")
+     * 
      * Reply to a topic (or just preview).
      *
-     * POST: $topic_id The topic id to reply to.
-     *       $message The post message.
-     *       $attach_signature Attach signature?
-     *       $subscribe_topic Subscribe to topic.
-     *       $preview Is this a preview only?
+     * @param Request $request
+     *  topic            The topic id to reply to.
+     *  message          The post message.
+     *  attach_signature Attach signature?
+     *  subscribe_topic  Subscribe to topic.
+     *  preview          Is this a preview only?
      *
-     * RETURN: $data The rendered post.
-     *         $post_id The post id.
+     * RETURN: array($data The rendered post.
+     *               $post_id The post id.
+     *              )
      *
      * @return Response|AjaxResponse
      */
-    public function replyAction()
+    public function replyAction(Request $request)
     {
         $this->errorIfForumDisabled();
         $this->checkAjaxToken();
-        $topic_id = $this->request->request->get('topic', null);
-        $message = $this->request->request->get('message', '');
-        $attach_signature = $this->request->request->get('attach_signature', 0) == '1' ? true : false;
-        $subscribe_topic = $this->request->request->get('subscribe_topic', 0) == '1' ? true : false;
-        $preview = $this->request->request->get('preview', 0) == '1' ? true : false;
+        $topic_id = $request->request->get('topic', null);
+        $message = $request->request->get('message', '');
+        $attach_signature = $request->request->get('attach_signature', 0) == '1' ? true : false;
+        $subscribe_topic = $request->request->get('subscribe_topic', 0) == '1' ? true : false;
+        $preview = $request->request->get('preview', 0) == '1' ? true : false;
         $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         $managedTopic = new TopicManager($topic_id);
         $start = 1;
@@ -182,9 +192,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
+     * @Route("/editpost", options={"expose"=true})
+     * @Method("POST")
+     *
      * Edit a post.
      *
-     * POST: $post The post id to edit.
+     * @param Request $request
+     *  post The post id to edit.
      *
      * RETURN: The edit post form.
      *
@@ -193,11 +207,11 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @return AjaxResponse
      */
-    public function editpostAction()
+    public function editpostAction(Request $request)
     {
         $this->errorIfForumDisabled();
         $this->checkAjaxToken();
-        $post_id = $this->request->request->get('post', null, 'POST');
+        $post_id = $request->request->get('post', null);
         $currentUserId = UserUtil::getVar('uid');
         if (!empty($post_id)) {
             $managedPost = new PostManager($post_id);
@@ -219,32 +233,37 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
+     * @Route("/updatepost", options={"expose"=true})
+     * @Method("POST")
+     *
      * Update a post.
      *
-     * POST: $postId The post id to update.
-     *       $message The new post message.
-     *       $delete_post Delete this post?
-     *       $attach_signature Attach signature?
+     * @param Request $request
+     *  postId           The post id to update.
+     *  title
+     *  message          The new post message.
+     *  delete_post      Delete this post?
+     *  attach_signature Attach signature?
      *
-     * RETURN: $action The executed action.
-     *         $newText The new post text (can be empty).
-     *         $redirect The page to redirect to (can be empty).
-     *
+     * RETURN: array($action The executed action.
+     *               $newText The new post text (can be empty).
+     *               $redirect The page to redirect to (can be empty).
+     *              )
      *
      * @throws FatalErrorException
      * @throws AccessDeniedException If the user tries to delete the only post of a topic.
      *
      * @return AjaxResponse
      */
-    public function updatepostAction()
+    public function updatepostAction(Request $request)
     {
         $this->errorIfForumDisabled();
         $this->checkAjaxToken();
-        $post_id = $this->request->request->get('postId', '');
-        $title = $this->request->request->get('title', '');
-        $message = $this->request->request->get('message', '');
-        $delete = $this->request->request->get('delete_post', 0) == '1' ? true : false;
-        $attach_signature = $this->request->request->get('attach_signature', 0) == '1' ? true : false;
+        $post_id = $request->request->get('postId', '');
+        $title = $request->request->get('title', '');
+        $message = $request->request->get('message', '');
+        $delete = $request->request->get('delete_post', 0) == '1' ? true : false;
+        $attach_signature = $request->request->get('attach_signature', 0) == '1' ? true : false;
         if (!empty($post_id)) {
             $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
             $this->checkMessageLength($message);
@@ -288,13 +307,23 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
+     * @Route("/changetopicstatus", options={"expose"=true})
+     * @Method("POST")
+     *
      * changeTopicStatus
+     *
+     * @param Request $request
+     *  topic
+     *  post
+     *  action
+     *  userAllowedToEdit
+     *  title
      *
      * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
      *
-     * @return string
+     * @return UnavailableResponse|BadDataResponse|PlainResponse
      */
-    public function changeTopicStatusAction()
+    public function changeTopicStatusAction(Request $request)
     {
         // Check if forum is disabled
         if ($this->getVar('forum_enabled') == 'no') {
@@ -302,10 +331,10 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // Get common parameters
         $params = array();
-        $params['topic_id'] = $this->request->request->get('topic', '');
-        $params['post_id'] = $this->request->request->get('post', null);
-        $params['action'] = $this->request->request->get('action', '');
-        $userAllowedToEdit = $this->request->request->get('userAllowedToEdit', 0);
+        $params['topic_id'] = $request->request->get('topic', '');
+        $params['post_id'] = $request->request->get('post', null);
+        $params['action'] = $request->request->get('action', '');
+        $userAllowedToEdit = $request->request->get('userAllowedToEdit', 0);
         // certain actions a user is always allowed
         $userAllowedToEdit = in_array($params['action'], array('subscribe', 'unsubscribe', 'solve', 'unsolve')) ? 1 : $userAllowedToEdit;
         // Check if topic is is set
@@ -319,7 +348,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // Get title parameter if action == setTitle
         if ($params['action'] == 'setTitle') {
-            $params['title'] = trim($this->request->request->get('title', ''));
+            $params['title'] = trim($request->request->get('title', ''));
             if (empty($params['title'])) {
                 return new BadDataResponse(array(), $this->__('Error! The post has no subject line.'));
             }
@@ -334,22 +363,25 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
+     * @Route("/getusers", options={"expose"=true})
+     * @Method("GET")
+     *
      * Performs a user search based on the user name fragment entered so far.
      *
-     * Parameters passed via GET:
-     *  string $fragment A partial user name entered by the user.
-     *
+     * @param Request $request
+     *  fragment A partial user name entered by the user.
      *
      * @throws AccessDeniedException
+     *
      * @return string PlainResponse with json_encoded object of users matching the criteria.
      */
-    public function getUsersAction()
+    public function getUsersAction(Request $request)
     {
         $this->checkAjaxToken();
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $fragment = $this->request->query->get('fragment', null);
+        $fragment = $request->query->get('fragment', null);
         $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', array('fragments' => array($fragment)));
         $reply = array();
         $reply['query'] = $fragment;
@@ -365,10 +397,18 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * addremovefavorite
+     * @Route("/modforum", options={"expose"=true})
+     * @Method("POST")
      *
+     * @param Request $request
+     *  forum
+     *  action
+     *
+     * @return string PlainResponse|BadDataResponse|UnavailableResponse
+     *
+     * @throws AccessDeniedException on failed perm check
      */
-    public function modifyForumAction()
+    public function modifyForumAction(Request $request)
     {
         $this->checkAjaxToken();
         if ($this->getVar('forum_enabled') == 'no') {
@@ -378,8 +418,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             return new BadDataResponse(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(
-            'forum_id' => $this->request->request->get('forum'),
-            'action' => $this->request->request->get('action'));
+            'forum_id' => $request->request->get('forum'),
+            'action' => $request->request->get('action'));
         if (empty($params['forum_id'])) {
             return new BadDataResponse(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
         }
@@ -394,10 +434,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * forumusers
+     * @Route("/forumusers", options={"expose"=true})
+     *
      * update the "users online" section in the footer
      *
      * used in User/footer_with_ajax.tpl
+     *
+     * @return UnavailableResponse
      */
     public function forumusersAction()
     {

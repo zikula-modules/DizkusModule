@@ -13,12 +13,10 @@ namespace Zikula\Module\DizkusModule\Controller;
 
 use SecurityUtil;
 use ModUtil;
-use Symfony\Component\HttpFoundation\Response;
 use UserUtil;
 use FormUtil;
 use DataUtil;
 use System;
-use Zikula\Core\Response\PlainResponse;
 use ZLanguage;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
@@ -44,8 +42,12 @@ use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
 use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
 use Zikula\Module\DizkusModule\Form\Handler\User\Report;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -57,12 +59,12 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function indexAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('User/dizkus_disabled.tpl');
+            return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
@@ -106,10 +108,12 @@ class UserController extends \Zikula_AbstractController
         $numposts = ModUtil::apiFunc($this->name, 'user', 'countstats', array('id' => '0', 'type' => 'all'));
         $this->view->assign('numposts', $numposts);
 
-        return $this->response($this->view->fetch('User/main.tpl'));
+        return new Response($this->view->fetch('User/main.tpl'));
     }
 
     /**
+     * @Route("/forum")
+     *
      * View forum by id
      *
      * opens a forum and shows the last postings
@@ -119,12 +123,12 @@ class UserController extends \Zikula_AbstractController
      * @throws NotFoundHttpException if forumID <= 0
      * @throws AccessDeniedException if perm check fails
      *
-     * @return string
+     * @return Response
      */
     public function viewforumAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('User/dizkus_disabled.tpl');
+            return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         // get the input
         $forumId = (int)$this->request->query->get('forum', null);
@@ -149,10 +153,12 @@ class UserController extends \Zikula_AbstractController
             ->assign('hot_threshold', $this->getVar('hot_threshold'))
             ->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->response($this->view->fetch('User/forum/view.tpl'));
+        return new Response($this->view->fetch('User/forum/view.tpl'));
     }
 
     /**
+     * @Route("/topic")
+     *
      * viewtopic
      *
      * @param integer 'topic' (via GET) the topic ID
@@ -161,12 +167,12 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function viewtopicAction()
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
-            return $this->view->fetch('User/dizkus_disabled.tpl');
+            return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         // get the input
         $topicId = (int)$this->request->query->get('topic', null);
@@ -206,10 +212,12 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('preview', false);
         $managedTopic->incrementViewsCount();
 
-        return $this->response($this->view->fetch('User/topic/view.tpl'));
+        return new Response($this->view->fetch('User/topic/view.tpl'));
     }
 
     /**
+     * @Route("/reply")
+     *
      * reply to a post
      *
      * @param integer 'forum' (via POST) the forum ID
@@ -225,7 +233,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function replyAction()
     {
@@ -286,7 +294,7 @@ class UserController extends \Zikula_AbstractController
             // check to see if the post contains spam
             if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
-                return false;
+                return new Response('', 406); // `Not Acceptable`
             }
             $managedPost->persist();
             // handle subscription
@@ -347,11 +355,13 @@ class UserController extends \Zikula_AbstractController
             $this->view->assign('last_visit_unix', $lastVisitUnix);
             $this->view->assign('permissions', $permissions);
 
-            return $this->response($this->view->fetch('User/topic/reply.tpl'));
+            return new Response($this->view->fetch('User/topic/reply.tpl'));
         }
     }
 
     /**
+     * @Route("/topic-new")
+     *
      * Create new topic
      *
      * User interface to create a new topic
@@ -366,6 +376,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/post-edit")
+     *
      * Edit post
      *
      * User interface to edit a new post
@@ -380,6 +392,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-delete")
+     *
      * Delete topic
      *
      * User interface to delete a post.
@@ -394,6 +408,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-move")
+     *
      * Move topic
      *
      * User interface to move a topic to another forum.
@@ -408,9 +424,11 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/ip")
+     *
      * View the posters IP information
      *
-     * @return string
+     * @return Response
      *
      * @throws AccessDeniedException on failed perm check
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
@@ -426,10 +444,12 @@ class UserController extends \Zikula_AbstractController
         }
         $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
 
-        return $this->response($this->view->fetch('User/viewip.tpl'));
+        return new Response($this->view->fetch('User/viewip.tpl'));
     }
 
     /**
+     * @Route("/prefs")
+     *
      * prefs
      *
      * Interface for a user to manage general user preferences.
@@ -444,6 +464,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/forum-subscriptions")
+     *
      * Interface for a user to manage topic subscriptions
      *
      * @return string
@@ -456,6 +478,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-subscriptions")
+     *
      * Interface for a user to manage topic subscriptions
      *
      * @return string
@@ -468,8 +492,11 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/forum-view-all")
+     *
      * Show all forums in index view instead of only favorite forums
      *
+     * @return RedirectResponse
      */
     public function showAllForumsAction()
     {
@@ -477,8 +504,11 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("forum-view-favs")
+     *
      * Show only favorite forums in index view instead of all forums
      *
+     * @return RedirectResponse
      */
     public function showFavoritesAction()
     {
@@ -488,6 +518,11 @@ class UserController extends \Zikula_AbstractController
     /**
      * Show only favorite forums in index view instead of all forums
      *
+     * @param string $setting
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException if user not logged in
      */
     private function changeViewSetting($setting)
     {
@@ -509,7 +544,11 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/forum-modify")
+     *
      * Add/remove a forum from the favorites
+     *
+     * @return RedirectResponse
      */
     public function modifyForumAction()
     {
@@ -522,7 +561,11 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-status-change")
+     *
      * Add/remove the sticky status of a topic
+     *
+     * @return RedirectResponse
      */
     public function changeTopicStatusAction()
     {
@@ -536,6 +579,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/sig")
+     *
      * Interface for a user to manage signature
      *
      * @return string
@@ -548,6 +593,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-mail")
+     *
      * User interface to email a topic to a arbitrary email-address
      *
      * @return string
@@ -560,6 +607,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/topic-view-latest")
+     *
      * View latest topics
      *
      * @param string 'selorder' (via GET)
@@ -569,7 +618,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function viewlatestAction()
     {
@@ -595,10 +644,12 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->response($this->view->fetch('User/topic/latest.tpl'));
+        return new Response($this->view->fetch('User/topic/latest.tpl'));
     }
 
     /**
+     * @Route("/topic-mine")
+     *
      * Display my posts or topics
      *
      * @param string 'action' (via GET)
@@ -606,7 +657,7 @@ class UserController extends \Zikula_AbstractController
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function mineAction()
     {
@@ -628,10 +679,12 @@ class UserController extends \Zikula_AbstractController
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
 
-        return $this->response($this->view->fetch('User/post/mine.tpl'));
+        return new Response($this->view->fetch('User/post/mine.tpl'));
     }
 
     /**
+     * @Route("/topic-split")
+     *
      * Split topic
      *
      * @return string
@@ -644,6 +697,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/post-move")
+     *
      * User interface to move a single post to another thread
      *
      * @return string
@@ -656,6 +711,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/forum-moderate")
+     *
      * Moderate forum
      *
      * User interface for moderation of multiple topics.
@@ -670,6 +727,8 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/post-report")
+     *
      * Report
      *
      * User interface to notify a moderator about a (bad) posting.
@@ -684,11 +743,13 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
+     * @Route("/feed")
+     *
      * generate and display an RSS feed of recent topics
      *
      * @throws AccessDeniedException on failed perm check
      *
-     * @return string
+     * @return Response|RedirectResponse
      */
     public function feedAction()
     {
@@ -788,7 +849,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('posts', $posts);
         $this->view->assign('dizkusinfo', $dzkinfo);
 
-        return new PlainResponse($this->view->fetch($templatefile), Response::HTTP_OK, array('Content-Type' => 'text/xml'));
+        return new Response($this->view->fetch($templatefile), Response::HTTP_OK, array('Content-Type' => 'text/xml'));
     }
 
 }
