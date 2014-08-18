@@ -173,7 +173,7 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/ranks-assign")
+     * @Route("/assignranks")
      *
      * ranks
      */

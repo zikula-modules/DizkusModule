@@ -361,7 +361,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-new")
+     * @Route("/topic/new")
      *
      * Create new topic
      *
@@ -377,7 +377,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/post-edit")
+     * @Route("/post/edit")
      *
      * Edit post
      *
@@ -393,7 +393,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-delete")
+     * @Route("/topic/delete")
      *
      * Delete topic
      *
@@ -409,7 +409,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-move")
+     * @Route("/topic/move")
      *
      * Move topic
      *
@@ -465,7 +465,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum-subscriptions")
+     * @Route("/prefs/forumsubscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -479,7 +479,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-subscriptions")
+     * @Route("/prefs/topicsubscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -493,7 +493,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum-view-all")
+     * @Route("/prefs/view-all-forums")
      *
      * Show all forums in index view instead of only favorite forums
      *
@@ -505,7 +505,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum-view-favs")
+     * @Route("/prefs/view-favs")
      *
      * Show only favorite forums in index view instead of all forums
      *
@@ -544,7 +544,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum-modify")
+     * @Route("/forum/modify")
      *
      * Add/remove a forum from the favorites
      *
@@ -561,7 +561,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-status-change")
+     * @Route("/topic/changestatus")
      *
      * Add/remove the sticky status of a topic
      *
@@ -579,7 +579,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/sig")
+     * @Route("/prefs/sig")
      *
      * Interface for a user to manage signature
      *
@@ -593,7 +593,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-mail")
+     * @Route("/topic/mail")
      *
      * User interface to email a topic to a arbitrary email-address
      *
@@ -607,7 +607,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-view-latest")
+     * @Route("/topics/viewlatest")
      *
      * View latest topics
      *
@@ -648,7 +648,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-mine")
+     * @Route("/topics/mine")
      *
      * Display my posts or topics
      *
@@ -683,7 +683,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic-split")
+     * @Route("/topic/split")
      *
      * Split topic
      *
@@ -697,7 +697,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/post-move")
+     * @Route("/post/move")
      *
      * User interface to move a single post to another thread
      *
@@ -711,7 +711,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum-moderate")
+     * @Route("/forum/moderate")
      *
      * Moderate forum
      *
@@ -727,7 +727,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/post-report")
+     * @Route("/post/report")
      *
      * Report
      *
