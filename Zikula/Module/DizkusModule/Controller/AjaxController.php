@@ -80,7 +80,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @return void
      *
-     * @note This is necessary because the Zikula_Controller_AbstractAjax overrides this method located in Zikula_AbstractController.
+     * NOTE: This is necessary because the Zikula_Controller_AbstractAjax overrides this method located in Zikula_AbstractController.
      */
     protected function configureView()
     {
