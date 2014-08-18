@@ -295,7 +295,7 @@ class UserController extends \Zikula_AbstractController
             // check to see if the post contains spam
             if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
-                return new Response('', 406); // `Not Acceptable`
+                return new Response('', Response::HTTP_NOT_ACCEPTABLE);
             }
             $managedPost->persist();
             // handle subscription
@@ -505,7 +505,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("forum-view-favs")
+     * @Route("/forum-view-favs")
      *
      * Show only favorite forums in index view instead of all forums
      *
