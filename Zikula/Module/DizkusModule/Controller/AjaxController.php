@@ -133,13 +133,13 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         /** @var $hookvalidators \Zikula\Core\Hook\ValidationProviders */
         if ($hookvalidators->hasErrors()) {
             foreach ($hookvalidators->getErrors() as $error) {
-                $this->request->getSession()->getFlashBag()->add('error', "Error! $error");
+                $request->getSession()->getFlashBag()->add('error', "Error! $error");
             }
             $preview = true;
         }
         // check to see if the post contains spam
         if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
             $preview = true;
         }
         if ($preview == false) {
@@ -181,8 +181,8 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
-        if ($this->request->getSession()->getFlashBag()->has('error')) {
-            $errors = implode('\n', $this->request->getSession()->getFlashBag()->get('error'));
+        if ($request->getSession()->getFlashBag()->has('error')) {
+            $errors = implode('\n', $request->getSession()->getFlashBag()->get('error'));
             return new Response($errors, 500);
         } else {
             return new AjaxResponse(array(

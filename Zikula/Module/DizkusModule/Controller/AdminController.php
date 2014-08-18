@@ -41,19 +41,6 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/main")
-     *
-     * The main administration function.
-     *
-     * @return RedirectResponse
-     * @deprecated
-     */
-    public function mainAction()
-    {
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
      * @Route("")
      *
      * the main administration function
@@ -129,21 +116,21 @@ class AdminController extends \Zikula_AbstractController
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'forums');
         if ($showstatus && $succesful) {
-            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forum index.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forum index.'));
         } else {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forum index'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forum index'));
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'topics');
         if ($showstatus && $succesful) {
-            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized topics.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized topics.'));
         } else {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing topics.'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing topics.'));
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'posters');
         if ($showstatus && $succesful) {
-            $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized posts counter.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized posts counter.'));
         } else {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
         }
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
