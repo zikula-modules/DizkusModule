@@ -169,7 +169,6 @@ class UserController extends \Zikula_AbstractController
      *
      * @param Request $request
      *  integer 'topic' the topic ID
-     *  integer 'post' a post ID
      *  integer 'start' pager value
      *
      * @throws AccessDeniedException on failed perm check
@@ -183,17 +182,9 @@ class UserController extends \Zikula_AbstractController
         }
         // get the input
         $topicId = (int)$request->query->get('topic', null);
-        $post_id = (int)$request->query->get('post', null);
         $start = (int)$request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
-        if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
-            $managedPost = new PostManager($post_id);
-            $topic_id = $managedPost->getTopicId();
-            if ($topic_id != false) {
-                // redirect instead of continue, better for SEO
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic_id), RouterInterface::ABSOLUTE_URL));
-            }
-        }
+
         $managedTopic = new TopicManager($topicId);
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
@@ -450,7 +441,10 @@ class UserController extends \Zikula_AbstractController
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new AccessDeniedException();
         }
-        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post)))->assign('post_id', $post);
+        $managedPost = new PostManager($post);
+        $pip = $managedPost->get()->getPoster_ip();
+        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('pip' => $pip)))
+            ->assign('topicId', $managedPost->getTopicId());
 
         return new Response($this->view->fetch('User/viewip.tpl'));
     }
