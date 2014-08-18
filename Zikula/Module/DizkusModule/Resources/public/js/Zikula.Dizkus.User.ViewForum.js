@@ -30,7 +30,7 @@ function modifyForum(e) {
             forum: jQuery('#forum_id').val(),
             action: action
         },
-        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=modifyForum",
+        url: Routing.generate('zikuladizkusmodule_ajax_modifyforum'),
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {

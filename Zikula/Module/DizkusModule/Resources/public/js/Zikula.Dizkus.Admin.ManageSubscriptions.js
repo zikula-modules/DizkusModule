@@ -6,11 +6,11 @@
 
 jQuery(document).ready(function() {
     jQuery('#username').autocomplete({
-        serviceUrl: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=getUsers",
+        serviceUrl: Routing.generate('zikuladizkusmodule_ajax_getusers'),
         paramName: 'fragment',
         onSelect: function(suggestion) {
             console.log(suggestion);
-            window.location.href = Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=admin&func=managesubscriptions&uid=" + suggestion.data;
+            window.location.href = Routing.generate('zikuladizkusmodule_aadmin_managesubscriptions', {uid: suggestion.data}, true);
         }
     });
     jQuery('#alltopic').click(function() {
