@@ -433,29 +433,27 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/ip")
+     * @Route("/ip/{post}", requirements={"post" = "\d+"})
      * @Method("GET")
      *
      * View the posters IP information
      *
-     * @param Request $request
-     *  integer post
-     * 
+     * @param integer $post
+     *
      * @return Response
      *
      * @throws AccessDeniedException on failed perm check
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function viewIpDataAction(Request $request)
+    public function viewIpDataAction($post = 0)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new AccessDeniedException();
         }
-        $post_id = (int)$request->query->filter('post', 0, FILTER_VALIDATE_INT);
-        if ($post_id == 0) {
+        if ($post == 0) {
             throw new \InvalidArgumentException();
         }
-        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post_id)))->assign('post_id', $post_id);
+        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', array('post_id' => $post)))->assign('post_id', $post);
 
         return new Response($this->view->fetch('User/viewip.tpl'));
     }
