@@ -37,6 +37,7 @@ class Dizkus extends \Zikula_AbstractHelper
      */
     public static function needle($args)
     {
+        $dom = \ZLanguage::getModuleDomain(self::NAME);
         // Get arguments from argument array
         $nid = $args['nid'];
         unset($args);
@@ -50,7 +51,7 @@ class Dizkus extends \Zikula_AbstractHelper
                 // not in cache array
                 // set the default
                 $cache[$nid] = '';
-                if (ModUtil::available('Dizkus')) {
+                if (ModUtil::available(self::NAME)) {
                     // nid is like F-## or T-##
                     $temp = explode('-', $nid);
                     $type = '';
@@ -58,45 +59,47 @@ class Dizkus extends \Zikula_AbstractHelper
                         $type = $temp[0];
                         $id = $temp[1];
                     }
-                    switch ($type) {
-                        case 'F':
-                            $managedForum = new ForumManager($id);
-                            if (!empty($managedForum)) {
-                                if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedForum->get())) {
-                                    $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $id));
-                                    $title = DataUtil::formatForDisplay($managedForum->get()->getName());
-                                    $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
+                    if (!empty($id)) {
+                        switch ($type) {
+                            case 'F':
+                                $managedForum = new ForumManager($id);
+                                if (!empty($managedForum)) {
+                                    if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedForum->get())) {
+                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $id));
+                                        $title = DataUtil::formatForDisplay($managedForum->get()->getName());
+                                        $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
+                                    } else {
+                                        $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for forum ID %s.', $id, $dom) . '</em>';
+                                    }
                                 } else {
-                                    $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for forum ID %s.', $id) . '</em>';
+                                    $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id, $dom) . '</em>';
                                 }
-                            } else {
-                                $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id) . '</em>';
-                            }
-                            break;
-                        case 'T':
-                            $managedTopic = new TopicManager($id);
-                            if (!empty($managedTopic)) {
-                                if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
-                                    $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $id));
-                                    $title = DataUtil::formatForDisplay($managedTopic->get()->getTitle());
-                                    $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
+                                break;
+                            case 'T':
+                                $managedTopic = new TopicManager($id);
+                                if (!empty($managedTopic)) {
+                                    if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
+                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $id));
+                                        $title = DataUtil::formatForDisplay($managedTopic->get()->getTitle());
+                                        $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
+                                    } else {
+                                        $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for topic ID %s.', $id, $dom) . '</em>';
+                                    }
                                 } else {
-                                    $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for topic ID %s.', $id) . '</em>';
+                                    $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id, $dom) . '</em>';
                                 }
-                            } else {
-                                $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id) . '</em>';
-                            }
-                            break;
-                        default:
-                            $cache[$nid] = '<em>' . __('Error! Unknown parameter at position #1 (\'F\' or \'T\').') . '</em>';
+                                break;
+                            default:
+                                $cache[$nid] = '<em>' . __('Error! Unknown parameter at position #1 (\'F\' or \'T\').', $dom) . '</em>';
+                        }
                     }
                 } else {
-                    $cache[$nid] = '<em>' . __('Error! The Dizkus module is not available.') . '</em>';
+                    $cache[$nid] = '<em>' . __('Error! The Dizkus module is not available.', $dom) . '</em>';
                 }
             }
             $result = $cache[$nid];
         } else {
-            $result = '<em>' . __('Error! No needle ID.') . '</em>';
+            $result = '<em>' . __('Error! No needle ID.', $dom) . '</em>';
         }
 
         return $result;
