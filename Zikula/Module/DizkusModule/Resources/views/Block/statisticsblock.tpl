@@ -3,7 +3,7 @@
     <ul class="fa-ul" style="margin-left:0;padding-left:40px;">
         {foreach item='topforum' from=$topforums}
         <li><i class="fa-li fa fa-comments text-muted"></i>
-            <a href="{modurl modname=$module type='user' func='viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
+            <a href="{route name='zikuladizkusmodule_user_viewforum' forum=$topforum.forum_id}" title="{$topforum.cat_title} :: {$topforum.name}">{$topforum.name}</a>
             <small>({$topforum.topicCount}/{$topforum.postCount})</small>
         </li>
         {/foreach}
@@ -32,5 +32,5 @@
     <li><i class="fa-li fa fa-check text-muted"></i>{gt text="Last User"}: {$last_user}</li>
 </ul>
 <p class="text-center">
-    <a style="font-size: 0.8em;" href="{modurl modname=$module type='user' func='index'}" title="{gt text="Go to forum"}">{gt text="Go to forum"}</a>
+    <a style="font-size: 0.8em;" href="{route name='zikuladizkusmodule_user_index'}" title="{gt text="Go to forum"}">{gt text="Go to forum"}</a>
 </p>

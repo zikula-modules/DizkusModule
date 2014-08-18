@@ -27,16 +27,16 @@
         <div id="navbar-forum-collapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 {if $permissions.comment && !$forum->isLocked()}
-                    <li><a class='fa fa-comment-o' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
+                    <li><a class='fa fa-comment-o' title="{gt text="Start a new topic"}" href="{route name='zikuladizkusmodule_user_newtopic' forum=$forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
                 {/if}
                 {if $coredata.logged_in}
                     <li>
                         {modapifunc modname=$module type='Forum' func='isSubscribed' forum=$forum assign='isSubscribed'}
                         {if !$isSubscribed}
-                            {modurl modname=$module type='user' func='modifyForum' action='subscribe' forum=$forum.forum_id assign='url'}
+                            {route name='zikuladizkusmodule_user_modifyforum' action='subscribe' forum=$forum.forum_id assign='url'}
                             {gt text="Subscribe to forum" assign='msg'}
                         {else}
-                            {modurl modname=$module type='user' func='modifyForum' action='unsubscribe' forum=$forum.forum_id assign='url'}
+                            {route name='zikuladizkusmodule_user_modifyforum' action='unsubscribe' forum=$forum.forum_id assign='url'}
                             {gt text="Unsubscribe from forum" assign='msg'}
                         {/if}
                         <a class='fa fa-envelope-o' id="forum-subscription" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
@@ -45,10 +45,10 @@
                         <li>
                             {modapifunc modname=$module type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                             {if $isFavorite}
-                                {modurl modname=$module type='user' func='modifyForum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
+                                {route name='zikuladizkusmodule_user_modifyforum' action='removeFromFavorites' forum=$forum.forum_id assign='url'}
                                 {gt text="Remove forum from favourites" assign='msg'}
                             {else}
-                                {modurl modname=$module type='user' func='modifyForum' action='addToFavorites' forum=$forum.forum_id assign='url'}
+                                {route name='zikuladizkusmodule_user_modifyforum' action='addToFavorites' forum=$forum.forum_id assign='url'}
                                 {gt text="Add forum to favourites" assign='msg'}
                             {/if}
                             <a class='fa fa-heart-o' id="forum-favourite" data-status="{if $isFavorite}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
@@ -57,7 +57,7 @@
                 {/if}
 
                 {if $isModerator OR $permissions.moderate}
-                    <li><a class='fa fa-wrench' title="{gt text="Moderate"}" href="{modurl modname=$module type='user' func='moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
+                    <li><a class='fa fa-wrench' title="{gt text="Moderate"}" href="{route name='zikuladizkusmodule_user_moderateforum' forum=$forum.forum_id}">&nbsp;{gt text="Moderate"}</a></li>
                 {/if}
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -104,7 +104,7 @@
 </div>
 {elseif (!$forum->isLocked())}
 <div class="alert alert-info text-center">
-    {gt text="There are no topics in this forum yet."}&nbsp;<a class='fa fa-comment-o btn btn-info btn-sm' title="{gt text="Start a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$forum.forum_id}">&nbsp;{gt text="Start a new topic"}</a>
+    {gt text="There are no topics in this forum yet."}&nbsp;<a class='fa fa-comment-o btn btn-info btn-sm' title="{gt text="Start a new topic"}" href="{route name='zikuladizkusmodule_user_newtopic' forum=$forum.forum_id}">&nbsp;{gt text="Start a new topic"}</a>
 </div>
 {/if}
 {/if}

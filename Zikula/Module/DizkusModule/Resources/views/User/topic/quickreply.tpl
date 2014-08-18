@@ -4,7 +4,7 @@
             <h3>{gt text="Quick reply"}</h3>
         </div>
         <div class="panel-body">
-            <form id="quickreplyform" role='form' action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
+            <form id="quickreplyform" role='form' action="{route name='zikuladizkusmodule_user_reply'}" method="post" enctype="multipart/form-data">
                 <div class="dizkusinformation_post text-danger" id="dizkusinformation_quickreply" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="form-group">
                     <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />

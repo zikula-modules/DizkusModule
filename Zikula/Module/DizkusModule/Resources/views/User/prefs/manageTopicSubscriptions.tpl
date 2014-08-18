@@ -31,7 +31,7 @@
         {foreach item='subscription' from=$subscriptions}
             <tr>
                 <td>
-                    <a href="{modurl modname=$module type='user' func='viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
+                    <a href="{route name='zikuladizkusmodule_user_viewtopic' topic=$subscription.topic.topic_id}" title="{$subscription.topic.topic_id|safetext} :: {$subscription.topic.title|safetext}">{$subscription.topic.title|safetext}</a>
                 </td>
                 <td>{formcheckbox cssClass="topic_checkbox" id=$subscription.topic.topic_id group="topicIds"}</td>
                 <td>{include file='User/lastPostBy.tpl' last_post=$subscription.topic.last_post}</td>

@@ -13,7 +13,7 @@
         <h3>{$templatetitle}</h3>
     </div>
     <div class="panel-body">
-        <form id="quickreplyform" role='form' action="{modurl modname=$module type='user' func='reply'}" method="post" enctype="multipart/form-data">
+        <form id="quickreplyform" role='form' action="{route name='zikuladizkusmodule_user_reply'}" method="post" enctype="multipart/form-data">
             <div id="dizkusinformation_-1" style='display:none;'>{img modname='core' set='ajax' src='indicator.white.gif'}</div>
             <div class="form-group">
                 <input type="hidden" id="forum" name="forum" value="{$reply.topic.forum.forum_id}" />

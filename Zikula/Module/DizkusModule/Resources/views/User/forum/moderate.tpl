@@ -4,7 +4,7 @@
     {form cssClass="form-horizontal" role="form"}
     {formvalidationsummary}
         <p class='clearfix'>
-            <a class='btn btn-warning pull-right' href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a>
+            <a class='btn btn-warning pull-right' href="{route name='zikuladizkusmodule_user_viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a>
         </p>
         <div class="panel panel-warning">
             <div class="panel-heading">

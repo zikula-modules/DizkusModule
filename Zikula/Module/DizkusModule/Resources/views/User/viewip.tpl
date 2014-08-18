@@ -29,7 +29,7 @@
         </tbody>
     </table>
     <div class='panel-footer'>
-        <a class="btn btn-warning" href="{modurl modname=$module type='user' func='viewtopic' post=$post_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
+        <a class="btn btn-warning" href="{route name='zikuladizkusmodule_user_viewtopic' post=$post_id}" title="{gt text="Back to the topic"}">{gt text="Back to the topic"}</a>
     </div>
 </div>
 

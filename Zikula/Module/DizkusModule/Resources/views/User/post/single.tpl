@@ -10,7 +10,7 @@
     {if isset($preview) AND ($preview eq 1)}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{gt text="PREVIEW"}</div></div>{/if}
     <div class='panel-heading'>
         <div class="postdate{if $isPosterOnline} padright{/if}">
-            {if isset($topic)}<a class="tooltips" href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class='fa fa-file-o'></i></a>{/if}
+            {if isset($topic)}<a class="tooltips" href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class='fa fa-file-o'></i></a>{/if}
             <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
         </div>
     </div>
@@ -60,7 +60,7 @@
                             <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}"><i class='fa fa-envelope-o fa-150x'></i></a>
                         {/if}
                         {if isset($topic) AND isset($post.poster_data) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
-                            <a class='tooltips' title="{gt text="View IP address"}" href="{modurl modname=$module type='user' func='viewIpData' post=$post.post_id}"><i class='fa fa-info-circle fa-150x'></i></a>
+                            <a class='tooltips' title="{gt text="View IP address"}" href="{route name='zikuladizkusmodule_user_viewipdata' post=$post.post_id}"><i class='fa fa-info-circle fa-150x'></i></a>
                         {/if}
                     </li>
                 {/if}
@@ -72,7 +72,7 @@
                 <div class="content" id="postingtext_{$post.post_id}">
                     <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if (!isset($topic.solved) OR ($topic.solved neq $post.post_id))} style="display:none;"{/if}>
                         {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR (isset($topic.poster.user_id) AND $topic.poster.user_id eq $current_userid))}
-                            <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{modurl modname=$module type='user' func='changeTopicStatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
+                            <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{route name='zikuladizkusmodule_user_changetopicstatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
                         {/if}
                         <i class='fa fa-check fa-2x'></i> {gt text='This post has been marked as the solution.'}
                     </div>
@@ -98,8 +98,8 @@
             <ul id="postingoptions_{$post.post_id}" class="javascriptpostingoptions list-inline">
                 {if isset($permissions.moderate) AND $permissions.moderate eq true}
                     {if ((isset($num) AND $num neq 0) OR (isset($topic) AND $start neq 0)) AND !$post.isFirstPost}
-                        <li><a class="fa fa-arrow-right fa-150x tooltips" title="{gt text="Move post"}" href="{modurl modname=$module type='user' func='movepost' post=$post.post_id}"></a></li>
-                        <li><a class="fa fa-scissors fa-150x tooltips" title="{gt text="Split topic"}" href="{modurl modname=$module type='user' func='splittopic' post=$post.post_id}"></a></li>
+                        <li><a class="fa fa-arrow-right fa-150x tooltips" title="{gt text="Move post"}" href="{route name='zikuladizkusmodule_user_movepost' post=$post.post_id}"></a></li>
+                        <li><a class="fa fa-scissors fa-150x tooltips" title="{gt text="Split topic"}" href="{route name='zikuladizkusmodule_user_splittopic' post=$post.post_id}"></a></li>
                     {/if}
                 {/if}
                 {if isset($topic) AND $topic.status neq 1}
@@ -107,7 +107,7 @@
                         <li><a class="quotepostlink fa fa-quote-left fa-150x tooltips" id="quotebutton_{$post.post_id}" title="{gt text="Quote post"}" onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"></a></li>
                     {/if}
                     {if (isset($permissions.edit) AND $permissions.edit eq 1) OR $post.userAllowedToEdit}
-                        <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{modurl modname=$module type='user' func='editpost' post=$post.post_id}"></a></li>
+                        <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{$post.post_id}" id="editbutton_{$post.post_id}" title="{gt text="Edit post"}" href="{route name='zikuladizkusmodule_user_editpost' post=$post.post_id}"></a></li>
                     {/if}
                     {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR $topic.poster.user_id eq $current_userid) AND ($modvars.ZikulaDizkusModule.solved_enabled|default:0) AND !$post.isFirstPost}
                     {if $topic.solved lt 0}
@@ -116,7 +116,7 @@
                         {assign var='stylestmt' value='style="display:none" '}
                     {/if}
                     <li>
-                        <a {$stylestmt}class="solvetopic tooltips" data-post="{$post.post_id}" data-action="solve" href="{modurl modname=$module type='user' func='changeTopicStatus' action='solve' topic=$topic.topic_id post=$post.post_id}" title="{gt text="Mark as solved by this post"}">
+                        <a {$stylestmt}class="solvetopic tooltips" data-post="{$post.post_id}" data-action="solve" href="{route name='zikuladizkusmodule_user_changetopicstatus' action='solve' topic=$topic.topic_id post=$post.post_id}" title="{gt text="Mark as solved by this post"}">
                             <i class="fa fa-check fa-150x"></i>
                         </a>
                     </li>
@@ -126,7 +126,7 @@
                 {/if}
                 {if !isset($notify) OR $notify eq false}
                     {if isset($permissions.comment) AND $permissions.comment eq true}
-                        <li><a class="fa fa-bell-o fa-150x tooltips" href="{modurl modname=$module type='user' func='report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}"></a></li>
+                        <li><a class="fa fa-bell-o fa-150x tooltips" href="{route name='zikuladizkusmodule_user_report' post=$post.post_id}" title="{gt text="Notify moderator about this posting"}"></a></li>
                     {/if}
                     <li><a class="fa fa-chevron-circle-up fa-150x tooltips" title="{gt text="Top"}" href="#top">&nbsp;</a></li>
                 {/if}

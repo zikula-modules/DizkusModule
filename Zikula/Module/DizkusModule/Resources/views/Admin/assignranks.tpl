@@ -6,7 +6,7 @@
 <div id="dizkus_admin">
 
     {gt text='Create an honorary rank' assign='createtext'}
-    {capture assign='createlink'}<strong><a href='{modurl modname=$module type='admin' func='ranks' ranktype='1'}'>{$createtext}</a></strong>{/capture}
+    {capture assign='createlink'}<strong><a href='{route name='zikuladizkusmodule_admin_ranks' ranktype='1'}'>{$createtext}</a></strong>{/capture}
     <p class="alert alert-info">{gt text="In this page, you can select particular users and assign them honorary ranks. %s. Only users that have posted in the forum may be assigned a rank." tag1=$createlink}</p>
 
     <div class="rankuser-alphanav text-center">
