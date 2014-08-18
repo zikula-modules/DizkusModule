@@ -43,7 +43,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
         // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {
             throw new AccessDeniedException();
         }
 
@@ -66,7 +66,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
     {
         if ($args['commandName'] == 'update') {
             // Security check
-            if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT)) {
+            if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_COMMENT)) {
                 throw new AccessDeniedException();
             }
 

@@ -68,7 +68,7 @@ class NotifyApi extends \Zikula_AbstractApi
             if (in_array($subscriber['uid'], $notified) || empty($subscriber['email'])) {
                 continue;
             }
-            if (SecurityUtil::checkPermission('Dizkus::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber['uid'])) {
+            if (SecurityUtil::checkPermission($this->name . '::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber['uid'])) {
                 $args = array(
                     'fromname' => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,

@@ -43,7 +43,7 @@ class TopicSubscriptions extends \Zikula_Form_AbstractHandler
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
 
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ) || !ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new AccessDeniedException();
         }
 

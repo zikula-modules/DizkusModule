@@ -27,7 +27,7 @@ class AdminApi extends \Zikula_AbstractApi
     {
         $links = array(
                 );
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             $links[] = array(
                 'url' => $this->get('router')->generate('zikuladizkusmodule_admin_tree'),
                 'text' => $this->__('Edit forum tree'),

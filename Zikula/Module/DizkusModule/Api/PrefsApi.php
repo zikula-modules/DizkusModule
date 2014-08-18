@@ -26,7 +26,7 @@ class PrefsApi extends \Zikula_AbstractApi
     {
         $links = array(
                 );
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_OVERVIEW)) {
+        if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_OVERVIEW)) {
             $links[] = array(
                 'url' => $this->get('router')->generate('zikuladizkusmodule_user_prefs'),
                 'text' => $this->__('Personal settings'),

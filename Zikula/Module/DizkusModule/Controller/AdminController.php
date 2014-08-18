@@ -92,7 +92,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function preferencesAction()
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         // Create output object
@@ -111,7 +111,7 @@ class AdminController extends \Zikula_AbstractController
     public function syncforumsAction(Request $request)
     {
         $showstatus = !$request->request->get('silent', 0);
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'forums');
@@ -149,7 +149,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function ranksAction(Request $request)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $submit = $request->request->get('submit', 2);
@@ -179,7 +179,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function assignranksAction()
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $form = FormUtil::newForm($this->name, $this);
@@ -198,7 +198,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function treeAction()
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $tree = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);

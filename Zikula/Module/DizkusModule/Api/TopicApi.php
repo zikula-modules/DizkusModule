@@ -73,7 +73,7 @@ class TopicApi extends \Zikula_AbstractApi
      */
     public function subscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -107,7 +107,7 @@ class TopicApi extends \Zikula_AbstractApi
      */
     public function unsubscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');

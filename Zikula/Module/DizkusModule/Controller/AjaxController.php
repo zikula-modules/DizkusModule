@@ -378,7 +378,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function getUsersAction(Request $request)
     {
         $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $fragment = $request->query->get('fragment', null);
