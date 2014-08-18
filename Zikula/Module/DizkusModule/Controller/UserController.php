@@ -465,7 +465,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/prefs/forumsubscriptions")
+     * @Route("/prefs/forum-subscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -479,7 +479,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/prefs/topicsubscriptions")
+     * @Route("/prefs/topic-subscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -561,7 +561,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic/changestatus")
+     * @Route("/topic/change-status")
      *
      * Add/remove the sticky status of a topic
      *
@@ -607,7 +607,7 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topics/viewlatest")
+     * @Route("/topics/view-latest")
      *
      * View latest topics
      *
