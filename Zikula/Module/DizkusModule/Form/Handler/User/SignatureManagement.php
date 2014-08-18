@@ -38,7 +38,9 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'signaturemanagement')));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_signaturemanagement');
+
+            return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
         // Security check
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {

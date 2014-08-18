@@ -48,6 +48,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotati
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 class UserController extends \Zikula_AbstractController
 {
@@ -68,7 +69,7 @@ class UserController extends \Zikula_AbstractController
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => (int) $indexTo))));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => (int) $indexTo), RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -99,7 +100,7 @@ class UserController extends \Zikula_AbstractController
                 $this->request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
                 $managedForumUser = new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
-                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
             } else {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
             }
@@ -184,7 +185,7 @@ class UserController extends \Zikula_AbstractController
             $topic_id = $managedPost->getTopicId();
             if ($topic_id != false) {
                 // redirect instead of continue, better for SEO
-                return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic_id), RouterInterface::ABSOLUTE_URL));
             }
         }
         $managedTopic = new TopicManager($topicId);
@@ -194,7 +195,7 @@ class UserController extends \Zikula_AbstractController
         }
         if (!$managedTopic->exists()) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topicId)));
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
@@ -261,7 +262,7 @@ class UserController extends \Zikula_AbstractController
          * if cancel is submitted move to topic-view
          */
         if ($cancel) {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic_id))));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic_id), RouterInterface::ABSOLUTE_URL));
         }
         $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         // check for maximum message size
@@ -307,7 +308,7 @@ class UserController extends \Zikula_AbstractController
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start);
-            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            $url = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', $params) . "#pid{$managedPost->getId()}";
             $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
             // notify topic & forum subscribers
             $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
@@ -526,7 +527,6 @@ class UserController extends \Zikula_AbstractController
      */
     private function changeViewSetting($setting)
     {
-        $url = ModUtil::url($this->name, 'user', 'index');
         if (!UserUtil::isLoggedIn()) {
             throw new AccessDeniedException();
         }
@@ -540,7 +540,7 @@ class UserController extends \Zikula_AbstractController
         $this->entityManager->persist($forumUser);
         $this->entityManager->flush();
 
-        return new RedirectResponse(System::normalizeUrl($url));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -557,7 +557,7 @@ class UserController extends \Zikula_AbstractController
             'forum_id' => (int)$this->request->query->get('forum'));
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $params['forum_id']))));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $params['forum_id']), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -575,7 +575,7 @@ class UserController extends \Zikula_AbstractController
         $params['post_id'] = (int)$this->request->query->get('post', null);
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $params['topic_id']))));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $params['topic_id']), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -627,7 +627,7 @@ class UserController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         // get the input
         $params = array();
@@ -666,7 +666,7 @@ class UserController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'user', 'index')));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         $params = array();
         $params['action'] = $this->request->query->get('action', 'posts');
@@ -760,11 +760,12 @@ class UserController extends \Zikula_AbstractController
         // get the module info
         $dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName($this->name));
         $dzkname = $dzkinfo['displayname'];
-        $mainUrl = ModUtil::url($this->name, 'user', 'index');
+        $mainUrl = $this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+
         if (isset($forum_id) && !is_numeric($forum_id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
 
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($mainUrl)));
+            return new RedirectResponse($mainUrl);
         }
         /**
          * check if template for feed exists
@@ -774,7 +775,7 @@ class UserController extends \Zikula_AbstractController
             // silently stop working
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find a template for an %s-type feed.', $feed));
 
-            return new RedirectResponse(System::normalizeUrl(ModUtil::url($mainUrl)));
+            return new RedirectResponse($mainUrl);
         }
         /**
          * get user id
@@ -786,7 +787,7 @@ class UserController extends \Zikula_AbstractController
          * set some defaults
          */
         // form the url
-        $link = ModUtil::url($this->name, 'user', 'index', array(), null, null, true);
+        $link = $mainUrl;
         $forumname = DataUtil::formatForDisplay($dzkname);
         // default where clause => no where clause
         $where = array();
@@ -799,7 +800,7 @@ class UserController extends \Zikula_AbstractController
                 throw new AccessDeniedException();
             }
             $where = array('t.forum', (int)$forum_id);
-            $link = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum_id), null, null, true);
+            $link = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
             $forumname = $managedForum->get()->getName();
         } elseif (isset($uid) && $uid != false) {
             $where = array('p.poster', $uid);
@@ -841,8 +842,8 @@ class UserController extends \Zikula_AbstractController
             $posts[$i]['time'] = $topic->getTopic_time();
             $posts[$i]['unixtime'] = $topic->getTopic_time()->format('U');
             $start = (int) ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
-            $posts[$i]['post_url'] = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, null, true);
-            $posts[$i]['last_post_url'] = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), null, 'pid' . $topic->getLast_post()->getPost_id(), true);
+            $posts[$i]['post_url'] = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), RouterInterface::ABSOLUTE_URL);
+            $posts[$i]['last_post_url'] = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic->getTopic_id(), 'start' => $start), RouterInterface::ABSOLUTE_URL) . "#pid{$topic->getLast_post()->getPost_id()}";
             $posts[$i]['rsstime'] = $topic->getTopic_time()->format(DATE_RSS);
             $i++;
         }

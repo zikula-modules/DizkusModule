@@ -31,7 +31,7 @@
  */
 function smarty_modifier_searchlink($uname = null)
 {
-    $link = ModUtil::url('Search', 'user', 'search', array('q' => $uname, 'active[Dizkus]' => 1, 'Dizkus_searchwhere' => 'author'), null, null, null, true);
+    $link = ModUtil::url('Search', 'user', 'search', array('q' => $uname, 'active[ZikulaDizkusModule]' => 1, 'ZikulaDizkusModule[location]' => 'author'), null, null, null, true);
 
     return DataUtil::formatForDisplay($link);
 }

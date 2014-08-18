@@ -18,14 +18,15 @@ use Zikula\Module\DizkusModule\Manager\ForumManager;
 
 class Dizkus extends \Zikula_AbstractHelper
 {
+    const NAME = 'ZikulaDizkusModule';
 
     public function info()
     {
         $info = array(
-            'module' => 'Dizkus',
+            'module' => self::NAME,
             'info' => 'DIZKUS{F-forumid|T-topicid}',
             'inspect' => true);
-        //reverse lookpup possible, needs MultiHook_needleapi_dizkus_inspect() function
+        //reverse lookup possible, needs MultiHook_needleapi_dizkus_inspect() function
         return $info;
     }
 
@@ -61,41 +62,41 @@ class Dizkus extends \Zikula_AbstractHelper
                         case 'F':
                             $managedForum = new ForumManager($id);
                             if (!empty($managedForum)) {
-                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
-                                    $url = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewforum', array('forum' => $id)));
-                                    $title = DataUtil::formatForDisplay($result[0]['name']);
+                                if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedForum->get())) {
+                                    $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $id));
+                                    $title = DataUtil::formatForDisplay($managedForum->get()->getName());
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                 } else {
-                                    $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for forum ID %s.', $id) . '</em>';
+                                    $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for forum ID %s.', $id) . '</em>';
                                 }
                             } else {
-                                $cache[$nid] = '<em>' . $this->__f('Error! The forum ID %s is unknown.', $id) . '</em>';
+                                $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id) . '</em>';
                             }
                             break;
                         case 'T':
                             $managedTopic = new TopicManager($id);
                             if (!empty($managedTopic)) {
-                                if (ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
-                                    $url = DataUtil::formatForDisplay(ModUtil::url('Dizkus', 'user', 'viewtopic', array('topic' => $id)));
-                                    $title = DataUtil::formatForDisplay($result[0]['title']);
+                                if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
+                                    $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $id));
+                                    $title = DataUtil::formatForDisplay($managedTopic->get()->getTitle());
                                     $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                 } else {
-                                    $cache[$nid] = '<em>' . $this->__f('Error! You do not have the necessary authorisation for topic ID %s.', $id) . '</em>';
+                                    $cache[$nid] = '<em>' . __f('Error! You do not have the necessary authorisation for topic ID %s.', $id) . '</em>';
                                 }
                             } else {
-                                $cache[$nid] = '<em>' . $this->__f('Error! The topic ID %s is unknown.', $id) . '</em>';
+                                $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id) . '</em>';
                             }
                             break;
                         default:
-                            $cache[$nid] = '<em>' . $this->__('Error! Unknown parameter at position #1 (\'F\' or \'T\').') . '</em>';
+                            $cache[$nid] = '<em>' . __('Error! Unknown parameter at position #1 (\'F\' or \'T\').') . '</em>';
                     }
                 } else {
-                    $cache[$nid] = '<em>' . $this->__('Error! The Dizkus module is not available.') . '</em>';
+                    $cache[$nid] = '<em>' . __('Error! The Dizkus module is not available.') . '</em>';
                 }
             }
             $result = $cache[$nid];
         } else {
-            $result = '<em>' . $this->__('Error! No needle ID.') . '</em>';
+            $result = '<em>' . __('Error! No needle ID.') . '</em>';
         }
 
         return $result;

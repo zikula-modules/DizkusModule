@@ -105,7 +105,7 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
                 }
             }
 
-            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_managesubscriptions', array('uid' => $this->_uid));
         } else {
             $this->_username = $this->request->request->get('username', '');
             $this->_uid = UserUtil::getIdFromName($this->_username);

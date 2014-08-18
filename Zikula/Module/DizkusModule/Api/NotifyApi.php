@@ -18,6 +18,7 @@ use UserUtil;
 use SecurityUtil;
 use DataUtil;
 use Zikula_View;
+use Symfony\Component\Routing\RouterInterface;
 
 class NotifyApi extends \Zikula_AbstractApi
 {
@@ -52,12 +53,8 @@ class NotifyApi extends \Zikula_AbstractApi
             ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
             ->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())
             ->assign('forum_id', $post->getTopic()->getForum()->getForum_id())
-            ->assign('topic_url', ModUtil::url($this->name, 'user', 'viewtopic', array(
-                        'topic' => $post->getTopic_id()),
-                        null,
-                        'dzk_quickreply',
-                        true))
-            ->assign('subscription_url', ModUtil::url($this->name, 'user', 'prefs', array(), null, null, true))
+            ->assign('topic_url', $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $post->getTopic_id()), RouterInterface::ABSOLUTE_URL)."#dzk_quickreply")
+            ->assign('subscription_url', $this->get('router')->generate('zikuladizkusmodule_user_prefs', array(), RouterInterface::ABSOLUTE_URL))
             ->assign('base_url', $view->getRequest()->getBaseUrl());
         $message = $view->fetch('Mail/notifyuser.txt');
         $topicSubscriptions = $post->getTopic()->getSubscriptions()->toArray();
@@ -162,7 +159,7 @@ class NotifyApi extends \Zikula_AbstractApi
             $reporting_username = $this->__('Guest');
         }
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', array('replyCount' => $args['post']->getTopic()->getReplyCount()));
-        $linkToTopic = ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), null, 'pid' . $args['post']->getPost_id(), true);
+        $linkToTopic = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $args['post']->getTopic_id(), 'start' => $start), RouterInterface::ABSOLUTE_URL)."#pid{$args['post']->getPost_id()}";
         $posttext = $this->getVar('striptagsfromemail') ? strip_tags($args['post']->getPost_text()) : $args['post']->getPost_text();
         $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . '
 ' . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . '

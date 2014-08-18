@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotatio
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("/admin")
@@ -49,8 +50,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function mainAction()
     {
-        $url = ModUtil::url($this->name, 'admin', 'tree');
-        return new RedirectResponse(System::normalizeUrl($url));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -62,8 +62,7 @@ class AdminController extends \Zikula_AbstractController
      */
     public function indexAction()
     {
-        $url = ModUtil::url($this->name, 'admin', 'tree');
-        return new RedirectResponse(System::normalizeUrl($url));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -94,9 +93,8 @@ class AdminController extends \Zikula_AbstractController
             $repo->moveDown($forum, true);
         }
         $this->entityManager->flush();
-        $url = ModUtil::url($this->name, 'admin', 'tree');
 
-        return new RedirectResponse(System::normalizeUrl($url));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -148,7 +146,7 @@ class AdminController extends \Zikula_AbstractController
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
         }
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'tree')));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -184,7 +182,7 @@ class AdminController extends \Zikula_AbstractController
             ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
         }
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($this->name, 'admin', 'ranks', array('ranktype' => $ranktype))));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', array('ranktype' => $ranktype), RouterInterface::ABSOLUTE_URL));
     }
 
     /**

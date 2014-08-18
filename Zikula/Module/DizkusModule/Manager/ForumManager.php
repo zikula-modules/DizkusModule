@@ -124,7 +124,7 @@ class ForumManager
             if ($key == 0) {
                 continue;
             }
-            $url = ModUtil::url($this->name, 'user', 'viewforum', array('forum' => $forum->getForum_id()));
+            $url = ServiceUtil::get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum->getForum_id()));
             $output[] = array(
                 'url' => $url,
                 'title' => $forum->getName());

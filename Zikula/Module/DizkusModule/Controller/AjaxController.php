@@ -92,7 +92,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     /**
      * @Route("/reply", options={"expose"=true})
      * @Method("POST")
-     * 
+     *
      * Reply to a topic (or just preview).
      *
      * @param Request $request

@@ -76,7 +76,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
         $this->_forum = new ForumManager($id);
 
-        $url = ModUtil::url($this->name, 'admin', 'tree');
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree');
         if (!$this->_forum->exists()) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Item with id %s not found', $id), null, $url);
             return false;

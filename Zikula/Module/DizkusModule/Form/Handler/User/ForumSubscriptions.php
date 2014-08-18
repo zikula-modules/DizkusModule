@@ -38,7 +38,9 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageForumSubscriptions')));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions');
+
+            return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
 
         if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !UserUtil::isLoggedIn()) {

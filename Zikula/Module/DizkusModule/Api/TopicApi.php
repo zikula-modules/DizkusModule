@@ -277,10 +277,10 @@ class TopicApi extends \Zikula_AbstractApi
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
                 $managedShadowTopic = new TopicManager();
+                $newUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $managedTopic->getId()));
                 $topicData = array(
                     'title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
-                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url($this->name, 'user', 'viewtopic', array(
-                        'topic' => $managedTopic->getId())) . '">' . $this->__('here') . '</a>.',
+                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . $newUrl . '">' . $this->__('here') . '</a>.',
                     'forum_id' => $oldForumId,
                     'topic_time' => $managedTopic->get()->getTopic_time(),
                     'attachSignature' => false,
