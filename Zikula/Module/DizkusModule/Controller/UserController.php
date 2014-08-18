@@ -58,13 +58,15 @@ class UserController extends \Zikula_AbstractController
      *
      * Show all forums a user may see
      *
+     * @param Request $request
+     *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         $indexTo = $this->getVar('indexTo');
@@ -97,12 +99,12 @@ class UserController extends \Zikula_AbstractController
         // check to make sure there are forums to display
         if (count($forums) < 1) {
             if ($showOnlyFavorites) {
-                $this->request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
+                $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
                 $managedForumUser = new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
             } else {
-                $this->request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
+                $request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
             }
         }
         $this->view->assign('forums', $forums);
@@ -114,29 +116,31 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/forum")
+     * @Method("GET")
      *
      * View forum by id
-     *
      * opens a forum and shows the last postings
-     * @param integer 'forum' (via GET) the forum id
-     * @param integer 'start' (via GET) the posting to start with if on page 1+
+     *
+     * @param Request $request
+     *  integer 'forum' the forum id
+     *  integer 'start' the posting to start with if on page 1+
      *
      * @throws NotFoundHttpException if forumID <= 0
      * @throws AccessDeniedException if perm check fails
      *
      * @return Response
      */
-    public function viewforumAction()
+    public function viewforumAction(Request $request)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         // get the input
-        $forumId = (int)$this->request->query->get('forum', null);
+        $forumId = (int)$request->query->get('forum', null);
         if (!($forumId > 0)) {
             throw new NotFoundHttpException($this->__('That forum doesn\'t exist!'));
         }
-        $start = (int)$this->request->query->get('start', 1);
+        $start = (int)$request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $managedForum = new ForumManager($forumId);
         // Permission check
@@ -159,26 +163,28 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/topic")
+     * @Method("GET")
      *
      * viewtopic
      *
-     * @param integer 'topic' (via GET) the topic ID
-     * @param integer 'post (via GET) a post ID
-     * @param integer 'start' (via GET) pager value
+     * @param Request $request
+     *  integer 'topic' the topic ID
+     *  integer 'post' a post ID
+     *  integer 'start' pager value
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function viewtopicAction()
+    public function viewtopicAction(Request $request)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         // get the input
-        $topicId = (int)$this->request->query->get('topic', null);
-        $post_id = (int)$this->request->query->get('post', null);
-        $start = (int)$this->request->query->get('start', 1);
+        $topicId = (int)$request->query->get('topic', null);
+        $post_id = (int)$request->query->get('post', null);
+        $start = (int)$request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         if (!empty($post_id) && is_numeric($post_id) && empty($topicId)) {
             $managedPost = new PostManager($post_id);
@@ -194,7 +200,7 @@ class UserController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         if (!$managedTopic->exists()) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topicId)));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topicId)));
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
@@ -218,45 +224,47 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/reply")
+     * @Method("POST")
      *
      * reply to a post
      *
-     * @param integer 'forum' (via POST) the forum ID
-     * @param integer 'topic' (via POST) the topic ID
-     * @param integer 'post' (via POST) the post ID
-     * @param string 'returnurl' (via POST) encoded url string
-     * @param string 'message' (via POST) the content of the post
-     * @param integer 'attach_signature' (via POST)
-     * @param integer 'subscribe_topic' (via POST)
-     * @param string 'preview' (via POST) submit button converted to boolean
-     * @param string 'submit' (via POST) submit button converted to boolean
-     * @param string 'cancel' (via POST) submit button converted to boolean
+     * @param Request $request
+     *  integer 'forum' the forum ID
+     *  integer 'topic' the topic ID
+     *  integer 'post' the post ID
+     *  string 'returnurl' encoded url string
+     *  string 'message' the content of the post
+     *  integer 'attach_signature'
+     *  integer 'subscribe_topic'
+     *  string 'preview' submit button converted to boolean
+     *  string 'submit' submit button converted to boolean
+     *  string 'cancel' submit button converted to boolean
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function replyAction()
+    public function replyAction(Request $request)
     {
         // Comment Permission check
-        $forum_id = (int) $this->request->request->get('forum', null);
+        $forum_id = (int) $request->request->get('forum', null);
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', array('forum_id' => $forum_id))) {
             throw new AccessDeniedException();
         }
         $this->checkCsrfToken();
         // get the input
-        $topic_id = (int)$this->request->request->get('topic', null);
-        $post_id = (int)$this->request->request->get('post', null);
-        $returnurl = $this->request->request->get('returnurl', null);
-        $message = $this->request->request->get('message', '');
-        $attach_signature = (int)$this->request->request->get('attach_signature', 0);
-        $subscribe_topic = (int)$this->request->request->get('subscribe_topic', 0);
+        $topic_id = (int)$request->request->get('topic', null);
+        $post_id = (int)$request->request->get('post', null);
+        $returnurl = $request->request->get('returnurl', null);
+        $message = $request->request->get('message', '');
+        $attach_signature = (int)$request->request->get('attach_signature', 0);
+        $subscribe_topic = (int)$request->request->get('subscribe_topic', 0);
         // convert form submit buttons to boolean
-        $isPreview = $this->request->request->get('preview', null);
+        $isPreview = $request->request->get('preview', null);
         $isPreview = isset($isPreview) ? true : false;
-        $submit = $this->request->request->get('submit', null);
+        $submit = $request->request->get('submit', null);
         $submit = isset($submit) ? true : false;
-        $cancel = $this->request->request->get('cancel', null);
+        $cancel = $request->request->get('cancel', null);
         $cancel = isset($cancel) ? true : false;
         /**
          * if cancel is submitted move to topic-view
@@ -267,12 +275,12 @@ class UserController extends \Zikula_AbstractController
         $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
         // check for maximum message size
         if (strlen($message) + strlen('[addsig]') > 65535) {
-            $this->request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
             // switch to preview mode
             $isPreview = true;
         }
         if (empty($message)) {
-            $this->request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is empty. Please add some text.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is empty. Please add some text.'));
             // switch to preview mode
             $isPreview = true;
         }
@@ -281,7 +289,7 @@ class UserController extends \Zikula_AbstractController
             $hook = new ValidationHook(new ValidationProviders());
             $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
             if ($hookvalidators->hasErrors()) {
-                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
                 $isPreview = true;
             }
         }
@@ -294,7 +302,7 @@ class UserController extends \Zikula_AbstractController
             $managedPost->create($data);
             // check to see if the post contains spam
             if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
                 return new Response('', Response::HTTP_NOT_ACCEPTABLE);
             }
             $managedPost->persist();
@@ -426,20 +434,24 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/ip")
+     * @Method("GET")
      *
      * View the posters IP information
      *
+     * @param Request $request
+     *  integer post
+     * 
      * @return Response
      *
      * @throws AccessDeniedException on failed perm check
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function viewIpDataAction()
+    public function viewIpDataAction(Request $request)
     {
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new AccessDeniedException();
         }
-        $post_id = (int)$this->request->query->filter('post', 0, FILTER_VALIDATE_INT);
+        $post_id = (int)$request->query->filter('post', 0, FILTER_VALIDATE_INT);
         if ($post_id == 0) {
             throw new \InvalidArgumentException();
         }
@@ -545,16 +557,21 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/forum/modify")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *  action
+     *  integer forum
      *
      * Add/remove a forum from the favorites
      *
      * @return RedirectResponse
      */
-    public function modifyForumAction()
+    public function modifyForumAction(Request $request)
     {
         $params = array(
-            'action' => $this->request->query->get('action'),
-            'forum_id' => (int)$this->request->query->get('forum'));
+            'action' => $request->query->get('action'),
+            'forum_id' => (int)$request->query->get('forum'));
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $params['forum_id']), RouterInterface::ABSOLUTE_URL));
@@ -562,17 +579,23 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/topic/change-status")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *  action
+     *  integer topic
+     *  integer post
      *
      * Add/remove the sticky status of a topic
      *
      * @return RedirectResponse
      */
-    public function changeTopicStatusAction()
+    public function changeTopicStatusAction(Request $request)
     {
-        $params = array();
-        $params['action'] = $this->request->query->get('action');
-        $params['topic_id'] = (int)$this->request->query->get('topic');
-        $params['post_id'] = (int)$this->request->query->get('post', null);
+        $params = array(
+            'action' => $request->query->get('action'),
+            'topic_id' => (int)$request->query->get('topic'),
+            'post_id' => (int)$request->query->get('post', null));
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $params['topic_id']), RouterInterface::ABSOLUTE_URL));
@@ -608,19 +631,21 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/topics/view-latest")
+     * @Method("GET")
      *
      * View latest topics
      *
-     * @param string 'selorder' (via GET)
-     * @param integer 'nohours' (via GET)
-     * @param integer 'unanswered' (via GET)
-     * @param integer 'last_visit_unix' (via GET)
+     * @param Request $request
+     *  string 'selorder'
+     *  integer 'nohours'
+     *  integer 'unanswered'
+     *  integer 'last_visit_unix'
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function viewlatestAction()
+    public function viewlatestAction(Request $request)
     {
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -631,11 +656,11 @@ class UserController extends \Zikula_AbstractController
         }
         // get the input
         $params = array();
-        $params['selorder'] = $this->request->get('selorder', 1);
-        $params['nohours'] = (int)$this->request->request->get('nohours', 24);
-        $params['unanswered'] = (int)$this->request->query->get('unanswered', 0);
-        $params['amount'] = (int)$this->request->query->get('amount', null);
-        $params['last_visit_unix'] = (int)$this->request->query->get('last_visit_unix', time());
+        $params['selorder'] = $request->get('selorder', 1);
+        $params['nohours'] = (int)$request->request->get('nohours', 24);
+        $params['unanswered'] = (int)$request->query->get('unanswered', 0);
+        $params['amount'] = (int)$request->query->get('amount', null);
+        $params['last_visit_unix'] = (int)$request->query->get('last_visit_unix', time());
         $this->view->assign($params);
         list($topics, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'getLatest', $params);
         $this->view->assign('topics', $topics);
@@ -649,17 +674,19 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/topics/mine")
+     * @Method("GET")
      *
      * Display my posts or topics
      *
-     * @param string 'action' (via GET)
-     * @param number 'uid' (via GET)
+     * @param Request $request
+     *  'action' string
+     *  'uid' int
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function mineAction()
+    public function mineAction(Request $request)
     {
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -669,8 +696,8 @@ class UserController extends \Zikula_AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         $params = array();
-        $params['action'] = $this->request->query->get('action', 'posts');
-        $params['uid'] = $this->request->query->get('user', null);
+        $params['action'] = $request->query->get('action', 'posts');
+        $params['uid'] = $request->query->get('user', null);
         list($topics, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
         $this->view->assign('topics', $topics);
         $this->view->assign('text', $text);
@@ -744,26 +771,29 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/feed")
+     * @Method("GET")
      *
      * generate and display an RSS feed of recent topics
+     *
+     * @param Request $request
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function feedAction()
+    public function feedAction(Request $request)
     {
-        $forum_id = $this->request->query->get('forum_id', null);
-        $count = (int)$this->request->query->get('count', 10);
-        $feed = $this->request->query->get('feed', 'rss20');
-        $user = $this->request->query->get('user', null);
+        $forum_id = $request->query->get('forum_id', null);
+        $count = (int)$request->query->get('count', 10);
+        $feed = $request->query->get('feed', 'rss20');
+        $user = $request->query->get('user', null);
         // get the module info
         $dzkinfo = ModUtil::getInfo(ModUtil::getIdFromName($this->name));
         $dzkname = $dzkinfo['displayname'];
         $mainUrl = $this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
 
         if (isset($forum_id) && !is_numeric($forum_id)) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! An invalid forum ID %s was encountered.', $forum_id));
 
             return new RedirectResponse($mainUrl);
         }
@@ -773,7 +803,7 @@ class UserController extends \Zikula_AbstractController
         $templatefile = 'Feed/' . DataUtil::formatForOS($feed) . '.tpl';
         if (!$this->view->template_exists($templatefile)) {
             // silently stop working
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find a template for an %s-type feed.', $feed));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! Could not find a template for an %s-type feed.', $feed));
 
             return new RedirectResponse($mainUrl);
         }
