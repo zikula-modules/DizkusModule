@@ -51,12 +51,6 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         // module dependencies
         $meta['dependencies'] = array(
             array(
-                'modname' => 'Scribite',
-                'minversion' => '5.0.0',
-                'maxversion' => '',
-                'reason' => $this->__('Scribite adds WYSIWYG editors to add html markup to post text.'),
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
-            array(
                 'modname' => 'BBCode',
                 'minversion' => '3.0.0',
                 'maxversion' => '',
