@@ -43,9 +43,9 @@
         <div class="panel-heading">
             <h2>{gt text="Latest forum posts"} ({$text})</h2>
         </div>
-        {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+        {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewlatest'}
         {include file='User/forum/forumtopicstable.tpl'}
-        {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+        {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewlatest'}
         {include file='User/forum/panelfooter.tpl'}
     </div>
 </div>

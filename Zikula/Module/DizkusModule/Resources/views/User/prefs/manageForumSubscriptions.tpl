@@ -10,7 +10,7 @@
     <div class="panel-heading">
         <h2>{$templatetitle}</h2>
     </div>
-    {*pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'*}
+    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_manageforumsubscriptions'*}
 
     <table class='table table-striped'>
         <thead>

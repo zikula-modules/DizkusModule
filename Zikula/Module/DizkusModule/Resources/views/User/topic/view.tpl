@@ -134,7 +134,7 @@
 {* ******************************************************
 * TOPIC LIST
 ******************************************************* *}
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewtopic'}
 
 <div id="dzk_postinglist">
     <ul class="post_list">
@@ -150,7 +150,7 @@
     </ul>
 </div>
 
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewtopic'}
 
 {* ******************************************************
 * QUICK REPLY FORM
