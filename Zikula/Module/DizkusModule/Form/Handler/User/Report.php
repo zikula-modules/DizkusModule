@@ -78,7 +78,7 @@ class Report extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . 'pid' . $this->_post->getId();
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
             return $view->redirect($url);
         }
 

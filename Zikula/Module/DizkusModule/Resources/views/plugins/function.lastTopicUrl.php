@@ -21,7 +21,7 @@ function smarty_function_lastTopicUrl($params, Zikula_View $view)
         'topic' => $topic->getTopic_id(),
         'start' => ModUtil::apiFunc($dizkusModuleName, 'user', 'getTopicPage', array('replyCount' => $topic->getReplyCount())),
     );
-    $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', $urlParams) . "pid" . $topic->getLast_post()->getPost_id();
+    $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', $urlParams) . "#pid" . $topic->getLast_post()->getPost_id();
 
     return $url;
 }
