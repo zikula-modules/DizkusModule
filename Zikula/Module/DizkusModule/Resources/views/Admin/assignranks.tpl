@@ -10,7 +10,7 @@
     <p class="alert alert-info">{gt text="In this page, you can select particular users and assign them honorary ranks. %s. Only users that have posted in the forum may be assigned a rank." tag1=$createlink}</p>
 
     <div class="rankuser-alphanav text-center">
-        {pagerabc posvar="letter" route='zikuladizkusmodule_admin_assignranks'}
+        {pagerabc printempty=true posvar="letter" route='zikuladizkusmodule_admin_assignranks'}
     </div>
 
     {form}
