@@ -372,9 +372,9 @@ function quickEditSave() {
         var action = result.data.action,
             redirect = result.data.redirect,
             newText = result.data.newText;
-        if (message.length > 0) {
-            alert(message);
-        }
+//        if (message.length > 0) {
+//            alert(message);
+//        }
 
         postEditing = false;
         postEditingChanged = false;
