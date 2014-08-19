@@ -162,37 +162,34 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic")
+     * @Route("/topic/{topic}/{start}", requirements={"topic" = "^[1-9]\d*$", "start" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * viewtopic
      *
      * @param Request $request
-     *  integer 'topic' the topic ID
-     *  integer 'start' pager value
+     * @param integer $topic the topic ID
+     * @param integer $start pager value
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function viewtopicAction(Request $request)
+    public function viewtopicAction(Request $request, $topic, $start = 1)
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
-        // get the input
-        $topicId = (int)$request->query->get('topic', null);
-        $start = (int)$request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
-        $managedTopic = new TopicManager($topicId);
+        $managedTopic = new TopicManager($topic);
+        if (!$managedTopic->exists()) {
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topic)));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
+        }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
             throw new AccessDeniedException();
-        }
-        if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topicId)));
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
@@ -372,7 +369,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/new.tpl', new NewTopic());
+        return new Response($form->execute('User/topic/new.tpl', new NewTopic()));
     }
 
     /**
@@ -388,7 +385,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/post/edit.tpl', new EditPost());
+        return new Response($form->execute('User/post/edit.tpl', new EditPost()));
     }
 
     /**
@@ -404,7 +401,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/delete.tpl', new DeleteTopic());
+        return new Response($form->execute('User/topic/delete.tpl', new DeleteTopic()));
     }
 
     /**
@@ -420,7 +417,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/move.tpl', new MoveTopic());
+        return new Response($form->execute('User/topic/move.tpl', new MoveTopic()));
     }
 
     /**
@@ -462,7 +459,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/prefs/prefs.tpl', new Prefs());
+        return new Response($form->execute('User/prefs/prefs.tpl', new Prefs()));
     }
 
     /**
@@ -476,7 +473,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/prefs/manageForumSubscriptions.tpl', new ForumSubscriptions());
+        return new Response($form->execute('User/prefs/manageForumSubscriptions.tpl', new ForumSubscriptions()));
     }
 
     /**
@@ -490,7 +487,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/prefs/manageTopicSubscriptions.tpl', new TopicSubscriptions());
+        return new Response($form->execute('User/prefs/manageTopicSubscriptions.tpl', new TopicSubscriptions()));
     }
 
     /**
@@ -601,7 +598,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/prefs/signaturemanagement.tpl', new SignatureManagement());
+        return new Response($form->execute('User/prefs/signaturemanagement.tpl', new SignatureManagement()));
     }
 
     /**
@@ -615,7 +612,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/email.tpl', new EmailTopic());
+        return new Response($form->execute('User/topic/email.tpl', new EmailTopic()));
     }
 
     /**
@@ -709,7 +706,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/split.tpl', new SplitTopic());
+        return new Response($form->execute('User/topic/split.tpl', new SplitTopic()));
     }
 
     /**
@@ -723,7 +720,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/post/move.tpl', new MovePost());
+        return new Response($form->execute('User/post/move.tpl', new MovePost()));
     }
 
     /**
@@ -739,7 +736,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/forum/moderate.tpl', new ModerateForum());
+        return new Response($form->execute('User/forum/moderate.tpl', new ModerateForum()));
     }
 
     /**
@@ -755,7 +752,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/notifymod.tpl', new Report());
+        return new Response($form->execute('User/notifymod.tpl', new Report()));
     }
 
     /**
