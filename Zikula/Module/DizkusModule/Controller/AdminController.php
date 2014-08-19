@@ -97,7 +97,7 @@ class AdminController extends \Zikula_AbstractController
         }
         // Create output object
         $form = FormUtil::newForm($this->name, $this);
-        return $form->execute('Admin/preferences.tpl', new Prefs());
+        return new Response($form->execute('Admin/preferences.tpl', new Prefs()));
     }
 
     /**
@@ -184,7 +184,7 @@ class AdminController extends \Zikula_AbstractController
         }
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('Admin/assignranks.tpl', new AssignRanks());
+        return new Response($form->execute('Admin/assignranks.tpl', new AssignRanks()));
     }
 
     /**
@@ -214,7 +214,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('Admin/modifyforum.tpl', new ModifyForum());
+        return new Response($form->execute('Admin/modifyforum.tpl', new ModifyForum()));
     }
 
     /**
@@ -225,7 +225,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('Admin/deleteforum.tpl', new DeleteForum());
+        return new Response($form->execute('Admin/deleteforum.tpl', new DeleteForum()));
     }
 
     /**
@@ -236,7 +236,7 @@ class AdminController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('Admin/managesubscriptions.tpl', new ManageSubscriptions());
+        return new Response($form->execute('Admin/managesubscriptions.tpl', new ManageSubscriptions()));
     }
 
 }
