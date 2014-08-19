@@ -502,7 +502,7 @@ class TopicManager
         if ($result) {
             return $result[0]['topic_id'];
         } else {
-            return '';
+            return $this->_topic->getTopic_id(); // return current value (checks in template for this)
         }
     }
 
