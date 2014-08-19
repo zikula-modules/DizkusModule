@@ -17,8 +17,7 @@ use SecurityUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler for the signature management.
@@ -38,7 +37,7 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_signaturemanagement');
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', array(), RouterInterface::ABSOLUTE_URL);
 
             return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
@@ -80,7 +79,8 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
             $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Signature has been updated.'));
 
             // redirect to user preferences page
-            return $view->redirect(new ModUrl($this->name, 'user', 'prefs', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_prefs', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         return true;

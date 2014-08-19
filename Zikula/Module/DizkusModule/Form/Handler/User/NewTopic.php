@@ -16,8 +16,7 @@ use Zikula\Module\DizkusModule\Manager\TopicManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
@@ -57,14 +56,16 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         if (!isset($this->_forumId)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing forum id.'));
-            return $view->redirect(new ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         $managedforum = new ForumManager($this->_forumId);
         if ($managedforum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
-            return $view->redirect(new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forumId)));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $this->_forumId), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
         $view->assign('forum', $managedforum->get());
         $view->assign('breadcrumbs', $managedforum->getBreadcrumbs(false));
@@ -84,7 +85,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forumId));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $this->_forumId), RouterInterface::ABSOLUTE_URL);
             return $view->redirect($url);
         }
 
@@ -151,7 +152,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         // store new topic
         $newManagedTopic->create();
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $newManagedTopic->getId()));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $newManagedTopic->getId()), RouterInterface::ABSOLUTE_URL);
         // notify hooks for both POST and TOPIC
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
         $this->dispatchHooks('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));

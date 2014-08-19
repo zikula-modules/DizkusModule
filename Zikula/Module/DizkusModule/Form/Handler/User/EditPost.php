@@ -16,11 +16,10 @@ use ModUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use ZLanguage;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to create a new topic.
@@ -55,7 +54,8 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
-            return $view->redirect(new ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         $this->_post = new PostManager($id);
@@ -78,7 +78,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         $data = $view->getValues();
         $deleting = (isset($data['delete']) && $data['delete'] === true);
         $fragment = $deleting ? null : 'pid' . $this->_post->getId();
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId()), $fragment);
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId()), RouterInterface::ABSOLUTE_URL) . $fragment;
 
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);

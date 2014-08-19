@@ -17,8 +17,7 @@ use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to move a post.
@@ -71,7 +70,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->topic_id));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }
@@ -119,7 +118,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             ModUtil::apiFunc($this->name, 'topic', 'join', $data);
 
-            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $data['to_topic_id']));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id']), RouterInterface::ABSOLUTE_URL);
             return $view->redirect($url);
         }
 

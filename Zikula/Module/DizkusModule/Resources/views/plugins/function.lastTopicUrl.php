@@ -11,18 +11,17 @@
 
 /**
  * lastTopicUrl plugin
- * lists all allowed html tags
  *
  */
 function smarty_function_lastTopicUrl($params, Zikula_View $view)
 {
     $dizkusModuleName = "ZikulaDizkusModule";
     $topic = $params['topic'];
-    $params = array(
+    $urlParams = array(
         'topic' => $topic->getTopic_id(),
         'start' => ModUtil::apiFunc($dizkusModuleName, 'user', 'getTopicPage', array('replyCount' => $topic->getReplyCount())),
     );
-    $url = new \Zikula\Core\ModUrl($dizkusModuleName, 'user', 'viewtopic', ZLanguage::getLanguageCode(), $params, "pid" . $topic->getLast_post()->getPost_id());
+    $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', $urlParams) . "pid" . $topic->getLast_post()->getPost_id();
 
-    return $url->getUrl();
+    return $url;
 }

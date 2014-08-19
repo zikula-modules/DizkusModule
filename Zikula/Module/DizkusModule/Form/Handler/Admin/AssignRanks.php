@@ -17,8 +17,7 @@ use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -112,12 +111,16 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         if (!$view->isValid()) {
             return false;
         }
-        $queryParams = $this->request->query->all();
-        unset($queryParams['module'], $queryParams['type'], $queryParams['func']);
+
+        $routeParams = array();
+        if ($view->getRequest()->attributes->has('_route_params')) {
+            $routeParams = $view->getRequest()->attributes->get('_route_params');
+            unset($routeParams['_zkModule'], $routeParams['_zkType'], $routeParams['_zkFunc'], $routeParams['_locale']);
+        }
 
         $setrank = $this->request->request->get('setrank');
         ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
-        $url = new ModUrl($this->name, 'admin', 'assignranks', ZLanguage::getLanguageCode(), $queryParams);
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_assignranks', $routeParams, RouterInterface::ABSOLUTE_URL);
 
         return $view->redirect($url);
     }
