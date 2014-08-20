@@ -79,7 +79,7 @@ class UserController extends \Zikula_AbstractController
         }
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('last_visit_unix', $lastVisitUnix);
-        // get the forms to display
+        // get the forums to display
         $showOnlyFavorites = ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
         $siteFavoritesAllowed = $this->getVar('favorites_enabled') == 'yes';
         $uid = UserUtil::getVar('uid');
@@ -115,34 +115,33 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum")
+     * @Route("/forum/{forum}/{start}", requirements={"topic" = "^[1-9]\d*$", "start" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * View forum by id
      * opens a forum and shows the last postings
      *
      * @param Request $request
-     *  integer 'forum' the forum id
-     *  integer 'start' the posting to start with if on page 1+
+     * @param integer $forum the forum id
+     * @param integer $start the posting to start with if on page 1+
      *
      * @throws NotFoundHttpException if forumID <= 0
      * @throws AccessDeniedException if perm check fails
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
-    public function viewforumAction(Request $request)
+    public function viewforumAction(Request $request, $forum, $start = 1)
     {
         if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
-        // get the input
-        $forumId = (int)$request->query->get('forum', null);
-        if (!($forumId > 0)) {
-            throw new NotFoundHttpException($this->__('That forum doesn\'t exist!'));
-        }
-        $start = (int)$request->query->get('start', 1);
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
-        $managedForum = new ForumManager($forumId);
+
+        $managedForum = new ForumManager($forum);
+        if (!$managedForum->exists()) {
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', array($forum)));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
+        }
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
             throw new AccessDeniedException();
@@ -192,19 +191,19 @@ class UserController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
-        $this->view->assign('ranks', $ranks);
-        $this->view->assign('start', $start);
-        $this->view->assign('topic', $managedTopic->get());
-        $this->view->assign('posts', $managedTopic->getPosts(--$start));
-        $this->view->assign('pager', $managedTopic->getPager());
-        $this->view->assign('permissions', $managedTopic->getPermissions());
-        $this->view->assign('isModerator', $managedTopic->getManagedForum()->isModerator());
-        $this->view->assign('breadcrumbs', $managedTopic->getBreadcrumbs());
-        $this->view->assign('isSubscribed', $managedTopic->isSubscribed());
-        $this->view->assign('nextTopic', $managedTopic->getNext());
-        $this->view->assign('previousTopic', $managedTopic->getPrevious());
-        $this->view->assign('last_visit_unix', $lastVisitUnix);
-        $this->view->assign('preview', false);
+        $this->view->assign('ranks', $ranks)
+            ->assign('start', $start)
+            ->assign('topic', $managedTopic->get())
+            ->assign('posts', $managedTopic->getPosts(--$start))
+            ->assign('pager', $managedTopic->getPager())
+            ->assign('permissions', $managedTopic->getPermissions())
+            ->assign('isModerator', $managedTopic->getManagedForum()->isModerator())
+            ->assign('breadcrumbs', $managedTopic->getBreadcrumbs())
+            ->assign('isSubscribed', $managedTopic->isSubscribed())
+            ->assign('nextTopic', $managedTopic->getNext())
+            ->assign('previousTopic', $managedTopic->getPrevious())
+            ->assign('last_visit_unix', $lastVisitUnix)
+            ->assign('preview', false);
         $managedTopic->incrementViewsCount();
 
         return new Response($this->view->fetch('User/topic/view.tpl'));
@@ -617,7 +616,6 @@ class UserController extends \Zikula_AbstractController
 
     /**
      * @Route("/topics/view-latest")
-     * @Method("GET")
      *
      * View latest topics
      *
