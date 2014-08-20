@@ -620,7 +620,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      * This routine will only attempt to migrate references where the topic_reference field
      * looks like `moduleID-objectId` -> e.g. '14-57'. If the field contains any underscores
      * the topic will be locked and the reference left unmigrated. This is mainly because
-     * modules that use that style of reference are not compatible with Core 1.3.6+
+     * modules that use that style of reference are not compatible with Core 1.4.0+
      * anyway and so migrating their references would be pointless.
      *
      * Additionally, if the subscriber module has more than one subscriber area, then migration is
