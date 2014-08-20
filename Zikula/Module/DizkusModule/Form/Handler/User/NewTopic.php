@@ -152,7 +152,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         // store new topic
         $newManagedTopic->create();
-        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $newManagedTopic->getId()), RouterInterface::ABSOLUTE_URL);
+        $url = new \Zikula\Core\ModUrl($this->name, 'user', 'viewtopic', \ZLanguage::getLanguageCode(),array('topic' => $newManagedTopic->getId()));
         // notify hooks for both POST and TOPIC
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
         $this->dispatchHooks('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));
@@ -161,6 +161,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $newManagedTopic->getId()), RouterInterface::ABSOLUTE_URL);
         return $view->redirect($url);
     }
 
