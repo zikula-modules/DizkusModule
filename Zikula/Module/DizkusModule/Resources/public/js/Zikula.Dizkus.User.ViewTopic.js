@@ -5,9 +5,9 @@
  */
 
 jQuery(document).ready(function() {
-    jQuery("#toggletopiclock").click(changeTopicStatus);
-    jQuery("#toggletopicsticky").click(changeTopicStatus);
-    jQuery("#toggletopicsubscription").click(changeTopicStatus);
+    jQuery("#toggletopiclock").attr('href', '#').click(changeTopicStatus);
+    jQuery("#toggletopicsticky").attr('href', '#').click(changeTopicStatus);
+    jQuery("#toggletopicsubscription").attr('href', '#').click(changeTopicStatus);
     jQuery(".solvetopic").click(changeTopicStatus);
     jQuery(".unsolvetopic").click(changeTopicStatus);
     // POST EDIT
