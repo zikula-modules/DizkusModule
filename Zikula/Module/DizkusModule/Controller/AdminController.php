@@ -89,6 +89,9 @@ class AdminController extends \Zikula_AbstractController
      *
      * preferences
      *
+     * @return Response
+     *
+     * @throws AccessDeniedException
      */
     public function preferencesAction()
     {
@@ -107,6 +110,10 @@ class AdminController extends \Zikula_AbstractController
      * syncforums
      * 
      * @param Request $request
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException
      */
     public function syncforumsAction(Request $request)
     {
@@ -176,6 +183,10 @@ class AdminController extends \Zikula_AbstractController
      * @Route("/assignranks")
      *
      * ranks
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
      */
     public function assignranksAction()
     {
@@ -209,6 +220,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("/modify")
      *
+     * @return Response
      */
     public function modifyForumAction()
     {
@@ -220,6 +232,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("/delete")
      *
+     * @return Response
      */
     public function deleteforumAction()
     {
@@ -231,6 +244,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("/subscriptions")
      *
+     * @return Response
      */
     public function manageSubscriptionsAction()
     {
