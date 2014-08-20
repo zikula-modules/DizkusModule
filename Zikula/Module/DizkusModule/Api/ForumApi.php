@@ -235,20 +235,23 @@ class ForumApi extends \Zikula_AbstractApi
     }
 
     /**
-     * modify unser/forum association
+     * modify user/forum association
      *
-     * @param  integer $args['forum_id']
+     * @param  $args
+     *  integer 'forum'
+     *  string 'action' = 'addToFavorites'|'removeFromFavorites'|'subscribe'|'unsubscribe'
+     *
      * @return boolean
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function modify($args)
     {
-        if (empty($args['forum_id'])) {
+        if (empty($args['forum']) || empty($args['action'])) {
             throw new \InvalidArgumentException();
         }
-        $managedForumUser = new ForumUserManager(UserUtil::getVar('uid'));
-        $managedForum = new ForumManager($args['forum_id']);
+        $managedForumUser = new ForumUserManager();
+        $managedForum = new ForumManager($args['forum']);
         switch ($args['action']) {
             case 'addToFavorites':
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());

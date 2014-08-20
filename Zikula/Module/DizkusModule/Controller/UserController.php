@@ -192,6 +192,7 @@ class UserController extends \Zikula_AbstractController
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks)
+            ->assign('start', $start)
             ->assign('topic', $managedTopic->get())
             ->assign('posts', $managedTopic->getPosts(--$start))
             ->assign('pager', $managedTopic->getPager())
@@ -540,25 +541,22 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/forum/modify")
+     * @Route("/forum/modify/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action" = "addToFavorites|removeFromFavorites|subscribe|unsubscribe"})
      * @Method("GET")
      *
-     * @param Request $request
-     *  action
-     *  integer forum
+     * @param integer $forum
+     * @param string $action
      *
      * Add/remove a forum from the favorites
+     * WARNING: this method is overridden by an Ajax method
      *
      * @return RedirectResponse
      */
-    public function modifyForumAction(Request $request)
+    public function modifyForumAction($forum, $action)
     {
-        $params = array(
-            'action' => $request->query->get('action'),
-            'forum_id' => (int)$request->query->get('forum'));
-        ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
+        ModUtil::apiFunc($this->name, 'Forum', 'modify', array('forum' => $forum, 'action' => $action));
 
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $params['forum_id']), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum), RouterInterface::ABSOLUTE_URL));
     }
 
     /**
