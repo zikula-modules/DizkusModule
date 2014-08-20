@@ -55,7 +55,7 @@
                 <li><a title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
                 <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='fa fa-search'></i></a></li>
             {else}
-                <li><a class='fa fa-comment' title="{gt text="View your posts"}" href="{route name='zikuladizkusmodule_user_mine'}">&nbsp;{gt text="View your posts"}</a></li>
+                <li><a class='fa fa-comment' title="{gt text="View my posts"}" href="{route name='zikuladizkusmodule_user_mine'}">&nbsp;{gt text="View my posts"}</a></li>
                 <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='fa fa-search'></i></a></li>
                 <li><a class='tooltips' title="{gt text="Personal settings"}" href="{route name='zikuladizkusmodule_user_prefs'}"><i class='fa fa-user'></i><i class='fa fa-wrench'></i></a></li>
             {/if}

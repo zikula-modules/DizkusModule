@@ -104,27 +104,19 @@ class PostApi extends \Zikula_AbstractApi
         return array($topics, $text, $pager);
     }
 
+    /**
+     * retrieve all my posts or topics
+     *
+     * @param $args
+     *  string 'action' = 'posts'|'topics'
+     *  integer 'offset' pager offset
+     *
+     * @return array
+     */
     public function search($args)
     {
-        $text = '';
-        $uname = '';
-        $own = false;
-        if (empty($args['uid'])) {
-            $args['uid'] = UserUtil::getVar('uid');
-            $own = true;
-        }
-        if (!is_int($args['uid'])) {
-            $uname = $args['uid'];
-            $args['uid'] = UserUtil::getIdFromName($uname);
-        } else {
-            $uname = UserUtil::getVar('uname', $args['uid']);
-        }
-        if (!$own && $args['uid'] == UserUtil::getVar('uid')) {
-            $own = true;
-        }
-        if (empty($args['action'])) {
-            $args['action'] = 'posts';
-        }
+        $args['action'] = !empty($args['action']) && in_array($args['action'], array('posts', 'topics')) ? $args['action'] : 'posts';
+        $args['offset'] = !empty($args['offset']) ? $args['offset'] : 0;
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
             ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
@@ -133,27 +125,20 @@ class PostApi extends \Zikula_AbstractApi
             ->orderBy('l.post_time', 'DESC');
         if ($args['action'] == 'topics') {
             $qb->where('t.poster = :uid');
-            if ($own) {
-                $text = $this->__('Your topics');
-            } else {
-                $text = $this->__f('%s\'s topics', array($uname));
-            }
         } else {
             $qb->where('p.poster = :uid');
-            if ($own) {
-                $text = $this->__('Your posts');
-            } else {
-                $text = $this->__f('%s\'s posts', array($uname));
-            }
         }
-        $qb->setParameter('uid', $args['uid']);
-        $qb->setFirstResult(0)->setMaxResults(10);
+        $qb->setParameter('uid', UserUtil::getVar('uid'));
+        $perPageVar = $args['action'] . '_per_page';
+        $limit = $this->getVar($perPageVar);
+        $qb->setFirstResult($args['offset'])
+            ->setMaxResults($limit);
         $topics = new Paginator($qb);
         $pager = array(
-            'numitems' => count($topics),
-            'itemsperpage' => 10);
+            'numitems' => $topics->count(),
+            'itemsperpage' => $limit);
 
-        return array($topics, $text, $pager);
+        return array($topics, $pager);
     }
 
     /**

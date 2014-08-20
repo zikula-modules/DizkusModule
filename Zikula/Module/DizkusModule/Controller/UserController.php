@@ -192,7 +192,6 @@ class UserController extends \Zikula_AbstractController
         }
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks)
-            ->assign('start', $start)
             ->assign('topic', $managedTopic->get())
             ->assign('posts', $managedTopic->getPosts(--$start))
             ->assign('pager', $managedTopic->getPager())
@@ -657,20 +656,19 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topics/mine")
+     * @Route("/topics/mine/{action}/{start}", requirements={"action" = "posts|topics", "start" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * Display my posts or topics
      *
-     * @param Request $request
-     *  'action' string
-     *  'uid' int
+     * @param string $action = 'posts'|'topics'
+     * @param integer $start pager offset
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function mineAction(Request $request)
+    public function mineAction($action = "posts", $start = 0)
     {
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -679,16 +677,13 @@ class UserController extends \Zikula_AbstractController
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
-        $params = array();
-        $params['action'] = $request->query->get('action', 'posts');
-        $params['uid'] = $request->query->get('user', null);
-        list($topics, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', $params);
-        $this->view->assign('topics', $topics);
-        $this->view->assign('text', $text);
-        $this->view->assign('pager', $pager);
-        $this->view->assign('action', $params['action']);
+
+        list($topics, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', array('action' => $action, 'start' => $start));
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
-        $this->view->assign('last_visit_unix', $lastVisitUnix);
+        $this->view->assign('topics', $topics)
+            ->assign('pager', $pager)
+            ->assign('action', $action)
+            ->assign('last_visit_unix', $lastVisitUnix);
 
         return new Response($this->view->fetch('User/post/mine.tpl'));
     }
