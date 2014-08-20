@@ -547,7 +547,7 @@ class UserController extends \Zikula_AbstractController
      * @param integer $forum
      * @param string $action
      *
-     * Add/remove a forum from the favorites
+     * Change a param of a forum
      * WARNING: this method is overridden by an Ajax method
      *
      * @return RedirectResponse
@@ -560,27 +560,30 @@ class UserController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/topic/change-status")
+     * @Route("/topic/change-status/{topic}/{action}/{post}", requirements={
+     *      "topic" = "^[1-9]\d*$",
+     *      "action" = "subscribe|unsubscribe|sticky|unsticky|lock|unlock|solve|unsolve|setTitle",
+     *      "post" = "^[1-9]\d*$"})
      * @Method("GET")
      *
-     * @param Request $request
-     *  action
-     *  integer topic
-     *  integer post
+     * @param integer $topic
+     * @param string $action
+     * @param integer $post (default = NULL)
      *
-     * Add/remove the sticky status of a topic
+     * Change a param of a topic
+     * WARNING: this method is overridden by an Ajax method
      *
      * @return RedirectResponse
      */
-    public function changeTopicStatusAction(Request $request)
+    public function changeTopicStatusAction($topic, $action, $post = null)
     {
         $params = array(
-            'action' => $request->query->get('action'),
-            'topic_id' => (int)$request->query->get('topic'),
-            'post_id' => (int)$request->query->get('post', null));
+            'action' => $action,
+            'topic' => $topic,
+            'post' => $post);
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $params['topic_id']), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic), RouterInterface::ABSOLUTE_URL));
     }
 
     /**

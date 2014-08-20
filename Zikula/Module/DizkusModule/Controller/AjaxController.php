@@ -331,14 +331,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         }
         // Get common parameters
         $params = array();
-        $params['topic_id'] = $request->request->get('topic', '');
-        $params['post_id'] = $request->request->get('post', null);
+        $params['topic'] = $request->request->get('topic', '');
+        $params['post'] = $request->request->get('post', null);
         $params['action'] = $request->request->get('action', '');
         $userAllowedToEdit = $request->request->get('userAllowedToEdit', 0);
         // certain actions a user is always allowed
         $userAllowedToEdit = in_array($params['action'], array('subscribe', 'unsubscribe', 'solve', 'unsolve')) ? 1 : $userAllowedToEdit;
         // Check if topic is is set
-        if (empty($params['topic_id'])) {
+        if (empty($params['topic'])) {
             return new BadDataResponse(array(), $this->__('Error! No topic ID in \'Dizkus/Ajax/changeTopicStatus()\'.'));
         }
         // Check if action is legal

@@ -26,39 +26,49 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class TopicApi extends \Zikula_AbstractApi
 {
 
+    /**
+     * @param $args
+     *  'topic'
+     *  'action'
+     *  'post'
+     *  'title'
+     *
+     * @throws \InvalidArgumentException
+     */
     public function changeStatus($args)
     {
-        $managedTopic = new TopicManager($args['topic_id']);
-        if ($args['action'] == 'subscribe') {
-            $this->subscribe(array('topic' => $managedTopic->get()));
-        } else {
-            if ($args['action'] == 'unsubscribe') {
+        if (empty($args['topic'])) {
+            throw new \InvalidArgumentException();
+        }
+        $managedTopic = new TopicManager($args['topic']);
+        switch ($args['action']) {
+            case 'subscribe':
+                $this->subscribe(array('topic' => $managedTopic->get()));
+                break;
+            case 'unsubscribe':
                 $this->unsubscribe(array('topic' => $managedTopic->get()));
-            } else {
-                switch ($args['action']) {
-                    case 'sticky':
-                        $managedTopic->sticky();
-                        break;
-                    case 'unsticky':
-                        $managedTopic->unsticky();
-                        break;
-                    case 'lock':
-                        $managedTopic->lock();
-                        break;
-                    case 'unlock':
-                        $managedTopic->unlock();
-                        break;
-                    case 'solve':
-                        $managedTopic->solve($args['post_id']);
-                        break;
-                    case 'unsolve':
-                        $managedTopic->unsolve();
-                        break;
-                    case 'setTitle':
-                        $managedTopic->setTitle($args['title']);
-                        break;
-                }
-            }
+                break;
+            case 'sticky':
+                $managedTopic->sticky();
+                break;
+            case 'unsticky':
+                $managedTopic->unsticky();
+                break;
+            case 'lock':
+                $managedTopic->lock();
+                break;
+            case 'unlock':
+                $managedTopic->unlock();
+                break;
+            case 'solve':
+                $managedTopic->solve($args['post']);
+                break;
+            case 'unsolve':
+                $managedTopic->unsolve();
+                break;
+            case 'setTitle':
+                $managedTopic->setTitle($args['title']);
+                break;
         }
     }
 
