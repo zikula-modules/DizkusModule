@@ -192,7 +192,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * @Route("/editpost", options={"expose"=true})
+     * @Route("/post/edit", options={"expose"=true})
      * @Method("POST")
      *
      * Edit a post.
@@ -233,7 +233,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * @Route("/updatepost", options={"expose"=true})
+     * @Route("/post/update", options={"expose"=true})
      * @Method("POST")
      *
      * Update a post.
@@ -307,7 +307,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * @Route("/changetopicstatus", options={"expose"=true})
+     * @Route("/topic/change-status", options={"expose"=true})
      * @Method("POST")
      *
      * changeTopicStatus
@@ -397,7 +397,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     }
 
     /**
-     * @Route("/modforum", options={"expose"=true})
+     * @Route("/forum/modify", options={"expose"=true})
      * @Method("POST")
      *
      * @param Request $request
@@ -418,9 +418,9 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             return new BadDataResponse(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(
-            'forum_id' => $request->request->get('forum'),
+            'forum' => $request->request->get('forum'),
             'action' => $request->request->get('action'));
-        if (empty($params['forum_id'])) {
+        if (empty($params['forum'])) {
             return new BadDataResponse(array(), $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
         }
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
