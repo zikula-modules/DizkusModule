@@ -581,6 +581,7 @@ class UserController extends \Zikula_AbstractController
             'action' => $action,
             'topic' => $topic,
             'post' => $post);
+        // perm check in API
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $topic), RouterInterface::ABSOLUTE_URL));

@@ -14,7 +14,6 @@ namespace Zikula\Module\DizkusModule\Controller;
 use ModUtil;
 use UserUtil;
 use DataUtil;
-use SessionUtil;
 use SecurityUtil;
 use System;
 use ZLanguage;
@@ -334,9 +333,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $params['topic'] = $request->request->get('topic', '');
         $params['post'] = $request->request->get('post', null);
         $params['action'] = $request->request->get('action', '');
-        $userAllowedToEdit = $request->request->get('userAllowedToEdit', 0);
-        // certain actions a user is always allowed
-        $userAllowedToEdit = in_array($params['action'], array('subscribe', 'unsubscribe', 'solve', 'unsolve')) ? 1 : $userAllowedToEdit;
+
         // Check if topic is is set
         if (empty($params['topic'])) {
             return new BadDataResponse(array(), $this->__('Error! No topic ID in \'Dizkus/Ajax/changeTopicStatus()\'.'));
@@ -353,10 +350,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 return new BadDataResponse(array(), $this->__('Error! The post has no subject line.'));
             }
         }
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate') && !($userAllowedToEdit == 1)) {
-            throw new AccessDeniedException();
-        }
+        // perm check in API
         ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 
         return new PlainResponse('successful');
@@ -427,7 +421,6 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
             // only need read perms to make a favorite
             throw new AccessDeniedException();
         }
-        SessionUtil::setVar('zk_ajax_call', 'ajax');
         ModUtil::apiFunc($this->name, 'Forum', 'modify', $params);
 
         return new PlainResponse('successful');

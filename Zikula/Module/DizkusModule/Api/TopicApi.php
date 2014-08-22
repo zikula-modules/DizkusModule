@@ -41,33 +41,52 @@ class TopicApi extends \Zikula_AbstractApi
             throw new \InvalidArgumentException();
         }
         $managedTopic = new TopicManager($args['topic']);
+        $perms = $managedTopic->getPermissions();
         switch ($args['action']) {
             case 'subscribe':
-                $this->subscribe(array('topic' => $managedTopic->get()));
+                if (UserUtil::isLoggedIn()) {
+                    $this->subscribe(array('topic' => $managedTopic->get()));
+                }
                 break;
             case 'unsubscribe':
-                $this->unsubscribe(array('topic' => $managedTopic->get()));
+                if (UserUtil::isLoggedIn()) {
+                    $this->unsubscribe(array('topic' => $managedTopic->get()));
+                }
                 break;
             case 'sticky':
-                $managedTopic->sticky();
+                if ($perms['moderate']) {
+                    $managedTopic->sticky();
+                }
                 break;
             case 'unsticky':
-                $managedTopic->unsticky();
+                if ($perms['moderate']) {
+                    $managedTopic->unsticky();
+                }
                 break;
             case 'lock':
-                $managedTopic->lock();
+                if ($perms['moderate']) {
+                    $managedTopic->lock();
+                }
                 break;
             case 'unlock':
-                $managedTopic->unlock();
+                if ($perms['moderate']) {
+                    $managedTopic->unlock();
+                }
                 break;
             case 'solve':
-                $managedTopic->solve($args['post']);
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->solve($args['post']);
+                }
                 break;
             case 'unsolve':
-                $managedTopic->unsolve();
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->unsolve();
+                }
                 break;
             case 'setTitle':
-                $managedTopic->setTitle($args['title']);
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->setTitle($args['title']);
+                }
                 break;
         }
     }
