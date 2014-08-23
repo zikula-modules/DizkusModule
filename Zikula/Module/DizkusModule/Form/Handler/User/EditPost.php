@@ -77,7 +77,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
     {
         $data = $view->getValues();
         $deleting = (isset($data['delete']) && $data['delete'] === true);
-        $fragment = $deleting ? null : '#pid' . $this->_post->getId();
+        $fragment = $deleting ? '' : '#pid' . $this->_post->getId();
         $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId()), RouterInterface::ABSOLUTE_URL) . $fragment;
 
         if ($args['commandName'] == 'cancel') {
