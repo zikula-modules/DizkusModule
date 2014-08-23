@@ -115,7 +115,6 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
         $routeParams = array();
         if ($view->getRequest()->attributes->has('_route_params')) {
             $routeParams = $view->getRequest()->attributes->get('_route_params');
-            unset($routeParams['_zkModule'], $routeParams['_zkType'], $routeParams['_zkFunc'], $routeParams['_locale']);
         }
 
         $setrank = $this->request->request->get('setrank');
