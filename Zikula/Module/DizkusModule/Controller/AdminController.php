@@ -53,31 +53,31 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/order")
+     * @Route("/order/{action}/{forum}", requirements={"forum" = "^[1-9]\d*$", "action" = "moveUp|moveDown"})
      * @Method("GET")
      *
      * Change forum order
      * Move up or down a forum in the tree
      * 
-     * @param Request $request
+     * @param integer $forum
+     * @param string $action
      *
      * @return RedirectResponse
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function changeForumOrderAction(Request $request)
+    public function changeForumOrderAction($forum, $action = "moveUp")
     {
-        $action = $request->query->get('action', 'moveUp');
-        $forumId = $request->query->get('forum', null);
-        if (empty($forumId)) {
-            throw new \InvalidArgumentException();
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
         }
+        /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
         $repo = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity');
-        $forum = $repo->find($forumId);
+        $forumEntity = $repo->find($forum);
         if ($action == 'moveUp') {
-            $repo->moveUp($forum, true);
+            $repo->moveUp($forumEntity, true);
         } else {
-            $repo->moveDown($forum, true);
+            $repo->moveDown($forumEntity, true);
         }
         $this->entityManager->flush();
 
