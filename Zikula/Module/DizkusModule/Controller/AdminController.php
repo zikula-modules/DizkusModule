@@ -16,6 +16,7 @@ use System;
 use SecurityUtil;
 use FormUtil;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\Prefs;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\AssignRanks;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\ModifyForum;
@@ -53,31 +54,30 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/order/{action}/{forum}", requirements={"forum" = "^[1-9]\d*$", "action" = "moveUp|moveDown"})
+     * @Route("/order/{action}/{forum}", requirements={"action" = "moveUp|moveDown", "forum" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * Change forum order
      * Move up or down a forum in the tree
      * 
-     * @param integer $forum
      * @param string $action
+     * @param ForumEntity $forum
      *
      * @return RedirectResponse
      *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     * @throws AccessDeniedException on Perm check failure
      */
-    public function changeForumOrderAction($forum, $action = "moveUp")
+    public function changeForumOrderAction($action, ForumEntity $forum)
     {
         if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
         $repo = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity');
-        $forumEntity = $repo->find($forum);
         if ($action == 'moveUp') {
-            $repo->moveUp($forumEntity, true);
+            $repo->moveUp($forum, true);
         } else {
-            $repo->moveDown($forumEntity, true);
+            $repo->moveDown($forum, true);
         }
         $this->entityManager->flush();
 
