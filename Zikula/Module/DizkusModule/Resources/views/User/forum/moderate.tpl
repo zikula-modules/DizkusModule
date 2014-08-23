@@ -4,15 +4,15 @@
     {form cssClass="form-horizontal" role="form"}
     {formvalidationsummary}
         <p class='clearfix'>
-            <a class='btn btn-warning pull-right' href="{modurl modname=$module type='user' func='viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a>
+            <a class='btn btn-warning pull-right' href="{route name='zikuladizkusmodule_user_viewforum' forum=$forum.forum_id}">{gt text="Go back to normal forum view"}</a>
         </p>
         <div class="panel panel-warning">
             <div class="panel-heading">
                 <h2><i class='fa fa-wrench'></i>&nbsp;{gt text='Moderating'}&nbsp;{$forum.name|safetext}&nbsp;{gt text='topics'}</h2>
             </div>
-            {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+            {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_moderateforum'}
             {include file='User/forum/forumtopicstable.tpl' topics=$forum.topics moderate=true}
-            {pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+            {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_moderateforum'}
         </div>
 
         <div class="alert alert-danger">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>

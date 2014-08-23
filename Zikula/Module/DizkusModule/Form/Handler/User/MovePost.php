@@ -16,8 +16,7 @@ use ModUtil;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use System;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to move a post.
@@ -65,7 +64,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
 
         if ($managedPost->get()->isFirst()) {
             $this->request->getSession()->getFlashBag()->add('error', 'You can not move the first post of a topic!');
-            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $managedPost->getTopicId()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $managedPost->getTopicId()), RouterInterface::ABSOLUTE_URL);
             return $view->redirect($url);
         }
 
@@ -83,7 +82,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->old_topic_id, 'start' => 1), 'pid' . $this->post_id);
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
             return $view->redirect($url);
         }
 
@@ -99,7 +98,7 @@ class MovePost extends \Zikula_Form_AbstractHandler
         $newTopicPostCount = ModUtil::apiFunc($this->name, 'post', 'move', $data);
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar($this->name, 'posts_per_page', 15);
 
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $data['to_topic_id'], 'start' => $start), 'pid' . $this->post_id);
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
         return $view->redirect($url);
     }
 

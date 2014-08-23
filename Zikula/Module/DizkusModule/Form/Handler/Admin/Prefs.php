@@ -18,8 +18,7 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Zikula\Module\DizkusModule\DizkusModuleInstaller;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 class Prefs extends \Zikula_Form_AbstractHandler
 {
@@ -77,7 +76,7 @@ class Prefs extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         // Security check
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
@@ -106,7 +105,8 @@ class Prefs extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to compensate for trouble with `databound`
-        return $view->redirect(new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode()));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL);
+        return $view->redirect($url);
     }
 
 }

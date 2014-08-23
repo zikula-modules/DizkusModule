@@ -5,13 +5,15 @@
  */
 
 jQuery(document).ready(function() {
-    jQuery("#forum-favourite").click(modifyForum);
-    jQuery("#forum-subscription").click(modifyForum);
+    jQuery("#forum-favourite").attr('href', '#').click(modifyForum);
+    jQuery("#forum-subscription").attr('href', '#').click(modifyForum);
 });
 
 function modifyForum(e) {
+    e.preventDefault();
     var action;
     var i = jQuery(this);
+    i.prepend(" <i class='fa fa-cog fa-spin text-danger'></i>");
     switch(i.attr('id')) {
         case 'forum-subscription':
             action = i.data('status') == 0 ? 'subscribe' : 'unsubscribe';
@@ -30,7 +32,7 @@ function modifyForum(e) {
             forum: jQuery('#forum_id').val(),
             action: action
         },
-        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=modifyForum",
+        url: Routing.generate('zikuladizkusmodule_ajax_modifyforum'),
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {
@@ -53,5 +55,4 @@ function modifyForum(e) {
             return;
         }
     });
-    e.preventDefault();
 }

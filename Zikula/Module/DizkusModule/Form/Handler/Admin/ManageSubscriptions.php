@@ -17,8 +17,7 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to manage subscriptions.
@@ -49,7 +48,7 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
      */
     public function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
@@ -98,24 +97,24 @@ class ManageSubscriptions extends \Zikula_Form_AbstractHandler
                     ModUtil::apiFunc($this->name, 'user', 'unsubscribe_forum_by_id', $id);
                 }
             }
-
             foreach ($data['topicsubscriptions'] as $id => $selected) {
                 if ($selected) {
                     ModUtil::apiFunc($this->name, 'user', 'unsubscribe_TopicById', $id);
                 }
             }
-
-            $url = ModUtil::url($this->name, 'admin', 'managesubscriptions', array('uid' => $this->_uid));
+            $urlParams = array('uid' => $this->_uid);
         } else {
             $this->_username = $this->request->request->get('username', '');
             $this->_uid = UserUtil::getIdFromName($this->_username);
             if ($this->_uid) {
-                $url = new ModUrl($this->name, 'admin', 'managesubscriptions', ZLanguage::getLanguageCode(), array('uid' => $this->_uid));
+                $urlParams = array('uid' => $this->_uid);
             } else {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__f('Could not find username "%s". Please try again.', $this->_username));
-                $url = new ModUrl($this->name, 'admin', 'managesubscriptions', ZLanguage::getLanguageCode());
+                $urlParams = array();
             }
         }
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_managesubscriptions', $urlParams, RouterInterface::ABSOLUTE_URL);
+
         return $view->redirect($url);
     }
 

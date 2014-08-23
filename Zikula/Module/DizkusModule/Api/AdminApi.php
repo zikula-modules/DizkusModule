@@ -27,40 +27,37 @@ class AdminApi extends \Zikula_AbstractApi
     {
         $links = array(
                 );
-        if (SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'tree'),
+                'url' => $this->get('router')->generate('zikuladizkusmodule_admin_tree'),
                 'text' => $this->__('Edit forum tree'),
                 'title' => $this->__('Create, delete, edit and re-order forums'),
                 'icon' => 'list');
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
-                    'ranktype' => RankEntity::TYPE_POSTCOUNT)),
+                'url' => $this->get('router')->generate('zikuladizkusmodule_admin_ranks', array('ranktype' => RankEntity::TYPE_POSTCOUNT)),
                 'text' => $this->__('Edit user ranks'),
                 'icon' => 'star-half-o',
                 'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts'),
                 'links' => array(
                     array(
-                        'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
-                            'ranktype' => RankEntity::TYPE_POSTCOUNT)),
+                        'url' => $this->get('router')->generate('zikuladizkusmodule_admin_ranks', array('ranktype' => RankEntity::TYPE_POSTCOUNT)),
                         'text' => $this->__('Edit user ranks'),
                         'title' => $this->__('Create, edit and delete user rankings acquired through the number of a user\'s posts')),
                     array(
-                        'url' => ModUtil::url($this->name, 'admin', 'ranks', array(
-                            'ranktype' => RankEntity::TYPE_HONORARY)),
+                        'url' => $this->get('router')->generate('zikuladizkusmodule_admin_ranks', array('ranktype' => RankEntity::TYPE_HONORARY)),
                         'text' => $this->__('Edit honorary ranks'),
                         'title' => $this->__('Create, delete and edit special ranks for particular users')),
                     array(
-                        'url' => ModUtil::url($this->name, 'admin', 'assignranks'),
+                        'url' => $this->get('router')->generate('zikuladizkusmodule_admin_assignranks'),
                         'text' => $this->__('Assign honorary rank'),
                         'title' => $this->__('Assign honorary user ranks to users'))));
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'manageSubscriptions'),
+                'url' => $this->get('router')->generate('zikuladizkusmodule_admin_managesubscriptions'),
                 'text' => $this->__('Manage subscriptions'),
                 'title' => $this->__('Remove a user\'s topic and forum subscriptions'),
                 'icon' => 'envelope-o');
             $links[] = array(
-                'url' => ModUtil::url($this->name, 'admin', 'preferences'),
+                'url' => $this->get('router')->generate('zikuladizkusmodule_admin_preferences'),
                 'text' => $this->__('Settings'),
                 'title' => $this->__('Edit general forum-wide settings'),
                 'icon' => 'wrench');

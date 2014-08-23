@@ -117,7 +117,7 @@ class ForumApi extends \Zikula_AbstractApi
             $parent = $forum->getParent();
             $parentId = isset($parent) ? $parent->getForum_id() : null;
             $forumId = $forum->getForum_id();
-            if (SecurityUtil::checkPermission('Dizkus::', "{$parentId}:{$forumId}:", ACCESS_READ, $userId)) {
+            if (SecurityUtil::checkPermission($this->name . '::', "{$parentId}:{$forumId}:", ACCESS_READ, $userId)) {
                 $ids[] = $forumId;
             }
         }
@@ -156,7 +156,7 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function subscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -193,7 +193,7 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function unsubscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -235,20 +235,23 @@ class ForumApi extends \Zikula_AbstractApi
     }
 
     /**
-     * modify unser/forum association
+     * modify user/forum association
      *
-     * @param  integer $args['forum_id']
+     * @param  $args
+     *  integer 'forum'
+     *  string 'action' = 'addToFavorites'|'removeFromFavorites'|'subscribe'|'unsubscribe'
+     *
      * @return boolean
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function modify($args)
     {
-        if (empty($args['forum_id'])) {
+        if (empty($args['forum']) || empty($args['action'])) {
             throw new \InvalidArgumentException();
         }
-        $managedForumUser = new ForumUserManager(UserUtil::getVar('uid'));
-        $managedForum = new ForumManager($args['forum_id']);
+        $managedForumUser = new ForumUserManager();
+        $managedForum = new ForumManager($args['forum']);
         switch ($args['action']) {
             case 'addToFavorites':
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());

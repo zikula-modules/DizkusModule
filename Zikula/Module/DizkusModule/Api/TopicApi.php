@@ -26,39 +26,68 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class TopicApi extends \Zikula_AbstractApi
 {
 
+    /**
+     * @param $args
+     *  'topic'
+     *  'action'
+     *  'post'
+     *  'title'
+     *
+     * @throws \InvalidArgumentException
+     */
     public function changeStatus($args)
     {
-        $managedTopic = new TopicManager($args['topic_id']);
-        if ($args['action'] == 'subscribe') {
-            $this->subscribe(array('topic' => $managedTopic->get()));
-        } else {
-            if ($args['action'] == 'unsubscribe') {
-                $this->unsubscribe(array('topic' => $managedTopic->get()));
-            } else {
-                switch ($args['action']) {
-                    case 'sticky':
-                        $managedTopic->sticky();
-                        break;
-                    case 'unsticky':
-                        $managedTopic->unsticky();
-                        break;
-                    case 'lock':
-                        $managedTopic->lock();
-                        break;
-                    case 'unlock':
-                        $managedTopic->unlock();
-                        break;
-                    case 'solve':
-                        $managedTopic->solve($args['post_id']);
-                        break;
-                    case 'unsolve':
-                        $managedTopic->unsolve();
-                        break;
-                    case 'setTitle':
-                        $managedTopic->setTitle($args['title']);
-                        break;
+        if (empty($args['topic'])) {
+            throw new \InvalidArgumentException();
+        }
+        $managedTopic = new TopicManager($args['topic']);
+        $perms = $managedTopic->getPermissions();
+        switch ($args['action']) {
+            case 'subscribe':
+                if (UserUtil::isLoggedIn()) {
+                    $this->subscribe(array('topic' => $managedTopic->get()));
                 }
-            }
+                break;
+            case 'unsubscribe':
+                if (UserUtil::isLoggedIn()) {
+                    $this->unsubscribe(array('topic' => $managedTopic->get()));
+                }
+                break;
+            case 'sticky':
+                if ($perms['moderate']) {
+                    $managedTopic->sticky();
+                }
+                break;
+            case 'unsticky':
+                if ($perms['moderate']) {
+                    $managedTopic->unsticky();
+                }
+                break;
+            case 'lock':
+                if ($perms['moderate']) {
+                    $managedTopic->lock();
+                }
+                break;
+            case 'unlock':
+                if ($perms['moderate']) {
+                    $managedTopic->unlock();
+                }
+                break;
+            case 'solve':
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->solve($args['post']);
+                }
+                break;
+            case 'unsolve':
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->unsolve();
+                }
+                break;
+            case 'setTitle':
+                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
+                    $managedTopic->setTitle($args['title']);
+                }
+                break;
         }
     }
 
@@ -73,7 +102,7 @@ class TopicApi extends \Zikula_AbstractApi
      */
     public function subscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -107,7 +136,7 @@ class TopicApi extends \Zikula_AbstractApi
      */
     public function unsubscribe($args)
     {
-        if (isset($args['user_id']) && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (isset($args['user_id']) && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         } else {
             $args['user_id'] = UserUtil::getVar('uid');
@@ -277,10 +306,10 @@ class TopicApi extends \Zikula_AbstractApi
             if ($args['createshadowtopic'] == true) {
                 // create shadow topic
                 $managedShadowTopic = new TopicManager();
+                $newUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $managedTopic->getId()));
                 $topicData = array(
                     'title' => $this->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
-                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . ModUtil::url($this->name, 'user', 'viewtopic', array(
-                        'topic' => $managedTopic->getId())) . '">' . $this->__('here') . '</a>.',
+                    'message' => $this->__('The original posting has been moved') . ' <a title="' . $this->__('moved') . '" href="' . $newUrl . '">' . $this->__('here') . '</a>.',
                     'forum_id' => $oldForumId,
                     'topic_time' => $managedTopic->get()->getTopic_time(),
                     'attachSignature' => false,

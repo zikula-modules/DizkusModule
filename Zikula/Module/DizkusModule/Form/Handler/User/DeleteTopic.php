@@ -21,8 +21,7 @@ use Zikula\Core\Hook\ProcessHook;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to delete a topic.
@@ -97,7 +96,8 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
     {
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->topic_id)));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         // check for valid form and get data
@@ -128,7 +128,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         }
 
         // redirect to the forum of the deleted topic
-        $url = new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $forum_id));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
         return $view->redirect($url);
     }
 

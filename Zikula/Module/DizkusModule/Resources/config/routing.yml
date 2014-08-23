@@ -1,0 +1,3 @@
+zikuladizkusmodule:
+    resource: "@ZikulaDizkusModule/Controller"
+    type:     annotation

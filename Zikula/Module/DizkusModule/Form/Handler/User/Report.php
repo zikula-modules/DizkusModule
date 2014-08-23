@@ -20,8 +20,7 @@ use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use System;
-use ZLanguage;
-use Zikula\Core\ModUrl;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to report posts.
@@ -55,7 +54,8 @@ class Report extends \Zikula_Form_AbstractHandler
 
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
-            return $view->redirect(new ModUrl($this->name, 'user', 'index', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         $this->_post = new PostManager($id);
@@ -78,7 +78,7 @@ class Report extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId(), 'start' => 1), 'pid' . $this->_post->getId());
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
             return $view->redirect($url);
         }
 
@@ -109,7 +109,7 @@ class Report extends \Zikula_Form_AbstractHandler
 
         $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
 
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->_post->getTopicId(), 'start' => $start));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => $start), RouterInterface::ABSOLUTE_URL);
         return $view->redirect($url);
     }
 

@@ -17,8 +17,7 @@ use UserUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to manage topic subscriptions.
@@ -38,10 +37,12 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            return ModUtil::func('Users', 'user', 'login', array('returnpage' => ModUtil::url($this->name, 'user', 'manageForumSubscriptions')));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions');
+
+            return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
         }
 
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_READ) || !UserUtil::isLoggedIn()) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ) || !UserUtil::isLoggedIn()) {
             throw new AccessDeniedException();
         }
 
@@ -74,7 +75,7 @@ class ForumSubscriptions extends \Zikula_Form_AbstractHandler
             }
         }
 
-        $url = new ModUrl($this->name, 'user', 'manageForumSubscriptions', ZLanguage::getLanguageCode());
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', array(), RouterInterface::ABSOLUTE_URL);
         return $view->redirect($url);
     }
 

@@ -64,7 +64,7 @@ class RankApi extends \Zikula_AbstractApi
      */
     public function save($args)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         //title, description, minimumCount, maximumCount, type, image
@@ -100,7 +100,7 @@ class RankApi extends \Zikula_AbstractApi
      */
     public function assign($args)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         if (is_array($args['setrank'])) {

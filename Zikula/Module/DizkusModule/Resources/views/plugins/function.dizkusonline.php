@@ -62,6 +62,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
 
     $onlineusers = $query->getArrayResult();
 
+    $total = 0;
     if (is_array($onlineusers)) {
         $total = count($onlineusers);
         foreach ($onlineusers as $onlineuser) {
@@ -76,6 +77,7 @@ function smarty_function_dizkusonline($params, Zikula_View $view)
         }
     }
 
+    $users = array();
     if ($params['checkgroups'] == true) {
         foreach ($unames as $user) {
             if ($user['admin'] == false) {

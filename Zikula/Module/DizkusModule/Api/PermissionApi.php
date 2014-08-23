@@ -129,7 +129,7 @@ class PermissionApi extends \Zikula_AbstractApi
                 }
             }
         }
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->getVar('forum_disabled_info'));
             return false;
         }
@@ -137,12 +137,12 @@ class PermissionApi extends \Zikula_AbstractApi
             $userId = null;
         }
         if (!isset($forum)) {
-            return SecurityUtil::checkPermission('Dizkus::', '::', $level, $userId);
+            return SecurityUtil::checkPermission($this->name . '::', '::', $level, $userId);
         }
         // loop through current forum and all parents and check for perms,
         // if ever false (at any parent) return false
         while ($forum->getLvl() != 0) {
-            $perm = SecurityUtil::checkPermission('Dizkus::', $forum->getForum_id() . '::', $level, $userId);
+            $perm = SecurityUtil::checkPermission($this->name . '::', $forum->getForum_id() . '::', $level, $userId);
             if (!$perm) {
                 return false;
             }

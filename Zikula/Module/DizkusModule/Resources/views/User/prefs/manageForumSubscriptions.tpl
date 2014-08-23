@@ -10,7 +10,7 @@
     <div class="panel-heading">
         <h2>{$templatetitle}</h2>
     </div>
-    {*pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'*}
+    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_manageforumsubscriptions'*}
 
     <table class='table table-striped'>
         <thead>
@@ -28,7 +28,7 @@
         {/if}
         {foreach item='subscription' from=$subscriptions}
             <tr>
-                <td><a href="{modurl modname=$module type='user' func='viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a></td>
+                <td><a href="{route name='zikuladizkusmodule_user_viewforum' forum=$subscription.forum.forum_id}" title="{$subscription.forum.name|safetext}">{$subscription.forum.name|safetext}</a></td>
                 <td>{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}</td>
             </tr>
             {foreachelse}

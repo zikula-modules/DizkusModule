@@ -12,7 +12,7 @@
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
 use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use ModUtil;
+use Symfony\Component\Routing\RouterInterface;
 use UserUtil;
 use System;
 use Zikula_Form_View;
@@ -77,7 +77,8 @@ class Prefs extends \Zikula_Form_AbstractHandler
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
         if ($args['commandName'] == 'cancel') {
-            return $view->redirect(new ModUrl($this->name, 'user', 'prefs', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_prefs', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
 
         // check for valid form

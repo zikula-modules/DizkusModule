@@ -19,8 +19,7 @@ use UserUtil;
 use Zikula_Form_View;
 use System;
 use Zikula_View;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
@@ -55,7 +54,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
      */
     public function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
@@ -63,7 +62,8 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         // disallow editing of root forum
         if ($id == 1) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__("Editing of root forum is disallowed", 403));
-            return $view->redirect(new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode()));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
         }
         if ($id > 1) {
             $view->assign('templatetitle', $this->__('Modify forum'));
@@ -76,7 +76,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
 
         $this->_forum = new ForumManager($id);
 
-        $url = ModUtil::url($this->name, 'admin', 'tree');
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree');
         if (!$this->_forum->exists()) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__f('Item with id %s not found', $id), null, $url);
             return false;
@@ -140,7 +140,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode());
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL);
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }

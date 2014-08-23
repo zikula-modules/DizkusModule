@@ -14,7 +14,7 @@
         {else}
             <div class='alert alert-success'>
                 <i class='fa fa-check fa-lg'></i> {gt text="A discussion topic has been created for this item." tag1=$forum}
-                [<a href="{modurl modname=$module type='user' func='viewtopic' topic=$topic.topic_id}">{gt text='View topic'}</a>]
+                [<a href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id}">{gt text='View topic'}</a>]
                 {gt text="Updated values here will be reflected in the discussion topic."}
             </div>
             <input type="hidden" name="dizkus[createTopic]" value="1" />

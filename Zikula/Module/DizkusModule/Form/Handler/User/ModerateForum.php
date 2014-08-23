@@ -16,8 +16,7 @@ use Zikula\Module\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to move a post.
@@ -133,7 +132,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = new ModUrl($this->name, 'user', 'moderateforum', ZLanguage::getLanguageCode(), array('forum' => $this->_managedForum->getId()));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_moderateforum', array('forum' => $this->_managedForum->getId()), RouterInterface::ABSOLUTE_URL);
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }

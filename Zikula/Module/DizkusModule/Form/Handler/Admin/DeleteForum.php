@@ -21,8 +21,7 @@ use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use ZLanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to edit forums.
@@ -51,7 +50,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      */
     public function initialize(Zikula_Form_View $view)
     {
-        if (!SecurityUtil::checkPermission('Dizkus::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
@@ -98,7 +97,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = new ModUrl($this->name, 'admin', 'tree', ZLanguage::getLanguageCode());
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL);
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);
         }

@@ -39,10 +39,10 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $meta['url'] = $this->__('forums');
         $meta['version'] = '4.0.0';
         $meta['core_min'] = '1.4.0';
-        // $meta['core_max'] = '1.3.99';
+        $meta['core_max'] = '1.4.99';
         $meta['securityschema'] = array(
-            'Dizkus::' => 'ForumID::',
-            'Dizkus::CreateForum' => 'ForumID::');
+            $this->name . '::' => 'ForumID::',
+            $this->name . '::CreateForum' => 'ForumID::');
         $meta['capabilities'] = array(
             HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
             HookUtil::PROVIDER_CAPABLE => array('enabled' => true),
@@ -50,12 +50,6 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         );
         // module dependencies
         $meta['dependencies'] = array(
-            array(
-                'modname' => 'Scribite',
-                'minversion' => '5.0.0',
-                'maxversion' => '',
-                'reason' => $this->__('Scribite adds WYSIWYG editors to add html markup to post text.'),
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
             array(
                 'modname' => 'BBCode',
                 'minversion' => '3.0.0',

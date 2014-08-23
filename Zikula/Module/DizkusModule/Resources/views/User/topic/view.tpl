@@ -60,16 +60,16 @@
     <div id="navbar-topic-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-left">
             {if !empty($previousTopic) and $topic.topic_id neq $previousTopic}{assign var='disabled' value=''}{else}{assign var='disabled' value=' disabled'}{/if}
-            <li><a class="tooltips fa fa-chevron-left{$disabled}" title="{gt text="Previous topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$previousTopic}"></a></li>
+            <li><a class="tooltips fa fa-chevron-left{$disabled}" title="{gt text="Previous topic"}" href="{route name='zikuladizkusmodule_user_viewtopic' topic=$previousTopic}"></a></li>
             {if !empty($nextTopic) and $topic.topic_id neq $nextTopic}{assign var='disabled' value=''}{else}{assign var='disabled' value=' disabled'}{/if}
-            <li><a class="tooltips fa fa-chevron-right{$disabled}" title="{gt text="Next topic"}" href="{modurl modname=$module type='user' func='viewtopic' topic=$nextTopic}"></a></li>
+            <li><a class="tooltips fa fa-chevron-right{$disabled}" title="{gt text="Next topic"}" href="{route name='zikuladizkusmodule_user_viewtopic' topic=$nextTopic}"></a></li>
 
             {if $permissions.comment}
-            <li><a class="fa fa-comment-o tooltips" title="{gt text="Create a new topic"}" href="{modurl modname=$module type='user' func='newtopic' forum=$topic.forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
+            <li><a class="fa fa-comment-o tooltips" title="{gt text="Create a new topic"}" href="{route name='zikuladizkusmodule_user_newtopic' forum=$topic.forum.forum_id}">&nbsp;{gt text="New topic"}</a></li>
             {/if}
 
             {if $userloggedin}
-            <li><a class="tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{modurl modname=$module type='user' func='emailtopic' topic=$topic.topic_id}">
+            <li><a class="tooltips" title="{gt text="Send the posts within this topic as an e-mail message to someone"}" href="{route name='zikuladizkusmodule_user_emailtopic' topic=$topic.topic_id}">
                <span class="fa-stack">
                    <i class="fa fa-envelope-o fa-stack-1x"></i>
                    <i class="fa fa-share fa-stack-1x fa-overlay-upper-left" style='color:lightblue;'></i>
@@ -82,10 +82,10 @@
             {if $userloggedin}
             <li>
                 {if $isSubscribed}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='unsubscribe' topic=$topic.topic_id assign='url'}
                     {gt text="Unsubscribe from topic" assign='msg'}
                 {else}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='subscribe' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='subscribe' topic=$topic.topic_id assign='url'}
                     {gt text="Subscribe to topic" assign='msg'}
                 {/if}
                 <a id="toggletopicsubscription" class="tooltips" data-action="{if $isSubscribed}unsubscribe{else}subscribe{/if}" href="{$url}" title="{$msg}">
@@ -99,11 +99,11 @@
             {if $isModerator}
             <li>
                 {if $topic.status eq 0}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='lock' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='lock' topic=$topic.topic_id assign='url'}
                     {gt text="Lock topic" assign='msg'}
                     {assign var="iconclass" value="fa fa-lock"}
                 {else}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='unlock' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='unlock' topic=$topic.topic_id assign='url'}
                     {gt text="Unlock topic" assign='msg'}
                     {assign var="iconclass" value="fa fa-unlock"}
                 {/if}
@@ -112,10 +112,10 @@
 
             <li>
                 {if $topic.sticky eq 0}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='sticky' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='sticky' topic=$topic.topic_id assign='url'}
                     {gt text="Give this topic 'sticky' status" assign='msg'}
                 {else}
-                    {modurl modname=$module type='user' func='changeTopicStatus' action='unsticky' topic=$topic.topic_id assign='url'}
+                    {route name='zikuladizkusmodule_user_changetopicstatus' action='unsticky' topic=$topic.topic_id assign='url'}
                     {gt text="Remove 'sticky' status" assign='msg'}
                 {/if}
                 <a id="toggletopicsticky" class="tooltips" title="{$msg}" data-action="{if $topic.sticky}unsticky{else}sticky{/if}" href="{$url}">
@@ -123,8 +123,8 @@
                 </a>
             </li>
 
-            <li><a class="fa fa-arrow-right tooltips" title="{gt text="Move or join topic"}" href="{modurl modname=$module type='user' func='movetopic' topic=$topic.topic_id}"></a></li>
-            <li><a class="fa fa-times tooltips" title="{gt text="Delete topic"}" href="{modurl modname=$module type='user' func='deletetopic' topic=$topic.topic_id}"></a></li>
+            <li><a class="fa fa-arrow-right tooltips" title="{gt text="Move or join topic"}" href="{route name='zikuladizkusmodule_user_movetopic' topic=$topic.topic_id}"></a></li>
+            <li><a class="fa fa-times tooltips" title="{gt text="Delete topic"}" href="{route name='zikuladizkusmodule_user_deletetopic' topic=$topic.topic_id}"></a></li>
             {/if}
             <li><a class="tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class='fa fa-chevron-circle-down'></i></a></li>
         </ul>
@@ -134,7 +134,7 @@
 {* ******************************************************
 * TOPIC LIST
 ******************************************************* *}
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewtopic'}
 
 <div id="dzk_postinglist">
     <ul class="post_list">
@@ -150,7 +150,7 @@
     </ul>
 </div>
 
-{pager show='post' rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+{pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewtopic'}
 
 {* ******************************************************
 * QUICK REPLY FORM

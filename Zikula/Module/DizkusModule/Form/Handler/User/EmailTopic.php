@@ -17,8 +17,7 @@ use DataUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Core\ModUrl;
-use Zlanguage;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This class provides a handler to email a topic.
@@ -54,7 +53,8 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
 
         $view->assign($managedTopic->get()->toArray());
         $view->assign('emailsubject', $managedTopic->get()->getTitle());
-        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $this->topic_id), null, null, true));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
+        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . $url);
 
         return true;
     }
@@ -69,7 +69,7 @@ class EmailTopic extends \Zikula_Form_AbstractHandler
      */
     public function handleCommand(Zikula_Form_View $view, &$args)
     {
-        $url = new ModUrl($this->name, 'user', 'viewtopic', ZLanguage::getLanguageCode(), array('topic' => $this->topic_id));
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             return $view->redirect($url);

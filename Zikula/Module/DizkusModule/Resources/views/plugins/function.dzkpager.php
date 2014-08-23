@@ -72,7 +72,8 @@ function smarty_function_dzkpager($params, Zikula_View $view)
         $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;
 
         for ($i = 1; $i < $init_page_max + 1; $i++) {
-            $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1))) . '">' . $i . '</a>';
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1));
+            $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay($url) . '">' . $i . '</a>';
             if ($i < $init_page_max) {
                 $page_string .= $separator;
             }
@@ -86,7 +87,8 @@ function smarty_function_dzkpager($params, Zikula_View $view)
                 $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;
 
                 for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {
-                    $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1))) . '">' . $i . '</a>';
+                    $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1));
+                    $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay($url) . '">' . $i . '</a>';
                     if ($i < $init_page_max + 1) {
                         $page_string .= $separator;
                     }
@@ -98,7 +100,8 @@ function smarty_function_dzkpager($params, Zikula_View $view)
             }
 
             for ($i = $total_pages - 2; $i < $total_pages + 1; $i++) {
-                $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1))) . '">' . $i . '</a>';
+                $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1));
+                $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay($url) . '">' . $i . '</a>';
                 if ($i < $total_pages) {
                     $page_string .= $separator;
                 }
@@ -106,7 +109,8 @@ function smarty_function_dzkpager($params, Zikula_View $view)
         }
     } else {
         for ($i = 1; $i < $total_pages + 1; $i++) {
-            $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1))) . '">' . $i . '</a>';
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $i - 1 ) * $per_page + 1));
+            $page_string .= (($i == $on_page) && ($linkall == false)) ? '<strong>' . $i . '</strong>' : '<a href="' . DataUtil::formatForDisplay($url) . '">' . $i . '</a>';
             if ($i < $total_pages) {
                 $page_string .= $separator;
             }
@@ -117,15 +121,18 @@ function smarty_function_dzkpager($params, Zikula_View $view)
     $add_next_set = false;
     if ($add_prevnext == true) {
         if ($on_page > 1) {
-            $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 2 ) * $per_page + 1))) . '">-1</a>] ' . $page_string;
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $on_page - 2 ) * $per_page + 1));
+            $page_string = '<a href="' . DataUtil::formatForDisplay($url) . '">-1</a>] ' . $page_string;
             $add_prev_set = true;
         }
         if ($on_page > 10) {
-            $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 11) * $per_page + 1))) . '">-10</a> ' . $page_string;
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $on_page - 11 ) * $per_page + 1));
+            $page_string = '<a href="' . DataUtil::formatForDisplay($url) . '">-10</a> ' . $page_string;
             $add_prev_set = true;
         }
         if ($on_page > 100) {
-            $page_string = '<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ( $on_page - 101) * $per_page + 1))) . '">-100</a> ' . $page_string;
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => ( $on_page - 101 ) * $per_page + 1));
+            $page_string = '<a href="' . DataUtil::formatForDisplay($url) . '">-100</a> ' . $page_string;
             $add_prev_set = true;
         }
         if ($add_prev_set == true) {
@@ -133,15 +140,18 @@ function smarty_function_dzkpager($params, Zikula_View $view)
         }
 
         if ($on_page < $total_pages) {
-            $page_string .= ' [<a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => $on_page * $per_page + 1))) . '">+1</a>';
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => $on_page * $per_page + 1));
+            $page_string .= ' [<a href="' . DataUtil::formatForDisplay($url) . '">+1</a>';
             $add_next_set = true;
         }
         if ($total_pages - $on_page > 10) {
-            $page_string .= ' <a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 9) * $per_page + 1))) . '">+10</a>';
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => $on_page + 9 * $per_page + 1));
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay($url) . '">+10</a>';
             $add_next_set = true;
         }
         if ($total_pages - $on_page > 100) {
-            $page_string .= ' <a href="' . DataUtil::formatForDisplay(ModUtil::url($dizkusModuleName, 'user', $func, array($objectname => $objectid, 'start' => ($on_page + 99) * $per_page + 1))) . '">+100</a>';
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_'.$func, array($objectname => $objectid, 'start' => $on_page + 99 * $per_page + 1));
+            $page_string .= ' <a href="' . DataUtil::formatForDisplay($url) . '">+100</a>';
             $add_next_set = true;
         }
         if ($add_next_set == true) {

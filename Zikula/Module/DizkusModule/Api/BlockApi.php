@@ -155,7 +155,8 @@ class BlockApi extends \Zikula_AbstractApi
                 // @todo see ticket #184 maybe this should be using UserApi::dzkVarPrepHTMLDisplay ????
                 $lastPost['post_text'] = DataUtil::formatForDisplay(nl2br($topic->getLast_post()->getPost_text()));
                 $lastPost['posted_time'] = DateUtil::formatDatetime($topic->getLast_post()->getPost_time(), 'datetimebrief');
-                $lastPost['last_post_url'] = DataUtil::formatForDisplay(ModUtil::url($this->name, 'user', 'viewtopic', array('topic' => $topic->getTopic_id(),
+                $lastPost['last_post_url'] = DataUtil::formatForDisplay($this->get('router')->generate('zikuladizkusmodule_user_viewtopic', array(
+                    'topic' => $topic->getTopic_id(),
                     'start' => $start)));
                 $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
                 $lastPost['word'] = $topic->getReplyCount() > 1 ? $this->__('Last') : $this->__('New');

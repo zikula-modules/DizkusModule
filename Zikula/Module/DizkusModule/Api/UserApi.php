@@ -173,14 +173,13 @@ class UserApi extends \Zikula_AbstractApi
      * get_viewip_data
      *
      * @param array $args The argument array.
-     *        int $args['post_id] The postings id.
+     *        int $args['pip] The posters IP.
      *
      * @return array with information.
      */
     public function get_viewip_data($args)
     {
-        $managedPost = new PostManager($args['post_id']);
-        $pip = $managedPost->get()->getPoster_ip();
+        $pip = $args['pip'];
         $viewip = array(
             'poster_ip' => $pip,
             'poster_host' => ($pip <> 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown')

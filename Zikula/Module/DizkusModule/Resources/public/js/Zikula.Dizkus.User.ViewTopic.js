@@ -5,9 +5,9 @@
  */
 
 jQuery(document).ready(function() {
-    jQuery("#toggletopiclock").click(changeTopicStatus);
-    jQuery("#toggletopicsticky").click(changeTopicStatus);
-    jQuery("#toggletopicsubscription").click(changeTopicStatus);
+    jQuery("#toggletopiclock").attr('href', '#').click(changeTopicStatus);
+    jQuery("#toggletopicsticky").attr('href', '#').click(changeTopicStatus);
+    jQuery("#toggletopicsubscription").attr('href', '#').click(changeTopicStatus);
     jQuery(".solvetopic").click(changeTopicStatus);
     jQuery(".unsolvetopic").click(changeTopicStatus);
     // POST EDIT
@@ -60,7 +60,7 @@ function changeTopicStatus(e) {
             post: i.data('post'),
             action: action
         },
-        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
+        url: Routing.generate('zikuladizkusmodule_ajax_changetopicstatus'),
         success: function(result) {
             if (result == 'successful') {
                 switch (action) {
@@ -128,7 +128,7 @@ function changeTopicTitle(e) {
             userAllowedToEdit: jQuery('#userAllowedToEdit').val(),
             action: 'setTitle'
         },
-        url: Zikula.Config.baseURL + "index.php?module=ZikulaDizkusModule&type=ajax&func=changeTopicStatus",
+        url: Routing.generate('zikuladizkusmodule_ajax_changetopicstatus'),
         success: function(result) {
             if (result == 'successful') {
                 jQuery('#topicsubjectedit_editor').hide();
@@ -326,7 +326,7 @@ function quickEdit(id) {
 
         jQuery.ajax({
             data: {post: postId},
-            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=editpost'
+            url: Routing.generate('zikuladizkusmodule_ajax_editpost')
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator(postId);
         });
@@ -372,9 +372,9 @@ function quickEditSave() {
         var action = result.data.action,
             redirect = result.data.redirect,
             newText = result.data.newText;
-        if (message.length > 0) {
-            alert(message);
-        }
+//        if (message.length > 0) {
+//            alert(message);
+//        }
 
         postEditing = false;
         postEditingChanged = false;
@@ -406,7 +406,7 @@ function quickEditSave() {
     };
     jQuery.ajax({
         data: pars,
-        url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=updatepost'
+        url: Routing.generate('zikuladizkusmodule_ajax_updatepost')
     }).done(successHandler).fail(errorHandler);
 }
 
@@ -498,7 +498,7 @@ function createQuickReply() {
         };
         jQuery.ajax({
             data: pars,
-            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
+            url: Routing.generate('zikuladizkusmodule_ajax_reply')
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator('quickreply');
         });
@@ -542,7 +542,8 @@ function previewQuickReply() {
         };
         jQuery.ajax({
             data: pars,
-            url: Zikula.Config.baseURL + 'index.php?module=ZikulaDizkusModule&type=ajax&func=reply'
+            url: Routing.generate('zikuladizkusmodule_ajax_reply')
+
         }).done(successHandler).fail(errorHandler).always(function() {
             hideAjaxIndicator('quickreply');
         });
