@@ -181,7 +181,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'unsticky':
                     foreach ($topic_ids as $topic_id) {
                         ModUtil::apiFunc($this->name, 'topic', 'changeStatus', array(
-                            'topic_id' => $topic_id,
+                            'topic' => $topic_id,
                             'action' => $mode));
                     }
                     break;

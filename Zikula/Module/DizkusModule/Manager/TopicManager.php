@@ -331,7 +331,7 @@ class TopicManager
         // subscribe
         if ($this->_subscribe) {
             $params = array(
-                'topic_id' => $this->_topic->getTopic_id(),
+                'topic' => $this->_topic->getTopic_id(),
                 'action' => 'subscribe');
             ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
         }
