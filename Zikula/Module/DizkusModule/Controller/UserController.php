@@ -368,7 +368,7 @@ class UserController extends \Zikula_AbstractController
     {
         $form = FormUtil::newForm($this->name, $this);
 
-        return $form->execute('User/topic/new.tpl', new NewTopic());
+        return new Response($form->execute('User/topic/new.tpl', new NewTopic()));
     }
 
     /**
