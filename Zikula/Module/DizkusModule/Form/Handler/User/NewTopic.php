@@ -158,7 +158,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
         $this->dispatchHooks('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));
 
         // notify topic & forum subscribers
-        ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
+//        ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
 
         // redirect to the new topic
         $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $newManagedTopic->getId()), RouterInterface::ABSOLUTE_URL);

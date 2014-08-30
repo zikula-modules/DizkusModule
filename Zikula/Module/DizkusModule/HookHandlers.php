@@ -242,8 +242,8 @@ class HookHandlers extends AbstractHookListener
             $newManagedTopic->create();
             // cannot notify hooks in non-controller
             // notify topic & forum subscribers
-            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
-                'post' => $newManagedTopic->getFirstPost()));
+//            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
+//                'post' => $newManagedTopic->getFirstPost()));
             $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
         }
 

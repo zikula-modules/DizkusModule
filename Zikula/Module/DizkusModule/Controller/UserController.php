@@ -306,7 +306,7 @@ class UserController extends \Zikula_AbstractController
             $url = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', $params) . "#pid{$managedPost->getId()}";
             $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
             // notify topic & forum subscribers
-            $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
+//            $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             // if viewed in hooked state, redirect back to hook subscriber
             if (isset($returnurl)) {
                 $urlParams = unserialize(htmlspecialchars_decode($returnurl));
