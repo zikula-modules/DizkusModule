@@ -80,7 +80,7 @@ class NotifyApi extends \Zikula_AbstractApi
                         'X-UserID: ' . md5(UserUtil::getVar('uid')),
                         'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'],
                         'X-DizkusTopicID: ' . $post->getTopic_id()));
-                ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args);
+                ModUtil::apiFunc('ZikulaMailerModule', 'user', 'sendmessage', $args);
                 $notified[] = $subscriber['uid'];
             }
         }
