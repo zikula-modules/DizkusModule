@@ -493,7 +493,7 @@ function createQuickReply() {
             hookEditLinks();
 
         }, errorHandler = function(request, message, detail) {
-            console.log(request, message, detail);
+            console.log(request);
             DizkusShowAjaxError(request.responseText);
             quickReplying = false;
         };
