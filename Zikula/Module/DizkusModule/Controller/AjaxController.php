@@ -180,14 +180,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
 
-//        if ($request->getSession()->getFlashBag()->has('error')) {
-//            $errors = implode('\n', $request->getSession()->getFlashBag()->get('error'));
-//            return new Response($errors, 500);
-//        } else {
+        if ($request->getSession()->getFlashBag()->has('error')) {
+            $errors = implode('\n', $request->getSession()->getFlashBag()->get('error'));
+            return new Response($errors, 500);
+        } else {
             return new AjaxResponse(array(
                 'data' => $this->view->fetch('User/post/single.tpl'),
                 'post_id' => $post['post_id']));
-//        }
+        }
     }
 
     /**
