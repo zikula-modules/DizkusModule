@@ -11,6 +11,7 @@
 
 namespace Zikula\Module\DizkusModule\Form\Handler\User;
 
+use Zikula\Core\RouteUrl;
 use Zikula\Module\DizkusModule\Manager\PostManager;
 use ModUtil;
 use System;
@@ -129,7 +130,8 @@ class EditPost extends \Zikula_Form_AbstractHandler
 
         // store post
         $this->_post->persist();
-        $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $url));
+        $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId()), $fragment);
+        $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($this->_post->getId(), $hookUrl));
 
         // redirect to the new topic
         return $view->redirect($url);

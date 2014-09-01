@@ -51,8 +51,8 @@
             <li><a class='fa fa-comments' title="{gt text="View latest posts"}" href="{route name='zikuladizkusmodule_user_viewlatest'}">&nbsp;{gt text="View latest posts"}</a></li>
             {if $coredata.logged_in neq 1}
                 {assign value="index.php?"|cat:$smarty.server.QUERY_STRING|urlencode var='redirect'}
-                <li><a title="{gt text="Log-in"}" href="{modurl modname="Users" type="user" func="login" returnpage=$redirect}">{gt text="Log-in"}</a></li>
-                <li><a title="{gt text="Register"}" href="{modurl modname="Users" type="user" func="register"}">{gt text="Register"}</a></li>
+                <li><a title="{gt text="Log-in"}" href="{route name="zikulausersmodule_user_login" returnpage=$redirect}">{gt text="Log-in"}</a></li>
+                <li><a title="{gt text="Register"}" href="{route name="zikulausersmodule_user_register"}">{gt text="Register"}</a></li>
                 <li><a class='tooltips' title="{gt text="Search forums"}" href="{modurl modname='Search' type='user' func='index'}"><i class='fa fa-search'></i></a></li>
             {else}
                 <li><a class='fa fa-comment' title="{gt text="View my posts"}" href="{route name='zikuladizkusmodule_user_mine'}">&nbsp;{gt text="View my posts"}</a></li>

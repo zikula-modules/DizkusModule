@@ -14,7 +14,7 @@ namespace Zikula\Module\DizkusModule\Helper;
 use Zikula\Module\SearchModule\AbstractSearchable;
 use SecurityUtil;
 use ModUtil;
-use Zikula\Core\ModUrl;
+use Zikula\Core\RouteUrl;
 
 class SearchHelper extends AbstractSearchable
 {
@@ -130,7 +130,7 @@ class SearchHelper extends AbstractSearchable
                 'created' => $topic->getTopic_time(),
                 'module' => $this->name,
                 'sesid' => $sessionId,
-                'url' => new ModUrl($this->name, 'user', 'viewtopic', \ZLanguage::getLanguageCode(), array('topic' => $topic->getTopic_id()))
+                'url' => RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', array('topic' => $topic->getTopic_id())),
             );
         }
 

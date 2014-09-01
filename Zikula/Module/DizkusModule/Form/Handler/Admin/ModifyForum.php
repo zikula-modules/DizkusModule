@@ -23,6 +23,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\RouteUrl;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -197,7 +198,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         $this->_forum->store($data);
 
         // notify hooks
-        $hookUrl = new ModUrl($this->name, 'user', 'viewforum', ZLanguage::getLanguageCode(), array('forum' => $this->_forum->getId()));
+        $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', array('forum' => $this->_forum->getId()));
         $this->dispatchHooks('dizkus.ui_hooks.forum.process_edit', new ProcessHook($this->_forum->getId(), $hookUrl));
 
         if ($this->_action == 'e') {

@@ -17,6 +17,7 @@ use UserUtil;
 use FormUtil;
 use DataUtil;
 use System;
+use Zikula\Core\RouteUrl;
 use ZLanguage;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
@@ -242,7 +243,7 @@ class UserController extends \Zikula_AbstractController
         // get the input
         $topic_id = (int)$request->request->get('topic', null);
         $post_id = (int)$request->request->get('post', null);
-        $returnurl = $request->request->get('returnurl', null);
+        $returnUrl = $request->request->get('returnUrl', '');
         $message = $request->request->get('message', '');
         $attach_signature = (int)$request->request->get('attach_signature', 0);
         $subscribe_topic = (int)$request->request->get('subscribe_topic', 0);
@@ -303,21 +304,36 @@ class UserController extends \Zikula_AbstractController
             $params = array(
                 'topic' => $topic_id,
                 'start' => $start);
-            $url = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', $params) . "#pid{$managedPost->getId()}";
+            $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', $params, "pid{$managedPost->getId()}");
             $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
             // notify topic & forum subscribers
 //            $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
-            // if viewed in hooked state, redirect back to hook subscriber
-            if (isset($returnurl)) {
-                $urlParams = unserialize(htmlspecialchars_decode($returnurl));
-                $mod = $urlParams['module'];
-                unset($urlParams['module']);
-                $type = $urlParams['type'];
-                unset($urlParams['type']);
-                $func = $urlParams['func'];
-                unset($urlParams['func']);
-                $params = array_merge($params, $urlParams);
-                $url = new ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $params, 'pid' . $managedPost->getId());
+            // if viewed in hooked state, compute redirectUrl to go back to hook subscriber
+            if (!empty($returnUrl)) {
+                $urlParams = unserialize(htmlspecialchars_decode($returnUrl));
+                $urlParams['start'] = $start;
+                if (isset($urlParams['route'])) { // array generated from RouteUrl::toArray() or from Request Obj
+                    $route = $urlParams['route'];
+                    unset($urlParams['route']);
+                    $url = RouteUrl::createFromRoute($route, $urlParams, "pid{$managedPost->getId()}");
+                } else {
+                    if (isset($urlParams['application'])) { // array generated from ModUrl::toArray()
+                        $mod = $urlParams['application'];
+                        unset($urlParams['application']);
+                        $type = $urlParams['controller'];
+                        unset($urlParams['controller']);
+                        $func = $urlParams['action'];
+                        unset($urlParams['action']);
+                    } else { // array generated only from URI
+                        $mod = $urlParams['module'];
+                        unset($urlParams['module']);
+                        $type = $urlParams['type'];
+                        unset($urlParams['type']);
+                        $func = $urlParams['func'];
+                        unset($urlParams['func']);
+                    }
+                    $url = new ModUrl($mod, $type, $func, ZLanguage::getLanguageCode(), $urlParams, 'pid' . $managedPost->getId());
+                }
             }
 
             return new RedirectResponse(System::normalizeUrl($url->getUrl()));

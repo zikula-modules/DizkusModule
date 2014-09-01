@@ -96,13 +96,17 @@ class HookHandlers extends AbstractHookListener
         // attempt to retrieve return url from hook or create if not available
         $url = $hook->getUrl();
         if (isset($url)) {
-            $urlParameters = $url->toArray();
+            $urlParams = $url->toArray();
         } else {
-            $urlParameters = $request->query->all();
+            $urlParams = $request->query->all();
+            $route = $request->get('_route');
+            if (isset($route)) {
+                $urlParams['route'] = $route;
+            }
         }
-        $returnurlparams = htmlspecialchars(serialize($urlParameters));
-        $this->view->assign('returnurl', $returnurlparams);
-        list($rankimages, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        $returnUrl = htmlspecialchars(serialize($urlParams));
+        $this->view->assign('returnUrl', $returnUrl);
+        list(, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());

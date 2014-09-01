@@ -20,6 +20,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\RouteUrl;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 
@@ -152,7 +153,7 @@ class NewTopic extends \Zikula_Form_AbstractHandler
 
         // store new topic
         $newManagedTopic->create();
-        $url = new \Zikula\Core\ModUrl($this->name, 'user', 'viewtopic', \ZLanguage::getLanguageCode(),array('topic' => $newManagedTopic->getId()));
+        $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', array('topic' => $newManagedTopic->getId()));
         // notify hooks for both POST and TOPIC
         $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
         $this->dispatchHooks('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));

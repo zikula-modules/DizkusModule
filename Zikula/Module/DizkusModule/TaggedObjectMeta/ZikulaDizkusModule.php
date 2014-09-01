@@ -16,19 +16,19 @@ use ModUtil;
 use ZLanguage;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Core\ModUrl;
+use Zikula\Core\UrlInterface;
 
 class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
 {
 
-    public function __construct($objectId, $areaId, $module, $urlString = null, ModUrl $urlObject = null)
+    public function __construct($objectId, $areaId, $module, $urlString = null, UrlInterface $urlObject = null)
     {
         parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
         $this->setObjectTitle('');
         // default to empty
-        $action = $urlObject->getAction();
+        $route = $urlObject->getRoute();
         $args = $urlObject->getArgs();
-        if ($action == 'viewtopic') {
+        if (strpos($route, 'viewtopic') !== false) {
             // item is post or topic
             if (isset($args['topic'])) {
                 $managedTopic = new TopicManager($args['topic']);

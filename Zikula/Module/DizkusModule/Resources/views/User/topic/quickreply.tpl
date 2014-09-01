@@ -10,6 +10,7 @@
                     <input type="hidden" id="forum" name="forum" value="{$topic.forum.forum_id}" />
                     <input type="hidden" id="topic" name="topic" value="{$topic.topic_id}" />
                     <input type="hidden" id="quote" name="quote" value="" />
+                    <input type="hidden" id="returnUrl" name="returnUrl" value="{$returnUrl|default:''}" />
                     <input type="hidden" name="csrftoken" value="{insert name='csrftoken'}" />
                     <label for="message" class="sr-only">{gt text="Message"}</label>
                     <textarea id="message" class="form-control" name="message" rows="10"></textarea>
