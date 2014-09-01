@@ -34,6 +34,7 @@ use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Entity\TopicEntity;
 use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\Module\DizkusModule\Manager\PostManager;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
 use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
 
@@ -220,26 +221,35 @@ class HookHandlers extends AbstractHookListener
             $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
             // create new topic in selected forum
             $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-            if (!isset($topic)) {
-                $topic = new TopicEntity();
-            }
             // use Meta class to create topic data
             $topicMetaInstance = $this->getClassInstance($hook);
-            // format data for topic creation
-            $data = array(
-                'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
-                'title' => $topicMetaInstance->getTitle(),
-                'message' => $topicMetaInstance->getContent(),
-                'subscribe_topic' => false,
-                'attachSignature' => false);
-            // create the new topic
-            $newManagedTopic = new TopicManager(null, $topic);
-            // inject new topic into manager
-            $newManagedTopic->prepare($data);
-            // add hook data to topic
-            $newManagedTopic->setHookData($hook);
-            // store new topic
-            $newManagedTopic->create();
+            if (!isset($topic)) {
+                // create the new topic
+                $newManagedTopic = new TopicManager();
+                // format data for topic creation
+                $data = array(
+                    'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
+                    'title' => $topicMetaInstance->getTitle(),
+                    'message' => $topicMetaInstance->getContent(),
+                    'subscribe_topic' => false,
+                    'attachSignature' => false);
+                $newManagedTopic->prepare($data);
+                // add hook data to topic
+                $newManagedTopic->setHookData($hook);
+                // store new topic
+                $newManagedTopic->create();
+            } else {
+                // create new post
+                $managedPost = new PostManager();
+                $data = array(
+                    'topic_id' => $topic->getTopic_id(),
+                    'post_text' => $topicMetaInstance->getContent(),
+                    'attachSignature' => false);
+                // create the post in the existing topic
+                $managedPost->create($data);
+                // store the post
+                $managedPost->persist();
+            }
             // cannot notify hooks in non-controller
             // notify topic & forum subscribers
 //            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
