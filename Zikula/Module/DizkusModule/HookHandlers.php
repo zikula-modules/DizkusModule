@@ -135,23 +135,8 @@ class HookHandlers extends AbstractHookListener
      */
     public function uiEdit(DisplayHook $hook)
     {
-        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
-        $forumId = $hookconfig[$hook->getAreaId()]['forum'];
-        if (!isset($forumId)) {
-            // admin didn't choose a forum, so create one and set as choice
-            $managedForum = new ForumManager();
-            $data = array(
-                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
-                'status' => ForumEntity::STATUS_LOCKED,
-                'parent' => $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findOneBy(array(
-                    'name' => ForumEntity::ROOTNAME)));
-            $managedForum->store($data);
-            // cannot notify hooks in non-controller
-            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
-            ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
-            $forumId = $managedForum->getId();
-        }
-        $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forumId);
+        $hookconfig = $this->getHookConfig($hook);
+        $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($hookconfig[$hook->getAreaId()]['forum']);
         $this->view->assign('forum', $forum->getName());
         $itemId = $hook->getId();
         if (!empty($itemId)) {
@@ -222,8 +207,7 @@ class HookHandlers extends AbstractHookListener
         $data = $this->view->getRequest()->request->get('dizkus', null);
         $createTopic = isset($data['createTopic']) ? true : false;
         if ($createTopic) {
-            $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig');
-            // create new topic in selected forum
+            $hookconfig = $this->getHookConfig($hook);
             $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
             // use Meta class to create topic data
             $topicMetaInstance = $this->getClassInstance($hook);
@@ -320,6 +304,33 @@ class HookHandlers extends AbstractHookListener
         }
 
         return new Generic($hook);
+    }
+
+    /**
+     * get the modvar settings for hook
+     * generates value if not yet set
+     *
+     * @param $hook
+     * @return array
+     */
+    private function getHookConfig($hook)
+    {
+        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
+        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig', array());
+        if (!isset($hookconfig[$hook->getAreaId()]['forum'])) {
+            // admin didn't choose a forum, so create one and set as choice
+            $managedForum = new ForumManager();
+            $data = array(
+                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
+                'status' => ForumEntity::STATUS_LOCKED,
+                'parent' => $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findOneBy(array(
+                        'name' => ForumEntity::ROOTNAME)));
+            $managedForum->store($data);
+            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
+            ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
+        }
+
+        return $hookconfig;
     }
 
 }
