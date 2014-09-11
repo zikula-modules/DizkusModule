@@ -5,7 +5,7 @@
 {capture assign="sticky_icon"}<span class="fa-stack"><i class="fa fa-bullhorn fa-stack-1x"></i></span>{/capture}
 {* ------- *}
 
-{assign var='templatetitle' value=$topic.title}
+{assign var='templatetitle' value=$topic.title|safehtml}
 {include file='User/header.tpl' parent=$topic.forum.forum_id}
 <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
 {if $modvars.ZikulaDizkusModule.ajax}
