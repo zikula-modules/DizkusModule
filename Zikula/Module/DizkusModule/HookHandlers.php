@@ -82,7 +82,7 @@ class HookHandlers extends AbstractHookListener
     public function uiView(DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
-        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_COMMENT)) {
+        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
             return;
         }
         $request = $this->view->getRequest();
