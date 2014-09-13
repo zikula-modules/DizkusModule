@@ -242,7 +242,7 @@ class AdminController extends \Zikula_AbstractController
     }
 
     /**
-     * @Route("/subscriptions")
+     * @Route("/subscriptions", options={"expose"=true})
      *
      * @return Response
      */
