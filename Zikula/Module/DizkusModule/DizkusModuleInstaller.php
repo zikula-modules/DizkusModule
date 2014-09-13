@@ -359,6 +359,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $sqls[] = "UPDATE `dizkus_posts` SET `poster_id`=1 WHERE poster_id='-1'";
         $sqls[] = "DELETE FROM `dizkus_subscription` WHERE `user_id` < 2";
         $sqls[] = "DELETE FROM `dizkus_topic_subscription` WHERE `user_id` < 2";
+        $sqls[] = "DELETE FROM `dizkus_topic_subscription` WHERE topic_id NOT IN (SELECT topic_id from dizkus_topics)";
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);
             try {
