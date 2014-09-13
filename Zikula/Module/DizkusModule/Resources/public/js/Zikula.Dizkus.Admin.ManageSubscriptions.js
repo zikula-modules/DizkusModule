@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
         paramName: 'fragment',
         onSelect: function(suggestion) {
             console.log(suggestion);
-            window.location.href = Routing.generate('zikuladizkusmodule_aadmin_managesubscriptions', {uid: suggestion.data}, true);
+            window.location.href = Routing.generate('zikuladizkusmodule_admin_managesubscriptions', {uid: suggestion.data}, true);
         }
     });
     jQuery('#alltopic').click(function() {
