@@ -8,8 +8,10 @@ jQuery(document).ready(function() {
     jQuery('#username').autocomplete({
         serviceUrl: Routing.generate('zikuladizkusmodule_ajax_getusers'),
         paramName: 'fragment',
+        onSearchStart: function(query) {
+            this.preventDefault;
+        },
         onSelect: function(suggestion) {
-            console.log(suggestion);
             window.location.href = Routing.generate('zikuladizkusmodule_admin_managesubscriptions', {uid: suggestion.data}, true);
         }
     });
