@@ -18,7 +18,7 @@ use SecurityUtil;
 use System;
 use Zikula\Core\RouteUrl;
 use ZLanguage;
-use Symfony\Component\Debug\Exception\FatalErrorException;
+use Zikula\Core\Exception\FatalErrorException;
 use Zikula\Core\Response\Ajax\AjaxResponse;
 use Zikula\Core\Response\Ajax\UnavailableResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
