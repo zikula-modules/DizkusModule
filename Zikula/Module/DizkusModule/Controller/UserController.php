@@ -696,7 +696,7 @@ class UserController extends \Zikula_AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
 
-        list($topics, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', array('action' => $action, 'start' => $start));
+        list($topics, $pager) = ModUtil::apiFunc($this->name, 'post', 'search', array('action' => $action, 'offset' => $start));
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
         $this->view->assign('topics', $topics)
             ->assign('pager', $pager)
