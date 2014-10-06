@@ -18,6 +18,7 @@ use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * This class provides a handler to manage topic subscriptions.
