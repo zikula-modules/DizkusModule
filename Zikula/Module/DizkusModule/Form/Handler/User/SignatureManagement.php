@@ -18,6 +18,7 @@ use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * This class provides a handler for the signature management.
@@ -37,9 +38,18 @@ class SignatureManagement extends \Zikula_Form_AbstractHandler
     public function initialize(Zikula_Form_View $view)
     {
         if (!UserUtil::isLoggedIn()) {
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', array(), RouterInterface::ABSOLUTE_URL);
+            $path = array(
+                'returnpage' => $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', array(), RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'zikulausersmodule_user_login');
 
-            return ModUtil::func('Users', 'user', 'login', array('returnpage' => $url));
+            $subRequest = $view->getRequest()->duplicate(array(), null, $path);
+            $httpKernel = $view->getContainer()->get('http_kernel');
+            $response = $httpKernel->handle(
+                $subRequest,
+                HttpKernelInterface::SUB_REQUEST
+            );
+
+            return $response;
         }
         // Security check
         if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_COMMENT) || (!(ModUtil::getVar($this->name, 'signaturemanagement') == 'yes'))) {
