@@ -249,17 +249,18 @@ class TopicApi extends \Zikula_AbstractApi
         } else {
             throw new \InvalidArgumentException();
         }
-        $params = array('forum_id' => $topic->getForum()->getForum_id());
+        $forum = $topic->getForum();
+        $params = array('forum_id' => $forum->getForum_id());
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $params)) {
             throw new AccessDeniedException();
         }
         $posts = $topic->getPosts();
         foreach ($posts as $post) {
             $post->getPoster()->decrementPostCount();
-            $topic->getForum()->decrementPostCount();
+            $forum->decrementPostCount();
         }
         // decrement topicCount
-        $topic->getForum()->decrementTopicCount();
+        $forum->decrementTopicCount();
         // update the db
         $this->entityManager->flush();
         // remove all posts in topic
@@ -269,10 +270,10 @@ class TopicApi extends \Zikula_AbstractApi
         // delete the topic (manual dql to avoid cascading deletion errors)
         $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
         // sync the forum up with the changes
-        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $topic->getForum(), 'flush' => false));
-        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $topic->getForum(), 'flush' => true));
+        ModUtil::apiFunc($this->name, 'sync', 'forum', array('forum' => $forum, 'flush' => false));
+        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $forum, 'flush' => true));
 
-        return $topic->getForum()->getForum_id();
+        return $forum->getForum_id();
     }
 
     /**
