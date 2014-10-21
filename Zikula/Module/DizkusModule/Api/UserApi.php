@@ -225,7 +225,7 @@ class UserApi extends \Zikula_AbstractApi
             $postSortOrder = ModUtil::getVar($this->name, 'post_sort_order');
         }
 
-        $last_page = 0;
+        $last_page = 1;
         if ($postSortOrder == 'ASC') {
             // +1 for the initial posting
             $last_page = floor($args['replyCount'] / $posts_per_page) * $posts_per_page + 1;
