@@ -7,7 +7,7 @@
         {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
         {pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
     {/if}
-    {pageaddvar name="jsgettext" value="module_dizkus_js:Dizkus"}
+    {pageaddvar name="jsgettext" value="module_dizkus_js:ZikulaDizkusModule"}
 
     {userloggedin assign='userloggedin'}
 
