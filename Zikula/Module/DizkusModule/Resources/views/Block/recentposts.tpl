@@ -6,7 +6,7 @@
     {/foreach}
     </ul>
 {else}
-    <p class="text-center">{gt text="No posts" domain="module_dizkus"}</p>
+    <p class="text-center">{gt text="No posts"}</p>
 {/if}
 {if !isset($showfooter) or ($showfooter==true)}
 <p class="text-center">
