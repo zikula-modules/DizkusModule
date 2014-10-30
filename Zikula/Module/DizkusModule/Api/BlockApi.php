@@ -159,7 +159,7 @@ class BlockApi extends \Zikula_AbstractApi
                     'topic' => $topic->getTopic_id(),
                     'start' => $start)));
                 $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
-                $lastPost['word'] = $topic->getReplyCount() > 1 ? $this->__('Last') : $this->__('New');
+                $lastPost['word'] = $topic->getReplyCount() >= 1 ? $this->__('Last') : $this->__('New');
 
                 array_push($lastPosts, $lastPost);
             }
