@@ -24,14 +24,14 @@
     {assign var='topic_solved_style' value=' style="display:none;"'}
 {/if}
 <h2>
-    <span class='text-danger' id="topic_unsolved"{$topic_unsolved_style}>
-        [<span class='fa fa-question'>&nbsp;{gt text="Support request"}</span>]
+    <span class="text-danger" id="topic_unsolved"{$topic_unsolved_style}>
+        [<span class="fa fa-question">&nbsp;{gt text="Support request"}</span>]
     </span>
-    <span class='text-success' id="topic_solved"{$topic_solved_style}>
-        [<span class='fa fa-check'>&nbsp;{gt text="Solved"}</span>]
+    <span class="text-success" id="topic_solved"{$topic_solved_style}>
+        [<span class="fa fa-check">&nbsp;{gt text="Solved"}</span>]
     </span>
     <span id="edittopicsubjectbutton" title="">
-        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span><span id='edittopicicon' style='display:none;'>&nbsp;<i class='fa fa-pencil fa fa-red'></i></span>
+        <span id="topic_title">{$topic.title|safehtml|notifyfilters:'dizkus.filter_hooks.post.filter'}</span><span id='edittopicicon' style='display:none;'>&nbsp;<i class="fa fa-pencil fa fa-red"></i></span>
     </span>
 </h2>
 
@@ -126,7 +126,7 @@
             <li><a class="fa fa-arrow-right tooltips" title="{gt text="Move or join topic"}" href="{route name='zikuladizkusmodule_user_movetopic' topic=$topic.topic_id}"></a></li>
             <li><a class="fa fa-times tooltips" title="{gt text="Delete topic"}" href="{route name='zikuladizkusmodule_user_deletetopic' topic=$topic.topic_id}"></a></li>
             {/if}
-            <li><a class="tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class='fa fa-chevron-circle-down'></i></a></li>
+            <li><a class="tooltips" title="{gt text="To bottom of page"}" href="#bottom"><i class="fa fa-chevron-circle-down"></i></a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
 </nav>

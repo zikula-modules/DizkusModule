@@ -8,7 +8,7 @@
     <div class="panel-heading">
         <h2>{$templatetitle}</h2>
     </div>
-    <div class='panel-body'>
+    <div class="panel-body">
         <div class="col-lg-offset-3 col-lg-9 alert alert-info">
             {gt text="Notice: This will split the topic before the selected posting."}
         </div>

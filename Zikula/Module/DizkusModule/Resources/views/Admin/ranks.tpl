@@ -17,26 +17,26 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="title">{gt text="User rank name"}</label>
                     <div class="col-lg-9">
-                        <input id="title" class='form-control' type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
+                        <input id="title" class="form-control" type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="minimumCount">{gt text="Minimum number of posts"}</label>
                     <div class="col-lg-9">
-                        <input id="minimumCount" class='form-control' type="text" name="ranks[-1][minimumCount]" value="" maxlength="5" size="4" />
+                        <input id="minimumCount" class="form-control" type="text" name="ranks[-1][minimumCount]" value="" maxlength="5" size="4" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="maximumCount">{gt text="Maximum number of posts"}</label>
                     <div class="col-lg-9">
-                        <input id="maximumCount" class='form-control' type="text" name="ranks[-1][maximumCount]" value="" maxlength="5" size="4" />
+                        <input id="maximumCount" class="form-control" type="text" name="ranks[-1][maximumCount]" value="" maxlength="5" size="4" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="newrank_image">{gt text="Internal Dizkus image"}</label>
                     <div class="col-lg-9">
-                        <div class='col-lg-3'>
-                            <select name="ranks[-1][image]" id="newrank_image" class='form-control input-sm'>
+                        <div class="col-lg-3">
+                            <select name="ranks[-1][image]" id="newrank_image" class="form-control input-sm">
                                 {foreach name='availableranks' item='rankimage' from=$rankimages}
                                 <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                                 {/foreach}
@@ -48,7 +48,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="description">{gt text="Description"}</label>
                     <div class="col-lg-9">
-                        <input id="description" type="text" class='form-control' name="ranks[-1][description]" value="" maxlength="255" size="60" />
+                        <input id="description" type="text" class="form-control" name="ranks[-1][description]" value="" maxlength="255" size="60" />
                     </div>
                 </div>
                 <div class="col-lg-offset-3 col-lg-9">
@@ -63,8 +63,8 @@
             <thead>
                 <tr>
                     <th>{gt text="User rank"}</th>
-                    <th class='data'>{gt text="Minimum posts"}</th>
-                    <th class='data'>{gt text="Maximum posts"}</th>
+                    <th class="data">{gt text="Minimum posts"}</th>
+                    <th class="data">{gt text="Maximum posts"}</th>
                     <th>{gt text="Image"}</th>
                     <th>{gt text="Description"}</th>
                     <th>{gt text="Delete rank"}</th>
@@ -77,7 +77,7 @@
                         <td><input type="text" class="form-control input-sm" name="ranks[{$rank.rank_id}][minimumCount]" value="{$rank.minimumCount}" maxlength="8" size="4" /></td>
                         <td><input type="text" class="form-control input-sm" name="ranks[{$rank.rank_id}][maximumCount]" value="{$rank.maximumCount}" maxlength="8" size="4" /></td>
                         <td>
-                            <div class='col-lg-7'>
+                            <div class="col-lg-7">
                             <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" data-id='{$num}' class="rankimageselect form-control input-sm">
                                 {foreach item=rankimage from=$rankimages}
                                     <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
@@ -95,7 +95,7 @@
             </tbody>
         </table>
         <div class="col-lg-offset-3 col-lg-9">
-            {button class='btn btn-success' __alt="Submit" __title="Submit" __text="Modify"}
+            {button class="btn btn-success" __alt="Submit" __title="Submit" __text="Modify"}
         </div>
     </form>
 

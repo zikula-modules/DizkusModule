@@ -11,7 +11,7 @@
     <div class="panel-heading">
         <h2>{gt text='Delete Topic'}: {$title}</h2>
     </div>
-    <div class='panel-body'>
+    <div class="panel-body">
         <div class="col-lg-offset-3 col-lg-9 alert alert-danger">
             {gt text="Confirmation prompt: Do you really want to permanently delete this topic and all posts under this topic?"}
         </div>

@@ -12,16 +12,16 @@
     </div>
     {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_manageforumsubscriptions'*}
 
-    <table class='table table-striped'>
+    <table class="table table-striped">
         <thead>
-        <tr class='active'>
-            <th class='col-lg-3'>{gt text="Forum"}</th>
+        <tr class="active">
+            <th class="col-lg-3">{gt text="Forum"}</th>
             <th>{gt text="Unsubscribe from forum"}</th>
         </tr>
         </thead>
         <tbody>
         {if count($subscriptions) > 0}
-            <tr class='warning'>
+            <tr class="warning">
                 <td></td>
                 <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{gt text="Remove all forum subscriptions"}</label></td>
             </tr>
@@ -33,7 +33,7 @@
             </tr>
             {foreachelse}
             <tr>
-                <td colspan='2' class='text-center danger'>
+                <td colspan='2' class="text-center danger">
                     {gt text="No forum subscriptions found."}
                 </td>
             </tr>

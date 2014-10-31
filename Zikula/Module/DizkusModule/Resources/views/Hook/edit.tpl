@@ -1,5 +1,5 @@
 <fieldset>
-    <legend><i class='fa fa-comment fa-lg'></i> {gt text="Dizkus"}</legend>
+    <legend><i class="fa fa-comment fa-lg"></i> {gt text="Dizkus"}</legend>
         {if !isset($topic)}
             <div class="form-group">
                 <div class="col-lg-3 control-label">
@@ -12,8 +12,8 @@
                 </div>
             </div>
         {else}
-            <div class='alert alert-success'>
-                <i class='fa fa-check fa-lg'></i> {gt text="A discussion topic has been created for this item." tag1=$forum}
+            <div class="alert alert-success">
+                <i class="fa fa-check fa-lg"></i> {gt text="A discussion topic has been created for this item." tag1=$forum}
                 [<a href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id}">{gt text='View topic'}</a>]
                 {gt text="Updated values here will be reflected in the discussion topic."}
             </div>

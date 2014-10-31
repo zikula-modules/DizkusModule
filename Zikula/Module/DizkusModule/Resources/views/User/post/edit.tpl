@@ -26,11 +26,11 @@
             {formlabel for="post_text" __text="Message body"}<br />
             {formtextinput cssClass="form-control" textMode="multiline" id="post_text" rows="10" cols="60"}
             {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-                <p class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                <p class="help-block">{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
             {/if}
         </div>
         <div class="form-group">
-            <div class='col-md-4'>
+            <div class="col-md-4">
             {if $moderate eq true}
                 <div><strong>{gt text="Options"}</strong></div>
                 {if !$isFirstPost}
@@ -50,7 +50,7 @@
                 {formbutton id="preview" commandName="preview" __text="Preview" class="btn btn-info"}
                 {formbutton id="cancel"  commandName="cancel"  __text="Cancel"  class="btn btn-danger"}
             </div>
-            <div class='col-md-8'>
+            <div class="col-md-8">
                 {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=$post_id}
             </div>
         </div>

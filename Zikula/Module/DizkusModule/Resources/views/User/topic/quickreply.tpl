@@ -16,11 +16,11 @@
                     <textarea id="message" class="form-control" name="message" rows="10"></textarea>
 
                     {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
-                        <p class='help-block'>{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
+                        <p class="help-block">{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                     {/if}
                 </div>
-                <div class='form-group'>
-                    <div class='col-md-4'>
+                <div class="form-group">
+                    <div class="col-md-4">
                         {if $userloggedin}
                         <div><strong>{gt text="Options"}</strong></div>
                         <div class="checkbox">
@@ -38,7 +38,7 @@
                         <input id="btnPreviewQuickReply" class="btn btn-primary" type="submit" name="preview" value="{gt text="Preview"}" />
                         <button id="btnCancelQuickReply" class="btn btn-danger" style='display:none' type="submit" name="cancel">{gt text="Cancel"}</button>
                     </div>
-                    <div class='col-md-8'>
+                    <div class="col-md-8">
                         {notifydisplayhooks eventname='dizkus.ui_hooks.post.ui_edit' id=null}
                     </div>
                 </div>

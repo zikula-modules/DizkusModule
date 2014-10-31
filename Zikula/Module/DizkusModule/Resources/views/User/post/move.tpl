@@ -8,7 +8,7 @@
     <div class="panel-heading">
         <h2>{$templatetitle}</h2>
     </div>
-    <div class='panel-body'>
+    <div class="panel-body">
         <div class="form-group">
             {formlabel for="to_topic" text="ID of target topic" class="col-lg-3 control-label"}
             <div class="col-lg-9">

@@ -103,7 +103,7 @@
                     {formradiobutton id="rss2forum" dataField='extsource'}
                     {else}
                     {formradiobutton id="rss2forum" dataField='extsource' disabled='disabled'}
-                        &nbsp;<span class='text-danger'>{gt text="'Feeds' module is not available."}</span>
+                        &nbsp;<span class="text-danger">{gt text="'Feeds' module is not available."}</span>
                     {/if}
                 </div>
             </div>
@@ -177,7 +177,7 @@
         <div class="form-group">
             {formlabel class="col-lg-3 control-label" for="rssfeed" __text="Select RSS feed"}
             <div class="col-lg-9">
-                <select name="rssfeed" size="1" class='form-control'>
+                <select name="rssfeed" size="1" class="form-control">
                     <option value="0">{gt text="None"}</option>
                     {if $rssfeeds}
                         {foreach item='feed' from=$rssfeeds}

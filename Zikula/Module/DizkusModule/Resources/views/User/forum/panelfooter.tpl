@@ -1,5 +1,5 @@
-<div class='panel-footer clearfix'>
-    <div class='pull-left'>
+<div class="panel-footer clearfix">
+    <div class="pull-left">
         {dizkusonline assign='online'}
         {assign var='anonsessions' value=$modvars.ZConfig.anonymoussessions}
         {assign var='mins' value=$modvars.ZConfig.secinactivemins}
@@ -18,7 +18,7 @@
         </ul>
         <p class="z-sub">{gt text='This list is based on users active over the last %s minutes.' tag1=$mins}</p>
     </div>
-    <div id='forum-legend' class='pull-right'>
+    <div id='forum-legend' class="pull-right">
             <span class="fa-stack">
                 <i class="fa fa-comments fa-stack-2x"></i>
                 <i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>

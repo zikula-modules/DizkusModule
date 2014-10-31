@@ -24,7 +24,7 @@
     {formvalidationsummary}
     <div id="liveusersearch" class="">
         <fieldset>
-            <label for="username" class="control-label col-lg-2">{gt text="Search for a user"}:</label>&nbsp;<div class='col-lg-3'><input class="form-control" maxlength="25" type="text" id="username" name='username' value="{$username}" placeholder="type a username" /></div>
+            <label for="username" class="control-label col-lg-2">{gt text="Search for a user"}:</label>&nbsp;<div class="col-lg-3"><input class="form-control" maxlength="25" type="text" id="username" name='username' value="{$username}" placeholder="type a username" /></div>
         </fieldset>
     </div>
 
@@ -56,7 +56,7 @@
                         </td>
                     </tr>
                     {/foreach}
-                    <tr class='danger'>
+                    <tr class="danger">
                         <td>
                             <input id="alltopic" type="checkbox" value="1" />
                         </td>
@@ -92,7 +92,7 @@
                             </td>
                         </tr>
                     {/foreach}
-                    <tr class='danger'>
+                    <tr class="danger">
                         <td>
                             <input id="allforums" type="checkbox" value="1" />
                         </td>

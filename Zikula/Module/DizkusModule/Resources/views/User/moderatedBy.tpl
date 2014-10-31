@@ -1,5 +1,5 @@
 {if (count($forum.moderatorUsers) > 0) OR (count($forum.moderatorGroups) > 0)}
-<div id='dzk_moderatedby' class='text-muted{if isset($well) && $well} well well-sm{/if}'>
+<div id='dzk_moderatedby' class="text-muted{if isset($well) && $well} well well-sm{/if}">
     <em>{gt text="Moderated by"}:</em>
 {/if}
 

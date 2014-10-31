@@ -8,9 +8,9 @@
 <div id="posting_{$post.post_id}" class="panel panel-default">
     {if $isPosterOnline}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{gt text="ONLINE"}</div></div>{/if}
     {if isset($preview) AND ($preview eq 1)}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{gt text="PREVIEW"}</div></div>{/if}
-    <div class='panel-heading'>
+    <div class="panel-heading">
         <div class="postdate{if $isPosterOnline} padright{/if}">
-            {if isset($topic)}<a class="tooltips" href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class='fa fa-file-o'></i></a>{/if}
+            {if isset($topic)}<a class="tooltips" href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id start=$start}#pid{$post.post_id}" title="{gt text="Link to this post"}"><i class="fa fa-file-o"></i></a>{/if}
             <strong>{gt text="Posted"}: </strong>{$post.post_time|dateformat:'datetimebrief'}
         </div>
     </div>
@@ -20,7 +20,7 @@
                 <div class="dzk_avatar">
                     <strong>{$post.poster.user.uname|profilelinkbyuname}</strong>
                     <br />
-                    <div>{useravatar uid=$post.poster.user_id class='img-rounded'}</div>
+                    <div>{useravatar uid=$post.poster.user_id class="img-rounded"}</div>
 
                     {if !empty($post.poster.rank.image)}
                         {if $post.poster.rank.rank_link neq ''}
@@ -57,10 +57,10 @@
                 {if $coredata.logged_in eq true}
                     <li>
                         {if $msgmodule}
-                            <a class='tooltips' title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}"><i class='fa fa-envelope-o fa-150x'></i></a>
+                            <a class="tooltips" title="{gt text="Send private message"}" href="{modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}"><i class="fa fa-envelope-o fa-150x"></i></a>
                         {/if}
                         {if isset($topic) AND isset($post.poster_data) AND $post.poster_data.moderate eq true AND $post.poster_data.seeip eq true}
-                            <a class='tooltips' title="{gt text="View IP address"}" href="{route name='zikuladizkusmodule_user_viewipdata' post=$post.post_id}"><i class='fa fa-info-circle fa-150x'></i></a>
+                            <a class="tooltips" title="{gt text="View IP address"}" href="{route name='zikuladizkusmodule_user_viewipdata' post=$post.post_id}"><i class="fa fa-info-circle fa-150x"></i></a>
                         {/if}
                     </li>
                 {/if}
@@ -70,17 +70,17 @@
             <div class="postbody col-md-9">
                 <div class="dizkusinformation_post" id="dizkusinformation_{$post.post_id}" style="display: none;">{img modname='core' set='ajax' src='indicator.white.gif'}</div>
                 <div class="content" id="postingtext_{$post.post_id}">
-                    <div id='solutionPost_{$post.post_id}' class='alert alert-success'{if (!isset($topic.solved) OR ($topic.solved neq $post.post_id))} style="display:none;"{/if}>
+                    <div id='solutionPost_{$post.post_id}' class="alert alert-success"{if (!isset($topic.solved) OR ($topic.solved neq $post.post_id))} style="display:none;"{/if}>
                         {if ((isset($permissions.edit) AND $permissions.edit eq 1) OR (isset($topic.poster.user_id) AND $topic.poster.user_id eq $current_userid))}
                             <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{$post.post_id}" href="{route name='zikuladizkusmodule_user_changetopicstatus' action='unsolve' topic=$topic.topic_id}" title="{gt text="Remove: this is not the solution"}">&times;</a>
                         {/if}
-                        <i class='fa fa-check fa-2x'></i> {gt text='This post has been marked as the solution.'}
+                        <i class="fa fa-check fa-2x"></i> {gt text='This post has been marked as the solution.'}
                     </div>
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
                     {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
                         {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}
                         {if !empty($signature)}
-                            <div class='dzk_postSignature'>
+                            <div class="dzk_postSignature">
                                 {$modvars.ZikulaDizkusModule.signature_start}
                                 <br />{$signature|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}
                                 <br />{$modvars.ZikulaDizkusModule.signature_end}
@@ -122,7 +122,7 @@
                     </li>
                     {/if}
                 {elseif isset($topic)}
-                    <li><i class='fa fa-lock fa-150x tooltips' title='{gt text='This topic is locked'}'></i></li>
+                    <li><i class="fa fa-lock fa-150x tooltips" title='{gt text='This topic is locked'}'></i></li>
                 {/if}
                 {if !isset($notify) OR $notify eq false}
                     {if isset($permissions.comment) AND $permissions.comment eq true}
@@ -132,7 +132,7 @@
                 {/if}
             </ul>
         </div>
-        <div class='clearfix'></div>
+        <div class="clearfix"></div>
         {/if}
     </div>
 </div>

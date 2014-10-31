@@ -15,7 +15,7 @@
                         {gt text="Forum to place hooked topics within:" domain="module_dizkus"}
                     </label>
                     <div class="col-lg-9">
-                        <select class='form-control' id='dizkus_forum' name='dizkus[{$areaid}][forum]'>
+                        <select class="form-control" id='dizkus_forum' name='dizkus[{$areaid}][forum]'>
                         {foreach from=$forums item='forum'}
                             <option label="{$forum.text}" value="{$forum.value}" {if isset($dizkushookconfig.$areaid.forum) and ($dizkushookconfig.$areaid.forum eq $forum.value)}selected="selected"{/if}>{$forum.text}</option>
                         {/foreach}
@@ -26,7 +26,7 @@
         {/foreach}
         <div class="col-lg-offset-3 col-lg-9">
             <input class="btn btn-success" type="submit" name="save" value="{gt text="Save"}" />
-            <a class='btn btn-danger' href="{modurl modname=$ActiveModule type="admin" func='main'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+            <a class="btn btn-danger" href="{modurl modname=$ActiveModule type="admin" func='main'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>
     </div>
 </form>

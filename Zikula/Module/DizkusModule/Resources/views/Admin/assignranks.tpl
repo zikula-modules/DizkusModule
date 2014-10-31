@@ -27,7 +27,7 @@
             <tr>
                 <td>{$user.user.uname|profilelinkbyuname}</td>
                 <td>
-                    <select name="setrank[{$user.user.uid}]" class='form-control input-sm'>
+                    <select name="setrank[{$user.user.uid}]" class="form-control input-sm">
                         <option value="0" {if (($user.rank.rank_id eq 0) || (empty($user.rank.rank_id)))}selected="selected"{/if}>{gt text="No rank"}</option>
                         {foreach item=rank from=$ranks}
                             <option value="{$rank.rank_id}" {if $user.rank.rank_id eq $rank.rank_id}selected="selected"{/if}>{$rank.title}</option>

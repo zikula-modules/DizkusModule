@@ -16,14 +16,14 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="title">{gt text="Honorary rank name"}</label>
                     <div class="col-lg-9">
-                        <input id="title" class='form-control' type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
+                        <input id="title" class="form-control" type="text" name="ranks[-1][title]" value="" maxlength="50" size="20" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="newrank_image">{gt text="Internal Dizkus image"}</label>
                     <div class="col-lg-9">
-                        <div class='col-lg-3'>
-                            <select name="ranks[-1][image]" id="newrank_image" class='form-control input-sm'>
+                        <div class="col-lg-3">
+                            <select name="ranks[-1][image]" id="newrank_image" class="form-control input-sm">
                             {foreach name='availableranks' item='rankimage' from=$rankimages}
                                 <option value="{$rankimage}" {if $smarty.foreach.availableranks.first}selected="selected"{capture assign='selectedimage'}{$rankimage}{/capture}{/if}>{$rankimage}</option>
                             {/foreach}
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label" for="description">{gt text="Description"}</label>
                     <div class="col-lg-9">
-                        <input id="description" class='form-control' type="text" name="ranks[-1][description]" value="" maxlength="255" size="60" />
+                        <input id="description" class="form-control" type="text" name="ranks[-1][description]" value="" maxlength="255" size="60" />
                     </div>
                 </div>
                 <div class="col-lg-offset-3 col-lg-9">
@@ -59,10 +59,10 @@
                 {foreach key='num' item='rank' from=$ranks}
                     <tr class="{cycle values='z-odd,z-even'}">
                         <td>
-                            <input type="text" class='form-control' name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
+                            <input type="text" class="form-control" name="ranks[{$rank.rank_id}][title]" value="{$rank.title|safetext}" maxlength="50" size="20" />
                         </td>
                         <td>
-                            <div class='col-lg-7'>
+                            <div class="col-lg-7">
                                 <select name="ranks[{$rank.rank_id}][image]" id="rank_image{$num}" data-id='{$num}' class="rankimageselect form-control input-sm">
                                 {foreach item='rankimage' from=$rankimages}
                                     <option value="{$rankimage}" {if $rankimage eq $rank.image}selected="selected"{/if}>{$rankimage}</option>
@@ -71,7 +71,7 @@
                             </div>
                             <img id="image{$num}" src="{$modvars.ZikulaDizkusModule.url_ranks_images}/{$rank.image}" alt="rankimage" />
                         </td>
-                        <td><input type="text" class='form-control' name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
+                        <td><input type="text" class="form-control" name="ranks[{$rank.rank_id}][description]" value="{$rank.description}" maxlength="255" size="40" /></td>
                         <td>
                             <input type="checkbox" value="1" name="ranks[{$rank.rank_id}][rank_delete]" />
                         </td>
@@ -82,7 +82,7 @@
             </tbody>
         </table>
         <div class="col-lg-offset-3 col-lg-9">
-            {button class='btn btn-success' __alt="Submit" __title="Submit" __text="Submit"}
+            {button class="btn btn-success" __alt="Submit" __title="Submit" __text="Submit"}
         </div>
     </form>
 

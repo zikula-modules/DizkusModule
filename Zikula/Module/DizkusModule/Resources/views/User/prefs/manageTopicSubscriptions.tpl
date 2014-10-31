@@ -12,17 +12,17 @@
     </div>
     {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_managetopicsubscriptions'*}
 
-    <table class='table table-striped'>
+    <table class="table table-striped">
         <thead>
-        <tr class='active'>
-            <th class='col-lg-3'>{gt text="Topic"}</th>
-            <th class='col-lg-6'>{gt text="Unsubscribe from topic"}</th>
+        <tr class="active">
+            <th class="col-lg-3">{gt text="Topic"}</th>
+            <th class="col-lg-6">{gt text="Unsubscribe from topic"}</th>
             <th>{gt text="Last post"}</th>
         </tr>
         </thead>
         <tbody>
         {if count($subscriptions) > 0}
-            <tr class='warning'>
+            <tr class="warning">
                 <td></td>
                 <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.topic_checkbox').attr('checked', this.checked);" />&nbsp;{gt text="Remove all topic subscriptions"}</label></td>
                 <td></td>
@@ -38,7 +38,7 @@
             </tr>
             {foreachelse}
             <tr>
-                <td colspan='3' class='text-center danger'>
+                <td colspan='3' class="text-center danger">
                     {gt text="No topic subscriptions found."}
                 </td>
             </tr>
