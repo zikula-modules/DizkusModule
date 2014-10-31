@@ -46,8 +46,8 @@
                 {else}
                     <li><strong>{gt text="Rank"}: </strong>{$posterRank.title|safetext}</li>
                 {/if}
-                    {usergetvar name='user_regdate' assign="user_regdate"}
-                    <li><strong>{gt text="Registered"}: </strong>{$post.poster.user.user_regdate|dateformat:'datebrief'}</li>
+                    {* usergetvar name='user_regdate' assign="user_regdate" *}
+                    <li><strong>{gt text="Registered"}: </strong>{$post.poster.user.user_regdate|default:'01-01-1970 00:00:00'|dateformat:'datebrief'}</li>
                 {if !$isPosterOnline}
                     <li><strong>{gt text="Last visit"}: </strong>{$post.poster.lastvisit|dateformat:'datebrief'}</li>
                 {/if}
