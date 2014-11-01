@@ -41,7 +41,7 @@
         </tbody>
     </table>
 
-    {pager rowcount=$usercount limit=$perpage posvar="page" display="page" maxpages="20" class="text-center" route='zikuladizkusmodule_admin_assignranks'}
+    {pager rowcount=$usercount limit=$perpage|default:15 posvar="page" display="page" maxpages="20" class="text-center" route='zikuladizkusmodule_admin_assignranks'}
 
     <div class="col-lg-offset-3 col-lg-9">
         <input type="hidden" name="lastletter" value="{$letter|safetext}" />

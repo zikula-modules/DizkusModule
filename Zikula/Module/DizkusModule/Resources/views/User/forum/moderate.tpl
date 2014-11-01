@@ -10,9 +10,9 @@
             <div class="panel-heading">
                 <h2><i class="fa fa-wrench"></i>&nbsp;{gt text='Moderating'}&nbsp;{$forum.name|safetext}&nbsp;{gt text='topics'}</h2>
             </div>
-            {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_moderateforum'}
+            {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_moderateforum'}
             {include file='User/forum/forumtopicstable.tpl' topics=$forum.topics moderate=true}
-            {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_moderateforum'}
+            {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_moderateforum'}
         </div>
 
         <div class="alert alert-danger">{gt text="Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action."}</div>

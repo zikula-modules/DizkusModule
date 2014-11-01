@@ -97,9 +97,9 @@
     <div class="panel-heading">
         <h2>{$forum.name|safetext}&nbsp;{gt text='topics'}</h2>
     </div>
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewforum'}
+    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_viewforum'}
     {include file='User/forum/forumtopicstable.tpl'}
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_viewforum'}
+    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_viewforum'}
     {include file='User/forum/panelfooter.tpl'}
 </div>
 {elseif (!$forum->isLocked())}

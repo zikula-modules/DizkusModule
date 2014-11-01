@@ -29,9 +29,9 @@
         <div class="panel-heading">
             <h2>{if $action eq "topics"}{gt text="My topics"}{else}{gt text="My posts"}{/if}</h2>
         </div>
-        {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_mine'}
+        {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_mine'}
         {include file='User/forum/forumtopicstable.tpl'}
-        {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_mine'}
+        {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_mine'}
         {include file='User/forum/panelfooter.tpl'}
     </div>
 </div>

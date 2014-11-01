@@ -13,7 +13,7 @@
 
     <h2>{gt text="%s Comment" plural="%s Comments" tag1=$pager.numitems-1 count=$pager.numitems-1}</h2>
 
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start'}
 
     <div id="dzk_postinglist">
         <ul class="post_list">
@@ -31,7 +31,7 @@
         </ul>
     </div>
 
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start'}
+    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start'}
 
     {if ($permissions.comment eq true)}
         {include file='User/topic/quickreply.tpl'}
