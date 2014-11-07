@@ -144,23 +144,25 @@ class ForumManager
      */
     public function getTopics($startNumber = 1)
     {
-        $id = $this->_forum->getForum_id();
-        $query = $this->entityManager
-            ->createQueryBuilder()
-            ->select('p')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 'p')
-            ->where('p.forum = :forumId')
-            ->setParameter('forumId', $id)
-            ->leftJoin('p.last_post', 'l')
-            ->orderBy('p.sticky', 'DESC')
-            ->addOrderBy('l.post_time', 'DESC')
-            ->getQuery();
-        $query->setFirstResult($startNumber - 1)
-            ->setMaxResults($this->_itemsPerPage);
-        $paginator = new Paginator($query, false);
-        $this->_numberOfItems = count($paginator);
-
-        return $paginator;
+        $this->_numberOfItems = $this->_forum->getTopics()->count();
+        return $this->_forum->getTopics()->slice($startNumber - 1, $this->_itemsPerPage);
+//        $id = $this->_forum->getForum_id();
+//        $query = $this->entityManager
+//            ->createQueryBuilder()
+//            ->select('p')
+//            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 'p')
+//            ->where('p.forum = :forumId')
+//            ->setParameter('forumId', $id)
+//            ->leftJoin('p.last_post', 'l')
+//            ->orderBy('p.sticky', 'DESC')
+//            ->addOrderBy('l.post_time', 'DESC')
+//            ->getQuery();
+//        $query->setFirstResult($startNumber - 1)
+//            ->setMaxResults($this->_itemsPerPage);
+//        $paginator = new Paginator($query, false);
+//        $this->_numberOfItems = count($paginator);
+//
+//        return $paginator;
     }
 
     /**
