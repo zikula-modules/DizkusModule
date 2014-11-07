@@ -137,7 +137,7 @@ class ForumEntity extends EntityAccess
     private $favorites;
 
     /**
-     * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"})
      */
     private $topics;
 
