@@ -104,7 +104,7 @@ class HookHandlers extends AbstractHookListener
                 $urlParams['route'] = $route;
             }
         }
-        $returnUrl = htmlspecialchars(serialize($urlParams));
+        $returnUrl = htmlspecialchars(json_encode($urlParams));
         $this->view->assign('returnUrl', $returnUrl);
         list(, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
         $this->view->assign('ranks', $ranks);

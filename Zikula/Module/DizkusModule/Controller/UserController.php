@@ -310,12 +310,12 @@ class UserController extends \Zikula_AbstractController
 //            $notified = ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $managedPost->get()));
             // if viewed in hooked state, compute redirectUrl to go back to hook subscriber
             if (!empty($returnUrl)) {
-                $urlParams = unserialize(htmlspecialchars_decode($returnUrl));
-                $urlParams['start'] = $start;
+                $urlParams = json_decode(htmlspecialchars_decode($returnUrl), true);
+                $urlParams['args']['start'] = $start;
                 if (isset($urlParams['route'])) { // array generated from RouteUrl::toArray() or from Request Obj
                     $route = $urlParams['route'];
                     unset($urlParams['route']);
-                    $url = RouteUrl::createFromRoute($route, $urlParams, "pid{$managedPost->getId()}");
+                    $url = RouteUrl::createFromRoute($route, $urlParams['args'], "pid{$managedPost->getId()}");
                 } else {
                     if (isset($urlParams['application'])) { // array generated from ModUrl::toArray()
                         $mod = $urlParams['application'];
