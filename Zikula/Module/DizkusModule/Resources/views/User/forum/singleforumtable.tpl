@@ -53,7 +53,7 @@
         </tr>
         {/foreach}
 
-        {assign var='freeTopicsInForum' value=$parent.topicCount}
+        {countfreetopics id=$parent.forum_id assign='freeTopicsInForum'}
         {if $freeTopicsInForum > 0 && $func eq 'index'}
         <tr>
             <td colspan='6' class="text-center success">{gt text="There is %s topic not in a subforum." plural="There are %s topics not in a subforum." tag1=$freeTopicsInForum count=$freeTopicsInForum}
