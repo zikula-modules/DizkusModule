@@ -20,7 +20,6 @@ use ServiceUtil;
 use DataUtil;
 use ModUtil;
 use UserUtil;
-use Zikula\Core\Exception\FatalErrorException;
 use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
 use Zikula\Module\DizkusModule\Entity\PostEntity;
 use Zikula\Module\DizkusModule\Manager\TopicManager;
@@ -121,7 +120,7 @@ class PostManager
             unset($data['topic_id']);
             $this->_post->merge($data);
         } else {
-            throw new FatalErrorException('Cannot create Post, no data provided.');
+            throw new \InvalidArgumentException('Cannot create Post, no data provided.');
         }
         // increment poster posts
         $uid = UserUtil::getVar('uid');

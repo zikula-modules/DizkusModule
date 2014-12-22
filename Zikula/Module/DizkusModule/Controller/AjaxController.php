@@ -18,7 +18,6 @@ use SecurityUtil;
 use System;
 use Zikula\Core\RouteUrl;
 use ZLanguage;
-use Zikula\Core\Exception\FatalErrorException;
 use Zikula\Core\Response\Ajax\AjaxResponse;
 use Zikula\Core\Response\Ajax\UnavailableResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
@@ -64,14 +63,14 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @param string $message The message to check.
      *
-     * @throws FatalErrorException
+     * @throws \LengthException
      *
      * @return void
      */
     private function checkMessageLength($message)
     {
         if (!ModUtil::apiFunc($this->name, 'post', 'checkMessageLength', array('message' => $message))) {
-            throw new FatalErrorException($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+            throw new \LengthException($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
         }
     }
 
@@ -202,7 +201,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * RETURN: The edit post form.
      *
-     * @throws FatalErrorException
+     * @throws \InvalidArgumentException
      * @throws AccessDeniedException
      *
      * @return AjaxResponse
@@ -229,7 +228,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 throw new AccessDeniedException();
             }
         }
-        throw new FatalErrorException($this->__('Error! No post ID in \'Dizkus/Ajax/editpost()\'.'));
+        throw new \InvalidArgumentException($this->__f('Error! No post ID in %s.', '\'Dizkus/Ajax/editpost()\''));
     }
 
     /**
@@ -250,7 +249,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *               $redirect The page to redirect to (can be empty).
      *              )
      *
-     * @throws FatalErrorException
+     * @throws \InvalidArgumentException
      * @throws AccessDeniedException If the user tries to delete the only post of a topic.
      *
      * @return AjaxResponse
@@ -302,7 +301,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
             return new AjaxResponse($response);
         }
-        throw new FatalErrorException($this->__('Error! No post_id in \'Dizkus/Ajax/updatepost()\'.'));
+        throw new \InvalidArgumentException($this->__f('Error! No post_id in %s.', '\'Dizkus/Ajax/updatepost()\''));
     }
 
     /**
