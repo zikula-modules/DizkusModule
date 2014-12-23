@@ -1,5 +1,5 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Admin.DeleteForum.js'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.DeleteForum.js'}
 {adminheader}
 <div class="z-admin-content-pagetitle">
     {icon type="delete" size="small"}

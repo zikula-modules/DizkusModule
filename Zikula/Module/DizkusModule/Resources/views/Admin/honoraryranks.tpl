@@ -1,5 +1,5 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Admin.Ranks.js'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.Ranks.js'}
 {adminheader}
 <h3>
     <span class="fa fa-trophy"></span>&nbsp;{gt text="Edit honorary ranks"}
