@@ -1,8 +1,8 @@
 {*pageaddvar name='javascript' value='zikula'}{* @todo I think this is unneeded *}
 {pageaddvar name='javascript' value='jQuery'}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js'}
-{pageaddvar name="javascript" value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Admin.ManageSubscriptions.js'}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Tools.js'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js'}
+{pageaddvar name="javascript" value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.ManageSubscriptions.js'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
 {adminheader}
 {strip}
     {pageaddvarblock}

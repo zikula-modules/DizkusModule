@@ -1,8 +1,8 @@
 {pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/chosen_v1.0.0/chosen.jquery.min.js'}
-{pageaddvar name='stylesheet' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/chosen_v1.0.0/chosen.css'}
-{pageaddvar name='stylesheet' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/css/chosen-bootstrap.css'}
-{pageaddvar name='javascript' value=$moduleBundle->getRelativePath()|cat:'/Resources/public/js/Zikula.Dizkus.Admin.ModifyForum.js'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/chosen_v1.0.0/chosen.jquery.min.js'}
+{pageaddvar name='stylesheet' value='@ZikulaDizkusModule/Resources/public/js/chosen_v1.0.0/chosen.css'}
+{pageaddvar name='stylesheet' value='@ZikulaDizkusModule/Resources/public/css/chosen-bootstrap.css'}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.ModifyForum.js'}
 
 {adminheader}
 <h3>
