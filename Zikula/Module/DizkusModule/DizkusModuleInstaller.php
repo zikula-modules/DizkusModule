@@ -227,13 +227,14 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     public static function getDefaultVars()
     {
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
+        $relativePath = self::generateRelativePath(__DIR__, 'modules');
 
         return array(
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
             'email_from' => System::getVar('adminmail'),
-            'url_ranks_images' => "modules/Dizkus/Zikula/Module/DizkusModule/Resources/public/images/ranks",
+            'url_ranks_images' => "$relativePath/Resources/public/images/ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => 'no',
             'extendedsearch' => 'no',
@@ -260,6 +261,27 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             'notifyAdminAsMod' => 2,
             'defaultPoster' => 2,
         );
+    }
+
+    /**
+     * find the relative path of this script from current full path
+     *
+     * @param string $path default __DIR__
+     * @param string $from default 'modules'
+     * @return string
+     */
+    public static function generateRelativePath($path = __DIR__, $from = 'modules')
+    {
+        $path = realpath($path);
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
+        foreach ($parts as $part) {
+            if ($part == $from) {
+                return $path;
+            } else {
+                $path = substr($path, strlen($part . DIRECTORY_SEPARATOR));
+            }
+        }
+        return $path;
     }
 
     /**
