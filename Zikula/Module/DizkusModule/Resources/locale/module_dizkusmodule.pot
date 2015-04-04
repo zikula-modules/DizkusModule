@@ -1,0 +1,2257 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Zikula 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-04 15:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: HookedTopicMeta/Generic.php:32
+msgid "item"
+msgstr ""
+
+#: HookedTopicMeta/Generic.php:38
+#, php-format
+msgid "Discussion of item at: %s"
+msgstr ""
+
+#: Listener/EventListener.php:65 Listener/EventListener.php:68
+msgid "Dizkus Hook Settings"
+msgstr ""
+
+#: Listener/EventListener.php:143
+#, php-format
+msgid "Error: No forum selected for area '%s'"
+msgstr ""
+
+#: Listener/EventListener.php:149
+msgid "Dizkus: Hook option settings updated."
+msgstr ""
+
+#: Listener/EventListener.php:197 HookHandlers.php:167 HookHandlers.php:274
+msgid "locked"
+msgstr ""
+
+#: Listener/EventListener.php:197 HookHandlers.php:167 HookHandlers.php:274
+msgid "deleted"
+msgstr ""
+
+#: Listener/EventListener.php:200
+#, php-format
+msgid "Dizkus: All hooked discussion topics %s."
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:64
+#, php-format
+msgid "Forum with id %s not found"
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:72
+msgid "Move them to a new parent forum"
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:75
+msgid "Remove them"
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:113
+#: Form/Handler/Admin/ModifyForum.php:157 Form/Handler/User/EditPost.php:97
+#: Form/Handler/User/DeleteTopic.php:110 Controller/UserController.php:280
+msgid "Error! Hooked content does not validate."
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:123
+msgid ""
+"You cannot move topics into this location, only forums. Delete the topics or "
+"choose a different destination."
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:128
+msgid "You cannot select a descendant forum as a destination."
+msgstr ""
+
+#: Form/Handler/Admin/DeleteForum.php:132
+msgid "You cannot select the same forum as a destination."
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:47
+msgid "Ascending"
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:48
+msgid "Descending"
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:50 Resources/views/User/topic/view.tpl:127
+#: Resources/views/User/topic/delete.tpl:4
+msgid "Delete topic"
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:51
+#: Resources/views/User/topic/translations.tpl:8
+#: Resources/views/User/topic/view.tpl:103
+msgid "Lock topic"
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:101
+msgid "Done! Updated configuration."
+msgstr ""
+
+#: Form/Handler/Admin/Prefs.php:104
+msgid "Done! Reset configuration to default values."
+msgstr ""
+
+#: Form/Handler/Admin/ManageSubscriptions.php:112
+#, php-format
+msgid "Could not find username \"%s\". Please try again."
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:65
+msgid "Editing of root forum is disallowed"
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:70
+msgid "Modify forum"
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:74
+msgid "Create forum"
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:82
+#, php-format
+msgid "Item with id %s not found"
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:123
+#: Resources/views/User/moderatedBy.tpl:17
+msgid "Group"
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:185
+msgid "Pop3 test successful."
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:205
+msgid "Forum successfully updated."
+msgstr ""
+
+#: Form/Handler/Admin/ModifyForum.php:207
+msgid "Forum successfully created."
+msgstr ""
+
+#: Form/Handler/User/EmailTopic.php:57
+msgid "Hello! Please visit this link. I think it will be of interest to you."
+msgstr ""
+
+#: Form/Handler/User/Report.php:56 Form/Handler/User/EditPost.php:57
+msgid "Error! Missing post id."
+msgstr ""
+
+#: Form/Handler/User/EditPost.php:102 Form/Handler/User/NewTopic.php:130
+#: Controller/UserController.php:293 Controller/AjaxController.php:141
+msgid "Error! Your post contains unacceptable content and has been rejected."
+msgstr ""
+
+#: Form/Handler/User/EditPost.php:107 Controller/AjaxController.php:272
+msgid ""
+"Error! Cannot delete the first post in a topic. Delete the topic instead."
+msgstr ""
+
+#: Form/Handler/User/SplitTopic.php:53 Resources/views/User/topic/split.tpl:22
+msgid "Split"
+msgstr ""
+
+#: Form/Handler/User/DeleteTopic.php:123
+msgid "Post deleted"
+msgstr ""
+
+#: Form/Handler/User/DeleteTopic.php:127
+msgid "Email sent!"
+msgstr ""
+
+#: Form/Handler/User/SignatureManagement.php:89
+msgid "Done! Signature has been updated."
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:70
+msgid "Choose target topic"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:84
+msgid "Choose action"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:87
+msgid "Mark selected topics as 'solved'"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:90
+msgid "Remove 'solved' status from selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:93
+msgid "Give selected topics 'sticky' status"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:96
+msgid "Remove 'sticky' status from selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:99
+msgid "Lock selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:102
+msgid "Unlock selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:105
+msgid "Delete selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:108
+msgid "Move selected topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:111
+#: Resources/views/User/topic/move.tpl:46
+msgid "Join topics"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:118
+msgid "Select target forum"
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:166
+msgid "Error! You did not select a target forum for the move."
+msgstr ""
+
+#: Form/Handler/User/ModerateForum.php:191
+msgid "Error! You did not select a target topic to join."
+msgstr ""
+
+#: Form/Handler/User/MoveTopic.php:93
+msgid "Error! The original forum cannot be the same as the target forum."
+msgstr ""
+
+#: Form/Handler/User/NewTopic.php:59
+msgid "Error! Missing forum id."
+msgstr ""
+
+#: Form/Handler/User/NewTopic.php:67
+msgid "Error! This forum is locked. New topics cannot be created."
+msgstr ""
+
+#: Resources/views/plugins/function.printtopic_button.php:28
+msgid "Print topic"
+msgstr ""
+
+#: Resources/views/plugins/function.dzkpager.php:162
+#, php-format
+msgid "Go to page %s: "
+msgstr ""
+
+#: Helper/SearchHelper.php:61
+#, php-format
+msgid ""
+"For forum searches, each search term must be between %1$s and %2$s "
+"characters in length."
+msgstr ""
+
+#: Helper/SearchHelper.php:74
+msgid "You do not have permission to search any of the forums."
+msgstr ""
+
+#: Helper/SearchHelper.php:114
+msgid "You do not have permission to search the requested forums."
+msgstr ""
+
+#: Block/StatisticsBlock.php:41
+msgid "Forum statistics"
+msgstr ""
+
+#: Block/StatisticsBlock.php:42
+msgid "Forum Statistics Block"
+msgstr ""
+
+#: Block/RecentPostsBlock.php:41
+msgid "Forum recent"
+msgstr ""
+
+#: Block/RecentPostsBlock.php:42
+msgid "Recent forum posts"
+msgstr ""
+
+#: TaggedObjectMeta/ZikulaDizkusModule.php:86
+msgid "topic"
+msgstr ""
+
+#: TaggedObjectMeta/ZikulaDizkusModule.php:87
+#: Resources/views/User/forum/view.tpl:23
+msgid "forum"
+msgstr ""
+
+#: Entity/ForumUserEntity.php:156
+msgid "Deleted user"
+msgstr ""
+
+#: Entity/ForumEntity.php:201
+msgid "Forum Index"
+msgstr ""
+
+#: Needles/Dizkus.php:72
+#, php-format
+msgid "Error! You do not have the necessary authorisation for forum ID %s."
+msgstr ""
+
+#: Needles/Dizkus.php:75
+#, php-format
+msgid "Error! The forum ID %s is unknown."
+msgstr ""
+
+#: Needles/Dizkus.php:86
+#, php-format
+msgid "Error! You do not have the necessary authorisation for topic ID %s."
+msgstr ""
+
+#: Needles/Dizkus.php:89
+#, php-format
+msgid "Error! The topic ID %s is unknown."
+msgstr ""
+
+#: Needles/Dizkus.php:93
+msgid "Error! Unknown parameter at position #1 ('F' or 'T')."
+msgstr ""
+
+#: Needles/Dizkus.php:97
+msgid "Error! The Dizkus module is not available."
+msgstr ""
+
+#: Needles/Dizkus.php:102
+msgid "Error! No needle ID."
+msgstr ""
+
+#: DizkusModuleInstaller.php:205
+#, php-format
+msgid ""
+"Notice: This version does not support upgrades from versions of Dizkus less "
+"than 3.1. Please upgrade to 3.1 before upgrading again to version %s."
+msgstr ""
+
+#: DizkusModuleInstaller.php:249
+msgid ""
+"Sorry! The forums are currently off-line for maintenance. Please try later."
+msgstr ""
+
+#: DizkusModuleInstaller.php:301
+#, php-format
+msgid ""
+"There was a problem recognizing the existing Dizkus tables. Please confirm "
+"that your settings for prefix in $ZConfig['System']['prefix'] match the "
+"actual Dizkus tables in the database. (Current prefix loaded as `%s`)"
+msgstr ""
+
+#: DizkusModuleInstaller.php:408
+msgid "Double check your path variable setting for rank images in settings!"
+msgstr ""
+
+#: DizkusModuleInstaller.php:424
+#, php-format
+msgid ""
+"The permission schemas %1$s and %2$s were changed into %3$s and %4$s, "
+"respectively. If you were using them please modify your permission table."
+msgstr ""
+
+#: HookHandlers.php:244
+msgid "Dizkus: Hooked discussion topic created."
+msgstr ""
+
+#: HookHandlers.php:275
+#, php-format
+msgid "Dizkus: Hooked discussion topic %s."
+msgstr ""
+
+#: HookHandlers.php:323
+#, php-format
+msgid "Discussion for %s"
+msgstr ""
+
+#: Api/NotifyApi.php:114
+msgid "Moderation request"
+msgstr ""
+
+#: Api/NotifyApi.php:165
+msgid "Guest"
+msgstr ""
+
+#: Api/NotifyApi.php:170
+#, php-format
+msgid "Request for moderation on %s"
+msgstr ""
+
+#: Api/NotifyApi.php:173
+msgid "Reporting user"
+msgstr ""
+
+#: Api/NotifyApi.php:173
+msgid "Comment"
+msgstr ""
+
+#: Api/NotifyApi.php:176
+msgid "Post Content"
+msgstr ""
+
+#: Api/NotifyApi.php:181
+msgid "Link to topic"
+msgstr ""
+
+#: Api/NotifyApi.php:197
+msgid "The moderator has been contacted about this post. Thank you."
+msgstr ""
+
+#: Api/NotifyApi.php:199
+msgid ""
+"There were no moderators set to be notified. Consider manually contacting "
+"the site admin."
+msgstr ""
+
+#: Api/TopicApi.php:312
+#, php-format
+msgid "*** The original posting '%s' has been moved"
+msgstr ""
+
+#: Api/TopicApi.php:313
+msgid "The original posting has been moved"
+msgstr ""
+
+#: Api/TopicApi.php:313
+msgid "moved"
+msgstr ""
+
+#: Api/TopicApi.php:313
+msgid "here"
+msgstr ""
+
+#: Api/TopicApi.php:412
+#, php-format
+msgid "Either \"%1$s\" or \"%2$s\" must be set."
+msgstr ""
+
+#: Api/TopicApi.php:428
+msgid "Destination topic does not exist."
+msgstr ""
+
+#: Api/UserApi.php:117
+msgid "Error! Wrong parameters in countstats()."
+msgstr ""
+
+#: Api/UserApi.php:185
+msgid "Host unknown"
+msgstr ""
+
+#: Api/UserApi.php:266
+msgid "Summary"
+msgstr ""
+
+#: Api/ParseTagsApi.php:114
+msgid "Quote"
+msgstr ""
+
+#: Api/ParseTagsApi.php:187
+msgid "Code"
+msgstr ""
+
+#: Api/CronApi.php:114 Controller/AjaxController.php:349
+msgid "Error! The post has no subject line."
+msgstr ""
+
+#: Api/PostApi.php:52 Resources/views/User/topic/latest.tpl:33
+msgid "Today"
+msgstr ""
+
+#: Api/PostApi.php:57
+msgid "Since yesterday"
+msgstr ""
+
+#: Api/PostApi.php:62
+msgid "In the last week"
+msgstr ""
+
+#: Api/PostApi.php:79
+#, php-format
+msgid "In the last %s hours"
+msgstr ""
+
+#: Api/PostApi.php:86
+#, php-format
+msgid "Since your last visit on %s"
+msgstr ""
+
+#: Api/PostApi.php:90 Resources/views/User/topic/latest.tpl:30
+msgid "Unanswered"
+msgstr ""
+
+#: Api/PostApi.php:95 Resources/views/User/topic/latest.tpl:31
+msgid "Unsolved"
+msgstr ""
+
+#: Api/PrefsApi.php:32 Resources/views/User/prefs/prefs.tpl:1
+#: Resources/views/User/navbar.tpl:60
+msgid "Personal settings"
+msgstr ""
+
+#: Api/PrefsApi.php:33
+msgid "Modify personal settings"
+msgstr ""
+
+#: Api/PrefsApi.php:37
+msgid "Forum subscriptions"
+msgstr ""
+
+#: Api/PrefsApi.php:38 Resources/views/Admin/managesubscriptions.tpl:75
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:1
+msgid "Manage forum subscriptions"
+msgstr ""
+
+#: Api/PrefsApi.php:42
+msgid "Topic subscriptions"
+msgstr ""
+
+#: Api/PrefsApi.php:43 Resources/views/Admin/managesubscriptions.tpl:34
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:1
+msgid "Manage topic subscriptions"
+msgstr ""
+
+#: Api/PrefsApi.php:48 Resources/views/User/prefs/signaturemanagement.tpl:13
+msgid "Signature"
+msgstr ""
+
+#: Api/PrefsApi.php:49
+msgid "Manage signature"
+msgstr ""
+
+#: Api/AdminApi.php:33
+msgid "Edit forum tree"
+msgstr ""
+
+#: Api/AdminApi.php:34
+msgid "Create, delete, edit and re-order forums"
+msgstr ""
+
+#: Api/AdminApi.php:38 Api/AdminApi.php:44 Resources/views/Admin/ranks.tpl:5
+msgid "Edit user ranks"
+msgstr ""
+
+#: Api/AdminApi.php:40 Api/AdminApi.php:45
+msgid ""
+"Create, edit and delete user rankings acquired through the number of a "
+"user's posts"
+msgstr ""
+
+#: Api/AdminApi.php:48 Resources/views/Admin/honoraryranks.tpl:5
+msgid "Edit honorary ranks"
+msgstr ""
+
+#: Api/AdminApi.php:49
+msgid "Create, delete and edit special ranks for particular users"
+msgstr ""
+
+#: Api/AdminApi.php:52 Resources/views/Admin/assignranks.tpl:3
+msgid "Assign honorary rank"
+msgstr ""
+
+#: Api/AdminApi.php:53
+msgid "Assign honorary user ranks to users"
+msgstr ""
+
+#: Api/AdminApi.php:56 Resources/views/Admin/managesubscriptions.tpl:18
+msgid "Manage subscriptions"
+msgstr ""
+
+#: Api/AdminApi.php:57
+msgid "Remove a user's topic and forum subscriptions"
+msgstr ""
+
+#: Api/AdminApi.php:61 Resources/views/Admin/preferences.tpl:3
+msgid "Settings"
+msgstr ""
+
+#: Api/AdminApi.php:62
+msgid "Edit general forum-wide settings"
+msgstr ""
+
+#: Api/ForumApi.php:87
+msgid "Forum Index (top level)"
+msgstr ""
+
+#: Api/BlockApi.php:162 Resources/views/User/topic/latest.tpl:22
+msgid "Last"
+msgstr ""
+
+#: Api/BlockApi.php:162
+msgid "New"
+msgstr ""
+
+#: Api/BlockApi.php:199
+msgid "Root"
+msgstr ""
+
+#: Api/AccountApi.php:48 Resources/views/Admin/managesubscriptions.tpl:81
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:18
+#: Resources/views/User/header.tpl:11
+msgid "Forum"
+msgstr ""
+
+#: Controller/UserController.php:103
+msgid ""
+"You have not selected any favorite forums. Please select some and try again."
+msgstr ""
+
+#: Controller/UserController.php:108
+msgid ""
+"This site has not set up any forums or they are all private. Contact the "
+"administrator."
+msgstr ""
+
+#: Controller/UserController.php:143
+#, php-format
+msgid "Error! The forum you selected (ID: %s) was not found. Please try again."
+msgstr ""
+
+#: Controller/UserController.php:187
+#, php-format
+msgid "Error! The topic you selected (ID: %s) was not found. Please try again."
+msgstr ""
+
+#: Controller/UserController.php:266 Controller/AjaxController.php:73
+msgid ""
+"Error! The message is too long. The maximum length is 65,535 characters."
+msgstr ""
+
+#: Controller/UserController.php:271
+msgid "Error! The message is empty. Please add some text."
+msgstr ""
+
+#: Controller/UserController.php:793
+#, php-format
+msgid "Error! An invalid forum ID %s was encountered."
+msgstr ""
+
+#: Controller/UserController.php:803
+#, php-format
+msgid "Error! Could not find a template for an %s-type feed."
+msgstr ""
+
+#: Controller/AdminController.php:126
+msgid "Done! Synchronized forum index."
+msgstr ""
+
+#: Controller/AdminController.php:128
+msgid "Error synchronizing forum index"
+msgstr ""
+
+#: Controller/AdminController.php:132
+msgid "Done! Synchronized topics."
+msgstr ""
+
+#: Controller/AdminController.php:134
+msgid "Error synchronizing topics."
+msgstr ""
+
+#: Controller/AdminController.php:138
+msgid "Done! Synchronized posts counter."
+msgstr ""
+
+#: Controller/AdminController.php:140
+msgid "Error synchronizing posts counter."
+msgstr ""
+
+#: Controller/AjaxController.php:231
+#, php-format
+msgid "Error! No post ID in %s."
+msgstr ""
+
+#: Controller/AjaxController.php:304
+#, php-format
+msgid "Error! No post_id in %s."
+msgstr ""
+
+#: Controller/AjaxController.php:338
+msgid "Error! No topic ID in 'Dizkus/Ajax/changeTopicStatus()'."
+msgstr ""
+
+#: Controller/AjaxController.php:343
+#, php-format
+msgid ""
+"Error! No mode or illegal mode parameter (%s) in 'Dizkus/Ajax/"
+"changeTopicStatus()'."
+msgstr ""
+
+#: Controller/AjaxController.php:411
+msgid "Error! Favourites have been disabled."
+msgstr ""
+
+#: Controller/AjaxController.php:417
+msgid "Error! No forum ID in 'Dizkus/Ajax/modifyForum()'."
+msgstr ""
+
+#: DizkusModuleVersion.php:36
+msgid "Dizkus forums"
+msgstr ""
+
+#: DizkusModuleVersion.php:38
+msgid "An integrated discussion forum for Zikula."
+msgstr ""
+
+#: DizkusModuleVersion.php:39
+msgid "forums"
+msgstr ""
+
+#: DizkusModuleVersion.php:57
+msgid "BBCode allows bracket-tag markup in post text."
+msgstr ""
+
+#: DizkusModuleVersion.php:63
+msgid "BBSmile allows addition of smilies to post text."
+msgstr ""
+
+#: DizkusModuleVersion.php:69
+msgid "Detect and block Spam from forum posts."
+msgstr ""
+
+#: DizkusModuleVersion.php:82
+msgid "Dizkus post hook"
+msgstr ""
+
+#: DizkusModuleVersion.php:92
+msgid "Dizkus post filter"
+msgstr ""
+
+#: DizkusModuleVersion.php:96
+msgid "Dizkus topic hook"
+msgstr ""
+
+#: DizkusModuleVersion.php:106
+msgid "Dizkus forum hook"
+msgstr ""
+
+#: DizkusModuleVersion.php:116
+msgid "Dizkus topic provider hook"
+msgstr ""
+
+#: Resources/views/Hook/modifyconfig.tpl:2
+#, php-format
+msgid "Dizkus settings for %s"
+msgstr ""
+
+#: Resources/views/Hook/modifyconfig.tpl:12
+#, php-format
+msgid "Dizkus hook option settings for area \"%s\""
+msgstr ""
+
+#: Resources/views/Hook/modifyconfig.tpl:15
+msgid "Forum to place hooked topics within:"
+msgstr ""
+
+#: Resources/views/Hook/modifyconfig.tpl:28
+#: Resources/views/Admin/preferences.tpl:256
+#: Resources/views/Admin/modifyforum.tpl:196
+#: Resources/views/User/prefs/prefs.tpl:40
+#: Resources/views/User/post/edit.tpl:49
+msgid "Save"
+msgstr ""
+
+#: Resources/views/Hook/modifyconfig.tpl:29
+#: Resources/views/Admin/deleteforum.tpl:33
+#: Resources/views/Admin/modifyforum.tpl:197
+#: Resources/views/Ajax/edittopicsubject.tpl:11
+#: Resources/views/Ajax/editpost.tpl:22
+#: Resources/views/User/prefs/prefs.tpl:41
+#: Resources/views/User/notifymod.tpl:22 Resources/views/User/post/move.tpl:20
+#: Resources/views/User/post/edit.tpl:51
+#: Resources/views/User/forum/moderate.tpl:57
+#: Resources/views/User/topic/split.tpl:23
+#: Resources/views/User/topic/email.tpl:31
+#: Resources/views/User/topic/move.tpl:34
+#: Resources/views/User/topic/move.tpl:47
+#: Resources/views/User/topic/new.tpl:55
+#: Resources/views/User/topic/reply.tpl:47
+#: Resources/views/User/topic/delete.tpl:38
+#: Resources/views/User/topic/quickreply.tpl:39
+msgid "Cancel"
+msgstr ""
+
+#: Resources/views/Hook/edit.tpl:2 Resources/views/Hook/delete.tpl:2
+msgid "Dizkus"
+msgstr ""
+
+#: Resources/views/Hook/edit.tpl:6
+msgid "Enable commenting on this item"
+msgstr ""
+
+#: Resources/views/Hook/edit.tpl:16
+msgid "A discussion topic has been created for this item."
+msgstr ""
+
+#: Resources/views/Hook/edit.tpl:17
+msgid "View topic"
+msgstr ""
+
+#: Resources/views/Hook/edit.tpl:18
+msgid "Updated values here will be reflected in the discussion topic."
+msgstr ""
+
+#: Resources/views/Hook/delete.tpl:4
+#, php-format
+msgid ""
+"WARNING: The discussion topic in the <em>%s</em> forum will be <strong>%s</"
+"strong> for this item."
+msgstr ""
+
+#: Resources/views/Hook/topicview.tpl:14
+#, php-format
+msgid "%s Comment"
+msgid_plural "%s Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/Admin/tree.tpl:4
+msgid "Forum tree"
+msgstr ""
+
+#: Resources/views/Admin/tree.tpl:12
+msgid "Create a new forum"
+msgstr ""
+
+#: Resources/views/Admin/tree.tpl:17
+msgid "Recalculate post and topics totals"
+msgstr ""
+
+#: Resources/views/Admin/tree.tpl:26 Resources/views/Admin/modifyforum.tpl:25
+msgid "Name"
+msgstr ""
+
+#: Resources/views/Admin/tree.tpl:27
+#: Resources/views/User/forum/moderate.tpl:22
+msgid "Actions"
+msgstr ""
+
+#: Resources/views/Admin/main.tpl:4
+msgid "Dizkus Administration"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:27
+msgid "Search for a user"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:40
+#: Resources/views/Admin/modifyforum.tpl:65
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:18
+#: Resources/views/User/forum/forumtopicstable.tpl:5
+msgid "Topic"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:41
+msgid "Poster"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:64
+msgid "All topic subscriptions"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:71
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:42
+msgid "No topic subscriptions found."
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:100
+msgid "All forum subscriptions"
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:107
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:37
+msgid "No forum subscriptions found."
+msgstr ""
+
+#: Resources/views/Admin/managesubscriptions.tpl:110
+msgid "Unsubscribe selected"
+msgstr ""
+
+#: Resources/views/Admin/deleteforum.tpl:6
+msgid "Delete forum"
+msgstr ""
+
+#: Resources/views/Admin/deleteforum.tpl:16
+#, php-format
+msgid "Are you sure want to remove the forum '%s'."
+msgstr ""
+
+#: Resources/views/Admin/deleteforum.tpl:20
+msgid "Move or remove subforums and topics"
+msgstr ""
+
+#: Resources/views/Admin/deleteforum.tpl:25
+msgid "destination:"
+msgstr ""
+
+#: Resources/views/Admin/deleteforum.tpl:32
+msgid "Yes"
+msgstr ""
+
+#: Resources/views/Admin/subtree.tpl:7
+msgid "edit forum"
+msgstr ""
+
+#: Resources/views/Admin/subtree.tpl:8
+msgid "view forum"
+msgstr ""
+
+#: Resources/views/Admin/subtree.tpl:9
+msgid "delete forum"
+msgstr ""
+
+#: Resources/views/Admin/subtree.tpl:11
+msgid "move up"
+msgstr ""
+
+#: Resources/views/Admin/subtree.tpl:16
+msgid "move down"
+msgstr ""
+
+#: Resources/views/Admin/pop3test.tpl:4 Resources/views/Admin/pop3test.tpl:12
+msgid "POP3 test results"
+msgstr ""
+
+#: Resources/views/Admin/pop3test.tpl:18
+msgid "Back to forum administration"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:11
+msgid "General settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:13
+msgid "Forums are accessible to visitors"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:19
+msgid ""
+"If the 'Forums are accessible to visitors' setting is deactivated then only "
+"administrators will have access to the forums. You can temporarily "
+"deactivate this setting to take the forums off-line when you need to perform "
+"maintenance."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:24
+msgid "Message displayed if forums are disabled"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:30
+msgid "Redirect forum index to forum id"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:34
+msgid "Leave blank to use standard forum index."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:39
+msgid "Sender address for e-mail messages from forums"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:45
+msgid "Anonymous posts assigned to UID"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:49
+msgid ""
+"Anonymous posts can be created by hooks or RSS feeds. This UID will be used "
+"as the 'original poster' of the thread. Default: 2 (admin)."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:54
+msgid "'Hot topic' threshold (default: 20)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:60
+msgid "Posts per page in topic index (default: 15)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:66
+msgid "Topics per page in forum index (default: 15)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:72
+msgid "Path to rank images"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:78
+msgid "Enable user-side ajax"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:86
+msgid "Enable solved option in topics"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:96
+msgid "Forum Search settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:99
+msgid "Enable full-text index field searching"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:103
+msgid ""
+"Notice: For searches with full-text index fields, you need MySQL 4 or later; "
+"the feature does not work with InnoDB databases. This flag will normally be "
+"set during installation, when the index fields have been created. Search "
+"results may be empty if the query string is present in too many postings. "
+"This is a feature of MySQL. For more information, see <a href=\"http://dev."
+"mysql.com/doc/mysql/en/fulltext-search.html\" title=\"Full-text search in "
+"MySQL\">'Full-text search in MySQL'</a> in the MySQL documentation."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:106
+msgid "Enable extended full-text search in internal search"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:110
+msgid ""
+"Notice: Extended full-text searching enables queries like '+Dizkus -Skype' "
+"to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or "
+"later. For more information, see <a href=\"http://dev.mysql.com/doc/mysql/en/"
+"fulltext-boolean.html\" title=\"Extended full-text search in MySQL\">'Full-"
+"text search in MySQL'</a> in the MySQL documentation."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:114
+msgid "Show text in search results"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:119
+msgid ""
+"Notice: Deactivate the 'Show text in search results' setting for high-volume "
+"sites if you need to improve search performance, or if you need to be "
+"attentive to constant cleaning of the search results table."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:123
+msgid "Minimum number of characters in search query string (1 minimum)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:130
+msgid "Maximum number of characters in search query string (50 maximum)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:138
+msgid "User-related settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:140
+msgid "Default sort order for posts"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:146
+msgid "Beginning of signature"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:152
+msgid "End of signature"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:158
+msgid "Enable signature management via forum user settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:166
+msgid "Strip user signatures from posts"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:176
+msgid "Security settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:178
+msgid "Log IP addresses"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:186
+msgid "Strip HTML tags from new posts"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:191
+msgid ""
+"Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect "
+"the content of '[code][/code]' BBCode tags."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:196
+msgid ""
+"Number of hours during which non-moderators are allowed to edit their post "
+"(leave blank for unlimited)"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:201
+#: Resources/views/User/topic/latest.tpl:27
+msgid "hours"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:205
+msgid "Strip HTML tags from outgoing email post content"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:210
+msgid "Strip action occurs post filter hook action."
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:214
+msgid "Admin to notify with Moderator notifications"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:222
+msgid "Other settings"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:224
+msgid "Enable Mail2Forum"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:232
+msgid "Enable RSS2Forum"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:240
+msgid "Enable favourites"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:248
+msgid "Action to be performed when 'delete' hook is called"
+msgstr ""
+
+#: Resources/views/Admin/preferences.tpl:257
+msgid "Restore defaults"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:11
+msgid "Edit forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:13
+msgid "New forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:32 Resources/views/Admin/ranks.tpl:49
+#: Resources/views/Admin/ranks.tpl:69
+#: Resources/views/Admin/honoraryranks.tpl:36
+#: Resources/views/Admin/honoraryranks.tpl:54
+msgid "Description"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:39
+msgid "Lock Forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:45
+msgid ""
+"Locking a forum prevents new <strong>topics</strong> from being created in "
+"the forum."
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:51
+msgid "Parent"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:59
+#: Resources/views/User/dizkus_disabled.tpl:1
+msgid "Forum Information"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:64
+msgid "Visit this forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:65
+#: Resources/views/Block/statisticsblock.tpl:30
+#: Resources/views/User/forum/singleforumtable.tpl:11
+msgid "Topics"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:66
+msgid "Post"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:66
+#: Resources/views/Block/statisticsblock.tpl:22
+#: Resources/views/Block/statisticsblock.tpl:31
+#: Resources/views/User/post/single.tpl:56
+#: Resources/views/User/forum/singleforumtable.tpl:12
+msgid "Posts"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:74
+msgid "Moderation (Users)"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:81
+msgid "Moderation (Groups)"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:89
+msgid "External source"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:92
+msgid "No external source"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:96
+#: Resources/views/Admin/modifyforum.tpl:124
+msgid "Mail2Forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:101
+#: Resources/views/Admin/modifyforum.tpl:176
+msgid "RSS2Forum"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:106
+msgid "'Feeds' module is not available."
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:114
+msgid "Connect as User..."
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:116
+msgid "Core user"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:126
+msgid "Perform POP3 test after saving"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:134
+msgid "POP3 server"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:140
+msgid "POP3 port"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:146
+msgid "POP3 log-in name"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:152
+msgid "POP3 password"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:158
+msgid "POP3 password (repeat for verification)"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:164
+msgid "Rule"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:168
+msgid ""
+"Notice: This rule is a regular expression applied to posts incoming via e-"
+"mail, in order to prevent spam postings. If there is no rule here then no "
+"checks will be performed."
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:178
+msgid "Select RSS feed"
+msgstr ""
+
+#: Resources/views/Admin/modifyforum.tpl:181
+msgid "None"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:9
+msgid ""
+"In this page, you can create, delete and edit user ranks for that users "
+"acquire automatically after a certain number of posts in the forums. To "
+"create a new rank, simply type entries in the fields of the 'Create new user "
+"rank' section and click on the 'Create' button. To edit a rank, edit the "
+"fields of a rank in the ranks list, and then click on 'Save rank changes'. "
+"To remove a rank, put a checkmark in the 'Delete rank' checkbox beside the "
+"desired rank, and then click on the 'Save rank changes' button."
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:16
+#: Resources/views/Admin/honoraryranks.tpl:15
+msgid "Create new rank"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:18
+msgid "User rank name"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:24
+msgid "Minimum number of posts"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:30
+msgid "Maximum number of posts"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:36
+#: Resources/views/Admin/honoraryranks.tpl:23
+msgid "Internal Dizkus image"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:55
+#: Resources/views/Admin/honoraryranks.tpl:42
+msgid "Create"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:65
+msgid "User rank"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:66
+msgid "Minimum posts"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:67
+msgid "Maximum posts"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:68
+#: Resources/views/Admin/honoraryranks.tpl:53
+msgid "Image"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:70
+#: Resources/views/Admin/honoraryranks.tpl:55
+msgid "Delete rank"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:93
+#: Resources/views/Admin/honoraryranks.tpl:80
+msgid "No items found."
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:98
+#: Resources/views/Admin/honoraryranks.tpl:85
+#: Resources/views/Admin/assignranks.tpl:49
+#: Resources/views/Ajax/edittopicsubject.tpl:10
+#: Resources/views/Ajax/editpost.tpl:21
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:51
+#: Resources/views/User/prefs/signaturemanagement.tpl:20
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:46
+#: Resources/views/User/forum/moderate.tpl:56
+#: Resources/views/User/topic/new.tpl:53
+#: Resources/views/User/topic/reply.tpl:45
+#: Resources/views/User/topic/quickreply.tpl:37
+msgid "Submit"
+msgstr ""
+
+#: Resources/views/Admin/ranks.tpl:98
+msgid "Modify"
+msgstr ""
+
+#: Resources/views/Admin/honoraryranks.tpl:9
+msgid ""
+"In this page, you can create, delete and edit special honorary ranks awarded "
+"to particular users (site staff or project team members, for example). To "
+"create a new rank, simply type entries in the fields of the 'Create new "
+"rank' section and click on the 'Create honorary rank' button. To edit a "
+"rank, edit the fields of a rank in the ranks list, and then click on 'Save "
+"rank changes'. To remove a rank, put a checkmark in the 'Delete rank' "
+"checkbox beside the desired rank, and then click on the 'Save rank changes' "
+"button."
+msgstr ""
+
+#: Resources/views/Admin/honoraryranks.tpl:17
+#: Resources/views/Admin/honoraryranks.tpl:52
+msgid "Honorary rank name"
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:8
+msgid "Create an honorary rank"
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:10
+#, php-format
+msgid ""
+"In this page, you can select particular users and assign them honorary "
+"ranks. %s. Only users that have posted in the forum may be assigned a rank."
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:21
+msgid "User name"
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:22
+#: Resources/views/User/post/single.tpl:45
+#: Resources/views/User/post/single.tpl:47
+msgid "Rank"
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:31
+msgid "No rank"
+msgstr ""
+
+#: Resources/views/Admin/assignranks.tpl:39
+msgid "No users found"
+msgstr ""
+
+#: Resources/views/Block/statisticsblock.tpl:2
+#, php-format
+msgid "%s Most-active forum"
+msgid_plural "%s Most-active forums"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/Block/statisticsblock.tpl:14
+#, php-format
+msgid "%s Recent topic"
+msgid_plural "%s Recent topics"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/Block/statisticsblock.tpl:19
+msgid "%s Most-active poster in last %s months"
+msgid_plural "%s Most-active posters in last %n months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/Block/statisticsblock.tpl:27
+msgid "Total"
+msgstr ""
+
+#: Resources/views/Block/statisticsblock.tpl:29
+msgid "Forums"
+msgstr ""
+
+#: Resources/views/Block/statisticsblock.tpl:32
+msgid "Last User"
+msgstr ""
+
+#: Resources/views/Block/statisticsblock.tpl:35
+#: Resources/views/Block/recentposts.tpl:13
+#: Resources/views/User/forum/singleforumtable.tpl:6
+#: Resources/views/User/forum/singleforumtable.tpl:20
+#: Resources/views/User/forum/singleforumtable.tpl:33
+#: Resources/views/User/forum/singleforumtable.tpl:60
+msgid "Go to forum"
+msgstr ""
+
+#: Resources/views/Block/recentposts_modify.tpl:2
+#: Resources/views/Block/statisticsblock_modify.tpl:2
+msgid "Name of template file"
+msgstr ""
+
+#: Resources/views/Block/recentposts_modify.tpl:8
+#: Resources/views/Block/statisticsblock_modify.tpl:8
+msgid "Parameters"
+msgstr ""
+
+#: Resources/views/Block/recentposts_modify.tpl:11
+#: Resources/views/Block/statisticsblock_modify.tpl:11
+msgid ""
+"Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'."
+msgstr ""
+
+#: Resources/views/Block/recentposts_modify.tpl:12
+#: Resources/views/Block/statisticsblock_modify.tpl:12
+msgid "Allowed parameters:"
+msgstr ""
+
+#: Resources/views/Block/recentposts.tpl:4
+msgid "in"
+msgstr ""
+
+#: Resources/views/Block/recentposts.tpl:5
+msgid "by"
+msgstr ""
+
+#: Resources/views/Block/recentposts.tpl:9
+msgid "No posts"
+msgstr ""
+
+#: Resources/views/Ajax/edittopicsubject.tpl:4
+msgid "Edit topic title"
+msgstr ""
+
+#: Resources/views/Ajax/edittopicsubject.tpl:7
+msgid "topic title"
+msgstr ""
+
+#: Resources/views/Ajax/forumusers.tpl:6
+#: Resources/views/User/forum/panelfooter.tpl:6
+msgid "Users on-line"
+msgstr ""
+
+#: Resources/views/Ajax/forumusers.tpl:17
+msgid "and"
+msgstr ""
+
+#: Resources/views/Ajax/forumusers.tpl:23
+msgid "anonymous guests"
+msgstr ""
+
+#: Resources/views/Ajax/forumusers.tpl:23
+msgid "anonymous guest"
+msgstr ""
+
+#: Resources/views/Ajax/forumusers.tpl:29
+#, php-format
+msgid "This list is based on users active over the last %1$s minutes."
+msgstr ""
+
+#: Resources/views/Ajax/editpost.tpl:3
+msgid "Status"
+msgstr ""
+
+#: Resources/views/Ajax/editpost.tpl:3
+msgid "Unchanged"
+msgstr ""
+
+#: Resources/views/Ajax/editpost.tpl:6 Resources/views/User/topic/new.tpl:25
+#: Resources/views/User/topic/reply.tpl:23
+#: Resources/views/User/topic/quickreply.tpl:15
+msgid "Message"
+msgstr ""
+
+#: Resources/views/Ajax/editpost.tpl:14 Resources/views/User/post/edit.tpl:45
+#: Resources/views/User/topic/new.tpl:41
+#: Resources/views/User/topic/reply.tpl:37
+#: Resources/views/User/topic/quickreply.tpl:29
+msgid "Attach my signature"
+msgstr ""
+
+#: Resources/views/Ajax/editpost.tpl:18 Resources/views/User/post/edit.tpl:39
+msgid "Delete post"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:3
+msgid "Search forum(s):"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:7
+#, php-format
+msgid ""
+"Notice: For forum searches, your search query must be between %1$s and %2$s "
+"characters long."
+msgstr ""
+
+#: Resources/views/Search/options.tpl:8
+msgid "Select forums"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:10
+msgid "All forums"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:15
+msgid "Search in"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:17
+msgid "Postings"
+msgstr ""
+
+#: Resources/views/Search/options.tpl:18
+msgid "Author"
+msgstr ""
+
+#: Resources/views/Mail/notifyuser.txt:1
+#, php-format
+msgid "Forums on %s"
+msgstr ""
+
+#: Resources/views/Mail/notifyuser.txt:4
+#, php-format
+msgid "%1$s wrote at %2$s"
+msgstr ""
+
+#: Resources/views/Mail/notifyuser.txt:11
+#, php-format
+msgid ""
+"Browse thread and reply: %s \n"
+"\n"
+msgstr ""
+
+#: Resources/views/Mail/notifyuser.txt:12
+#, php-format
+msgid "Maintain topic and forum subscriptions: %s"
+msgstr ""
+
+#: Resources/views/Mail/notifyuser.txt:14
+#, php-format
+msgid ""
+"You are receiving this e-mail message because you are subscribed to be "
+"notified of events in the forums on %s."
+msgstr ""
+
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:19
+#: Resources/views/User/topic/translations.tpl:6
+#: Resources/views/User/topic/view.tpl:86
+msgid "Unsubscribe from topic"
+msgstr ""
+
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:20
+#: Resources/views/User/forum/singleforumtable.tpl:13
+#: Resources/views/User/forum/forumtopicstable.tpl:8
+msgid "Last post"
+msgstr ""
+
+#: Resources/views/User/prefs/manageTopicSubscriptions.tpl:27
+msgid "Remove all topic subscriptions"
+msgstr ""
+
+#: Resources/views/User/prefs/prefs.tpl:9
+msgid "Personal Settings"
+msgstr ""
+
+#: Resources/views/User/prefs/prefs.tpl:16
+msgid "Post order"
+msgstr ""
+
+#: Resources/views/User/prefs/prefs.tpl:23
+msgid "Display only favorite forums"
+msgstr ""
+
+#: Resources/views/User/prefs/prefs.tpl:32
+msgid "Autosubscribe to new topics"
+msgstr ""
+
+#: Resources/views/User/prefs/signaturemanagement.tpl:1
+msgid "Manage your signature"
+msgstr ""
+
+#: Resources/views/User/prefs/signaturemanagement.tpl:11
+msgid "Posting display settings"
+msgstr ""
+
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:19
+#: Resources/views/User/forum/view.tpl:40
+#: Resources/views/User/forum/view.tpl:120
+msgid "Unsubscribe from forum"
+msgstr ""
+
+#: Resources/views/User/prefs/manageForumSubscriptions.tpl:26
+msgid "Remove all forum subscriptions"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:5
+msgid "User IP and account information"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:12
+msgid "IP address"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:16
+msgid "Host"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:20
+msgid "Usernames posting from same IP"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:24
+#, php-format
+msgid "%s posts"
+msgstr ""
+
+#: Resources/views/User/viewip.tpl:32
+msgid "Back to the topic"
+msgstr ""
+
+#: Resources/views/User/notifymod.tpl:1
+#: Resources/views/User/post/single.tpl:129
+msgid "Notify moderator about this posting"
+msgstr ""
+
+#: Resources/views/User/notifymod.tpl:13
+msgid ""
+"A moderator will be notified about the selected posting.<br />Valid reasons "
+"are: Copyright violations, personal insults and so on.<br />The following "
+"are not valid reasons for moderation: Typos, difference of opinion on the "
+"topic et cetera."
+msgstr ""
+
+#: Resources/views/User/notifymod.tpl:18
+msgid "Your comment:"
+msgstr ""
+
+#: Resources/views/User/notifymod.tpl:21
+#: Resources/views/User/topic/email.tpl:30
+msgid "Send"
+msgstr ""
+
+#: Resources/views/User/main.tpl:4 Resources/views/User/navbar.tpl:4
+#: Resources/views/User/navbar.tpl:6
+msgid "Forums index page"
+msgstr ""
+
+#: Resources/views/User/main.tpl:7
+msgid "RSS Feed"
+msgstr ""
+
+#: Resources/views/User/main.tpl:8
+#, php-format
+msgid "Total posts: %s"
+msgstr ""
+
+#: Resources/views/User/header.tpl:17
+msgid "New topic in forum"
+msgstr ""
+
+#: Resources/views/User/post/move.tpl:1
+msgid "Move post from one topic to another"
+msgstr ""
+
+#: Resources/views/User/post/move.tpl:19
+#: Resources/views/User/post/single.tpl:101
+msgid "Move post"
+msgstr ""
+
+#: Resources/views/User/post/mine.tpl:1
+msgid "My forum posts"
+msgstr ""
+
+#: Resources/views/User/post/mine.tpl:22 Resources/views/User/navbar.tpl:58
+msgid "View my posts"
+msgstr ""
+
+#: Resources/views/User/post/mine.tpl:23
+msgid "View my topics"
+msgstr ""
+
+#: Resources/views/User/post/mine.tpl:30
+msgid "My topics"
+msgstr ""
+
+#: Resources/views/User/post/mine.tpl:30
+msgid "My posts"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:1 Resources/views/User/post/edit.tpl:13
+#: Resources/views/User/post/single.tpl:110
+msgid "Edit post"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:21 Resources/views/User/topic/new.tpl:20
+msgid "Subject line"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:26
+msgid "Message body"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:29 Resources/views/User/topic/new.tpl:28
+#: Resources/views/User/topic/reply.tpl:27
+#: Resources/views/User/topic/quickreply.tpl:19
+msgid "No HTML tags allowed (except inside [code][/code] tags)"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:35 Resources/views/User/topic/new.tpl:38
+#: Resources/views/User/topic/reply.tpl:33
+#: Resources/views/User/topic/quickreply.tpl:25
+msgid "Options"
+msgstr ""
+
+#: Resources/views/User/post/edit.tpl:50 Resources/views/User/topic/new.tpl:54
+#: Resources/views/User/topic/reply.tpl:46
+#: Resources/views/User/topic/quickreply.tpl:38
+msgid "Preview"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:9
+msgid "ONLINE"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:10
+msgid "PREVIEW"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:13
+msgid "Link to this post"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:14
+msgid "Posted"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:50
+msgid "Registered"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:52
+#: Resources/views/User/topic/latest.tpl:36
+msgid "Last visit"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:60
+msgid "Send private message"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:63
+msgid "View IP address"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:75
+msgid "Remove: this is not the solution"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:77
+msgid "This post has been marked as the solution."
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:102
+#: Resources/views/User/topic/split.tpl:1
+msgid "Split topic"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:107
+msgid "Quote post"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:119
+#: Resources/views/User/topic/translations.tpl:14
+msgid "Mark as solved by this post"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:125
+msgid "This topic is locked"
+msgstr ""
+
+#: Resources/views/User/post/single.tpl:131
+msgid "Top"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:4
+msgid "Go to forums index page"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:22
+msgid "Favorites"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:24
+msgid "Current forum time:"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:38
+msgid "Dizkus Forum"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:46
+msgid "Show all forums"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:48
+msgid "Show favourite forums only"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:51
+msgid "View latest posts"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:54
+msgid "Log-in"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:55
+msgid "Register"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:56 Resources/views/User/navbar.tpl:59
+msgid "Search forums"
+msgstr ""
+
+#: Resources/views/User/navbar.tpl:63
+msgid "Administrate Dizkus"
+msgstr ""
+
+#: Resources/views/User/moderatedBy.tpl:3
+msgid "Moderated by"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:30
+#: Resources/views/User/forum/view.tpl:107
+msgid "Start a new topic"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:30 Resources/views/User/topic/new.tpl:1
+#: Resources/views/User/topic/view.tpl:68
+msgid "New topic"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:37
+#: Resources/views/User/forum/view.tpl:119
+msgid "Subscribe to forum"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:49
+#: Resources/views/User/forum/view.tpl:122
+msgid "Remove forum from favourites"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:52
+#: Resources/views/User/forum/view.tpl:121
+msgid "Add forum to favourites"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:60
+#: Resources/views/User/forum/moderate.tpl:1
+msgid "Moderate"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:78
+msgid "subforums"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:98
+#: Resources/views/User/forum/moderate.tpl:11
+msgid "topics"
+msgstr ""
+
+#: Resources/views/User/forum/view.tpl:107
+msgid "There are no topics in this forum yet."
+msgstr ""
+
+#: Resources/views/User/forum/panelfooter.tpl:13
+msgid "0 users"
+msgstr ""
+
+#: Resources/views/User/forum/panelfooter.tpl:16
+#, php-format
+msgid "and %1$s anonymous guest"
+msgid_plural "and %1$s anonymous guests"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/User/forum/panelfooter.tpl:19
+#, php-format
+msgid "This list is based on users active over the last %s minutes."
+msgstr ""
+
+#: Resources/views/User/forum/panelfooter.tpl:26
+#, php-format
+msgid "New posts since %s"
+msgstr ""
+
+#: Resources/views/User/forum/singleforumtable.tpl:10
+msgid "Subforums"
+msgstr ""
+
+#: Resources/views/User/forum/singleforumtable.tpl:51
+#: Resources/views/User/forum/forumtopicstable.tpl:65
+msgid "No subforums available."
+msgstr ""
+
+#: Resources/views/User/forum/singleforumtable.tpl:59
+#, php-format
+msgid "There is %s topic not in a subforum."
+msgid_plural "There are %s topics not in a subforum."
+msgstr[0] ""
+msgstr[1] ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:6
+msgid "Replies"
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:7
+msgid "Views"
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:9
+msgid "All"
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:23
+msgid "Topic is pinned to top of list."
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:27
+msgid "This topic is locked."
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:34
+msgid "This topic is solved."
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:36
+msgid "This topic is a support request."
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:41
+#, php-format
+msgid "by %s"
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:41
+msgid "on"
+msgstr ""
+
+#: Resources/views/User/forum/forumtopicstable.tpl:48
+msgid "Hot topic"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:7
+msgid "Go back to normal forum view"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:11
+msgid "Moderating"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:18
+msgid ""
+"Warning! You will not be prompted for confirmation. Clicking on 'Submit' "
+"will immediately execute the chosen action."
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:20
+msgid "Moderator options"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:28
+msgid "Choose target forum to move topic(s) to"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:34
+#: Resources/views/User/topic/move.tpl:25
+msgid "Create shadow topic"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:42
+msgid "To join topics, select the target topic here"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:47
+msgid "or target topic #"
+msgstr ""
+
+#: Resources/views/User/forum/moderate.tpl:63
+#, php-format
+msgid "There are no topics in the forum '%s' to moderate."
+msgstr ""
+
+#: Resources/views/User/lastPostBy.tpl:3
+#, php-format
+msgid "Last post by %s"
+msgstr ""
+
+#: Resources/views/User/lastPostBy.tpl:5
+msgid "View latest post"
+msgstr ""
+
+#: Resources/views/User/lastPostBy.tpl:5
+msgid "view"
+msgstr ""
+
+#: Resources/views/User/footer_with_ajax.tpl:20
+msgid "Powered by "
+msgstr ""
+
+#: Resources/views/User/topic/split.tpl:13
+msgid "Notice: This will split the topic before the selected posting."
+msgstr ""
+
+#: Resources/views/User/topic/split.tpl:16
+msgid "Subject for new topic"
+msgstr ""
+
+#: Resources/views/User/topic/email.tpl:1
+msgid "Send as e-mail"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:1
+msgid "Move or join topics"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:15
+msgid "Move topic to another forum"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:16
+msgid ""
+"When you press the 'Move' button at the bottom of this form, the topic you "
+"have selected (and all its related posts) will be <strong>moved</strong> to "
+"the forum you have selected. Note: You will only be able to move the topic "
+"to a forum for which you are moderator. An administrator is allowed to move "
+"any topic to any forum."
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:19
+msgid "Target forum"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:33
+msgid "Move topics"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:38
+msgid "Join topic with another topic"
+msgstr ""
+
+#: Resources/views/User/topic/move.tpl:40
+msgid "ID of target topic"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:3
+msgid "Click to edit"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:4
+#: Resources/views/User/topic/view.tpl:89
+msgid "Subscribe to topic"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:9
+#: Resources/views/User/topic/view.tpl:107
+msgid "Unlock topic"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:10
+#: Resources/views/User/topic/view.tpl:116
+msgid "Give this topic 'sticky' status"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:12
+#: Resources/views/User/topic/view.tpl:119
+msgid "Remove 'sticky' status"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:16
+msgid "Mark as unsolved"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:18
+msgid "Changed"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:19
+msgid "Loading post"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:20
+msgid "Deleting post"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:21
+msgid "Updating post"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:22
+msgid "Storing reply"
+msgstr ""
+
+#: Resources/views/User/topic/translations.tpl:23
+msgid "Preparing preview"
+msgstr ""
+
+#: Resources/views/User/topic/new.tpl:16
+#, php-format
+msgid "New topic in '%s' forum"
+msgstr ""
+
+#: Resources/views/User/topic/new.tpl:45
+msgid "Mark as support question"
+msgstr ""
+
+#: Resources/views/User/topic/new.tpl:49
+msgid "Email me when a reply is posted"
+msgstr ""
+
+#: Resources/views/User/topic/reply.tpl:1
+#, php-format
+msgid "Reply to '%s'"
+msgstr ""
+
+#: Resources/views/User/topic/reply.tpl:42
+#: Resources/views/User/topic/quickreply.tpl:34
+msgid "Notify me when a reply is posted"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:28
+msgid "Support request"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:31
+msgid "Solved"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:63
+msgid "Previous topic"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:65
+msgid "Next topic"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:68
+msgid "Create a new topic"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:72
+msgid "Send the posts within this topic as an e-mail message to someone"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:126
+msgid "Move or join topic"
+msgstr ""
+
+#: Resources/views/User/topic/view.tpl:129
+msgid "To bottom of page"
+msgstr ""
+
+#: Resources/views/User/topic/latest.tpl:1
+#: Resources/views/User/topic/latest.tpl:44
+msgid "Latest forum posts"
+msgstr ""
+
+#: Resources/views/User/topic/latest.tpl:32
+msgid "Since Yesterday"
+msgstr ""
+
+#: Resources/views/User/topic/latest.tpl:34
+msgid "Last week"
+msgstr ""
+
+#: Resources/views/User/topic/delete.tpl:12
+msgid "Delete Topic"
+msgstr ""
+
+#: Resources/views/User/topic/delete.tpl:16
+msgid ""
+"Confirmation prompt: Do you really want to permanently delete this topic and "
+"all posts under this topic?"
+msgstr ""
+
+#: Resources/views/User/topic/delete.tpl:19
+msgid "Send a reason to the poster"
+msgstr ""
+
+#: Resources/views/User/topic/delete.tpl:28
+#, php-format
+msgid "Your post \"%s\" was deleted, because "
+msgstr ""
+
+#: Resources/views/User/topic/delete.tpl:37
+msgid "Delete"
+msgstr ""
+
+#: Resources/views/User/topic/quickreply.tpl:4
+msgid "Quick reply"
+msgstr ""
