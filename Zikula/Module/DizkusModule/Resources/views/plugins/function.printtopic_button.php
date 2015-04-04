@@ -14,8 +14,8 @@
  * adds the print topic button
  * requires the Printer theme
  *
- * @params $params['forum_id'] int forum id
- * @params $params['topic_id'] int topic id
+ * @param $params['forum_id'] int forum id
+ * @param $params['topic_id'] int topic id
  */
 function smarty_function_printtopic_button($params, Zikula_View $view)
 {

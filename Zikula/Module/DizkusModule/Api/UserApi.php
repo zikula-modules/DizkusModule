@@ -30,10 +30,10 @@ class UserApi extends \Zikula_AbstractApi
      * Counts posts in forums, topics
      * or counts forum users
      *
-     * @params $args['id'] int the id, depends on 'type' parameter
-     * @params $args['type'] string, defines the id parameter
-     * @params $args['force'] boolean, default false, if true, do not use cached
-     * @returns int (depending on type and id)
+     * @param $args['id'] int the id, depends on 'type' parameter
+     * @param $args['type'] string, defines the id parameter
+     * @param $args['force'] boolean, default false, if true, do not use cached
+     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
@@ -142,8 +142,8 @@ class UserApi extends \Zikula_AbstractApi
      *
      * reads the cookie, updates it and returns the last visit date in unix timestamp
      *
-     * @params none
-     * @returns unix timestamp last visit date
+     * @param none
+     * @return unix timestamp last visit date
      *
      */
     public function setcookies()
@@ -206,7 +206,7 @@ class UserApi extends \Zikula_AbstractApi
      * Uses the number of replyCount and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
      *
-     * @params $args['replyCount'] int number of topic replies
+     * @param $args['replyCount'] int number of topic replies
      * @return int page number of last posting in the thread
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
@@ -238,8 +238,8 @@ class UserApi extends \Zikula_AbstractApi
      * insert rss
      * @see rss2dizkus.php - only used there
      *
-     * @params $args['forum']    array with forum data
-     * @params $args['items']    array with feed data as returned from Feeds module
+     * @param $args['forum']    array with forum data
+     * @param $args['items']    array with feed data as returned from Feeds module
      * @return boolean true or false
      */
     public function insertrss($args)
@@ -355,8 +355,8 @@ class UserApi extends \Zikula_AbstractApi
      * dzkstriptags
      * strip all html tags outside of [code][/code]
      *
-     * @params  $text     string the text
-     * @returns string    the sanitized text
+     * @param  $text     string the text
+     * @return string    the sanitized text
      */
     public function dzkstriptags($text = '')
     {

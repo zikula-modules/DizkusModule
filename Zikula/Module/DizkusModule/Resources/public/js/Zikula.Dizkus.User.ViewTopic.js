@@ -441,7 +441,7 @@ var quickReplying = false;
 
 /**
  * Saves and shows the new post.
- * @returns {boolean} Used to not to submit the normal, non-ajax form.
+ * @return {boolean} Used to not to submit the normal, non-ajax form.
  */
 function createQuickReply() {
     if (!quickReplying) {
@@ -510,7 +510,7 @@ function createQuickReply() {
 
 /**
  * Shows a preview of the quick reply.
- * @returns {boolean}
+ * @return {boolean}
  */
 function previewQuickReply() {
     if (!quickReplying) {

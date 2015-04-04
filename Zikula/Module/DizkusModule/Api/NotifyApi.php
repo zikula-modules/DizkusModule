@@ -28,9 +28,9 @@ class NotifyApi extends \Zikula_AbstractApi
      *
      * Sending notify e-mail to users subscribed to the topic or the forum
      *
-     * @params $args['post'] Zikula\Module\DizkusModule\Entity\PostEntity
+     * @param $args['post'] Zikula\Module\DizkusModule\Entity\PostEntity
      *
-     * @returns boolean
+     * @return boolean
      */
     public function emailSubscribers($args)
     {
@@ -97,9 +97,9 @@ class NotifyApi extends \Zikula_AbstractApi
     /**
      * notify moderators
      *
-     * @params $args['post'] Zikula\Module\DizkusModule\Entity\PostEntity
-     * @params $args['comment'] string
-     * @returns void
+     * @param $args['post'] Zikula\Module\DizkusModule\Entity\PostEntity
+     * @param $args['comment'] string
+     * @return void
      */
     public function notify_moderator($args)
     {
@@ -205,10 +205,10 @@ class NotifyApi extends \Zikula_AbstractApi
     /**
      * email
      *
-     * @params $args['sendto_email'] string the recipients email address
-     * @params $args['message'] string the text
-     * @params $args['subject'] string the subject
-     * @returns bool
+     * @param $args['sendto_email'] string the recipients email address
+     * @param $args['message'] string the text
+     * @param $args['subject'] string the subject
+     * @return bool
      */
     public function email($args)
     {
