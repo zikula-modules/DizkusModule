@@ -23,10 +23,10 @@ class CronApi extends \Zikula_AbstractApi
     /**
      * cron
      *
-     * @params $args['forum'] integer
-     * @params $args['force'] boolean if true force connection no matter of active setting or interval
-     * @params $args['debug'] boolean indicates debug mode on/off
-     * @returns void
+     * @param $args['forum'] integer
+     * @param $args['force'] boolean if true force connection no matter of active setting or interval
+     * @param $args['debug'] boolean indicates debug mode on/off
+     * @return void
      */
     public function mail($args)
     {

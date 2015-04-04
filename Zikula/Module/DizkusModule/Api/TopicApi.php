@@ -164,9 +164,9 @@ class TopicApi extends \Zikula_AbstractApi
     /**
      * Get topic subscriptions
      *
-     * @params $args['uid'] User id (optional)
+     * @param $args['uid'] User id (optional)
      *
-     * @returns \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
+     * @return \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {
@@ -281,12 +281,12 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * This function moves a given topic to another forum
      *
-     * @params $args['topic_id'] int the topics id
-     * @params $args['forum_id'] int the destination forums id
-     * @params $args['createshadowtopic']   boolean true = create shadow topic
-     * @params $args['topicObj'] TopicEntity
+     * @param $args['topic_id'] int the topics id
+     * @param $args['forum_id'] int the destination forums id
+     * @param $args['createshadowtopic']   boolean true = create shadow topic
+     * @param $args['topicObj'] TopicEntity
      *
-     * @returns void
+     * @return void
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
@@ -342,8 +342,8 @@ class TopicApi extends \Zikula_AbstractApi
     /**
      * split the topic at the provided post
      *
-     * @params PostManager $args['post']
-     * @params Array $args['data']
+     * @param PostManager $args['post']
+     * @param Array $args['data']
      *
      * @return Integer id of the new topic
      *
@@ -397,9 +397,9 @@ class TopicApi extends \Zikula_AbstractApi
     /**
      * joins two topics together
      *
-     * @params $args['to_topic_id'] int the target topic that will contain the post from from_topic (destination)
-     * @params $args['from_topic_id'] int this topic get integrated into to_topic (origin)
-     * @params $args['topicObj'] TopicEntity The (origin) topic as object
+     * @param $args['to_topic_id'] int the target topic that will contain the post from from_topic (destination)
+     * @param $args['from_topic_id'] int this topic get integrated into to_topic (origin)
+     * @param $args['topicObj'] TopicEntity The (origin) topic as object
      *              must have *either* topicObj or from_topic_id
      *
      * @return Integer Destination topic ID

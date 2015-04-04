@@ -22,8 +22,8 @@ class FavoritesApi extends \Zikula_AbstractApi
      * display of user favorite forums only?
      *
      * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
-     * @params $args['user_id'] int the users id
-     * @returns boolean
+     * @param $args['user_id'] int the users id
+     * @return boolean
      *
      */
     public function getStatus()

@@ -30,12 +30,12 @@ class PostApi extends \Zikula_AbstractApi
     /**
      * get_latest_posts
      *
-     * @params $args['selorder'] int 1-6, see below
-     * @params $args['nohours'] int posting within these hours
-     * @params $args['unanswered'] int 0 or 1(= postings with no answers)
-     * @params $args['last_visit_unix'] string the users last visit data as unix timestamp
-     * @params $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
-     * @returns array (postings, mail2forumpostings, rsspostings, text_to_display)
+     * @param $args['selorder'] int 1-6, see below
+     * @param $args['nohours'] int posting within these hours
+     * @param $args['unanswered'] int 0 or 1(= postings with no answers)
+     * @param $args['last_visit_unix'] string the users last visit data as unix timestamp
+     * @param $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
+     * @return array (postings, mail2forumpostings, rsspostings, text_to_display)
      */
     public function getLatest($args)
     {
@@ -144,11 +144,11 @@ class PostApi extends \Zikula_AbstractApi
     /**
      * movepost
      *
-     * @params $args['post_id']
-     * @params $args['old_topic_id']
-     * @params $args['to_topic_id']
+     * @param $args['post_id']
+     * @param $args['old_topic_id']
+     * @param $args['to_topic_id']
      *
-     * @returns int count of posts in destination topic
+     * @return int count of posts in destination topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */

@@ -13,9 +13,9 @@
  * boardstats plugin
  * reads some statistics
  *
- * @params $params['type']   string see below
- * @params $params['id']     int    id, depending on $type
- * @params $params['assign'] string (optional) assign the result instead of returning it
+ * @param $params['type']   string see below
+ * @param $params['id']     int    id, depending on $type
+ * @param $params['assign'] string (optional) assign the result instead of returning it
  *
  * Possible values of $type and $id and what they deliver
  * ------------------------------------------------------

@@ -220,9 +220,9 @@ class ForumApi extends \Zikula_AbstractApi
     /**
      * Get forum subscriptions of a user
      *
-     * @params $args['uid'] User id (optional)
+     * @param $args['uid'] User id (optional)
      *
-     * @returns \Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection, may be empty
+     * @return \Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection, may be empty
      */
     public function getSubscriptions($args)
     {
