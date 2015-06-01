@@ -15,6 +15,7 @@ use ModUtil;
 use System;
 use SecurityUtil;
 use FormUtil;
+use Zikula\Module\DizkusModule\ZikulaDizkusModule;
 use Zikula\Module\DizkusModule\Entity\RankEntity;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
 use Zikula\Module\DizkusModule\Form\Handler\Admin\Prefs;
@@ -251,6 +252,71 @@ class AdminController extends \Zikula_AbstractController
         $form = FormUtil::newForm($this->name, $this);
 
         return new Response($form->execute('Admin/managesubscriptions.tpl', new ManageSubscriptions()));
+    }
+
+    /**
+     * @Route("/hookconfig/{moduleName}")
+     * @Method("GET")
+     *
+     * configure dizkus hook options for given module
+     *
+     * @param $moduleName
+     * @return Response
+     */
+    public function hookConfigAction($moduleName)
+    {
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+        $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
+        $module = ModUtil::getModule($moduleName);
+        if (isset($module)) {
+            $classname = $module->getVersionClass();
+        } else {
+            $classname = $moduleName . '_Version';
+        }
+        $moduleVersionObj = new $classname();
+        $bindingsBetweenOwners = \HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME);
+        foreach ($bindingsBetweenOwners as $k => $binding) {
+            $areaname = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
+            $bindingsBetweenOwners[$k]['areaname'] = $areaname;
+            $bindingsBetweenOwners[$k]['areatitle'] = $this->view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
+        }
+        $this->view->assign('areas', $bindingsBetweenOwners);
+        $this->view->assign('dizkushookconfig', $hookconfig);
+        $this->view->assign('activeModule', $moduleName);
+        $this->view->assign('forums', ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Forum', 'getParents', array('includeLocked' => true)));
+
+        return new Response($this->view->fetch('Hook/modifyconfig.tpl'));
+    }
+
+    /**
+     * @Route("/hookconfig")
+     * @Method("POST")
+     *
+     * process dizkus hook options for a given module
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function hookConfigProcessAction(Request $request)
+    {
+        $hookdata = $request->request->get('dizkus', array());
+        $moduleName = $request->request->get('activeModule');
+        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+        foreach ($hookdata as $area => $data) {
+            if (!isset($data['forum']) || empty($data['forum'])) {
+                $request->getSession()->getFlashBag()->add('error', $this->__f('Error: No forum selected for area \'%s\'', $area));
+                $hookdata[$area]['forum'] = null;
+            }
+        }
+        ModUtil::setVar($moduleName, 'dizkushookconfig', $hookdata);
+        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
+        $request->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hook option settings updated.'));
+
+        return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
     }
 
 }

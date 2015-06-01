@@ -1,10 +1,14 @@
-{adminheader}
-<h3><span class="fa fa-comments"></span>&nbsp;{gt text="Dizkus settings for %s" tag1=$ActiveModule}</h3>
+{admincategorymenu}
+<div class="z-admin-content clearfix">
+    {modgetinfo modname=$activeModule info='displayname' assign='displayName'}
+    {modgetimage modname=$activeModule assign='image'}
+    {moduleheader modname=$activeModule type='admin' title=$displayName putimage=true image=$image}
 
-<form class="form-horizontal" action="{modurl modname=$ActiveModule type="admin" func="dizkushookconfigprocess"}" method="post" enctype="application/x-www-form-urlencoded">
+<h3><span class="fa fa-comments"></span>&nbsp;{gt text="Dizkus settings for %s" tag1=$activeModule}</h3>
+
+<form class="form-horizontal" action="{route name="zikuladizkusmodule_admin_hookconfigprocess"}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" name="dizkus[dizkus_csrftoken]" value="{insert name="csrftoken"}" />
-        <input type="hidden" name="ActiveModule" value="{$ActiveModule}" />
+        <input type="hidden" name="activeModule" value="{$activeModule}" />
 
         {foreach from=$areas item='area'}
             {assign var='areaid' value=$area.sareaid}
@@ -26,7 +30,7 @@
         {/foreach}
         <div class="col-lg-offset-3 col-lg-9">
             <input class="btn btn-success" type="submit" name="save" value="{gt text="Save"}" />
-            <a class="btn btn-danger" href="{modurl modname=$ActiveModule type="admin" func='main'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+            <a class="btn btn-danger" href="{modurl modname=$activeModule type="admin" func='index'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
         </div>
     </div>
 </form>

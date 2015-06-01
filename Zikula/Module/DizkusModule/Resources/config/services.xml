@@ -13,6 +13,7 @@
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="request_stack" />
             <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="router" />
         </service>
     </services>
 </container>
