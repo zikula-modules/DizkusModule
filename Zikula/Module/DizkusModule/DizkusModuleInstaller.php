@@ -606,7 +606,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         foreach ($groups as $group) {
             $groupId = $group['user_id'] - 1000000;
             $modGroup = new ModeratorGroupEntity();
-            $coreGroup = $this->entityManager->find('Zikula\\Module\\GroupsModule\\Entity\\GroupEntity', $groupId);
+            $coreGroup = $this->entityManager->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $groupId);
             if ($coreGroup) {
                 $modGroup->setGroup($coreGroup);
                 $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $group['forum_id']);
@@ -629,7 +629,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     private function upgrade_to_4_0_0_migratePop3Connections($connections)
     {
         foreach ($connections as $connectionData) {
-            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\Module\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
+            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
             $connection = new Pop3Connection($connectionData);
             $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $connectionData['id']);
             $forum->setPop3Connection($connection);

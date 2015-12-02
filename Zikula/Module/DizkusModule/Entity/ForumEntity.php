@@ -462,7 +462,7 @@ class ForumEntity extends EntityAccess
         foreach ($gids as $gid) {
             $moderatorGroup = new ModeratorGroupEntity();
             $em = ServiceUtil::get('doctrine.entitymanager');
-            $group = $em->find('Zikula\\Module\\GroupsModule\\Entity\\GroupEntity', $gid);
+            $group = $em->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $gid);
             $moderatorGroup->setGroup($group);
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);

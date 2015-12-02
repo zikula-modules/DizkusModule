@@ -14,7 +14,7 @@ namespace Zikula\Module\DizkusModule\Entity;
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula\Module\GroupsModule\Entity\GroupEntity as ZikulaGroup;
+use Zikula\GroupsModule\Entity\GroupEntity as ZikulaGroup;
 
 /**
  * ModeratorGroup entity class
@@ -36,7 +36,7 @@ class ModeratorGroupEntity extends EntityAccess
 
     /**
      * Zikula Core Group Entity
-     * @ORM\ManyToOne(targetEntity="Zikula\Module\GroupsModule\Entity\GroupEntity")
+     * @ORM\ManyToOne(targetEntity="Zikula\GroupsModule\Entity\GroupEntity")
      * @ORM\JoinColumn(name="group_id", referencedColumnName="gid")
      */
     private $group;
@@ -49,7 +49,7 @@ class ModeratorGroupEntity extends EntityAccess
 
     /**
      * get Core Group
-     * @return \Zikula\Module\GroupsModule\Entity\GroupEntity
+     * @return \Zikula\GroupsModule\Entity\GroupEntity
      */
     public function getGroup()
     {
@@ -58,7 +58,7 @@ class ModeratorGroupEntity extends EntityAccess
 
     /**
      * set group
-     * @param \Zikula\Module\GroupsModule\Entity\GroupEntity $group
+     * @param \Zikula\GroupsModule\Entity\GroupEntity $group
      */
     public function setGroup(ZikulaGroup $group)
     {

@@ -60,7 +60,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('u')
-                ->from('Zikula\Module\UsersModule\Entity\UserEntity', 'u')
+                ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
                 ->orderBy('u.uname', 'ASC');
         if (!empty($letter) and $letter != '*') {
             $qb->andWhere('u.uname LIKE :letter')

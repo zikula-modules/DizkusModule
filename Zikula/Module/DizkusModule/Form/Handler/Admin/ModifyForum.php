@@ -176,7 +176,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
                     'password' => $data['password'],
                     'matchstring' => $data['matchstring'],
                 );
-                $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\Module\UsersModule\Entity\UserEntity', $data['coreUser']);
+                $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\UsersModule\Entity\UserEntity', $data['coreUser']);
                 $connection = new Pop3Connection($connectionData);
                 $this->_forum->get()->setPop3Connection($connection);
 
