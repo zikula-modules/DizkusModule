@@ -73,7 +73,7 @@ class Pop3Connection
     private $lastconnect = 0;
 
     /**
-     * Zikula\Module\UsersModule\Entity\UserEntity
+     * Zikula\UsersModule\Entity\UserEntity
      *
      * object
      */

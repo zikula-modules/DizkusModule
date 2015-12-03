@@ -393,7 +393,7 @@ class UserApi extends \Zikula_AbstractApi
             return array();
         }
         $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
-        $rsm->addEntityResult('Zikula\\Module\\UsersModule\\Entity\\UserEntity', 'u');
+        $rsm->addEntityResult('Zikula\\UsersModule\\Entity\\UserEntity', 'u');
         $rsm->addFieldResult('u', 'uname', 'uname');
         $rsm->addFieldResult('u', 'uid', 'uid');
         $sql = 'SELECT u.uid, u.uname FROM users u WHERE ';
