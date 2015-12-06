@@ -379,7 +379,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $reply = array();
         $reply['query'] = $fragment;
         $reply['suggestions'] = array();
-        /** @var $user \Zikula\Module\UsersModule\Entity\UserEntity */
+        /** @var $user \Zikula\UsersModule\Entity\UserEntity */
         foreach ($users as $user) {
             $reply['suggestions'][] = array(
                 'value' => htmlentities(stripslashes($user->getUname())),

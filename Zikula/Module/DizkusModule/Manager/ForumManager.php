@@ -275,7 +275,7 @@ class ForumManager
             return false;
         }
         // is this user in any of the groups?
-        $dql = 'SELECT m FROM Zikula\\Module\\GroupsModule\\Entity\\GroupMembershipEntity m
+        $dql = 'SELECT m FROM Zikula\\GroupsModule\\Entity\\GroupMembershipEntity m
             WHERE m.uid = :uid
             AND m.gid IN (:gids)';
         $groupMembership = $this->entityManager

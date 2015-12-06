@@ -76,7 +76,7 @@ class AssignRanks extends \Zikula_Form_AbstractHandler
 
         // recreate the array of users as ForumUserEntities
         $userArray = array();
-        /** @var $user \Zikula\Module\UsersModule\Entity\UserEntity */
+        /** @var $user \Zikula\UsersModule\Entity\UserEntity */
         foreach ($allusers as $user) {
             $managedForumUser = new ForumUserManager($user->getUid(), false);
             $forumUser = $managedForumUser->get();
