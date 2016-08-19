@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
 use SecurityUtil;

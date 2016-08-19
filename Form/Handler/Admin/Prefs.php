@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -17,7 +17,7 @@ use SecurityUtil;
 use UserUtil;
 use System;
 use Zikula_Form_View;
-use Zikula\Module\DizkusModule\DizkusModuleInstaller;
+use Zikula\DizkusModule\DizkusModuleInstaller;
 use Symfony\Component\Routing\RouterInterface;
 
 class Prefs extends \Zikula_Form_AbstractHandler

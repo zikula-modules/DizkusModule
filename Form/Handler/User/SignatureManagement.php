@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 use ModUtil;
 use UserUtil;

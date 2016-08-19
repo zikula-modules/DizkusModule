@@ -9,14 +9,14 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use System;
 use SecurityUtil;
 use Zikula_Form_View;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
@@ -57,7 +57,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         $id = $this->request->query->get('id', null);
 
         if ($id) {
-            $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $id);
+            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
             if ($forum) {
                 $this->view->assign($forum->toArray());
             } else {
@@ -160,7 +160,7 @@ class DeleteForum extends \Zikula_Form_AbstractHandler
         }
 
         // repair the tree
-        $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->recover();
+        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->recover();
         $this->entityManager->clear();
 
         // resync all forums, topics & posters

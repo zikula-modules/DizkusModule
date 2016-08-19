@@ -9,16 +9,16 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
-use Zikula\Module\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\PostManager;
 use ModUtil;
 use UserUtil;
 use DataUtil;
 use ServiceUtil;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\RankEntity;
 use System;
 use Symfony\Component\Routing\RouterInterface;
 

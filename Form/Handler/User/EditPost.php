@@ -9,10 +9,10 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 use Zikula\Core\RouteUrl;
-use Zikula\Module\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\PostManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;

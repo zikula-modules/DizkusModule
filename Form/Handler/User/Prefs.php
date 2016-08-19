@@ -9,9 +9,9 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 use Symfony\Component\Routing\RouterInterface;
 use UserUtil;
 use System;

@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 use ModUtil;
 use System;
@@ -18,9 +18,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

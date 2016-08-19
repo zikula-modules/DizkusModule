@@ -9,10 +9,10 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;

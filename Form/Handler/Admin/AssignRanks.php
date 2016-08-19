@@ -9,14 +9,14 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
 use ModUtil;
 use SecurityUtil;
 use System;
 use Zikula_Form_View;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 use Symfony\Component\Routing\RouterInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

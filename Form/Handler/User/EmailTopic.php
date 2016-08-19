@@ -9,9 +9,9 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
-use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\TopicManager;
 use ModUtil;
 use DataUtil;
 use System;

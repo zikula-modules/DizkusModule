@@ -9,14 +9,14 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\User;
+namespace Zikula\DizkusModule\Form\Handler\User;
 
-use Zikula\Module\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\TopicManager;
 use ModUtil;
 use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Zikula\Module\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

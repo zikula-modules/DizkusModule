@@ -9,10 +9,10 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Form\Handler\Admin;
+namespace Zikula\DizkusModule\Form\Handler\Admin;
 
-use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Module\DizkusModule\Connection\Pop3Connection;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Connection\Pop3Connection;
 use ModUtil;
 use SecurityUtil;
 use UserUtil;
@@ -160,7 +160,7 @@ class ModifyForum extends \Zikula_Form_AbstractHandler
         $data = $view->getValues();
 
         // convert parent id to object
-        $data['parent'] = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $data['parent']);
+        $data['parent'] = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $data['parent']);
 
         if ($data['extsource'] == 'mail2forum') {
             if ($data['passwordconfirm'] != $data['password']) {
