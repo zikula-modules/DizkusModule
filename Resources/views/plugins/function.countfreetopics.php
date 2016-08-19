@@ -22,7 +22,7 @@ function smarty_function_countfreetopics($params, Zikula_View $view)
 
     /** @var \Doctrine\ORM\EntityManager $em */
     $em = $view->getContainer()->get('doctrine.entitymanager');
-    $query = $em->createQuery('SELECT COUNT(t.topic_id) FROM Zikula\Module\DizkusModule\Entity\TopicEntity t WHERE t.forum=:fid');
+    $query = $em->createQuery('SELECT COUNT(t.topic_id) FROM Zikula\DizkusModule\Entity\TopicEntity t WHERE t.forum=:fid');
     $query->setParameter('fid', $id);
     $count = $query->getSingleScalarResult();
     if (!empty($params['assign'])) {

@@ -9,13 +9,13 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\TaggedObjectMeta;
+namespace Zikula\DizkusModule\TaggedObjectMeta;
 
 use DateUtil;
 use ModUtil;
 use ZLanguage;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\Core\UrlInterface;
 
 class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta

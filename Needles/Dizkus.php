@@ -9,12 +9,12 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Needles;
+namespace Zikula\DizkusModule\Needles;
 
 use ModUtil;
 use DataUtil;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 
 class Dizkus extends \Zikula_AbstractHelper
 {
