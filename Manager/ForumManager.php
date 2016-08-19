@@ -14,13 +14,13 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\Manager;
+namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
 use ModUtil;
 use UserUtil;
 use SecurityUtil;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ForumManager
@@ -48,7 +48,7 @@ class ForumManager
             // forum has been injected
             $this->_forum = $forum;
         } elseif ($id > 0) {
-            $this->_forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $id);
+            $this->_forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
         } else {
             $this->_forum = new ForumEntity();
         }
@@ -117,7 +117,7 @@ class ForumManager
             return array();
         }
         $forums = $this->entityManager
-            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')
+            ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
             ->getPath($this->_forum);
         $output = array();
         foreach ($forums as $key => $forum) {
@@ -148,7 +148,7 @@ class ForumManager
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('p')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 'p')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 'p')
             ->where('p.forum = :forumId')
             ->setParameter('forumId', $id)
             ->leftJoin('p.last_post', 'l')

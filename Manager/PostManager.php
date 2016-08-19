@@ -14,16 +14,16 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\Manager;
+namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
 use DataUtil;
 use ModUtil;
 use UserUtil;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Module\DizkusModule\Entity\PostEntity;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 
 class PostManager
 {
@@ -50,7 +50,7 @@ class PostManager
         $this->entityManager = ServiceUtil::get('doctrine.entitymanager');
         $this->name = 'ZikulaDizkusModule';
         if ($id > 0) {
-            $this->_post = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\PostEntity', $id);
+            $this->_post = $this->entityManager->find('Zikula\DizkusModule\Entity\PostEntity', $id);
             $this->_topic = new TopicManager(null, $this->_post->getTopic());
         } else {
             $this->_post = new PostEntity();
@@ -126,7 +126,7 @@ class PostManager
         $uid = UserUtil::getVar('uid');
         // assign anonymous creations to the admin
         $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
-        $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
+        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
         }
@@ -167,7 +167,7 @@ class PostManager
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();
         // remove the post
-        $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\PostEntity')->manualDelete($id);
+        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->manualDelete($id);
         // decrement forum post count
         $managedForum->decrementPostCount();
         // decrement replies count

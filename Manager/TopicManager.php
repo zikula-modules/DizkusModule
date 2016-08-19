@@ -14,18 +14,18 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\Manager;
+namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
 use ModUtil;
 use UserUtil;
 use DataUtil;
 use Zikula\Core\Hook\ProcessHook;
-use Zikula\Module\DizkusModule\Entity\PostEntity;
-use Zikula\Module\DizkusModule\Entity\TopicEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class TopicManager
@@ -68,7 +68,7 @@ class TopicManager
             $this->managedForum = new ForumManager(null, $this->_topic->getForum());
         } elseif ($id > 0) {
             // find existing topic
-            $this->_topic = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\TopicEntity', $id);
+            $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
             $this->managedForum = new ForumManager(null, $this->_topic->getForum());
         } else {
             // create new topic
@@ -178,7 +178,7 @@ class TopicManager
         // Do a new query in order to limit maxresults, firstresult, order, etc.
         $query = $this->entityManager->createQueryBuilder()
             ->select('p, u, r')
-            ->from('Zikula\Module\DizkusModule\Entity\PostEntity', 'p')
+            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
             ->where('p.topic = :topicId')
             ->setParameter('topicId', $this->_topic->getTopic_id())
             ->leftJoin('p.poster', 'u')
@@ -286,7 +286,7 @@ class TopicManager
         $uid = UserUtil::getVar('uid');
         // assign anonymous creations to the admin
         $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
-        $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
+        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
         }
@@ -429,7 +429,7 @@ class TopicManager
             return false;
         }
         $topicSubscription = $this->entityManager
-            ->getRepository('Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity')
+            ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
             ->findOneBy(array('topic' => $this->_topic, 'forumUser' => UserUtil::getVar('uid')));
 
         return isset($topicSubscription);
@@ -440,7 +440,7 @@ class TopicManager
      */
     public function resetLastPost($flush = false)
     {
-        $dql = 'SELECT p FROM Zikula\Module\DizkusModule\Entity\PostEntity p
+        $dql = 'SELECT p FROM Zikula\DizkusModule\Entity\PostEntity p
             WHERE p.topic = :topic
             ORDER BY p.post_time DESC';
         $query = $this->entityManager->createQuery($dql);
@@ -489,7 +489,7 @@ class TopicManager
      */
     private function getAdjacent($oper, $dir)
     {
-        $dql = "SELECT t.topic_id FROM Zikula\Module\DizkusModule\Entity\TopicEntity t
+        $dql = "SELECT t.topic_id FROM Zikula\DizkusModule\Entity\TopicEntity t
             WHERE t.topic_time {$oper} :time
             AND t.forum = :forum
             AND t.sticky = 0

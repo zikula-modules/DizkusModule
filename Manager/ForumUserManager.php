@@ -14,11 +14,11 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\Manager;
+namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
 use UserUtil;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
 
 class ForumUserManager
 {
@@ -43,7 +43,7 @@ class ForumUserManager
         if (empty($uid)) {
             $uid = UserUtil::getVar('uid');
         }
-        $this->_forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
+        $this->_forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$this->_forumUser && $create) {
             $this->_forumUser = new ForumUserEntity($uid);
             $this->entityManager->persist($this->_forumUser);
