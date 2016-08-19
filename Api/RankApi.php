@@ -9,11 +9,11 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use SecurityUtil;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -49,7 +49,7 @@ class RankApi extends \Zikula_AbstractApi
         } else {
             $orderby = 'title';
         }
-        $ranks = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\RankEntity')
+        $ranks = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\RankEntity')
             ->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
 
         return array($filelist, $ranks);
@@ -74,7 +74,7 @@ class RankApi extends \Zikula_AbstractApi
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {
-                $r = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\RankEntity', $rankid);
+                $r = $this->entityManager->find('Zikula\DizkusModule\Entity\RankEntity', $rankid);
                 if ((isset($rank['rank_delete'])) && ($rank['rank_delete'] == '1')) {
                     $this->entityManager->remove($r);
                     // update users that are assigned the rank to null
@@ -108,7 +108,7 @@ class RankApi extends \Zikula_AbstractApi
                 $rankId = $rankId == 0 ? null : $rankId;
                 $managedForumUser = new ForumUserManager($userId);
                 if (isset($rankId)) {
-                    $rank = $this->entityManager->getReference('Zikula\Module\DizkusModule\Entity\RankEntity', $rankId);
+                    $rank = $this->entityManager->getReference('Zikula\DizkusModule\Entity\RankEntity', $rankId);
                     $managedForumUser->get()->setRank($rank);
                 } else {
                     $managedForumUser->get()->clearRank();
@@ -149,7 +149,7 @@ class RankApi extends \Zikula_AbstractApi
         $userRank = $this->entityManager
             ->createQueryBuilder()
             ->select('r')
-            ->from('Zikula\Module\DizkusModule\Entity\RankEntity', 'r')
+            ->from('Zikula\DizkusModule\Entity\RankEntity', 'r')
             ->where('r.minimumCount <= :posts and r.maximumCount >= :posts')
             ->setParameter('posts', $args['poster']->getPostCount())
             ->getQuery()

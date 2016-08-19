@@ -9,11 +9,11 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use ModUtil;
 use SecurityUtil;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\RankEntity;
 
 class AdminApi extends \Zikula_AbstractApi
 {

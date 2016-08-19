@@ -9,14 +9,14 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use SecurityUtil;
 use UserUtil;
 use ModUtil;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ForumApi extends \Zikula_AbstractApi
@@ -37,9 +37,9 @@ class ForumApi extends \Zikula_AbstractApi
         if ($includeRoot) {
             $forumRoot = null;
         } else {
-            $forumRoot = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findOneBy(array('name' => ForumEntity::ROOTNAME));
+            $forumRoot = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(array('name' => ForumEntity::ROOTNAME));
         }
-        $parents = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy($forumRoot);
+        $parents = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy($forumRoot);
         $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;
@@ -53,11 +53,11 @@ class ForumApi extends \Zikula_AbstractApi
      */
     public function getAllChildren()
     {
-        $repo = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity');
+        $repo = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('node')
-            ->from('Zikula\Module\DizkusModule\Entity\ForumEntity', 'node')
+            ->from('Zikula\DizkusModule\Entity\ForumEntity', 'node')
             ->orderBy('node.root, node.lft', 'ASC')
             ->where('node.lvl > 0')
             ->getQuery();
@@ -111,7 +111,7 @@ class ForumApi extends \Zikula_AbstractApi
         $parent = isset($args['parent']) ? $args['parent'] : null;
         $userId = isset($args['userId']) ? $args['userId'] : null;
         $ids = array();
-        $forums = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findAll();
+        $forums = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findAll();
         /** @var $forum ForumEntity */
         foreach ($forums as $forum) {
             $parent = $forum->getParent();
@@ -136,7 +136,7 @@ class ForumApi extends \Zikula_AbstractApi
     public function isSubscribed($args)
     {
         $forumSubscription = $this->entityManager
-            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity')
+            ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
             ->findOneBy(array(
                 'forum' => $args['forum'],
                 'forumUser' => UserUtil::getVar('uid'))
@@ -170,7 +170,7 @@ class ForumApi extends \Zikula_AbstractApi
             'forum' => $args['forum'],
             'forumUser' => $managedForumUser->get());
         $forumSubscription = $this->entityManager
-            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity')
+            ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
             ->findOneBy($searchParams);
         if (!$forumSubscription) {
             $managedForumUser->get()->addForumSubscription($args['forum']);
@@ -207,7 +207,7 @@ class ForumApi extends \Zikula_AbstractApi
         }
         $managedForumUser = new ForumUserManager($args['user_id']);
         if (isset($args['forum'])) {
-            $forumSubscription = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy(array(
+            $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy(array(
                 'forum' => $args['forum'],
                 'forumUser' => $managedForumUser->get()));
             $managedForumUser->get()->removeForumSubscription($forumSubscription);
@@ -258,7 +258,7 @@ class ForumApi extends \Zikula_AbstractApi
                 break;
             case 'removeFromFavorites':
                 $forumUserFavorite = $this->entityManager
-                    ->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity')
+                    ->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')
                     ->findOneBy(array(
                         'forum' => $managedForum->get(),
                         'forumUser' => $managedForumUser->get())

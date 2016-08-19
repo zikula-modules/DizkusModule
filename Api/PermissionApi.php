@@ -9,10 +9,10 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use SecurityUtil;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
 
 class PermissionApi extends \Zikula_AbstractApi
 {
@@ -117,11 +117,11 @@ class PermissionApi extends \Zikula_AbstractApi
                 $forum = $args;
             } else {
                 if (is_numeric($args)) {
-                    $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args);
+                    $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args);
                 } else {
                     if (is_array($args)) {
                         // reconstitute object
-                        $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $args['forum_id']);
+                        $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args['forum_id']);
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
                     } else {
                         throw new \InvalidArgumentException();

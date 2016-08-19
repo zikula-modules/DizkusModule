@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use UserUtil;
 use ModUtil;
@@ -18,10 +18,10 @@ use System;
 use CookieUtil;
 use DateTime;
 use DataUtil;
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Module\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Entity\PostEntity;
 
 class UserApi extends \Zikula_AbstractApi
 {
@@ -69,10 +69,10 @@ class UserApi extends \Zikula_AbstractApi
             case 'forumposts':
                 if ($force || !isset($cache[$type][$id])) {
                     $dql = 'SELECT count(p)
-                        FROM Zikula\Module\DizkusModule\Entity\PostEntity p
+                        FROM Zikula\DizkusModule\Entity\PostEntity p
                         WHERE p.topic IN (
                             SELECT t.topic_id
-                            FROM Zikula\Module\DizkusModule\Entity\TopicEntity t
+                            FROM Zikula\DizkusModule\Entity\TopicEntity t
                             WHERE t.forum = :forum)';
                     $query = $this->entityManager->createQuery($dql)->setParameter('forum', $id);
                     $cache[$type][$id] = $query->getSingleScalarResult();
@@ -105,7 +105,7 @@ class UserApi extends \Zikula_AbstractApi
             case 'lastuser':
                 if (!isset($cache[$type])) {
                     $qb = $this->entityManager->createQueryBuilder();
-                    $qb->select('u')->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user_id', 'DESC')->setMaxResults(1);
+                    $qb->select('u')->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user_id', 'DESC')->setMaxResults(1);
                     $forumUser = $qb->getQuery()->getSingleResult();
                     $user = $forumUser->getUser();
                     $cache[$type] = $user['uname'];
@@ -129,7 +129,7 @@ class UserApi extends \Zikula_AbstractApi
     private function countEntity($entityname, $where = null, $parameter = null)
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('count(a)')->from("Zikula\\Module\\DizkusModule\\Entity\\{$entityname}Entity", 'a');
+        $qb->select('count(a)')->from("Zikula\\DizkusModule\\Entity\\{$entityname}Entity", 'a');
         if (isset($where) && isset($parameter)) {
             $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
         }
@@ -185,7 +185,7 @@ class UserApi extends \Zikula_AbstractApi
             'poster_host' => ($pip <> 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown')
         );
         $dql = 'SELECT p
-            FROM Zikula\Module\DizkusModule\Entity\PostEntity p
+            FROM Zikula\DizkusModule\Entity\PostEntity p
             WHERE p.poster_ip = :pip
             GROUP BY p.poster';
         $query = $this->entityManager->createQuery($dql)->setParameter('pip', $pip);
@@ -258,7 +258,7 @@ class UserApi extends \Zikula_AbstractApi
             }
             $topicTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimestamp);
             // Checking if the forum already has that news.
-            $topic = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findOneBy(array('reference' => $reference));
+            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(array('reference' => $reference));
             if (!isset($topic)) {
                 // Not found, add the feed item
                 $subject = $item->get_title();

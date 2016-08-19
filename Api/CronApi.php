@@ -9,12 +9,12 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use ModUtil;
 use UserUtil;
 use DataUtil;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use pop3_class;
 
 class CronApi extends \Zikula_AbstractApi
@@ -38,7 +38,7 @@ class CronApi extends \Zikula_AbstractApi
         $forum = $managedForum->get();
         $pop3conn = $forum->getPop3Connection()->getConnection();
         // array of connection details
-        include_once 'modules/Dizkus/lib/vendor/pop3class/pop3.php';
+        include_once 'modules/zikula/dizkus-module/vendor/pop3class/pop3.php';
         if ($forum->getPop3Connection()->isActive() && $pop3conn['last_connect'] <= time() - $pop3conn['interval'] * 60 || $force == true) {
             $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['name'] . '\n', $args['debug']);
             // get new mails for this forum
@@ -120,7 +120,7 @@ class CronApi extends \Zikula_AbstractApi
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
                                                     // and store this mail in the same thread
-                                                    $topic = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findOneBy(array('msgid', $replyto));
+                                                    $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(array('msgid', $replyto));
                                                     if (!isset($topic)) {
                                                         // msgid not found, we clear replyto to create a new topic
                                                         $replyto = '';

@@ -9,14 +9,14 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use UserUtil;
 use ModUtil;
 use DataUtil;
 use DateUtil;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 
 class BlockApi extends \Zikula_AbstractApi
 {
@@ -98,7 +98,7 @@ class BlockApi extends \Zikula_AbstractApi
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select(array('t', 'f', 'p', 'fu'))
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->innerJoin('t.forum', 'f')
             ->innerJoin('t.last_post', 'p')
             ->innerJoin('p.poster', 'fu');
@@ -183,7 +183,7 @@ class BlockApi extends \Zikula_AbstractApi
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('f')
-            ->from('Zikula\Module\DizkusModule\Entity\ForumEntity', 'f')
+            ->from('Zikula\DizkusModule\Entity\ForumEntity', 'f')
             ->orderBy('f.lvl', 'DESC')
             ->addOrderBy('f.postCount', 'DESC');
         $qb->setMaxResults($forumMax);
@@ -225,7 +225,7 @@ class BlockApi extends \Zikula_AbstractApi
         $timePeriod = new \DateTime();
         $timePeriod->modify("-$months months");
         $qb->select('u')
-            ->from('Zikula\Module\DizkusModule\Entity\ForumUserEntity', 'u')
+            ->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')
             ->where('u.user_id > 1')
             ->andWhere('u.lastvisit > :timeperiod')
             ->setParameter('timeperiod', $timePeriod)

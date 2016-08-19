@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use System;
 use ModUtil;
@@ -38,7 +38,7 @@ class NotifyApi extends \Zikula_AbstractApi
         $dizkusModuleInfo = ModUtil::getInfoFromName($this->name);
         $dizkusFrom = ModUtil::getVar($this->name, 'email_from');
         $fromAddress = !empty($dizkusFrom) ? $dizkusFrom : System::getVar('adminmail');
-        /* @var $post \Zikula\Module\DizkusModule\Entity\PostEntity */
+        /* @var $post \Zikula\DizkusModule\Entity\PostEntity */
         $post = $args['post'];
         $subject = $post->isFirst() ? '' : 'Re: ';
         $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();

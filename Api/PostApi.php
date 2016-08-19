@@ -13,15 +13,15 @@
  * This class provides the post api functions
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use DateTime;
 use DataUtil;
 use DateUtil;
 use UserUtil;
 use ModUtil;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\PostManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostApi extends \Zikula_AbstractApi
@@ -41,7 +41,7 @@ class PostApi extends \Zikula_AbstractApi
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->leftJoin('t.last_post', 'l')
             ->orderBy('l.post_time', 'DESC');
         // sql part per selected time frame
@@ -119,7 +119,7 @@ class PostApi extends \Zikula_AbstractApi
         $args['offset'] = !empty($args['offset']) ? $args['offset'] : 0;
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->leftJoin('t.last_post', 'l')
             ->leftJoin('t.posts', 'p')
             ->orderBy('l.post_time', 'DESC');

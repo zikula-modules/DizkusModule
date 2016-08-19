@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 use UserUtil;
 
@@ -36,7 +36,7 @@ class FavoritesApi extends \Zikula_AbstractApi
         if (isset($this->_displayOnlyFavorites[$uid])) {
             return $this->_displayOnlyFavorites[$uid];
         }
-        $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
+        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             return false;
         }
@@ -64,7 +64,7 @@ class FavoritesApi extends \Zikula_AbstractApi
             $args['user_id'] = UserUtil::getVar('uid');
         }
         $forumUserFavorite = $this->entityManager
-            ->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity')
+            ->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')
             ->findOneBy(array('forum' => $args['forum'], 'forumUser' => $args['user_id']));
 
         return isset($forumUserFavorite);

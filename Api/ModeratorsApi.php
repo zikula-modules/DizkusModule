@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Api;
+namespace Zikula\DizkusModule\Api;
 
 /**
  * This class provides the moderators api functions
@@ -32,7 +32,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
         $mods = array('users' => array(), 'groups' => array());
         if (isset($forum_id)) {
             // get array of parents
-            $forum = $em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($forum_id);
+            $forum = $em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($forum_id);
             $conn = $em->getConnection();
             // resort to brute SQL because no easy DQL way here.
             $sql = "SELECT parent FROM dizkus_forums WHERE forum_order <= {$forum->getLft()} AND rgt >= {$forum->getRgt()} AND parent > 1";
@@ -40,7 +40,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
         }
         // get moderator users
         $qb = $em->createQueryBuilder();
-        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\ModeratorUserEntity', 'm')->leftJoin('m.forumUser', 'u');
+        $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorUserEntity', 'm')->leftJoin('m.forumUser', 'u');
         if (!empty($forum_id)) {
             $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
             // check parents also
@@ -59,7 +59,7 @@ class ModeratorsApi extends \Zikula_AbstractApi
         }
         // get moderator groups
         $qb = $em->createQueryBuilder();
-        $qb->select('m')->from('Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity', 'm')->leftJoin('m.group', 'g');
+        $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorGroupEntity', 'm')->leftJoin('m.group', 'g');
         if (!empty($forum_id)) {
             $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
             // check parents also
