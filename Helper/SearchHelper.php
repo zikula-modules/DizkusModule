@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Helper;
+namespace Zikula\DizkusModule\Helper;
 
 use Zikula\Module\SearchModule\AbstractSearchable;
 use SecurityUtil;
@@ -77,7 +77,7 @@ class SearchHelper extends AbstractSearchable
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->leftJoin('t.posts', 'p');
 
         switch ($location) {

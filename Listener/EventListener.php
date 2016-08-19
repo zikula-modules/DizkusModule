@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Listener;
+namespace Zikula\DizkusModule\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use SecurityUtil;
@@ -22,8 +22,8 @@ use Zikula_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Event\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Zikula\Module\DizkusModule\ZikulaDizkusModule;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\ZikulaDizkusModule;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
 
@@ -88,7 +88,7 @@ class EventListener implements EventSubscriberInterface
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $deleteHookAction = ModUtil::getVar(ZikulaDizkusModule::NAME, 'deletehookaction');
         // lock or remove
-        $topics = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
+        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
         $count = 0;
         $total = 0;
         foreach ($topics as $topic) {
@@ -130,23 +130,23 @@ class EventListener implements EventSubscriberInterface
     {
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
         // remove subscriptions - topic
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity u
+        $dql = 'DELETE Zikula\DizkusModule\Entity\TopicSubscriptionEntity u
             WHERE u.forumUser = :uid';
         $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove subscriptions - forum
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity u
+        $dql = 'DELETE Zikula\DizkusModule\Entity\ForumSubscriptionEntity u
             WHERE u.forumUser = :uid';
         $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove favorites
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity u
+        $dql = 'DELETE Zikula\DizkusModule\Entity\ForumUserFavoriteEntity u
             WHERE u.forumUser = :uid';
         $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // remove moderators
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\ModeratorUserEntity u
+        $dql = 'DELETE Zikula\DizkusModule\Entity\ModeratorUserEntity u
             WHERE u.forumUser = :uid';
         $this->entityManager->createQuery($dql)->setParameter('uid', $user['uid'])->execute();
         // change user level - unused at the moment
-        $dql = 'UPDATE Zikula\Module\DizkusModule\Entity\ForumUserEntity u
+        $dql = 'UPDATE Zikula\DizkusModule\Entity\ForumUserEntity u
             SET u.level = :level
             WHERE u.user_id = :uid';
         $this->entityManager->createQuery($dql)

@@ -12,11 +12,11 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\HookedTopicMeta;
+namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use ModUtil;
 use News_Api_User;
-use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
+use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class News extends AbstractHookedTopicMeta
 {

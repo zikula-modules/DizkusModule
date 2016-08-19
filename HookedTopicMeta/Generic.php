@@ -12,10 +12,10 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule\HookedTopicMeta;
+namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use ZLanguage;
-use Zikula\Module\DizkusModule\AbstractHookedTopicMeta;
+use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class Generic extends AbstractHookedTopicMeta
 {
