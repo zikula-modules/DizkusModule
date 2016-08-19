@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule;
+namespace Zikula\DizkusModule;
 
 use HookUtil;
 use ModUtil;
@@ -46,7 +46,7 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $meta['capabilities'] = array(
             HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
             HookUtil::PROVIDER_CAPABLE => array('enabled' => true),
-            AbstractSearchable::SEARCHABLE => array('class' => 'Zikula\Module\DizkusModule\Helper\SearchHelper'),
+            AbstractSearchable::SEARCHABLE => array('class' => 'Zikula\DizkusModule\Helper\SearchHelper'),
         );
         // module dependencies
         $meta['dependencies'] = array(
@@ -114,13 +114,13 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $this->registerHookSubscriberBundle($bundle3);
         // Topic Provider Hooks
         $bundle5 = new ProviderBundle($this->name, self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
-        $bundle5->addServiceHandler('display_view', 'Zikula\Module\DizkusModule\HookHandlers', 'uiView', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('form_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('form_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'uiDelete', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('validate_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'validateEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('validate_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'validateDelete', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('process_edit', 'Zikula\Module\DizkusModule\HookHandlers', 'processEdit', 'dizkus.hooks.topic');
-        $bundle5->addServiceHandler('process_delete', 'Zikula\Module\DizkusModule\HookHandlers', 'processDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('display_view', 'Zikula\DizkusModule\HookHandlers', 'uiView', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('form_edit', 'Zikula\DizkusModule\HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('form_delete', 'Zikula\DizkusModule\HookHandlers', 'uiDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('validate_edit', 'Zikula\DizkusModule\HookHandlers', 'validateEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('validate_delete', 'Zikula\DizkusModule\HookHandlers', 'validateDelete', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('process_edit', 'Zikula\DizkusModule\HookHandlers', 'processEdit', 'dizkus.hooks.topic');
+        $bundle5->addServiceHandler('process_delete', 'Zikula\DizkusModule\HookHandlers', 'processDelete', 'dizkus.hooks.topic');
         $this->registerHookProviderBundle($bundle5);
     }
 

@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\DizkusModule;
+namespace Zikula\DizkusModule;
 
 use Zikula\Core\UrlInterface;
 use Zikula\Core\Hook\ProcessHook;

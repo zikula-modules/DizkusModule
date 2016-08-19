@@ -9,18 +9,18 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule;
+namespace Zikula\DizkusModule;
 
 use HookUtil;
 use ModUtil;
 use ZLanguage;
 use System;
 use Exception;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity;
-use Zikula\Module\DizkusModule\Connection\Pop3Connection;
+use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\ModeratorGroupEntity;
+use Zikula\DizkusModule\Connection\Pop3Connection;
 use DoctrineHelper;
 
 class DizkusModuleInstaller extends \Zikula_AbstractInstaller
@@ -33,16 +33,16 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     const MODULENAME = 'ZikulaDizkusModule';
 
     private $_entities = array(
-        'Zikula\Module\DizkusModule\Entity\ForumEntity',
-        'Zikula\Module\DizkusModule\Entity\PostEntity',
-        'Zikula\Module\DizkusModule\Entity\TopicEntity',
-        'Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity',
-        'Zikula\Module\DizkusModule\Entity\ForumUserEntity',
-        'Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity',
-        'Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity',
-        'Zikula\Module\DizkusModule\Entity\RankEntity',
-        'Zikula\Module\DizkusModule\Entity\ModeratorUserEntity',
-        'Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity',
+        'Zikula\DizkusModule\Entity\ForumEntity',
+        'Zikula\DizkusModule\Entity\PostEntity',
+        'Zikula\DizkusModule\Entity\TopicEntity',
+        'Zikula\DizkusModule\Entity\ForumUserFavoriteEntity',
+        'Zikula\DizkusModule\Entity\ForumUserEntity',
+        'Zikula\DizkusModule\Entity\ForumSubscriptionEntity',
+        'Zikula\DizkusModule\Entity\TopicSubscriptionEntity',
+        'Zikula\DizkusModule\Entity\RankEntity',
+        'Zikula\DizkusModule\Entity\ModeratorUserEntity',
+        'Zikula\DizkusModule\Entity\ModeratorGroupEntity',
     );
 
     /**
@@ -575,7 +575,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         foreach ($Posters as $poster) {
             $posterId = $poster['poster_id'];
             if ($posterId > 0) {
-                $forumUser = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumUserEntity')->find($posterId);
+                $forumUser = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->find($posterId);
                 // if a ForumUser cannot be found, create one
                 if (!$forumUser) {
                     $forumUser = new ForumUserEntity($posterId);
@@ -609,7 +609,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $coreGroup = $this->entityManager->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $groupId);
             if ($coreGroup) {
                 $modGroup->setGroup($coreGroup);
-                $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $group['forum_id']);
+                $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $group['forum_id']);
                 $modGroup->setForum($forum);
                 $this->entityManager->persist($modGroup);
             }
@@ -631,7 +631,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         foreach ($connections as $connectionData) {
             $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
             $connection = new Pop3Connection($connectionData);
-            $forum = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumEntity', $connectionData['id']);
+            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $connectionData['id']);
             $forum->setPop3Connection($connection);
         }
         $this->entityManager->flush();
@@ -656,7 +656,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     {
         $count = 0;
         foreach ($rows as $row) {
-            $topic = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\TopicEntity', $row['topic_id']);
+            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $row['topic_id']);
             if (isset($topic)) {
                 if (strpos($row['topic_reference'], '_') !== false) {
                     // reference contains an unsupported underscore, lock the topic

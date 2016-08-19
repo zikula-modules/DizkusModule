@@ -1,6 +1,6 @@
 <?php
 
-namespace Zikula\Module\DizkusModule;
+namespace Zikula\DizkusModule;
 
 use Zikula\Core\AbstractModule;
 

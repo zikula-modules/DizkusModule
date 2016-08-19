@@ -10,14 +10,14 @@
         }
     ],
     "autoload": {
-        "psr-0": { "Zikula\\Module\\DizkusModule\\": "" }
+        "psr-4": { "Zikula\\DizkusModule\\": "" }
     },
     "require": {
         "php": ">5.3.3"
     },
     "extra": {
         "zikula": {
-            "class": "Zikula\\Module\\DizkusModule\\ZikulaDizkusModule"
+            "class": "Zikula\\DizkusModule\\ZikulaDizkusModule"
         }
     }
 }

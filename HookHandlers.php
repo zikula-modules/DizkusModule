@@ -16,7 +16,7 @@
  * Hooks Handlers.
  */
 
-namespace Zikula\Module\DizkusModule;
+namespace Zikula\DizkusModule;
 
 use ServiceUtil;
 use SecurityUtil;
@@ -30,13 +30,13 @@ use Zikula\Core\Hook\DisplayHook;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\DisplayHookResponse;
 use Zikula\Core\Hook\ValidationHook;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula\Module\DizkusModule\Entity\TopicEntity;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\HookedTopicMeta\Generic;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\HookedTopicMeta\Generic;
 
 class HookHandlers extends AbstractHookListener
 {
@@ -87,7 +87,7 @@ class HookHandlers extends AbstractHookListener
         }
         $request = $this->view->getRequest();
         $start = (int)$request->query->get('start', 1);
-        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new TopicManager(null, $topic);
         } else {
@@ -135,11 +135,11 @@ class HookHandlers extends AbstractHookListener
     public function uiEdit(DisplayHook $hook)
     {
         $hookconfig = $this->getHookConfig($hook);
-        $forum = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->find($hookconfig[$hook->getAreaId()]['forum']);
+        $forum = $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($hookconfig[$hook->getAreaId()]['forum']);
         $this->view->assign('forum', $forum->getName());
         $itemId = $hook->getId();
         if (!empty($itemId)) {
-            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+            $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
             $this->view->assign('topic', $topic);
             $this->view->assign('newTopic', false);
         } else {
@@ -159,7 +159,7 @@ class HookHandlers extends AbstractHookListener
      */
     public function uiDelete(DisplayHook $hook)
     {
-        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $this->view->assign('forum', $topic->getForum()->getName());
             $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
@@ -207,7 +207,7 @@ class HookHandlers extends AbstractHookListener
         $createTopic = isset($data['createTopic']) ? true : false;
         if ($createTopic) {
             $hookconfig = $this->getHookConfig($hook);
-            $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+            $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
             // use Meta class to create topic data
             $topicMetaInstance = $this->getClassInstance($hook);
             if (!isset($topic)) {
@@ -258,7 +258,7 @@ class HookHandlers extends AbstractHookListener
     {
         $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
         // lock or remove
-        $topic = $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             switch ($deleteHookAction) {
                 case 'remove':
@@ -322,7 +322,7 @@ class HookHandlers extends AbstractHookListener
             $data = array(
                 'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
                 'status' => ForumEntity::STATUS_LOCKED,
-                'parent' => $this->_em->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->findOneBy(array(
+                'parent' => $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(array(
                         'name' => ForumEntity::ROOTNAME)));
             $managedForum->store($data);
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
