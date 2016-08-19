@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity\Repository;
+namespace Zikula\DizkusModule\Entity\Repository;
 
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
@@ -18,7 +18,7 @@ class ForumRepository extends NestedTreeRepository
 
     public function getRssForums()
     {
-        $dql = 'SELECT f FROM Zikula\Module\DizkusModule\Entity\ForumEntity f
+        $dql = 'SELECT f FROM Zikula\DizkusModule\Entity\ForumEntity f
                 WHERE f.pop3Connection IS NOT NULL';
         $query = $this->_em->createQuery($dql);
         try {

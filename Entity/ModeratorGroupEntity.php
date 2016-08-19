@@ -9,11 +9,11 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\GroupsModule\Entity\GroupEntity as ZikulaGroup;
 
 /**

@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity\Repository;
+namespace Zikula\DizkusModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -25,7 +25,7 @@ class PostRepository extends EntityRepository
      */
     public function manualDelete($id)
     {
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\PostEntity p
+        $dql = 'DELETE Zikula\DizkusModule\Entity\PostEntity p
             WHERE p.post_id = :id';
         $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }

@@ -9,15 +9,15 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use ServiceUtil;
 use ZLanguage;
 use Zikula\Core\Doctrine\EntityAccess;
-use Zikula\Module\DizkusModule\Connection\Pop3Connection;
-use Zikula\Module\DizkusModule\Entity\ModeratorUserEntity;
-use Zikula\Module\DizkusModule\Entity\ModeratorGroupEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Connection\Pop3Connection;
+use Zikula\DizkusModule\Entity\ModeratorUserEntity;
+use Zikula\DizkusModule\Entity\ModeratorGroupEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,7 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\ForumRepository")
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumRepository")
  */
 class ForumEntity extends EntityAccess
 {

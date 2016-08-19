@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity\Repository;
+namespace Zikula\DizkusModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Zikula\Component\HookDispatcher\Hook;
@@ -26,14 +26,14 @@ class TopicRepository extends EntityRepository
      */
     public function manualDelete($id)
     {
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\TopicEntity t
+        $dql = 'DELETE Zikula\DizkusModule\Entity\TopicEntity t
             WHERE t.topic_id = :id';
         $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }
 
     public function manualDeletePosts($id)
     {
-        $dql = 'DELETE Zikula\Module\DizkusModule\Entity\PostEntity p
+        $dql = 'DELETE Zikula\DizkusModule\Entity\PostEntity p
             WHERE p.topic = :topic';
         $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
@@ -46,7 +46,7 @@ class TopicRepository extends EntityRepository
      */
     public function deleteTopicSubscriptions($id)
     {
-        $dql = 'DELETE from Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity ts
+        $dql = 'DELETE from Zikula\DizkusModule\Entity\TopicSubscriptionEntity ts
             WHERE ts.topic = :topic';
         $this->_em->createQuery($dql)->setParameter('topic', $id)->execute();
     }
@@ -59,7 +59,7 @@ class TopicRepository extends EntityRepository
      */
     public function getHookedTopic(Hook $hook)
     {
-        $dql = 'SELECT a FROM Zikula\Module\DizkusModule\Entity\TopicEntity a
+        $dql = 'SELECT a FROM Zikula\DizkusModule\Entity\TopicEntity a
             WHERE a.hookedModule = :modulename
             AND a.hookedObjectId = :objectid
             AND a.hookedAreaId = :area ';

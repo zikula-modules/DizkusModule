@@ -9,12 +9,12 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use Zikula\Core\Doctrine\EntityAccess;
-use Zikula\Module\DizkusModule\Entity\ForumUserFavoriteEntity;
-use Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity;
-use Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity;
+use Zikula\DizkusModule\Entity\ForumUserFavoriteEntity;
+use Zikula\DizkusModule\Entity\TopicSubscriptionEntity;
+use Zikula\DizkusModule\Entity\ForumSubscriptionEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;

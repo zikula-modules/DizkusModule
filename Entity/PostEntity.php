@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use ServiceUtil;
 use ModUtil;
@@ -25,7 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
- * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\PostRepository")
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\PostRepository")
  */
 class PostEntity extends EntityAccess
 {

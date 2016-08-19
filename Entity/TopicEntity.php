@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Entity;
+namespace Zikula\DizkusModule\Entity;
 
 use ModUtil;
 use Zikula\Core\Doctrine\EntityAccess;
@@ -23,7 +23,7 @@ use Zikula\Core\UrlInterface;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
- * @ORM\Entity(repositoryClass="Zikula\Module\DizkusModule\Entity\Repository\TopicRepository")
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\TopicRepository")
  */
 class TopicEntity extends EntityAccess
 {
