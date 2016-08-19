@@ -9,20 +9,20 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Controller;
+namespace Zikula\DizkusModule\Controller;
 
 use ModUtil;
 use System;
 use SecurityUtil;
 use FormUtil;
-use Zikula\Module\DizkusModule\ZikulaDizkusModule;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Entity\ForumEntity;
-use Zikula\Module\DizkusModule\Form\Handler\Admin\Prefs;
-use Zikula\Module\DizkusModule\Form\Handler\Admin\AssignRanks;
-use Zikula\Module\DizkusModule\Form\Handler\Admin\ModifyForum;
-use Zikula\Module\DizkusModule\Form\Handler\Admin\DeleteForum;
-use Zikula\Module\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
+use Zikula\DizkusModule\ZikulaDizkusModule;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Form\Handler\Admin\Prefs;
+use Zikula\DizkusModule\Form\Handler\Admin\AssignRanks;
+use Zikula\DizkusModule\Form\Handler\Admin\ModifyForum;
+use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
+use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
@@ -74,7 +74,7 @@ class AdminController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
-        $repo = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity');
+        $repo = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
         if ($action == 'moveUp') {
             $repo->moveUp($forum, true);
         } else {
@@ -213,7 +213,7 @@ class AdminController extends \Zikula_AbstractController
         if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $tree = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
+        $tree = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
 
         return new Response($this->view->assign('tree', $tree)->fetch('Admin/tree.tpl'));
     }

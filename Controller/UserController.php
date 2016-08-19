@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Controller;
+namespace Zikula\DizkusModule\Controller;
 
 use SecurityUtil;
 use ModUtil;
@@ -23,25 +23,25 @@ use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\ModUrl;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Form\Handler\User\NewTopic;
-use Zikula\Module\DizkusModule\Form\Handler\User\EditPost;
-use Zikula\Module\DizkusModule\Form\Handler\User\DeleteTopic;
-use Zikula\Module\DizkusModule\Form\Handler\User\MoveTopic;
-use Zikula\Module\DizkusModule\Form\Handler\User\Prefs;
-use Zikula\Module\DizkusModule\Form\Handler\User\ForumSubscriptions;
-use Zikula\Module\DizkusModule\Form\Handler\User\TopicSubscriptions;
-use Zikula\Module\DizkusModule\Form\Handler\User\SignatureManagement;
-use Zikula\Module\DizkusModule\Form\Handler\User\EmailTopic;
-use Zikula\Module\DizkusModule\Form\Handler\User\SplitTopic;
-use Zikula\Module\DizkusModule\Form\Handler\User\MovePost;
-use Zikula\Module\DizkusModule\Form\Handler\User\ModerateForum;
-use Zikula\Module\DizkusModule\Form\Handler\User\Report;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Form\Handler\User\NewTopic;
+use Zikula\DizkusModule\Form\Handler\User\EditPost;
+use Zikula\DizkusModule\Form\Handler\User\DeleteTopic;
+use Zikula\DizkusModule\Form\Handler\User\MoveTopic;
+use Zikula\DizkusModule\Form\Handler\User\Prefs;
+use Zikula\DizkusModule\Form\Handler\User\ForumSubscriptions;
+use Zikula\DizkusModule\Form\Handler\User\TopicSubscriptions;
+use Zikula\DizkusModule\Form\Handler\User\SignatureManagement;
+use Zikula\DizkusModule\Form\Handler\User\EmailTopic;
+use Zikula\DizkusModule\Form\Handler\User\SplitTopic;
+use Zikula\DizkusModule\Form\Handler\User\MovePost;
+use Zikula\DizkusModule\Form\Handler\User\ModerateForum;
+use Zikula\DizkusModule\Form\Handler\User\Report;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
@@ -84,7 +84,7 @@ class UserController extends \Zikula_AbstractController
         $showOnlyFavorites = ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
         $siteFavoritesAllowed = $this->getVar('favorites_enabled') == 'yes';
         $uid = UserUtil::getVar('uid');
-        $qb = $this->entityManager->getRepository('Zikula\Module\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
+        $qb = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
         if (UserUtil::isLoggedIn() && $siteFavoritesAllowed && $showOnlyFavorites) {
             // display only favorite forums
             $qb->join('node.favorites', 'fa');
@@ -544,7 +544,7 @@ class UserController extends \Zikula_AbstractController
             throw new AccessDeniedException();
         }
         $uid = UserUtil::getVar('uid');
-        $forumUser = $this->entityManager->find('Zikula\Module\DizkusModule\Entity\ForumUserEntity', $uid);
+        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
         }
@@ -845,7 +845,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('current_language', ZLanguage::getLocale());
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t, f, p, fu')
-            ->from('Zikula\Module\DizkusModule\Entity\TopicEntity', 't')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->join('t.forum', 'f')
             ->join('t.last_post', 'p')
             ->join('p.poster', 'fu');

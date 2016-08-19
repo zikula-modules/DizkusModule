@@ -9,7 +9,7 @@
  * @package Dizkus
  */
 
-namespace Zikula\Module\DizkusModule\Controller;
+namespace Zikula\DizkusModule\Controller;
 
 use ModUtil;
 use UserUtil;
@@ -27,11 +27,11 @@ use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\FilterHook;
-use Zikula\Module\DizkusModule\Entity\RankEntity;
-use Zikula\Module\DizkusModule\Manager\TopicManager;
-use Zikula\Module\DizkusModule\Manager\PostManager;
-use Zikula\Module\DizkusModule\Manager\ForumUserManager;
-use Zikula\Module\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\ForumManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
