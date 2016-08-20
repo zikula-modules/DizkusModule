@@ -28,7 +28,7 @@ class HookContainer extends AbstractHookContainer {
     protected function setupHookBundles()
     {
         // Post Subscriber Hooks
-        $bundle1 = new SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.post', 'ui_hooks', $this->__('Dizkus post hook'));
+        $bundle1 = new SubscriberBundle('ZikulaDizkusModule', 'subscriber.dizkus.ui_hooks.post', 'ui_hooks', $this->__('Dizkus post hook'));
         $bundle1->addEvent('display_view', 'dizkus.ui_hooks.post.ui_view');
         $bundle1->addEvent('form_edit', 'dizkus.ui_hooks.post.ui_edit');
         $bundle1->addEvent('form_delete', 'dizkus.ui_hooks.post.ui_delete');
@@ -38,11 +38,11 @@ class HookContainer extends AbstractHookContainer {
         $bundle1->addEvent('process_delete', 'dizkus.ui_hooks.post.process_delete');
         $this->registerHookSubscriberBundle($bundle1);
         // Post Filter Hooks
-        $bundle4 = new SubscriberBundle($this->name, 'subscriber.dizkus.filter_hooks.post', 'filter_hooks', $this->__('Dizkus post filter'));
+        $bundle4 = new SubscriberBundle('ZikulaDizkusModule', 'subscriber.dizkus.filter_hooks.post', 'filter_hooks', $this->__('Dizkus post filter'));
         $bundle4->addEvent('filter', 'dizkus.filter_hooks.post.filter');
         $this->registerHookSubscriberBundle($bundle4);
         // Topic Subscriber Hooks
-        $bundle2 = new SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.topic', 'ui_hooks', $this->__('Dizkus topic hook'));
+        $bundle2 = new SubscriberBundle('ZikulaDizkusModule', 'subscriber.dizkus.ui_hooks.topic', 'ui_hooks', $this->__('Dizkus topic hook'));
         $bundle2->addEvent('display_view', 'dizkus.ui_hooks.topic.ui_view');
         $bundle2->addEvent('form_edit', 'dizkus.ui_hooks.topic.ui_edit');
         $bundle2->addEvent('form_delete', 'dizkus.ui_hooks.topic.ui_delete');
@@ -52,7 +52,7 @@ class HookContainer extends AbstractHookContainer {
         $bundle2->addEvent('process_delete', 'dizkus.ui_hooks.topic.process_delete');
         $this->registerHookSubscriberBundle($bundle2);
         // Forum Subscriber Hooks
-        $bundle3 = new SubscriberBundle($this->name, 'subscriber.dizkus.ui_hooks.forum', 'ui_hooks', $this->__('Dizkus forum hook'));
+        $bundle3 = new SubscriberBundle('ZikulaDizkusModule', 'subscriber.dizkus.ui_hooks.forum', 'ui_hooks', $this->__('Dizkus forum hook'));
         $bundle3->addEvent('display_view', 'dizkus.ui_hooks.forum.ui_view');
         $bundle3->addEvent('form_edit', 'dizkus.ui_hooks.forum.ui_edit');
         $bundle3->addEvent('form_delete', 'dizkus.ui_hooks.forum.ui_delete');
@@ -62,7 +62,7 @@ class HookContainer extends AbstractHookContainer {
         $bundle3->addEvent('process_delete', 'dizkus.ui_hooks.forum.process_delete');
         $this->registerHookSubscriberBundle($bundle3);
         // Topic Provider Hooks
-        $bundle5 = new ProviderBundle($this->name, self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
+        $bundle5 = new ProviderBundle('ZikulaDizkusModule', self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
         $bundle5->addServiceHandler('display_view', 'Zikula\DizkusModule\HookHandlers', 'uiView', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('form_edit', 'Zikula\DizkusModule\HookHandlers', 'uiEdit', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('form_delete', 'Zikula\DizkusModule\HookHandlers', 'uiDelete', 'dizkus.hooks.topic');
