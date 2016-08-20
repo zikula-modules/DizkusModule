@@ -9,68 +9,17 @@
  * @package Dizkus
  */
 
-namespace Zikula\DizkusModule;
+namespace Zikula\DizkusModule\Container;
 
-use HookUtil;
-use ModUtil;
-use Zikula\Component\HookDispatcher\SubscriberBundle;
-use Zikula\Component\HookDispatcher\ProviderBundle;
-use Zikula\Module\SearchModule\AbstractSearchable;
+use Zikula\Bundle\HookBundle\AbstractHookContainer;
+use Zikula\Bundle\HookBundle\Bundle\SubscriberBundle;
+use Zikula\Bundle\HookBundle\Bundle\ProviderBundle;
 
-/**
- * Provides metadata for this module to the Extensions module.
- */
-class DizkusModuleVersion extends \Zikula_AbstractVersion
-{
-
-    const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';
-
-    /**
-     * Assemble and return module metadata.
-     *
-     * @return array Module metadata.
-     */
-    public function getMetaData()
-    {
-        $meta = array();
-        $meta['displayname'] = $this->__('Dizkus forums');
-        $meta['oldnames'] = array('Dizkus');
-        $meta['description'] = $this->__('An integrated discussion forum for Zikula.');
-        $meta['url'] = $this->__('forums');
-        $meta['version'] = '4.0.0';
-        $meta['core_min'] = '1.4.1';
-        $meta['core_max'] = '1.4.99';
-        $meta['securityschema'] = array(
-            $this->name . '::' => 'ForumID::',
-            $this->name . '::CreateForum' => 'ForumID::');
-        $meta['capabilities'] = array(
-            HookUtil::SUBSCRIBER_CAPABLE => array('enabled' => true),
-            HookUtil::PROVIDER_CAPABLE => array('enabled' => true),
-            AbstractSearchable::SEARCHABLE => array('class' => 'Zikula\DizkusModule\Helper\SearchHelper'),
-        );
-        // module dependencies
-        $meta['dependencies'] = array(
-            array(
-                'modname' => 'BBCode',
-                'minversion' => '3.0.0',
-                'maxversion' => '',
-                'reason' => $this->__('BBCode allows bracket-tag markup in post text.'),
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
-            array(
-                'modname' => 'BBSmile',
-                'minversion' => '3.0.0',
-                'maxversion' => '',
-                'reason' => $this->__('BBSmile allows addition of smilies to post text.'),
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED),
-            array(
-                'modname' => 'Akismet',
-                'minversion' => '2.1.0',
-                'maxversion' => '',
-                'reason' => $this->__('Detect and block Spam from forum posts.'),
-                'status' => ModUtil::DEPENDENCY_RECOMMENDED));
-        return $meta;
-    }
-
+class HookContainer extends AbstractHookContainer {
+    
+    
+    const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';   
+    
     /**
      * Define the hook bundles supported by this module.
      *
@@ -122,6 +71,6 @@ class DizkusModuleVersion extends \Zikula_AbstractVersion
         $bundle5->addServiceHandler('process_edit', 'Zikula\DizkusModule\HookHandlers', 'processEdit', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('process_delete', 'Zikula\DizkusModule\HookHandlers', 'processDelete', 'dizkus.hooks.topic');
         $this->registerHookProviderBundle($bundle5);
-    }
-
+    }    
+    
 }

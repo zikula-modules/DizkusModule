@@ -11,19 +11,17 @@
 
 namespace Zikula\DizkusModule;
 
-use HookUtil;
 use ModUtil;
 use ZLanguage;
 use System;
-use Exception;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\ModeratorGroupEntity;
 use Zikula\DizkusModule\Connection\Pop3Connection;
-use DoctrineHelper;
+use Zikula\Core\AbstractExtensionInstaller;
 
-class DizkusModuleInstaller extends \Zikula_AbstractInstaller
+class DizkusModuleInstaller extends AbstractExtensionInstaller
 {
     /**
      * Module name
@@ -32,7 +30,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
      */
     const MODULENAME = 'ZikulaDizkusModule';
 
-    private $_entities = array(
+    private $entities = array(
         'Zikula\DizkusModule\Entity\ForumEntity',
         'Zikula\DizkusModule\Entity\PostEntity',
         'Zikula\DizkusModule\Entity\TopicEntity',
@@ -55,16 +53,16 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     public function install()
     {
         try {
-            DoctrineHelper::createSchema($this->entityManager, $this->_entities);
+            $this->schemaTool->create($this->entities);
         } catch (\Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
             return false;
         }
         // ToDo: create FULLTEXT index
         // set the module vars
         $this->setVars(self::getDefaultVars());
-        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
-        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
+        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -181,16 +179,16 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
     public function uninstall()
     {
         try {
-            DoctrineHelper::dropSchema($this->entityManager, $this->_entities);
-        } catch (Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->schemaTool->drop($this->entities);
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
             return false;
         }
         // remove module vars
         $this->delVars();
         // unregister hooks
-        HookUtil::unregisterSubscriberBundles($this->version->getHookSubscriberBundles());
-        HookUtil::unregisterProviderBundles($this->version->getHookProviderBundles());
+        $this->hookApi->uninstallSubscriberHooks($this->bundle->getMetaData());
+        $this->hookApi->uninstallProviderHooks($this->bundle->getMetaData());
         // Deletion successful
         return true;
     }
@@ -200,9 +198,9 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         // Only support upgrade from version 3.1 and up. Notify users if they have a version below that one.
         if (version_compare($oldversion, '3.1', '<')) {
             // Inform user about error, and how he can upgrade to $modversion
-            $upgradeToVersion = $this->version->getVersion();
+            $upgradeToVersion = $this->bundle->getMetaData()->getVersion();
 
-            $this->request->getSession()->getFlashBag()->add('error', $this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
+            $this->addFlash('error', $this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
             return false;
         }
         switch ($oldversion) {
@@ -214,6 +212,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
                     return false;
                 }
                 break;
+            case '4.0.0':
+                return true;
         }
 
         return true;
@@ -297,8 +297,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $stmt = $connection->prepare($sql);
         try {
             $stmt->execute();
-        } catch (Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
             return false;
         }
         // remove the legacy hooks
@@ -345,28 +345,28 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         }
         // update all the tables to 4.0.0
         try {
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[0]));
+            $this->schemaTool->update(array($this->entities[0]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[1]));
+            $this->schemaTool->update(array($this->entities[1]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[2]));
+            $this->schemaTool->update(array($this->entities[2]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[3]));
+            $this->schemaTool->update(array($this->entities[3]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[4]));
+            $this->schemaTool->update(array($this->entities[4]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[5]));
+            $this->schemaTool->update(array($this->entities[5]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[6]));
+            $this->schemaTool->update(array($this->entities[6]));
             sleep(1);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[7]));
+            $this->schemaTool->update(array($this->entities[7]));
             sleep(2);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[8]));
+            $this->schemaTool->update(array($this->entities[8]));
             sleep(2);
-            DoctrineHelper::updateSchema($this->entityManager, array($this->_entities[9]));
+            $this->schemaTool->update(array($this->entities[9]));
             sleep(2);
-        } catch (Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
             return false;
         }
         // migrate data from old formats
@@ -386,7 +386,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $stmt = $connection->prepare($sql);
             try {
                 $stmt->execute();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
             }
         }
         $this->delVar('autosubscribe');
@@ -405,11 +405,11 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
         $this->setVar('indexTo', $defaultModuleVars['indexTo']);
         $this->setVar('notifyAdminAsMod', $defaultModuleVars['notifyAdminAsMod']);
         //add note about url_ranks_images var
-        $this->request->getSession()->getFlashBag()->add('status', $this->__('Double check your path variable setting for rank images in settings!'));
+        $this->addFlash('status', $this->__('Double check your path variable setting for rank images in settings!'));
 
         // register new hooks and event handlers
-        HookUtil::registerSubscriberBundles($this->version->getHookSubscriberBundles());
-        HookUtil::registerProviderBundles($this->version->getHookProviderBundles());
+        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // update block settings
         $mid = $connection->fetchColumn("SELECT DISTINCT id from modules WHERE name='Dizkus' OR name='".$this->name."'");
         if (!empty($mid) && is_int($mid)) {
@@ -421,7 +421,7 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $stmt->execute();
         }
         $repArray = array('Dizkus_Centerblock::', 'Dizkus_Statisticsblock', "{$this->name}::RecentPostsBlock", "{$this->name}::StatisticsBlock");
-        $this->request->getSession()->getFlashBag()->add('status', $this->__f('The permission schemas %1$s and %2$s were changed into %3$s and %4$s, respectively. If you were using them please modify your permission table.', $repArray));
+        $this->addFlash('status', $this->__f('The permission schemas %1$s and %2$s were changed into %3$s and %4$s, respectively. If you were using them please modify your permission table.', $repArray));
 
         return true;
     }
@@ -449,8 +449,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $stmt = $connection->prepare($sql);
             try {
                 $stmt->execute();
-            } catch (Exception $e) {
-                $this->request->getSession()->getFlashBag()->add('error', $e);
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e);
             }
         }
     }
@@ -493,8 +493,8 @@ class DizkusModuleInstaller extends \Zikula_AbstractInstaller
             $stmt = $connection->prepare($sql);
             try {
                 $stmt->execute();
-            } catch (Exception $e) {
-                $this->request->getSession()->getFlashBag()->add('error', $e);
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e);
                 return false;
             }
         }

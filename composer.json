@@ -1,5 +1,6 @@
 {
     "name": "zikula/dizkus-module",
+    "version": "4.1.0",
     "description": "An integrated discussion forum for Zikula",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
@@ -13,11 +14,31 @@
         "psr-4": { "Zikula\\DizkusModule\\": "" }
     },
     "require": {
-        "php": ">5.3.3"
+        "php": ">5.4.1"
+    },
+    "suggest" : {
+            "BBCode:>3.0.0" : "BBCode allows bracket-tag markup in post text.",
+            "BBSmile:>1.0.0" : "BBSmile allows addition of smilies to post text.",
+            "Akismet:>2.1.0" : "Detect and block Spam from forum posts."
     },
     "extra": {
         "zikula": {
-            "class": "Zikula\\DizkusModule\\ZikulaDizkusModule"
+            "class": "Zikula\\DizkusModule\\ZikulaDizkusModule",
+            "core-compatibility": ">=1.4.1",
+            "displayname": "Dizkus forums",
+            "url": "forums",
+            "oldnames": [],
+            "capabilities": {
+                "admin": {"route": "zikuladizkusmodule_admin_tree"},
+                "user": {"route": "zikuladizkusmodule_user_index"},
+                "hook_subscriber": {"class": "Zikula\\DizkusModule\\Container\\HookContainer"},
+                "hook_provider": {"class": "Zikula\\DizkusModule\\Container\\HookContainer"},
+                "searchable": {"class": "Zikula\\DizkusModule\\Helper\\SearchHelper"}
+            },
+            "securityschema": {
+                "ZikulaDizkusModule::": "ForumID::",
+                "ZikulaDizkusModule::CreateForum": "ForumID::"
+            }
         }
     }
 }
