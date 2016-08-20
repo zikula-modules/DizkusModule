@@ -290,7 +290,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     private function upgrade_to_4_0_0()
     {
         // do a check here for tables containing the prefix and fail if existing tables cannot be found.
-        $configPrefix = $this->serviceManager['prefix'];
+        $configPrefix = System::getVar('prefix');
         $prefix = !empty($configPrefix) ? $configPrefix . '_' : '';
         $connection = $this->entityManager->getConnection();
         $sql = 'SELECT * FROM ' . $prefix . 'dizkus_categories';
