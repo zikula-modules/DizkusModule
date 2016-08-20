@@ -3,7 +3,7 @@ Zikula Dizkus Forums
 
 Dizkus is a discussion forum module for the Zikula Application Framework
 
-This version **requires** Zikula Core 1.4.0+
+This version **requires** Zikula Core 1.4.3+
 
 The code is currently under development, but typically is in a functional
 state. Feel free to test and report issues. thank you.
@@ -18,10 +18,8 @@ Your directory structure should look like so:
 
 ```
   /modules
-    /Dizkus
-      /Zikula
-        /Module
-          /DizkusModule
+      /zikula
+          /dizkus-module
             /Api
             /Block
             etc...
