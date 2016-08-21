@@ -1,10 +1,10 @@
 <ol class="breadcrumb clearfix">
     <li>
-    {if ($smarty.get.func neq "index")}
+    {*if ($smarty.get.func neq "index")*}
         <a class="tooltips fa fa-home" title="{gt text='Go to forums index page'}" href="{route name='zikuladizkusmodule_user_index'}">&nbsp;{gt text="Forums index page"}</a>
-    {else}
+    {*else}
         <span class="fa fa-home">&nbsp;{gt text="Forums index page"}</span>
-    {/if}
+    {/if*}
     </li>
 
     {if isset($breadcrumbs)}
