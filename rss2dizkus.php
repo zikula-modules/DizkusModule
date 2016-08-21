@@ -26,7 +26,7 @@ $em = ServiceUtil::get('doctrine.entitymanager');
 //
 // Checking if RSS2Forum is enabled
 //
-if (!ModUtil::getVar('ZikulaDizkusModule', 'rss2f_enabled') == 'no') {
+if (!ModUtil::getVar('ZikulaDizkusModule', 'rss2f_enabled')) {
     return;
 }
 //

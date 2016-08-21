@@ -77,7 +77,7 @@
                         <i class="fa fa-check fa-2x"></i> {gt text='This post has been marked as the solution.'}
                     </div>
                     {$post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags}
-                    {if $post.attachSignature AND ($modvars.ZikulaDizkusModule.removesignature == 'no')}
+                    {if $post.attachSignature AND (!$modvars.ZikulaDizkusModule.removesignature)}
                         {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}
                         {if !empty($signature)}
                             <div class="dzk_postSignature">

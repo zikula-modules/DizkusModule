@@ -119,14 +119,14 @@ class SearchHelper extends AbstractSearchable
 
         $topics = $qb->getQuery()->getResult();
         $sessionId = session_id();
-        $showTextInSearchResults = ModUtil::getVar($this->name, 'showtextinsearchresults', 'no');
+        $showTextInSearchResults = ModUtil::getVar($this->name, 'showtextinsearchresults', false);
         // Process the result set and insert into search result table
         $records = array();
         foreach ($topics as $topic) {
             /** @var $topic \Zikula\Module\DizkusModule\Entity\TopicEntity */
             $records[] = array(
                 'title' => $topic->getTitle(),
-                'text' => $showTextInSearchResults == 'yes' ? $topic->getPosts()->first()->getPost_text() : '',
+                'text' => $showTextInSearchResults ? $topic->getPosts()->first()->getPost_text() : '',
                 'created' => $topic->getTopic_time(),
                 'module' => $this->name,
                 'sesid' => $sessionId,

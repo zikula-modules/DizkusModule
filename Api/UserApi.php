@@ -360,7 +360,7 @@ class UserApi extends \Zikula_AbstractApi
      */
     public function dzkstriptags($text = '')
     {
-        if (!empty($text) && ModUtil::getVar($this->name, 'striptags') == 'yes') {
+        if (!empty($text) && ModUtil::getVar($this->name, 'striptags')) {
             // save code tags
             $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
             for ($i = 0; $i < $codecount; $i++) {

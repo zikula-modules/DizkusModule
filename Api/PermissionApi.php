@@ -129,7 +129,7 @@ class PermissionApi extends \Zikula_AbstractApi
                 }
             }
         }
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->getVar('forum_disabled_info'));
             return false;
         }

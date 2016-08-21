@@ -41,7 +41,7 @@
                         {/if}
                         <a class="fa fa-envelope-o" id="forum-subscription" data-status="{if $isSubscribed}1{else}0{/if}" href="{$url}" title="{$msg}">&nbsp;{$msg}</a>
                     </li>
-                    {if $modvars.ZikulaDizkusModule.favorites_enabled eq "yes"}
+                    {if $modvars.ZikulaDizkusModule.favorites_enabled }
                         <li>
                             {modapifunc modname=$module type='Favorites' func='isFavorite' forum=$forum assign='isFavorite'}
                             {if $isFavorite}

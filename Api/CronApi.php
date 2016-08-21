@@ -30,7 +30,7 @@ class CronApi extends \Zikula_AbstractApi
      */
     public function mail($args)
     {
-        if (ModUtil::getVar($this->name, 'm2f_enabled') != 'yes') {
+        if (!ModUtil::getVar($this->name, 'm2f_enabled')) {
             return;
         }
         $force = isset($args['force']) ? (bool)$args['force'] : false;
