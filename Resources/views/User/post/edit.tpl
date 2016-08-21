@@ -25,7 +25,7 @@
         <div class="form-group">
             {formlabel for="post_text" __text="Message body"}<br />
             {formtextinput cssClass="form-control" textMode="multiline" id="post_text" rows="10" cols="60"}
-            {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
+            {if $modvars.ZikulaDizkusModule.striptags }
                 <p class="help-block">{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
             {/if}
         </div>

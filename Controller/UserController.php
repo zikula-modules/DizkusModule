@@ -67,7 +67,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function indexAction(Request $request)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         $indexTo = $this->getVar('indexTo');
@@ -82,7 +82,7 @@ class UserController extends \Zikula_AbstractController
         $this->view->assign('last_visit_unix', $lastVisitUnix);
         // get the forums to display
         $showOnlyFavorites = ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
-        $siteFavoritesAllowed = $this->getVar('favorites_enabled') == 'yes';
+        $siteFavoritesAllowed = $this->getVar('favorites_enabled');
         $uid = UserUtil::getVar('uid');
         $qb = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
         if (UserUtil::isLoggedIn() && $siteFavoritesAllowed && $showOnlyFavorites) {
@@ -133,7 +133,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewforumAction(Request $request, $forum, $start = 1)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
@@ -177,7 +177,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewtopicAction(Request $request, $topic, $start = 1)
     {
-        if ($this->getVar('forum_enabled') == 'no' && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return new Response($this->view->fetch('User/dizkus_disabled.tpl'));
         }
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');

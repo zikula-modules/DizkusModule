@@ -23,7 +23,7 @@
                 <label for="message" class="sr-only">{gt text="Message"}</label>
                 <textarea id="message" class="form-control" name="message" rows="10">{$reply.message}</textarea>
 
-                {if $modvars.ZikulaDizkusModule.striptags == 'yes'}
+                {if $modvars.ZikulaDizkusModule.striptags }
                     <p class="help-block">{gt text="No HTML tags allowed (except inside [code][/code] tags)"}</p>
                 {/if}
             </div>

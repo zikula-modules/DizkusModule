@@ -22,23 +22,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Prefs extends \Zikula_Form_AbstractHandler
 {
-    /**
-     * These array keys are module vars that (for BC reasons) are stored
-     * as text 'yes' or 'no' instead of boolean
-     */
-    private $YESNOS = array(
-        'log_ip',
-        'm2f_enabled',
-        'rss2f_enabled',
-        'favorites_enabled',
-        'signaturemanagement',
-        'removesignature',
-        'striptags',
-        'forum_enabled',
-//        'fulltextindex',
-//        'extendedsearch',
-        'showtextinsearchresults'
-    );
 
     public function initialize(Zikula_Form_View $view)
     {
@@ -58,16 +41,6 @@ class Prefs extends \Zikula_Form_AbstractHandler
             $admins[] = array('text' => UserUtil::getVar('uname', $admin['uid']), 'value' => $admin['uid']);
         }
         $this->view->assign('admins', $admins);
-
-        // convert yes/no to boolean
-        foreach ($this->YESNOS as $value) {
-            if (array_key_exists($value, $vars) and $vars[$value] == 'yes') {
-                $vars[$value] = true;
-            } else {
-                $vars[$value] = false;
-            }
-        }
-
         $this->view->assign($vars);
 
         return true;
@@ -88,14 +61,8 @@ class Prefs extends \Zikula_Form_AbstractHandler
             }
 
             $data = $view->getValues();
-
-            // convert booleans to yes/no
-            foreach ($this->YESNOS as $yesno) {
-                $this->setVar($yesno, $data[$yesno] == 1 ? 'yes' : 'no');
-                unset($data[$yesno]);
-            }
-            $this->setVar('fulltextindex', 'no'); // disable until technology catches up with InnoDB
-            $this->setVar('extendedsearch', 'no'); // disable until technology catches up with InnoDB
+            $this->setVar('fulltextindex', false); // disable until technology catches up with InnoDB
+            $this->setVar('extendedsearch', false); // disable until technology catches up with InnoDB
             // set the rest from the array
             $this->setVars($data);
             $this->request->getSession()->getFlashBag()->add('status', $this->__('Done! Updated configuration.'));

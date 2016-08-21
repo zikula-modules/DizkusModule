@@ -53,7 +53,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      */
     private function errorIfForumDisabled()
     {
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (!$this->getVar('forum_enabled')) {
             throw new AccessDeniedException(strip_tags($this->getVar('forum_disabled_info')));
         }
     }
@@ -283,7 +283,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 $managedOriginalPost->update($data);
                 $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
                 $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedOriginalPost->getId(), $url));
-                if ($attach_signature && $this->getVar('removesignature') == 'no') {
+                if ($attach_signature && !$this->getVar('removesignature')) {
                     // include signature in response text
                     $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
                     $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
@@ -324,7 +324,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function changeTopicStatusAction(Request $request)
     {
         // Check if forum is disabled
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (!$this->getVar('forum_enabled')) {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         // Get common parameters
@@ -404,10 +404,10 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     public function modifyForumAction(Request $request)
     {
         $this->checkAjaxToken();
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (!$this->getVar('forum_enabled')) {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
-        if ($this->getVar('favorites_enabled') == 'no') {
+        if (!$this->getVar('favorites_enabled')) {
             return new BadDataResponse(array(), $this->__('Error! Favourites have been disabled.'));
         }
         $params = array(
@@ -436,7 +436,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      */
     public function forumusersAction()
     {
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (!$this->getVar('forum_enabled')) {
             return new UnavailableResponse(array(), strip_tags($this->getVar('forum_disabled_info')));
         }
         $this->view->setCaching(false);

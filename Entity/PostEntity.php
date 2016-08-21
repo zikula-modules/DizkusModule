@@ -111,7 +111,7 @@ class PostEntity extends EntityAccess
      */
     public function __construct()
     {
-        if (ModUtil::getVar(self::MODULENAME, 'log_ip') == 'no') {
+        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
             // for privacy issues ip logging can be deactivated
             $this->poster_ip = 'unrecorded';
         } else {

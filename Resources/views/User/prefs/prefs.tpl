@@ -18,7 +18,7 @@
                 {formdropdownlist id="postOrder" items=$orders cssClass='form-control'}
             </div>
         </div>
-        {if $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
+        {if $modvars.ZikulaDizkusModule.favorites_enabled }
             <div class="form-group">
                 {formlabel for="displayOnlyFavorites" __text="Display only favorite forums" class="col-lg-3 control-label"}
                 <div class="col-lg-9">

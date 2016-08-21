@@ -42,7 +42,7 @@ class PrefsApi extends \Zikula_AbstractApi
                 'text' => $this->__('Topic subscriptions'),
                 'title' => $this->__('Manage topic subscriptions'),
                 'icon' => 'envelope-alt');
-            if (ModUtil::getVar($this->name, 'signaturemanagement') == 'yes') {
+            if (ModUtil::getVar($this->name, 'signaturemanagement')) {
                 $links[] = array(
                     'url' => $this->get('router')->generate('zikuladizkusmodule_user_signaturemanagement'),
                     'text' => $this->__('Signature'),

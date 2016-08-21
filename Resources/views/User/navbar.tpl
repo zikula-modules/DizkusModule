@@ -41,7 +41,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div id="navbar-main-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-            {if $coredata.logged_in eq 1 AND $func eq 'index' AND $modvars.ZikulaDizkusModule.favorites_enabled eq 'yes'}
+            {if $coredata.logged_in eq 1 AND $func eq 'index' AND $modvars.ZikulaDizkusModule.favorites_enabled }
                 {if $favorites}
                     <li><a class="fa fa-comments" href="{route name='zikuladizkusmodule_user_showallforums'}" title="{gt text="Show all forums"}">&nbsp;{gt text="Show all forums"}</a></li>
                 {else}

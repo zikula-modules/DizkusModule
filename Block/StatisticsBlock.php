@@ -65,7 +65,7 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
             throw new AccessDeniedException();
         }
         // check if forum is turned off
-        if ($this->getVar('forum_enabled') == 'no') {
+        if (!$this->getVar('forum_enabled')) {
             $blockInfo['content'] = $this->getVar('forum_disabled_info');
 
             return BlockUtil::themesideblock($blockInfo);
