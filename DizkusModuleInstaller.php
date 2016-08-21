@@ -213,7 +213,10 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 }
                 break;
             case '4.0.0':
-                return true;
+                if (!$this->upgrade_to_4_1_0()) {
+                    return false;
+                }                
+                break;
         }
 
         return true;
@@ -236,24 +239,24 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'email_from' => System::getVar('adminmail'),
             'url_ranks_images' => "$relativePath/Resources/public/images/ranks",
             'post_sort_order' => 'ASC',
-            'log_ip' => 'no',
-            'extendedsearch' => 'no',
-            'm2f_enabled' => 'no',
-            'favorites_enabled' => 'yes',
-            'removesignature' => 'no',
-            'striptags' => 'yes',
+            'log_ip' => false,
+            'extendedsearch' => false,
+            'm2f_enabled' => false,
+            'favorites_enabled' => true,
+            'removesignature' => false,
+            'striptags' => true,
             'deletehookaction' => 'lock',
-            'rss2f_enabled' => 'no',
+            'rss2f_enabled' => false,
             'timespanforchanges' => 24,
-            'forum_enabled' => 'yes',
+            'forum_enabled' => true,
             'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
-            'signaturemanagement' => 'no',
+            'signaturemanagement' => false,
             'signature_start' => '--',
             'signature_end' => '--',
-            'showtextinsearchresults' => 'yes',
+            'showtextinsearchresults' => true,
             'minsearchlength' => 3,
             'maxsearchlength' => 30,
-            'fulltextindex' => 'no',
+            'fulltextindex' => false,
             'solved_enabled' => true,
             'ajax' => true,
             'striptagsfromemail' => false,
@@ -691,5 +694,25 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // flush remaining
         $this->entityManager->flush();
     }
+    
+    /**
+     * upgrade to 4.1.0
+     */
+    private function upgrade_to_4_1_0()
+    {
+        $currentModVars = $this->getVars();
+        $this->setVar('log_ip', $currentModVars['log_ip'] === 'yes' ? true : false);
+        $this->setVar('extendedsearch', $currentModVars['extendedsearch'] === 'yes' ? true : false);
+        $this->setVar('m2f_enabled', $currentModVars['m2f_enabled'] === 'yes' ? true : false);         
+        $this->setVar('favorites_enabled', $currentModVars['favorites_enabled'] === 'yes' ? true : false);
+        $this->setVar('removesignature', $currentModVars['removesignature'] === 'yes' ? true : false);       
+        $this->setVar('striptags', $currentModVars['striptags'] === 'yes' ? true : false);        
+        $this->setVar('rss2f_enabled', $currentModVars['rss2f_enabled'] === 'yes' ? true : false);        
+        $this->setVar('forum_enabled', $currentModVars['forum_enabled'] === 'yes' ? true : false);        
+        $this->setVar('signaturemanagement', $currentModVars['signaturemanagement'] === 'yes' ? true : false);        
+        $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);       
+        $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
 
+        return true;
+    }
 }
