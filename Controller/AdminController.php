@@ -14,11 +14,11 @@ namespace Zikula\DizkusModule\Controller;
 use Zikula\Core\Controller\AbstractController;
 use ModUtil;
 use System;
-use FormUtil;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Form\Handler\Admin\Prefs;
+use Zikula\DizkusModule\Form\Type\PreferencesType;
+use Zikula\DizkusModule\DizkusModuleInstaller;
 use Zikula\DizkusModule\Form\Handler\Admin\AssignRanks;
 use Zikula\DizkusModule\Form\Handler\Admin\ModifyForum;
 use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
@@ -36,12 +36,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class AdminController extends AbstractController
 {
-
-//    public function postInitialize()
-//    {
-//        $this->view->setCaching(false);
-//    }
-
     /**
      * @Route("")
      *
@@ -95,14 +89,30 @@ class AdminController extends AbstractController
      *
      * @throws AccessDeniedException
      */
-    public function preferencesAction()
+    public function preferencesAction(Request $request)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        // Create output object
-        $form = FormUtil::newForm($this->name, $this);
-        return new Response($form->execute('Admin/preferences.tpl', new Prefs()));
+        
+        $form = $this->createForm(new PreferencesType, $this->getVars(), []);
+        
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            if ($form->get('save')->isClicked()) {
+                $this->setVars($form->getData());
+                $this->addFlash('status', $this->__('Done! Updated configuration.'));
+            }
+            if ($form->get('restore')->isClicked()) {
+                $this->setVars(DizkusModuleInstaller::getDefaultVars());                
+                $this->addFlash('status', $this->__('Done! Reset configuration to default values.'));
+            }
+            return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
+        }
+
+        return $this->render('@ZikulaDizkusModule/Admin/preferences.html.twig', [
+                    'form' => $form->createView(),
+        ]);     
     }
 
     /**
