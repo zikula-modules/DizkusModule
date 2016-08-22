@@ -14,7 +14,6 @@ namespace Zikula\DizkusModule\Controller;
 use Zikula\Core\Controller\AbstractController;
 use ModUtil;
 use System;
-use SecurityUtil;
 use FormUtil;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
@@ -71,19 +70,20 @@ class AdminController extends AbstractController
      */
     public function changeForumOrderAction($action, ForumEntity $forum)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
+        $em = $this->getDoctrine()->getManager();
         /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
-        $repo = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        $repo = $em->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
         if ($action == 'moveUp') {
             $repo->moveUp($forum, true);
         } else {
             $repo->moveDown($forum, true);
         }
-        $this->entityManager->flush();
+        $em->flush();
 
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -97,7 +97,7 @@ class AdminController extends AbstractController
      */
     public function preferencesAction()
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         // Create output object
@@ -120,7 +120,7 @@ class AdminController extends AbstractController
     public function syncforumsAction(Request $request)
     {
         $showstatus = !$request->request->get('silent', 0);
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $succesful = ModUtil::apiFunc($this->name, 'Sync', 'forums');
@@ -158,7 +158,7 @@ class AdminController extends AbstractController
      */
     public function ranksAction(Request $request)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $submit = $request->request->get('submit', 2);
@@ -192,7 +192,7 @@ class AdminController extends AbstractController
      */
     public function assignranksAction()
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $form = FormUtil::newForm($this->name, $this);
@@ -267,7 +267,7 @@ class AdminController extends AbstractController
      */
     public function hookConfigAction($moduleName)
     {
-        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
@@ -305,7 +305,7 @@ class AdminController extends AbstractController
     {
         $hookdata = $request->request->get('dizkus', array());
         $moduleName = $request->request->get('activeModule');
-        if (!SecurityUtil::checkPermission($moduleName . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         foreach ($hookdata as $area => $data) {
