@@ -11,6 +11,7 @@
 
 namespace Zikula\DizkusModule\Controller;
 
+use Zikula\Core\Controller\AbstractController;
 use ModUtil;
 use System;
 use SecurityUtil;
@@ -34,13 +35,13 @@ use Symfony\Component\Routing\RouterInterface;
 /**
  * @Route("/admin")
  */
-class AdminController extends \Zikula_AbstractController
+class AdminController extends AbstractController
 {
 
-    public function postInitialize()
-    {
-        $this->view->setCaching(false);
-    }
+//    public function postInitialize()
+//    {
+//        $this->view->setCaching(false);
+//    }
 
     /**
      * @Route("")
@@ -210,12 +211,13 @@ class AdminController extends \Zikula_AbstractController
      */
     public function treeAction()
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $tree = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false);
-
-        return new Response($this->view->assign('tree', $tree)->fetch('Admin/tree.tpl'));
+        
+        return $this->render('@ZikulaDizkusModule/Admin/tree.html.twig', [
+                    'tree' => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false)
+            ]);        
     }
 
     /**

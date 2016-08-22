@@ -1,0 +1,28 @@
+{% for item in tree %}
+    {% if item.lvl > 0 %}
+        {% set lvl = item.lvl*4-4 %}
+        <li class="list-group-item">
+            {% for i in range(1, lvl) %}&nbsp;{% endfor %}             
+            {{ item.name }}             
+            <div class="pull-right">
+                {% if not loop.first %}
+                    <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_changeforumorder', {'forum':item.forum_id, 'action':'moveUp'}) }}" title='{{ __("move up") }}'>
+                        <i class="fa fa-arrow-up fa fa-150x"></i>
+                    </a>
+                {% endif %}
+                {% if not loop.last %}
+                    <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_changeforumorder', {'forum':item.forum_id, 'action':'moveDown'}) }}"  title='{{ __("move down") }}'
+                       {% if loop.first %}style="margin-right:20px"{% endif %}>
+                        <i class="fa fa-arrow-down fa fa-150x"></i>
+                    </a>
+                {% endif %}               
+                <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_modifyforum',{ 'id': item.forum_id}) }}" title='{{ __("edit forum #{item.name}")}}'><i class="fa fa-pencil fa-150x"></i></a>
+                <a class="tooltips" href="{{ path('zikuladizkusmodule_user_viewforum',{ 'forum': item.forum_id}) }}" title='{{ __("view forum #{item.name}")}}'><i class="fa fa-eye fa-blue fa-150x"></i></a>
+                <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_deleteforum',{ 'id': item.forum_id}) }}" title='{{ __("delete forum #{item.name}")}}'><i class="fa fa-trash-o fa-red fa-150x"></i></a>              
+            </div>  
+        </li>
+    {% endif %}
+    {% if item.__children > 0 %}
+        {% include "@ZikulaDizkusModule/Admin/subtree.html.twig" with {'tree': item.__children } %}
+    {% endif %}
+{% endfor %}
