@@ -45,7 +45,7 @@ class AdminController extends AbstractController
      */
     public function indexAction()
     {
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -152,7 +152,7 @@ class AdminController extends AbstractController
             $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
         }
 
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', array(), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
 
     /**
@@ -174,21 +174,24 @@ class AdminController extends AbstractController
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => $ranktype));
-            $this->view->assign('ranks', $ranks);
-            $this->view->assign('ranktype', $ranktype);
-            $this->view->assign('rankimages', $rankimages);
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => $ranktype]);
+            $template = 'honoraryranks';
             if ($ranktype == 0) {
-                return new Response($this->view->fetch('Admin/ranks.tpl'));
-            } else {
-                return new Response($this->view->fetch('Admin/honoraryranks.tpl'));
+                $template = 'ranks';
             }
+ 
+            return $this->render("@ZikulaDizkusModule/Admin/$template.html.twig", [
+                        'ranks' => $ranks,
+                        'ranktype' => $ranktype,
+                        'rankimages' => $rankimages,
+                        'settings' => $this->getVars()
+            ]); 
         } else {
             $ranks = $request->request->filter('ranks', '', FILTER_SANITIZE_STRING);
-            ModUtil::apiFunc($this->name, 'Rank', 'save', array('ranks' => $ranks));
+            ModUtil::apiFunc($this->name, 'Rank', 'save', ['ranks' => $ranks]);
         }
 
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', array('ranktype' => $ranktype), RouterInterface::ABSOLUTE_URL));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', ['ranktype' => $ranktype], RouterInterface::ABSOLUTE_URL));
     }
 
     /**
