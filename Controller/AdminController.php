@@ -11,18 +11,21 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Zikula\Core\Controller\AbstractController;
 use ModUtil;
 use System;
+use Zikula\Core\Controller\AbstractController;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
-use Zikula\DizkusModule\Form\Handler\Admin\AssignRanks;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 use Zikula\DizkusModule\Form\Handler\Admin\ModifyForum;
 use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
+
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
@@ -203,14 +206,70 @@ class AdminController extends AbstractController
      *
      * @throws AccessDeniedException
      */
-    public function assignranksAction()
+    public function assignranksAction(Request $request)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $form = FormUtil::newForm($this->name, $this);
+        
+        $letter = $request->request->get('letter');
+        $lastletter = $request->request->get('lastletter');
+        $page = (int)$request->request->get('page', 1);
+        
+        // check for a letter parameter
+        if (!empty($lastletter)) {
+            $letter = $lastletter;
+        }
 
-        return new Response($form->execute('Admin/assignranks.tpl', new AssignRanks()));
+        if (empty($letter) || strlen($letter) != 1) {
+            $letter = '*';
+        }
+        $letter = strtolower($letter);
+
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_HONORARY]);
+
+        $perpage = 20;
+        $em = $this->getDoctrine()->getManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('u')
+                ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
+                ->orderBy('u.uname', 'ASC');
+        if (!empty($letter) and $letter != '*') {
+            $qb->andWhere('u.uname LIKE :letter')
+                ->setParameter('letter', $letter . '%');
+        }
+        $query = $qb->getQuery();
+        $query->setFirstResult(($page - 1) * $perpage)
+            ->setMaxResults($perpage);
+
+        // Paginator
+        $allusers = new Paginator($query);
+        $count = $allusers->count();
+
+        // recreate the array of users as ForumUserEntities
+        $userArray = [];
+        /** @var $user \Zikula\UsersModule\Entity\UserEntity */
+        foreach ($allusers as $user) {
+            $managedForumUser = new ForumUserManager($user->getUid(), false);
+            $forumUser = $managedForumUser->get();
+            if (isset($forumUser)) {
+                $userArray[$user->getUid()] = $forumUser;
+            } else {
+                $count--;
+            }
+        }
+        
+        
+        return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
+//                    'form' => $form->createView(),
+                    'ranks' => $ranks,
+                    'rankimages' => $rankimages,
+                    'allusers' => $userArray,
+                    'letter' => $letter,
+                    'page' => $page,
+                    'perpage' => $perpage,
+                    'usercount' => $count
+        ]);       
     }
 
     /**
