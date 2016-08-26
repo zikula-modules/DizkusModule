@@ -17,12 +17,13 @@ use Zikula\Core\Controller\AbstractController;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Manager\ForumManager;
+
 use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-use Zikula\DizkusModule\Form\Handler\Admin\ModifyForum;
 use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 
@@ -290,15 +291,35 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/modify")
+     * @Route("/modify/{id}")
      *
      * @return Response
      */
-    public function modifyForumAction()
+    public function modifyForumAction(Request $request, $id = null)
     {
-        $form = FormUtil::newForm($this->name, $this);
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
 
-        return new Response($form->execute('Admin/modifyforum.tpl', new ModifyForum()));
+        // disallow editing of root forum
+        if ($id == 1) {
+            $request->getSession()->getFlashBag()->add('error', $this->__("Editing of root forum is disallowed", 403));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));            
+        }        
+        
+        if ($id){
+            $forum = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($id);
+        }else {
+            $forum = new ForumEntity();   
+        }
+        
+        
+        $form = $this->createForm('Zikula\DizkusModule\Form\Type\ForumType', $forum, []);        
+        
+        return $this->render('@ZikulaDizkusModule/Admin/modifyforum.html.twig', [
+                    'forum' => $forum,
+                    'form' => $form->createView(),
+            ]);   
     }
 
     /**

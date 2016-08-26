@@ -523,5 +523,9 @@ class ForumEntity extends EntityAccess
     {
         $this->status = self::STATUS_UNLOCKED;
     }
-
+    
+    public function getIndentedName() {
+        $name = $this->name == self::ROOTNAME ? 'Forum Index (top level)' : $this->name;
+        return str_repeat("--", $this->lvl).$name;
+    }
 }
