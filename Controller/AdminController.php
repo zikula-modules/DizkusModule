@@ -212,31 +212,28 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
         
-        $letter = $request->request->get('letter');
-        $lastletter = $request->request->get('lastletter');
-        $page = (int)$request->request->get('page', 1);
+        $page = (int)$request->query->get('page', 1);        
+        $letter = $request->query->get('letter');      
+    
+        if ($request->getMethod() == 'POST') {
+            $letter = $request->request->get('letter');            
+            $page = (int)$request->request->get('page', 1);        
+            
+            $setrank = $request->request->get('setrank');
+            ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_assignranks', ['page' => $page, 'letter' => $letter], RouterInterface::ABSOLUTE_URL));
+        }
         
-        // check for a letter parameter
-        if (!empty($lastletter)) {
-            $letter = $lastletter;
-        }
-
-        if (empty($letter) || strlen($letter) != 1) {
-            $letter = '*';
-        }
-        $letter = strtolower($letter);
-
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_HONORARY]);
-
+        $letter = (empty($letter) || strlen($letter) != 1) ? '*' : $letter;
         $perpage = 20;
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('u')
                 ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
                 ->orderBy('u.uname', 'ASC');
-        if (!empty($letter) and $letter != '*') {
+        if ($letter != '*') {
             $qb->andWhere('u.uname LIKE :letter')
-                ->setParameter('letter', $letter . '%');
+                ->setParameter('letter', strtolower($letter) . '%');
         }
         $query = $qb->getQuery();
         $query->setFirstResult(($page - 1) * $perpage)
@@ -259,9 +256,9 @@ class AdminController extends AbstractController
             }
         }
         
+        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_HONORARY]);
         
         return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
-//                    'form' => $form->createView(),
                     'ranks' => $ranks,
                     'rankimages' => $rankimages,
                     'allusers' => $userArray,
