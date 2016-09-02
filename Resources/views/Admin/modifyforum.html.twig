@@ -1,7 +1,7 @@
 {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/chosen_v1.0.0/chosen.jquery.min.js')) }}
 {{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:js/chosen_v1.0.0/chosen.css')) }}
-{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:css/chosen-bootstrap.css')) }}
-{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.ModifyForum.js')) }}
+{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:css/chosen-bootstrap.css')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.ModifyForum.js')) }}
 
 {{ adminHeader() }}
 {% form_theme form with ['bootstrap_3_layout.html.twig',
@@ -54,7 +54,36 @@
                 {{ form_widget(form.parent, { 'attr': {'class': ''} }) }}
             </div>
         </div>                
-                
+
+        {% if forum.forum_id %}
+        <div class="form-group">
+            <label for="forum_info" class="col-md-3 col-sm-3 control-label">{{ __('Forum Information') }}</label>           
+            <div class="col-lg-9">
+                <span id="forum_info">
+                    <a title="{{ __('Visit this forum') }}" href="{{ path('zikuladizkusmodule_user_viewforum', {'forum': forum.forum_id}) }}">
+                        {{ topiccount }}&nbsp;{% if topiccount == 1 %}{{ __('Topic') }}{% else %}{{ __('Topics') }}{% endif %}&nbsp;/&nbsp;
+                        {{ postcount }}&nbsp;{% if postcount == 1 %}{{ __('Post') }}{% else %}{{ __('Posts') }}{% endif %}
+                    </a>
+                </span>
+            </div>
+        </div>
+        {% endif %}            
+            
+        <div class="form-group">
+            {{ form_label(form.moderatorUsers, __('Moderation (Users)'), { 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.moderatorUsers, { 'attr': {'class': 'chzn-selectx', 'data-placeholder': __('Select Some Options') } }) }}                
+               {# {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select form-control" selectionMode='multiple'}#}
+            </div>
+        </div>
+
+ {#       <div class="form-group">
+            {{ form_label(form.moderatorGroups, __('Moderation (Groups)'), { 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {formdropdownlist id="moderatorGroups" items=$allGroups cssClass="chzn-select form-control" selectionMode='multiple'}
+            </div>
+        </div> #}       
+        
     </fieldset>    
 
 

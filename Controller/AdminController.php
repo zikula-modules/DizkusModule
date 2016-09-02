@@ -313,10 +313,16 @@ class AdminController extends AbstractController
             $forum = new ForumEntity();   
         }
         
+        $topiccount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
+                'type' => 'forumtopics']);  
+        $postcount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
+                'type' => 'forumposts']);        
         
         $form = $this->createForm('Zikula\DizkusModule\Form\Type\ForumType', $forum, []);        
         
         return $this->render('@ZikulaDizkusModule/Admin/modifyforum.html.twig', [
+                    'topiccount' => $topiccount,
+                    'postcount' => $postcount,
                     'forum' => $forum,
                     'form' => $form->createView(),
             ]);   

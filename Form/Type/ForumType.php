@@ -14,6 +14,9 @@ namespace Zikula\DizkusModule\Form\Type;
 use ModUtil;
 //use UserUtil;
 use Doctrine\ORM\EntityRepository;
+//use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +25,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ForumType extends AbstractType {
 
     public function __construct() {
-        
+    
+        $em = \ServiceUtil::get('doctrine.entitymanager');
+        $users = $em->getRepository('ZikulaUsersModule:UserEntity')->findAll();
+//                 $this->users = new ArrayCollection($usersArr);
+//        foreach ($users as $user) {
+//            $usersArr['uid'] = $user['uname'];
+//        }
+
+        $this->users = $users;
+//          dump($this->users);        
+//        $users = UserUtil::
 //        $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', array('gid' => 2));
 //        $admins = ['-1' => 'disable'];
 //        foreach ($adminGroup['members'] as $admin) {
@@ -47,10 +60,31 @@ class ForumType extends AbstractType {
                         return $er->createQueryBuilder('f')
                             ->orderBy('f.root', 'ASC')
                             ->addOrderBy('f.lft', 'ASC');},
-                    'choice_label' => 'indentedName',
+                    'choice_label' => function ($parent) {                        
+                        return str_repeat("--", $parent->getLvl()).$parent->getName();
+                    },
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
+                ->add('moderatorUsers', 'entity' , [
+                    'class' => 'Zikula\DizkusModule\Entity\ModeratorUserEntity',
+                    'choices' => $this->users,
+                    'property' => 'uid',
+                    'choice_label' => function ($moderator) {   
+                        //dump($moderator);
+                        return $moderator->getUname();
+                    },
+                    'multiple' => true,
+                    'expanded' => false,
+                    'required' => false])
+                ->addEventListener(
+                    FormEvents::POST_SET_DATA,
+                    function(FormEvent $event) {
+                        $form = $event->getForm();
+                        $data = $event->getData();
+                        dump($data);
+                    }
+                    )                            
 //                ->add('forum_disabled_info', 'textarea', [
 //                    'required' => false
 //                ])
