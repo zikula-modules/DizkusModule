@@ -23,6 +23,8 @@
     {{ form_errors(form) }}
     <fieldset>
 
+        <legend>{{ __("Forum settings")}}</legend>
+        
         <div class="form-group">
             {{ form_label(form.name, __('Name') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
             <div class="col-lg-9">
@@ -56,130 +58,60 @@
         </div>                
 
         {% if forum.forum_id %}
-        <div class="form-group">
-            <label for="forum_info" class="col-md-3 col-sm-3 control-label">{{ __('Forum Information') }}</label>           
-            <div class="col-lg-9">
-                <span id="forum_info">
-                    <a title="{{ __('Visit this forum') }}" href="{{ path('zikuladizkusmodule_user_viewforum', {'forum': forum.forum_id}) }}">
-                        {{ topiccount }}&nbsp;{% if topiccount == 1 %}{{ __('Topic') }}{% else %}{{ __('Topics') }}{% endif %}&nbsp;/&nbsp;
-                        {{ postcount }}&nbsp;{% if postcount == 1 %}{{ __('Post') }}{% else %}{{ __('Posts') }}{% endif %}
-                    </a>
-                </span>
+            <div class="form-group">
+                <label for="forum_info" class="col-md-3 col-sm-3 control-label">{{ __('Forum Information') }}</label>           
+                <div class="col-lg-9">
+                    <span id="forum_info">
+                        <a title="{{ __('Visit this forum') }}" href="{{ path('zikuladizkusmodule_user_viewforum', {'forum': forum.forum_id}) }}">
+                            {{ topiccount }}&nbsp;{% if topiccount == 1 %}{{ __('Topic') }}{% else %}{{ __('Topics') }}{% endif %}&nbsp;/&nbsp;
+                            {{ postcount }}&nbsp;{% if postcount == 1 %}{{ __('Post') }}{% else %}{{ __('Posts') }}{% endif %}
+                        </a>
+                    </span>
+                </div>
             </div>
-        </div>
         {% endif %}            
-            
+
         <div class="form-group">
             {{ form_label(form.moderatorUsers, __('Moderation (Users)'), { 'label_attr': {'class': 'col-md-3'} }) }}
             <div class="col-lg-9">
-                {{ form_widget(form.moderatorUsers, { 'attr': {'class': 'chzn-selectx', 'data-placeholder': __('Select Some Options') } }) }}                
-               {# {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select form-control" selectionMode='multiple'}#}
+                {{ form_widget(form.moderatorUsers, { 'attr': {'class': 'chzn-select', 'data-placeholder': __('Select Some Options') } }) }}                
             </div>
         </div>
 
- {#       <div class="form-group">
+        <div class="form-group">
             {{ form_label(form.moderatorGroups, __('Moderation (Groups)'), { 'label_attr': {'class': 'col-md-3'} }) }}
             <div class="col-lg-9">
-                {formdropdownlist id="moderatorGroups" items=$allGroups cssClass="chzn-select form-control" selectionMode='multiple'}
+                {{ form_widget(form.moderatorGroups, { 'attr': {'class': 'chzn-select', 'data-placeholder': __('Select Some Options') } }) }} 
             </div>
-        </div> #}       
-        
+        </div>        
+
     </fieldset>    
 
-
+    <fieldset>
+         <legend>{{ __("External sources")}}</legend>   
+    
+                <p class="col-md-12 help-block alert alert-warning ">
+                    {{ __("External sources are not supported in this version of Dzikus.")}}
+                </p>          
+    
+    </fieldset>     
+            
+    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_edit', id=forum.forum_id) }}
+    
+    <div class="form-group">
+        <div class="col-lg-offset-6 col-md-8">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+            {{ form_widget(form.restore, {'attr': {'class': 'btn btn-danger'}}) }}
+        </div>
+    </div>   
+    
     {{ form_end(form) }}
 </div>    
-    
+
 {{ adminFooter() }}
-{{ dump() }}
+{# 
 
-
-{#{pageaddvar name="javascript" value="jquery"}
-{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/chosen_v1.0.0/chosen.jquery.min.js'}
-{pageaddvar name='stylesheet' value='@ZikulaDizkusModule/Resources/public/js/chosen_v1.0.0/chosen.css'}
-{pageaddvar name='stylesheet' value='@ZikulaDizkusModule/Resources/public/css/chosen-bootstrap.css'}
-{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.ModifyForum.js'}
-
-{adminheader}
-<h3>
-    <span class="fa fa-pencil-square-o"></span>&nbsp;
-    {if $name}
-        {gt text="Edit forum"}
-    {else}
-        {gt text="New forum"}
-    {/if}
-</h3>
-
-<div id="dizkus_admin">
-
-    {form cssClass="form-horizontal" role="form"}
-    {formvalidationsummary}
-
-    <fieldset>
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="name" __text='Name'}
-            <div class="col-lg-9">
-                {formtextinput id="name" size="70" maxLength="150" mandatory=true cssClass='form-control'}
-            </div>
-        </div>
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="description" __text="Description"}
-            <div class="col-lg-9">
-                {formtextinput id="description" textMode="multiline" rows="3" cols="40" cssClass='form-control'}
-            </div>
-        </div>
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="status" __text="Lock Forum"}
-            <div class="col-lg-9">
-                <div class="checkbox">
-                    {formcheckbox id="status"}
-                </div>
-                <div class="help-block alert alert-info">
-                    <em>{gt text="Locking a forum prevents new <strong>topics</strong> from being created in the forum."}</em>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="parent" __text="Parent"}
-            <div class="col-lg-9">
-                {formdropdownlist id="parent" items=$parents cssClass='form-control'}
-            </div>
-        </div>
-
-        {if $name}
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="forum_info" __text="Forum Information"}
-            <div class="col-lg-9">
-                <span id="forum_info">
-                    {boardstats type='forumtopics' id=$forum_id assign='topiccount'}
-                    {boardstats type='forumposts' id=$forum_id assign='postcount'}
-                    <a title="{gt text='Visit this forum'}" href="{route name='zikuladizkusmodule_user_viewforum' forum=$forum_id}">
-                        {$topiccount}&nbsp;{if $topiccount eq 1}{gt text="Topic"}{else}{gt text="Topics"}{/if}&nbsp;/&nbsp;
-                        {$postcount}&nbsp;{if $postcount eq 1}{gt text="Post"}{else}{gt text="Posts"}{/if}
-                    </a>
-                </span>
-            </div>
-        </div>
-        {/if}
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="moderatorUsers" __text="Moderation (Users)"}
-            <div class="col-lg-9">
-                {formdropdownlist id="moderatorUsers" items=$allUsers cssClass="chzn-select form-control" selectionMode='multiple'}
-            </div>
-        </div>
-
-        <div class="form-group">
-            {formlabel class="col-lg-3 control-label" for="moderatorGroups" __text="Moderation (Groups)"}
-            <div class="col-lg-9">
-                {formdropdownlist id="moderatorGroups" items=$allGroups cssClass="chzn-select form-control" selectionMode='multiple'}
-            </div>
-        </div>
-
+    External sources (below) are disabled because is not implemented in this version
 
         <div id="extsource" class="form-group">
             <strong class="col-lg-3 control-label">{gt text="External source"}</strong>
@@ -288,14 +220,4 @@
 
     {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_edit' id=$forum_id}
 
-    <div class="col-lg-offset-3 col-lg-9">
-        {formbutton id="submit" commandName="submit" __text="Save" class="btn btn-success"}
-        {formbutton id="cancel" commandName="cancel" __text="Cancel" class="btn btn-danger"}
-    </div>
-
-    {/form}
-
-</div>
-
-{adminfooter}
 #}
