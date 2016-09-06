@@ -23,6 +23,7 @@ use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\EntityRepository;
 
 use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
@@ -312,7 +313,7 @@ class AdminController extends AbstractController
         }else {
             $forum = new ForumEntity();   
         }
-        //@todo use service
+        //@todo use services
         $topiccount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
                 'type' => 'forumtopics']);  
         $postcount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
@@ -342,15 +343,75 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/delete")
+     * @Route("/delete/{id}")
      *
      * @return Response
      */
-    public function deleteforumAction()
+    public function deleteforumAction(Request $request, $id = null)
     {
-        $form = FormUtil::newForm($this->name, $this);
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+        
+        if ($id) {
+            $forum = $this->getDoctrine()->getManager()->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
+            if ($forum) {
+            } else {
+                $request->getSession()->getFlashBag()->add('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));                 
+            }
+        } else {
+                $request->getSession()->getFlashBag()->add('error', $this->__('No forum id'), 403);
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL)); 
+        }
 
-        return new Response($form->execute('Admin/deleteforum.tpl', new DeleteForum()));
+        $forumRoot = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(['name' => ForumEntity::ROOTNAME]);
+        $destinations = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->getChildren($forumRoot);
+
+        $form = $this->createFormBuilder([])
+                ->add('action', 'choice', [
+                    'choices' => ['0' => $this->__('Remove them'),
+                                  '1' => $this->__('Move them to a new parent forum')],
+                    'multiple' => false,
+                    'expanded' => false,
+                    'required' => true])
+                ->add('destination', 'choice', [
+                    'choices' => $destinations,
+                    'choice_value' => function($destination){
+                        //for some reason last element is null @FIXME
+                        return $destination === null ? null : $destination->getForum_id();
+                    },
+                    'choice_label' => function ($destination) use ($forum) {
+                        $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? ' (' . $this->__("is child forum") . ')' : '';
+                        $current = $destination->getForum_id() === $forum->getForum_id()? ' (' . $this->__("current") . ')' : '';
+                        $locked = $destination->isLocked() ? ' (' . $this->__("is locked") . ')' : '';
+                        return str_repeat("--", $destination->getLvl()) . $destination->getName() . $current . $locked. $isChild;
+                    },
+                    'choice_attr' => function($destination) use ($forum){
+                        $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? true : false ;
+                        return $destination->getForum_id() === $forum->getForum_id() || $destination->isLocked() || $isChild ? ['disabled' => 'disabled'] : [];
+                    },
+                    'choices_as_values' => true,
+                    'multiple' => false,
+                    'expanded' => false,
+                    'required' => true])
+                ->add('remove', 'submit')
+                ->add('cancel', 'submit')
+                ->getForm();        
+        
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            dump($form->getData());
+            
+            
+            
+            
+        }        
+       
+        return $this->render('@ZikulaDizkusModule/Admin/deleteforum.html.twig', [
+                    'forum' => $forum,
+                    'form' => $form->createView(),
+            ]);  
     }
 
     /**

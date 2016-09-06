@@ -1,0 +1,90 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig'
+] %}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.DeleteForum.js')) }}
+{{ adminHeader() }}
+<h3>
+    <span class="fa fa-trash"></span>&nbsp;{{ __('Delete forum') }}
+</h3>
+<div id="dizkus_admin">
+    {{ showflashes() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+
+    <div class="alert alert-warning">
+        {{  __f("Are you sure want to remove the forum '%s'.", {'%s':forum.name}) }} 
+    </div>   
+
+    <div class="form-group">
+        {{ form_label(form.action, __("Move or remove subforums and topics"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+        <div class="col-md-8">
+            {{ form_widget(form.action, { 'attr': {'class': ''} }) }}                 
+        </div>
+    </div>    
+
+    <div class="form-group">
+        {{ form_label(form.destination, __('Destination') ,{ 'label_attr': {'class': 'col-md-4'} }) }} 
+        <div class="col-lg-8">
+            {{ form_widget(form.destination, { 'attr': {'class': ''} }) }}
+        </div>
+    </div>         
+
+    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_delete', id=forum.forum_id) }}
+        
+    <div class="form-group">
+        <div class="col-lg-offset-6 col-md-8">
+            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-default'}}) }}            
+            {{ form_widget(form.remove, {'attr': {'class': 'btn btn-danger'}}) }}
+        </div>
+    </div>   
+
+    {{ form_end(form) }} 
+</div>
+{{ adminFooter() }}    
+
+{{ dump() }}
+
+
+{#{pageaddvar name="javascript" value="jquery"}
+{pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.DeleteForum.js'}
+{adminheader}
+<div class="z-admin-content-pagetitle">
+    {icon type="delete" size="small"}
+    <h3>{gt text="Delete forum"}</h3>
+</div>
+
+<div id="dizkus_admin">
+
+    {form cssClass="z-form"}
+    {formvalidationsummary}
+
+
+    <div class="z-warningmsg">
+        {gt text="Are you sure want to remove the forum '%s'." tag1=$name}
+    </div>
+
+    <div class="z-formrow">
+        {formlabel for="action" __text='Move or remove subforums and topics'}
+        {formdropdownlist id="action" items=$actions}
+    </div>
+
+    <div id="destinationSelector" class="z-formrow" style="display: none;">
+        {formlabel for="destination" __text='destination:'}
+        {formdropdownlist id="destination" items=$destinations}
+    </div>
+
+    {notifydisplayhooks eventname='dizkus.ui_hooks.forum.ui_delete' id=$forum_id}
+
+    <div class="z-formbuttons z-buttons">
+        {formbutton id="submit" commandName="submit" __text="Yes" class="z-bt-ok"}
+        {formbutton id="restore" commandName="cancel" __text="Cancel" class="z-bt-cancel"}
+    </div>
+
+    {/form}
+
+</div>
+
+{adminfooter}
+
+#}
