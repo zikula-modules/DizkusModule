@@ -34,7 +34,7 @@
         
     <div class="form-group">
         <div class="col-lg-offset-6 col-md-8">
-            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-default'}}) }}            
+            <a class="btn btn-default" href="{{ path('zikuladizkusmodule_admin_tree') }}" role="button">{{ __('Cancel')}}</a>
             {{ form_widget(form.remove, {'attr': {'class': 'btn btn-danger'}}) }}
         </div>
     </div>   
@@ -42,9 +42,6 @@
     {{ form_end(form) }} 
 </div>
 {{ adminFooter() }}    
-
-{{ dump() }}
-
 
 {#{pageaddvar name="javascript" value="jquery"}
 {pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Admin.DeleteForum.js'}

@@ -13,28 +13,35 @@ namespace Zikula\DizkusModule\Controller;
 
 use ModUtil;
 use System;
+
 use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\Event\GenericEvent;
+
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Manager\ForumManager;
-
 use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
 use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
+use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
+use Zikula\DizkusModule\Container\HookContainer;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityRepository;
 
-use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
-use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
-
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
 
 /**
  * @Route("/admin")
@@ -396,16 +403,49 @@ class AdminController extends AbstractController
                     'expanded' => false,
                     'required' => true])
                 ->add('remove', 'submit')
-                ->add('cancel', 'submit')
                 ->getForm();        
         
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            dump($form->getData());
-            
-            
-            
-            
+                    
+        // check hooked modules for validation
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_delete', $hook)->getValidators();
+       
+        if ($form->isValid() && !$hookvalidators->hasErrors()) {
+            $data = $form->getData();  
+            if ($data['action'] == 1) {
+                // get the child forums and move them
+                $children = $forum->getChildren();
+                foreach ($children as $child) {
+                    $child->setParent($data['destination']);
+                }
+                $forum->removeChildren();
+
+                // get child topics and move them
+                $topics = $forum->getTopics();
+                foreach ($topics as $topic) {
+                    $topic->setForum($data['destination']);
+                    $forum->getTopics()->removeElement($topic);
+                }
+                $this->getDoctrine()->getManager()->flush();
+            }
+            // remove the forum
+            $this->getDoctrine()->getManager()->remove($forum);
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_delete', new ProcessHook($forum->getForum_id()));
+
+            if (isset($data['destination'])) {
+                // sync last post in destination
+                ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $data['destination']]);
+            }
+
+            // repair the tree
+            $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->recover();
+            $this->getDoctrine()->getManager()->clear();
+
+            // resync all forums, topics & posters
+            ModUtil::apiFunc($this->name, 'sync', 'all');                   
         }        
        
         return $this->render('@ZikulaDizkusModule/Admin/deleteforum.html.twig', [
