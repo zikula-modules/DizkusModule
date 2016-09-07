@@ -524,26 +524,27 @@ class AdminController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
+        
+        //use extensions @todo
         $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
+        //use service @todo
         $module = ModUtil::getModule($moduleName);
-        if (isset($module)) {
-            $classname = $module->getVersionClass();
-        } else {
-            $classname = $moduleName . '_Version';
-        }
-        $moduleVersionObj = new $classname();
-        $bindingsBetweenOwners = \HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME);
+        
+        $bindingsBetweenOwners = $this->get('hook_dispatcher')->getBindingsBetweenOwners($moduleName, $this->name);
         foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
+            $areaname = $this->getDoctrine()->getManager()->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
-            $bindingsBetweenOwners[$k]['areatitle'] = $this->view->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
+            //find way to get area title @todo
+            $bindingsBetweenOwners[$k]['areatitle'] = 'Area title';
+            //$bindingsBetweenOwners[$k]['areatitle'] = $this->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
         }
-        $this->view->assign('areas', $bindingsBetweenOwners);
-        $this->view->assign('dizkushookconfig', $hookconfig);
-        $this->view->assign('activeModule', $moduleName);
-        $this->view->assign('forums', ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Forum', 'getParents', array('includeLocked' => true)));
 
-        return new Response($this->view->fetch('Hook/modifyconfig.tpl'));
+        return $this->render('@ZikulaDizkusModule/Hook/modifyconfig.html.twig', [
+                    'areas' => $bindingsBetweenOwners,
+                    'dizkushookconfig' => $hookconfig,
+                    'activeModule' => $moduleName,
+                    'forums' => ModUtil::apiFunc($this->name, 'Forum', 'getParents', ['includeLocked' => true])
+            ]);    
     }
 
     /**

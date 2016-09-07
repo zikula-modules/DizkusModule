@@ -1,0 +1,37 @@
+{{ adminHeader() }}
+<h3>
+    <span class="fa fa-comments"></span>&nbsp;{{ __f('Dizkus settings for %s', {'%s': activeModule }) }}
+</h3>
+<div id="dizkus_admin">
+
+<form class="form-horizontal" action="{{ path("zikuladizkusmodule_admin_hookconfigprocess") }}" method="post" enctype="application/x-www-form-urlencoded">
+    <div>
+        <input type="hidden" name="activeModule" value="{{ activeModule }}" />
+        {% for area in areas %}
+            {% set areaid = area.sareaid %}
+            <fieldset>
+                <legend>{{ __f('Dizkus hook option settings for area "%s"', {'%s':area.areatitle}) }}</legend>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="dizkus_forum">
+                        {{ __("Forum to place hooked topics within:") }}
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control" id='dizkus_forum' name='dizkus[{{areaid}}][forum]'>
+                        {% for forum in forums %}
+                            <option label="{{ forum.text }}" value="{{ forum.value }}" {#% if dizkushookconfig.areaid.forum is defined and ($dizkushookconfig.$areaid.forum eq $forum.value)}selected="selected"{/if#}>{{ forum.text }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        {% endfor %}
+        <div class="col-md-offset-3 col-md-9">
+            <a class="btn btn-default" href="{#modurl modname=$activeModule type="admin" func='index'#}" title="{{ __("Cancel") }}">{{ __("Cancel") }}</a>            
+            <input class="btn btn-success" type="submit" name="save" value="{{ __("Save") }}" />
+        </div>
+    </div>
+</form>    
+
+</div>    
+{{ adminFooter() }}
+{{ dump() }}
