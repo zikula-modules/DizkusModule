@@ -455,15 +455,59 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/subscriptions", options={"expose"=true})
+     * @Route("/subscriptions/{uid}", options={"expose"=true})
      *
      * @return Response
      */
-    public function manageSubscriptionsAction()
+    public function manageSubscriptionsAction(Request $request, $uid = null)
     {
-        $form = FormUtil::newForm($this->name, $this);
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
 
-        return new Response($form->execute('Admin/managesubscriptions.tpl', new ManageSubscriptions()));
+        $topicsubscriptions = [];
+        $forumsubscriptions = [];
+        
+        $username = null;
+        if (!empty($uid)) {
+            $username = \UserUtil::getVar('uname', $uid);
+        }
+        
+        if (!empty($uid)) {
+            $params = ['uid' => $uid];
+            $topicsubscriptions = ModUtil::apiFunc($this->name, 'Topic', 'getSubscriptions', $params);
+            $forumsubscriptions = ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptions', $params);
+        }
+        
+        if ($request->isMethod('POST')) {
+            
+            $forumSub = $request->request->get('forumsubscriptions', []);          
+            foreach ($forumSub as $id => $selected) {
+                if ($selected) {
+                    ModUtil::apiFunc($this->name, 'forum', 'unsubscribe', [
+                        'user_id' => $uid,
+                        'forum' => $id
+                    ]);
+                }
+            }
+            
+            $topicSub = $request->request->get('topicsubscriptions', []);
+            foreach ($topicSub as $id => $selected) {
+                if ($selected) {
+                    ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', [
+                        'user_id' => $uid,
+                        'topic' => $id
+                    ]);
+                }
+            } 
+        }   
+        
+        return $this->render('@ZikulaDizkusModule/Admin/managesubscriptions.html.twig', [
+                    'uid' => $uid,
+                    'username' => $username,
+                    'topicsubscriptions' => $topicsubscriptions,
+                    'forumsubscriptions' => $forumsubscriptions
+            ]);        
     }
 
     /**
