@@ -19,6 +19,7 @@ use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Event\GenericEvent;
+use Zikula\Core\RouteUrl;
 
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
@@ -340,7 +341,8 @@ class AdminController extends AbstractController
             $em->flush();
   
             // notify hooks
-            $hookUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()], RouterInterface::ABSOLUTE_URL);
+            //$hookUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()], RouterInterface::ABSOLUTE_URL);
+            $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()]);
             $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_edit', new ProcessHook($forum->getForum_id(), $hookUrl));
             
             if ($id) {
