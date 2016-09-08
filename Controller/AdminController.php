@@ -330,10 +330,19 @@ class AdminController extends AbstractController
         
         $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        
+        // check hooked modules for validation
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();        
+
+        if ($form->isValid() && !$hookvalidators->hasErrors() ) {
             $em->persist($forum);
             $em->flush();
   
+            // notify hooks
+            $hookUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()], RouterInterface::ABSOLUTE_URL);
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_edit', new ProcessHook($forum->getForum_id(), $hookUrl));
+            
             if ($id) {
                 $request->getSession()->getFlashBag()->add('status', $this->__('Forum successfully updated.'));
             } else {

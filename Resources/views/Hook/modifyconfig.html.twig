@@ -12,10 +12,10 @@
             <fieldset>
                 <legend>{{ __f('Dizkus hook option settings for area "%s"', {'%s':area.areatitle}) }}</legend>
                 <div class="form-group">
-                    <label class="col-md-3 control-label" for="dizkus_forum">
+                    <label class="col-md-4 control-label" for="dizkus_forum">
                         {{ __("Forum to place hooked topics within:") }}
                     </label>
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <select class="form-control" id='dizkus_forum' name='dizkus[{{areaid}}][forum]'>
                         {% for forum in forums %}
                             <option label="{{ forum.text }}" value="{{ forum.value }}" {#% if dizkushookconfig.areaid.forum is defined and ($dizkushookconfig.$areaid.forum eq $forum.value)}selected="selected"{/if#}>{{ forum.text }}</option>
