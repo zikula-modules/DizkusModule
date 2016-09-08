@@ -533,25 +533,28 @@ class AdminController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        
-        //use extensions @todo
-        $hookconfig = ModUtil::getVar($moduleName, 'dizkushookconfig');
-        //use service @todo
-        $module = ModUtil::getModule($moduleName);
-        
+
+        $hookconfig = $this->get('zikula_extensions_module.api.variable')->get($moduleName, 'dizkushookconfig');
+        // looks like module should always exist it would not be hooked
+        $module = $this->get('zikula_extensions_module.api.extension')->getModule($moduleName);
+        $moduleCapabilities = $module->getCapabilities();
+        // same hook_subscriber class should always exist right?
+        // maybe use CapabilityApi here ?? 
+        // $capabilities = $this->get('zikula_extensions_module.api.capability')->isCapable($moduleName, 'hook_subscriber');
+        $moduleHookContainerClass = $moduleCapabilities['hook_subscriber']['class'];
+        $moduleHookContainer = new $moduleHookContainerClass($this->get('translator.default'));      
         $bindingsBetweenOwners = $this->get('hook_dispatcher')->getBindingsBetweenOwners($moduleName, $this->name);
         foreach ($bindingsBetweenOwners as $k => $binding) {
             $areaname = $this->getDoctrine()->getManager()->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
             $bindingsBetweenOwners[$k]['areaname'] = $areaname;
-            //find way to get area title @todo
-            $bindingsBetweenOwners[$k]['areatitle'] = 'Area title';
-            //$bindingsBetweenOwners[$k]['areatitle'] = $this->__($moduleVersionObj->getHookSubscriberBundle($areaname)->getTitle());
+            $bindingsBetweenOwners[$k]['areatitle'] = $moduleHookContainer->getHookSubscriberBundle($areaname)->getTitle();
         }
 
         return $this->render('@ZikulaDizkusModule/Hook/modifyconfig.html.twig', [
                     'areas' => $bindingsBetweenOwners,
                     'dizkushookconfig' => $hookconfig,
-                    'activeModule' => $moduleName,
+                    'activeModule' => $module,
+                    // @todo remove usage of ModUtil 
                     'forums' => ModUtil::apiFunc($this->name, 'Forum', 'getParents', ['includeLocked' => true])
             ]);    
     }
@@ -567,22 +570,24 @@ class AdminController extends AbstractController
      */
     public function hookConfigProcessAction(Request $request)
     {
-        $hookdata = $request->request->get('dizkus', array());
+        $hookdata = $request->request->get('dizkus', []);
         $moduleName = $request->request->get('activeModule');
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
+        
         foreach ($hookdata as $area => $data) {
             if (!isset($data['forum']) || empty($data['forum'])) {
                 $request->getSession()->getFlashBag()->add('error', $this->__f('Error: No forum selected for area \'%s\'', $area));
                 $hookdata[$area]['forum'] = null;
             }
         }
-        ModUtil::setVar($moduleName, 'dizkushookconfig', $hookdata);
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
+        $this->get('zikula_extensions_module.api.variable')->set($moduleName, 'dizkushookconfig' , $hookdata);
         $request->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hook option settings updated.'));
 
-        return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
+        //return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName], RouterInterface::ABSOLUTE_URL));        
     }
 
 }

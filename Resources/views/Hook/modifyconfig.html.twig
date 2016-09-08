@@ -1,12 +1,12 @@
 {{ adminHeader() }}
 <h3>
-    <span class="fa fa-comments"></span>&nbsp;{{ __f('Dizkus settings for %s', {'%s': activeModule }) }}
+    <span class="fa fa-comments"></span>&nbsp;{{ __f('Dizkus settings for %s', {'%s': activeModule.displayname }) }}
 </h3>
 <div id="dizkus_admin">
 
 <form class="form-horizontal" action="{{ path("zikuladizkusmodule_admin_hookconfigprocess") }}" method="post" enctype="application/x-www-form-urlencoded">
     <div>
-        <input type="hidden" name="activeModule" value="{{ activeModule }}" />
+        <input type="hidden" name="activeModule" value="{{ activeModule.name }}" />
         {% for area in areas %}
             {% set areaid = area.sareaid %}
             <fieldset>
@@ -18,7 +18,11 @@
                     <div class="col-md-8">
                         <select class="form-control" id='dizkus_forum' name='dizkus[{{areaid}}][forum]'>
                         {% for forum in forums %}
-                            <option label="{{ forum.text }}" value="{{ forum.value }}" {#% if dizkushookconfig.areaid.forum is defined and ($dizkushookconfig.$areaid.forum eq $forum.value)}selected="selected"{/if#}>{{ forum.text }}</option>
+                            <option label="{{ forum.text }}" value="{{ forum.value }}" 
+                                    {% if dizkushookconfig is defined
+                                            and dizkushookconfig[areaid] is defined
+                                            and dizkushookconfig[areaid].forum is defined
+                                            and (dizkushookconfig[areaid].forum == forum.value) %} selected="selected" {% endif %}>{{ forum.text }}</option>
                         {% endfor %}
                         </select>
                     </div>
@@ -34,4 +38,3 @@
 
 </div>    
 {{ adminFooter() }}
-{{ dump() }}
