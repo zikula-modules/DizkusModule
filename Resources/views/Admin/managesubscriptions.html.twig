@@ -1,0 +1,110 @@
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/jQuery-Autocomplete-1.2.7/dist/jquery.autocomplete.min.js')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.ManageSubscriptions.js')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Tools.js')) }}
+    <style>
+        .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+        .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+        .autocomplete-selected { background: #F0F0F0; }
+        .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }       
+    </style>
+
+{{ adminHeader() }}
+<h3>
+    <span class="fa fa-envelope"></span>&nbsp;{{ __('Manage subscriptions') }}
+</h3>
+<div id="dizkus_admin">
+    <form class="form-horizontal" action="{{ path('zikuladizkusmodule_admin_managesubscriptions', {'uid': uid}) }}" method="post">   
+    <div id="liveusersearch" class="">
+        <fieldset>
+            <label for="username" class="control-label col-lg-2">{{ __("Search for a user") }}:</label>&nbsp;
+            <div class="col-md-3">
+                <input class="form-control" maxlength="25" type="text" id="username" name='username' value="{{ username }}" placeholder="{{ __('type a username') }}" />
+            </div>
+        </fieldset>
+    </div>       
+    {% if uid %}           
+        <div class="topic-subscriptions-table">
+            {% if topicsubscriptions|length > 0 %}
+            <div class="list-header list-group-item clearfix" style="background: #eee;">
+              <h2>{{ __("Manage topic subscriptions") }}</h2>
+              <div class="row">
+                <div class="col-md-4">
+                   <strong>{{ __("Topic") }}</strong>
+                </div>
+                <div class="col-md-4">
+                   <strong>{{ __("Poster") }}</strong>
+                </div>                   
+                <div class="col-md-2 pull-right text-right">
+                  <label>
+                    {{ __('Select all') }}&nbsp;<input id="alltopic" type="checkbox" >
+                  </label>       
+                </div>
+              </div>
+            </div>
+            <ul class="list-group">
+                {% for subscription in topicsubscriptions %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ subscription.topic.title }}
+                            </div>                   
+                            <div class="col-md-4">
+                                {{ subscription.topic.poster.user.uname }}
+                            </div>
+                            <div class="col-md-2 pull-right text-right">
+                              <label>
+                                <input type="checkbox" id="{{ subscription.topic.topic_id }}" name="topicsubscriptions[{{ subscription.topic.topic_id }}]" class="topicsubscriptions">
+                              </label>       
+                            </div>                        
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>    
+            {% else %}
+                <h3>{{ __("No topic subscriptions found.") }}</h3>
+            {% endif%}    
+        </div>
+        <div class="forum-subscriptions-table">  
+            {% if forumsubscriptions|length > 0 %}
+            <div class="list-header list-group-item clearfix" style="background: #eee;">
+              <h2>{{ __("Manage forum subscriptions") }}</h2>
+              <div class="row">
+                <div class="col-md-4">
+                   <strong>{{ __("Forum") }}</strong>
+                </div>                 
+                <div class="col-md-2 pull-right text-right">
+                  <label>
+                    {{ __('Select all') }}&nbsp;<input id="allforums" type="checkbox" >
+                  </label>       
+                </div>
+              </div>
+            </div>
+            <ul class="list-group">
+                {% for subscription in forumsubscriptions %}            
+                    <li class="list-group-item">
+                        <div class="row">                        
+                            <div class="col-md-4">
+                                <a href="{{ path('zikuladizkusmodule_user_viewforum', {'forum':subscription.forum.forum_id}) }}" title="{{ subscription.forum.name }}">{{ subscription.forum.name }}</a>
+                            </div>
+                            <div class="col-md-2 pull-right text-right">
+                              <label>
+                                <input type="checkbox" id="{{ subscription.forum.forum_id }}" name="forumsubscriptions[{{ subscription.forum.forum_id }}]" class="forumsubscriptions">
+                              </label>       
+                            </div>                             
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul> 
+            {% else %}
+                <h3>{{ __("No forum subscriptions found.") }}</h3>
+            {% endif%}        
+        </div>
+        {% if topicsubscriptions|length > 0 or forumsubscriptions|length > 0 %}    
+            <div class="col-md-offset-9 col-md-3">
+                <button type="submit" name="submit" id="submit" class="btn btn-success" alt="{{ __('Unsubscribe selected') }}" title="{{ __('Unsubscribe selected') }}">{{ __('Unsubscribe selected') }}</button>
+            </div>
+        {% endif %}   
+    {% endif %}        
+    </form>
+</div>
+{{ adminFooter() }}

@@ -1,0 +1,253 @@
+{{ adminHeader() }}
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+<h3>
+    <span class="fa fa-wrench"></span>&nbsp;{{ __('Settings')}}
+</h3>
+<div id="dizkus_admin">
+    {{ showflashes() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    <fieldset>
+        <legend>{{ __("General settings")}}</legend>
+        <div class="form-group">       
+            {{ form_label(form.forum_enabled, __('Forums are accessible to visitors') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.forum_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                {{ form_errors(form.forum_enabled) }}
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                </p>  
+            </div>
+        </div>     
+        <div class="form-group">
+            {{ form_label(form.forum_disabled_info, __('Message displayed if forums are disabled'), { 'label_attr': {'class': 'col-md-4'} }) }} 
+            <div class="col-md-8">
+                {{ form_widget(form.forum_disabled_info, { 'attr': {'class': ''} }) }}
+                {{ form_errors(form.forum_disabled_info) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.indexTo, __('Redirect forum index to forum id'), { 'label_attr': {'class': 'col-md-4'} }) }} 
+            <div class="col-md-8">
+                {{ form_widget(form.indexTo, { 'attr': {'class': '', 'size': 5, 'maxlength':10} }) }}                
+                <p class="help-block alert alert-info">
+                    {{ __('Leave blank to use standard forum index.') }}
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.email_from, __('Sender address for e-mail messages from forums'), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.email_from, { 'attr': {'class': '', 'size': 30, 'maxlength':200} }) }}                 
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.defaultPoster, __('Anonymous posts assigned to UID'), { 'label_attr': {'class': 'col-md-4'} }) }}    
+            <div class="col-md-8">
+                {{ form_widget(form.defaultPoster, { 'attr': {'class': '', 'min': 1, 'size': 3, 'maxlength':20} }) }}                
+                <p class="help-block alert alert-info">
+                    {{ __("Anonymous posts can be created by hooks or RSS feeds. This UID will be used as the 'original poster' of the thread. Default: 2 (admin).") }}
+                </p>
+            </div>
+        </div>                
+        <div class="form-group">
+            {{ form_label(form.hot_threshold, __("'Hot topic' threshold (default: 20)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.hot_threshold, { 'attr': {'class': '', 'min': 2, 'max': 100, 'size': 3, 'maxlength':3} }) }}                 
+            </div>
+        </div>                
+        <div class="form-group">
+            {{ form_label(form.posts_per_page, __("Posts per page in topic index (default: 15)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.posts_per_page, { 'attr': {'class': '', 'min': 1, 'max': 100, 'size': 3, 'maxlength':3 } }) }}                 
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.topics_per_page, __("Topics per page in forum index (default: 15)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.topics_per_page, { 'attr': {'class': '', 'min': 5, 'max': 100, 'size': 3, 'maxlength':3 } }) }}                 
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.url_ranks_images, __("Path to rank images"), { 'label_attr': {'class': 'col-md-4'} }) }} 
+            <div class="col-md-8">
+                {{ form_widget(form.url_ranks_images, { 'attr': {'class': '', 'size': 30, 'maxlength':100 } }) }}                  
+            </div>
+        </div>
+        <div class="form-group">       
+            {{ form_label(form.ajax, __('Enable user-side ajax') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.ajax, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            </div>
+        </div>
+        <div class="form-group">       
+            {{ form_label(form.solved_enabled, __('Enable solved option in topics') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.solved_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+            </div>
+        </div>            
+    </fieldset>        
+    <fieldset>
+        <legend>{{ __("Forum Search settings") }}</legend>            
+        <div class="form-group">       
+            {{ form_label(form.fulltextindex, __('Enable full-text index field searching') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.fulltextindex, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="help-block alert alert-danger">
+                    {{ __("This setting is disabled.")}}
+                </p> 
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("Notice: For searches with full-text index fields, you need MySQL 4 or later; the feature does not work with InnoDB databases. This flag will normally be set during installation, when the index fields have been created. Search results may be empty if the query string is present in too many postings. This is a feature of MySQL. For more information, see <a href='http://dev.mysql.com/doc/mysql/en/fulltext-search.html' title='Full-text search in MySQL'> Full-text search in MySQL </a> in the MySQL documentation.")}}
+                </p> 
+            </div>
+        </div>
+        <div class="form-group">       
+            {{ form_label(form.extendedsearch, __('Enable extended full-text search in internal search') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.extendedsearch, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="help-block alert alert-danger">
+                    {{ __("This setting is disabled.")}}
+                </p>                
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("Notice: Extended full-text searching enables queries like '+Dizkus -Skype' to find posts that contain 'Dizkus' but not 'Skype'. Requires MySQL 4.01 or later. For more information, see <a href='http://dev.mysql.com/doc/mysql/en/fulltext-boolean.html' title='Extended full-text search in MySQL'>'Full-text search in MySQL'</a> in the MySQL documentation.")}}
+                </p>        
+            </div>
+        </div>             
+        <div class="form-group">       
+            {{ form_label(form.showtextinsearchresults, __('Show text in search results') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.showtextinsearchresults, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("Notice: Deactivate the 'Show text in search results' setting for high-volume sites if you need to improve search performance, or if you need to be attentive to constant cleaning of the search results table.")}}
+                </p>        
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.minsearchlength, __("Minimum number of characters in search query string (1 minimum)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.minsearchlength, { 'attr': {'class': '', 'min': 1, 'max': 50, 'size': 2, 'maxlength': 2 } }) }}                 
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.maxsearchlength, __("Maximum number of characters in search query string (50 maximum)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.maxsearchlength, { 'attr': {'class': '', 'min': 1, 'max': 50, 'size': 2, 'maxlength':2 } }) }}                 
+            </div>
+        </div>
+    </fieldset>         
+    <fieldset>          
+        <legend>{{ __("User-related settings") }}</legend>            
+        <div class="form-group">
+            {{ form_label(form.post_sort_order, __("Default sort order for posts"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.post_sort_order, { 'attr': {'class': ''} }) }}                 
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.signature_start, __('Beginning of signature'), { 'label_attr': {'class': 'col-md-4'} }) }} 
+            <div class="col-md-8">
+                {{ form_widget(form.signature_start, { 'attr': {'class': ''} }) }}
+            </div>
+        </div>         
+        <div class="form-group">
+            {{ form_label(form.signature_end, __('End of signature'), { 'label_attr': {'class': 'col-md-4'} }) }} 
+            <div class="col-md-8">
+                {{ form_widget(form.signature_end, { 'attr': {'class': ''} }) }}
+            </div>
+        </div> 
+        <div class="form-group">       
+            {{ form_label(form.signaturemanagement, __('Enable signature management via forum user settings') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.signaturemanagement, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            </div>
+        </div>
+        <div class="form-group">       
+            {{ form_label(form.removesignature, __('Strip user signatures from posts') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.removesignature, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+            </div>
+        </div>           
+    </fieldset>             
+    <fieldset>
+        <legend>{{ __("Security settings") }}</legend>        
+        <div class="form-group">       
+            {{ form_label(form.log_ip, __('Log IP addresses') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.log_ip, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+            </div>
+        </div>  
+        <div class="form-group">       
+            {{ form_label(form.striptags, __('Strip user signatures from posts') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.striptags, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags.")}}
+                </p>                 
+            </div>
+        </div>  
+        <div class="form-group">
+            {{ form_label(form.timespanforchanges, __("Number of hours during which non-moderators are allowed to edit their post (leave blank for unlimited)"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.timespanforchanges, { 'attr': {'class': '', 'size': 3, 'maxlength': 3 } }) }}                 
+            </div>
+        </div>            
+        <div class="form-group">       
+            {{ form_label(form.striptagsfromemail, __('Strip HTML tags from outgoing email post content') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.striptagsfromemail, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="col-md-12 help-block alert alert-info pull-right">
+                    {{ __("Strip action occurs post filter hook action.")}}
+                </p>                 
+            </div>
+        </div>            
+        <div class="form-group">
+            {{ form_label(form.notifyAdminAsMod, __("Admin to notify with Moderator notifications"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+            <div class="col-md-8">
+                {{ form_widget(form.notifyAdminAsMod, { 'attr': {'class': ''} }) }}                 
+            </div>
+        </div>            
+    </fieldset>
+    <fieldset>            
+        <div class="form-group">       
+            {{ form_label(form.m2f_enabled, __('Enable Mail2Forum') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.m2f_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="help-block alert alert-danger">
+                    {{ __("This setting is disabled.")}}
+                </p>                 
+            </div>
+        </div> 
+        <div class="form-group">       
+            {{ form_label(form.rss2f_enabled, __('Enable RSS2Forum') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.rss2f_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+                <p class="help-block alert alert-danger">
+                    {{ __("This setting is disabled.")}}
+                </p>                 
+            </div>
+        </div> 
+        <div class="form-group">       
+            {{ form_label(form.favorites_enabled, __('Enable favourites') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.favorites_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }} 
+            </div>
+        </div>            
+        <div class="form-group">       
+            {{ form_label(form.deletehookaction, __("Action to be performed when 'delete' hook is called") ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+            <div class="col-md-8">           
+                {{ form_widget(form.deletehookaction, { 'attr': {'class': ''} }) }}  
+            </div>
+        </div>            
+    </fieldset>            
+    <div class="form-group">
+        <div class="col-lg-offset-6 col-md-8">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+            {{ form_widget(form.restore, {'attr': {'class': 'btn btn-danger'}}) }}
+        </div>
+    </div>
+    {{ form_end(form) }}  
+</div>
+{{ adminFooter() }}               

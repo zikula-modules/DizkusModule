@@ -523,5 +523,4 @@ class ForumEntity extends EntityAccess
     {
         $this->status = self::STATUS_UNLOCKED;
     }
-
 }
