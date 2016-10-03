@@ -35,6 +35,7 @@ use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\DizkusModule\HookedTopicMeta\Generic;
+use Zikula\DizkusModule\Container\HookContainer;
 
 class HookHandlers extends AbstractHookListener
 {
@@ -118,7 +119,7 @@ class HookHandlers extends AbstractHookListener
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
         PageUtil::addVar('stylesheet', "@ZikulaDizkusModule/Resources/public/css/style.css");
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/topicview.tpl'));
+        $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/topicview.tpl'));
     }
 
     /**
@@ -144,7 +145,7 @@ class HookHandlers extends AbstractHookListener
             $this->view->assign('newTopic', true);
         }
         // add this response to the event stack
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
+        $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
     }
 
     /**
@@ -163,7 +164,7 @@ class HookHandlers extends AbstractHookListener
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
+            $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
         }
     }
 
