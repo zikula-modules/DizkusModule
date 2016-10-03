@@ -1,0 +1,16 @@
+parameters:
+    zikula_dizkus_module.security.class: Zikula\DizkusModule\Security\Permission
+    zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
+
+services:
+    zikula_dizkus_module.security:
+        class: %zikula_dizkus_module.security.class%
+        tags:
+            - { name: zikula.dizkus.security }
+        arguments: [@request_stack, @doctrine.entitymanager, @translator.default, @zikula_permissions_module.api.permission, @zikula_extensions_module.api.variable]
+        
+    zikula_dizkus_module.event_listener:
+        class: %zikula_dizkus_module.event_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments: [@request_stack, @doctrine.entitymanager, @router]
