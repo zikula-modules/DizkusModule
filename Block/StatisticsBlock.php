@@ -90,13 +90,15 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
         // must set this default
         $paramArray['months'] = !empty($paramArray['months']) ? $paramArray['months'] : 6;
 
-        $topForums = ModUtil::apiFunc($this->name, 'block', 'getTopForums', $paramArray);
+        $BlockHelper = $this->get('zikula_dizkus_module.blocks_helper');
+        
+        $topForums = $BlockHelper->getTopForums($paramArray);
         $this->view->assign('topforums', $topForums)
             ->assign('topforumscount', count($topForums));
-        $lastPosts = ModUtil::apiFunc($this->name, 'block', 'getLastPosts', $paramArray);
+        $lastPosts = $BlockHelper->getLastPosts($paramArray);
         $this->view->assign('lastposts', $lastPosts)
             ->assign('lastpostcount', count($lastPosts));
-        $topPosters = ModUtil::apiFunc($this->name, 'block', 'getTopPosters', $paramArray);
+        $topPosters = $BlockHelper->getTopPosters($paramArray);
         $this->view->assign('topposters', $topPosters)
             ->assign('toppostercount', count($topPosters))
             ->assign('months', $paramArray['months']);
@@ -121,9 +123,9 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
+//        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
+//            throw new AccessDeniedException();
+//        }
         $params = $this->request->request->get('dizkus');
         $blockInfo['content'] = BlockUtil::varsToContent($params);
 
@@ -141,9 +143,9 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
+//        if (!SecurityUtil::checkPermission($this->name . '::StatisticsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
+//            throw new AccessDeniedException();
+//        }
         // Break out options from our content field
         $vars = BlockUtil::varsFromContent($blockInfo['content']);
         // ensure default values

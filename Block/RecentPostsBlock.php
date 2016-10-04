@@ -91,7 +91,8 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
                 $paramarray[trim($paramdata[0])] = trim($paramdata[1]);
             }
         }
-        $this->view->assign('lastposts', ModUtil::apiFunc($this->name, 'block', 'getLastPosts', $paramarray));
+        
+        $this->view->assign('lastposts', $this->get('zikula_dizkus_module.blocks_helper')->getLastPosts($paramarray));
 
         $blockInfo['content'] = $this->view->fetch('Block/' . trim($vars['template']));
 
@@ -109,9 +110,9 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function update($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
+//        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
+//            throw new AccessDeniedException();
+//        }
         $params = $this->request->request->get('dizkus');
         $blockInfo['content'] = BlockUtil::varsToContent($params);
 
@@ -129,9 +130,12 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
      */
     public function modify($blockInfo)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
+//        if (!SecurityUtil::checkPermission($this->name . '::RecentPostsBlock', $blockInfo['bid'] . '::', ACCESS_ADMIN)) {
+//            throw new AccessDeniedException();
+//        }
+        
+        dump($blockInfo);
+        
         $vars = BlockUtil::varsFromContent($blockInfo['content']);
         // ensure default values
         $vars['params'] = !empty($vars['params']) ? $vars['params'] : 'maxposts=5';

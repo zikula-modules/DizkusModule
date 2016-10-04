@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
+use Zikula\DizkusModule\Entity\ForumEntity;
 
 /**
  * Description of Permissions
@@ -175,8 +176,8 @@ class Permission {
                 }
             }
         }
-        if (!$this->variableApi->getVar($this->name, 'forum_enabled') && !$this->permissionApi->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->variableApi->getVar($this->name, 'forum_disabled_info'));
+        if (!$this->variableApi->get($this->name, 'forum_enabled') && !$this->permissionApi->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            $this->request->getSession()->getFlashBag()->add('error', $this->variableApi->get($this->name, 'forum_disabled_info'));
             return false;
         }
         if (empty($userId)) {
@@ -241,4 +242,30 @@ class Permission {
         return $forum;
     }
 
+    /**
+     * Get the ids of all the forums the user is allowed to see
+     *
+     * @param  integer $args['parent']
+     * @param  integer $args['userId']
+     * @return array
+     */
+    public function getForumIdsByPermission($args)
+    {
+        $parent = isset($args['parent']) ? $args['parent'] : null;
+        $userId = (isset($args['userId']) && $args['userId'] > 1) ? $args['userId'] : null;
+        $ids = [];
+        $forums = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findAll();
+        /** @var $forum ForumEntity */
+        foreach ($forums as $forum) {
+            $parent = $forum->getParent();
+            $parentId = isset($parent) ? $parent->getForum_id() : null;
+            $forumId = $forum->getForum_id();
+            if ($this->permissionApi->hasPermission($this->name . '::', "{$parentId}:{$forumId}:", ACCESS_READ, $userId)) {
+                $ids[] = $forumId;
+            }
+        }
+
+        return $ids;
+    }    
+    
 }
