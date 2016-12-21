@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -12,7 +12,6 @@
 namespace Zikula\DizkusModule\Form\Handler\User;
 
 use ModUtil;
-use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Hook\ValidationHook;
@@ -28,7 +27,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class DeleteTopic extends \Zikula_Form_AbstractHandler
 {
-
     /**
      * topic id
      *
@@ -46,11 +44,11 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
     /**
      * Setup form.
      *
-     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     * @param Zikula_Form_View $view current Zikula_Form_View instance
      *
      * @return boolean
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function initialize(Zikula_Form_View $view)
@@ -75,7 +73,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         $this->topic_poster = $managedTopic->get()->getPoster();
         $topicPerms = $managedTopic->getPermissions();
 
-        if ($topicPerms['moderate'] <> true) {
+        if ($topicPerms['moderate'] != true) {
             throw new AccessDeniedException();
         }
 
@@ -87,8 +85,8 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
     /**
      * Handle form submission.
      *
-     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
-     * @param array            &$args Arguments.
+     * @param Zikula_Form_View $view  current Zikula_Form_View instance
+     * @param array            &$args Arguments
      *
      * @return bool|void
      */
@@ -97,6 +95,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
         // rewrite to topic if cancel was pressed
         if ($args['commandName'] == 'cancel') {
             $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
@@ -129,7 +128,7 @@ class DeleteTopic extends \Zikula_Form_AbstractHandler
 
         // redirect to the forum of the deleted topic
         $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
+
         return $view->redirect($url);
     }
-
 }

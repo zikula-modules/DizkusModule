@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -13,7 +13,6 @@ namespace Zikula\DizkusModule\Form\Handler\User;
 
 use Zikula\DizkusModule\Manager\TopicManager;
 use ModUtil;
-use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\DizkusModule\Entity\TopicEntity;
@@ -24,7 +23,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class MoveTopic extends \Zikula_Form_AbstractHandler
 {
-
     /**
      * topic_id
      *
@@ -33,7 +31,6 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
     private $topic_id;
 
     /**
-     *
      * @var TopicEntity
      */
     private $topic;
@@ -41,11 +38,11 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
     /**
      * Setup form.
      *
-     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     * @param Zikula_Form_View $view current Zikula_Form_View instance
      *
      * @return boolean
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -63,8 +60,8 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
     /**
      * Handle form submission.
      *
-     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
-     * @param array            &$args Arguments.
+     * @param Zikula_Form_View $view  current Zikula_Form_View instance
+     * @param array            &$args Arguments
      *
      * @return bool|void
      */
@@ -91,6 +88,7 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
 
             if ($data['forum_id'] == $this->topic->getForum()->getForum_id()) {
                 $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The original forum cannot be the same as the target forum.'));
+
                 return false;
             }
             $data['topicObj'] = $this->topic;
@@ -119,10 +117,10 @@ class MoveTopic extends \Zikula_Form_AbstractHandler
             ModUtil::apiFunc($this->name, 'topic', 'join', $data);
 
             $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id']), RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
         return true;
     }
-
 }

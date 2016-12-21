@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -18,11 +18,10 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
 
 class SyncApi extends \Zikula_AbstractApi
 {
-
     /**
      * perform sync on all forums, topics and posters
      *
-     * @param Boolean $silentMode (unused)
+     * @param boolean $silentMode (unused)
      */
     public function all($silentMode = false)
     {
@@ -34,7 +33,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * perform sync on all forums
      *
-     * @return Boolean
+     * @return boolean
      */
     public function forums()
     {
@@ -56,7 +55,7 @@ class SyncApi extends \Zikula_AbstractApi
      * recalculate topicCount and postCount counts
      *
      * @param ForumEntity $args['forum']
-     * @param Boolean             $args['flush']
+     * @param boolean             $args['flush']
      *
      * @return boolean
      *
@@ -137,7 +136,7 @@ class SyncApi extends \Zikula_AbstractApi
      * recalcluate Topic replies for one topic
      *
      * @param TopicEntity $args['topic']
-     * @param Boolean             $args['flush']
+     * @param boolean             $args['flush']
      *
      * @return boolean
      *
@@ -201,7 +200,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * reset the last post in a forum due to movement
      * @param ForumEntity $args['forum']
-     * @param Boolean             $args['flush'] default: true
+     * @param boolean             $args['flush'] default: true
      *
      * @return boolean|void
      *
@@ -239,7 +238,7 @@ class SyncApi extends \Zikula_AbstractApi
     /**
      * reset the last post in a topic due to movement
      * @param TopicEntity $args['topic']
-     * @param Boolean             $args['flush']
+     * @param boolean             $args['flush']
      *
      * @return boolean|void
      *
@@ -265,5 +264,4 @@ class SyncApi extends \Zikula_AbstractApi
             $this->entityManager->flush();
         }
     }
-
 }

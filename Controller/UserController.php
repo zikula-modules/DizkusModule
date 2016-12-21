@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -53,7 +53,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class UserController extends \Zikula_AbstractController
 {
-
     /**
      * @Route("")
      *
@@ -103,6 +102,7 @@ class UserController extends \Zikula_AbstractController
                 $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
                 $managedForumUser = new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
+
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
             } else {
                 $request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
@@ -141,6 +141,7 @@ class UserController extends \Zikula_AbstractController
         $managedForum = new ForumManager($forum);
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', array($forum)));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
@@ -185,6 +186,7 @@ class UserController extends \Zikula_AbstractController
         $managedTopic = new TopicManager($topic);
         if (!$managedTopic->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', array($topic)));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
@@ -291,6 +293,7 @@ class UserController extends \Zikula_AbstractController
             // check to see if the post contains spam
             if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
                 $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+
                 return new Response('', Response::HTTP_NOT_ACCEPTABLE);
             }
             $managedPost->persist();
@@ -879,5 +882,4 @@ class UserController extends \Zikula_AbstractController
 
         return new Response($this->view->fetch($templatefile), Response::HTTP_OK, array('Content-Type' => 'text/xml'));
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -12,9 +12,6 @@
 namespace Zikula\DizkusModule\Entity;
 
 use Zikula\Core\Doctrine\EntityAccess;
-use Zikula\DizkusModule\Entity\ForumUserFavoriteEntity;
-use Zikula\DizkusModule\Entity\TopicSubscriptionEntity;
-use Zikula\DizkusModule\Entity\ForumSubscriptionEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -110,7 +107,7 @@ class ForumUserEntity extends EntityAccess
     /**
      * NON-PERSISTED property
      * array of core vars for user
-     * @var array $user
+     * @var array
      */
     private $user = array();
 
@@ -156,6 +153,7 @@ class ForumUserEntity extends EntityAccess
                 $this->user['uname'] = __('Deleted user', $dom);
             }
         }
+
         return $this->user;
     }
 
@@ -391,5 +389,4 @@ class ForumUserEntity extends EntityAccess
     {
         $this->forumSubscriptions->clear();
     }
-
 }

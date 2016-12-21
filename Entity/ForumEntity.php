@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -15,8 +15,6 @@ use ServiceUtil;
 use ZLanguage;
 use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\DizkusModule\Connection\Pop3Connection;
-use Zikula\DizkusModule\Entity\ModeratorUserEntity;
-use Zikula\DizkusModule\Entity\ModeratorGroupEntity;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -32,7 +30,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ForumEntity extends EntityAccess
 {
-
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
     const STATUS_LOCKED = true;
     const STATUS_UNLOCKED = false;

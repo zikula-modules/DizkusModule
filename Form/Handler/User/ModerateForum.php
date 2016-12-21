@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -14,7 +14,6 @@ namespace Zikula\DizkusModule\Form\Handler\User;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\DizkusModule\Manager\ForumManager;
 use ModUtil;
-use System;
 use Zikula_Form_View;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -23,7 +22,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class ModerateForum extends \Zikula_Form_AbstractHandler
 {
-
     /**
      * forum
      *
@@ -34,11 +32,11 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
     /**
      * Setup form.
      *
-     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     * @param Zikula_Form_View $view current Zikula_Form_View instance
      *
      * @return boolean
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function initialize(Zikula_Form_View $view)
@@ -54,7 +52,6 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
             // both zikula perms and Dizkus perms denied
             throw new AccessDeniedException();
         }
-
 
         $lastVisitUnix = ModUtil::apiFunc($this->name, 'user', 'setcookies');
 
@@ -125,8 +122,8 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
     /**
      * Handle form submission.
      *
-     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
-     * @param array            &$args Arguments.
+     * @param Zikula_Form_View $view  current Zikula_Form_View instance
+     * @param array            &$args Arguments
      *
      * @return bool|void
      */
@@ -152,7 +149,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
         // get this value by traditional method because checkboxen have values
         $topic_ids = $this->request->request->get('topic_id', array());
 
-        if (count($topic_ids) <> 0) {
+        if (count($topic_ids) != 0) {
             switch ($mode) {
                 case 'del':
                 case 'delete':
@@ -164,6 +161,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'move':
                     if (empty($moveto)) {
                         $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
+
                         return $view->redirect($url);
                     }
                     foreach ($topic_ids as $topic_id) {
@@ -189,6 +187,7 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
                 case 'join':
                     if (empty($jointo) && empty($jointo_select)) {
                         $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target topic to join.'));
+
                         return $view->redirect($url);
                     }
                     // text input overrides select box
@@ -214,5 +213,4 @@ class ModerateForum extends \Zikula_Form_AbstractHandler
 
         return $view->redirect($url);
     }
-
 }

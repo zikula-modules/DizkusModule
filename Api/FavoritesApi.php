@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -15,7 +15,6 @@ use UserUtil;
 
 class FavoritesApi extends \Zikula_AbstractApi
 {
-
     private $_displayOnlyFavorites = array();
 
     /**
@@ -24,7 +23,6 @@ class FavoritesApi extends \Zikula_AbstractApi
      * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
      * @param $args['user_id'] int the users id
      * @return boolean
-     *
      */
     public function getStatus()
     {
@@ -69,5 +67,4 @@ class FavoritesApi extends \Zikula_AbstractApi
 
         return isset($forumUserFavorite);
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -15,11 +15,10 @@ use Zikula\Bundle\HookBundle\AbstractHookContainer;
 use Zikula\Bundle\HookBundle\Bundle\SubscriberBundle;
 use Zikula\Bundle\HookBundle\Bundle\ProviderBundle;
 
-class HookContainer extends AbstractHookContainer {
-    
-    
-    const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';   
-    
+class HookContainer extends AbstractHookContainer
+{
+    const PROVIDER_UIAREANAME = 'provider.dizkus.ui_hooks.topic';
+
     /**
      * Define the hook bundles supported by this module.
      *
@@ -71,6 +70,5 @@ class HookContainer extends AbstractHookContainer {
         $bundle5->addServiceHandler('process_edit', 'Zikula\DizkusModule\HookHandlers', 'processEdit', 'dizkus.hooks.topic');
         $bundle5->addServiceHandler('process_delete', 'Zikula\DizkusModule\HookHandlers', 'processDelete', 'dizkus.hooks.topic');
         $this->registerHookProviderBundle($bundle5);
-    }    
-    
+    }
 }

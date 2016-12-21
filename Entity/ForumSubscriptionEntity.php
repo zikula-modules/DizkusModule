@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -22,7 +22,6 @@ use Zikula\Core\Doctrine\EntityAccess;
  */
 class ForumSubscriptionEntity extends EntityAccess
 {
-
     /**
      * The following are annotations which define the msg_id field.
      *
@@ -99,5 +98,4 @@ class ForumSubscriptionEntity extends EntityAccess
     {
         $this->forumUser = $forumUser;
     }
-
 }

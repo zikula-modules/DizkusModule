@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -20,7 +20,6 @@ use Zikula\Core\UrlInterface;
 
 class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
 {
-
     public function __construct($objectId, $areaId, $module, $urlString = null, UrlInterface $urlObject = null)
     {
         parent::__construct($objectId, $areaId, $module, $urlString, $urlObject);
@@ -93,5 +92,4 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
 
         return $link;
     }
-
 }

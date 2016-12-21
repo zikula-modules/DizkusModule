@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -26,7 +26,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostApi extends \Zikula_AbstractApi
 {
-
     /**
      * get_latest_posts
      *
@@ -183,9 +182,9 @@ class PostApi extends \Zikula_AbstractApi
     /**
      * Checks if the given message isn't too long.
      *
-     * @param $args['message'] The message to check.
+     * @param $args['message'] the message to check
      *
-     * @return bool False if the message is to long, else true.
+     * @return bool false if the message is to long, else true
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
@@ -200,5 +199,4 @@ class PostApi extends \Zikula_AbstractApi
 
         return true;
     }
-
 }

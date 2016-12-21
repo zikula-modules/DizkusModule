@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -17,12 +17,10 @@ use DataUtil;
 use SecurityUtil;
 use System;
 use Zikula\Core\RouteUrl;
-use ZLanguage;
 use Zikula\Core\Response\Ajax\AjaxResponse;
 use Zikula\Core\Response\Ajax\UnavailableResponse;
 use Zikula\Core\Response\Ajax\BadDataResponse;
 use Zikula\Core\Response\PlainResponse;
-use Zikula\Core\UrlInterface;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ProcessHook;
@@ -43,7 +41,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AjaxController extends \Zikula_Controller_AbstractAjax
 {
-
     /**
      * Checks if the forum is disabled.
      *
@@ -61,7 +58,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
     /**
      * Checks if a message is shorter than 65535 - 8 characters.
      *
-     * @param string $message The message to check.
+     * @param string $message the message to check
      *
      * @throws \LengthException
      *
@@ -79,7 +76,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *
      * @return void
      *
-     * NOTE: This is necessary because the Zikula_Controller_AbstractAjax overrides this method located in Zikula_AbstractController.
+     * NOTE: This is necessary because the Zikula_Controller_AbstractAjax overrides this method located in Zikula_AbstractController
      */
     protected function configureView()
     {
@@ -182,6 +179,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
 
         if ($request->getSession()->getFlashBag()->has('error')) {
             $errors = implode('\n', $request->getSession()->getFlashBag()->get('error'));
+
             return new Response($errors, 500);
         } else {
             return new AjaxResponse(array(
@@ -250,7 +248,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *              )
      *
      * @throws \InvalidArgumentException
-     * @throws AccessDeniedException If the user tries to delete the only post of a topic.
+     * @throws AccessDeniedException if the user tries to delete the only post of a topic
      *
      * @return AjaxResponse
      */
@@ -286,7 +284,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
                 if ($attach_signature && !$this->getVar('removesignature')) {
                     // include signature in response text
                     $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
-                    $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
+                    $message .= !empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
                 }
                 // must dzkVarPrepHTMLDisplay the message content here because the template modifies cannot be run in ajax
                 $newText = ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message);
@@ -317,7 +315,7 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      *  userAllowedToEdit
      *  title
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      *
      * @return UnavailableResponse|BadDataResponse|PlainResponse
      */
@@ -362,11 +360,11 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
      * Performs a user search based on the user name fragment entered so far.
      *
      * @param Request $request
-     *  fragment A partial user name entered by the user.
+     *  fragment A partial user name entered by the user
      *
      * @throws AccessDeniedException
      *
-     * @return string PlainResponse with json_encoded object of users matching the criteria.
+     * @return string plainResponse with json_encoded object of users matching the criteria
      */
     public function getUsersAction(Request $request)
     {
@@ -447,5 +445,4 @@ class AjaxController extends \Zikula_Controller_AbstractAjax
         $this->view->display('Ajax/forumusers.tpl');
         System::shutDown();
     }
-
 }

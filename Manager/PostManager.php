@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Dizkus
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -17,17 +17,13 @@
 namespace Zikula\DizkusModule\Manager;
 
 use ServiceUtil;
-use DataUtil;
 use ModUtil;
 use UserUtil;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
-use Zikula\DizkusModule\Manager\TopicManager;
-use Zikula\DizkusModule\Manager\ForumManager;
 
 class PostManager
 {
-
     /**
      * managed post
      * @var PostEntity
@@ -181,5 +177,4 @@ class PostManager
             ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
     }
-
 }

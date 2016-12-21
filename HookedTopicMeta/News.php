@@ -20,7 +20,6 @@ use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class News extends AbstractHookedTopicMeta
 {
-
     private $newsItem = null;
 
     public function setup()
@@ -44,5 +43,4 @@ class News extends AbstractHookedTopicMeta
     {
         $this->content = $this->newsItem['hometext'];
     }
-
 }

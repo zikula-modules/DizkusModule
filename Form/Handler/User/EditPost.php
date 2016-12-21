@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -14,7 +14,6 @@ namespace Zikula\DizkusModule\Form\Handler\User;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Manager\PostManager;
 use ModUtil;
-use System;
 use Zikula_Form_View;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Hook\ValidationHook;
@@ -27,7 +26,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class EditPost extends \Zikula_Form_AbstractHandler
 {
-
     /**
      * PostManager
      *
@@ -38,11 +36,11 @@ class EditPost extends \Zikula_Form_AbstractHandler
     /**
      * Setup form.
      *
-     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     * @param Zikula_Form_View $view current Zikula_Form_View instance
      *
      * @return boolean
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -56,6 +54,7 @@ class EditPost extends \Zikula_Form_AbstractHandler
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
             $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
@@ -69,8 +68,8 @@ class EditPost extends \Zikula_Form_AbstractHandler
     /**
      * Handle form submission.
      *
-     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
-     * @param array            &$args Arguments.
+     * @param Zikula_Form_View $view  current Zikula_Form_View instance
+     * @param array            &$args Arguments
      *
      * @return bool|void
      */
@@ -136,5 +135,4 @@ class EditPost extends \Zikula_Form_AbstractHandler
         // redirect to the new topic
         return $view->redirect($url);
     }
-
 }

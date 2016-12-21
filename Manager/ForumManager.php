@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Dizkus
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -25,7 +25,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ForumManager
 {
-
     /**
      * managed forum
      * @var ForumEntity
@@ -106,7 +105,7 @@ class ForumManager
     /**
      * get forum bread crumbs
      *
-     * @param boolean $withoutCurrent Show tree without the current item.
+     * @param boolean $withoutCurrent show tree without the current item
      *
      * @return array
      */
@@ -242,7 +241,7 @@ class ForumManager
     /**
      * store the forum
      *
-     * @param array $data Page data.
+     * @param array $data page data
      */
     public function store($data)
     {
@@ -297,5 +296,4 @@ class ForumManager
     {
         return $this->get()->getLft() > $forum->getLft() && $this->get()->getRgt() < $forum->getRgt();
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityRepository;
 
 class PostRepository extends EntityRepository
 {
-
     /**
      * Delete a post via dql
      * avoids cascading deletion errors
@@ -29,5 +28,4 @@ class PostRepository extends EntityRepository
             WHERE p.post_id = :id';
         $this->_em->createQuery($dql)->setParameter('id', $id)->execute();
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -59,6 +59,7 @@ class SearchHelper extends AbstractSearchable
         foreach ($words as $word) {
             if (strlen($word) < $minLength || strlen($word) > $maxLength) {
                 $this->addError($this->__f('For forum searches, each search term must be between %1$s and %2$s characters in length.', array($minLength, $maxLength)));
+
                 return array();
             }
         }
@@ -72,6 +73,7 @@ class SearchHelper extends AbstractSearchable
         $allowedForums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
         if (!is_array($allowedForums) || count($allowedForums) == 0) {
             $this->addError($this->__('You do not have permission to search any of the forums.'));
+
             return array();
         }
 
@@ -83,7 +85,7 @@ class SearchHelper extends AbstractSearchable
         switch ($location) {
             case 'author':
                 $authorIds = array();
-                foreach($words as $word) {
+                foreach ($words as $word) {
                     $authorId = \UserUtil::getIDFromName($word);
                     if ($authorId > 0) {
                         $authorIds[] =$authorId;
@@ -112,6 +114,7 @@ class SearchHelper extends AbstractSearchable
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
                 $this->addError($this->__('You do not have permission to search the requested forums.'));
+
                 return array();
             }
             $qb->andWhere($qb->expr()->in('t.forum', ':forums'))->setParameter('forums', $forums);
@@ -136,5 +139,4 @@ class SearchHelper extends AbstractSearchable
 
         return $records;
     }
-
 }

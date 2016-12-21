@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -16,7 +16,6 @@ use Zikula\DizkusModule\Entity\ForumEntity;
 
 class PermissionApi extends \Zikula_AbstractApi
 {
-
     /**
      * Checks the permissions of a user for a specific forum.
      *
@@ -40,7 +39,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * Check if a user is allowed to see forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return boolean
      */
@@ -52,7 +51,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * Check if a user is allowed to read forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return boolean
      */
@@ -64,7 +63,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * Check if a user is allowed to write forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return boolean
      */
@@ -76,7 +75,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * Check if a user is allowed to moderate forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return boolean
      */
@@ -88,7 +87,7 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * Check if a user is allowed to administrate forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return boolean
      */
@@ -100,8 +99,8 @@ class PermissionApi extends \Zikula_AbstractApi
     /**
      * check Permission
      *
-     * @param array|object $args  Arguments.
-     * @param int          $level Level.
+     * @param array|object $args  arguments
+     * @param int          $level level
      *
      * @return boolean
      *
@@ -131,6 +130,7 @@ class PermissionApi extends \Zikula_AbstractApi
         }
         if (!$this->getVar('forum_enabled') && !SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->getVar('forum_disabled_info'));
+
             return false;
         }
         if (empty($userId)) {
@@ -194,5 +194,4 @@ class PermissionApi extends \Zikula_AbstractApi
 
         return $forum;
     }
-
 }

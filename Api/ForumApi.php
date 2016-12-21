@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ForumApi extends \Zikula_AbstractApi
 {
-
     /**
      * get tree
      * format as array suitable for {formdropdownlist}
@@ -276,5 +275,4 @@ class ForumApi extends \Zikula_AbstractApi
 
         return true;
     }
-
 }

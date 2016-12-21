@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -15,7 +15,6 @@ use ServiceUtil;
 use ModUtil;
 use DateTime;
 use UserUtil;
-use System;
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -311,7 +310,7 @@ class PostEntity extends EntityAccess
     {
         $array = parent::toArray();
         $array['userAllowedToEdit'] = $this->getUserAllowedToEdit();
+
         return $array;
     }
-
 }

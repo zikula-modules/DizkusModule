@@ -22,7 +22,6 @@ use ServiceUtil;
 use SecurityUtil;
 use ModUtil;
 use PageUtil;
-use System;
 use ZLanguage;
 use Zikula_View;
 use Zikula\Bundle\HookBundle\Hook\AbstractHookListener;
@@ -32,7 +31,6 @@ use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
 use Zikula\Bundle\HookBundle\Hook\ValidationHook;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
@@ -40,7 +38,6 @@ use Zikula\DizkusModule\HookedTopicMeta\Generic;
 
 class HookHandlers extends AbstractHookListener
 {
-
     /**
      * Zikula_View instance
      * @var Zikula_View
@@ -75,7 +72,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Display hook for view.
      *
-     * @param DisplayHook $hook The hook.
+     * @param DisplayHook $hook the hook
      *
      * @return string
      */
@@ -128,7 +125,7 @@ class HookHandlers extends AbstractHookListener
      * Display hook for edit.
      * Display a UI interface during the creation of the hooked object.
      *
-     * @param DisplayHook $hook The hook.
+     * @param DisplayHook $hook the hook
      *
      * @return string
      */
@@ -153,7 +150,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Display hook for delete.
      *
-     * @param DisplayHook $hook The hook.
+     * @param DisplayHook $hook the hook
      *
      * @return string
      */
@@ -173,7 +170,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Validate hook for edit.
      *
-     * @param ValidationHook $hook The hook.
+     * @param ValidationHook $hook the hook
      *
      * @return void (unused)
      */
@@ -185,7 +182,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Validate hook for delete.
      *
-     * @param ValidationHook $hook The hook.
+     * @param ValidationHook $hook the hook
      *
      * @return void (unused)
      */
@@ -197,7 +194,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Process hook for edit.
      *
-     * @param ProcessHook $hook The hook.
+     * @param ProcessHook $hook the hook
      *
      * @return boolean
      */
@@ -250,7 +247,7 @@ class HookHandlers extends AbstractHookListener
     /**
      * Process hook for delete.
      *
-     * @param ProcessHook $hook The hook.
+     * @param ProcessHook $hook the hook
      *
      * @return boolean
      */
@@ -276,7 +273,6 @@ class HookHandlers extends AbstractHookListener
 
         return true;
     }
-
 
     /**
      * Factory class to find Meta Class and instantiate
@@ -331,5 +327,4 @@ class HookHandlers extends AbstractHookListener
 
         return $hookconfig;
     }
-
 }
