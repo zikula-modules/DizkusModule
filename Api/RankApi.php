@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -21,16 +21,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class RankApi extends \Zikula_AbstractApi
 {
-
     private $_userRanks = array();
 
     /**
      * Get all ranks
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return array
-     *
      */
     public function getAll($args)
     {
@@ -123,7 +121,7 @@ class RankApi extends \Zikula_AbstractApi
     /**
      * Get user rank data
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return array The rank data of the poster
      */
@@ -190,5 +188,4 @@ class RankApi extends \Zikula_AbstractApi
 
         return false;
     }
-
 }

@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Dizkus
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -19,18 +19,14 @@ namespace Zikula\DizkusModule\Manager;
 use ServiceUtil;
 use ModUtil;
 use UserUtil;
-use DataUtil;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class TopicManager
 {
-
     /**
      * managed topic
      * @var TopicEntity
@@ -253,7 +249,6 @@ class TopicManager
     }
 
     /**
-     *
      * @param integer $data['forum_id']
      * @param string $data['message']
      * @param boolean $data['attachSignature']
@@ -505,5 +500,4 @@ class TopicManager
             return $this->_topic->getTopic_id(); // return current value (checks in template for this)
         }
     }
-
 }

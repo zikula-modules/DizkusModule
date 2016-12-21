@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -56,6 +56,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $this->schemaTool->create($this->entities);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
+
             return false;
         }
         // ToDo: create FULLTEXT index
@@ -182,6 +183,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $this->schemaTool->drop($this->entities);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
+
             return false;
         }
         // remove module vars
@@ -201,6 +203,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $upgradeToVersion = $this->bundle->getMetaData()->getVersion();
 
             $this->addFlash('error', $this->__f('Notice: This version does not support upgrades from versions of Dizkus less than 3.1. Please upgrade to 3.1 before upgrading again to version %s.', $upgradeToVersion));
+
             return false;
         }
         switch ($oldversion) {
@@ -215,7 +218,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             case '4.0.0':
                 if (!$this->upgrade_to_4_1_0()) {
                     return false;
-                }                
+                }
                 break;
         }
 
@@ -284,6 +287,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $path = substr($path, strlen($part . DIRECTORY_SEPARATOR));
             }
         }
+
         return $path;
     }
 
@@ -302,6 +306,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $stmt->execute();
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
+
             return false;
         }
         // remove the legacy hooks
@@ -370,6 +375,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             sleep(2);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
+
             return false;
         }
         // migrate data from old formats
@@ -498,15 +504,16 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $stmt->execute();
             } catch (\Exception $e) {
                 $this->addFlash('error', $e);
+
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * Migrate categories from 3.1 > 4.0.0
-     *
      */
     private function upgrade_to_4_0_0_migrateCategories()
     {
@@ -541,7 +548,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $count = 1;
         $sqls = array();
         $categories = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE lvl = 1");
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $category['l'] = ++$count;
             $children = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE parent = $category[forum_id]");
             foreach ($children as $child) {
@@ -568,7 +575,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
     /**
      * Update Poster Data from 3.1 > 4.0.0
-     *
      */
     private function upgrade_to_4_0_0_updatePosterData()
     {
@@ -694,7 +700,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // flush remaining
         $this->entityManager->flush();
     }
-    
+
     /**
      * upgrade to 4.1.0
      */
@@ -703,14 +709,14 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $currentModVars = $this->getVars();
         $this->setVar('log_ip', $currentModVars['log_ip'] === 'yes' ? true : false);
         $this->setVar('extendedsearch', $currentModVars['extendedsearch'] === 'yes' ? true : false);
-        $this->setVar('m2f_enabled', $currentModVars['m2f_enabled'] === 'yes' ? true : false);         
+        $this->setVar('m2f_enabled', $currentModVars['m2f_enabled'] === 'yes' ? true : false);
         $this->setVar('favorites_enabled', $currentModVars['favorites_enabled'] === 'yes' ? true : false);
-        $this->setVar('removesignature', $currentModVars['removesignature'] === 'yes' ? true : false);       
-        $this->setVar('striptags', $currentModVars['striptags'] === 'yes' ? true : false);        
-        $this->setVar('rss2f_enabled', $currentModVars['rss2f_enabled'] === 'yes' ? true : false);        
-        $this->setVar('forum_enabled', $currentModVars['forum_enabled'] === 'yes' ? true : false);        
-        $this->setVar('signaturemanagement', $currentModVars['signaturemanagement'] === 'yes' ? true : false);        
-        $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);       
+        $this->setVar('removesignature', $currentModVars['removesignature'] === 'yes' ? true : false);
+        $this->setVar('striptags', $currentModVars['striptags'] === 'yes' ? true : false);
+        $this->setVar('rss2f_enabled', $currentModVars['rss2f_enabled'] === 'yes' ? true : false);
+        $this->setVar('forum_enabled', $currentModVars['forum_enabled'] === 'yes' ? true : false);
+        $this->setVar('signaturemanagement', $currentModVars['signaturemanagement'] === 'yes' ? true : false);
+        $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);
         $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
 
         return true;

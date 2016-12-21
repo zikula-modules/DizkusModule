@@ -4,17 +4,14 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Api;
 
-use UserUtil;
-use ModUtil;
 use DataUtil;
-use ThemeUtil;
 
 /**
  * This class provides the api functions for rudimentary parsing of
@@ -45,6 +42,7 @@ class ParseTagsApi extends \Zikula_AbstractApi
         // Remove added padding from the string..
         $message = substr($message, 1);
         $message = substr($message, 0, -1);
+
         return $message;
     }
 
@@ -94,10 +92,10 @@ class ParseTagsApi extends \Zikula_AbstractApi
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
-                } else if (strcasecmp("[/quote]", $possible_end) == 0) {
+                } elseif (strcasecmp("[/quote]", $possible_end) == 0) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
-                    if (sizeof($stack) > 0) {
+                    if (count($stack) > 0) {
                         // There exists a starting tag.
                         // We need to do 2 replacements now.
                         $start_index = array_pop($stack);
@@ -127,7 +125,7 @@ class ParseTagsApi extends \Zikula_AbstractApi
                         // Now.. we've screwed up the indices by changing the length of the string.
                         // So, if there's anything in the stack, we want to resume searching just after it.
                         // otherwise, we go back to the start.
-                        if (sizeof($stack) > 0) {
+                        if (count($stack) > 0) {
                             $curr_pos = array_pop($stack);
                             array_push($stack, $curr_pos);
                             ++$curr_pos;
@@ -200,7 +198,7 @@ class ParseTagsApi extends \Zikula_AbstractApi
                 $message = preg_replace($str_to_match, $codetext, $message);
             }
         }
+
         return $message;
     }
-
 }

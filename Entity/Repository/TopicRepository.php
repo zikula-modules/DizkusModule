@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -16,7 +16,6 @@ use Zikula\Component\HookDispatcher\Hook;
 
 class TopicRepository extends EntityRepository
 {
-
     /**
      * Delete a topic via dql
      * avoids cascading deletion errors
@@ -81,5 +80,4 @@ class TopicRepository extends EntityRepository
 
         return $result;
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -32,7 +32,7 @@ class BlockApi extends \Zikula_AbstractApi
      *      @type bool show_m2f   if set show postings from mail2forum forums
      *      @type bool show_rss   if set show postings from rss2forum forums
      *                      }
-     * 
+     *
      * @return array $lastposts
      */
     public function getLastPosts($params)
@@ -49,7 +49,6 @@ class BlockApi extends \Zikula_AbstractApi
             // get the forum and check permissions
             $managedForum = new ForumManager($params['forum_id']);
             if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead', $managedForum->get())) {
-
                 return array();
             }
             $whereForum[] = $params['forum_id'];
@@ -174,7 +173,7 @@ class BlockApi extends \Zikula_AbstractApi
      * @param mixed[] $params {
      *      @type int maxforums    number of forums to read, default = 5
      *                      }
-     * 
+     *
      * @return array $topForums
      */
     public function getTopForums($params)

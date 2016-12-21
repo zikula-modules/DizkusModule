@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Dizkus
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -18,11 +18,9 @@ namespace Zikula\DizkusModule\Connection;
 
 /**
  * Class to define a connection to a pop3 server
- *
  */
 class Pop3Connection
 {
-
     /**
      * active
      *
@@ -133,5 +131,4 @@ class Pop3Connection
     {
         $this->lastconnect = time();
     }
-
 }

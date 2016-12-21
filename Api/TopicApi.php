@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class TopicApi extends \Zikula_AbstractApi
 {
-
     /**
      * @param $args
      *  'topic'
@@ -183,7 +182,7 @@ class TopicApi extends \Zikula_AbstractApi
      *
      * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
      *
-     * @param string $reference The reference.
+     * @param string $reference the reference
      *
      * @return array Topic data as array
      *
@@ -343,9 +342,9 @@ class TopicApi extends \Zikula_AbstractApi
      * split the topic at the provided post
      *
      * @param PostManager $args['post']
-     * @param Array $args['data']
+     * @param array $args['data']
      *
-     * @return Integer id of the new topic
+     * @return integer id of the new topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
@@ -402,7 +401,7 @@ class TopicApi extends \Zikula_AbstractApi
      * @param $args['topicObj'] TopicEntity The (origin) topic as object
      *              must have *either* topicObj or from_topic_id
      *
-     * @return Integer Destination topic ID
+     * @return integer Destination topic ID
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
@@ -453,5 +452,4 @@ class TopicApi extends \Zikula_AbstractApi
 
         return $managedDestinationTopic->getId();
     }
-
 }

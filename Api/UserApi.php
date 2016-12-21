@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -14,18 +14,15 @@ namespace Zikula\DizkusModule\Api;
 use UserUtil;
 use ModUtil;
 use ServiceUtil;
-use System;
 use CookieUtil;
 use DateTime;
 use DataUtil;
-use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Entity\PostEntity;
 
 class UserApi extends \Zikula_AbstractApi
 {
-
     /**
      * Counts posts in forums, topics
      * or counts forum users
@@ -144,7 +141,6 @@ class UserApi extends \Zikula_AbstractApi
      *
      * @param none
      * @return unix timestamp last visit date
-     *
      */
     public function setcookies()
     {
@@ -175,14 +171,14 @@ class UserApi extends \Zikula_AbstractApi
      * @param array $args The argument array.
      *        int $args['pip] The posters IP.
      *
-     * @return array with information.
+     * @return array with information
      */
     public function get_viewip_data($args)
     {
         $pip = $args['pip'];
         $viewip = array(
             'poster_ip' => $pip,
-            'poster_host' => ($pip <> 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown')
+            'poster_host' => ($pip != 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown')
         );
         $dql = 'SELECT p
             FROM Zikula\DizkusModule\Entity\PostEntity p
@@ -198,6 +194,7 @@ class UserApi extends \Zikula_AbstractApi
                 'uname' => $coreUser['uname'],
                 'postcount' => $post->getPoster()->getPostCount());
         }
+
         return $viewip;
     }
 
@@ -428,5 +425,4 @@ class UserApi extends \Zikula_AbstractApi
 
         return $text;
     }
-
 }

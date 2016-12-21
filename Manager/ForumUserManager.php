@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  * @package Dizkus
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -22,7 +22,6 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
 
 class ForumUserManager
 {
-
     /**
      * managed forum user
      * @var ForumUserEntity
@@ -116,5 +115,4 @@ class ForumUserManager
         $this->_forumUser->setDisplayOnlyFavorites($value);
         $this->entityManager->flush();
     }
-
 }

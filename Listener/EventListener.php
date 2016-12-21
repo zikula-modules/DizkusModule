@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -12,16 +12,11 @@
 namespace Zikula\DizkusModule\Listener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use SecurityUtil;
 use ModUtil;
 use HookUtil;
 use Symfony\Component\Routing\RouterInterface;
-use System;
 use ZLanguage;
-use Zikula_View;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Event\GenericEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +28,7 @@ class EventListener implements EventSubscriberInterface
     private $requestStack;
     private $router;
 
-    function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router)
+    public function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router)
     {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
@@ -154,5 +149,4 @@ class EventListener implements EventSubscriberInterface
             ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
             ->execute();
     }
-
 }

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -12,21 +12,19 @@
 namespace Zikula\DizkusModule\Api;
 
 use UserUtil;
-use ModUtil;
 
 /**
  * This class provides the account api functions
  */
 class AccountApi extends \Zikula_AbstractApi
 {
-
     /**
      * Return an array of items to show in the your account panel.
      *
      * @param array $args Arguments array.
      *        string $args['uname'] User name.
      *
-     * @return array Array of items.
+     * @return array array of items
      */
     public function getall($args)
     {
@@ -50,5 +48,4 @@ class AccountApi extends \Zikula_AbstractApi
         // Return the items
         return $items;
     }
-
 }

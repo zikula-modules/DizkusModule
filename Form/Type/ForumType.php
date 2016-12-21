@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -19,12 +19,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class ForumType extends AbstractType {
+class ForumType extends AbstractType
+{
+    public function __construct()
+    {
+        //@todo use service injection
 
-    public function __construct() {
-
-        //@todo use service injection 
-        
         // assign all users for the moderator selection
         $em = \ServiceUtil::get('doctrine.entitymanager');
         $users = $em->getRepository('ZikulaUsersModule:UserEntity')->findAll();
@@ -42,8 +42,8 @@ class ForumType extends AbstractType {
         $this->groups = $allGroupsAsDrowpdownList;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->add('name', 'text', [])
                 ->add('description', 'textarea', [
                     'required' => false
@@ -54,7 +54,7 @@ class ForumType extends AbstractType {
                     'required' => true])
                 ->add('parent', 'entity', [
                     'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
-                    'query_builder' => function(EntityRepository $er) {
+                    'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('f')
                                 ->orderBy('f.root', 'ASC')
                                 ->addOrderBy('f.lft', 'ASC');
@@ -65,35 +65,35 @@ class ForumType extends AbstractType {
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
-                //stuff below works but probably there is better way            
+                //stuff below works but probably there is better way
                 ->addEventListener(
-                        FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-                    $form = $event->getForm();
-                    $data = $event->getData();
-                    $selectedCollection = $data->getModeratorUsers()->getValues();
-                    $selectedArr = [];
-                    foreach ($selectedCollection as $element) {
-                        $selectedArr[$element->getForumUser()->getUser_id()] = $element->getForumUser()->getUser_id();
-                    }
-                    $form->add('moderatorUsers', ChoiceType::class, [
+                        FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                            $form = $event->getForm();
+                            $data = $event->getData();
+                            $selectedCollection = $data->getModeratorUsers()->getValues();
+                            $selectedArr = [];
+                            foreach ($selectedCollection as $element) {
+                                $selectedArr[$element->getForumUser()->getUser_id()] = $element->getForumUser()->getUser_id();
+                            }
+                            $form->add('moderatorUsers', ChoiceType::class, [
                         'data' => $selectedArr,
                         'choices' => $this->users,
                         'multiple' => true,
                         'expanded' => false,
                         'required' => false]
                     );
-                }
+                        }
                 )
                 ->addEventListener(
-                        FormEvents::PRE_SET_DATA, function(FormEvent $event) {
-                    $form = $event->getForm();
-                    $data = $event->getData();
-                    $selectedCollection = $data->getModeratorGroups()->getValues();
-                    $selectedArr = [];
-                    foreach ($selectedCollection as $element) {
-                        $selectedArr[$element->getGroup()->getGid()] = $element->getGroup()->getGid();
-                    }
-                    $form->add('moderatorGroups', ChoiceType::class, [
+                        FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                            $form = $event->getForm();
+                            $data = $event->getData();
+                            $selectedCollection = $data->getModeratorGroups()->getValues();
+                            $selectedArr = [];
+                            foreach ($selectedCollection as $element) {
+                                $selectedArr[$element->getGroup()->getGid()] = $element->getGroup()->getGid();
+                            }
+                            $form->add('moderatorGroups', ChoiceType::class, [
                         'data' => $selectedArr,
                         'choices' => $this->groups,
                         //'mapped' => false,
@@ -101,7 +101,7 @@ class ForumType extends AbstractType {
                         'expanded' => false,
                         'required' => false]
                     );
-                }
+                        }
                 )
                 ->add('restore', 'submit', [
                     'label' => 'Restore defaults'
@@ -111,18 +111,19 @@ class ForumType extends AbstractType {
         ]);
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'forum_form';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults([
             'data_class' => 'Zikula\DizkusModule\Entity\ForumEntity',
             'translator' => null
         ]);
     }
-
 }

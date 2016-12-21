@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
 {
-
     /**
      * init
      *
@@ -49,7 +48,7 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Display the block
      *
-     * @param array $blockInfo Blockinfo array.
+     * @param array $blockInfo blockinfo array
      *
      * @throws AccessDeniedException on perm check failure
      *
@@ -102,8 +101,8 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Update the block
      *
-     * @param array $blockInfo Blockinfo array.
-     * 
+     * @param array $blockInfo blockinfo array
+     *
      * @throws AccessDeniedException on perm check failure
      *
      * @return boolean|array
@@ -122,7 +121,7 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Modify the block
      *
-     * @param array $blockInfo Blockinfo array.
+     * @param array $blockInfo blockinfo array
      *
      * @throws AccessDeniedException on perm check failure
      *
@@ -141,5 +140,4 @@ class RecentPostsBlock extends \Zikula_Controller_AbstractBlock
         return $this->view->assign('vars', $vars)
             ->fetch('Block/recentposts_modify.tpl');
     }
-
 }

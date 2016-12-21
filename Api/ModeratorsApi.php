@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -16,7 +16,6 @@ namespace Zikula\DizkusModule\Api;
  */
 class ModeratorsApi extends \Zikula_AbstractApi
 {
-
     /**
      * Returns an array of all the moderators of a forum (including groups)
      *
@@ -78,5 +77,4 @@ class ModeratorsApi extends \Zikula_AbstractApi
 
         return $mods;
     }
-
 }

@@ -19,7 +19,6 @@ use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class Generic extends AbstractHookedTopicMeta
 {
-
     private $dom;
 
     public function setup()
@@ -37,5 +36,4 @@ class Generic extends AbstractHookedTopicMeta
     {
         $this->content = __f('Discussion of item at: %s', $this->getLink(), $this->dom);
     }
-
 }

@@ -19,7 +19,6 @@ use Zikula\Core\Hook\ProcessHook;
 
 abstract class AbstractHookedTopicMeta
 {
-
     /**
      * Hooked module object id
      *
@@ -123,7 +122,6 @@ abstract class AbstractHookedTopicMeta
      */
     protected function setup()
     {
-
     }
 
     /**
@@ -157,5 +155,4 @@ abstract class AbstractHookedTopicMeta
 
         return $link;
     }
-
 }

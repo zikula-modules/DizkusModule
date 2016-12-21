@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -14,14 +14,12 @@ namespace Zikula\DizkusModule\Api;
 use UserUtil;
 use DateTime;
 use System;
-use Doctrine;
 
 /**
  * This class provides the userdata api functions
  */
 class UserDataApi extends \Zikula_AbstractApi
 {
-
     private $_online;
 
     public function initialize()
@@ -34,7 +32,7 @@ class UserDataApi extends \Zikula_AbstractApi
      *
      * Check if a user is online
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return boolean True if online
      */
@@ -63,5 +61,4 @@ class UserDataApi extends \Zikula_AbstractApi
 
         return $isOnline;
     }
-
 }

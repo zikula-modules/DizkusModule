@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -27,7 +27,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Report extends \Zikula_Form_AbstractHandler
 {
-
     /**
      * post
      *
@@ -38,11 +37,11 @@ class Report extends \Zikula_Form_AbstractHandler
     /**
      * Setup form.
      *
-     * @param Zikula_Form_View $view Current Zikula_Form_View instance.
+     * @param Zikula_Form_View $view current Zikula_Form_View instance
      *
      * @return boolean
      *
-     * @throws AccessDeniedException If the current user does not have adequate permissions to perform this function.
+     * @throws AccessDeniedException if the current user does not have adequate permissions to perform this function
      */
     public function initialize(Zikula_Form_View $view)
     {
@@ -55,6 +54,7 @@ class Report extends \Zikula_Form_AbstractHandler
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
             $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
@@ -70,8 +70,8 @@ class Report extends \Zikula_Form_AbstractHandler
     /**
      * Handle form submission.
      *
-     * @param Zikula_Form_View $view  Current Zikula_Form_View instance.
-     * @param array            &$args Arguments.
+     * @param Zikula_Form_View $view  current Zikula_Form_View instance
+     * @param array            &$args Arguments
      *
      * @return bool|void
      */
@@ -79,6 +79,7 @@ class Report extends \Zikula_Form_AbstractHandler
     {
         if ($args['commandName'] == 'cancel') {
             $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
+
             return $view->redirect($url);
         }
 
@@ -94,7 +95,7 @@ class Report extends \Zikula_Form_AbstractHandler
         // - use censor and compare with original comment
         // if only one of this comparisons fails -> trash it, it is spam.
         if (!UserUtil::isLoggedIn()) {
-            if (strip_tags($data['comment']) <> $data['comment']) {
+            if (strip_tags($data['comment']) != $data['comment']) {
                 // possibly spam, stop now
                 // get the users ip address and store it in zTemp/Dizkus_spammers.txt
                 $this->dzk_blacklist();
@@ -110,6 +111,7 @@ class Report extends \Zikula_Form_AbstractHandler
         $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
 
         $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => $start), RouterInterface::ABSOLUTE_URL);
+
         return $view->redirect($url);
     }
 
@@ -163,8 +165,9 @@ class Report extends \Zikula_Form_AbstractHandler
             foreach ($reserved_ips as $r) {
                 $min = ip2long($r[0]);
                 $max = ip2long($r[1]);
-                if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max))
+                if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max)) {
                     return false;
+                }
             }
 
             return true;

@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -13,8 +13,6 @@ namespace Zikula\DizkusModule\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zikula\Core\Doctrine\EntityAccess;
-use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
 
 /**
  * ModeratorUser entity class
@@ -24,7 +22,6 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
  */
 class ModeratorUserEntity extends EntityAccess
 {
-
     /**
      * id
      *
@@ -86,5 +83,4 @@ class ModeratorUserEntity extends EntityAccess
     {
         $this->forum = $forum;
     }
-
 }

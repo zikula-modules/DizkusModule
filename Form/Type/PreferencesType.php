@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -17,9 +17,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PreferencesType extends AbstractType {
-
-    public function __construct() {
+class PreferencesType extends AbstractType
+{
+    public function __construct()
+    {
         $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', array('gid' => 2));
         $admins = ['-1' => 'disable'];
         foreach ($adminGroup['members'] as $admin) {
@@ -28,8 +29,8 @@ class PreferencesType extends AbstractType {
         $this->admins = $admins;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->add('forum_enabled', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
                     'multiple' => false,
                     'expanded' => true,
@@ -151,18 +152,19 @@ class PreferencesType extends AbstractType {
         ]);
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'preferences_form';
     }
 
     /**
      * OptionsResolverInterface is @deprecated and is supposed to be replaced by
      * OptionsResolver but docs not clear on implementation
-     * 
-     * @param OptionsResolverInterface $resolver            
+     *
+     * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver->setDefaults([]);
     }
-
 }

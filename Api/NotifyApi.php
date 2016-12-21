@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -22,7 +22,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class NotifyApi extends \Zikula_AbstractApi
 {
-
     /**
      * Notify Subscribers by e-mail
      *
@@ -228,5 +227,4 @@ class NotifyApi extends \Zikula_AbstractApi
 
         return ModUtil::apiFunc('Mailer', 'user', 'sendmessage', $args2);
     }
-
 }

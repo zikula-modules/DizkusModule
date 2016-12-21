@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -16,7 +16,6 @@ use SecurityUtil;
 
 class PrefsApi extends \Zikula_AbstractApi
 {
-
     /**
      * get available user pref panel links
      *
@@ -53,5 +52,4 @@ class PrefsApi extends \Zikula_AbstractApi
 
         return $links;
     }
-
 }

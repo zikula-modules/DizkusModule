@@ -4,7 +4,7 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  * @package Dizkus
  */
@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class StatisticsBlock extends \Zikula_Controller_AbstractBlock
 {
-
     /**
      * init
      *
@@ -49,10 +48,10 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * display the block
      *
-     * @param array $blockInfo Blockinfo array.
+     * @param array $blockInfo blockinfo array
      *
      * @throws AccessDeniedException on perm check failure
-     * 
+     *
      * @return array|boolean
      */
     public function display($blockInfo)
@@ -114,10 +113,10 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Update the block
      *
-     * @param array $blockInfo Blockinfo array.
+     * @param array $blockInfo blockinfo array
      *
      * @throws AccessDeniedException on perm check failure
-     * 
+     *
      * @return boolean|array
      */
     public function update($blockInfo)
@@ -134,10 +133,10 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
     /**
      * Modify the block
      *
-     * @param array $blockInfo Blockinfo array.
+     * @param array $blockInfo blockinfo array
      *
      * @throws AccessDeniedException on perm check failure
-     * 
+     *
      * @return string|boolean
      */
     public function modify($blockInfo)
@@ -153,7 +152,5 @@ class StatisticsBlock extends \Zikula_Controller_AbstractBlock
 
         return $this->view->assign('vars', $vars)
             ->fetch('Block/statisticsblock_modify.tpl');
-        
     }
-
 }
