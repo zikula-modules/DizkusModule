@@ -1,0 +1,63 @@
+<table class="table">
+    <thead>
+        <tr class="active">
+            <th colspan='2'>
+                {% if forum is not defined %}
+                    <a id="forumlink_{{ parent.name }}" class="tooltips" title="{{ __("Go to forum") }} '{{ parent.name|escape('html') }}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id}) }}">
+                   <i class="fa fa-comments"></i>&nbsp;{{ parent.name|upper|escape('html') }}</a>
+                {% endif %}
+            </th>
+            <th class="data">{{ __('Subforums')|upper }}</th>
+            <th class="data">{{ __('Topics')|upper }}</th>
+            <th class="data">{{ __('Posts')|upper }}</th>
+            <th class="lastpost">{{ __('Last post')|upper }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for forum in parent.children %}
+        <tr>
+            <td class="data">
+                <a class="tooltips" title="{{ __("Go to forum") }} '{{ forum.name|escape('html') }}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': forum.forum_id}) }}">
+                    <span class="fa-stack fa-2x">
+                        <i class="fa fa-comments fa-stack-2x"></i>
+                    {% if forum.last_post != null %}
+                        {% if date(forum.last_post.post_time) > date(last_visit_unix) %}
+                            <i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>
+                        {% endif %}
+                    {% endif %}
+                    </span>
+                </a>
+            </td>
+            <td class="description">
+                <h3><a class="tooltips" title="{{ __("Go to forum") }} '{{ forum.name|escape('html') }}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':forum.forum_id}) }}">{{ forum.name }}</a></h3>
+                {% if forum.description != '' %}<p>{{ forum.description|escape('html') }}</p>{% endif %}
+                {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':forum}) }}
+            </td>
+            <td class="data">{{ forum.children|length }}</td>
+            <td class="data">{{ forum.topicCount|escape('html') }}</td>
+            <td class="data">{{ forum.postCount|escape('html') }}</td>
+            <td class="lastpost">
+            {% if forum.last_post != null %}
+                {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':forum.last_post}) }}
+            {% else %}
+                <span></span>
+            {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan='6' class="text-center warning">
+                {{ __('No subforums available.') }}
+            </td>
+        </tr>
+        {% endfor %}
+        {% set freeTopicsInForum=countFreeTopics(parent.forum_id) %}
+        {% if freeTopicsInForum > 0 and app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_index' %}
+        <tr>
+            <td colspan='6' class="text-center success">{{ _fn("There is %s topic not in a subforum.", "There are %s topics not in a subforum.", freeTopicsInForum , {'%s':freeTopicsInForum}) }}
+                <a id="forumlink_{{ parent.name }}" title="{{ __("Go to forum") }} '{{ parent.name|escape('html') }}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum' : parent.forum_id}) }}">{{ __("Go to forum") }} '{{ parent.name|escape('html') }}'</a>
+            </td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>

@@ -1,14 +1,40 @@
 parameters:
     zikula_dizkus_module.security.class: Zikula\DizkusModule\Security\Permission
     zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
-    zikula_dizkus_module.blocks_helper.class: Zikula\DizkusModule\Helper\BlocksHelper
+    zikula_dizkus_module.twig.extension.class: Zikula\DizkusModule\Twig\TwigExtension
+    zikula_dizkus_module.links.class: Zikula\DizkusModule\Container\LinkContainer
+    
+    zikula_dizkus_module.forum_helper.class: Zikula\DizkusModule\Helper\ForumHelper
+    zikula_dizkus_module.topic_helper.class: Zikula\DizkusModule\Helper\TopicHelper
+    zikula_dizkus_module.post_helper.class: Zikula\DizkusModule\Helper\PostHelper
+
+    zikula_dizkus_module.forum_user_helper.class: Zikula\DizkusModule\Helper\ForumUserHelper
+    zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
+    zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
+    zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
 
 services:
+    
+# Common
+
     zikula_dizkus_module.security:
         class: %zikula_dizkus_module.security.class%
         tags:
             - { name: zikula.dizkus.security }
         arguments: [@request_stack, @doctrine.orm.default_entity_manager, @translator.default, @zikula_permissions_module.api.permission, @zikula_extensions_module.api.variable]
+        
+    zikula_dizkus_module.twig.extension:
+        class: %zikula_dizkus_module.twig.extension.class%
+        tags:
+            - { name: twig.extension }        
+        arguments: [@service_container]
+        
+    zikula_dizkus_module.link_container:
+        class: %zikula_dizkus_module.links.class%
+        lazy: true
+        tags:
+            - { name: zikula.link_container }
+        arguments: [@translator.default, @router, @zikula_permissions_module.api.permission, @zikula_extensions_module.api.variable, @zikula_users_module.current_user]
         
     zikula_dizkus_module.event_listener:
         class: %zikula_dizkus_module.event_listener.class%
@@ -16,8 +42,47 @@ services:
             - { name: kernel.event_subscriber }
         arguments: [@request_stack, @doctrine.orm.default_entity_manager, @router]
 
-    zikula_dizkus_module.blocks_helper:
-        class: %zikula_dizkus_module.blocks_helper.class%
+# Helpers
+        
+    zikula_dizkus_module.forum_helper:
+        class: %zikula_dizkus_module.forum_helper.class%
         tags:
-            - { name: zikula.dizkus.blocks_helper }
-        arguments: [@request_stack, @doctrine.orm.default_entity_manager, @router, @zikula_users_module.current_user, @zikula_extensions_module.api.variable, @zikula_dizkus_module.security, @translator.default]
+            - { name: zikula.dizkus.forum_helper }
+        arguments: [@request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @zikula_dizkus_module.security, @translator.default]
+
+    zikula_dizkus_module.topic_helper:
+        class: %zikula_dizkus_module.topic_helper.class%
+        tags:
+            - { name: zikula.dizkus.topic_helper }
+        arguments: [@translator.default, @router, @request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @zikula_dizkus_module.security, @zikula_extensions_module.api.variable]
+
+    zikula_dizkus_module.post_helper:
+        class: %zikula_dizkus_module.post_helper.class%
+        tags:
+            - { name: zikula.dizkus.post_helper }
+        arguments: [@translator.default, @router, @request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @zikula_dizkus_module.security, @zikula_extensions_module.api.variable]
+
+    zikula_dizkus_module.forum_user_helper:
+        class: %zikula_dizkus_module.forum_user_helper.class%
+        tags:
+            - { name: zikula.dizkus.forum_user_helper }
+        arguments: [@request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @translator.default]
+  
+    zikula_dizkus_module.favorites_helper:
+        class: %zikula_dizkus_module.favorites_helper.class%
+        tags:
+            - { name: zikula.dizkus.favorites_helper }
+        arguments: [@request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user]
+
+    zikula_dizkus_module.count_helper:
+        class: %zikula_dizkus_module.count_helper.class%
+        tags:
+            - { name: zikula.dizkus.count_helper }
+        arguments: [@request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user]
+          
+    zikula_dizkus_module.moderators_helper:
+        class: %zikula_dizkus_module.moderators_helper.class%
+        tags:
+            - { name: zikula.dizkus.moderators_helper }
+        arguments: [@doctrine.orm.default_entity_manager]
+ 

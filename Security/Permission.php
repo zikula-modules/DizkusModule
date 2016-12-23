@@ -166,9 +166,11 @@ class Permission {
                 if (is_numeric($args)) {
                     $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args);
                 } else {
-                    if (is_array($args)) {
+                    if (is_array($args) ) {
                         // reconstitute object
-                        $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args['forum_id']);
+                        if(isset($args['forum_id'])){
+                            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args['forum_id']);
+                        }
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
                     } else {
                         throw new \InvalidArgumentException();

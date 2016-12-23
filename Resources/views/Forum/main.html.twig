@@ -1,0 +1,19 @@
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div class="panel panel-default">
+    <div class="panel-heading"><h2 class="fa fa-home">&nbsp;{{ __("Forums index page") }}</h2>
+        {% if totalposts is defined %}
+        <div style='position:absolute; top:0; right:0; padding: 1.25em;'>
+            <a class="btn btn-default btn-sm tooltips" title="{{ __('RSS Feed') }}" href="{{ path('zikuladizkusmodule_feed_feed') }}"><i class="fa fa-rss-square fa-150x fa-orange"></i>
+            {{ __f('Total posts: %s',{'%s':totalposts }) }}</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% for parent in forums %}
+        {{ include("@ZikulaDizkusModule/Forum/singleforumtable.html.twig") }}
+    {% endfor %}
+        
+    {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

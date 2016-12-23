@@ -1,0 +1,54 @@
+{{ pageSetVar('title', __("Manage topic subscriptions")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+
+<div id="dzk_userprefs">
+
+    {{ moduleLinks('prefs') }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2>{{ __("Manage topic subscriptions") }}</h2>
+    </div>
+
+{#    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_managetopicsubscriptions'*}  #}  
+
+    <table class="table table-striped">
+        <thead>
+        <tr class="active">
+            <th class="col-lg-3">{{ __("Topic") }}</th>
+            <th>{{ __("Unsubscribe from topic") }}</th>
+            <th>{{ __("Last post") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if subscriptions|length > 0 %}
+            <tr class="warning">
+                <td></td>
+                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{{ __("Remove all topic subscriptions") }}</label></td>
+                <td></td>
+            </tr>
+        {% endif %}
+        {% for subscription in subscriptions %}
+            <tr>
+                <td><a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'forum': subscription.topic.topic_id}) }}" title="{{ subscription.topic.title|escape('html') }}">{{ subscription.topic.title|escape('html') }}</a></td>
+                <td>{#{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}#}</td>
+                <td>{{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':subscription.topic.last_post}) }} </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan='3' class="text-center danger">
+                    {{ __("No topic subscriptions found.") }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if subscriptions|length > 0 %}
+    <div class="col-lg-offset-3 col-lg-9">
+
+    </div>
+{% endif %} 
+    
+</div>
+
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

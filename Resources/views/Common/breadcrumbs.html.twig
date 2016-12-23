@@ -1,0 +1,26 @@
+<ol class="breadcrumb clearfix">
+    <li>
+    {% if app.request.attributes.get('_route') != 'zikuladizkusmodule_forum_index' %}
+        <a class="tooltips fa fa-home" title="{{ __('Go to forums index page') }}" href="{{ path('zikuladizkusmodule_forum_index') }}">&nbsp;{{ __('Forums index page') }}</a>
+    {% else %}
+        <span class="fa fa-home">&nbsp;{{ __("Forums index page") }}</span>
+    {% endif %}
+    </li>
+
+ {% if breadcrumbs is defined %}
+    {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.url }}">{{ breadcrumb.title|escape('html')|notifyFilters('dizkus.filter_hooks.post.filter') }}</a></li>
+    {% endfor %}
+{% endif %}
+
+    {% if templatetitle is defined %}
+        <li><span>{{ templatetitle|escape('html')|notifyFilters('dizkus.filter_hooks.post.filter') }}</span></li>
+    {% endif %}
+
+
+    {% set favorites=favoritesStatus() %}
+    {% if favorites and favorites == 1 %}
+        <li><em>{{ __("Favorites") }}</em></li>
+    {% endif %}
+    <em class="pull-right">{{ __('Current forum time:') }} {{ "now"|date("Y-m-d H:i") }} </em>
+</ol>

@@ -1,0 +1,30 @@
+{% form_theme form with ['ZikulaDizkusModule:Form:radio.html.twig'] %}
+
+<div class="form-group">
+    {{ form_label(form.template, __('Name of template file') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
+    <div class="col-lg-9">
+        {{ form_widget(form.template, { 'attr': {'class': '', 'size': 70, 'maxlength':150 } }) }}                
+    </div>
+    <p class="col-md-12 help-block alert alert-info">
+        {{ __("Notice: Enter twig template name without extension.")}} <br />
+        {{ __("Example: For template 'recentposts.html.twig' enter 'recentposts'.")}}        
+    </p>  
+</div>
+<div class="form-group">
+    {{ form_label(form.params, __('Parameters') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
+    <div class="col-lg-9">
+        {{ form_widget(form.params, { 'attr': {'class': '', 'size': 70, 'maxlength':150 } }) }}                
+    </div>
+    <p class="col-md-12 help-block alert alert-info">
+        {{ __("Notice: Enter a comma-separated list. Example: 'maxposts=5,forum_id=27'.")}} <br />
+        {{ __("Allowed parameters:")}} <code>maxposts, forum_id, user_id, canread, favorites, show_m2f, show_rss</code>
+    </p>      
+</div>
+<div class="form-group">       
+    {{ form_label(form.showfooter, __('Show footer') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
+    <div class="col-md-9">           
+        {{ form_widget(form.showfooter, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+    </div>
+</div>
+    
+{#{{ notifyDisplayHooks('blocks.ui_hooks.htmlblock.content.form_edit', form.vars.value.bid|default(null)) }}#}

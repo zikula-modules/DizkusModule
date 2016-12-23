@@ -1,0 +1,71 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ pageSetVar('title', __("Manage your signature")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+
+<div id="dzk_userprefs">
+
+    {{ moduleLinks('prefs') }}
+
+    <h2>{{ __("Posting display settings") }}</h2>
+
+    {{ showflashes() }}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <fieldset>
+    <legend>{{ __("Posting display settings") }}</legend>        
+        <div class="form-group">
+            {{ form_label(form.signature, __('Signature') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
+            <div class="col-lg-9">
+                 {{ form_widget(form.signature, { 'attr': {'class': ''} }) }} 
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-offset-6 col-md-8">
+                {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-default'}}) }}                
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
+            </div>
+        </div>  
+    </fieldset>
+
+    {{ form_end(form) }}    
+    
+</div>
+
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+
+
+
+{# empty Twig template 
+
+{gt text="Manage your signature" assign='templatetitle'}
+{pagesetvar name=title value=$templatetitle}
+{include file='User/header.tpl'}
+
+<h2>{$templatetitle}</h2>
+{modulelinks modname=$module type='prefs'}<br />
+
+{form cssClass='form-horizontal' role="form"}
+{formvalidationsummary}
+<fieldset>
+    <legend>{gt text="Posting display settings"}</legend>
+    <div class="form-group">
+        {formlabel for="signature" __text="Signature" class="col-lg-3 control-label"}
+        <div class="col-lg-9">
+            {formtextinput id="signature" textMode="multiLine" rows="5" cols="40" cssClass='form-control'}
+        </div>
+    </div>
+</fieldset>
+    <div class="col-lg-offset-3 col-lg-9">
+    {formbutton commandName="update" __text="Submit" class="btn btn-success"}
+</div>
+{/form}
+
+{include file='User/footer.tpl'}
+
+
+#}

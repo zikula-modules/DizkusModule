@@ -123,7 +123,7 @@ class ForumManager
             if ($key == 0) {
                 continue;
             }
-            $url = ServiceUtil::get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum->getForum_id()));
+            $url = ServiceUtil::get('router')->generate('zikuladizkusmodule_forum_viewforum', array('forum' => $forum->getForum_id()));
             $output[] = array(
                 'url' => $url,
                 'title' => $forum->getName());
@@ -260,29 +260,38 @@ class ForumManager
     {
         if (!isset($uid)) {
             $uid = UserUtil::getVar('uid');
+            if($uid === null){
+                return false;
+            }
         }
         // check zikula perms
         if (SecurityUtil::checkPermission($this->name, $this->_forum->getForum_id() . '::', ACCESS_MODERATE)) {
-            return true;
+         //   return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
         if (in_array($uid, $moderatorUsers)) {
-            return true;
+          //  return true;
         }
         $gids = $this->_forum->getModeratorGroupsAsIdArray(true);
         if (empty($gids)) {
-            return false;
+         //   return false;
         }
         // is this user in any of the groups?
-        $dql = 'SELECT m FROM Zikula\\GroupsModule\\Entity\\GroupMembershipEntity m
-            WHERE m.uid = :uid
-            AND m.gid IN (:gids)';
-        $groupMembership = $this->entityManager
+        $dql = 'SELECT m FROM Zikula\\UsersModule\\Entity\\UserEntity m
+            WHERE m.uid = :uid';
+        $user = $this->entityManager
             ->createQuery($dql)
             ->setParameter('uid', $uid)
-            ->setParameter('gids', $gids)
-            ->getResult();
-
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+          
+        $groupMembership = [];
+        foreach($user->getGroups()->toArray() as $group){
+              if(in_array($group->getGid(), $gids)){
+                $groupMembership[] = $group->getGid();   
+              }
+        }
+          
         return count($groupMembership) > 0 ? true : false;
     }
 

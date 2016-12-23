@@ -1,0 +1,33 @@
+{% if settings.ajax %}
+    {#{pageaddvar name='javascript' value='jQuery'}#}
+{% endif %}
+
+{% if maintitle is not defined %}
+    {% set maintitle='' %}
+{% endif %}
+
+{% if app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_index' %}
+    {% set maintitle=__('Forum') %}
+{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_viewforum' and forum is defined %}
+    {% set maintitle=forum.name %}
+{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_user_viewtopic' and topic is defined %}
+    {% set maintitle=topic.title %}
+{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_user_newtopic' %}
+    {% set maintitle=__('New topic in forum') %}
+{% endif %}
+
+{% if templatetitle is defined %}
+    {% set maintitle=templatetitle %}
+{% endif %}
+
+{% if maintitle != '' %}
+   {{ pageSetVar('title', maintitle) }}
+{% endif %}
+
+{{ showflashes() }}
+
+<div id="dizkus">
+
+    <a id="top" accesskey="t"></a>
+    {{ include("@ZikulaDizkusModule/Common/breadcrumbs.html.twig") }}
+    {{ include("@ZikulaDizkusModule/Common/navbar.html.twig") }}

@@ -1,0 +1,25 @@
+{% if forum.moderatorUsers|length > 0 or forum.moderatorGroups|length > 0 %}
+    <div id='dzk_moderatedby' class="text-muted{% if well is defined and well %} well well-sm{% endif %}">
+        <em>{{ __("Moderated by") }}:</em>
+    {% endif %}
+
+    {# @todo |profilelinkbyuname      #}
+
+    {% if forum.moderatorUsers|length > 0 %}
+        <span>
+            {% for modid, mod in forum.moderatorUsers %}
+                {{ mod.forumUser.user.uname}}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+            {% if forum.moderatorGroups|length > 0 %}, {% endif %}
+        </span>
+    {% endif %}
+    {% if forum.moderatorGroups|length > 0 %}
+        <span>
+            {% for id, group in forum.moderatorGroups %}
+                {{ group.group.name }} ({{ __('Group') }}){% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </span>
+    {% endif %}
+    {% if forum.moderatorUsers|length > 0 or forum.moderatorGroups|length > 0 %}
+    </div>
+{% endif %}

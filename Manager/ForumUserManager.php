@@ -57,7 +57,7 @@ class ForumUserManager
      */
     public function getPostOrder()
     {
-        return ($this->_forumUser->getPostOrder() == 0) ? 'ASC' : 'DESC';
+        return ($this->_forumUser->getPostOrder() == 1) ? 'ASC' : 'DESC';
     }
 
     /**
@@ -115,4 +115,15 @@ class ForumUserManager
         $this->_forumUser->setDisplayOnlyFavorites($value);
         $this->entityManager->flush();
     }
+
+    /**
+     * Change the value of Favorite Forum display
+     * @param boolean $value
+     */
+    public function setAutosubscribe($value)
+    {
+        $this->_forumUser->setAutosubscribe($value);
+        $this->entityManager->flush();
+    }    
+    
 }
