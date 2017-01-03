@@ -30,11 +30,17 @@ class TwigExtension extends \Twig_Extension
      * @var ContainerInterface
      */
     private $container;
+    
+    /**
+     * @var ContainerInterface
+     */
+    private $translator;
 
     public function __construct(ContainerInterface $container = null)
     {
         $this->name = 'ZikulaDizkusModule';
         $this->container = $container;
+        $this->translator = $this->container->get('translator');
     }
     
     /**
@@ -59,7 +65,7 @@ class TwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-//            new \Twig_SimpleFilter('isCoreModule', [$this, 'isCoreModule']),
+            new \Twig_SimpleFilter('viewTopicLink', [$this, 'viewTopicLink'], ['is_safe' => ['html']])
         ];
     }  
     
@@ -93,7 +99,7 @@ class TwigExtension extends \Twig_Extension
      */
     public function isSubscribed($forum, $user_id = null)
     {
-        return $this->container->get('zikula_dizkus_module.forum_helper')->isSubscribed($forum, $user_id);
+        return $this->container->get('zikula_dizkus_module.forum_manager')->isSubscribed($forum, $user_id);
     } 
     
     /**
@@ -222,11 +228,51 @@ class TwigExtension extends \Twig_Extension
         
         $urlParams = [
             'topic' => $topic->getTopic_id(),
-            'start' => $this->container->get('zikula_dizkus_module.topic_helper')->getTopicPage($topic->getReplyCount())
+            'start' => $this->container->get('zikula_dizkus_module.topic_manager')->getTopicPage($topic->getReplyCount())
         ];
         $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams) . "#pid" . $topic->getLast_post()->getPost_id();
 
         return $url;    
+    }
+    
+    /**
+     * Smarty modifier to create a link to a topic
+     *
+     * Available parameters:
+
+     * Example
+     *
+     *   {$topic_id|viewtopiclink}
+     *
+     *
+     * @author       Frank Schummertz
+     * @author       The Dizkus team
+     * @since        16. Sept. 2003
+     * @param        array    $string     the contents to transform
+     * @return       string   the modified output
+     */
+    public function viewTopicLink($topic_id = null, $subject = null, $forum_name = null, $class = '', $start = null, $last_post_id = null)
+    {
+        if (!isset($topic_id)) {
+            return '';
+        }
+
+        $class = 'class="tooltips ' . DataUtil::formatForDisplay($class) . '"';
+
+        $args = ['topic' => (int) $topic_id];
+        if (isset($start)) {
+            $args['start'] = (int) $start;
+        }
+
+        $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $args);
+        if (isset($last_post_id)) {
+            $url .= '#pid' . (int) $last_post_id;
+        }
+
+        // @todo - maybe allow title to be added as a parameter
+        $title = $this->translator->__('go to topic');
+        
+        return "<a $class href='" . DataUtil::formatForDisplay($url) . "' title=". $title .">$subject</a>";
     }
     
     /**
@@ -315,7 +361,7 @@ class TwigExtension extends \Twig_Extension
     <i class="fa fa-quote-right fa-4x text-more-muted"></i>
 </div>';
 
-        $stack = array();
+        $stack = [];
         $curr_pos = 1;
         while ($curr_pos && ($curr_pos < strlen($message))) {
             $curr_pos = strpos($message, "[", $curr_pos);

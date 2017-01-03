@@ -65,9 +65,9 @@ class StatisticsBlock extends AbstractBlockHandler
         // must set this default
         $paramArray['months'] = !empty($paramArray['months']) ? $paramArray['months'] : 6;
 
-        $topforums = $this->get('zikula_dizkus_module.forum_helper')->getTopForums($paramArray);
-        $lastposts = $this->get('zikula_dizkus_module.post_helper')->getLastPosts($paramArray);
-        $topposters = $this->get('zikula_dizkus_module.post_helper')->getTopPosters($paramArray);
+        $topforums = $this->get('zikula_dizkus_module.forum_manager')->getTopForums($paramArray);
+        $lastposts = $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramArray);
+        $topposters = $this->get('zikula_dizkus_module.post_manager')->getTopPosters($paramArray);
 
         return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [
             'topforums' => $topforums,            

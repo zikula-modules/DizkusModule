@@ -108,7 +108,7 @@ class ForumController extends AbstractController
     }       
 
     /**
-     * @Route("/forum/{forum}/{start}", requirements={"topic" = "^[1-9]\d*$", "start" = "^[1-9]\d*$"})
+     * @Route("/forum/{forum}/{start}", requirements={"forum" = "^[1-9]\d*$", "start" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * View forum by id
@@ -132,7 +132,7 @@ class ForumController extends AbstractController
         }
         $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
 
-        $managedForum = new ForumManager($forum);
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum); //new ForumManager($forum);
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', [$forum]));
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
@@ -141,13 +141,12 @@ class ForumController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead($managedForum->get())) {
             throw new AccessDeniedException();
         }        
-        // filter the forum children by permissions
-        $forum = $this->get('zikula_dizkus_module.security')->filterForumChildrenByPermission($managedForum->get());
 
         return $this->render('@ZikulaDizkusModule/Forum/view.html.twig', [
                     'topics' => $managedForum->getTopics($start),
                     'last_visit_unix' => $lastVisitUnix,
-                    'forum' => $forum,
+                     // filter the forum children by permissions
+                    'forum' => $this->get('zikula_dizkus_module.security')->filterForumChildrenByPermission($managedForum->get()),
                     'pager' => $managedForum->getPager(),
                     'permissions' => $managedForum->getPermissions(),
                     'isModerator' => $managedForum->isModerator(),
@@ -156,66 +155,8 @@ class ForumController extends AbstractController
         ]);          
     }    
     
-
     /**
-     * @Route("/forum/modify", options={"expose"=true})
-     * @Method("POST")
-     *
-     * @param Request $request
-     *  forum
-     *  action
-     *
-     * @return string PlainResponse|BadDataResponse|UnavailableResponse
-     *
-     * @throws AccessDeniedException on failed perm check
-     */
-    public function modifyForumAction(Request $request)
-    {
-        //@todo - create non ajax version of this func (below) add ajax security
-        //$this->checkAjaxToken();
-        if (!$this->getVar('forum_enabled')) {
-            return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-        }
-        if (!$this->getVar('favorites_enabled')) {
-            return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
-        }
-
-        $forum = $request->request->get('forum');
-        $action = $request->request->get('action');
-        if (empty($forum)) {
-            return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-        }
-        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
-            // only need read perms to make a favorite
-            throw new AccessDeniedException();
-        }
-        $this->get('zikula_dizkus_module.forum_helper')->modify($forum, $action);
-
-        return new PlainResponse('successful');
-    }
-
-    /**
-     * @ Route("/forum/modify/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action" = "addToFavorites|removeFromFavorites|subscribe|unsubscribe"})
-     * @Method("GET")
-     *
-     * @param integer $forum
-     * @param string $action
-     *
-     * Change a param of a forum
-     * WARNING: this method is overridden by an Ajax method
-     *
-     * @return RedirectResponse
-     */
-//    public function modifyForumAction($forum, $action);
-//    {
-//        ModUtil::apiFunc($this->name, 'Forum', 'modify', array('forum' => $forum, 'action' => $action));
-//
-//        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum), RouterInterface::ABSOLUTE_URL));
-//    }      
-    
-    
-    /**
-     * @Route("/forum/moderate")
+     * @Route("/forum/moderate/{forum}", requirements={"forum" = "^[1-9]\d*$"})
      *
      * Moderate forum
      *
@@ -223,29 +164,20 @@ class ForumController extends AbstractController
      *
      * @return string
      */
-    public function moderateForumAction(Request $request)
+    public function moderateForumAction(Request $request, $forum)
     {
-        
-        $forum_id = (int)$request->query->get('forum', null);
-        if (!isset($forum_id)) {
+        // params check
+        if (!isset($forum)) {
             throw new \InvalidArgumentException();
         }
         // Get the Forum and Permission-Check
-        $this->_managedForum = new ForumManager($forum_id);
+        $this->_managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
 
         if (!$this->_managedForum->isModerator()) {
             // both zikula perms and Dizkus perms denied
             throw new AccessDeniedException();
         }
-
-
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
-
-//        $this->view->assign('forum_id', $forum_id);
-//        $this->view->assign('mode', '');
-//        $this->view->assign('topic_ids', []);
-//        $this->view->assign('last_visit_unix', $lastVisitUnix);
-//        $this->view->assign('forum', $this->_managedForum->get());
+        
         $topics = $this->_managedForum->getTopics();
         $topicSelect = [
             [
@@ -260,7 +192,7 @@ class ForumController extends AbstractController
                 'text' => $text
             ];
         }
-//        $this->view->assign('topicSelect', $topicSelect);
+        
         $actions = [
             [
                 'value' => '',
@@ -293,21 +225,172 @@ class ForumController extends AbstractController
                 'value' => 'join',
                 'text' => $this->__("Join topics")],
         ];
-//        $this->view->assign('actions', $actions);
+        
+        
+        $form = $this->createFormBuilder([])
+                ->add('action', 'choice', [
+                    'choices' => $actions,
+                    'multiple' => false,
+                    'expanded' => false,
+                    'required' => true])
+                
+//                ->add('topic_ids', null,['mapped' => false])
+                
+                ->add('remove', 'submit')
+                ->getForm();        
+        
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            
+            
+            //cancel
+            //->generate('zikuladizkusmodule_user_moderateforum', array('forum' => $this->_managedForum->getId()), RouterInterface::ABSOLUTE_URL);
+            
+            
+            $data = $form->getData(); 
+            $topic_ids= $request->request->get('topic_id',[]);
+            dump($data);
+            $mode = isset($data['mode']) ? $data['mode'] : '';
+            $shadow = $data['createshadowtopic'];
+            $moveto = isset($data['moveto']) ? $data['moveto'] : null;
+            $jointo = isset($data['jointo']) ? $data['jointo'] : null;
+            $jointo_select = isset($data['jointotopic']) ? $data['jointotopic'] : null;
+            // get this value by traditional method because checkboxen have values
+            
+            if (count($topic_ids) <> 0) {
+                switch ($mode) {
+                    case 'del':
+                    case 'delete':
+                        foreach ($topic_ids as $topic_id) {
+                            $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', ['topic' => $topic_id]);
+                        }
+                        break;
+
+                    case 'move':
+                        if (empty($moveto)) {
+                            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
+                            return $view->redirect($url);
+                        }
+                        foreach ($topic_ids as $topic_id) {
+                            ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
+                                'forum_id' => $moveto,
+                                'createshadowtopic' => $shadow]);
+                        }
+                        break;
+
+                    case 'lock':
+                    case 'unlock':
+                    case 'solve':
+                    case 'unsolve':
+                    case 'sticky':
+                    case 'unsticky':
+                        foreach ($topic_ids as $topic_id) {
+                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
+                                'topic' => $topic_id,
+                                'action' => $mode]);
+                        }
+                        break;
+
+                    case 'join':
+                        if (empty($jointo) && empty($jointo_select)) {
+                            $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target topic to join.'));
+                            return $view->redirect($url);
+                        }
+                        // text input overrides select box
+                        if (empty($jointo) && !empty($jointo_select)) {
+                            $jointo = $jointo_select;
+                        }
+                        if (in_array($jointo, $topic_ids)) {
+                            // jointo, the target topic, is part of the topics to join
+                            // we remove this to avoid a loop
+                            $fliparray = array_flip($topic_ids);
+                            unset($fliparray[$jointo]);
+                            $topic_ids = array_flip($fliparray);
+                        }
+                        foreach ($topic_ids as $from_topic_id) {
+                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
+                                'to_topic_id' => $jointo]);
+                        }
+                        break;
+
+                    default:
+                }
+            }
+            //done
+            //->generate('zikuladizkusmodule_user_moderateforum', array('forum' => $this->_managedForum->getId()), RouterInterface::ABSOLUTE_URL);
+            
+        }
+           
         // For Movetopic
-        $forums = ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren');
+        $forums = $this->get('zikula_dizkus_module.forum_manager')->getAllChildren();
         array_unshift($forums, [
             'value' => '',
             'text' => "<< " . $this->__("Select target forum") . " >>"]);
-//        $this->view->assign('forums', $forums)
-//            ->assign('pager', $this->_managedForum->getPager());
 
-                return $this->render('@ZikulaDizkusModule/Forum/moderate.html.twig', [
-//                    'form' => $form->createView(),
-                    'settings' => $this->getVars()
+        return $this->render('@ZikulaDizkusModule/Forum/moderate.html.twig', [
+            'form' => $form->createView(),
+//            $this->view->assign('mode', '');
+//            $this->view->assign('topic_ids', []);
+//            $this->view->assign('topicSelect', $topicSelect);
+            'forum' => $this->_managedForum->get(),
+            'forums' => $forums,
+            'pager' => $this->_managedForum->getPager(),
+            'actions' => $actions,
+            'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit(),
+            'settings' => $this->getVars()
         ]); 
     }
+    
+    /**
+     * 
+     * AJAX
+     * 
+     */
 
+    /**
+     * @Route("/forum/modify/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action" = "addToFavorites|removeFromFavorites|subscribe|unsubscribe"}, options={"expose"=true})
+     * @ Method("POST")
+     * 
+     * @param Request $request
+     *  forum
+     *  action
+     *
+     * @return string PlainResponse|BadDataResponse|UnavailableResponse
+     *
+     * @throws AccessDeniedException on failed perm check
+     */
+    public function modifyForumAction(Request $request, $forum , $action)
+    {   
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            if ($request->isXmlHttpRequest()){
+                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
+            }else{
+                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+                            'forum_disabled_info' => $this->getVar('forum_disabled_info')
+                ]); 
+            }
+        }   
+        
+        if (!$this->getVar('favorites_enabled')) {
+            return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
+        }
+
+        if (empty($forum)) {
+            return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
+        }
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            // only need read perms to make a favorite
+            throw new AccessDeniedException();
+        }
+        $this->get('zikula_dizkus_module.forum_manager')->modify($forum, $action);
+
+        return new PlainResponse('successful');
+        
+//        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum), RouterInterface::ABSOLUTE_URL));
+        
+    }
+    
     /**
      * @Route("/forumusers", options={"expose"=true})
      *
@@ -322,26 +405,6 @@ class ForumController extends AbstractController
         if (!$this->getVar('forum_enabled')) {
             return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
         }
-        $this->view->setCaching(false);
-        if (System::getVar('shorturls')) {
-            $this->view->_get_plugin_filepath('outputfilter', 'shorturls');
-            $this->view->register_outputfilter('smarty_outputfilter_shorturls');
-        }
-        $this->view->display('Ajax/forumusers.tpl');
-        System::shutDown();
-    }   
-    
-    /**
-     * Checks if the forum is disabled.
-     *
-     * @throws AccessDeniedException
-     *
-     * @return void
-     */
-    private function errorIfForumDisabled()
-    {
-        if (!$this->getVar('forum_enabled')) {
-            throw new AccessDeniedException(strip_tags($this->getVar('forum_disabled_info')));
-        }
-    }   
+
+    }      
 }

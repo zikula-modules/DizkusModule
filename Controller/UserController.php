@@ -27,7 +27,7 @@ use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
-use Zikula\DizkusModule\Manager\PostManager;
+//use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
 
 use Zikula\DizkusModule\Form\Type\UserPreferencesType;
@@ -397,7 +397,7 @@ class UserController extends AbstractController
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new AccessDeniedException();
         }
-        $managedPost = new PostManager($post);
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post); //new PostManager();
         $pip = $managedPost->get()->getPoster_ip();
         $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', ['pip' => $pip]))
             ->assign('topicId', $managedPost->getTopicId());

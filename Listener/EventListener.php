@@ -37,11 +37,11 @@ class EventListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            'module_dispatch.service_links' => array('serviceLinks'),
-            'installer.module.uninstalled' => array('moduleDelete'),
-            'user.account.delete' => array('deleteUser'),
-        );
+        return [
+            'module_dispatch.service_links' => ['serviceLinks'],
+            'installer.module.uninstalled' => ['moduleDelete'],
+            'user.account.delete' => ['deleteUser'],
+        ];
     }
 
     /**
@@ -57,12 +57,12 @@ class EventListener implements EventSubscriberInterface
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $moduleName = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
-        if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array(array(
-                    'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', array('moduleName' => $moduleName)),
-                    'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
-            $event->data[] = array(
-                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', array('moduleName' => $moduleName)),
-                'text' => __('Dizkus Hook Settings', $dom));
+        if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
+                    'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                    'text' => __('Dizkus Hook Settings', $dom)], $event->data))) {
+            $event->data[] = [
+                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                'text' => __('Dizkus Hook Settings', $dom)];
         }
     }
 
@@ -83,13 +83,13 @@ class EventListener implements EventSubscriberInterface
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $deleteHookAction = ModUtil::getVar(ZikulaDizkusModule::NAME, 'deletehookaction');
         // lock or remove
-        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
+        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(['hookedModule' => $module]);
         $count = 0;
         $total = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', ['topic' => $topic]);
                     break;
                 case 'lock':
                 default:

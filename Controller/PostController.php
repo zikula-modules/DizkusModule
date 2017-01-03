@@ -80,7 +80,7 @@ class PostController extends AbstractController
         $post_id = $request->request->get('post', null);
         $currentUserId = UserUtil::getVar('uid');
         if (!empty($post_id)) {
-            $managedPost = new PostManager($post_id);
+            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id);// new PostManager($post_id);
             $forum = $managedPost->get()->getTopic()->getForum();
             $managedForum = new ForumManager(null, $forum);
             if ($managedPost->get()->getPoster()->getUser_id() == $currentUserId || $managedForum->isModerator()) {
@@ -133,7 +133,7 @@ class PostController extends AbstractController
         if (!empty($post_id)) {
             $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
             $this->checkMessageLength($message);
-            $managedOriginalPost = new PostManager($post_id);
+            $managedOriginalPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id); //new PostManager($post_id);
             if ($delete) {
                 if ($managedOriginalPost->get()->isFirst()) {
                     throw new AccessDeniedException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));

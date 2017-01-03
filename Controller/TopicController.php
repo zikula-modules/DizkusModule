@@ -22,6 +22,8 @@ use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\TopicManager;
 
+use Zikula\Common\Translator\TranslatorInterface;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityRepository;
 
@@ -63,7 +65,7 @@ class TopicController extends AbstractController
         
         $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
 
-        $managedTopic = new TopicManager($topic);
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
@@ -171,7 +173,7 @@ class TopicController extends AbstractController
                 'topic_id' => $topic_id,
                 'post_text' => $message,
                 'attachSignature' => $attach_signature];
-            $managedPost = new PostManager();
+            $managedPost = $this->get('zikula_dizkus_module.post_manager')->manage();
             $managedPost->create($data);
             // check to see if the post contains spam
             if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {

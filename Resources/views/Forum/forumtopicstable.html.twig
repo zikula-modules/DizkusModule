@@ -35,15 +35,15 @@
                     {% elseif topic.solved == -1 %}
                     <i title='{{ __("This topic is a support request.")  }}' class="fa fa-question fa-red tooltips"></i>
                     {% endif %}
-{#                  {{ topic.topic_id|viewtopiclink:$topic.title }                #}
-                    {{ topic.topic_id }}
+                    {{ topic.topic_id|viewTopicLink(topic.title|striptags|truncate(50, true)) }}                
                 </h4>
                 <div class="text-muted">
-                    {#       |profilelinkbyuname             #}
+                    {#   @todo    |profilelinkbyuname             #}
                     <small>{{ __f("by %s", {'%s': topic.poster.user.uname}) }} {{ __('on') }} {{ topic.firstPostTime|date('Y-m-d H:i:s') }}</small>
-{#                    {assign var='total_posts' value=$topic.replyCount+1}#}
-                    {% set total_posts=topic.replyCount+1 %}
-{#                    {dzkpager objectid=$topic.topic_id total=$total_posts add_prevnext=false separator=", " linkall=true force="viewtopic" tag="div"}#}
+                    {% set total_posts=topic.replyCount+50 %}
+                    {% for i in range(0, total_posts, settings.posts_per_page) %}
+                        <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id, 'page': loop.index}) }}">{{ loop.index }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}
                 </div>
             </td>
             <td class="data">

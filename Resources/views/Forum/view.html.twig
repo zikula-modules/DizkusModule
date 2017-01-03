@@ -51,9 +51,8 @@
                                 {% set msg= __("Add forum to favourites") %}
                             {% endif %}
                             <a class="fa fa-heart-o" id="forum-favourite" data-status="{% if isFavorite %}1{% else %}0{% endif %}" href="{{ url }}" title="{{ msg }}">&nbsp;{{ msg }}</a>
-                        {# #}
                         </li>
-                    {% endif %}
+                    {% endif %} 
                 {% endif %}
 
                 {% if isModerator or permissions.moderate %}

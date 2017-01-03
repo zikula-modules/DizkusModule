@@ -63,7 +63,7 @@ class RecentPostsBlock extends AbstractBlockHandler
         }
 
         return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [        
-            'lastposts' => $this->get('zikula_dizkus_module.post_helper')->getLastPosts($paramarray),
+            'lastposts' => $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramarray),
             'showfooter' => $properties['showfooter']
         ]);
     }
