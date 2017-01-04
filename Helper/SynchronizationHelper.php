@@ -8,53 +8,39 @@
 
 namespace Zikula\DizkusModule\Helper;
 
-use ModUtil;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Helper\CountHelper;
 
-
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
-use Zikula\UsersModule\Api\CurrentUserApi;
-
 
 /**
- * CronHelper
+ * SynchronizationHelper
  *
  * @author Kaik
  */
 class SynchronizationHelper {
     
     /**
-     * @var RequestStack
-     */    
-    private $requestStack;      
-    
-    /**
      * @var EntityManager
      */
-    private $entityManager;    
+    private $entityManager;
     
     /**
-     * @var CurrentUserApi
-     */    
-    private $userApi;      
-
-    private $cache = [];  
+     * @var CountHelper
+     */ 
+    private $countHelper;
     
     
     public function __construct(
-            RequestStack $requestStack,
             EntityManager $entityManager,
-            CurrentUserApi $userApi        
+            CountHelper $countHelper
          ) {
         
         $this->name = 'ZikulaDizkusModule';
-        $this->requestStack = $requestStack;
-        $this->request = $requestStack->getMasterRequest();
-        $this->entityManager = $entityManager;
-        $this->userApi = $userApi;    
+        $this->entityManager = $entityManager;   
+        $this->countHelper = $countHelper;        
     }
     /**
      * perform sync on all forums, topics and posters
@@ -81,9 +67,9 @@ class SynchronizationHelper {
         // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
         $forums = $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
-            ->findBy(array(), array('lvl' => 'ASC'));
+            ->findBy([], ['lvl' => 'ASC']);
         foreach ($forums as $forum) {
-            $this->forum(array('forum' => $forum));
+            $this->forum($forum);
         }
 
         return true;
@@ -92,45 +78,44 @@ class SynchronizationHelper {
     /**
      * recalculate topicCount and postCount counts
      *
-     * @param ForumEntity $args['forum']
-     * @param Boolean             $args['flush']
+     * @param ForumEntity $forum
+     * @param Boolean     $flush
      *
      * @return boolean
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function forum($args)
+    public function forum($forum, $flush = false)
     {
-        if (!isset($args['forum'])) {
+        if (!isset($forum)) {
             throw new \InvalidArgumentException();
         }
-        if ($args['forum'] instanceof ForumEntity) {
-            $id = $args['forum']->getForum_id();
+        if ($forum instanceof ForumEntity) {
+            $id = $forum->getForum_id();
         } else {
-            $id = $args['forum'];
-            $args['forum'] = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
+            $id = $forum;
+            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
         }
-        // count topics of a forum
-        $topicCount = ModUtil::apiFunc($this->name, 'user', 'countstats', array(
-                    'type' => 'forumtopics',
-                    'id' => $id,
-                    'force' => true));
-        $args['forum']->setTopicCount($topicCount);
-        // count posts of a forum
-        $postCount = ModUtil::apiFunc($this->name, 'user', 'countstats', array(
-                    'type' => 'forumposts',
-                    'id' => $id,
-                    'force' => true));
-        $args['forum']->setPostCount($postCount);
-        $this->entityManager->flush();
-        $this->addToParentForumCount($args['forum'], 'Post');
-        $this->addToParentForumCount($args['forum'], 'Topic');
+        
+        $topicCount = $this->countHelper->getForumTopicsCount($id, $force = true);
+        $forum->setTopicCount($topicCount);
+        
+        $postCount = $this->countHelper->getForumPostsCount($id, $force = true);        
+        $forum->setPostCount($postCount);
+        
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+
+        $this->addToParentForumCount($forum, 'Post');
+        $this->addToParentForumCount($forum, 'Topic');
 
         return true;
     }
 
     /**
      * recursive function to add counts to parents
+     * 
      * @param ForumEntity $forum
      * @param string              $entity
      */
@@ -140,7 +125,7 @@ class SynchronizationHelper {
         if (!isset($parent)) {
             return;
         }
-        $entity = in_array($entity, array('Post', 'Topic')) ? $entity : 'Post';
+        $entity = in_array($entity, ['Post', 'Topic']) ? $entity : 'Post';
         $getMethod = "get{$entity}Count";
         $currentParentCount = $parent->{$getMethod}();
         $forumCount = $forum->{$getMethod}();
@@ -162,9 +147,7 @@ class SynchronizationHelper {
     {
         $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findAll();
         foreach ($topics as $topic) {
-            $this->topic(array(
-                'topic' => $topic,
-                'type' => 'forum'));
+            $this->topic($topic, 'forum');
         }
         // flush?
         return true;
@@ -173,25 +156,24 @@ class SynchronizationHelper {
     /**
      * recalcluate Topic replies for one topic
      *
-     * @param TopicEntity $args['topic']
-     * @param Boolean             $args['flush']
+     * @param TopicEntity $topic
+     * @param Boolean     $flush
      *
      * @return boolean
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function topic($args)
+    public function topic($topic, $flush = true)
     {
-        if (!isset($args['topic'])) {
+        if (!isset($topic)) {
             throw new \InvalidArgumentException();
         }
-        if ($args['topic'] instanceof TopicEntity) {
-            $id = $args['topic']->getTopic_id();
+        if ($topic instanceof TopicEntity) {
+            $id = $topic->getTopic_id();
         } else {
-            $id = $args['topic'];
-            $args['topic'] = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
+            $id = $topic;
+            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
         }
-        $flush = isset($args['flush']) ? $args['flush'] : true;
         // count posts of a topic
         $qb = $this->entityManager->createQueryBuilder();
         $replies = $qb->select('COUNT(p)')
@@ -201,7 +183,7 @@ class SynchronizationHelper {
             ->getQuery()
             ->getSingleScalarResult();
         $replies = (int)$replies - 1;
-        $args['topic']->setReplyCount($replies);
+        $topic->setReplyCount($replies);
         if ($flush) {
             $this->entityManager->flush();
         }
@@ -237,36 +219,35 @@ class SynchronizationHelper {
 
     /**
      * reset the last post in a forum due to movement
-     * @param ForumEntity $args['forum']
-     * @param Boolean             $args['flush'] default: true
+     * 
+     * @param ForumEntity $forum
+     * @param Boolean     $flush default: true
      *
      * @return boolean|void
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function forumLastPost($args)
+    public function forumLastPost($forum, $flush = true)
     {
-        if (!isset($args['forum']) || !$args['forum'] instanceof ForumEntity) {
+        if (!isset($forum) || !$forum instanceof ForumEntity) {
             throw new \InvalidArgumentException();
         }
-        $flush = isset($args['flush']) ? $args['flush'] : true;
+
         // get the most recent post in the forum
         $dql = 'SELECT t FROM Zikula\DizkusModule\Entity\TopicEntity t
             WHERE t.forum = :forum
             ORDER BY t.topic_time DESC';
         $query = $this->entityManager->createQuery($dql);
-        $query->setParameter('forum', $args['forum']);
+        $query->setParameter('forum', $forum);
         $query->setMaxResults(1);
         $topic = $query->getOneOrNullResult();
         if (isset($topic)) {
-            $args['forum']->setLast_post($topic->getLast_post());
+            $forum->setLast_post($topic->getLast_post());
         }
         // recurse up the tree
-        $parent = $args['forum']->getParent();
+        $parent = $forum->getParent();
         if (isset($parent)) {
-            $this->forumLastPost(array(
-                'forum' => $parent,
-                'flush' => false));
+            $this->forumLastPost($parent, false);
         }
         if ($flush) {
             $this->entityManager->flush();
@@ -275,33 +256,32 @@ class SynchronizationHelper {
 
     /**
      * reset the last post in a topic due to movement
-     * @param TopicEntity $args['topic']
-     * @param Boolean             $args['flush']
+     * 
+     * @param TopicEntity $topic
+     * @param Boolean     $flush
      *
      * @return boolean|void
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function topicLastPost($args)
+    public function topicLastPost($topic, $flush = true)
     {
-        if (!isset($args['topic']) || !$args['topic'] instanceof TopicEntity) {
+        if (!isset($topic) || !$topic instanceof TopicEntity) {
             throw new \InvalidArgumentException();
         }
-        $flush = isset($args['flush']) ? $args['flush'] : true;
+
         // get the most recent post in the topic
         $dql = 'SELECT p FROM Zikula\DizkusModule\Entity\PostEntity p
             WHERE p.topic = :topic
             ORDER BY p.post_time DESC';
         $query = $this->entityManager->createQuery($dql);
-        $query->setParameter('topic', $args['topic']);
+        $query->setParameter('topic', $topic);
         $query->setMaxResults(1);
         $post = $query->getSingleResult();
-        $args['topic']->setLast_post($post);
-        $args['topic']->setTopic_time($post->getPost_time());
+        $topic->setLast_post($post);
+        $topic->setTopic_time($post->getPost_time());
         if ($flush) {
             $this->entityManager->flush();
         }
-    }
-    
-    
+    } 
 }

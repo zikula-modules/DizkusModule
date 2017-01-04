@@ -9,23 +9,58 @@
     {{ form_start(form) }}
     {{ form_errors(form) }}
         <p class="clearfix">
-            <a class="btn btn-warning pull-right" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':forum.forum_id}) }}">{{ __("Go back to normal forum view") }}</a>
+            <a class="btn btn-default pull-right" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':forum.forum_id}) }}">{{ __("Go back to normal forum view") }}</a>
         </p>
         <div class="panel panel-warning">
             <div class="panel-heading">
                 <h2><i class="fa fa-wrench"></i>&nbsp;{{ __('Moderating') }}&nbsp;{{ forum.name }}&nbsp;{{ __('topics') }}</h2>
             </div>
+            {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage|default(15), posvar:'start', route:'zikuladizkusmodule_forum_moderateforum'}) }} 
             {{ include("@ZikulaDizkusModule/Forum/forumtopicstable.html.twig" , {'topics': forum.topics, 'moderate': true }) }}               
-                
-                
-{#            {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_moderateforum'}
-            {include file='User/forum/forumtopicstable.tpl' topics=$forum.topics moderate=true}
-            {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_moderateforum'}#}
+            {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage|default(15), posvar:'start', route:'zikuladizkusmodule_forum_moderateforum'}) }}    
+       
         </div>    
         <div class="alert alert-danger">{{ __("Warning! You will not be prompted for confirmation. Clicking on 'Submit' will immediately execute the chosen action.") }}</div>
-    
-    
-    
+        <fieldset>
+        <legend>{{ __("Moderator options") }}</legend>    
+            <div class="form-group">
+                {{ form_label(form.action, __("Actions"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+                <div class="col-md-8">
+                    {{ form_widget(form.action, { 'attr': {'class': ''} }) }}                 
+                </div>
+            </div>       
+            <div class="form-group">
+                {{ form_label(form.moveto, __("Choose target forum to move topic(s) to"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+                <div class="col-md-8">
+                    {{ form_widget(form.moveto, { 'attr': {'class': ''} }) }}                 
+                </div>
+            </div> 
+            <div class="form-group">       
+                {{ form_label(form.createshadowtopic, __('Create shadow topic') ,{ 'label_attr': {'class': 'col-md-4'} }) }}                  
+                <div class="col-md-8">           
+                    {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                </div>
+            </div>  
+            <div class="form-group">
+                {{ form_label(form.jointotopic, __("To join topics, select the target topic here"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+                <div class="col-md-8">
+                    {{ form_widget(form.jointotopic, { 'attr': {'class': ''} }) }}                 
+                </div>
+            </div>        
+            <div class="form-group">
+                {{ form_label(form.jointo, __("or target topic #"), { 'label_attr': {'class': 'col-md-4'} }) }}             
+                <div class="col-md-8">
+                    {{ form_widget(form.jointo, { 'attr': {'class': 'col-md-5', 'style': 'width:200px;'} }) }}                 
+                </div>
+            </div>         
+                
+        </fieldset>
+        <div class="form-group">
+            <div class="col-lg-offset-6 col-md-8">
+                {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
+            </div>
+        </div>
+                
     {{ form_end(form) }}
 
 

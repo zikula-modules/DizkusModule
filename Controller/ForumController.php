@@ -20,7 +20,8 @@ use Zikula\Core\RouteUrl;
 use Zikula\Core\Response\PlainResponse;
 
 use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
+
+use Zikula\DizkusModule\Form\Type\ModerateType;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityRepository;
@@ -178,104 +179,44 @@ class ForumController extends AbstractController
             throw new AccessDeniedException();
         }
         
-        $topics = $this->_managedForum->getTopics();
-        $topicSelect = [
-            [
-                'value' => '',
-                'text' => "<< " . $this->__("Choose target topic") . " >>"],
-        ];
-        foreach ($topics as $topic) {
-            $text = substr($topic->getTitle(), 0, 50);
-            $text = strlen($text) < strlen($topic->getTitle()) ? "$text..." : $text;
-            $topicSelect[] = [
-                'value' => $topic->getTopic_id(),
-                'text' => $text
-            ];
-        }
-        
-        $actions = [
-            [
-                'value' => '',
-                'text' => "<< " . $this->__("Choose action") . " >>"],
-            [
-                'value' => 'solve',
-                'text' => $this->__("Mark selected topics as 'solved'")],
-            [
-                'value' => 'unsolve',
-                'text' => $this->__("Remove 'solved' status from selected topics")],
-            [
-                'value' => 'sticky',
-                'text' => $this->__("Give selected topics 'sticky' status")],
-            [
-                'value' => 'unsticky',
-                'text' => $this->__("Remove 'sticky' status from selected topics")],
-            [
-                'value' => 'lock',
-                'text' => $this->__("Lock selected topics")],
-            [
-                'value' => 'unlock',
-                'text' => $this->__("Unlock selected topics")],
-            [
-                'value' => 'delete',
-                'text' => $this->__("Delete selected topics")],
-            [
-                'value' => 'move',
-                'text' => $this->__("Move selected topics")],
-            [
-                'value' => 'join',
-                'text' => $this->__("Join topics")],
-        ];
-        
-        
-        $form = $this->createFormBuilder([])
-                ->add('action', 'choice', [
-                    'choices' => $actions,
-                    'multiple' => false,
-                    'expanded' => false,
-                    'required' => true])
-                
-//                ->add('topic_ids', null,['mapped' => false])
-                
-                ->add('remove', 'submit')
-                ->getForm();        
-        
+        $form = $this->createForm(new ModerateType($this->get('translator'), $this->_managedForum), [], []);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             
-            
-            //cancel
-            //->generate('zikuladizkusmodule_user_moderateforum', array('forum' => $this->_managedForum->getId()), RouterInterface::ABSOLUTE_URL);
-            
-            
             $data = $form->getData(); 
-            $topic_ids= $request->request->get('topic_id',[]);
-            dump($data);
-            $mode = isset($data['mode']) ? $data['mode'] : '';
+            $action = isset($data['action']) ? $data['action'] : '';
             $shadow = $data['createshadowtopic'];
             $moveto = isset($data['moveto']) ? $data['moveto'] : null;
             $jointo = isset($data['jointo']) ? $data['jointo'] : null;
             $jointo_select = isset($data['jointotopic']) ? $data['jointotopic'] : null;
             // get this value by traditional method because checkboxen have values
+            $topic_ids = $request->request->get('topic_id',[]);
             
             if (count($topic_ids) <> 0) {
-                switch ($mode) {
+                switch ($action) {
                     case 'del':
                     case 'delete':
                         foreach ($topic_ids as $topic_id) {
-                            $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', ['topic' => $topic_id]);
+                          dump('delete topic' . $topic_id); 
+                          $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($topic_id);
+                          // $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', ['topic' => $topic_id]);
                         }
                         break;
 
                     case 'move':
                         if (empty($moveto)) {
                             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
-                            return $view->redirect($url);
+                            dump('move to forum' . $moveto); //
+                            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_moderateforum', ['forum' => $this->_managedForum->getId()], RouterInterface::ABSOLUTE_URL));
                         }
                         foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
-                                'forum_id' => $moveto,
-                                'createshadowtopic' => $shadow]);
+                            dump('move topic #' . $topic_id . ' to forum #' . $moveto); //
+                            $this->get('zikula_dizkus_module.topic_manager')->move($topic_id, $moveto, $shadow);
+//                          ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
+//                                'forum_id' => $moveto,
+//                                'createshadowtopic' => $shadow]);
                         }
                         break;
 
@@ -286,16 +227,17 @@ class ForumController extends AbstractController
                     case 'sticky':
                     case 'unsticky':
                         foreach ($topic_ids as $topic_id) {
-                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
-                                'topic' => $topic_id,
-                                'action' => $mode]);
+                        dump( $action . ' '. $topic_id); //
+//                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
+//                                'topic' => $topic_id,
+//                                'action' => $action]);
                         }
                         break;
 
                     case 'join':
                         if (empty($jointo) && empty($jointo_select)) {
                             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target topic to join.'));
-                            return $view->redirect($url);
+                            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_moderateforum', ['forum' => $this->_managedForum->getId()], RouterInterface::ABSOLUTE_URL));
                         }
                         // text input overrides select box
                         if (empty($jointo) && !empty($jointo_select)) {
@@ -309,34 +251,24 @@ class ForumController extends AbstractController
                             $topic_ids = array_flip($fliparray);
                         }
                         foreach ($topic_ids as $from_topic_id) {
-                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
-                                'to_topic_id' => $jointo]);
+                            
+                              dump('join from' . $from_topic_id . ' to ' . $jointo); //                            
+//                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
+//                                'to_topic_id' => $jointo]);
                         }
                         break;
 
                     default:
                 }
             }
-            //done
-            //->generate('zikuladizkusmodule_user_moderateforum', array('forum' => $this->_managedForum->getId()), RouterInterface::ABSOLUTE_URL);
             
+            //return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_moderateforum', ['forum' => $this->_managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
            
-        // For Movetopic
-        $forums = $this->get('zikula_dizkus_module.forum_manager')->getAllChildren();
-        array_unshift($forums, [
-            'value' => '',
-            'text' => "<< " . $this->__("Select target forum") . " >>"]);
-
         return $this->render('@ZikulaDizkusModule/Forum/moderate.html.twig', [
             'form' => $form->createView(),
-//            $this->view->assign('mode', '');
-//            $this->view->assign('topic_ids', []);
-//            $this->view->assign('topicSelect', $topicSelect);
             'forum' => $this->_managedForum->get(),
-            'forums' => $forums,
             'pager' => $this->_managedForum->getPager(),
-            'actions' => $actions,
             'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit(),
             'settings' => $this->getVars()
         ]); 

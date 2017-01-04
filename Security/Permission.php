@@ -156,14 +156,13 @@ class Permission {
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
-        dump($args);
+
         // ensure always working with an ForumEntity object or null
         if (empty($args)) {
             $forum = null;
         } else {
             if ($args instanceof ForumEntity) {
                 $forum = $args;
-                dump('xxx');
             } else {
                 if (is_numeric($args)) {
                     $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args);

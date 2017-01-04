@@ -16,24 +16,23 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-use ServiceUtil;
-use ModUtil;
-use UserUtil;
+
+use DataUtil;
 use DateUtil;
 
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Zikula\DizkusModule\Entity\PostEntity;
-
-
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\UsersModule\Api\CurrentUserApi;
 use Zikula\ExtensionsModule\Api\VariableApi;
 
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\TopicManager;
@@ -77,6 +76,21 @@ class PostManager
     private $variableApi;
     
     /**
+     * @var VariableApi
+     */
+    private $forumManagerService;    
+    
+    /**
+     * @var VariableApi
+     */
+    private $topicManagerService;
+    
+    /**
+     * @var synchronizationHelper
+     */
+    private $synchronizationHelper;
+    
+    /**
      * managed post
      * @var PostEntity
      */
@@ -95,7 +109,10 @@ class PostManager
             EntityManager $entityManager,
             CurrentUserApi $userApi,
             Permission $permission,
-            VariableApi $variableApi
+            VariableApi $variableApi,
+            TopicManager $topicManagerService,
+            ForumManager $forumManagerService,
+            SynchronizationHelper $synchronizationHelper
          ) {
         
         $this->name = 'ZikulaDizkusModule';
@@ -107,7 +124,10 @@ class PostManager
         $this->userApi = $userApi;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
+        $this->topicManagerService = $topicManagerService;
+        $this->forumManagerService = $forumManagerService;
         
+        $this->synchronizationHelper = $synchronizationHelper;        
     }
 
     /**
@@ -117,7 +137,7 @@ class PostManager
     {
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Zikula\DizkusModule\Entity\PostEntity', $id);
-            $this->_topic = new TopicManager(null, $this->_post->getTopic());
+            $this->_topic = $this->topicManagerService->getManager(null, $this->_post->getTopic()); //new TopicManager(null, $this->_post->getTopic());
         } else {
             $this->_post = new PostEntity();
         }
@@ -183,7 +203,7 @@ class PostManager
     public function create($data = null)
     {
         if (!is_null($data)) {
-            $this->_topic = new TopicManager($data['topic_id']);
+            $this->_topic = $this->topicManagerService->getManager($data['topic_id']); //new TopicManager($data['topic_id']);
             $this->_post->setTopic($this->_topic->get());
             unset($data['topic_id']);
             $this->_post->merge($data);
@@ -191,9 +211,12 @@ class PostManager
             throw new \InvalidArgumentException('Cannot create Post, no data provided.');
         }
         // increment poster posts
-        $uid = UserUtil::getVar('uid');
+//        $uid = UserUtil::getVar('uid');
         // assign anonymous creations to the admin
-        $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
+//        $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
+        
+        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2) ;
+        
         $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
@@ -213,7 +236,7 @@ class PostManager
         // update topic time to last post time
         $this->_topic->get()->setTopic_time($this->_post->getPost_time());
         // increment forum posts
-        $managedForum = new ForumManager(null, $this->_topic->get()->getForum());
+        $managedForum = $this->forumManagerService->getManager(null, $this->_topic->get()->getForum()); //new ForumManager(null, $this->_topic->get()->getForum());
         $managedForum->incrementPostCount();
         $managedForum->setLastPost($this->_post);
         $this->entityManager->persist($this->_post);
@@ -230,7 +253,7 @@ class PostManager
         // preserve post_id
         $id = $this->_post->getPost_id();
         $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
-        $managedForum = new ForumManager($this->_topic->getForumId());
+        $managedForum = $this->forumManagerService->getManager($this->_topic->getForumId()); //new ForumManager($this->_topic->getForumId());
         $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
         // decrement user posts
         $this->_post->getPoster()->decrementPostCount();
@@ -246,7 +269,8 @@ class PostManager
             $this->_topic->resetLastPost(true);
         }
         if ($id == $forumLastPostId) {
-            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
+            $this->synchronizationHelper->forumLastPost($managedForum->get(), true);            
+//          ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
     }
 
@@ -354,7 +378,7 @@ class PostManager
         $whereForum = [];
         if (!empty($params['forum_id']) && is_numeric($params['forum_id'])) {
             // get the forum and check permissions
-            $managedForum = new ForumManager($params['forum_id']);
+            $managedForum = $this->forumManagerService->getManager($params['forum_id']); //new ForumManager($params['forum_id']);
             if (!$this->permission->canRead($managedForum->get())) {
                 return [];
             }
@@ -497,7 +521,10 @@ class PostManager
         } else {
             $qb->where('p.poster = :uid');
         }
-        $qb->setParameter('uid', UserUtil::getVar('uid'));
+        
+        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1 ;        
+        
+        $qb->setParameter('uid', $uid);
         $perPageVar = $args['action'] . '_per_page';
         $limit = $this->getVar($perPageVar);
         $qb->setFirstResult($args['offset'])
@@ -529,9 +556,9 @@ class PostManager
         if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
             throw new \InvalidArgumentException();
         }
-        $managedOriginTopic = new TopicManager($old_topic_id);
-        $managedDestinationTopic = new TopicManager($to_topic_id);
-        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id); //new PostManager();
+        $managedOriginTopic = $this->topicManagerService->getManager($old_topic_id);  //new TopicManager($old_topic_id);
+        $managedDestinationTopic = $this->topicManagerService->getManager($to_topic_id); //new TopicManager($to_topic_id);
+        $managedPost = $this->getManager($post_id); //new PostManager();
         $managedOriginTopic->get()->getPosts()->removeElement($managedPost->get());
         $managedPost->get()->setTopic($managedDestinationTopic->get());
         $managedDestinationTopic->get()->addPost($managedPost->get());
@@ -539,12 +566,16 @@ class PostManager
         $managedDestinationTopic->incrementRepliesCount();
         $managedPost->get()->updatePost_time();
         $this->entityManager->flush();
-        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', [
-            'topic' => $managedOriginTopic->get(),
-            'flush' => false]);
-        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', [
-            'topic' => $managedDestinationTopic->get(),
-            'flush' => true]);
+        
+        $this->synchronizationHelper->topicLastPost($managedOriginTopic->get(), false); 
+        $this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);        
+        
+//        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', [
+//            'topic' => $managedOriginTopic->get(),
+//            'flush' => false]);
+//        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', [
+//            'topic' => $managedDestinationTopic->get(),
+//            'flush' => true]);
 
         return $managedDestinationTopic->getPostCount();
     }
@@ -552,18 +583,18 @@ class PostManager
     /**
      * Checks if the given message isn't too long.
      *
-     * @param $args['message'] The message to check.
+     * @param $message The message to check.
      *
      * @return bool False if the message is to long, else true.
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function checkMessageLength($args)
+    public function checkMessageLength($message)
     {
-        if (!isset($args['message'])) {
+        if (!isset($message)) {
             throw new \InvalidArgumentException();
         }
-        if (strlen($args['message']) + 8 > 65535) {
+        if (strlen($message) + 8 > 65535) {
             return false;
         }
 

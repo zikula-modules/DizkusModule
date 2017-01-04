@@ -3,15 +3,12 @@ parameters:
     zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
     zikula_dizkus_module.twig.extension.class: Zikula\DizkusModule\Twig\TwigExtension
     zikula_dizkus_module.links.class: Zikula\DizkusModule\Container\LinkContainer
-    
-#    zikula_dizkus_module.forum_helper.class: Zikula\DizkusModule\Helper\ForumHelper
-#    zikula_dizkus_module.topic_helper.class: Zikula\DizkusModule\Helper\TopicHelper
-#    zikula_dizkus_module.post_helper.class: Zikula\DizkusModule\Helper\PostHelper
 
     zikula_dizkus_module.forum_user_helper.class: Zikula\DizkusModule\Helper\ForumUserHelper
     zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
     zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
+    zikula_dizkus_module.synchronization_helper.class: Zikula\DizkusModule\Helper\SynchronizationHelper
 
     zikula_dizkus_module.forum_manager.class: Zikula\DizkusModule\Manager\ForumManager
     zikula_dizkus_module.topic_manager.class: Zikula\DizkusModule\Manager\TopicManager
@@ -71,6 +68,12 @@ services:
         tags:
             - { name: zikula.dizkus.moderators_helper }
         arguments: [@doctrine.orm.default_entity_manager]
+        
+    zikula_dizkus_module.synchronization_helper:
+        class: %zikula_dizkus_module.synchronization_helper.class%
+        tags:
+            - { name: zikula.dizkus.synchronization_helper }
+        arguments: [@doctrine.orm.default_entity_manager, @zikula_dizkus_module.count_helper]
  
 # Managers
         
@@ -84,7 +87,7 @@ services:
         class: %zikula_dizkus_module.topic_manager.class%
         tags:
             - { name: zikula.dizkus.topic_manager }
-        arguments: [@translator.default, @router, @request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @zikula_dizkus_module.security, @zikula_extensions_module.api.variable, @zikula_dizkus_module.forum_manager]
+        arguments: [@translator.default, @router, @request_stack, @doctrine.orm.default_entity_manager, @zikula_users_module.current_user, @zikula_dizkus_module.security, @zikula_extensions_module.api.variable, @zikula_dizkus_module.forum_manager, @zikula_dizkus_module.synchronization_helper]
 
     zikula_dizkus_module.post_manager:
         class: %zikula_dizkus_module.post_manager.class%

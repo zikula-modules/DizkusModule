@@ -326,7 +326,7 @@ class ForumEntity extends EntityAccess
         return $this->last_post;
     }
 
-    public function setLast_post(PostEntity $post)
+    public function setLast_post(PostEntity $post = null)
     {
         return $this->last_post = $post;
     }

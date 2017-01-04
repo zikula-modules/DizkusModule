@@ -78,7 +78,7 @@ class TopicController extends AbstractController
         //list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         
         $managedTopic->incrementViewsCount();
-
+         
         return $this->render('@ZikulaDizkusModule/Topic/view.html.twig', [
           //  'ranks' => $ranks,
             'start' => $start,

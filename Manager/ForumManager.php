@@ -589,12 +589,12 @@ class ForumManager
             ->where('node.lvl > 0')
             ->getQuery();
         $tree = $repo->buildTree($query->getArrayResult());
-
+        
         return $this->getNode($tree, null);
     }
 
     /**
-     * Format ArrayResult for usage in {formdropdownlist}
+     * Format flat ArrayResult for dropdowns
      *
      * @param  \ArrayAccess $input
      * @param  integer $id
@@ -613,12 +613,10 @@ class ForumManager
                     if ($i['name'] == ForumEntity::ROOTNAME) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
-                    $output[] = [
-                        'value' => $i['forum_id'],
-                        'text' => $pre . $i['name']];
+                    $output[$i['forum_id']] = $pre . $i['name']. '(' . $i['forum_id'] . ')';
                 }
                 if (isset($i['__children'])) {
-                    $output = array_merge($output, $this->getNode($i['__children'], $id, $level + 1, $includeLocked));
+                    $output = $output + $this->getNode($i['__children'], $id, $level + 1, $includeLocked);
                 }
             }
         }
