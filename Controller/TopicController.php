@@ -18,6 +18,7 @@ use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\Core\RouteUrl;
 
+use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\TopicManager;
@@ -63,7 +64,7 @@ class TopicController extends AbstractController
             ]); 
         }
         
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
+        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
@@ -75,12 +76,13 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }     
         // @todo rank helper    
-        //list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+        list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]); //ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+        
         
         $managedTopic->incrementViewsCount();
          
         return $this->render('@ZikulaDizkusModule/Topic/view.html.twig', [
-          //  'ranks' => $ranks,
+            'ranks' => $ranks,
             'start' => $start,
             'topic' => $managedTopic->get(),
             'posts' => $managedTopic->getPosts(--$start),

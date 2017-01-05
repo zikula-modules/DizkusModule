@@ -16,9 +16,8 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-use ServiceUtil;
-use ModUtil;
-use UserUtil;
+
+use DataUtil;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
@@ -74,9 +73,14 @@ class TopicManager
     private $variableApi;
     
     /**
+     * @var forumUserManagerService
+     */
+    private $forumUserManagerService;
+    
+    /**
      * @var ForumManagerService
      */
-    private $forumManagerService;
+    private $forumManagerService; 
     
     /**
      * @var synchronizationHelper
@@ -115,6 +119,7 @@ class TopicManager
             CurrentUserApi $userApi,
             Permission $permission,
             VariableApi $variableApi,
+            ForumUserManager $forumUserManagerService,
             ForumManager $forumManagerService,
             SynchronizationHelper $synchronizationHelper
          ) {
@@ -129,6 +134,7 @@ class TopicManager
         $this->permission = $permission;
         $this->variableApi = $variableApi;
         
+        $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->synchronizationHelper = $synchronizationHelper;
         
@@ -249,8 +255,8 @@ class TopicManager
     public function getPosts($startNumber = 1)
     {
         if ($this->userApi->isLoggedIn()) {
-            $managedForumUser = new ForumUserManager();
-            $postSortOrder = $managedForumUser->getPostOrder();
+           $managedForumUser = $this->forumUserManagerService->getManager(); //new ForumUserManager();
+           $postSortOrder = $managedForumUser->getPostOrder();
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
         }
@@ -686,7 +692,7 @@ class TopicManager
             throw new AccessDeniedException();
         }        
 
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
         $searchParams = [
             'topic' => $topic,
             'forumUser' => $managedForumUser->get()];
@@ -722,7 +728,7 @@ class TopicManager
             throw new AccessDeniedException();
         }        
 
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
         if (isset($topic)) {
             $topicSubscription = $this->entityManager
                 ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
@@ -748,7 +754,7 @@ class TopicManager
             $loggedIn = $this->userApi->isLoggedIn();
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
 
         return $managedForumUser->get()->getTopicSubscriptions();
     }
@@ -791,7 +797,7 @@ class TopicManager
         // get some environment
         $posts_per_page = $this->variableApi->get($this->name, 'posts_per_page');
         if ($this->userApi->isLoggedIn()) {
-            $managedForumUser = new ForumUserManager();
+            $managedForumUser = $this->forumUserManagerService->getManager($user_id); // new ForumUserManager();
             $postSortOrder = $managedForumUser->getPostOrder();
         } else {
             $postSortOrder = $this->variableApi->get($this->name, 'post_sort_order');

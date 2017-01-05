@@ -8,11 +8,13 @@
 
 namespace Zikula\DizkusModule\Helper;
 
-use Zikula\DizkusModule\Entity\RankEntity;
-
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
-use Zikula\UsersModule\Api\CurrentUserApi;
+
+use Zikula\ExtensionsModule\Api\VariableApi;
+
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Security\Permission;
 
 
 /**
@@ -21,39 +23,43 @@ use Zikula\UsersModule\Api\CurrentUserApi;
  * @author Kaik
  */
 class RankHelper {
-    
-    /**
-     * @var RequestStack
-     */    
-    private $requestStack;      
-    
+
     /**
      * @var EntityManager
      */
     private $entityManager;    
     
     /**
-     * @var CurrentUserApi
+     * @var Permission
      */    
-    private $userApi;      
-
-    private $cache = [];  
+    private $permission;
+    
+    /**
+     * @var VariableApi
+     */
+    private $variableApi;
+    
+    /**
+     * @var forumUserManagerService
+     */
+    private $forumUserManagerService;   
     
     
     public function __construct(
-            RequestStack $requestStack,
             EntityManager $entityManager,
-            CurrentUserApi $userApi        
+            Permission $permission,
+            VariableApi $variableApi,
+            ForumUserManager $forumUserManagerService
          ) {
         
         $this->name = 'ZikulaDizkusModule';
-        $this->requestStack = $requestStack;
-        $this->request = $requestStack->getMasterRequest();
         $this->entityManager = $entityManager;
-        $this->userApi = $userApi;    
+        $this->permission = $permission;
+        $this->variableApi = $variableApi;
+        $this->forumUserManagerService = $forumUserManagerService;
     }
     
-     private $_userRanks = array();
+     private $_userRanks = [];
 
     /**
      * Get all ranks
@@ -66,9 +72,9 @@ class RankHelper {
     public function getAll($args)
     {
         // read images
-        $path = $this->getVar('url_ranks_images');
+        $path = $this->variableApi->get($this->name, 'url_ranks_images');
         $handle = opendir($path);
-        $filelist = array();
+        $filelist = [];
         while ($file = readdir($handle)) {
             if ($this->dzk_isimagefile($path . '/' . $file)) {
                 $filelist[] = $file;
@@ -81,9 +87,9 @@ class RankHelper {
             $orderby = 'title';
         }
         $ranks = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\RankEntity')
-            ->findBy(array('type' => $args['ranktype']), array($orderby => 'ASC'));
+            ->findBy(['type' => $args['ranktype']], [$orderby => 'ASC']);
 
-        return array($filelist, $ranks);
+        return [$filelist, $ranks];
     }
 
     /**
@@ -95,7 +101,7 @@ class RankHelper {
      */
     public function save($args)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->permission->canAdministrate()) {
             throw new AccessDeniedException();
         }
         //title, description, minimumCount, maximumCount, type, image
@@ -109,7 +115,7 @@ class RankHelper {
                 if ((isset($rank['rank_delete'])) && ($rank['rank_delete'] == '1')) {
                     $this->entityManager->remove($r);
                     // update users that are assigned the rank to null
-                    $users = $this->entityManager->getRepository('ZikulaDizkusModule:RankEntity')->findBy(array('rank' => $rankid));
+                    $users = $this->entityManager->getRepository('ZikulaDizkusModule:RankEntity')->findBy(['rank' => $rankid]);
                     foreach ($users as $user) {
                         $user->clearRank();
                     }
@@ -131,13 +137,13 @@ class RankHelper {
      */
     public function assign($args)
     {
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->permission->canAdministrate()) {
             throw new AccessDeniedException();
         }
         if (is_array($args['setrank'])) {
             foreach ($args['setrank'] as $userId => $rankId) {
                 $rankId = $rankId == 0 ? null : $rankId;
-                $managedForumUser = new ForumUserManager($userId);
+                $managedForumUser = $this->forumUserManagerService($userId); //new ForumUserManager($userId);
                 if (isset($rankId)) {
                     $rank = $this->entityManager->getReference('Zikula\DizkusModule\Entity\RankEntity', $rankId);
                     $managedForumUser->get()->setRank($rank);
@@ -160,7 +166,7 @@ class RankHelper {
      */
     public function getData($args)
     {
-        $data = array();
+        $data = [];
         if (!isset($args['poster'])) {
             return $data;
         }
@@ -221,6 +227,4 @@ class RankHelper {
 
         return false;
     }
-
-    
 }

@@ -67,7 +67,7 @@ class ForumController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
+        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
 
         // get the forums to display
         $showOnlyFavorites = $this->get('zikula_dizkus_module.favorites_helper')->getStatus();   //ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
@@ -131,7 +131,7 @@ class ForumController extends AbstractController
                         'forum_disabled_info' => $this->getVar('forum_disabled_info')
             ]); 
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit();
+        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
 
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum); //new ForumManager($forum);
         if (!$managedForum->exists()) {

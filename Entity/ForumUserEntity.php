@@ -109,7 +109,7 @@ class ForumUserEntity extends EntityAccess
      * array of core vars for user
      * @var array
      */
-    private $user = array();
+    private $user = [];
 
     /**
      * constructor

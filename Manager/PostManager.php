@@ -110,8 +110,8 @@ class PostManager
             CurrentUserApi $userApi,
             Permission $permission,
             VariableApi $variableApi,
-            TopicManager $topicManagerService,
             ForumManager $forumManagerService,
+            TopicManager $topicManagerService,
             SynchronizationHelper $synchronizationHelper
          ) {
         
@@ -124,9 +124,8 @@ class PostManager
         $this->userApi = $userApi;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
-        $this->topicManagerService = $topicManagerService;
         $this->forumManagerService = $forumManagerService;
-        
+        $this->topicManagerService = $topicManagerService;
         $this->synchronizationHelper = $synchronizationHelper;        
     }
 

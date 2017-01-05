@@ -59,6 +59,7 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('getSystemSetting', [$this, 'getSystemSetting']),
             new \Twig_SimpleFunction('lastTopicUrl', [$this, 'lastTopicUrl']),
             new \Twig_SimpleFunction('userLoggedIn', [$this, 'userLoggedIn']),
+            new \Twig_SimpleFunction('getRankByPostCount', [$this, 'getRankByPostCount']),
         ];
     }
 
@@ -485,6 +486,30 @@ class TwigExtension extends \Twig_Extension
             }
         }
         return $message;
+    }
+    
+    /**
+     * {getRankByPostCount posts=$post.poster.postCount ranks=$ranks }
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     */
+    function getRankByPostCount($posts, $ranks)
+    {
+        $posts = !empty($posts) ? $posts : 0;
+        if (!isset($ranks)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $posterRank = null;
+
+        foreach ($ranks as $rank) {
+            if (($posts >= $rank->getMinimumCount()) && ($posts <= $rank->getMaximumCount())) {
+                $posterRank = $rank;
+            }
+        }
+        
+        return $posterRank;
+
     }
     
     /**
