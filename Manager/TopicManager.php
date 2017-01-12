@@ -260,6 +260,7 @@ class TopicManager
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
         }
+        dump($postSortOrder);
         // do not allow negative first result
         $startNumber = $startNumber > 0 ? $startNumber : 0;
         // Do a new query in order to limit maxresults, firstresult, order, etc.
@@ -350,6 +351,11 @@ class TopicManager
     {
         // prepare first post
         $this->_firstPost = new PostEntity();
+                    
+        // @todo this was in controller but should be moved to Post manager.
+        //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
+        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);  
+         
         $this->_firstPost->setPost_text($data['message']);
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
@@ -357,15 +363,15 @@ class TopicManager
         $this->_firstPost->setTitle($data['title']);
         $this->_firstPost->setTopic($this->_topic);
         $this->_firstPost->setIsFirstPost(true);
-        $this->_subscribe = $data['subscribe_topic'];
-        unset($data['subscribe_topic']);
+        $this->_subscribe = $data['subscribeTopic'];
+        unset($data['subscribeTopic']);
         $this->_forumId = $data['forum_id'];
         $this->managedForum =  $this->forumManagerService->getManager($this->_forumId); //new ForumManager($this->_forumId);
         $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
-        $solveStatus = isset($data['solveStatus']) && ($data['solveStatus'] == 1) ? -1 : 0; // -1 = support request
+        $solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
         $this->_topic->setSolved($solveStatus);
-        unset($data['solveStatus']);
+        unset($data['isSupportQuestion']);
         $this->_topic->setLast_post($this->_firstPost);
         $this->_topic->merge($data);
         // prepare poster data or assign anonymous creations to the admin
@@ -610,7 +616,7 @@ class TopicManager
         if (empty($topic)) {
             throw new \InvalidArgumentException();
         }
-        $managedTopic = new $this->getManager($topic);
+        $managedTopic = $this->getManager($topic);
         $perms = $managedTopic->getPermissions();
         switch ($action) {
             case 'subscribe':

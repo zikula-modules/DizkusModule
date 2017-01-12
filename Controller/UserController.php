@@ -64,7 +64,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
                      
-        $this->_forumUser = new ForumUserManager($uid);
+        $this->_forumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();//new ForumUserManager($uid);
         $form = $this->createForm(new UserPreferencesType, $this->_forumUser->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')] );
         $form->handleRequest($request);
         if ($form->isValid()) {

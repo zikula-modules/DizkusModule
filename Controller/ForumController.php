@@ -91,7 +91,7 @@ class ForumController extends AbstractController
         if (count($forums) < 1) {
             if ($showOnlyFavorites) {
                 $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
-                $managedForumUser = new ForumUserManager($uid);
+                $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid); //new ForumUserManager($uid);
                 $managedForumUser->displayFavoriteForumsOnly(false);
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
             } else {

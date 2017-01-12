@@ -38,8 +38,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotati
  */
 class PostController extends AbstractController
 {
-
-
     /**
      * @Route("/post/edit")
      *
@@ -55,7 +53,6 @@ class PostController extends AbstractController
 //
 //        return new Response($form->execute('User/post/edit.tpl', new EditPost()));
 //    }
-
 
     /**
      * @Route("/post/edit", options={"expose"=true})
@@ -181,9 +178,50 @@ class PostController extends AbstractController
      */
     public function movepostAction()
     {
-        $form = FormUtil::newForm($this->name, $this);
+        
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+            throw new AccessDeniedException();
+        }
 
-        return new Response($form->execute('User/post/move.tpl', new MovePost()));
+        // get the input
+        $id = (int) $this->request->query->get('post');
+
+        $this->post_id = $id;
+
+        $managedPost = new PostManager($id);
+
+        $this->old_topic_id = $managedPost->getTopicId();
+
+        if ($managedPost->get()->isFirst()) {
+            $this->request->getSession()->getFlashBag()->add('error', 'You can not move the first post of a topic!');
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $managedPost->getTopicId()), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
+        }
+
+        return true;
+        if ($args['commandName'] == 'cancel') {
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
+            return $view->redirect($url);
+        }
+
+        // check for valid form
+        if (!$view->isValid()) {
+            return false;
+        }
+
+        $data = $view->getValues();
+        $data['old_topic_id'] = $this->old_topic_id;
+        $data['post_id'] = $this->post_id;
+
+        $newTopicPostCount = ModUtil::apiFunc($this->name, 'post', 'move', $data);
+        $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar($this->name, 'posts_per_page', 15);
+
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
+        return $view->redirect($url);
+        
+//        $form = FormUtil::newForm($this->name, $this);
+//
+//        return new Response($form->execute('User/post/move.tpl', new MovePost()));
     }
     
     /**
@@ -197,9 +235,67 @@ class PostController extends AbstractController
      */
     public function reportAction()
     {
-        $form = FormUtil::newForm($this->name, $this);
+        
+        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+            throw new AccessDeniedException();
+        }
+        // get the input
+        $id = (int) $this->request->query->get('post');
 
-        return new Response($form->execute('User/notifymod.tpl', new Report()));
+        if (!isset($id)) {
+            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+            return $view->redirect($url);
+        }
+
+        $this->_post = new PostManager($id);
+        $view->assign('post', $this->_post->get());
+        $view->assign('notify', true);
+        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        $this->view->assign('ranks', $ranks);
+
+        return true;
+
+        
+        if ($args['commandName'] == 'cancel') {
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
+            return $view->redirect($url);
+        }
+
+        // check for valid form
+        if (!$view->isValid()) {
+            return false;
+        }
+
+        $data = $view->getValues();
+
+        // some spam checks:
+        // - remove html and compare with original comment
+        // - use censor and compare with original comment
+        // if only one of this comparisons fails -> trash it, it is spam.
+        if (!UserUtil::isLoggedIn()) {
+            if (strip_tags($data['comment']) <> $data['comment']) {
+                // possibly spam, stop now
+                // get the users ip address and store it in zTemp/Dizkus_spammers.txt
+                $this->dzk_blacklist();
+                // set 403 header and stop
+                header('HTTP/1.0 403 Forbidden');
+                System::shutDown();
+            }
+        }
+
+        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', array('post' => $this->_post->get(),
+            'comment' => $data['comment']));
+
+        $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
+
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => $start), RouterInterface::ABSOLUTE_URL);
+        return $view->redirect($url);
+        
+        
+//        $form = FormUtil::newForm($this->name, $this);
+//
+//        return new Response($form->execute('User/notifymod.tpl', new Report()));
     }
     
     /**
@@ -218,3 +314,104 @@ class PostController extends AbstractController
         }
     }   
 }
+
+
+
+
+//    /**
+//    
+//    
+//    Report
+//    
+//    
+//     * dzk_blacklist()
+//     * blacklist the users ip address if considered a spammer
+//     */
+//    private function dzk_blacklist()
+//    {
+//        $ztemp = System::getVar('temp');
+//        $blacklistfile = $ztemp . '/Dizkus_spammer.txt';
+//        $request = ServiceUtil::get('request');
+//
+//        $fh = fopen($blacklistfile, 'a');
+//        if ($fh) {
+//            $ip = $this->dzk_getip();
+//            $line = implode(',', array(strftime('%Y-%m-%d %H:%M:%S'),
+//                $ip,
+//                $request->server->get('REQUEST_METHOD'),
+//                $request->server->get('REQUEST_URI'),
+//                $request->server->get('SERVER_PROTOCOL'),
+//                $request->server->get('HTTP_REFERRER'),
+//                $request->server->get('HTTP_USER_AGENT')));
+//            fwrite($fh, DataUtil::formatForStore($line) . "\n");
+//            fclose($fh);
+//        }
+//
+//        return;
+//    }
+//
+//    /**
+//     * check for valid ip address
+//     * original code taken form spidertrap
+//     * @author       Thomas Zeithaml <info@spider-trap.de>
+//     * @copyright    (c) 2005-2006 Spider-Trap Team
+//     */
+//    private function dzk_validip($ip)
+//    {
+//        if (!empty($ip) && ip2long($ip) != -1) {
+//            $reserved_ips = array(
+//                array('0.0.0.0', '2.255.255.255'),
+//                array('10.0.0.0', '10.255.255.255'),
+//                array('127.0.0.0', '127.255.255.255'),
+//                array('169.254.0.0', '169.254.255.255'),
+//                array('172.16.0.0', '172.31.255.255'),
+//                array('192.0.2.0', '192.0.2.255'),
+//                array('192.168.0.0', '192.168.255.255'),
+//                array('255.255.255.0', '255.255.255.255')
+//            );
+//
+//            foreach ($reserved_ips as $r) {
+//                $min = ip2long($r[0]);
+//                $max = ip2long($r[1]);
+//                if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max))
+//                    return false;
+//            }
+//
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    /**
+//     * get the users ip address
+//     * changes: replaced references to $_SERVER with System::serverGetVar()
+//     * original code taken form spidertrap
+//     * @author       Thomas Zeithaml <info@spider-trap.de>
+//     * @copyright    (c) 2005-2006 Spider-Trap Team
+//     */
+//    private function dzk_getip()
+//    {
+//        $request = ServiceUtil::get('request');
+//        if ($this->dzk_validip($request->server->get("HTTP_CLIENT_IP"))) {
+//            return $request->server->get("HTTP_CLIENT_IP");
+//        }
+//
+//        foreach (explode(',', $request->server->get("HTTP_X_FORWARDED_FOR")) as $ip) {
+//            if ($this->dzk_validip(trim($ip))) {
+//                return $ip;
+//            }
+//        }
+//
+//        if ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+//            return $request->server->get("HTTP_X_FORWARDED");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED_FOR"))) {
+//            return $request->server->get("HTTP_FORWARDED_FOR");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED"))) {
+//            return $request->server->get("HTTP_FORWARDED");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+//            return $request->server->get("HTTP_X_FORWARDED");
+//        } else {
+//            return $request->server->get("REMOTE_ADDR");
+//        }
+//    }

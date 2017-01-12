@@ -127,12 +127,7 @@ class ForumUserManager
      */
     public function setPostOrder($sort)
     {
-        if (strtolower($sort) == 'asc') {
-            $order = true;
-        } else {
-            $order = false;
-        }
-        $this->_forumUser->setPostOrder($order);
+        $this->_forumUser->setPostOrder($sort);
         $this->entityManager->flush();
     }
 
@@ -389,32 +384,7 @@ class ForumUserManager
         return $text;
     }
 
-    /**
-     * dzkstriptags
-     * strip all html tags outside of [code][/code]
-     *
-     * @param  $text     string the text
-     * @return string    the sanitized text
-     */
-    public function dzkstriptags($text = '')
-    {
-        if (!empty($text) && ModUtil::getVar($this->name, 'striptags')) {
-            // save code tags
-            $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
-            for ($i = 0; $i < $codecount; $i++) {
-                $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
-            }
-            // strip all html
-            $text = strip_tags($text);
-            // replace code tags saved before
-            for ($i = 0; $i < $codecount; $i++) {
-                // @todo should use htmlentities here???? dzkstriptagst too ^^^
-                $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
-            }
-        }
 
-        return $text;
-    }
 
     /**
      * get an array of users where uname matching text fragment(s)

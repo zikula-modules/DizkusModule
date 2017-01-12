@@ -1,17 +1,6 @@
-{#
-
-{usergetvar name='uid' assign='current_userid'}
-{assign var='msgmodule' value=$modvars.ZConfig.messagemodule}
-{modapifunc modname=$module type='UserData' func='getUserOnlineStatus' uid=$post.poster.user_id assign='isPosterOnline'}
-
-{if isset($post_counter) AND isset($post_count) AND $post_counter == $post_count}<a id="bottom"></a>{/if}
-
-#}
-
+{% if loop is defined and loop.last %}<a id="bottom"></a> {% endif %}
 {% set msgmodule=getModVar('ZConfig', 'messagemodule', false) %}
 {% set isPosterOnline=currentUser.uid == post.poster.user_id ? true : false %}
-{#{{ currentUser.uid }}#}
-{#{{ dump(currentUser.attributes.avatar) }}#}
 <div id="posting_{{ post.post_id }}" class="panel panel-default">
    {% if isPosterOnline %}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{{ __("ONLINE") }}</div></div>{% endif %}
    {% if preview is defined and preview == 1 %}<div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{{ __("PREVIEW") }}</div></div>{% endif %}
@@ -57,7 +46,6 @@
                 {% else %}
                 <li><strong>{{ __("Rank") }}: </strong>{{ posterRank.title|escape('html') }}</li>
                 {% endif %}
-                   {# {* usergetvar name='user_regdate' assign="user_regdate" *}#}
                     <li><strong>{{ __("Registered") }}: </strong>{{ post.poster.user.user_regdate|default('01-01-1970 00:00:00')|date('d-m-Y') }}</li>
                 {%if isPosterOnline != true %}
                     <li><strong>{{ __("Last visit") }}: </strong>{{ post.poster.lastvisit|date('d-m-Y') }}</li>
@@ -68,7 +56,7 @@
                       {% if msgmodule == false %}
                             <a class="tooltips" title="{{ __("Send private message") }}" href="{#  @todo finish InterCom {modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}#}"><i class="fa fa-envelope-o fa-150x"></i></a>
                         {% endif %}
-                        {% if topic is not empty and post.poster_data is not empty and post.poster_data.moderate == true and post.poster_data.seeip == true %}
+                        {% if topic is defined and topic is not empty and post.poster_data is defined and post.poster_data.moderate == true and post.poster_data.seeip == true %}
                             <a class="tooltips" title="{{ __("View IP address") }}" href="{{ path('zikuladizkusmodule_user_viewipdata', {'post':post.post_id} ) }}"><i class="fa fa-info-circle fa-150x"></i></a>
                         {% endif %}
                     </li>
@@ -87,7 +75,7 @@
                     </div> 
                     {{ post.post_text }}{# |dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags  #}
                     {% if post.attachSignature and settings.removesignature == true %}
-                        {#{usergetvar name='signature' assign="signature" uid=$post.poster.user_id}#}
+{#                  {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}#}
                         {% if signature is not empty %}
                             <div class="dzk_postSignature">
                                       {{ settings.signature_start }}
@@ -102,7 +90,7 @@
         </div>
     </div>
     <div class="panel-footer">
-        {% if preview is not defined or preview == true %}
+        {% if preview is not defined or preview != true %}
         <div class="pull-right">
             <ul id="postingoptions_{{ post.post_id }}" class="javascriptpostingoptions list-inline">
                 {% if permissions.moderate is defined and permissions.moderate == true %}
@@ -124,11 +112,13 @@
                     {% else %}
                         {% set stylestmt='style="display:none" ' %}
                     {% endif %}
+                
                     <li>
                         <a {{ stylestmt }}class="solvetopic tooltips" data-post="{{ post.post_id }}" data-action="solve" href="{#{route name='zikuladizkusmodule_user_changetopicstatus' action='solve' topic=$topic.topic_id post=$post.post_id}#}" title="{{ __("Mark as solved by this post") }}">
                             <i class="fa fa-check fa-150x"></i>
                         </a>
                     </li>
+                    
                     {% endif %}
                 {% elseif topic is defined %}
                     <li><i class="fa fa-lock fa-150x tooltips" title='{{ __('This topic is locked') }}'></i></li>
