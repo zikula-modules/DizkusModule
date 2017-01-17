@@ -4,7 +4,9 @@
  * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @link https://github.com/zikula-modules/Dizkus
+ * 
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -61,7 +63,7 @@ class RecentPostsBlock extends AbstractBlockHandler
         }
 
         return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [
-            'lastposts' => $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramarray),
+            'lastposts'  => $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramarray),
             'showfooter' => $properties['showfooter'],
         ]);
     }
