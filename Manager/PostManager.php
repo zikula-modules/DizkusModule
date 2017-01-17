@@ -348,14 +348,15 @@ class PostManager
      * gets the last $maxPosts postings of forum $forum_id.
      *
      * @param mixed[] $params {
-     * @var int maxposts    number of posts to read, default = 5
-     * @var int forum_id    forum_id, if not set, all forums
-     * @var int user_id     -1 = last postings of current user, otherwise its treated as an user_id
+     *
+     * @var int  maxposts    number of posts to read, default = 5
+     * @var int  forum_id    forum_id, if not set, all forums
+     * @var int  user_id     -1 = last postings of current user, otherwise its treated as an user_id
      * @var bool canread    if set, only the forums that we have read access to [** flag is no longer supported, this is the default settings for now **]
      * @var bool favorites  if set, only the favorite forums
      * @var bool show_m2f   if set show postings from mail2forum forums
      * @var bool show_rss   if set show postings from rss2forum forums
-     *                        }
+     *           }
      *
      * @return array $lastposts
      */
@@ -598,9 +599,10 @@ class PostManager
      * gets the top $maxposters users depending on their post count.
      *
      * @param mixed[] $params {
+     *
      * @var int maxposters    number of users to read, default = 3
      * @var int months        number months back to search, default = 6
-     *                        }
+     *          }
      *
      * @return array $topPosters
      */
