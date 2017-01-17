@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @see https://github.com/zikula-modules/Dizkus
+ * 
+ * @link https://github.com/zikula-modules/Dizkus
+ * 
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
+ * 
  */
 
 namespace Zikula\DizkusModule\Block;
@@ -14,25 +16,24 @@ namespace Zikula\DizkusModule\Block;
 use Zikula\BlocksModule\AbstractBlockHandler;
 
 /**
- * Class RecentPostsBlock
+ * Class RecentPostsBlock.
  */
 class RecentPostsBlock extends AbstractBlockHandler
 {
-    
     /**
-     * Display the block
+     * Display the block.
      */
     public function display(array $properties)
     {
         if (!$this->hasPermission('ZikulaDizkusModule::RecentPostsBlock', "$properties[bid]::", ACCESS_READ)) {
             return '';
-        } 
-        
+        }
+
         // check if forum is turned off
         $forum_enabled = $this->getVar('forum_enabled');
         if (!$forum_enabled) {
             return $this->renderView('@ZikulaDizkusModule/Block/dizkus.disabled.html.twig', [
-                'forum_disabled_info' => $this->getVar('forum_disabled_info')
+                'forum_disabled_info' => $this->getVar('forum_disabled_info'),
             ]);
         }
 
@@ -42,16 +43,16 @@ class RecentPostsBlock extends AbstractBlockHandler
 //        }
 
         // check if template is set, if not, use the default block template
-        $template = empty($properties['template']) ? 'recentposts' : $properties['template'] ;
+        $template = empty($properties['template']) ? 'recentposts' : $properties['template'];
 
         if (empty($properties['params'])) {
             $properties['params'] = 'maxposts=5';
         }
-        
+
         if (empty($properties['showfooter'])) {
             $properties['showfooter'] = true;
         }        
-        
+
         // convert param string to php array
         $paramarray = [];
         $params = explode(',', $properties['params']);
@@ -64,7 +65,7 @@ class RecentPostsBlock extends AbstractBlockHandler
 
         return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [        
             'lastposts' => $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramarray),
-            'showfooter' => $properties['showfooter']
+            'showfooter' => $properties['showfooter'],
         ]);
     }
 
@@ -77,4 +78,5 @@ class RecentPostsBlock extends AbstractBlockHandler
     {
         return '@ZikulaDizkusModule/Block/recentposts.modify.html.twig';
     }
+
 }
