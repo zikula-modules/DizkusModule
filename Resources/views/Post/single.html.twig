@@ -15,7 +15,7 @@
             <div id="posting_{{ post.post_id }}_userinfo" class="post_author col-md-3">
                 <div class="dzk_avatar">
                     {#        @todo   |profilelinkbyuname      #}
-                   <strong>{{ post.poster.user.uname }}</strong>
+                    <span id="post_poster_name_{{ post.post_id }}"><strong>{{ post.poster.user.uname }}</strong></span>
                     <br />
                     <div> {#{useravatar uid=$post.poster.user_id class="img-rounded"}#}
                          {#       @todo                #}
@@ -73,7 +73,7 @@
                         {% endif %}
                         <i class="fa fa-check fa-2x"></i> {{ __('This post has been marked as the solution.') }}
                     </div> 
-                    {{ post.post_text }}{# |dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags  #}
+                    <span id="post_content_{{ post.post_id }}" >{{ post.post_text }}</span>{# |dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags  #}
                     {% if post.attachSignature and settings.removesignature == true %}
 {#                  {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}#}
                         {% if signature is not empty %}
@@ -95,13 +95,14 @@
             <ul id="postingoptions_{{ post.post_id }}" class="javascriptpostingoptions list-inline">
                 {% if permissions.moderate is defined and permissions.moderate == true %}
                     {% if ((num is defined and num != 0) or (topic is defined and start != 0)) and not post.isFirstPost %}
-                        <li><a class="fa fa-arrow-right fa-150x tooltips" title="{{ __("Move post") }}" href="{#{route name='zikuladizkusmodule_user_movepost' post=$post.post_id}#}"></a></li>
-                        <li><a class="fa fa-scissors fa-150x tooltips" title="{{ __("Split topic") }}" href="{#{route name='zikuladizkusmodule_user_splittopic' post=$post.post_id}#}"></a></li>
+                        <li><a class="movepostlink  fa fa-arrow-right fa-150x tooltips" title="{{ __("Move post") }}" href="{#{route name='zikuladizkusmodule_user_movepost' post=$post.post_id}#}"></a></li>
+                        <li><a class="splitpostlink fa fa-scissors fa-150x tooltips" title="{{ __("Split topic") }}" href="{#{route name='zikuladizkusmodule_user_splittopic' post=$post.post_id}#}"></a></li>
                     {% endif %}
                 {% endif %}
                 {% if topic is defined and topic.status != 1 %}
                     {% if permissions.comment is defined and permissions.comment == true and settings.ajax %}
-                        <li><a class="quotepostlink fa fa-quote-left fa-150x tooltips" id="quotebutton_{{ post.post_id }}" title="{{ __("Quote post") }}" onclick="quote({#'{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}'#});"></a></li>
+                        {#  quote changed to plain js   onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"#}
+                        <li><a class="quotepostlink fa fa-quote-left fa-150x tooltips" id="quotebutton_{{ post.post_id }}" data-post="{{ post.post_id }}" title="{{ __("Quote post") }}" ></a></li>
                     {% endif %}
                     {% if (permissions.edit is defined and permissions.edit == 1) or post.userAllowedToEdit %}
                         <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{{ post.post_id }}" id="editbutton_{{ post.post_id }}" title="{{ __("Edit post") }}" href="{#{route name='zikuladizkusmodule_user_editpost' post=$post.post_id}#}"></a></li>
@@ -125,7 +126,7 @@
                 {% endif %}
                 {%if notify is not defined or notify == false %}
                     {%if permissions.comment is defined and permissions.comment == true %}
-                        <li><a class="fa fa-bell-o fa-150x tooltips" href="{#{route name='zikuladizkusmodule_user_report' post=$post.post_id}#}" title="{{ __("Notify moderator about this posting") }}"></a></li>
+                        <li><a class="notifypostlink fa fa-bell-o fa-150x tooltips" href="{#{route name='zikuladizkusmodule_user_report' post=$post.post_id}#}" title="{{ __("Notify moderator about this posting") }}"></a></li>
                     {% endif %}
                     <li><a class="fa fa-chevron-circle-up fa-150x tooltips" title="{{ __("Top") }}" href="#top">&nbsp;</a></li>
                 {% endif %}

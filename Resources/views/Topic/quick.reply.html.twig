@@ -1,14 +1,18 @@
+{% if post != false and preview == false %}
+        <div id="quickreplynewpost" class="hidden">
+            <li class="post post_{{ post.post_id }}">
+                {{ include("@ZikulaDizkusModule/Post/single.html.twig") }}
+            </li>
+        </div>
+{% endif %}
 
+{% if preview == true %}
+        <div id="replypreview" style="margin:1em 0;">
+            {{ include("@ZikulaDizkusModule/Post/single.html.twig") }}
+        </div>
+{% endif %}
 
-
-
-
-
-
-
-
-
-
+{{ include("@ZikulaDizkusModule/Topic/reply.form.html.twig", {'settings': settings, 'topic': topic}) }}
 
 
 

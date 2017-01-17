@@ -14,7 +14,8 @@
 {% endif %}
 
     {% if templatetitle is defined %}
-        <li><span>{{ templatetitle|escape('html')|notifyFilters('dizkus.filter_hooks.post.filter') }}</span></li>
+        {#   template title should be escaped at this point     #}
+        <li><span>{{ templatetitle|notifyFilters('dizkus.filter_hooks.post.filter') }}</span></li>
     {% endif %}
 
 

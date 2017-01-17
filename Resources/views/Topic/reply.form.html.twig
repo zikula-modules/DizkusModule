@@ -9,10 +9,19 @@
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3>{{ __("Quick reply") }}</h3>
+        <h3>
+            {% if templatetitle is defined %}
+                {{ templatetitle }}
+            {% else %}    
+                {{ __("Quick reply") }}
+            {% endif %}        
+        </h3>
     </div>
     <div class="panel-body">
-        <div class="form-group">           
+        <div class="form-group {% if not form.message.vars.valid %}has-error{% endif %}">    
+            {% if not form.message.vars.valid %}
+                <div class="alert alert-danger" role="alert">{{ form_errors(form.message) }}</div>
+            {% endif %}
             {{ form_widget(form.message, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
             {% if settings.striptags == 'yes' %}
                 <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
@@ -36,7 +45,7 @@
                         {{ form_widget(form.preview, {'attr': {'class': 'btn btn-primary'}}) }}
                         
                         {#   #}
-                        <a class="btn btn-danger" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topic.topic_id}) }}" role="button">{{ __('Cancel') }}</a> 
+                        <a id="topic_reply_form_cancel" class="btn btn-danger" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topic.topic_id}) }}" role="button">{{ __('Cancel') }}</a> 
                         
             </div>
             <div class="col-md-8">

@@ -17,6 +17,7 @@ use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Event\GenericEvent;
 use Zikula\Core\RouteUrl;
+use Zikula\Core\Response\PlainResponse;
 
 use Zikula\DizkusModule\Form\Type\Topic\NewType;
 use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
@@ -30,6 +31,7 @@ use Zikula\Common\Translator\TranslatorInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityRepository;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +68,7 @@ class TopicController extends AbstractController
         }
         
         $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
-
+ 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
@@ -76,6 +78,7 @@ class TopicController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead($managedTopic->get()->getForum())) {
             throw new AccessDeniedException();
         }     
+                
         // @todo rank helper    
         list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]); //ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         
@@ -220,11 +223,11 @@ class TopicController extends AbstractController
     } 
     
     /**
-     * @Route("/topic/{topic}/reply", requirements={"topic" = "^[1-9]\d*$"} )
+     * @Route("/topic/{topic}/reply", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * Reply topic
      *
-     * User interface to delete a topic.
+     * User interface to reply a topic.
      *
      * @return string
      */
@@ -240,40 +243,43 @@ class TopicController extends AbstractController
             $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         } 
-
-       
-//        // process validation hooks
-//        $hook = new ValidationHook(new ValidationProviders());
-//        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
-//        /** @var $hookvalidators \Zikula\Core\Hook\ValidationProviders */
-//        if ($hookvalidators->hasErrors()) {
-//            foreach ($hookvalidators->getErrors() as $error) {
-//                $request->getSession()->getFlashBag()->add('error', "Error! $error");
-//            }
-//            $preview = true;
-//        }
         
+        $template = $request->get('template') == 'quick.reply' || $request->isXmlHttpRequest() ? 'quick.reply' : 'reply';
+        $action  = $this->get('router')->generate('zikuladizkusmodule_topic_replytopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);         
+        $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);        
+        $form->handleRequest($request);
         
-        $action  = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
-                        
-        $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action]);        
-        $form->handleRequest($request); 
+        // process validation hooks
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
+        /** @var $hookvalidators \Zikula\Core\Hook\ValidationProviders */
+        if ($hookvalidators->hasErrors()) {
+            foreach ($hookvalidators->getErrors() as $error) {
+                // This need to be tested!!
+                //$request->getSession()->getFlashBag()->add('error', "Error! $error");
+                $form->get('message')->addError(new FormError($this->__($error)));
+            }
+        }
         
+        //&& !$hookvalidators->hasErrors() is not needed because we attach any hook errors to message field 
+        // this might not be ok for some hooks - to chceck!
         if($form->isValid()){
             
+            //return new PlainResponse(dump($form));
+            
+            // everything is good at this point so we either show preview or save 
             $data = $form->getData();
             $reply = [
                 'topic_id' => $topic,
                 'post_text' => $data['message'],
                 'attachSignature' => $data['attachSignature']];            
             
-            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();//new PostManager();
+            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
             $managedPost->create($reply);            
        
             list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);  
             
                 if ($form->get('preview')->isClicked()) {
-             
                     $preview = true;
                     $post = $managedPost->toArray();
                     $post['post_id'] = -1;
@@ -285,19 +291,25 @@ class TopicController extends AbstractController
                 }
                 
                 if ($form->get('save')->isClicked()) {
-                    // because symfony does not allow to redirect when called from twig we need to use preview mode
-                    // to simulate added post this is only in case no javascript - ajax is used 
-                    $managedPost->persist();
-                    $preview = true;
-                    $post = $managedPost->toArray();
-
+                    $managedPost->persist();                    
+                    $post = $managedPost->toArray();                          
+                    //if not ajax redirect to topic page
+                    if(!$request->isXmlHttpRequest()){
+                        // everything is good no ajax return to to topic view
+                        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));                        
+                    }
+                    
+                    unset($form);
+                    $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]); 
                     
                 }                
               
+        }else {
+           // error - no preview just form with error information!
         }
                  
-        // Full new page view
-        return $this->render('@ZikulaDizkusModule/Topic/reply.html.twig', [
+        // 
+        return $this->render("@ZikulaDizkusModule/Topic/$template.html.twig", [
             'topic' => $managedTopic->get(),
             'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -308,7 +320,7 @@ class TopicController extends AbstractController
 //            'forum' => $managedForum->get(),
             'start' => isset($start) ? $start : 1,
             'settings' => $this->getVars()
-            ]);  
+            ], $request->isXmlHttpRequest() ? new PlainResponse() : null );  
     }
     
 

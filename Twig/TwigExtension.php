@@ -60,6 +60,7 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('lastTopicUrl', [$this, 'lastTopicUrl']),
             new \Twig_SimpleFunction('userLoggedIn', [$this, 'userLoggedIn']),
             new \Twig_SimpleFunction('getRankByPostCount', [$this, 'getRankByPostCount']),
+            new \Twig_SimpleFunction('dzkquote', [$this, 'dzkquote']),
         ];
     }
 
@@ -510,6 +511,33 @@ class TwigExtension extends \Twig_Extension
         
         return $posterRank;
 
+    }
+    
+    /**
+     * dizkus quote plugin
+     *
+     * @param $uid    int user id
+     * @param $text    string text to quote
+     *
+     *
+     */
+    function dzkquote($uid, $text)
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        if (!empty($uid)) {
+            $user = '=' . UserUtil::getVar('uname', $uid);
+        } else {
+            $user = '';
+        }
+
+        // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
+        // and therefore cannot have multiple lines.
+        $text = str_replace(array("\r", "\n"), '_____LINEFEED_DIZKUS_____', addslashes($text));
+
+        return '[quote' . $user . ']' . $text . '[/quote]';
     }
     
     /**

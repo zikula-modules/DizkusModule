@@ -1,6 +1,5 @@
-
-
-<div id="newtopicpreview" style="display: none;">&nbsp;</div>
+{% set templatetitle=__f("Reply to '%s'", {'%s':topic.title|escape('html')}) %}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 
 {% if preview is defined and preview == true %}
     <div id="replypreview" style="margin:1em 0;">
@@ -9,7 +8,7 @@
 {% endif %}
 
 {{ include("@ZikulaDizkusModule/Topic/reply.form.html.twig", {'settings': settings, 'topic': topic}) }}
-
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
 
 {# empty Twig template
 
@@ -17,7 +16,7 @@
 
 
 
-{gt text="Reply to '%s'" tag1=$reply.topic.title|safetext assign='templatetitle'}
+{gt text=|safetext assign='templatetitle'}
 {pagesetvar name='title' value=$templatetitle}
 
 {include file='User/header.tpl'}
