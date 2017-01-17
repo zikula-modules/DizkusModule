@@ -1,41 +1,28 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Controller;
 
-use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Hook\ValidationHook;
-use Zikula\Core\Hook\ValidationProviders;
-use Zikula\Core\Hook\ProcessHook;
-use Zikula\Core\Event\GenericEvent;
-use Zikula\Core\RouteUrl;
-
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
-
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Doctrine\ORM\EntityRepository;
-
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\RouteUrl; // used in annotations - do not remove
+use Zikula\DizkusModule\Manager\ForumManager; // used in annotations - do not remove
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
-
-/**
- * 
- */
 class PostController extends AbstractController
 {
     /**
@@ -61,7 +48,7 @@ class PostController extends AbstractController
      * Edit a post.
      *
      * @param Request $request
-     *  post The post id to edit.
+     *                         post The post id to edit.
      *
      * RETURN: The edit post form.
      *
@@ -77,14 +64,14 @@ class PostController extends AbstractController
         $post_id = $request->request->get('post', null);
         $currentUserId = UserUtil::getVar('uid');
         if (!empty($post_id)) {
-            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id);// new PostManager($post_id);
+            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id); // new PostManager($post_id);
             $forum = $managedPost->get()->getTopic()->getForum();
             $managedForum = new ForumManager(null, $forum);
             if ($managedPost->get()->getPoster()->getUser_id() == $currentUserId || $managedForum->isModerator()) {
                 $this->view->setCaching(false);
                 $this->view->assign('post', $managedPost->get());
                 // simplify our live
-                $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
+                $this->view->assign('postingtextareaid', 'postingtext_'.$managedPost->getId().'_edit');
                 $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
 
                 return new AjaxResponse($this->view->fetch('Ajax/editpost.tpl'));
@@ -93,8 +80,8 @@ class PostController extends AbstractController
             }
         }
         throw new \InvalidArgumentException($this->__f('Error! No post ID in %s.', '\'Dizkus/Ajax/editpost()\''));
-    }    
-    
+    }
+
     /**
      * @Route("/post/update", options={"expose"=true})
      * @Method("POST")
@@ -102,11 +89,11 @@ class PostController extends AbstractController
      * Update a post.
      *
      * @param Request $request
-     *  postId           The post id to update.
-     *  title
-     *  message          The new post message.
-     *  delete_post      Delete this post?
-     *  attach_signature Attach signature?
+     *                         postId           The post id to update.
+     *                         title
+     *                         message          The new post message.
+     *                         delete_post      Delete this post?
+     *                         attach_signature Attach signature?
      *
      * RETURN: array($action The executed action.
      *               $newText The new post text (can be empty).
@@ -114,7 +101,7 @@ class PostController extends AbstractController
      *              )
      *
      * @throws \InvalidArgumentException
-     * @throws AccessDeniedException If the user tries to delete the only post of a topic.
+     * @throws AccessDeniedException     If the user tries to delete the only post of a topic.
      *
      * @return AjaxResponse
      */
@@ -135,40 +122,39 @@ class PostController extends AbstractController
                 if ($managedOriginalPost->get()->isFirst()) {
                     throw new AccessDeniedException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
                 } else {
-                    $response = array('action' => 'deleted');
+                    $response = ['action' => 'deleted'];
                 }
                 $managedOriginalPost->delete();
                 $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($managedOriginalPost->getId()));
             } else {
-                $data = array(
-                    'title' => $title,
-                    'post_text' => $message,
-                    'attachSignature' => $attach_signature);
+                $data = [
+                    'title'           => $title,
+                    'post_text'       => $message,
+                    'attachSignature' => $attach_signature, ];
                 $managedOriginalPost->update($data);
-                $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', array('topic' => $managedOriginalPost->getTopicId()), 'pid' . $managedOriginalPost->getId());
+                $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', ['topic' => $managedOriginalPost->getTopicId()], 'pid'.$managedOriginalPost->getId());
                 $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedOriginalPost->getId(), $url));
                 if ($attach_signature && !$this->getVar('removesignature')) {
                     // include signature in response text
                     $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
-                    $message .=!empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
+                    $message .= !empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
                 }
                 // must dzkVarPrepHTMLDisplay the message content here because the template modifies cannot be run in ajax
                 $newText = ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message);
                 // process hooks
                 $newText = $this->dispatchHooks('dizkus.filter_hooks.post.filter', new FilterHook($newText))->getData();
                 // process internal quotes/hooks
-                $newText = ModUtil::apiFunc($this->name, 'ParseTags', 'transform', array('message' => $newText));
-                $response = array(
-                    'action' => 'updated',
-                    'newText' => $newText);
+                $newText = ModUtil::apiFunc($this->name, 'ParseTags', 'transform', ['message' => $newText]);
+                $response = [
+                    'action'  => 'updated',
+                    'newText' => $newText, ];
             }
 
             return new AjaxResponse($response);
         }
         throw new \InvalidArgumentException($this->__f('Error! No post_id in %s.', '\'Dizkus/Ajax/updatepost()\''));
     }
-    
-    
+
     /**
      * @Route("/post/move")
      *
@@ -178,7 +164,6 @@ class PostController extends AbstractController
      */
     public function movepostAction()
     {
-        
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
             throw new AccessDeniedException();
         }
@@ -194,13 +179,15 @@ class PostController extends AbstractController
 
         if ($managedPost->get()->isFirst()) {
             $this->request->getSession()->getFlashBag()->add('error', 'You can not move the first post of a topic!');
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $managedPost->getTopicId()), RouterInterface::ABSOLUTE_URL);
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $managedPost->getTopicId()], RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
         return true;
         if ($args['commandName'] == 'cancel') {
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->old_topic_id, 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $this->old_topic_id, 'start' => 1], RouterInterface::ABSOLUTE_URL).'#pid'.$this->post_id;
+
             return $view->redirect($url);
         }
 
@@ -216,14 +203,15 @@ class PostController extends AbstractController
         $newTopicPostCount = ModUtil::apiFunc($this->name, 'post', 'move', $data);
         $start = $newTopicPostCount - $newTopicPostCount % ModUtil::getVar($this->name, 'posts_per_page', 15);
 
-        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id'], 'start' => $start), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $data['to_topic_id'], 'start' => $start], RouterInterface::ABSOLUTE_URL).'#pid'.$this->post_id;
+
         return $view->redirect($url);
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/post/move.tpl', new MovePost()));
     }
-    
+
     /**
      * @Route("/post/report")
      *
@@ -235,7 +223,6 @@ class PostController extends AbstractController
      */
     public function reportAction()
     {
-        
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
             throw new AccessDeniedException();
         }
@@ -244,21 +231,22 @@ class PostController extends AbstractController
 
         if (!isset($id)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', array(), RouterInterface::ABSOLUTE_URL);
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL);
+
             return $view->redirect($url);
         }
 
         $this->_post = new PostManager($id);
         $view->assign('post', $this->_post->get());
         $view->assign('notify', true);
-        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         $this->view->assign('ranks', $ranks);
 
         return true;
 
-        
         if ($args['commandName'] == 'cancel') {
-            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => 1), RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
+            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $this->_post->getTopicId(), 'start' => 1], RouterInterface::ABSOLUTE_URL).'#pid'.$this->_post->getId();
+
             return $view->redirect($url);
         }
 
@@ -274,7 +262,7 @@ class PostController extends AbstractController
         // - use censor and compare with original comment
         // if only one of this comparisons fails -> trash it, it is spam.
         if (!UserUtil::isLoggedIn()) {
-            if (strip_tags($data['comment']) <> $data['comment']) {
+            if (strip_tags($data['comment']) != $data['comment']) {
                 // possibly spam, stop now
                 // get the users ip address and store it in zTemp/Dizkus_spammers.txt
                 $this->dzk_blacklist();
@@ -284,20 +272,20 @@ class PostController extends AbstractController
             }
         }
 
-        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', array('post' => $this->_post->get(),
-            'comment' => $data['comment']));
+        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', ['post' => $this->_post->get(),
+            'comment'                                                       => $data['comment'], ]);
 
-        $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', array('replyCount' => $this->_post->get()->getTopic()->getReplyCount()));
+        $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', ['replyCount' => $this->_post->get()->getTopic()->getReplyCount()]);
 
-        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->_post->getTopicId(), 'start' => $start), RouterInterface::ABSOLUTE_URL);
+        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $this->_post->getTopicId(), 'start' => $start], RouterInterface::ABSOLUTE_URL);
+
         return $view->redirect($url);
-        
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/notifymod.tpl', new Report()));
     }
-    
+
     /**
      * Checks if a message is shorter than 65535 - 8 characters.
      *
@@ -309,21 +297,18 @@ class PostController extends AbstractController
      */
     private function checkMessageLength($message)
     {
-        if (!ModUtil::apiFunc($this->name, 'post', 'checkMessageLength', array('message' => $message))) {
+        if (!ModUtil::apiFunc($this->name, 'post', 'checkMessageLength', ['message' => $message])) {
             throw new \LengthException($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
         }
-    }   
+    }
 }
 
-
-
-
 //    /**
-//    
-//    
+//
+//
 //    Report
-//    
-//    
+//
+//
 //     * dzk_blacklist()
 //     * blacklist the users ip address if considered a spammer
 //     */

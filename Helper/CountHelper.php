@@ -8,73 +8,72 @@
 
 namespace Zikula\DizkusModule\Helper;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
-
 /**
- * CountHelper
+ * CountHelper.
  *
  * @author Kaik
  */
-class CountHelper {
-    
+class CountHelper
+{
     /**
      * @var RequestStack
-     */    
-    private $requestStack;      
-    
+     */
+    private $requestStack;
+
     /**
      * @var EntityManager
      */
-    private $entityManager;    
-    
+    private $entityManager;
+
     /**
      * @var CurrentUserApi
-     */    
-    private $userApi;      
+     */
+    private $userApi;
 
-    private $cache = [];  
-    
-    
+    private $cache = [];
+
     public function __construct(
             RequestStack $requestStack,
             EntityManager $entityManager,
-            CurrentUserApi $userApi        
+            CurrentUserApi $userApi
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->requestStack = $requestStack;
         $this->request = $requestStack->getMasterRequest();
         $this->entityManager = $entityManager;
-        $this->userApi = $userApi;    
+        $this->userApi = $userApi;
     }
-    
+
     /**
-     * Count forums
+     * Count forums.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getAllForumsCount($force = false)
     {
         if ($force || !isset($this->cache['Forum']['all'])) {
             $this->cache['Forum']['all'] = $this->countEntity('Forum');
         }
-        
-        return $this->cache['Forum']['all'];            
-    }   
-    
+
+        return $this->cache['Forum']['all'];
+    }
+
     /**
-     * Count forum topics
+     * Count forum topics.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getForumTopicsCount($forum, $force = false)
     {
@@ -83,16 +82,17 @@ class CountHelper {
             $this->cache['Forum'][$forum]['topics'] = $this->countEntity('Topic', 'forum', $forum);
         }
 
-        return $this->cache['Forum'][$forum]['topics'];            
-    } 
-    
+        return $this->cache['Forum'][$forum]['topics'];
+    }
+
     /**
-     * Count forum posts
+     * Count forum posts.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getForumPostsCount($forum, $force = false)
     {
@@ -107,16 +107,17 @@ class CountHelper {
             $this->cache['Forum'][$forum]['posts'] = $query->getSingleScalarResult();
         }
 
-        return $this->cache['Forum'][$forum]['posts'];            
-    }    
-    
+        return $this->cache['Forum'][$forum]['posts'];
+    }
+
     /**
-     * Count all topics
+     * Count all topics.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getAllTopicsCount($force = false)
     {
@@ -124,16 +125,17 @@ class CountHelper {
             $this->cache['Topic']['all'] = $this->countEntity('Topic');
         }
 
-        return $this->cache['Topic']['all'];            
+        return $this->cache['Topic']['all'];
     }
-    
+
     /**
-     * Count topic posts
+     * Count topic posts.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getTopicPostsCount($topic, $force = false)
     {
@@ -142,16 +144,17 @@ class CountHelper {
             $this->cache['Topic'][$topic]['posts'] = $this->countEntity('Post', 'topic', $topic);
         }
 
-        return $this->cache['Topic'][$topic]['posts'];            
+        return $this->cache['Topic'][$topic]['posts'];
     }
-    
+
     /**
-     * Counts posts
+     * Counts posts.
      *
      * @param $force boolean, default false, if true, do not use cached
-     * @return int (depending on type and id)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int (depending on type and id)
      */
     public function getAllPostsCount($force = false)
     {
@@ -159,15 +162,16 @@ class CountHelper {
             $this->cache['Post']['all'] = $this->countEntity('Post');
         }
 
-        return $this->cache['Post']['all'];            
+        return $this->cache['Post']['all'];
     }
-    
+
     /**
-     * Count the number of items in a provided entity
+     * Count the number of items in a provided entity.
      *
      * @param $entityname
      * @param null $where
      * @param null $parameter
+     *
      * @return int
      */
     private function countEntity($entityname, $where = null, $parameter = null)
@@ -175,18 +179,14 @@ class CountHelper {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('count(a)')->from("Zikula\\DizkusModule\\Entity\\{$entityname}Entity", 'a');
         if (isset($where) && isset($parameter)) {
-            $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
+            $qb->andWhere('a.'.$where.' = :parameter')->setParameter('parameter', $parameter);
         }
 
-        return (int)$qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
-    
-    
-
 }
-    
-    
-    /**
+
+    /*
      * Counts posts in forums, topics
      * or counts forum users
      *
@@ -201,7 +201,7 @@ class CountHelper {
 //    {
 //
 //        static $cache = [];
-//        
+//
 ////        switch ($type) {
 ////            case 'all':
 ////            case 'allposts':
@@ -275,10 +275,10 @@ class CountHelper {
 ////            default:
 ////                throw new \InvalidArgumentException($this->__('Error! Wrong parameters in countstats().'));
 ////        }
-////        
+////
 //        return $cache;
 //    }
-    /**
+    /*
      * Counts posts in forums, topics
      * or counts forum users
      *
@@ -369,8 +369,8 @@ class CountHelper {
 //                throw new \InvalidArgumentException($this->translator->__('Error! Wrong parameters in countstats().'));
 //        }
 //    }
-    
-    /**
+
+    /*
      * setcookies
      *
      * reads the cookie, updates it and returns the last visit date in unix timestamp
@@ -400,8 +400,7 @@ class CountHelper {
 //        CookieUtil::setCookie('DizkusLastVisitTemp', "{$temptime}", time() + 1800, $path, null, null, false);
 //
 //        return $temptime;
-//    }  
-    
+//    }
 
 //    /**
 //     * Count the number of items in a provided entity

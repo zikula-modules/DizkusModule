@@ -1,26 +1,27 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Listener;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use ModUtil;
-use HookUtil;
-use Symfony\Component\Routing\RouterInterface;
-use ZLanguage;
-use Zikula\Core\Event\GenericEvent;
-use Zikula\DizkusModule\ZikulaDizkusModule;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use HookUtil;
+use ModUtil;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Zikula\Core\Event\GenericEvent;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\ZikulaDizkusModule;
+use ZLanguage;
 
 class EventListener implements EventSubscriberInterface
 {
@@ -39,14 +40,14 @@ class EventListener implements EventSubscriberInterface
     {
         return [
             'module_dispatch.service_links' => ['serviceLinks'],
-            'installer.module.uninstalled' => ['moduleDelete'],
-            'user.account.delete' => ['deleteUser'],
+            'installer.module.uninstalled'  => ['moduleDelete'],
+            'user.account.delete'           => ['deleteUser'],
         ];
     }
 
     /**
      * respond to event 'module_dispatch.service_links'
-     * populate Services menu with hook option link
+     * populate Services menu with hook option link.
      *
      * @param GenericEvent $event
      *
@@ -58,17 +59,17 @@ class EventListener implements EventSubscriberInterface
         $moduleName = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
         if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
-                    'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-                    'text' => __('Dizkus Hook Settings', $dom)], $event->data))) {
+                    'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                    'text' => __('Dizkus Hook Settings', $dom), ], $event->data))) {
             $event->data[] = [
-                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-                'text' => __('Dizkus Hook Settings', $dom)];
+                'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                'text' => __('Dizkus Hook Settings', $dom), ];
         }
     }
 
     /**
      * respond to event "installer.module.uninstalled".
-     * Receives $modinfo as event $args
+     * Receives $modinfo as event $args.
      *
      * On module delete handle associated hooked topics
      *

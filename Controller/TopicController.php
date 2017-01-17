@@ -1,49 +1,38 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Controller;
 
-use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Hook\ValidationHook;
-use Zikula\Core\Hook\ValidationProviders;
-use Zikula\Core\Hook\ProcessHook;
-use Zikula\Core\Event\GenericEvent;
-use Zikula\Core\RouteUrl;
-use Zikula\Core\Response\PlainResponse;
-
-use Zikula\DizkusModule\Form\Type\Topic\NewType;
-use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
-use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
-use Zikula\DizkusModule\Manager\TopicManager;
-
-use Zikula\Common\Translator\TranslatorInterface;
-
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Doctrine\ORM\EntityRepository;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Response\PlainResponse;
+use Zikula\Core\RouteUrl;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Form\Type\Topic\NewType;
+use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumUserManager; // used in annotations - do not remove
+use Zikula\DizkusModule\Manager\TopicManager; // used in annotations - do not remove
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
-
-/**
- * 
- */
 class TopicController extends AbstractController
 {
     /**
@@ -52,8 +41,8 @@ class TopicController extends AbstractController
      * viewtopic
      *
      * @param Request $request
-     * @param integer $topic the topic ID
-     * @param integer $start pager value
+     * @param int     $topic   the topic ID
+     * @param int     $start   pager value
      *
      * @throws AccessDeniedException on failed perm check
      *
@@ -61,47 +50,48 @@ class TopicController extends AbstractController
      */
     public function viewtopicAction(Request $request, $topic, $start = 1)
     {
-        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
-                        'forum_disabled_info' => $this->getVar('forum_disabled_info')
-            ]); 
+                        'forum_disabled_info' => $this->getVar('forum_disabled_info'),
+            ]);
         }
-        
+
         $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
- 
+
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead($managedTopic->get()->getForum())) {
             throw new AccessDeniedException();
-        }     
-                
-        // @todo rank helper    
+        }
+
+        // @todo rank helper
         list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]); //ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
-        
+
         $managedTopic->incrementViewsCount();
-         
+
         return $this->render('@ZikulaDizkusModule/Topic/view.html.twig', [
-            'ranks' => $ranks,
-            'start' => $start,
-            'topic' => $managedTopic->get(),
-            'posts' => $managedTopic->getPosts(--$start),
-            'pager' => $managedTopic->getPager(),
-            'permissions' => $this->get('zikula_dizkus_module.security')->get($managedTopic->get()->getForum()),
-            'isModerator' => $managedTopic->getManagedForum()->isModerator(),
-            'breadcrumbs' => $managedTopic->getBreadcrumbs(),
-            'isSubscribed' => $managedTopic->isSubscribed(),
-            'nextTopic' => $managedTopic->getNext(),
-            'previousTopic' => $managedTopic->getPrevious(),
+            'ranks'           => $ranks,
+            'start'           => $start,
+            'topic'           => $managedTopic->get(),
+            'posts'           => $managedTopic->getPosts(--$start),
+            'pager'           => $managedTopic->getPager(),
+            'permissions'     => $this->get('zikula_dizkus_module.security')->get($managedTopic->get()->getForum()),
+            'isModerator'     => $managedTopic->getManagedForum()->isModerator(),
+            'breadcrumbs'     => $managedTopic->getBreadcrumbs(),
+            'isSubscribed'    => $managedTopic->isSubscribed(),
+            'nextTopic'       => $managedTopic->getNext(),
+            'previousTopic'   => $managedTopic->getPrevious(),
             'last_visit_unix' => $lastVisitUnix,
-            'preview'=> false,
-            'settings' => $this->getVars()
-            ]);              
+            'preview'         => false,
+            'settings'        => $this->getVars(),
+            ]);
     }
-    
+
     /**
      * @Route("/topic/new")
      *
@@ -123,33 +113,35 @@ class TopicController extends AbstractController
 
         if (!isset($forum)) {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing forum id.'));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        $managedForum =  $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);    //new ForumManager($this->_forumId);
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);    //new ForumManager($this->_forumId);
         if ($managedForum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
             $request->getSession()->getFlashBag()->add('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL));
         }
-         
-        $form = $this->createForm(new NewType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], []);        
+
+        $form = $this->createForm(new NewType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], []);
         $form->handleRequest($request);
-        
+
         // check hooked modules for validation
-        $hook = new ValidationHook(new ValidationProviders()); //   
-        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();        
-        
+        $hook = new ValidationHook(new ValidationProviders()); //
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
+
         // check hooked modules for validation for POST
         $postHook = new ValidationHook(new ValidationProviders());
         /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
-        $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators(); 
+        $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             foreach ($postHookValidators->getErrors() as $error) {
                 $request->getSession()->getFlashBag()->add('error', "Error! $error");
             }
         }
-        
+
         // check hooked modules for validation for TOPIC
         $topicHook = new ValidationHook(new ValidationProviders());
         /** @var $topicHookValidators \Zikula\Core\Hook\ValidationProviders */
@@ -158,28 +150,25 @@ class TopicController extends AbstractController
             foreach ($postHookValidators->getErrors() as $error) {
                 $request->getSession()->getFlashBag()->add('error', "Error! $error");
             }
-        } 
-        
-        if ($form->isValid() && !$hookvalidators->hasErrors() && !$postHookValidators->hasErrors() && !$topicHookValidators->hasErrors()) {
+        }
 
+        if ($form->isValid() && !$hookvalidators->hasErrors() && !$postHookValidators->hasErrors() && !$topicHookValidators->hasErrors()) {
             $data = $form->getData();
             $data['forum_id'] = $forum;
-            $data['attachSignature'] = isset($data['attachSignature']) ? $data['attachSignature'] : false ;
-            $data['subscribeTopic'] = isset($data['subscribeTopic']) ? $data['subscribeTopic'] : false ;
-            $data['isSupportQuestion'] = isset($data['isSupportQuestion']) ? $data['isSupportQuestion'] : false ;
-            
-            
+            $data['attachSignature'] = isset($data['attachSignature']) ? $data['attachSignature'] : false;
+            $data['subscribeTopic'] = isset($data['subscribeTopic']) ? $data['subscribeTopic'] : false;
+            $data['isSupportQuestion'] = isset($data['isSupportQuestion']) ? $data['isSupportQuestion'] : false;
+
             $newManagedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager();
             $newManagedTopic->prepare($data);
-                       
+
             // @todo this maybe should be done by hooks?
 //            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
 //                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
 //                return false;
-//            } 
-            
+//            }
+
             if ($form->get('preview')->isClicked()) {
-                
                 $preview = true;
                 $post = $newManagedTopic->getPreview()->toArray();
                 $post['post_id'] = 0;
@@ -188,13 +177,12 @@ class TopicController extends AbstractController
                 $post['attachSignature'] = $data['attachSignature'];
                 $post['subscribeTopic'] = $data['subscribeTopic'];
                 $post['isSupportQuestion'] = $data['isSupportQuestion'];
-                
-                list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
 
+                list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             }
-             
+
             if ($form->get('save')->isClicked()) {
-                
+
                 // store new topic
                 $newManagedTopic->create();
                 $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()]);
@@ -207,21 +195,21 @@ class TopicController extends AbstractController
 
                 // redirect to the new topic
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
-            }           
-         }        
-        
+            }
+        }
+
         return $this->render('@ZikulaDizkusModule/Topic/new.html.twig', [
-            'ranks' => isset($ranks) ? $ranks : false,
+            'ranks'         => isset($ranks) ? $ranks : false,
             'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
-            'form' => $form->createView(),
-            'breadcrumbs' => $managedForum->getBreadcrumbs(false),
-            'preview'=> isset($preview) ? $preview : false,
-            'post' => isset($post) ? $post : false,
-            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
-    } 
-    
+            'form'          => $form->createView(),
+            'breadcrumbs'   => $managedForum->getBreadcrumbs(false),
+            'preview'       => isset($preview) ? $preview : false,
+            'post'          => isset($post) ? $post : false,
+            'forum'         => $managedForum->get(),
+            'settings'      => $this->getVars(),
+            ]);
+    }
+
     /**
      * @Route("/topic/{topic}/reply", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      *
@@ -237,18 +225,19 @@ class TopicController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-            
+
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
-        } 
-        
+        }
+
         $template = $request->get('template') == 'quick.reply' || $request->isXmlHttpRequest() ? 'quick.reply' : 'reply';
-        $action  = $this->get('router')->generate('zikuladizkusmodule_topic_replytopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);         
-        $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);        
+        $action = $this->get('router')->generate('zikuladizkusmodule_topic_replytopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
+        $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
         $form->handleRequest($request);
-        
+
         // process validation hooks
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
@@ -260,55 +249,52 @@ class TopicController extends AbstractController
                 $form->get('message')->addError(new FormError($this->__($error)));
             }
         }
-        
-        //&& !$hookvalidators->hasErrors() is not needed because we attach any hook errors to message field 
+
+        //&& !$hookvalidators->hasErrors() is not needed because we attach any hook errors to message field
         // this might not be ok for some hooks - to chceck!
-        if($form->isValid()){
-            
+        if ($form->isValid()) {
+
             //return new PlainResponse(dump($form));
-            
-            // everything is good at this point so we either show preview or save 
+
+            // everything is good at this point so we either show preview or save
             $data = $form->getData();
             $reply = [
-                'topic_id' => $topic,
-                'post_text' => $data['message'],
-                'attachSignature' => $data['attachSignature']];            
-            
-            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
-            $managedPost->create($reply);            
-       
-            list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);  
-            
-                if ($form->get('preview')->isClicked()) {
-                    $preview = true;
-                    $post = $managedPost->toArray();
-                    $post['post_id'] = -1;
-                    $post['post_time'] = time();
-                    $post['topic_id'] = $topic;
-                    $post['attachSignature'] = $data['attachSignature'];
-                    $post['subscribeTopic'] = $data['subscribeTopic'];
+                'topic_id'        => $topic,
+                'post_text'       => $data['message'],
+                'attachSignature' => $data['attachSignature'], ];
 
-                }
-                
-                if ($form->get('save')->isClicked()) {
-                    $managedPost->persist();                    
-                    $post = $managedPost->toArray();                          
+            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
+            $managedPost->create($reply);
+
+            list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+
+            if ($form->get('preview')->isClicked()) {
+                $preview = true;
+                $post = $managedPost->toArray();
+                $post['post_id'] = -1;
+                $post['post_time'] = time();
+                $post['topic_id'] = $topic;
+                $post['attachSignature'] = $data['attachSignature'];
+                $post['subscribeTopic'] = $data['subscribeTopic'];
+            }
+
+            if ($form->get('save')->isClicked()) {
+                $managedPost->persist();
+                $post = $managedPost->toArray();
                     //if not ajax redirect to topic page
-                    if(!$request->isXmlHttpRequest()){
+                    if (!$request->isXmlHttpRequest()) {
                         // everything is good no ajax return to to topic view
-                        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));                        
+                        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
                     }
-                    
-                    unset($form);
-                    $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]); 
-                    
-                }                
-              
-        }else {
-           // error - no preview just form with error information!
+
+                unset($form);
+                $form = $this->createForm(new ReplyType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
+            }
+        } else {
+            // error - no preview just form with error information!
         }
-                 
-        // 
+
+        //
         return $this->render("@ZikulaDizkusModule/Topic/$template.html.twig", [
             'topic' => $managedTopic->get(),
             'ranks' => isset($ranks) ? $ranks : false,
@@ -316,13 +302,12 @@ class TopicController extends AbstractController
             'form' => $form->createView(),
 //            'breadcrumbs' => $managedForum->getBreadcrumbs(false),
             'preview'=> isset($preview) ? $preview : false,
-            'post' => isset($post) ? $post : false,
+            'post'   => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'start' => isset($start) ? $start : 1,
-            'settings' => $this->getVars()
-            ], $request->isXmlHttpRequest() ? new PlainResponse() : null );  
+            'start'    => isset($start) ? $start : 1,
+            'settings' => $this->getVars(),
+            ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
     }
-    
 
     /**
      * @Route("/topic/{topic}/delete", requirements={"topic" = "^[1-9]\d*$"} )
@@ -335,7 +320,7 @@ class TopicController extends AbstractController
      */
     public function deletetopicAction(Request $request)
     {
-//        
+        //
 //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
@@ -363,8 +348,8 @@ class TopicController extends AbstractController
 //        $view->assign($managedTopic->toArray());
 //
 //        return true;
-//        
-//        
+//
+//
 //       // rewrite to topic if cancel was pressed
 //        if ($args['commandName'] == 'cancel') {
 //            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
@@ -401,13 +386,11 @@ class TopicController extends AbstractController
 //        // redirect to the forum of the deleted topic
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
 //        return $view->redirect($url);
-        
-        
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/topic/delete.tpl', new DeleteTopic()));
-        
+
         return $this->render('@ZikulaDizkusModule/Topic/delete.html.twig', [
 //            'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -416,8 +399,8 @@ class TopicController extends AbstractController
 //            'preview'=> isset($preview) ? $preview : false,
 //            'post' => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
+            'settings' => $this->getVars(),
+            ]);
     }
 
     /**
@@ -431,7 +414,7 @@ class TopicController extends AbstractController
      */
     public function movetopicAction(Request $request)
     {
-        
+
 //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
@@ -441,8 +424,8 @@ class TopicController extends AbstractController
 //        $this->topic = $managedTopic->get();
 //        $view->assign('topic', $this->topic_id);
 //        $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));
-//        
-//        
+//
+//
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
 //        if ($args['commandName'] == 'cancel') {
 //            return $view->redirect($url);
@@ -496,11 +479,11 @@ class TopicController extends AbstractController
 //        }
 //
 //        return true;
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/topic/move.tpl', new MoveTopic()));
-        
+
         return $this->render('@ZikulaDizkusModule/Topic/move.html.twig', [
 //            'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -509,10 +492,10 @@ class TopicController extends AbstractController
 //            'preview'=> isset($preview) ? $preview : false,
 //            'post' => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
+            'settings' => $this->getVars(),
+            ]);
     }
-    
+
     /**
      * @Route("/topic/{topic}/split", requirements={"topic" = "^[1-9]\d*$"} )
      *
@@ -522,7 +505,7 @@ class TopicController extends AbstractController
      */
     public function splittopicAction(Request $request)
     {
-        
+
 //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
 //            throw new AccessDeniedException();
 //        }
@@ -534,7 +517,7 @@ class TopicController extends AbstractController
 //        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());
 //
 //        return true;
-//        
+//
 //        // rewrite to topic if cancel was pressed
 //        if ($args['commandName'] == 'cancel') {
 //            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->post->getTopicId()), RouterInterface::ABSOLUTE_URL);
@@ -551,11 +534,11 @@ class TopicController extends AbstractController
 //
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $newtopic_id), RouterInterface::ABSOLUTE_URL);
 //        return $view->redirect($url);
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/topic/split.tpl', new SplitTopic()));
-        
+
         return $this->render('@ZikulaDizkusModule/Topic/split.html.twig', [
 //            'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -564,10 +547,10 @@ class TopicController extends AbstractController
 //            'preview'=> isset($preview) ? $preview : false,
 //            'post' => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
-    }    
- 
+            'settings' => $this->getVars(),
+            ]);
+    }
+
     /**
      * @Route("/topic/{topic}/mail", requirements={"topic" = "^[1-9]\d*$"} )
      *
@@ -577,7 +560,7 @@ class TopicController extends AbstractController
      */
     public function emailtopicAction(Request $request)
     {
-        
+
 //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
@@ -592,7 +575,7 @@ class TopicController extends AbstractController
 //        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . $url);
 //
 //        return true;
-//        
+//
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
 //        // rewrite to topic if cancel was pressed
 //        if ($args['commandName'] == 'cancel') {
@@ -612,13 +595,11 @@ class TopicController extends AbstractController
 //        ));
 //
 //        return $view->redirect($url);
-        
-        
-        
+
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/topic/email.tpl', new EmailTopic()));
-        
+
         return $this->render('@ZikulaDizkusModule/Topic/email.html.twig', [
 //            'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -627,22 +608,22 @@ class TopicController extends AbstractController
 //            'preview'=> isset($preview) ? $preview : false,
 //            'post' => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
-    } 
+            'settings' => $this->getVars(),
+            ]);
+    }
 
-   /**
+    /**
      * @Route("/topic/{topic}/{action}/{post}", requirements={
      *      "topic" = "^[1-9]\d*$",
      *      "action" = "subscribe|unsubscribe|sticky|unsticky|lock|unlock|solve|unsolve|setTitle",
      *      "post" = "^[1-9]\d*$"}, options={"expose"=true}
-     *      
+     *
      * )
      * @Method("GET")
      *
-     * @param integer $topic
+     * @param int    $topic
      * @param string $action
-     * @param integer $post (default = NULL)
+     * @param int    $post   (default = NULL)
      *
      * Change a param of a topic
      * WARNING: this method is overridden by an Ajax method
@@ -651,30 +632,30 @@ class TopicController extends AbstractController
      */
     public function changeTopicStatusAction(Request $request, $topic, $action, $post = null)
     {
-//        $params = array(
+        //        $params = array(
 //            'action' => $action,
 //            'topic' => $topic,
 //            'post' => $post);
 //        // perm check in API
 //        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 //
-//       
+//
         dump($topic);
         dump($action);
-        
+
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $topic], RouterInterface::ABSOLUTE_URL));
     }
-    
+
     /**
      * @Route("/topics/view-latest")
      *
      * View latest topics
      *
      * @param Request $request
-     *  string 'selorder'
-     *  integer 'nohours'
-     *  integer 'unanswered'
-     *  integer 'last_visit_unix'
+     *                         string 'selorder'
+     *                         integer 'nohours'
+     *                         integer 'unanswered'
+     *                         integer 'last_visit_unix'
      *
      * @throws AccessDeniedException on failed perm check
      *
@@ -682,7 +663,7 @@ class TopicController extends AbstractController
      */
     public function viewlatestAction(Request $request)
     {
-//        // Permission check
+        //        // Permission check
 //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
@@ -705,7 +686,7 @@ class TopicController extends AbstractController
 //        $this->view->assign('last_visit_unix', $lastVisitUnix);
 //
 //        return new Response($this->view->fetch('User/topic/latest.tpl'));
-        
+
         return $this->render('@ZikulaDizkusModule/Topic/latest.html.twig', [
 //            'ranks' => isset($ranks) ? $ranks : false,
 //            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
@@ -714,12 +695,10 @@ class TopicController extends AbstractController
 //            'preview'=> isset($preview) ? $preview : false,
 //            'post' => isset($post) ? $post : false,
 //            'forum' => $managedForum->get(),
-            'settings' => $this->getVars()
-            ]); 
-    }  
+            'settings' => $this->getVars(),
+            ]);
+    }
 }
-
-
 
 //    /**
 //     * @Route("/reply")
@@ -882,7 +861,7 @@ class TopicController extends AbstractController
 //        }
 //    }
 
-    /**
+    /*
      * @Route("/reply", options={"expose"=true})
      * @Method("POST")
      *
@@ -982,13 +961,11 @@ class TopicController extends AbstractController
 //                'data' => $this->view->fetch('User/post/single.tpl'),
 //                'post_id' => $post['post_id']));
 //        }
-//    }    
-//    
-//       
- 
+//    }
+//
+//
 
-
-    /**
+    /*
      * @Route("/topic/change-status", options={"expose"=true})
      * @Method("POST")
      *
@@ -1037,4 +1014,4 @@ class TopicController extends AbstractController
 //        ModUtil::apiFunc($this->name, 'Topic', 'changeStatus', $params);
 //
 //        return new PlainResponse('successful');
-//    }    
+//    }

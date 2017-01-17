@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Copyright Dizkus Team 2012
+ * Copyright Dizkus Team 2012.
  *
  * This work is contributed to the Zikula Foundation under one or more
  * Contributor Agreements and licensed to You under the following license:
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Dizkus
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -16,27 +16,19 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-
 use DataUtil;
 use DateUtil;
-
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
-
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\UsersModule\Api\CurrentUserApi;
-use Zikula\ExtensionsModule\Api\VariableApi;
-
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
-use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\DizkusModule\Security\Permission;
+use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\UsersModule\Api\CurrentUserApi;
 
 class PostManager
 {
@@ -49,10 +41,10 @@ class PostManager
      * @var RouterInterface
      */
     private $router;
-    
+
     /**
      * @var RequestStack
-     */    
+     */
     private $requestStack;
 
     /**
@@ -62,46 +54,48 @@ class PostManager
 
     /**
      * @var CurrentUserApi
-     */    
+     */
     private $userApi;
 
     /**
      * @var Permission
-     */    
+     */
     private $permission;
 
     /**
      * @var VariableApi
      */
     private $variableApi;
-    
+
     /**
      * @var VariableApi
      */
-    private $forumManagerService;    
-    
+    private $forumManagerService;
+
     /**
      * @var VariableApi
      */
     private $topicManagerService;
-    
+
     /**
      * @var synchronizationHelper
      */
     private $synchronizationHelper;
-    
+
     /**
-     * managed post
+     * managed post.
+     *
      * @var PostEntity
      */
     private $_post;
 
     /**
-     * Post topic
+     * Post topic.
+     *
      * @var TopicManager
      */
     private $_topic;
-    
+
     public function __construct(
             TranslatorInterface $translator,
             RouterInterface $router,
@@ -114,7 +108,6 @@ class PostManager
             TopicManager $topicManagerService,
             SynchronizationHelper $synchronizationHelper
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -126,11 +119,11 @@ class PostManager
         $this->variableApi = $variableApi;
         $this->forumManagerService = $forumManagerService;
         $this->topicManagerService = $topicManagerService;
-        $this->synchronizationHelper = $synchronizationHelper;        
+        $this->synchronizationHelper = $synchronizationHelper;
     }
 
     /**
-     * Start managing
+     * Start managing.
      */
     public function getManager($id = null)
     {
@@ -140,12 +133,12 @@ class PostManager
         } else {
             $this->_post = new PostEntity();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * return page as array
+     * return page as array.
      *
      * @return mixed array or false
      */
@@ -172,7 +165,7 @@ class PostManager
     }
 
     /**
-     * get the Post entity
+     * get the Post entity.
      *
      * @return PostEntity
      */
@@ -182,9 +175,9 @@ class PostManager
     }
 
     /**
-     * update the post
+     * update the post.
      *
-     * @return boolean
+     * @return bool
      */
     public function update($data = null)
     {
@@ -197,7 +190,7 @@ class PostManager
     }
 
     /**
-     * create a post from provided data but do not yet persist
+     * create a post from provided data but do not yet persist.
      */
     public function create($data = null)
     {
@@ -213,9 +206,9 @@ class PostManager
 //        $uid = UserUtil::getVar('uid');
         // assign anonymous creations to the admin
 //        $uid = !$uid ? ModUtil::getVar($this->name, 'defaultPoster', 2) : $uid;
-        
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2) ;
-        
+
+        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2);
+
         $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
             $forumUser = new ForumUserEntity($uid);
@@ -224,7 +217,7 @@ class PostManager
     }
 
     /**
-     * persist the post and update related entities to reflect new post
+     * persist the post and update related entities to reflect new post.
      */
     public function persist()
     {
@@ -243,9 +236,9 @@ class PostManager
     }
 
     /**
-     * delete a post
+     * delete a post.
      *
-     * @return boolean
+     * @return bool
      */
     public function delete()
     {
@@ -268,19 +261,20 @@ class PostManager
             $this->_topic->resetLastPost(true);
         }
         if ($id == $forumLastPostId) {
-            $this->synchronizationHelper->forumLastPost($managedForum->get(), true);            
+            $this->synchronizationHelper->forumLastPost($managedForum->get(), true);
 //          ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', array('forum' => $managedForum->get(), 'flush' => true));
         }
     }
 
     /**
-     * get_latest_posts
+     * get_latest_posts.
      *
      * @param $args['selorder'] int 1-6, see below
      * @param $args['nohours'] int posting within these hours
      * @param $args['unanswered'] int 0 or 1(= postings with no answers)
      * @param $args['last_visit_unix'] string the users last visit data as unix timestamp
      * @param $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
+     *
      * @return array (postings, mail2forumpostings, rsspostings, text_to_display)
      */
     public function getLatest($args)
@@ -321,7 +315,7 @@ class PostManager
                     $args['nohours'] = 336;
                 }
                 $qb->where('l.post_time > :wheretime')
-                    ->setParameter('wheretime', new DateTime('-' . $args['nohours'] . ' hours'));
+                    ->setParameter('wheretime', new DateTime('-'.$args['nohours'].' hours'));
                 $text = DataUtil::formatForDisplay($this->translator->__f('In the last %s hours', $args['nohours']));
                 break;
             case '6':
@@ -344,25 +338,25 @@ class PostManager
         $qb->setFirstResult(0)->setMaxResults(10);
         $topics = new Paginator($qb);
         $pager = [
-            'numitems' => count($topics),
-            'itemsperpage' => 10];
+            'numitems'     => count($topics),
+            'itemsperpage' => 10, ];
 
         return [$topics, $text, $pager];
     }
 
     /**
-     * gets the last $maxPosts postings of forum $forum_id
+     * gets the last $maxPosts postings of forum $forum_id.
      *
      * @param mixed[] $params {
-     *      @type int maxposts    number of posts to read, default = 5
-     *      @type int forum_id    forum_id, if not set, all forums
-     *      @type int user_id     -1 = last postings of current user, otherwise its treated as an user_id
-     *      @type bool canread    if set, only the forums that we have read access to [** flag is no longer supported, this is the default settings for now **]
-     *      @type bool favorites  if set, only the favorite forums
-     *      @type bool show_m2f   if set show postings from mail2forum forums
-     *      @type bool show_rss   if set show postings from rss2forum forums
-     *                      }
-     * 
+     * @var int maxposts    number of posts to read, default = 5
+     * @var int forum_id    forum_id, if not set, all forums
+     * @var int user_id     -1 = last postings of current user, otherwise its treated as an user_id
+     * @var bool canread    if set, only the forums that we have read access to [** flag is no longer supported, this is the default settings for now **]
+     * @var bool favorites  if set, only the favorite forums
+     * @var bool show_m2f   if set show postings from mail2forum forums
+     * @var bool show_rss   if set show postings from rss2forum forums
+     *                        }
+     *
      * @return array $lastposts
      */
     public function getLastPosts($params)
@@ -465,7 +459,7 @@ class PostManager
                 $lastPost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getName());
 
                 $start = 1;
-                if ($postSortOrder == "ASC") {
+                if ($postSortOrder == 'ASC') {
                     $start = ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
                 }
 
@@ -485,8 +479,8 @@ class PostManager
                 $lastPost['posted_time'] = DateUtil::formatDatetime($topic->getLast_post()->getPost_time(), 'datetimebrief');
                 $lastPost['last_post_url'] = DataUtil::formatForDisplay($this->router->generate('zikuladizkusmodule_topic_viewtopic', [
                     'topic' => $topic->getTopic_id(),
-                    'start' => $start]));
-                $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'] . "#pid" . $topic->getLast_post()->getPost_id();
+                    'start' => $start, ]));
+                $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'].'#pid'.$topic->getLast_post()->getPost_id();
                 $lastPost['word'] = $topic->getReplyCount() >= 1 ? $this->translator->__('Last') : $this->translator->__('New');
 
                 array_push($lastPosts, $lastPost);
@@ -495,9 +489,9 @@ class PostManager
 
         return $lastPosts;
     }
- 
+
     /**
-     * retrieve all my posts or topics
+     * retrieve all my posts or topics.
      *
      * @param $args
      *  string 'action' = 'posts'|'topics'
@@ -520,32 +514,32 @@ class PostManager
         } else {
             $qb->where('p.poster = :uid');
         }
-        
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1 ;        
-        
+
+        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1;
+
         $qb->setParameter('uid', $uid);
-        $perPageVar = $args['action'] . '_per_page';
+        $perPageVar = $args['action'].'_per_page';
         $limit = $this->getVar($perPageVar);
         $qb->setFirstResult($args['offset'])
             ->setMaxResults($limit);
         $topics = new Paginator($qb);
         $pager = [
-            'numitems' => $topics->count(),
-            'itemsperpage' => $limit];
+            'numitems'     => $topics->count(),
+            'itemsperpage' => $limit, ];
 
         return [$topics, $pager];
     }
 
     /**
-     * movepost
+     * movepost.
      *
      * @param $args['post_id']
      * @param $args['old_topic_id']
      * @param $args['to_topic_id']
      *
-     * @return int count of posts in destination topic
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int count of posts in destination topic
      */
     public function move($args)
     {
@@ -565,10 +559,10 @@ class PostManager
         $managedDestinationTopic->incrementRepliesCount();
         $managedPost->get()->updatePost_time();
         $this->entityManager->flush();
-        
-        $this->synchronizationHelper->topicLastPost($managedOriginTopic->get(), false); 
-        $this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);        
-        
+
+        $this->synchronizationHelper->topicLastPost($managedOriginTopic->get(), false);
+        $this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);
+
 //        ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', [
 //            'topic' => $managedOriginTopic->get(),
 //            'flush' => false]);
@@ -584,9 +578,9 @@ class PostManager
      *
      * @param $message The message to check.
      *
-     * @return bool False if the message is to long, else true.
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool False if the message is to long, else true.
      */
     public function checkMessageLength($message)
     {
@@ -599,14 +593,14 @@ class PostManager
 
         return true;
     }
-     
+
     /**
-     * gets the top $maxposters users depending on their post count
+     * gets the top $maxposters users depending on their post count.
      *
      * @param mixed[] $params {
-     *      @type int maxposters    number of users to read, default = 3
-     *      @type int months        number months back to search, default = 6
-     *                      }
+     * @var int maxposters    number of users to read, default = 3
+     * @var int months        number months back to search, default = 6
+     *                        }
      *
      * @return array $topPosters
      */
@@ -635,19 +629,20 @@ class PostManager
                     'user_name' => DataUtil::formatForDisplay($coreUser['uname']),
                     // for BC reasons
                     'postCount' => DataUtil::formatForDisplay($forumUser->getPostCount()),
-                    'user_id' => DataUtil::formatForDisplay($forumUser->getUser_id())];
+                    'user_id'   => DataUtil::formatForDisplay($forumUser->getUser_id()), ];
             }
         }
 
         return $topPosters;
-    } 
-   
+    }
+
     /**
      * dzkstriptags
-     * strip all html tags outside of [code][/code]
+     * strip all html tags outside of [code][/code].
      *
      * @param  $text     string the text
-     * @return string    the sanitized text
+     *
+     * @return string the sanitized text
      */
     public function dzkstriptags($text = '')
     {
@@ -655,7 +650,7 @@ class PostManager
             // save code tags
             $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
             for ($i = 0; $i < $codecount; $i++) {
-                $text = preg_replace('/(' . preg_quote($codes[0][$i], '/') . ')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
+                $text = preg_replace('/('.preg_quote($codes[0][$i], '/').')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
             }
             // strip all html
             $text = strip_tags($text);

@@ -8,30 +8,30 @@
 
 namespace Zikula\DizkusModule\Security;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
-use Zikula\DizkusModule\Entity\ForumEntity;
 
 /**
- * Description of Permissions
+ * Description of Permissions.
  *
  * @author Kaik
  */
-class Permission {
-
+class Permission
+{
     /**
      * @var RequestStack
-     */    
-    private $requestStack;    
+     */
+    private $requestStack;
 
     /**
      * @var EntityManager
      */
     private $entityManager;
-    
+
     /**
      * @var TranslatorInterface
      */
@@ -45,9 +45,8 @@ class Permission {
     /**
      * @var VariableApi
      */
-    private $variableApi;    
-    
-    
+    private $variableApi;
+
     public function __construct(RequestStack $requestStack,
             EntityManager $entityManager,
             TranslatorInterface $translator,
@@ -61,9 +60,8 @@ class Permission {
         $this->translator = $translator;
         $this->permissionApi = $permissionApi;
         $this->variableApi = $variableApi;
-        
     }
-    
+
     /**
      * Checks the permissions of a user for a specific forum.
      *
@@ -89,7 +87,7 @@ class Permission {
      *
      * @param array $args Arguments.
      *
-     * @return boolean
+     * @return bool
      */
     public function canSee($args)
     {
@@ -101,7 +99,7 @@ class Permission {
      *
      * @param array $args Arguments.
      *
-     * @return boolean
+     * @return bool
      */
     public function canRead($args)
     {
@@ -113,7 +111,7 @@ class Permission {
      *
      * @param array $args Arguments.
      *
-     * @return boolean
+     * @return bool
      */
     public function canWrite($args)
     {
@@ -125,7 +123,7 @@ class Permission {
      *
      * @param array $args Arguments.
      *
-     * @return boolean
+     * @return bool
      */
     public function canModerate($args)
     {
@@ -137,7 +135,7 @@ class Permission {
      *
      * @param array $args Arguments.
      *
-     * @return boolean
+     * @return bool
      */
     public function canAdministrate($args)
     {
@@ -145,14 +143,14 @@ class Permission {
     }
 
     /**
-     * check Permission
+     * check Permission.
      *
      * @param array|object $args  Arguments.
      * @param int          $level Level.
      *
-     * @return boolean
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
@@ -167,9 +165,9 @@ class Permission {
                 if (is_numeric($args)) {
                     $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args);
                 } else {
-                    if (is_array($args) ) {
+                    if (is_array($args)) {
                         // reconstitute object
-                        if(isset($args['forum_id'])){
+                        if (isset($args['forum_id'])) {
                             $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $args['forum_id']);
                         }
                         $userId = isset($args['user_id']) ? $args['user_id'] : null;
@@ -179,20 +177,21 @@ class Permission {
                 }
             }
         }
-        if (!$this->variableApi->get($this->name, 'forum_enabled') && !$this->permissionApi->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!$this->variableApi->get($this->name, 'forum_enabled') && !$this->permissionApi->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->variableApi->get($this->name, 'forum_disabled_info'));
+
             return false;
         }
         if (empty($userId)) {
             $userId = null;
         }
         if (!isset($forum)) {
-            return $this->permissionApi->hasPermission($this->name . '::', '::', $level, $userId);
+            return $this->permissionApi->hasPermission($this->name.'::', '::', $level, $userId);
         }
         // loop through current forum and all parents and check for perms,
         // if ever false (at any parent) return false
         while ($forum->getLvl() != 0) {
-            $perm = $this->permissionApi->hasPermission($this->name . '::', $forum->getForum_id() . '::', $level, $userId);
+            $perm = $this->permissionApi->hasPermission($this->name.'::', $forum->getForum_id().'::', $level, $userId);
             if (!$perm) {
                 return false;
             }
@@ -203,8 +202,10 @@ class Permission {
     }
 
     /**
-     * check and filter and array of forums and their children for READ permissions
+     * check and filter and array of forums and their children for READ permissions.
+     *
      * @param array $forums
+     *
      * @return array
      */
     public function filterForumArrayByPermission(array $forums)
@@ -226,8 +227,10 @@ class Permission {
     }
 
     /**
-     * check and filter child forums for READ permissions
+     * check and filter child forums for READ permissions.
+     *
      * @param ForumEntity $forum
+     *
      * @return \Zikula\Module\DizkusModule\Entity\ForumEntity
      */
     public function filterForumChildrenByPermission(ForumEntity $forum)
@@ -246,10 +249,11 @@ class Permission {
     }
 
     /**
-     * Get the ids of all the forums the user is allowed to see
+     * Get the ids of all the forums the user is allowed to see.
      *
-     * @param  integer $args['parent']
-     * @param  integer $args['userId']
+     * @param int $args['parent']
+     * @param int $args['userId']
+     *
      * @return array
      */
     public function getForumIdsByPermission($args)
@@ -263,12 +267,11 @@ class Permission {
             $parent = $forum->getParent();
             $parentId = isset($parent) ? $parent->getForum_id() : null;
             $forumId = $forum->getForum_id();
-            if ($this->permissionApi->hasPermission($this->name . '::', "{$parentId}:{$forumId}:", ACCESS_READ, $userId)) {
+            if ($this->permissionApi->hasPermission($this->name.'::', "{$parentId}:{$forumId}:", ACCESS_READ, $userId)) {
                 $ids[] = $forumId;
             }
         }
 
         return $ids;
-    }    
-    
+    }
 }

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Copyright Dizkus Team 2012
+ * Copyright Dizkus Team 2012.
  *
  * This work is contributed to the Zikula Foundation under one or more
  * Contributor Agreements and licensed to You under the following license:
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Dizkus
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -17,24 +17,19 @@
 namespace Zikula\DizkusModule\Manager;
 
 use DataUtil;
-
-use Zikula\DizkusModule\Entity\ForumEntity;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\UsersModule\Api\CurrentUserApi;
-use Zikula\ExtensionsModule\Api\VariableApi;
-
-use Zikula\PermissionsModule\Api\PermissionApi;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Security\Permission;
-
-
+use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\PermissionsModule\Api\PermissionApi;
+use Zikula\UsersModule\Api\CurrentUserApi;
 
 class ForumManager
-{ 
+{
     /**
      * @var TranslatorInterface
      */
@@ -44,10 +39,10 @@ class ForumManager
      * @var RouterInterface
      */
     private $router;
-    
+
     /**
      * @var RequestStack
-     */    
+     */
     private $requestStack;
 
     /**
@@ -57,35 +52,36 @@ class ForumManager
 
     /**
      * @var CurrentUserApi
-     */    
+     */
     private $userApi;
 
     /**
      * @var Permission
-     */    
+     */
     private $permission;
 
     /**
      * @var VariableApi
      */
     private $variableApi;
-    
+
     /**
      * @var PermissionApi
-     */    
-    private $permissionApi;    
-    
+     */
+    private $permissionApi;
+
     /**
-     * managed forum
+     * managed forum.
+     *
      * @var ForumEntity
      */
     private $_forum;
-    
+
     private $_itemsPerPage;
     private $_numberOfItems;
-    
+
     protected $name;
-    
+
     public function __construct(
             TranslatorInterface $translator,
             RouterInterface $router,
@@ -96,7 +92,6 @@ class ForumManager
             VariableApi $variableApi,
             PermissionApi $permissionApi
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -106,15 +101,11 @@ class ForumManager
         $this->userApi = $userApi;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
-        $this->permissionApi = $permissionApi;        
-        
-        $this->_itemsPerPage = $this->variableApi->get($this->name, 'topics_per_page');       
-        
+        $this->permissionApi = $permissionApi;
+
+        $this->_itemsPerPage = $this->variableApi->get($this->name, 'topics_per_page');
     }
 
-    /**
-     * 
-     */
     public function getManager($id = null, ForumEntity $forum = null)
     {
         if (isset($forum)) {
@@ -125,14 +116,14 @@ class ForumManager
         } else {
             $this->_forum = new ForumEntity();
         }
-        
+
         return $this;
     }
 
     /**
-     * Check if forum exists
+     * Check if forum exists.
      *
-     * @return boolean
+     * @return bool
      */
     public function exists()
     {
@@ -140,9 +131,9 @@ class ForumManager
     }
 
     /**
-     * return page as array
+     * return page as array.
      *
-     * @return array|boolean false
+     * @return array|bool false
      */
     public function toArray()
     {
@@ -154,9 +145,9 @@ class ForumManager
     }
 
     /**
-     * return page as array
+     * return page as array.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -164,7 +155,7 @@ class ForumManager
     }
 
     /**
-     * return forum as doctrine2 object
+     * return forum as doctrine2 object.
      *
      * @return ForumEntity
      */
@@ -179,9 +170,9 @@ class ForumManager
     }
 
     /**
-     * get forum bread crumbs
+     * get forum bread crumbs.
      *
-     * @param boolean $withoutCurrent show tree without the current item
+     * @param bool $withoutCurrent Show tree without the current item.
      *
      * @return array
      */
@@ -201,8 +192,8 @@ class ForumManager
             }
             $url = $this->router->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum->getForum_id()]);
             $output[] = [
-                'url' => $url,
-                'title' => $forum->getName()];
+                'url'   => $url,
+                'title' => $forum->getName(), ];
         }
         if ($withoutCurrent) {
             // last element added in template instead
@@ -213,7 +204,7 @@ class ForumManager
     }
 
     /**
-     * return posts of a forum as doctrine2 object
+     * return posts of a forum as doctrine2 object.
      *
      * @return Paginator collection of paginated topics
      */
@@ -239,7 +230,7 @@ class ForumManager
     }
 
     /**
-     * get the pager
+     * get the pager.
      *
      * @return array
      */
@@ -247,13 +238,13 @@ class ForumManager
     {
         return [
             'itemsperpage' => $this->_itemsPerPage,
-            'numitems' => $this->_numberOfItems];
+            'numitems'     => $this->_numberOfItems, ];
     }
 
     /**
-     * increase read count
+     * increase read count.
      *
-     * @return boolean true
+     * @return bool true
      */
     public function incrementReadCount()
     {
@@ -264,7 +255,7 @@ class ForumManager
     }
 
     /**
-     * Increase post count
+     * Increase post count.
      */
     public function incrementPostCount()
     {
@@ -274,7 +265,7 @@ class ForumManager
     }
 
     /**
-     * decrease post count
+     * decrease post count.
      */
     public function decrementPostCount()
     {
@@ -284,7 +275,7 @@ class ForumManager
     }
 
     /**
-     * increase topic count
+     * increase topic count.
      */
     public function incrementTopicCount()
     {
@@ -294,7 +285,7 @@ class ForumManager
     }
 
     /**
-     * recursive method to modify parent forum's post or topic count
+     * recursive method to modify parent forum's post or topic count.
      */
     private function modifyParentCount(ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
     {
@@ -315,7 +306,7 @@ class ForumManager
     }
 
     /**
-     * store the forum
+     * store the forum.
      *
      * @param array $data page data
      */
@@ -329,30 +320,30 @@ class ForumManager
     /**
      * Is the current user (provided user) a forum moderator?
      *
-     * @param  integer $uid (optional, default: null)
-     * @return boolean
+     * @param int $uid (optional, default: null)
+     *
+     * @return bool
      */
     public function isModerator($uid = null)
     {
         if (!isset($uid)) {
             $loggedIn = $this->userApi->isLoggedIn();
-            if(!$loggedIn){
-                return false;  
+            if (!$loggedIn) {
+                return false;
             }
             $uid = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-
         }
         // check zikula perms
-        if ($this->permissionApi->hasPermission($this->name, $this->_forum->getForum_id() . '::', ACCESS_MODERATE)) {
-         //   return true;
+        if ($this->permissionApi->hasPermission($this->name, $this->_forum->getForum_id().'::', ACCESS_MODERATE)) {
+            //   return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
         if (in_array($uid, $moderatorUsers)) {
-          //  return true;
+            //  return true;
         }
         $gids = $this->_forum->getModeratorGroupsAsIdArray(true);
         if (empty($gids)) {
-         //   return false;
+            //   return false;
         }
         // is this user in any of the groups?
         $dql = 'SELECT m FROM Zikula\\UsersModule\\Entity\\UserEntity m
@@ -362,22 +353,23 @@ class ForumManager
             ->setParameter('uid', $uid)
             ->setMaxResults(1)
             ->getOneOrNullResult();
-          
+
         $groupMembership = [];
-        foreach($user->getGroups()->toArray() as $group){
-              if(in_array($group->getGid(), $gids)){
-                $groupMembership[] = $group->getGid();   
-              }
+        foreach ($user->getGroups()->toArray() as $group) {
+            if (in_array($group->getGid(), $gids)) {
+                $groupMembership[] = $group->getGid();
+            }
         }
-          
+
         return count($groupMembership) > 0 ? true : false;
     }
 
     /**
      * Is this forum a child of the provided forum?
      *
-     * @param  ForumEntity $forum
-     * @return boolean
+     * @param ForumEntity $forum
+     *
+     * @return bool
      */
     public function isChildOf(ForumEntity $forum)
     {
@@ -385,7 +377,7 @@ class ForumManager
     }
 
     /**
-     * Get forum subscriptions of a user
+     * Get forum subscriptions of a user.
      *
      * @param $user_id  User id (optional)
      *
@@ -395,23 +387,23 @@ class ForumManager
     {
         if (empty($user_id)) {
             $loggedIn = $this->userApi->isLoggedIn();
-            if(!$loggedIn){
-                throw new AccessDeniedException();   
+            if (!$loggedIn) {
+                throw new AccessDeniedException();
             }
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
         $managedForumUser = new ForumUserManager($user_id);
 
         return $managedForumUser->get()->getForumSubscriptions();
-    }   
-    
+    }
+
     /**
-     * Get forum subscription status
+     * Get forum subscription status.
      *
-     * @param int $forum The forum
+     * @param int $forum   The forum
      * @param int $user_id The user id (optional).
      *
-     * @return boolean True if the user is subscribed or false if not
+     * @return bool True if the user is subscribed or false if not
      */
     public function isSubscribed($forum, $user_id)
     {
@@ -421,24 +413,24 @@ class ForumManager
         if (empty($user_id)) {
             $loggedIn = $this->userApi->isLoggedIn();
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }       
+        }
         $forumSubscription = $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
             ->findOneBy([
-                'forum' => $forum,
-                'forumUser' => $user_id]
+                'forum'     => $forum,
+                'forumUser' => $user_id, ]
             );
 
         return isset($forumSubscription);
     }
 
     /**
-     * subscribe a forum
+     * subscribe a forum.
      *
-     * @param int $forum The forum
+     * @param int $forum   The forum
      * @param int $user_id The user id (optional: needs ACCESS_ADMIN).
      *
-     * @return boolean
+     * @return bool
      */
     public function subscribe($forum, $user_id = null)
     {
@@ -446,8 +438,8 @@ class ForumManager
             throw new AccessDeniedException();
         } else {
             $loggedIn = $this->userApi->isLoggedIn();
-            if(!$loggedIn){
-                throw new AccessDeniedException();   
+            if (!$loggedIn) {
+                throw new AccessDeniedException();
             }
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
@@ -457,8 +449,8 @@ class ForumManager
         }
         $managedForumUser = new ForumUserManager($user_id);
         $searchParams = [
-            'forum' => $forum,
-            'forumUser' => $managedForumUser->get()];
+            'forum'     => $forum,
+            'forumUser' => $managedForumUser->get(), ];
         $forumSubscription = $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
             ->findOneBy($searchParams);
@@ -474,14 +466,14 @@ class ForumManager
     }
 
     /**
-     * Unsubscribe a forum
+     * Unsubscribe a forum.
      *
-     * @param int $forum The forum
+     * @param int $forum   The forum
      * @param int $user_id The user id (optional: needs ACCESS_ADMIN).
      *
-     * @return boolean
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
      */
     public function unsubscribe($forum, $user_id = null)
     {
@@ -498,24 +490,24 @@ class ForumManager
         $managedForumUser = new ForumUserManager($user_id);
         if (isset($forum)) {
             $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
-                'forum' => $forum,
-                'forumUser' => $managedForumUser->get()]);
+                'forum'     => $forum,
+                'forumUser' => $managedForumUser->get(), ]);
             $managedForumUser->get()->removeForumSubscription($forumSubscription);
         }
         $this->entityManager->flush();
 
         return true;
-    }  
+    }
 
     /**
-     * modify user/forum association
+     * modify user/forum association.
      *
-     * @param  integer $forum
-     * @param  string $action = 'addToFavorites'|'removeFromFavorites'|'subscribe'|'unsubscribe'
-     *
-     * @return boolean
+     * @param int    $forum
+     * @param string $action = 'addToFavorites'|'removeFromFavorites'|'subscribe'|'unsubscribe'
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
      */
     public function modify($forum, $action)
     {
@@ -532,8 +524,8 @@ class ForumManager
                 $forumUserFavorite = $this->entityManager
                     ->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')
                     ->findOneBy([
-                        'forum' => $managedForum->get(),
-                        'forumUser' => $managedForumUser->get()]
+                        'forum'     => $managedForum->get(),
+                        'forumUser' => $managedForumUser->get(), ]
                     );
                 $managedForumUser->get()->removeFavoriteForum($forumUserFavorite);
                 break;
@@ -548,17 +540,18 @@ class ForumManager
 
         return true;
     }
-    
+
     /**
      * get tree
-     * format as array 
+     * format as array.
      *
-     * @param  integer $id
+     * @param int $id
+     *
      * @return array
      */
-    public function getParents($id = null, $includeLocked = true, $includeRoot = true )
+    public function getParents($id = null, $includeLocked = true, $includeRoot = true)
     {
-//        $id = isset($args['id']) ? $args['id'] : null;
+        //        $id = isset($args['id']) ? $args['id'] : null;
 //        $includeLocked = isset($args['includeLocked']) ? $args['includeLocked'] : true;
 //        $includeRoot = isset($args['includeRoot']) && $args['includeRoot'] == false ? false : true;
         if (!$includeRoot) {
@@ -574,7 +567,7 @@ class ForumManager
 
     /**
      * Get all tree nodes that are not root
-     * Format as array
+     * Format as array.
      *
      * @return array
      */
@@ -589,17 +582,18 @@ class ForumManager
             ->where('node.lvl > 0')
             ->getQuery();
         $tree = $repo->buildTree($query->getArrayResult());
-        
+
         return $this->getNode($tree, null);
     }
 
     /**
-     * Format flat ArrayResult for dropdowns
+     * Format flat ArrayResult for dropdowns.
      *
-     * @param  \ArrayAccess $input
-     * @param  integer $id
-     * @param  integer $level
-     * @param bool $includeLocked
+     * @param \ArrayAccess $input
+     * @param int          $id
+     * @param int          $level
+     * @param bool         $includeLocked
+     *
      * @return array
      */
     private function getNode($input, $id, $level = 0, $includeLocked = true)
@@ -613,7 +607,7 @@ class ForumManager
                     if ($i['name'] == ForumEntity::ROOTNAME) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
-                    $output[$i['forum_id']] = $pre . $i['name']. '(' . $i['forum_id'] . ')';
+                    $output[$i['forum_id']] = $pre.$i['name'].'('.$i['forum_id'].')';
                 }
                 if (isset($i['__children'])) {
                     $output = $output + $this->getNode($i['__children'], $id, $level + 1, $includeLocked);
@@ -623,17 +617,16 @@ class ForumManager
 
         return $output;
     }
-    
+
     /**
-     * gets the last $maxforums forums
+     * gets the last $maxforums forums.
      *
      * @param mixed[] $params {
-     *      @type int maxforums    number of forums to read, default = 5
-     *                      }
-     * 
+     * @var int maxforums    number of forums to read, default = 5
+     *                        }
+     *
      * @return array $topForums
-     * 
-     * 
+     *
      * @todo Maybe move to count helper ?
      */
     public function getTopForums($params)

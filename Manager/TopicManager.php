@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Copyright Dizkus Team 2012
+ * Copyright Dizkus Team 2012.
  *
  * This work is contributed to the Zikula Foundation under one or more
  * Contributor Agreements and licensed to You under the following license:
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Dizkus
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -16,24 +16,19 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-
-use DataUtil;
-use Zikula\Core\Hook\ProcessHook;
-use Zikula\DizkusModule\Entity\PostEntity;
-use Zikula\DizkusModule\Entity\TopicEntity;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-
-use Zikula\DizkusModule\Helper\SynchronizationHelper;
-
-use Doctrine\ORM\Tools\Pagination\Paginator;
-
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\UsersModule\Api\CurrentUserApi;
-use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Security\Permission;
+use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\UsersModule\Api\CurrentUserApi;
 
 class TopicManager
 {
@@ -46,10 +41,10 @@ class TopicManager
      * @var RouterInterface
      */
     private $router;
-    
+
     /**
      * @var RequestStack
-     */    
+     */
     private $requestStack;
 
     /**
@@ -59,36 +54,37 @@ class TopicManager
 
     /**
      * @var CurrentUserApi
-     */    
+     */
     private $userApi;
 
     /**
      * @var Permission
-     */    
+     */
     private $permission;
 
     /**
      * @var VariableApi
      */
     private $variableApi;
-    
+
     /**
      * @var forumUserManagerService
      */
     private $forumUserManagerService;
-    
+
     /**
      * @var ForumManagerService
      */
-    private $forumManagerService; 
-    
+    private $forumManagerService;
+
     /**
      * @var synchronizationHelper
      */
-    private $synchronizationHelper;    
-    
+    private $synchronizationHelper;
+
     /**
-     * managed topic
+     * managed topic.
+     *
      * @var TopicEntity
      */
     private $_topic;
@@ -99,18 +95,19 @@ class TopicManager
     private $managedForum;
 
     /**
-     * first post in topic
+     * first post in topic.
+     *
      * @var PostEntity
      */
     private $_firstPost = null;
     private $_subscribe = false;
     private $_forumId;
-    
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $name;
-    
+
     public function __construct(
             TranslatorInterface $translator,
             RouterInterface $router,
@@ -123,7 +120,6 @@ class TopicManager
             ForumManager $forumManagerService,
             SynchronizationHelper $synchronizationHelper
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -133,19 +129,17 @@ class TopicManager
         $this->userApi = $userApi;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
-        
+
         $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->synchronizationHelper = $synchronizationHelper;
-        
+
         $this->_itemsPerPage = $this->variableApi->get($this->name, 'posts_per_page');
         $this->_defaultPostSortOrder = $this->variableApi->get($this->name, 'post_sort_order');
-        
     }
-    
-    
+
     /**
-     * construct
+     * construct.
      */
     public function getManager($id = null, TopicEntity $topic = null)
     {
@@ -156,19 +150,19 @@ class TopicManager
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
-            $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum());//new ForumManager(null, $this->_topic->getForum());
+            $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
         } else {
             // create new topic
             $this->_topic = new TopicEntity();
         }
 
-        return $this; 
+        return $this;
     }
 
     /**
-     * Check if topic exists
+     * Check if topic exists.
      *
-     * @return boolean
+     * @return bool
      */
     public function exists()
     {
@@ -176,7 +170,7 @@ class TopicManager
     }
 
     /**
-     * return page as array
+     * return page as array.
      *
      * @return mixed array or false
      */
@@ -190,7 +184,7 @@ class TopicManager
     }
 
     /**
-     * return topic id
+     * return topic id.
      *
      * @return int
      */
@@ -200,7 +194,7 @@ class TopicManager
     }
 
     /**
-     * return topic title
+     * return topic title.
      *
      * @return string
      */
@@ -210,7 +204,7 @@ class TopicManager
     }
 
     /**
-     * return topic as doctrine2 object
+     * return topic as doctrine2 object.
      *
      * @return TopicEntity
      */
@@ -220,7 +214,7 @@ class TopicManager
     }
 
     /**
-     * return topic forum id
+     * return topic forum id.
      *
      * @return int
      */
@@ -248,14 +242,14 @@ class TopicManager
     }
 
     /**
-     * return posts of a topic as doctrine2 object
+     * return posts of a topic as doctrine2 object.
      *
      * @return object
      */
     public function getPosts($startNumber = 1)
     {
         if ($this->userApi->isLoggedIn()) {
-           $managedForumUser = $this->forumUserManagerService->getManager(); //new ForumUserManager();
+            $managedForumUser = $this->forumUserManagerService->getManager(); //new ForumUserManager();
            $postSortOrder = $managedForumUser->getPostOrder();
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
@@ -281,7 +275,7 @@ class TopicManager
     }
 
     /**
-     * return pager
+     * return pager.
      *
      * @return array
      */
@@ -289,11 +283,11 @@ class TopicManager
     {
         return [
             'itemsperpage' => $this->_itemsPerPage,
-            'numitems' => $this->_numberOfItems];
+            'numitems'     => $this->_numberOfItems, ];
     }
 
     /**
-     * get forum bread crumbs
+     * get forum bread crumbs.
      *
      * @return string
      */
@@ -303,7 +297,7 @@ class TopicManager
     }
 
     /**
-     * add to views count
+     * add to views count.
      */
     public function incrementViewsCount()
     {
@@ -323,7 +317,7 @@ class TopicManager
     }
 
     /**
-     * add to replies count
+     * add to replies count.
      */
     public function incrementRepliesCount()
     {
@@ -332,7 +326,7 @@ class TopicManager
     }
 
     /**
-     * subtract from replies count
+     * subtract from replies count.
      */
     public function decrementRepliesCount()
     {
@@ -341,21 +335,21 @@ class TopicManager
     }
 
     /**
-     * @param integer $data['forum_id']
+     * @param int    $data['forum_id']
      * @param string $data['message']
-     * @param boolean $data['attachSignature']
+     * @param bool   $data['attachSignature']
      * @param string $data['title']
-     * @param boolean $data['subscribe_topic']
+     * @param bool   $data['subscribe_topic']
      */
     public function prepare($data)
     {
         // prepare first post
         $this->_firstPost = new PostEntity();
-                    
+
         // @todo this was in controller but should be moved to Post manager.
         //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
-        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);  
-         
+        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
+
         $this->_firstPost->setPost_text($data['message']);
         unset($data['message']);
         $this->_firstPost->setAttachSignature($data['attachSignature']);
@@ -366,7 +360,7 @@ class TopicManager
         $this->_subscribe = $data['subscribeTopic'];
         unset($data['subscribeTopic']);
         $this->_forumId = $data['forum_id'];
-        $this->managedForum =  $this->forumManagerService->getManager($this->_forumId); //new ForumManager($this->_forumId);
+        $this->managedForum = $this->forumManagerService->getManager($this->_forumId); //new ForumManager($this->_forumId);
         $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
         $solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
@@ -375,7 +369,7 @@ class TopicManager
         $this->_topic->setLast_post($this->_firstPost);
         $this->_topic->merge($data);
         // prepare poster data or assign anonymous creations to the admin
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2) ;
+        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2);
 
         $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$forumUser) {
@@ -387,7 +381,7 @@ class TopicManager
     }
 
     /**
-     * Add hook data to topic
+     * Add hook data to topic.
      *
      * @param ProcessHook $hook
      */
@@ -405,9 +399,9 @@ class TopicManager
     }
 
     /**
-     * create topic and post
+     * create topic and post.
      *
-     * @return integer topic id
+     * @return int topic id
      */
     public function create()
     {
@@ -421,10 +415,10 @@ class TopicManager
         $this->entityManager->flush();
         // subscribe
         if ($this->_subscribe) {
-//            $params = [
+            //            $params = [
 //                'topic' => $this->_topic->getTopic_id(),
 //                'action' => 'subscribe'];
-//            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);            
+//            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
             $this->changeStatus($this->_topic->getTopic_id(), 'subscribe');
         }
 
@@ -432,9 +426,9 @@ class TopicManager
     }
 
     /**
-     * set topic sticky
+     * set topic sticky.
      *
-     * @return boolean
+     * @return bool
      */
     public function sticky()
     {
@@ -445,9 +439,9 @@ class TopicManager
     }
 
     /**
-     * set topic unsticky
+     * set topic unsticky.
      *
-     * @return boolean
+     * @return bool
      */
     public function unsticky()
     {
@@ -458,9 +452,9 @@ class TopicManager
     }
 
     /**
-     * lock topic
+     * lock topic.
      *
-     * @return boolean
+     * @return bool
      */
     public function lock()
     {
@@ -471,9 +465,9 @@ class TopicManager
     }
 
     /**
-     * unlock topic
+     * unlock topic.
      *
-     * @return boolean
+     * @return bool
      */
     public function unlock()
     {
@@ -484,10 +478,11 @@ class TopicManager
     }
 
     /**
-     * set topic solved
+     * set topic solved.
      *
-     * @param integer $postid
-     * @return boolean
+     * @param int $postid
+     *
+     * @return bool
      */
     public function solve($postid)
     {
@@ -498,9 +493,9 @@ class TopicManager
     }
 
     /**
-     * set topic unsolved
+     * set topic unsolved.
      *
-     * @return boolean
+     * @return bool
      */
     public function unsolve()
     {
@@ -511,18 +506,18 @@ class TopicManager
     }
 
     /**
-     * get if the current user is subscribed
+     * get if the current user is subscribed.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSubscribed()
     {
         if (!$this->userApi->isLoggedIn()) {
             return false;
         }
-        
-        $uid =  $this->request->getSession()->get('uid');
-        
+
+        $uid = $this->request->getSession()->get('uid');
+
         $topicSubscription = $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
             ->findOneBy(['topic' => $this->_topic, 'forumUser' => $uid]);
@@ -531,7 +526,7 @@ class TopicManager
     }
 
     /**
-     * find last post by post_time and set
+     * find last post by post_time and set.
      */
     public function resetLastPost($flush = false)
     {
@@ -550,8 +545,9 @@ class TopicManager
     }
 
     /**
-     * get the number of posts in this topic
-     * @return integer
+     * get the number of posts in this topic.
+     *
+     * @return int
      */
     public function getPostCount()
     {
@@ -559,8 +555,9 @@ class TopicManager
     }
 
     /**
-     * Get the next topic (by time) in the same Forum
-     * @return integer
+     * Get the next topic (by time) in the same Forum.
+     *
+     * @return int
      */
     public function getNext()
     {
@@ -568,8 +565,9 @@ class TopicManager
     }
 
     /**
-     * Get the previous topic (by time) in the same Forum
-     * @return integer
+     * Get the previous topic (by time) in the same Forum.
+     *
+     * @return int
      */
     public function getPrevious()
     {
@@ -577,10 +575,12 @@ class TopicManager
     }
 
     /**
-     * Get the adjacent topic (by time) in the same Forum
+     * Get the adjacent topic (by time) in the same Forum.
+     *
      * @param $oper string less than or greater than operator < or >
      * @param $dir string Sort direction ASC/DESC
-     * @return integer
+     *
+     * @return int
      */
     private function getAdjacent($oper, $dir)
     {
@@ -601,16 +601,14 @@ class TopicManager
         }
     }
 
-   /**
-     * 
-     * 
+    /**
      * @param $topic
      * @param $action
      * @param $post
      * @param $title
      *
      * @throws \InvalidArgumentException
-    */
+     */
     public function changeStatus($topic, $action, $post = null, $title = '')
     {
         if (empty($topic)) {
@@ -653,7 +651,7 @@ class TopicManager
                 if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
                     if (empty($post)) {
                         throw new \InvalidArgumentException();
-                    }                    
+                    }
                     $managedTopic->solve($post);
                 }
                 break;
@@ -666,7 +664,7 @@ class TopicManager
                 if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
                     if (empty($title)) {
                         throw new \InvalidArgumentException();
-                    }                    
+                    }
                     $managedTopic->setTitle($title);
                 }
                 break;
@@ -676,10 +674,10 @@ class TopicManager
     /**
      * Subscribe a topic.
      *
-     * @param int|object $topic Topic id or object.
-     * @param int $user_id User id (optional: needs ACCESS_ADMIN).
+     * @param int|object $topic   Topic id or object.
+     * @param int        $user_id User id (optional: needs ACCESS_ADMIN).
      *
-     * @return boolean|void
+     * @return bool|void
      */
     public function subscribe($topic, $user_id = null)
     {
@@ -690,18 +688,18 @@ class TopicManager
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
         if (!is_object($topic)) {
-            // @todo what if topic is not found 
+            // @todo what if topic is not found
             $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
         }
-        // Permission check        
+        // Permission check
         if (!$this->permission->canRead($topic->getForum())) {
             throw new AccessDeniedException();
-        }        
+        }
 
         $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
         $searchParams = [
-            'topic' => $topic,
-            'forumUser' => $managedForumUser->get()];
+            'topic'     => $topic,
+            'forumUser' => $managedForumUser->get(), ];
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy($searchParams);
         if (!$topicSubscription) {
             $managedForumUser->get()->addTopicSubscription($topic);
@@ -712,8 +710,8 @@ class TopicManager
     /**
      * Unsubscribe a topic.
      *
-     * @param int|object $topic Topic id or object.
-     * @param int $user_id User id (optional: needs ACCESS_ADMIN).
+     * @param int|object $topic   Topic id or object.
+     * @param int        $user_id User id (optional: needs ACCESS_ADMIN).
      *
      * @return void|bool
      */
@@ -726,13 +724,13 @@ class TopicManager
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
         if (!is_object($topic)) {
-            // @todo what if topic is not found 
+            // @todo what if topic is not found
             $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
         }
-        // Permission check        
+        // Permission check
         if (!$this->permission->canRead($topic->getForum())) {
             throw new AccessDeniedException();
-        }        
+        }
 
         $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
         if (isset($topic)) {
@@ -748,7 +746,7 @@ class TopicManager
     }
 
     /**
-     * Get topic subscriptions
+     * Get topic subscriptions.
      *
      * @param int $user_id User id (optional).
      *
@@ -766,15 +764,15 @@ class TopicManager
     }
 
     /**
-     * getIdByReference
+     * getIdByReference.
      *
      * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
      *
      * @param string $reference The reference.
      *
-     * @return array Topic data as array
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return array Topic data as array
      */
     public function getIdByReference($reference)
     {
@@ -791,9 +789,10 @@ class TopicManager
      * number of the last post in the thread. This is needed for easier navigation.
      *
      * @param $replyCount int number of topic replies
-     * @return int page number of last posting in the thread
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int page number of last posting in the thread
      */
     public function getTopicPage($replyCount)
     {
@@ -816,18 +815,18 @@ class TopicManager
         }
         // if not ASC then DESC which means latest topic is on top anyway...
         return $last_page;
-    } 
+    }
 
     /**
-     * delete a topic
+     * delete a topic.
      *
      * This function deletes a topic given by id or object
      *
      * @param $topic The topic's id or object
      *
-     * @return int the forum's id for redirecting
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int the forum's id for redirecting
      */
     public function delete($topic)
     {
@@ -836,14 +835,14 @@ class TopicManager
             $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
         } elseif (!$topic instanceof TopicEntity) {
             throw new \InvalidArgumentException();
-        } 
-        
+        }
+
         $forum = $topic->getForum();
 
-        // Permission check        
+        // Permission check
         if (!$this->permission->canModerate(['forum_id' => $forum->getForum_id()])) {
             throw new AccessDeniedException();
-        } 
+        }
 
         $posts = $topic->getPosts();
         foreach ($posts as $post) {
@@ -863,8 +862,8 @@ class TopicManager
         // sync the forum up with the changes
 
         $this->synchronizationHelper->forum($forum, false);
-        $this->synchronizationHelper->forumLastPost($forum, true);            
-        
+        $this->synchronizationHelper->forumLastPost($forum, true);
+
 //        ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $forum, 'flush' => false]);
 //        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $forum, 'flush' => true]);
 
@@ -872,7 +871,7 @@ class TopicManager
     }
 
     /**
-     * Move topic
+     * Move topic.
      *
      * This function moves a given topic to another forum
      *
@@ -881,9 +880,9 @@ class TopicManager
      * @param $createshadowtopic   boolean true = create shadow topic
      * @param $topic TopicEntity
      *
-     * @return void
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return void
      */
     public function move($topic_id, $forum_id, $createshadowtopic, $topic = false)
     {
@@ -904,32 +903,32 @@ class TopicManager
                 $managedShadowTopic = $this->getManager();
                 $newUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()]);
                 $topicData = [
-                    'title' => $this->translator->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
-                    'message' => $this->translator->__('The original posting has been moved') . ' <a title="' . $this->translator->__('moved') . '" href="' . $newUrl . '">' . $this->translator->__('here') . '</a>.',
-                    'forum_id' => $oldForumId,
-                    'topic_time' => $managedTopic->get()->getTopic_time(),
+                    'title'           => $this->translator->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
+                    'message'         => $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.',
+                    'forum_id'        => $oldForumId,
+                    'topic_time'      => $managedTopic->get()->getTopic_time(),
                     'attachSignature' => false,
-                    'subscribe_topic' => false];
+                    'subscribe_topic' => false, ];
                 $managedShadowTopic->prepare($topicData);
                 $managedShadowTopic->lock();
                 $this->entityManager->persist($managedShadowTopic->get());
             }
-            
+
             // re-sync all forum counts and last posts
             $previousForumLocation = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $oldForumId);
             // we need to set it to null here so it can be easly synchronized later forumLastPost id is unique
             $previousForumLocation->setLast_post();
-            
+
             $this->entityManager->flush();
-            
+
             $this->synchronizationHelper->forumLastPost($previousForumLocation, false);
-            
-            $this->synchronizationHelper->forumLastPost($forum, false);            
-            
+
+            $this->synchronizationHelper->forumLastPost($forum, false);
+
             $this->synchronizationHelper->forum($oldForumId, false);
 
-            $this->synchronizationHelper->forum($forum, true);           
-            
+            $this->synchronizationHelper->forum($forum, true);
+
             // @todo sync helper
 //            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', [
 //                'forum' => $previousForumLocation,
@@ -944,19 +943,17 @@ class TopicManager
 //                'forum' => $forum,
 //                'flush' => true]);
         }
-
-        return;
     }
 
     /**
-     * split the topic at the provided post
+     * split the topic at the provided post.
      *
      * @param PostManager $managedPost
-     * @param string $newsubject
-     *
-     * @return Integer id of the new topic
+     * @param string      $newsubject
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int id of the new topic
      */
     public function split($managedPost, $newsubject)
     {
@@ -1006,16 +1003,16 @@ class TopicManager
     }
 
     /**
-     * joins two topics together
+     * joins two topics together.
      *
      * @param $from_topic_id int this topic get integrated into to_topic (origin)
      * @param $to_topic_id int the target topic that will contain the post from from_topic (destination)
      * @param $topic TopicEntity The (origin) topic as object
      *              must have *either* topic or from_topic_id
      *
-     * @return Integer Destination topic ID
-     *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int Destination topic ID
      */
     public function join($from_topic_id, $to_topic_id, $topic)
     {
@@ -1058,10 +1055,10 @@ class TopicManager
         // resync destination topic and all forums
 
         $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
-        $this->synchronizationHelper->forum($managedOriginTopic->get()->getForum(), false);        
+        $this->synchronizationHelper->forum($managedOriginTopic->get()->getForum(), false);
         $this->synchronizationHelper->forumLastPost($managedOriginTopic->get()->getForum(), true);
-        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false); 
-        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);            
+        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
+        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
 
 //        ModUtil::apiFunc($this->name, 'sync', 'topic', ['topic' => $managedDestinationTopic->get(), 'flush' => true]);
 //        ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $managedOriginTopic->get()->getForum(), 'flush' => false]);
@@ -1070,6 +1067,5 @@ class TopicManager
 //        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true]);
 
         return $managedDestinationTopic->getId();
-    } 
-    
+    }
 }

@@ -8,44 +8,41 @@
 
 namespace Zikula\DizkusModule\Helper;
 
-use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Entity\TopicEntity;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Zikula\DizkusModule\Helper\CountHelper;
-
 use Doctrine\ORM\EntityManager;
+use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
 
 /**
- * SynchronizationHelper
+ * SynchronizationHelper.
  *
  * @author Kaik
  */
-class SynchronizationHelper {
-    
+class SynchronizationHelper
+{
     /**
      * @var EntityManager
      */
     private $entityManager;
-    
+
     /**
      * @var CountHelper
-     */ 
+     */
     private $countHelper;
-    
-    
+
     public function __construct(
             EntityManager $entityManager,
             CountHelper $countHelper
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
-        $this->entityManager = $entityManager;   
-        $this->countHelper = $countHelper;        
+        $this->entityManager = $entityManager;
+        $this->countHelper = $countHelper;
     }
+
     /**
-     * perform sync on all forums, topics and posters
+     * perform sync on all forums, topics and posters.
      *
-     * @param Boolean $silentMode (unused)
+     * @param bool $silentMode (unused)
      */
     public function all($silentMode = false)
     {
@@ -55,9 +52,9 @@ class SynchronizationHelper {
     }
 
     /**
-     * perform sync on all forums
+     * perform sync on all forums.
      *
-     * @return Boolean
+     * @return bool
      */
     public function forums()
     {
@@ -76,14 +73,14 @@ class SynchronizationHelper {
     }
 
     /**
-     * recalculate topicCount and postCount counts
+     * recalculate topicCount and postCount counts.
      *
      * @param ForumEntity $forum
-     * @param Boolean     $flush
-     *
-     * @return boolean
+     * @param bool        $flush
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
      */
     public function forum($forum, $flush = false)
     {
@@ -96,13 +93,13 @@ class SynchronizationHelper {
             $id = $forum;
             $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
         }
-        
+
         $topicCount = $this->countHelper->getForumTopicsCount($id, $force = true);
         $forum->setTopicCount($topicCount);
-        
-        $postCount = $this->countHelper->getForumPostsCount($id, $force = true);        
+
+        $postCount = $this->countHelper->getForumPostsCount($id, $force = true);
         $forum->setPostCount($postCount);
-        
+
         if ($flush) {
             $this->entityManager->flush();
         }
@@ -114,10 +111,10 @@ class SynchronizationHelper {
     }
 
     /**
-     * recursive function to add counts to parents
-     * 
+     * recursive function to add counts to parents.
+     *
      * @param ForumEntity $forum
-     * @param string              $entity
+     * @param string      $entity
      */
     private function addToParentForumCount(ForumEntity $forum, $entity = 'Post')
     {
@@ -139,9 +136,9 @@ class SynchronizationHelper {
     }
 
     /**
-     * perform sync on all topics
+     * perform sync on all topics.
      *
-     * @return boolean
+     * @return bool
      */
     public function topics()
     {
@@ -154,14 +151,14 @@ class SynchronizationHelper {
     }
 
     /**
-     * recalcluate Topic replies for one topic
+     * recalcluate Topic replies for one topic.
      *
      * @param TopicEntity $topic
-     * @param Boolean     $flush
-     *
-     * @return boolean
+     * @param bool        $flush
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
      */
     public function topic($topic, $flush = true)
     {
@@ -182,7 +179,7 @@ class SynchronizationHelper {
             ->setParameter('id', $id)
             ->getQuery()
             ->getSingleScalarResult();
-        $replies = (int)$replies - 1;
+        $replies = (int) $replies - 1;
         $topic->setReplyCount($replies);
         if ($flush) {
             $this->entityManager->flush();
@@ -192,9 +189,9 @@ class SynchronizationHelper {
     }
 
     /**
-     * recalculate user posts for all users
+     * recalculate user posts for all users.
      *
-     * @return boolean
+     * @return bool
      */
     public function posters()
     {
@@ -218,14 +215,14 @@ class SynchronizationHelper {
     }
 
     /**
-     * reset the last post in a forum due to movement
-     * 
-     * @param ForumEntity $forum
-     * @param Boolean     $flush default: true
+     * reset the last post in a forum due to movement.
      *
-     * @return boolean|void
+     * @param ForumEntity $forum
+     * @param bool        $flush default: true
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool|void
      */
     public function forumLastPost($forum, $flush = true)
     {
@@ -255,14 +252,14 @@ class SynchronizationHelper {
     }
 
     /**
-     * reset the last post in a topic due to movement
-     * 
-     * @param TopicEntity $topic
-     * @param Boolean     $flush
+     * reset the last post in a topic due to movement.
      *
-     * @return boolean|void
+     * @param TopicEntity $topic
+     * @param bool        $flush
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool|void
      */
     public function topicLastPost($topic, $flush = true)
     {
@@ -283,5 +280,5 @@ class SynchronizationHelper {
         if ($flush) {
             $this->entityManager->flush();
         }
-    } 
+    }
 }

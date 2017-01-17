@@ -9,65 +9,59 @@
 namespace Zikula\DizkusModule\Helper;
 
 use Doctrine\ORM\EntityManager;
-
-use Zikula\ExtensionsModule\Api\VariableApi;
-
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Security\Permission;
-
+use Zikula\ExtensionsModule\Api\VariableApi;
 
 /**
- * CronHelper
+ * CronHelper.
  *
  * @author Kaik
  */
-class RankHelper {
-
+class RankHelper
+{
     /**
      * @var EntityManager
      */
-    private $entityManager;    
-    
+    private $entityManager;
+
     /**
      * @var Permission
-     */    
+     */
     private $permission;
-    
+
     /**
      * @var VariableApi
      */
     private $variableApi;
-    
+
     /**
      * @var forumUserManagerService
      */
-    private $forumUserManagerService;   
-    
-    
+    private $forumUserManagerService;
+
     public function __construct(
             EntityManager $entityManager,
             Permission $permission,
             VariableApi $variableApi,
             ForumUserManager $forumUserManagerService
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->entityManager = $entityManager;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
         $this->forumUserManagerService = $forumUserManagerService;
     }
-    
-     private $_userRanks = [];
+
+    private $_userRanks = [];
 
     /**
-     * Get all ranks
+     * Get all ranks.
      *
      * @param array $args Arguments array.
      *
      * @return array
-     *
      */
     public function getAll($args)
     {
@@ -76,7 +70,7 @@ class RankHelper {
         $handle = opendir($path);
         $filelist = [];
         while ($file = readdir($handle)) {
-            if ($this->dzk_isimagefile($path . '/' . $file)) {
+            if ($this->dzk_isimagefile($path.'/'.$file)) {
                 $filelist[] = $file;
             }
         }
@@ -93,11 +87,11 @@ class RankHelper {
     }
 
     /**
-     * Modify a rank
+     * Modify a rank.
      *
      * @param array $args Argument array
      *
-     * @return boolean
+     * @return bool
      */
     public function save($args)
     {
@@ -131,7 +125,7 @@ class RankHelper {
     }
 
     /**
-     * assignranksave
+     * assignranksave.
      *
      * setrank array(uid) = rank_id
      */
@@ -158,7 +152,7 @@ class RankHelper {
     }
 
     /**
-     * Get user rank data
+     * Get user rank data.
      *
      * @param array $args Arguments array.
      *
@@ -205,7 +199,7 @@ class RankHelper {
     {
         $data['rank_link'] = substr($data['description'], 0, 7) == 'http://' ? $data['description'] : '';
         if (!empty($data['image'])) {
-            $data['image'] = $this->getVar('url_ranks_images') . '/' . $data['image'];
+            $data['image'] = $this->getVar('url_ranks_images').'/'.$data['image'];
             $data['image_attr'] = function_exists('getimagesize') ? @getimagesize($data['image']) : null;
         }
 
@@ -214,7 +208,7 @@ class RankHelper {
 
     /**
      * dzk is an image
-     * check if a filename is an image or not
+     * check if a filename is an image or not.
      */
     private function dzk_isimagefile($filepath)
     {

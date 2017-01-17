@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * Class TextBlockType
+ * Class TextBlockType.
  */
 class StatisticsBlockType extends AbstractType
 {
@@ -27,12 +27,11 @@ class StatisticsBlockType extends AbstractType
             ->add('params', 'Symfony\Component\Form\Extension\Core\Type\TextType', [
             ])
             ->add('showfooter', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
-                    'multiple' => false,
-                    'expanded' => true,
-                    'required' => true,
-                    'data' => 1])
-        ;
-        
+                    'multiple'                       => false,
+                    'expanded'                       => true,
+                    'required'                       => true,
+                    'data'                           => 1, ]);
+
         // @todo add show footer setting
     }
 

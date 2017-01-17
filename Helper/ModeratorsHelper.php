@@ -11,34 +11,33 @@ namespace Zikula\DizkusModule\Helper;
 use Doctrine\ORM\EntityManager;
 
 /**
- * FavoritesHelper
+ * FavoritesHelper.
  *
  * @author Kaik
  */
-class ModeratorsHelper {
-      
+class ModeratorsHelper
+{
     /**
      * @var EntityManager
      */
-    private $entityManager;    
-   
+    private $entityManager;
+
     public function __construct(
-            EntityManager $entityManager  
-         ) {       
+            EntityManager $entityManager
+         ) {
         $this->name = 'ZikulaDizkusModule';
         $this->entityManager = $entityManager;
     }
 
     /**
-     * Returns an array of all the moderators of a forum (including groups)
+     * Returns an array of all the moderators of a forum (including groups).
      *
-     * @param int  $forum_id Forum id.
+     * @param int $forum_id Forum id.
      *
      * @return array containing the uid/gid as index and the user/group name as value
      */
     public function get($forum_id = false)
     {
-
         $mods = ['users' => [], 'groups' => []];
         if ($forum_id !== false) {
             // get array of parents
@@ -88,5 +87,4 @@ class ModeratorsHelper {
 
         return $mods;
     }
-
 }

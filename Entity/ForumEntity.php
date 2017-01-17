@@ -1,27 +1,28 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use ServiceUtil;
-use ZLanguage;
 use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\DizkusModule\Connection\Pop3Connection;
 use Zikula\DizkusModule\Manager\ForumUserManager;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
+use ZLanguage;
 
 /**
- * Forum entity class
+ * Forum entity class.
  *
  * @ORM\Entity
  * @Gedmo\Tree(type="nested")
@@ -35,7 +36,7 @@ class ForumEntity extends EntityAccess
     const STATUS_UNLOCKED = false;
 
     /**
-     * forum_id
+     * forum_id.
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -44,28 +45,28 @@ class ForumEntity extends EntityAccess
     private $forum_id;
 
     /**
-     * forum_name
+     * forum_name.
      *
      * @ORM\Column(type="string", length=150)
      */
     private $name = '';
 
     /**
-     * description
+     * description.
      *
      * @ORM\Column(type="text")
      */
     private $description = '';
 
     /**
-     * topicCount
+     * topicCount.
      *
      * @ORM\Column(type="integer")
      */
     private $topicCount = 0;
 
     /**
-     * The number of posts of the forum
+     * The number of posts of the forum.
      *
      * @ORM\Column(type="integer")
      */
@@ -115,14 +116,14 @@ class ForumEntity extends EntityAccess
     private $last_post;
 
     /**
-     * pop3Connection
+     * pop3Connection.
      *
      * @ORM\Column(type="object", nullable=true)
      */
     private $pop3Connection = null;
 
     /**
-     * moduleref
+     * moduleref.
      *
      * @ORM\Column(type="integer")
      */
@@ -139,35 +140,38 @@ class ForumEntity extends EntityAccess
     private $topics;
 
     /**
-     * ModeratorUserEntity collection
+     * ModeratorUserEntity collection.
+     *
      * @ORM\OneToMany(targetEntity="ModeratorUserEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorUsers;
 
     /**
-     * ModeratorGroupEntity collection
+     * ModeratorGroupEntity collection.
+     *
      * @ORM\OneToMany(targetEntity="ModeratorGroupEntity", mappedBy="forum", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $moderatorGroups;
 
     /**
-     * Subscriptions
+     * Subscriptions.
      *
      * ForumSubscriptionEntity collection
+     *
      * @ORM\OneToMany(targetEntity="ForumSubscriptionEntity", mappedBy="forum", cascade={"remove"})
      */
     private $subscriptions;
 
     /**
      * Forum status locked (1)/unlocked (0)
-     * locking a forum prevents new TOPICS from being created within
+     * locking a forum prevents new TOPICS from being created within.
      *
      * @ORM\Column(type="boolean")
      */
     private $status = self::STATUS_UNLOCKED;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -284,7 +288,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get Forum parent
+     * get Forum parent.
      *
      * @return ForumEntity
      */
@@ -299,7 +303,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get Children
+     * get Children.
      *
      * @return ArrayCollection ForumEntity
      */
@@ -309,7 +313,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * remove all the child forums
+     * remove all the child forums.
      */
     public function removeChildren()
     {
@@ -317,7 +321,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get last post in Forum
+     * get last post in Forum.
      *
      * @return PostEntity
      */
@@ -359,7 +363,8 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get ForumUsers that have marked this forum as favorite
+     * get ForumUsers that have marked this forum as favorite.
+     *
      * @return ArrayCollection ForumUserFavoritesEntity
      */
     public function getFavorites()
@@ -368,7 +373,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get forum Topics
+     * get forum Topics.
      *
      * @return ArrayCollection TopicEntity
      */
@@ -378,7 +383,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get Moderators
+     * get Moderators.
      *
      * @return ArrayCollection ModeratorUserEntity
      */
@@ -388,14 +393,15 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * Get all the moderator uids for current forum or full tree
+     * Get all the moderator uids for current forum or full tree.
      *
-     * @param  boolean $includeParents include entire parent tree? (recursive)
+     * @param bool $includeParents include entire parent tree? (recursive)
+     *
      * @return array
      */
     public function getModeratorUsersAsIdArray($includeParents = false)
     {
-        $output = array();
+        $output = [];
         $thisForum = $this;
         while (isset($thisForum) && $thisForum->getForum_id() > 1) {
             foreach ($thisForum->getModeratorUsers() as $moderatorUser) {
@@ -422,7 +428,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get forum moderator groups
+     * get forum moderator groups.
      *
      * @return ArrayCollection ModeratorGroupEntity
      */
@@ -432,14 +438,15 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * Get all the moderator group ids for current forum or full tree
+     * Get all the moderator group ids for current forum or full tree.
      *
-     * @param  boolean $includeParents include entire parent tree? (recursive)
+     * @param bool $includeParents include entire parent tree? (recursive)
+     *
      * @return array
      */
     public function getModeratorGroupsAsIdArray($includeParents = false)
     {
-        $output = array();
+        $output = [];
         $thisForum = $this;
         while (isset($thisForum) && $thisForum->getForum_id() > 1) {
             foreach ($thisForum->getModeratorGroups() as $moderatorGroup) {
@@ -467,7 +474,8 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get Forum Subscriptions
+     * get Forum Subscriptions.
+     *
      * @return ArrayCollection ForumSubscriptionEntity
      */
     public function getSubscriptions()
@@ -476,9 +484,9 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * get forum status
+     * get forum status.
      *
-     * @return boolean
+     * @return bool
      */
     public function getStatus()
     {
@@ -486,8 +494,9 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * set forum status
-     * @param boolean $status
+     * set forum status.
+     *
+     * @param bool $status
      */
     public function setStatus($status)
     {
@@ -498,7 +507,8 @@ class ForumEntity extends EntityAccess
 
     /**
      * is forum locked?
-     * @return boolean
+     *
+     * @return bool
      */
     public function isLocked()
     {
@@ -506,7 +516,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * lock the forum
+     * lock the forum.
      */
     public function lock()
     {
@@ -514,7 +524,7 @@ class ForumEntity extends EntityAccess
     }
 
     /**
-     * unlock the forum
+     * unlock the forum.
      */
     public function unlock()
     {

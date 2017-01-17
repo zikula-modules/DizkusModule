@@ -8,57 +8,54 @@
 
 namespace Zikula\DizkusModule\Helper;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
-
 /**
- * FavoritesHelper
+ * FavoritesHelper.
  *
  * @author Kaik
  */
-class FavoritesHelper {
-    
+class FavoritesHelper
+{
     /**
      * @var RequestStack
-     */    
-    private $requestStack;      
-    
+     */
+    private $requestStack;
+
     /**
      * @var EntityManager
      */
-    private $entityManager;    
-    
+    private $entityManager;
+
     /**
      * @var CurrentUserApi
-     */    
-    private $userApi;     
-    
-    
-    private $_displayOnlyFavorites = [];    
-    
+     */
+    private $userApi;
+
+    private $_displayOnlyFavorites = [];
+
     public function __construct(
             RequestStack $requestStack,
             EntityManager $entityManager,
-            CurrentUserApi $userApi        
+            CurrentUserApi $userApi
          ) {
-        
         $this->name = 'ZikulaDizkusModule';
         $this->requestStack = $requestStack;
         $this->request = $requestStack->getMasterRequest();
         $this->entityManager = $entityManager;
-        $this->userApi = $userApi;    
+        $this->userApi = $userApi;
     }
-    
 
     /**
      * display of user favorite forums only?
      *
      * read the flag from the users table that indicates the users last choice: show all forum (0) or favorites only (1)
-     * @param $args['user_id'] int the users id
-     * @return boolean
      *
+     * @param $args['user_id'] int the users id
+     *
+     * @return bool
      */
     public function getStatus()
     {
@@ -81,14 +78,15 @@ class FavoritesHelper {
     }
 
     /**
-     * Get forum subscription status
+     * Get forum subscription status.
      *
      * @param $args
      *      'forum' Zikula\Module\DizkusModule\Entity\ForumEntity
      *      'user_id' int the users uid (optional)
-     * @return boolean - true if the forum is user favorite or false if not
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool - true if the forum is user favorite or false if not
      */
     public function isFavorite($forum, $user_id = null)
     {
@@ -105,5 +103,4 @@ class FavoritesHelper {
 
         return isset($forumUserFavorite);
     }
-
 }

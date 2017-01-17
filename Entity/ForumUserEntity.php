@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Entity;
 
-use Zikula\Core\Doctrine\EntityAccess;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use UserUtil;
+use Zikula\Core\Doctrine\EntityAccess;
 use ZLanguage;
 
 /**
- * ForumUser entity class
+ * ForumUser entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")
@@ -36,28 +37,28 @@ class ForumUserEntity extends EntityAccess
     private $user_id;
 
     /**
-     * postCount
+     * postCount.
      *
      * @ORM\Column(type="integer")
      */
     private $postCount = 0;
 
     /**
-     * autosubscribe preference
+     * autosubscribe preference.
      *
      * @ORM\Column(type="boolean")
      */
     private $autosubscribe = true;
 
     /**
-     * user level
+     * user level.
      *
      * @ORM\Column(type="integer")
      */
     private $level = self::USER_LEVEL_NORMAL;
 
     /**
-     * lastvisit
+     * lastvisit.
      *
      * @Gedmo\Timestampable
      * @ORM\Column(type="datetime", nullable=true)
@@ -67,14 +68,14 @@ class ForumUserEntity extends EntityAccess
     /**
      * user_favorites
      * user choice to display favorites only (true)
-     *     or all forums (false)
+     *     or all forums (false).
      *
      * @ORM\Column(name="user_favorites", type="boolean")
      */
     private $displayOnlyFavorites = false;
 
     /**
-     * postOrder
+     * postOrder.
      *
      * @ORM\Column(type="boolean")
      */
@@ -87,33 +88,38 @@ class ForumUserEntity extends EntityAccess
     private $rank;
 
     /**
-     * ForumUserFavoriteEntity collection
+     * ForumUserFavoriteEntity collection.
+     *
      * @ORM\OneToMany(targetEntity="ForumUserFavoriteEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $favoriteForums;
 
     /**
-     * TopicSubscriptionEntity collection
+     * TopicSubscriptionEntity collection.
+     *
      * @ORM\OneToMany(targetEntity="TopicSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $topicSubscriptions;
 
     /**
-     * ForumSubscriptionEntity collection
+     * ForumSubscriptionEntity collection.
+     *
      * @ORM\OneToMany(targetEntity="ForumSubscriptionEntity", mappedBy="forumUser", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $forumSubscriptions;
 
     /**
      * NON-PERSISTED property
-     * array of core vars for user
+     * array of core vars for user.
+     *
      * @var array
      */
     private $user = [];
 
     /**
-     * constructor
-     * @param integer $uid the core user id
+     * constructor.
+     *
+     * @param int $uid the core user id
      */
     public function __construct($uid)
     {
@@ -141,8 +147,9 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * Core user vars
-     * @return array|boolean (if core user doesn't exist, method returns false)
+     * Core user vars.
+     *
+     * @return array|bool (if core user doesn't exist, method returns false)
      */
     public function getUser()
     {
@@ -208,8 +215,9 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * get if user wants only to display favorite forums
-     * @return boolean
+     * get if user wants only to display favorite forums.
+     *
+     * @return bool
      */
     public function getDisplayOnlyFavorites()
     {
@@ -217,8 +225,9 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * set the displayOnlyFavorites value;
-     * @param boolean $val
+     * set the displayOnlyFavorites value;.
+     *
+     * @param bool $val
      */
     public function setDisplayOnlyFavorites($val)
     {
@@ -228,7 +237,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * display favorite forums only
+     * display favorite forums only.
      */
     public function showFavoritesOnly()
     {
@@ -236,7 +245,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * display all forums (not just favorites)
+     * display all forums (not just favorites).
      */
     public function showAllForums()
     {
@@ -254,7 +263,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * get User rank
+     * get User rank.
      *
      * @return RankEntity
      */
@@ -264,7 +273,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * set the User rank
+     * set the User rank.
+     *
      * @param RankEntity $rank
      */
     public function setRank(RankEntity $rank)
@@ -273,7 +283,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * clear the User rank value
+     * clear the User rank value.
      */
     public function clearRank()
     {
@@ -281,7 +291,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * get User favorite forums
+     * get User favorite forums.
+     *
      * @return ForumUserFavoriteEntity collection
      */
     public function getFavoriteForums()
@@ -290,7 +301,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * add a forum as favorite
+     * add a forum as favorite.
+     *
      * @param ForumEntity $forum
      */
     public function addFavoriteForum(ForumEntity $forum)
@@ -302,7 +314,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * remove a forum as favorite
+     * remove a forum as favorite.
+     *
      * @param ForumUserFavoriteEntity $forumUserFavorite
      */
     public function removeFavoriteForum(ForumUserFavoriteEntity $forumUserFavorite)
@@ -311,7 +324,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * clear all forum favorites
+     * clear all forum favorites.
      */
     public function clearForumFavorites()
     {
@@ -319,7 +332,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * get User topic subscriptions
+     * get User topic subscriptions.
+     *
      * @return TopicSubscriptionEntity collection
      */
     public function getTopicSubscriptions()
@@ -328,7 +342,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * add a topic subscription
+     * add a topic subscription.
+     *
      * @param TopicEntity $topic
      */
     public function addTopicSubscription(TopicEntity $topic)
@@ -338,7 +353,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * remove a topic subscription
+     * remove a topic subscription.
+     *
      * @param TopicSubscriptionEntity $topicSubscription
      */
     public function removeTopicSubscription(TopicSubscriptionEntity $topicSubscription)
@@ -347,7 +363,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * clear all topic subscriptions
+     * clear all topic subscriptions.
      */
     public function clearTopicSubscriptions()
     {
@@ -355,7 +371,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * get User forum subscriptions
+     * get User forum subscriptions.
+     *
      * @return ForumSubscriptionEntity collection
      */
     public function getForumSubscriptions()
@@ -364,7 +381,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * add a forum subscription
+     * add a forum subscription.
+     *
      * @param ForumEntity $forum
      */
     public function addForumSubscription(ForumEntity $forum)
@@ -374,7 +392,8 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * remove a forum subscription
+     * remove a forum subscription.
+     *
      * @param ForumSubscriptionEntity $forumSubscription
      */
     public function removeForumSubscription(ForumSubscriptionEntity $forumSubscription)
@@ -383,7 +402,7 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * clear all forum subscriptions
+     * clear all forum subscriptions.
      */
     public function clearForumSubscriptions()
     {

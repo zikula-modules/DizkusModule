@@ -1,51 +1,37 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
- * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @link https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Controller;
 
-use SecurityUtil;
 use ModUtil;
-use UserUtil;
-use FormUtil;
-use DataUtil;
-use System;
-use Zikula\Core\RouteUrl;
-use ZLanguage;
-use Zikula\Core\Hook\ValidationProviders;
-use Zikula\Core\Hook\ValidationHook;
-use Zikula\Core\Hook\ProcessHook;
-use Zikula\Core\ModUrl;
-use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
-//use Zikula\DizkusModule\Manager\PostManager;
-use Zikula\DizkusModule\Manager\TopicManager;
-
-use Zikula\DizkusModule\Form\Type\UserPreferencesType;
-
-use Zikula\Core\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
-use Symfony\Component\HttpFoundation\Request;
+use SecurityUtil;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+//use Zikula\DizkusModule\Manager\PostManager;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RouterInterface; // used in annotations - do not remove
+use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
+use UserUtil;
+use Zikula\Core\Controller\AbstractController;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\Form\Type\UserPreferencesType;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 
 class UserController extends AbstractController
 {
-
     /**
      * @Route("/prefs")
      *
@@ -57,34 +43,34 @@ class UserController extends AbstractController
      */
     public function prefsAction(Request $request)
     {
-             
-        $uid = ($request->getSession()->get('uid') > 1 ) ? $request->getSession()->get('uid') : 1;
-        $loggedIn = $uid > 1 ? true : false ;
+        $uid = ($request->getSession()->get('uid') > 1) ? $request->getSession()->get('uid') : 1;
+        $loggedIn = $uid > 1 ? true : false;
         if (!$loggedIn) {
             throw new AccessDeniedException();
         }
-                     
-        $this->_forumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();//new ForumUserManager($uid);
-        $form = $this->createForm(new UserPreferencesType, $this->_forumUser->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')] );
+
+        $this->_forumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager(); //new ForumUserManager($uid);
+        $form = $this->createForm(new UserPreferencesType(), $this->_forumUser->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
                 $this->_forumUser->setPostOrder($data['postOrder']);
-                if ($this->getVar('favorites_enabled')){
-                    $this->_forumUser->displayFavoriteForumsOnly( (boolean) $data['displayOnlyFavorites']);
+                if ($this->getVar('favorites_enabled')) {
+                    $this->_forumUser->displayFavoriteForumsOnly((bool) $data['displayOnlyFavorites']);
                 }
                 $this->_forumUser->setAutosubscribe($data['autosubscribe']);
-                
+
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
+
             return $this->redirect($this->generateUrl('zikuladizkusmodule_user_prefs'));
         }
 
         return $this->render('@ZikulaDizkusModule/User/preferences.html.twig', [
-                    'form' => $form->createView(),
-                    'settings' => $this->getVars()
-        ]);     
+                    'form'     => $form->createView(),
+                    'settings' => $this->getVars(),
+        ]);
     }
 
     /**
@@ -96,12 +82,11 @@ class UserController extends AbstractController
      */
     public function manageForumSubscriptionsAction(Request $request)
     {
-        
         $loggedIn = $this->get('zikula_users_module.current_user')->isLoggedIn();
         if (!$loggedIn) {
             $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login'];
+                'returnpage'  => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -119,8 +104,6 @@ class UserController extends AbstractController
 
         $managedForumUser = new ForumUserManager($request->getSession()->get('uid'));
 
-        
-        
 //        if (!$view->isValid()) {
 //            return false;
 //        }
@@ -134,16 +117,12 @@ class UserController extends AbstractController
 //        }
 //
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', array(), RouterInterface::ABSOLUTE_URL);
-//        return $view->redirect($url);        
-        
-        
-        
-        
+//        return $view->redirect($url);
+
         return $this->render('@ZikulaDizkusModule/User/manageForumSubscriptions.html.twig', [
                     'subscriptions' => $managedForumUser->get()->getForumSubscriptions(),
-                    'settings' => $this->getVars()
-        ]); 
-        
+                    'settings'      => $this->getVars(),
+        ]);
     }
 
     /**
@@ -155,12 +134,11 @@ class UserController extends AbstractController
      */
     public function manageTopicSubscriptionsAction(Request $request)
     {
-
         $loggedIn = $this->get('zikula_users_module.current_user')->isLoggedIn();
         if (!$loggedIn) {
             $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login'];
+                'returnpage'  => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -177,8 +155,7 @@ class UserController extends AbstractController
         }
 
         $managedForumUser = new ForumUserManager($request->getSession()->get('uid'));
-        
-        
+
 //        $data = $view->getValues();
 //
 //        if (count($data['topicIds']) > 0) {
@@ -190,14 +167,12 @@ class UserController extends AbstractController
 //        }
 //
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', array(), RouterInterface::ABSOLUTE_URL);
-//        return $view->redirect($url);        
-        
-        
-        
+//        return $view->redirect($url);
+
         return $this->render('@ZikulaDizkusModule/User/manageTopicSubscriptions.html.twig', [
                     'subscriptions' => $managedForumUser->get()->getTopicSubscriptions(),
-                    'settings' => $this->getVars()
-        ]);   
+                    'settings'      => $this->getVars(),
+        ]);
     }
 
     /**
@@ -225,13 +200,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * Show only favorite forums in index view instead of all forums
+     * Show only favorite forums in index view instead of all forums.
      *
      * @param string $setting
      *
-     * @return RedirectResponse
-     *
      * @throws AccessDeniedException if user not logged in
+     *
+     * @return RedirectResponse
      */
     private function changeViewSetting(Request $request, $setting)
     {
@@ -263,8 +238,8 @@ class UserController extends AbstractController
         $loggedIn = $this->get('zikula_users_module.current_user')->isLoggedIn();
         if (!$loggedIn) {
             $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login'];
+                'returnpage'  => $this->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', [], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -275,7 +250,7 @@ class UserController extends AbstractController
 
             return $response;
         }
-        
+
         // Security check
         if (!$this->get('zikula_dizkus_module.security')->canWrite([]) || !$this->getVar('signaturemanagement')) {
             throw new AccessDeniedException();
@@ -283,34 +258,33 @@ class UserController extends AbstractController
 
         $form = $this->createFormBuilder(['signature' => UserUtil::getVar('signature')])
                 ->add('signature', 'textarea', [
-                    'required' => false
+                    'required' => false,
                 ])
                 ->add('cancel', 'submit', [
-                    'label' => 'Restore defaults'
+                    'label' => 'Restore defaults',
                 ])
                 ->add('save', 'submit', [
-                    'label' => 'Save'
-                ])               
-            ->getForm();       
+                    'label' => 'Save',
+                ])
+            ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
-                UserUtil::setVar('signature', $data['signature']);             
+                UserUtil::setVar('signature', $data['signature']);
                 $this->addFlash('status', $this->__('Done! Signature has been updated.'));
             }
+
             return $this->redirect($this->generateUrl('zikuladizkusmodule_user_signaturemanagement'));
-        }       
+        }
 
         return $this->render('@ZikulaDizkusModule/User/manageSignature.html.twig', [
-                    'form' => $form->createView(),
-                    'settings' => $this->getVars()
-        ]); 
-        
+                    'form'     => $form->createView(),
+                    'settings' => $this->getVars(),
+        ]);
     }
-
 
     /**
      * @Route("/mine/{action}/{start}", requirements={"action" = "posts|topics", "start" = "^[1-9]\d*$"})
@@ -319,13 +293,13 @@ class UserController extends AbstractController
      * Display my posts or topics
      *
      * @param string $action = 'posts'|'topics'
-     * @param integer $start pager offset
+     * @param int    $start  pager offset
      *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
-    public function mineAction($action = "posts", $start = 0)
+    public function mineAction($action = 'posts', $start = 0)
     {
         // Permission check
         if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
@@ -344,7 +318,7 @@ class UserController extends AbstractController
 
         return new Response($this->view->fetch('User/post/mine.tpl'));
     }
-  
+
     /**
      * @Route("/getusers", options={"expose"=true})
      * @Method("GET")
@@ -352,7 +326,7 @@ class UserController extends AbstractController
      * Performs a user search based on the user name fragment entered so far.
      *
      * @param Request $request
-     *  fragment A partial user name entered by the user.
+     *                         fragment A partial user name entered by the user.
      *
      * @throws AccessDeniedException
      *
@@ -361,7 +335,7 @@ class UserController extends AbstractController
     public function getUsersAction(Request $request)
     {
         $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $fragment = $request->query->get('fragment', null);
@@ -373,24 +347,24 @@ class UserController extends AbstractController
         foreach ($users as $user) {
             $reply['suggestions'][] = [
                 'value' => htmlentities(stripslashes($user->getUname())),
-                'data' => $user->getUid()];
+                'data'  => $user->getUid(), ];
         }
 
         return new PlainResponse(json_encode($reply));
     }
-    
+
     /**
      * @Route("/user/ip/{post}", requirements={"post" = "^[1-9]\d*$"})
      * @Method("GET")
      *
      * View the posters IP information
      *
-     * @param integer $post
+     * @param int $post
+     *
+     * @throws AccessDeniedException     on failed perm check
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return Response
-     *
-     * @throws AccessDeniedException on failed perm check
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
     public function viewIpDataAction($post)
     {
@@ -403,6 +377,5 @@ class UserController extends AbstractController
             ->assign('topicId', $managedPost->getTopicId());
 
         return new Response($this->view->fetch('User/viewip.tpl'));
-    }    
-    
+    }
 }
