@@ -150,7 +150,9 @@ class TopicManager
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
-            $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
+            if($this->exists()){
+                $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
+            }
         } else {
             // create new topic
             $this->_topic = new TopicEntity();
@@ -850,16 +852,9 @@ class TopicManager
         foreach ($posts as $post) {
             $post->getPoster()->decrementPostCount();
             $forum->decrementPostCount();
-
-//            if($forum->getLast_post() != null && $forum->getLast_post()->getPost_id() == $post->getPost_id()){
-//                // set forum last post to avoid cascading deletion errors
-//                $forum->setLast_post(null);
-//            }
         }
         // decrement topicCount
         $forum->decrementTopicCount();
-        // set topic last post to avoid cascading deletion errors
-//        $topic->setLast_post(null);
         // update the db
         $this->entityManager->flush();
         // delete the topic

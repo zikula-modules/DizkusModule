@@ -342,7 +342,6 @@ class TopicController extends AbstractController
         }
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
-
             $data = $form->getData();
 
             if ($form->get('cancel')->isClicked()) {
@@ -350,7 +349,6 @@ class TopicController extends AbstractController
             }
 
             if ($form->get('delete')->isClicked()) {
-
                 $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($managedTopic->get());
                 $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($managedTopic->get()));
 
