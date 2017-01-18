@@ -498,11 +498,11 @@ class TwigExtension extends \Twig_Extension
 
     /**
      * dizkus quote plugin.
-     * 
-     * 
+     *
+     *
      * Not used - javascript used instead
-     * 
-     * 
+     *
+     *
      * @param $uid    int user id
      * @param $text    string text to quote
      */
