@@ -120,7 +120,7 @@
                     {% if topic.sticky == 0 %}{{ sticky_icon }}{% else %}{{ unsticky_icon }}{% endif %}
                 </a>
             </li>
-            <li><a class="fa fa-arrow-right tooltips" title="{{ __("Move or join topic") }}" href="{{ path('zikuladizkusmodule_topic_movetopic', {'topic':topic.topic_id}) }}"></a></li>
+            <li><a class="fa fa-arrow-right tooltips" title="{{ __("Move or join topic") }}" href="{{ path('zikuladizkusmodule_topic_joinmovetopic', {'topic':topic.topic_id}) }}"></a></li>
             <li><a class="fa fa-times tooltips" title="{{ __("Delete topic") }}" href="{{ path('zikuladizkusmodule_topic_deletetopic', {'topic':topic.topic_id}) }}"></a></li>
             {% endif %}
             <li><a class="tooltips" title="{{ __("To bottom of page") }}" href="#bottom"><i class="fa fa-chevron-circle-down"></i></a></li>

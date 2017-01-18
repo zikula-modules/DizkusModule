@@ -57,7 +57,6 @@ class ModerateType extends AbstractType
         // For Movetopic
         $forums = $managedForum->getAllChildren();
         $this->forums = (['' => '<< '.$this->translator->__('Select target forum').' >>'] + $forums);
-        dump($this->forums);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

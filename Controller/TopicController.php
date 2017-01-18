@@ -28,6 +28,7 @@ use Zikula\Core\Response\PlainResponse;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Form\Type\Topic\DeleteType;
+use Zikula\DizkusModule\Form\Type\Topic\JoinMoveType;
 use Zikula\DizkusModule\Form\Type\Topic\NewType;
 use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
 use Zikula\DizkusModule\Manager\ForumManager;
@@ -376,7 +377,7 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/topic/{topic}/move", requirements={"topic" = "^[1-9]\d*$"} )
+     * @Route("/topic/{topic}/joinmove", requirements={"topic" = "^[1-9]\d*$"} )
      *
      * Move topic
      *
@@ -384,57 +385,58 @@ class TopicController extends AbstractController
      *
      * @return string
      */
-    public function movetopicAction(Request $request)
+    public function joinmovetopicAction(Request $request, $topic)
     {
-        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-//            throw new AccessDeniedException();
-//        }
-//
-//        $this->topic_id = (int) $this->request->query->get('topic', null);
-//        $managedTopic = new TopicManager($this->topic_id);
-//        $this->topic = $managedTopic->get();
-//        $view->assign('topic', $this->topic_id);
-//        $view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getAllChildren'));
-//
-//
-//        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
-//        if ($args['commandName'] == 'cancel') {
-//            return $view->redirect($url);
-//        }
-//
-//        // check for valid form
-//        if (!$view->isValid()) {
-//            return false;
-//        }
-//
-//        $data = $view->getValues();
-//
-//        if ($args['commandName'] == 'move') {
-//            // require perms for both subject topic and destination forum
-//            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
-//                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', array('forum_id' => $data['forum_id']))) {
-//                throw new AccessDeniedException();
-//            }
-//
-//            if ($data['forum_id'] == $this->topic->getForum()->getForum_id()) {
-//                $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! The original forum cannot be the same as the target forum.'));
-//                return false;
-//            }
-//            $data['topicObj'] = $this->topic;
-//
-//            ModUtil::apiFunc($this->name, 'topic', 'move', $data);
-//
-//            return $view->redirect($url);
-//        }
-//
-//        if ($args['commandName'] == 'join') {
-//            $managedDestinationTopic = new TopicManager($data['to_topic_id']);
-//            // require perms for both subject topic and destination topic
-//            if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $this->topic->getForum())
-//                    || !ModUtil::apiFunc($this->name, 'Permission', 'canModerate', $managedDestinationTopic->get()->getForum())) {
-//                throw new AccessDeniedException();
-//            }
-//
+        // Permission check
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
+        if (!$managedTopic->exists()) {
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $form = $this->createForm(
+                    new JoinMoveType($this->get('translator'), $this->get('zikula_dizkus_module.forum_manager')->getAllChildren()),
+                    [],
+                    ['topic' => $managedTopic->getId(), 'forum' => $managedTopic->getForumId()]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            if ($form->get('cancel')->isClicked()) {
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            }
+
+            if ($form->get('move')->isClicked()) {
+                // require perms for both subject topic and destination forum
+                if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
+                        || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $data['forum_id']])) {
+                    throw new AccessDeniedException();
+                }
+                $this->get('zikula_dizkus_module.topic_manager')->move($managedTopic->getId(), $data['forum_id'], $data['createshadowtopic']);
+
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            }
+
+            if ($form->get('join')->isClicked()) {
+                $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($data['to_topic_id']);
+                if (!$managedDestinationTopic->exists()) {
+                    $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$data['to_topic_id']]));
+
+                    return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                }
+                if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
+                        || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedDestinationTopic->getForumId()])) {
+                    throw new AccessDeniedException();
+                }
+
 //            if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
 //                // user wants to copy topic to itself
 //                return $view->redirect($url);
@@ -444,26 +446,15 @@ class TopicController extends AbstractController
 //            $data['topicObj'] = $this->topic;
 //
 //            ModUtil::apiFunc($this->name, 'topic', 'join', $data);
-//
-//            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $data['to_topic_id']), RouterInterface::ABSOLUTE_URL);
-//            return $view->redirect($url);
-//        }
-//
-//        return true;
 
-//        $form = FormUtil::newForm($this->name, $this);
-//
-//        return new Response($form->execute('User/topic/move.tpl', new MoveTopic()));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            }
+        }
 
         return $this->render('@ZikulaDizkusModule/Topic/move.html.twig', [
-//            'ranks' => isset($ranks) ? $ranks : false,
-//            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
-//            'form' => $form->createView(),
-//            'breadcrumbs' => $managedForum->getBreadcrumbs(false),
-//            'preview'=> isset($preview) ? $preview : false,
-//            'post' => isset($post) ? $post : false,
-//            'forum' => $managedForum->get(),
-            'settings' => $this->getVars(),
+            'topic'     => $managedTopic->get(),
+            'form'      => $form->createView(),
+            'settings'  => $this->getVars(),
             ]);
     }
 
