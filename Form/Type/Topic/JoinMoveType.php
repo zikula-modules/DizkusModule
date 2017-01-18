@@ -34,7 +34,6 @@ class JoinMoveType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $this->forum = $options['forum'];
 
         $builder
