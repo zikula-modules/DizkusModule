@@ -150,7 +150,7 @@ class TopicManager
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
-            if($this->exists()){
+            if ($this->exists()) {
                 $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
             }
         } else {
