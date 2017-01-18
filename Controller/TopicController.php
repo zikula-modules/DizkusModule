@@ -5,7 +5,7 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
@@ -183,7 +183,6 @@ class TopicController extends AbstractController
             }
 
             if ($form->get('save')->isClicked()) {
-
                 // store new topic
                 $newManagedTopic->create();
                 $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()]);
@@ -254,7 +253,6 @@ class TopicController extends AbstractController
         //&& !$hookvalidators->hasErrors() is not needed because we attach any hook errors to message field
         // this might not be ok for some hooks - to chceck!
         if ($form->isValid()) {
-
             // everything is good at this point so we either show preview or save
             $data = $form->getData();
             $reply = [
@@ -340,7 +338,6 @@ class TopicController extends AbstractController
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-
             //return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 //
@@ -352,8 +349,7 @@ class TopicController extends AbstractController
             }
 
             if ($form->get('delete')->isClicked()) {
-
-//          $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
+                //          $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
 
             $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($topic));
             }
@@ -427,8 +423,7 @@ class TopicController extends AbstractController
      */
     public function movetopicAction(Request $request)
     {
-
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
 //
@@ -518,8 +513,7 @@ class TopicController extends AbstractController
      */
     public function splittopicAction(Request $request)
     {
-
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
 //            throw new AccessDeniedException();
 //        }
 //
@@ -573,8 +567,7 @@ class TopicController extends AbstractController
      */
     public function emailtopicAction(Request $request)
     {
-
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
 //

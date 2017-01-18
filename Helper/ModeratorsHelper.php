@@ -32,7 +32,7 @@ class ModeratorsHelper
     /**
      * Returns an array of all the moderators of a forum (including groups).
      *
-     * @param int $forum_id Forum id.
+     * @param int $forum_id forum id
      *
      * @return array containing the uid/gid as index and the user/group name as value
      */

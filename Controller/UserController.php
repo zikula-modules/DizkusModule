@@ -5,7 +5,7 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
@@ -326,11 +326,11 @@ class UserController extends AbstractController
      * Performs a user search based on the user name fragment entered so far.
      *
      * @param Request $request
-     *                         fragment A partial user name entered by the user.
+     *                         fragment A partial user name entered by the user
      *
      * @throws AccessDeniedException
      *
-     * @return string PlainResponse with json_encoded object of users matching the criteria.
+     * @return string plainResponse with json_encoded object of users matching the criteria
      */
     public function getUsersAction(Request $request)
     {

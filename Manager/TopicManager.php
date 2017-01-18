@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -673,8 +673,8 @@ class TopicManager
     /**
      * Subscribe a topic.
      *
-     * @param int|object $topic   Topic id or object.
-     * @param int        $user_id User id (optional: needs ACCESS_ADMIN).
+     * @param int|object $topic   topic id or object
+     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
      *
      * @return bool|void
      */
@@ -709,8 +709,8 @@ class TopicManager
     /**
      * Unsubscribe a topic.
      *
-     * @param int|object $topic   Topic id or object.
-     * @param int        $user_id User id (optional: needs ACCESS_ADMIN).
+     * @param int|object $topic   topic id or object
+     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
      *
      * @return void|bool
      */
@@ -747,7 +747,7 @@ class TopicManager
     /**
      * Get topic subscriptions.
      *
-     * @param int $user_id User id (optional).
+     * @param int $user_id user id (optional)
      *
      * @return \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
      */
@@ -767,7 +767,7 @@ class TopicManager
      *
      * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
      *
-     * @param string $reference The reference.
+     * @param string $reference the reference
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *

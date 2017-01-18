@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -577,11 +577,11 @@ class PostManager
     /**
      * Checks if the given message isn't too long.
      *
-     * @param $message The message to check.
+     * @param $message the message to check
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
-     * @return bool False if the message is to long, else true.
+     * @return bool false if the message is to long, else true
      */
     public function checkMessageLength($message)
     {

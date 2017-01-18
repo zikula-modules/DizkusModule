@@ -85,7 +85,7 @@ class Permission
     /**
      * Check if a user is allowed to see forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return bool
      */
@@ -97,7 +97,7 @@ class Permission
     /**
      * Check if a user is allowed to read forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return bool
      */
@@ -109,7 +109,7 @@ class Permission
     /**
      * Check if a user is allowed to write forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return bool
      */
@@ -121,7 +121,7 @@ class Permission
     /**
      * Check if a user is allowed to moderate forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return bool
      */
@@ -133,7 +133,7 @@ class Permission
     /**
      * Check if a user is allowed to administrate forum.
      *
-     * @param array $args Arguments.
+     * @param array $args arguments
      *
      * @return bool
      */
@@ -145,8 +145,8 @@ class Permission
     /**
      * check Permission.
      *
-     * @param array|object $args  Arguments.
-     * @param int          $level Level.
+     * @param array|object $args  arguments
+     * @param int          $level level
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
@@ -154,7 +154,6 @@ class Permission
      */
     private function checkPermission($args, $level = ACCESS_READ)
     {
-
         // ensure always working with an ForumEntity object or null
         if (empty($args)) {
             $forum = null;

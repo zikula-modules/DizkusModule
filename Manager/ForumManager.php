@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -172,7 +172,7 @@ class ForumManager
     /**
      * get forum bread crumbs.
      *
-     * @param bool $withoutCurrent Show tree without the current item.
+     * @param bool $withoutCurrent show tree without the current item
      *
      * @return array
      */
@@ -401,7 +401,7 @@ class ForumManager
      * Get forum subscription status.
      *
      * @param int $forum   The forum
-     * @param int $user_id The user id (optional).
+     * @param int $user_id the user id (optional)
      *
      * @return bool True if the user is subscribed or false if not
      */
@@ -428,7 +428,7 @@ class ForumManager
      * subscribe a forum.
      *
      * @param int $forum   The forum
-     * @param int $user_id The user id (optional: needs ACCESS_ADMIN).
+     * @param int $user_id the user id (optional: needs ACCESS_ADMIN)
      *
      * @return bool
      */
@@ -469,7 +469,7 @@ class ForumManager
      * Unsubscribe a forum.
      *
      * @param int $forum   The forum
-     * @param int $user_id The user id (optional: needs ACCESS_ADMIN).
+     * @param int $user_id the user id (optional: needs ACCESS_ADMIN)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *

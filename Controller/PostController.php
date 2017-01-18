@@ -5,7 +5,7 @@
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
@@ -101,7 +101,7 @@ class PostController extends AbstractController
      *              )
      *
      * @throws \InvalidArgumentException
-     * @throws AccessDeniedException     If the user tries to delete the only post of a topic.
+     * @throws AccessDeniedException     if the user tries to delete the only post of a topic
      *
      * @return AjaxResponse
      */
@@ -289,7 +289,7 @@ class PostController extends AbstractController
     /**
      * Checks if a message is shorter than 65535 - 8 characters.
      *
-     * @param string $message The message to check.
+     * @param string $message the message to check
      *
      * @throws \LengthException
      *

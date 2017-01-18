@@ -59,7 +59,7 @@ class RankHelper
     /**
      * Get all ranks.
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return array
      */
@@ -154,7 +154,7 @@ class RankHelper
     /**
      * Get user rank data.
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return array The rank data of the poster
      */

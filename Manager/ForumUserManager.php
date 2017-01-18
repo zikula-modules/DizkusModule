@@ -8,7 +8,7 @@
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
  *
- * @link https://github.com/zikula-modules/Dizkus
+ * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
@@ -224,7 +224,7 @@ class ForumUserManager
      * @param array $args The argument array.
      *                    int $args['pip] The posters IP.
      *
-     * @return array with information.
+     * @return array with information
      */
     public function get_viewip_data($args)
     {
@@ -434,7 +434,7 @@ class ForumUserManager
      *
      * Check if a user is online
      *
-     * @param array $args Arguments array.
+     * @param array $args arguments array
      *
      * @return bool True if online
      */
