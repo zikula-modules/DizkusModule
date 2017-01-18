@@ -43,10 +43,10 @@ class JoinMoveType extends AbstractType
                     'multiple'      => false,
                     'expanded'      => false,
                     'required'      => false,
-                    'choice_attr'   => function($key) {
+                    'choice_attr'   => function ($key) {
                         return $key == $this->forum ? ['disabled' => 'disabled'] : [];
                     },
-                    'choice_label'   => function($key) {
+                    'choice_label'   => function ($key) {
                         return $key == $this->forum ? $this->forums[$key] . ' ' .  $this->translator->__('current') : $this->forums[$key];
                     },
 //                  'data'          => 0,
