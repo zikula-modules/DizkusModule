@@ -801,7 +801,8 @@ class TopicManager
         // get some environment
         $posts_per_page = $this->variableApi->get($this->name, 'posts_per_page');
         if ($this->userApi->isLoggedIn()) {
-            $managedForumUser = $this->forumUserManagerService->getManager($user_id); // new ForumUserManager();
+            $user_id = $this->request->getSession()->get('uid');
+            $managedForumUser = $this->forumUserManagerService->getManager($user_id);
             $postSortOrder = $managedForumUser->getPostOrder();
         } else {
             $postSortOrder = $this->variableApi->get($this->name, 'post_sort_order');
@@ -832,7 +833,9 @@ class TopicManager
         if (is_numeric($topic)) {
             // @todo what if topic not found?
             $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
-        } elseif (!$topic instanceof TopicEntity) {
+        }
+
+        if (!$topic instanceof TopicEntity) {
             throw new \InvalidArgumentException();
         }
 
@@ -847,24 +850,31 @@ class TopicManager
         foreach ($posts as $post) {
             $post->getPoster()->decrementPostCount();
             $forum->decrementPostCount();
+
+//            if($forum->getLast_post() != null && $forum->getLast_post()->getPost_id() == $post->getPost_id()){
+//                // set forum last post to avoid cascading deletion errors
+//                $forum->setLast_post(null);
+//            }
         }
         // decrement topicCount
         $forum->decrementTopicCount();
+        // set topic last post to avoid cascading deletion errors
+//        $topic->setLast_post(null);
         // update the db
         $this->entityManager->flush();
+        // delete the topic
+        $this->entityManager->remove($topic);
+
         // remove all posts in topic
-        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDeletePosts($topic->getTopic_id());
+//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDeletePosts($topic->getTopic_id());
         // remove topic subscriptions
-        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->deleteTopicSubscriptions($topic->getTopic_id());
+//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->deleteTopicSubscriptions($topic->getTopic_id());
         // delete the topic (manual dql to avoid cascading deletion errors)
-        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
+//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
         // sync the forum up with the changes
 
         $this->synchronizationHelper->forum($forum, false);
         $this->synchronizationHelper->forumLastPost($forum, true);
-
-//        ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $forum, 'flush' => false]);
-//        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $forum, 'flush' => true]);
 
         return $forum->getForum_id();
     }

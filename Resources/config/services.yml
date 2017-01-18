@@ -34,14 +34,20 @@ services:
         class: %zikula_dizkus_module.twig.extension.class%
         tags:
             - { name: twig.extension }        
-        arguments: [@service_container]
+        arguments:
+            - "@service_container"
         
     zikula_dizkus_module.link_container:
         class: %zikula_dizkus_module.links.class%
         lazy: true
         tags:
             - { name: zikula.link_container }
-        arguments: [@translator.default, @router, @zikula_permissions_module.api.permission, @zikula_extensions_module.api.variable, @zikula_users_module.current_user]
+        arguments:
+            - "@translator.default"
+            - "@router"
+            - "@zikula_permissions_module.api.permission"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_users_module.current_user"
         
     zikula_dizkus_module.event_listener:
         class: %zikula_dizkus_module.event_listener.class%

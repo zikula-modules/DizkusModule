@@ -111,7 +111,7 @@ class ForumEntity extends EntityAccess
 
     /**
      * @ORM\OneToOne(targetEntity="PostEntity", cascade={"persist"})
-     * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true)
+     * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true, onDelete="SET NULL")
      */
     private $last_post;
 

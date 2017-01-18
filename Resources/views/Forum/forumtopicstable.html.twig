@@ -13,7 +13,7 @@
     {% for topic in topics %}
         <tr>
             <td class="data">
-                {% if forum is defined %}
+                {% if forum is defined and forum.last_post.post_time is defined %}
                     {% set comp=(date(forum.last_post.post_time) > date(last_visit_unix)) %}
                 {% else %}
                     {% set comp=false %}

@@ -61,7 +61,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -228,7 +228,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -320,7 +320,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -338,72 +338,37 @@ class TopicController extends AbstractController
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            //return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
         }
-//
 
-        if ($form->isValid()) {
+        if ($form->isValid() && !$hookvalidators->hasErrors()) {
+
             $data = $form->getData();
+
             if ($form->get('cancel')->isClicked()) {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
 
             if ($form->get('delete')->isClicked()) {
-                //          $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
 
-            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($topic));
+                $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($managedTopic->get());
+                $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($managedTopic->get()));
+
+                //@todo send the poster a reason why his/her post was deleted
+//                if ($data['sendReason'] && !empty($data['reason'])) {
+//                    $poster = $topic_poster->getUser();
+//                    ModUtil::apiFunc('Mailer', 'user', 'sendmessage', [
+//                        'toaddress' => $poster['email'],
+//                        'subject' => $this->__('Post deleted'),
+//                        'body' => $data['reason'],
+//                        'html' => true]
+//                    );
+//                    $this->request->getSession()->getFlashBag()->add('status', $this->__('Email sent!'));
+//                }
+
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum_id], RouterInterface::ABSOLUTE_URL));
             }
         }
-
-//
-//        $this->topic_poster = $managedTopic->get()->getPoster();
-//        $topicPerms = $managedTopic->getPermissions();
-//
-//        if ($topicPerms['moderate'] <> true) {
-//            throw new AccessDeniedException();
-//        }
-//
-//        $view->assign($managedTopic->toArray());
-//
-//        return true;
-//
-//
-//       // rewrite to topic if cancel was pressed
-//        if ($args['commandName'] == 'cancel') {
-//            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
-//            return $view->redirect($url);
-//        }
-//
-//        // check for valid form and get data
-//        if (!$view->isValid()) {
-//            return false;
-//        }
-//        $hook = new ValidationHook(new ValidationProviders());
-//        $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
-//        if ($hookvalidators->hasErrors()) {
-//            return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
-//        }
-//
-//        $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
-//        $this->dispatchHooks('dizkus.ui_hooks.topic.process_delete', new ProcessHook($this->topic_id));
-//
-//        $data = $view->getValues();
-//
-//        // send the poster a reason why his/her post was deleted
-//        if ($data['sendReason'] && !empty($data['reason'])) {
-//            $poster = $this->topic_poster->getUser();
-//            ModUtil::apiFunc('Mailer', 'user', 'sendmessage', array(
-//                'toaddress' => $poster['email'],
-//                'subject' => $this->__('Post deleted'),
-//                'body' => $data['reason'],
-//                'html' => true)
-//            );
-//            $this->request->getSession()->getFlashBag()->add('status', $this->__('Email sent!'));
-//        }
-//
-//        // redirect to the forum of the deleted topic
-//        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
-//        return $view->redirect($url);
 
         return $this->render('@ZikulaDizkusModule/Topic/delete.html.twig', [
             'topic'     => $managedTopic->get(),

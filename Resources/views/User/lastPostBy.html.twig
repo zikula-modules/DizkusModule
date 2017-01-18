@@ -1,6 +1,6 @@
+{#   @todo    profile link  #}  
 <span>
     {% if last_post != null %}
-{#   @todo    profile link  #}  
         {{ __f("Last post by %s", {'%s':last_post.poster.user.uname }) }}<br />
         {{ last_post.post_time|date('Y-m-d H:i:s') }}
         <a class="tooltips" title="{{ __("View latest post") }}" href="{{ lastTopicUrl(last_post.topic) }}"><i class="fa fa-hand-o-right"></i> {{ __('view') }}</a>

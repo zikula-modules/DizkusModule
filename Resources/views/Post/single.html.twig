@@ -29,14 +29,14 @@
                             <img class="userinforankimage" src="/{{ post.poster.rank.imageLink }}" alt="{{ post.poster.rank.title }}" title="{{ post.poster.rank.description }}" />
                         {% if post.poster.rank.rank_link == '' %}</a>{% endif %}
                     {% else %}
-                        {% set  posterRank=getRankByPostCount(post.poster.postCount, ranks) %}
-                      {% if posterRank.rank_link !='' %}
-                        <a href="{{ posterRank.rank_link }}" title="{{ posterRank.rank_link }}">
-                        {% endif %}
-                        {% if posterRank.image != '' %}
-                            <img class="userinforankimage" src="/{{ posterRank.imageLink }}" alt="{{ posterRank.title }}" title="{{ posterRank.description }}" />
-                        {% endif %}
-                    {% if posterRank.rank_link != '' %}</a>{% endif %}
+                        {% set posterRank=getRankByPostCount(post.poster.postCount, ranks) %}
+                            {% if posterRank.rank_link !='' %}
+                                <a href="{{ posterRank.rank_link }}" title="{{ posterRank.rank_link }}">
+                            {% endif %}
+                            {% if posterRank.image != '' %}
+                                <img class="userinforankimage" src="/{{ posterRank.imageLink }}" alt="{{ posterRank.title }}" title="{{ posterRank.description }}" />
+                            {% endif %}
+                            {% if posterRank.rank_link != '' %}</a>{% endif %}
                     {% endif %}
                 </div>
 

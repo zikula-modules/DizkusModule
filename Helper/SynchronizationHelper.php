@@ -195,21 +195,24 @@ class SynchronizationHelper
      */
     public function posters()
     {
-        $qb = $this->entityManager->createQueryBuilder();
-        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user_id')
-            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-            ->leftJoin('p.poster', 'd')
-            ->groupBy('d.user')
-            ->getQuery()
-            ->getArrayResult();
-        foreach ($posts as $post) {
-            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user_id']);
-            if (!$forumUser) {
-                $forumUser = new ForumUserEntity($post['user_id']);
-            }
-            $forumUser->setPostCount($post[1]);
-        }
-        $this->entityManager->flush();
+        // @todo @FIXME this generates error [Semantical Error] line 0, col 28 near 'user) as user_id': Error: Class Zikula\DizkusModule\Entity\ForumUserEntity has no field or association named user
+//        $qb = $this->entityManager->createQueryBuilder();
+//        $posts = $qb->select('count(p)', 'IDENTITY(d.user_id) as user_id')
+//            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+//            ->leftJoin('p.poster', 'd')
+//            ->groupBy('d.user_id')
+//            ->getQuery()
+//            ->getArrayResult();
+//
+//        foreach ($posts as $post) {
+//
+//            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user_id']);
+//            if (!$forumUser) {
+//                $forumUser = new ForumUserEntity($post['user_id']);
+//            }
+//            $forumUser->setPostCount($post[1]);
+//        }
+//        $this->entityManager->flush();
 
         return true;
     }

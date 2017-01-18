@@ -122,7 +122,6 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/sync")
-     * @Method("POST")
      *
      * syncforums
      *
@@ -138,19 +137,19 @@ class AdminController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $succesful = ModUtil::apiFunc($this->name, 'Sync', 'forums');
+        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->forums(); //ModUtil::apiFunc($this->name, 'Sync', 'forums');
         if ($showstatus && $succesful) {
-            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forum index.'));
+            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forums index.'));
         } else {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forum index'));
+            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forums index.'));
         }
-        $succesful = ModUtil::apiFunc($this->name, 'Sync', 'topics');
+        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->topics(); //ModUtil::apiFunc($this->name, 'Sync', 'topics');
         if ($showstatus && $succesful) {
             $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized topics.'));
         } else {
             $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing topics.'));
         }
-        $succesful = ModUtil::apiFunc($this->name, 'Sync', 'posters');
+        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->posters(); //ModUtil::apiFunc($this->name, 'Sync', 'posters');
         if ($showstatus && $succesful) {
             $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized posts counter.'));
         } else {

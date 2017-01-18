@@ -485,7 +485,7 @@ class TwigExtension extends \Twig_Extension
             throw new \InvalidArgumentException();
         }
 
-        $posterRank = null;
+        $posterRank = $ranks[0];
 
         foreach ($ranks as $rank) {
             if (($posts >= $rank->getMinimumCount()) && ($posts <= $rank->getMaximumCount())) {
