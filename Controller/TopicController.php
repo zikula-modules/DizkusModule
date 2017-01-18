@@ -326,7 +326,7 @@ class TopicController extends AbstractController
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
-            
+
         $topic_poster = $managedTopic->get()->getPoster();
         $topicPerms = $managedTopic->getPermissions();
 
@@ -336,11 +336,11 @@ class TopicController extends AbstractController
 
         $form = $this->createForm(new DeleteType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['topic' => $managedTopic->getId()]);
         $form->handleRequest($request);  
-        
+
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            
+
             //return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
         }
 //

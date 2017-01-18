@@ -20,9 +20,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DeleteType extends AbstractType {
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+class DeleteType extends AbstractType 
+{
+    public function buildForm(FormBuilderInterface $builder, array $options) 
+    {
         $builder->add('topic', HiddenType::class, [
                     'required' => false,
                     'mapped'   => false,
@@ -36,9 +37,8 @@ class DeleteType extends AbstractType {
                     'multiple'  => false,
                     'expanded'  => true,
                     'required'  => true,
-                    'data'      => 0
-                    ])
-                
+                    'data'      => 0,
+                ])
                 ->add('delete', SubmitType::class, [
                     'label' => 'Delete',
                 ])
@@ -55,7 +55,8 @@ class DeleteType extends AbstractType {
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver) 
+    {
         $resolver->setDefaults([
             'translator' => null,
             'topic'      => null,
