@@ -29,6 +29,7 @@ use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Form\Type\Topic\NewType;
 use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
+use Zikula\DizkusModule\Form\Type\Topic\DeleteType;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\ForumUserManager; // used in annotations - do not remove
 use Zikula\DizkusModule\Manager\TopicManager; // used in annotations - do not remove
@@ -254,8 +255,6 @@ class TopicController extends AbstractController
         // this might not be ok for some hooks - to chceck!
         if ($form->isValid()) {
 
-            //return new PlainResponse(dump($form));
-
             // everything is good at this point so we either show preview or save
             $data = $form->getData();
             $reply = [
@@ -294,16 +293,12 @@ class TopicController extends AbstractController
             // error - no preview just form with error information!
         }
 
-        //
         return $this->render("@ZikulaDizkusModule/Topic/$template.html.twig", [
             'topic' => $managedTopic->get(),
             'ranks' => isset($ranks) ? $ranks : false,
-//            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
             'form' => $form->createView(),
-//            'breadcrumbs' => $managedForum->getBreadcrumbs(false),
             'preview'=> isset($preview) ? $preview : false,
             'post'   => isset($post) ? $post : false,
-//            'forum' => $managedForum->get(),
             'start'    => isset($start) ? $start : 1,
             'settings' => $this->getVars(),
             ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
@@ -318,25 +313,59 @@ class TopicController extends AbstractController
      *
      * @return string
      */
-    public function deletetopicAction(Request $request)
+    public function deletetopicAction(Request $request, $topic)
     {
-        //
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-//            throw new AccessDeniedException();
-//        }
+        // Permission check
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
+        if (!$managedTopic->exists()) {
+            $request->getSession()->getFlashBag()->add('error', $this->translator->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+            
+        $topic_poster = $managedTopic->get()->getPoster();
+        $topicPerms = $managedTopic->getPermissions();
+
+        if ($topicPerms['moderate'] <> true) {
+            throw new AccessDeniedException();
+        } 
+        
+        $form = $this->createForm(new DeleteType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['topic' => $managedTopic->getId()]);
+        $form->handleRequest($request);  
+        
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
+        if ($hookvalidators->hasErrors()) {
+            
+            //return $this->view->registerError($this->__('Error! Hooked content does not validate.'));
+        }
 //
-//        $this->topic_id = (int)$this->request->query->get('topic');
-//
-//        if (empty($this->topic_id)) {
-//            $post_id = (int)$this->request->query->get('post');
-//            if (empty($post_id)) {
-//                throw new \InvalidArgumentException();
-//            }
-//            $managedPost = new PostManager($post_id);
-//            $this->topic_id = $managedPost->getTopicId();
-//        }
-//
-//        $managedTopic = new TopicManager($this->topic_id);
+
+        
+        
+        if ($form->isValid()) {
+            $data = $form->getData();
+            if ($form->get('cancel')->isClicked()) {
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            }
+
+            if ($form->get('delete')->isClicked()) {
+                
+//          $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
+                
+                
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($topic));
+            
+            
+            
+            }
+        }
+        
+        
 //
 //        $this->topic_poster = $managedTopic->get()->getPoster();
 //        $topicPerms = $managedTopic->getPermissions();
@@ -387,18 +416,9 @@ class TopicController extends AbstractController
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum_id), RouterInterface::ABSOLUTE_URL);
 //        return $view->redirect($url);
 
-//        $form = FormUtil::newForm($this->name, $this);
-//
-//        return new Response($form->execute('User/topic/delete.tpl', new DeleteTopic()));
-
         return $this->render('@ZikulaDizkusModule/Topic/delete.html.twig', [
-//            'ranks' => isset($ranks) ? $ranks : false,
-//            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
-//            'form' => $form->createView(),
-//            'breadcrumbs' => $managedForum->getBreadcrumbs(false),
-//            'preview'=> isset($preview) ? $preview : false,
-//            'post' => isset($post) ? $post : false,
-//            'forum' => $managedForum->get(),
+            'topic' => $managedTopic->get(),
+            'form' => $form->createView(),
             'settings' => $this->getVars(),
             ]);
     }

@@ -254,7 +254,6 @@ class TopicManager
         } else {
             $postSortOrder = $this->_defaultPostSortOrder;
         }
-        dump($postSortOrder);
         // do not allow negative first result
         $startNumber = $startNumber > 0 ? $startNumber : 0;
         // Do a new query in order to limit maxresults, firstresult, order, etc.

@@ -57,7 +57,6 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('lastTopicUrl', [$this, 'lastTopicUrl']),
             new \Twig_SimpleFunction('userLoggedIn', [$this, 'userLoggedIn']),
             new \Twig_SimpleFunction('getRankByPostCount', [$this, 'getRankByPostCount']),
-            new \Twig_SimpleFunction('dzkquote', [$this, 'dzkquote']),
         ];
     }
 
@@ -65,6 +64,7 @@ class TwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('viewTopicLink', [$this, 'viewTopicLink'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('transform', [$this, 'transform'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -295,10 +295,8 @@ class TwigExtension extends \Twig_Extension
     /**
      * transform only [quote] and [code] tags.
      */
-    public function transform($args)
+    public function transform($message)
     {
-        $message = $args['message'];
-
         // pad it with a space so we can distinguish between FALSE and matching the 1st char (index 0).
         // This is important; encode_quote() and encode_code() depend on it.
         $message = ' '.$message.' ';
@@ -500,28 +498,32 @@ class TwigExtension extends \Twig_Extension
 
     /**
      * dizkus quote plugin.
-     *
+     * 
+     * 
+     * Not used - javascript used instead
+     * 
+     * 
      * @param $uid    int user id
      * @param $text    string text to quote
      */
-    public function dzkquote($uid, $text)
-    {
-        if (empty($text)) {
-            return '';
-        }
-
-        if (!empty($uid)) {
-            $user = '='.UserUtil::getVar('uname', $uid);
-        } else {
-            $user = '';
-        }
-
-        // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
-        // and therefore cannot have multiple lines.
-        $text = str_replace(["\r", "\n"], '_____LINEFEED_DIZKUS_____', addslashes($text));
-
-        return '[quote'.$user.']'.$text.'[/quote]';
-    }
+//    public function dzkquote($uid, $text)
+//    {
+//        if (empty($text)) {
+//            return '';
+//        }
+//
+//        if (!empty($uid)) {
+//            $user = '='.UserUtil::getVar('uname', $uid);
+//        } else {
+//            $user = '';
+//        }
+//
+//        // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
+//        // and therefore cannot have multiple lines.
+//        $text = str_replace(["\r", "\n"], '_____LINEFEED_DIZKUS_____', addslashes($text));
+//
+//        return '[quote'.$user.']'.$text.'[/quote]';
+//    }
 
     /**
      * Returns internal name of this extension.
