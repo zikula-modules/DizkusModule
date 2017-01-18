@@ -335,7 +335,7 @@ class TopicController extends AbstractController
         }
 
         $form = $this->createForm(new DeleteType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['topic' => $managedTopic->getId()]);
-        $form->handleRequest($request);  
+        $form->handleRequest($request);
 
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
