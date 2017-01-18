@@ -62,5 +62,4 @@ class DeleteType extends AbstractType
             'topic'      => null,
         ]);
     }
-
 }

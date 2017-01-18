@@ -356,7 +356,6 @@ class TopicController extends AbstractController
 //          $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', array('topic' => $this->topic_id));
 
             $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_delete', new ProcessHook($topic));
-
             }
         }
 
