@@ -87,8 +87,6 @@ class AdminController extends AbstractController
     /**
      * @Route("/prefs")
      *
-     * preferences
-     *
      * @return Response
      *
      * @throws AccessDeniedException
@@ -123,8 +121,6 @@ class AdminController extends AbstractController
     /**
      * @Route("/sync")
      *
-     * syncforums
-     *
      * @param Request $request
      *
      * @return RedirectResponse
@@ -137,23 +133,23 @@ class AdminController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->forums(); //ModUtil::apiFunc($this->name, 'Sync', 'forums');
-        if ($showstatus && $succesful) {
-            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized forums index.'));
+
+        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->forums()) {
+            $this->addFlash('status', $this->__('Done! Synchronized forums index.'));
         } else {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing forums index.'));
+            $this->addFlash('error', $this->__('Error synchronizing forums index.'));
         }
-        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->topics(); //ModUtil::apiFunc($this->name, 'Sync', 'topics');
-        if ($showstatus && $succesful) {
-            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized topics.'));
+
+        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->topics()) {
+            $this->addFlash('status', $this->__('Done! Synchronized topics.'));
         } else {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing topics.'));
+            $this->addFlash('error', $this->__('Error synchronizing topics.'));
         }
-        $succesful = $this->get('zikula_dizkus_module.synchronization_helper')->posters(); //ModUtil::apiFunc($this->name, 'Sync', 'posters');
-        if ($showstatus && $succesful) {
-            $request->getSession()->getFlashBag()->add('status', $this->__('Done! Synchronized posts counter.'));
+
+        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->posters()) {
+            $this->addFlash('status', $this->__('Done! Synchronized posts counter.'));
         } else {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error synchronizing posts counter.'));
+            $this->addFlash('error', $this->__('Error synchronizing posts counter.'));
         }
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
@@ -178,21 +174,21 @@ class AdminController extends AbstractController
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
-            list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => $ranktype]);
+            list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
             if ($ranktype == 0) {
                 $template = 'ranks';
             }
 
             return $this->render("@ZikulaDizkusModule/Admin/$template.html.twig", [
-                        'ranks' => $ranks,
-                        'ranktype' => $ranktype,
-                        'rankimages' => $rankimages,
-                        'settings' => $this->getVars()
+                'ranks' => $ranks,
+                'ranktype' => $ranktype,
+                'rankimages' => $rankimages,
+                'settings' => $this->getVars()
             ]);
         } else {
             $ranks = $request->request->filter('ranks', '', FILTER_SANITIZE_STRING);
-            ModUtil::apiFunc($this->name, 'Rank', 'save', ['ranks' => $ranks]);
+            $this->get('zikula_dizkus_module.rank_helper')->save(['ranks' => $ranks]);
         }
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', ['ranktype' => $ranktype], RouterInterface::ABSOLUTE_URL));
@@ -221,7 +217,8 @@ class AdminController extends AbstractController
             $page = (int)$request->request->get('page', 1);
 
             $setrank = $request->request->get('setrank');
-            ModUtil::apiFunc($this->name, 'Rank', 'assign', array('setrank' => $setrank));
+
+            $this->get('zikula_dizkus_module.rank_helper')->assign(['setrank' => $setrank]);
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_assignranks', ['page' => $page, 'letter' => $letter], RouterInterface::ABSOLUTE_URL));
         }
@@ -249,7 +246,7 @@ class AdminController extends AbstractController
         $userArray = [];
         /** @var $user \Zikula\UsersModule\Entity\UserEntity */
         foreach ($allusers as $user) {
-            $managedForumUser = new ForumUserManager($user->getUid(), false);
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($user->getUid(), false);
             $forumUser = $managedForumUser->get();
             if (isset($forumUser)) {
                 $userArray[$user->getUid()] = $forumUser;
@@ -258,7 +255,7 @@ class AdminController extends AbstractController
             }
         }
 
-        list($rankimages, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_HONORARY]);
+        list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
 
         return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
                     'ranks' => $ranks,
@@ -304,7 +301,7 @@ class AdminController extends AbstractController
 
         // disallow editing of root forum
         if ($id == 1) {
-            $request->getSession()->getFlashBag()->add('error', $this->__("Editing of root forum is disallowed", 403));
+            $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -314,11 +311,9 @@ class AdminController extends AbstractController
         } else {
             $forum = new ForumEntity();
         }
-        //@todo use services
-        $topiccount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
-                'type' => 'forumtopics']);
-        $postcount = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'countstats', ['id' => $id,
-                'type' => 'forumposts']);
+
+        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($id);
+        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($id);
 
         $form = $this->createForm('Zikula\DizkusModule\Form\Type\ForumType', $forum, []);
 
@@ -334,14 +329,13 @@ class AdminController extends AbstractController
             $em->flush();
 
             // notify hooks
-            //$hookUrl = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()], RouterInterface::ABSOLUTE_URL);
             $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()]);
             $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_edit', new ProcessHook($forum->getForum_id(), $hookUrl));
 
             if ($id) {
-                $request->getSession()->getFlashBag()->add('status', $this->__('Forum successfully updated.'));
+                $this->addFlash('status', $this->__('Forum successfully updated.'));
             } else {
-                $request->getSession()->getFlashBag()->add('status', $this->__('Forum successfully created.'));
+                $this->addFlash('status', $this->__('Forum successfully created.'));
             }
         }
 
@@ -368,12 +362,12 @@ class AdminController extends AbstractController
             $forum = $this->getDoctrine()->getManager()->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
             if ($forum) {
             } else {
-                $request->getSession()->getFlashBag()->add('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
+                $this->addFlash('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
 
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
             }
         } else {
-            $request->getSession()->getFlashBag()->add('error', $this->__('No forum id'), 403);
+            $this->addFlash('error', $this->__('No forum id'), 403);
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -381,6 +375,7 @@ class AdminController extends AbstractController
         $forumRoot = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(['name' => ForumEntity::ROOTNAME]);
         $destinations = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->getChildren($forumRoot);
 
+        // @todo move to form handler
         $form = $this->createFormBuilder([])
                 ->add('action', 'choice', [
                     'choices' => ['0' => $this->__('Remove them'),
@@ -445,7 +440,7 @@ class AdminController extends AbstractController
 
             if (isset($data['destination'])) {
                 // sync last post in destination
-                ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $data['destination']]);
+                $this->get('zikula_dizkus_module.synchronization_helper')->forumLastPost($data['destination']);
             }
 
             // repair the tree
@@ -453,7 +448,7 @@ class AdminController extends AbstractController
             $this->getDoctrine()->getManager()->clear();
 
             // resync all forums, topics & posters
-            ModUtil::apiFunc($this->name, 'sync', 'all');
+            $this->get('zikula_dizkus_module.synchronization_helper')->all();
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/deleteforum.html.twig', [
@@ -482,29 +477,22 @@ class AdminController extends AbstractController
         }
 
         if (!empty($uid)) {
-            $params = ['uid' => $uid];
-            $topicsubscriptions = ModUtil::apiFunc($this->name, 'Topic', 'getSubscriptions', $params);
-            $forumsubscriptions = ModUtil::apiFunc($this->name, 'Forum', 'getSubscriptions', $params);
+            $topicsubscriptions = $this->get('zikula_dizkus_module.topic_manager')->getSubscriptions($uid);
+            $forumsubscriptions = $this->get('zikula_dizkus_module.forum_manager')->getSubscriptions($uid);
         }
 
         if ($request->isMethod('POST')) {
             $forumSub = $request->request->get('forumsubscriptions', []);
             foreach ($forumSub as $id => $selected) {
                 if ($selected) {
-                    ModUtil::apiFunc($this->name, 'forum', 'unsubscribe', [
-                        'user_id' => $uid,
-                        'forum' => $id
-                    ]);
+                    $this->get('zikula_dizkus_module.forum_manager')->unsubscribe($id, $uid);
                 }
             }
 
             $topicSub = $request->request->get('topicsubscriptions', []);
             foreach ($topicSub as $id => $selected) {
                 if ($selected) {
-                    ModUtil::apiFunc($this->name, 'topic', 'unsubscribe', [
-                        'user_id' => $uid,
-                        'topic' => $id
-                    ]);
+                    $this->get('zikula_dizkus_module.topic_manager')->unsubscribe($id, $uid);
                 }
             }
         }
@@ -552,8 +540,7 @@ class AdminController extends AbstractController
                     'areas' => $bindingsBetweenOwners,
                     'dizkushookconfig' => $hookconfig,
                     'activeModule' => $module,
-                    // @todo remove usage of ModUtil
-                    'forums' => ModUtil::apiFunc($this->name, 'Forum', 'getParents', ['includeLocked' => true])
+                    'forums' => $this->get('zikula_dizkus_module.synchronization_helper')->getParents(null, true),
             ]);
     }
 
@@ -576,13 +563,13 @@ class AdminController extends AbstractController
 
         foreach ($hookdata as $area => $data) {
             if (!isset($data['forum']) || empty($data['forum'])) {
-                $request->getSession()->getFlashBag()->add('error', $this->__f('Error: No forum selected for area \'%s\'', $area));
+                $this->addFlash('error', $this->__f('Error: No forum selected for area \'%s\'', $area));
                 $hookdata[$area]['forum'] = null;
             }
         }
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
         $this->get('zikula_extensions_module.api.variable')->set($moduleName, 'dizkushookconfig', $hookdata);
-        $request->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hook option settings updated.'));
+        $this->addFlash('status', $this->__('Dizkus: Hook option settings updated.'));
 
         //return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName], RouterInterface::ABSOLUTE_URL));

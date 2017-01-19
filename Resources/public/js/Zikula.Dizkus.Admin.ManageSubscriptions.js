@@ -6,7 +6,7 @@
 
 jQuery(document).ready(function() {
     jQuery('#username').autocomplete({
-        serviceUrl: Routing.generate('zikuladizkusmodule_ajax_getusers'),
+        serviceUrl: Routing.generate('zikuladizkusmodule_user_getusers'),
         paramName: 'fragment',
         onSearchStart: function(query) {
             this.preventDefault;

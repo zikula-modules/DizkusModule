@@ -759,7 +759,7 @@ class TopicManager
             $loggedIn = $this->userApi->isLoggedIn();
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
 
         return $managedForumUser->get()->getTopicSubscriptions();
     }
@@ -924,28 +924,11 @@ class TopicManager
             $previousForumLocation->setLast_post();
 
             $this->entityManager->flush();
-
             $this->synchronizationHelper->forumLastPost($previousForumLocation, false);
-
             $this->synchronizationHelper->forumLastPost($forum, false);
-
             $this->synchronizationHelper->forum($oldForumId, false);
-
             $this->synchronizationHelper->forum($forum, true);
 
-            // @todo sync helper
-//            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', [
-//                'forum' => $previousForumLocation,
-//                'flush' => false]);
-//            ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', [
-//                'forum' => $forum,
-//                'flush' => false]);
-//            ModUtil::apiFunc($this->name, 'sync', 'forum', [
-//                'forum' => $oldForumId,
-//                'flush' => false]);
-//            ModUtil::apiFunc($this->name, 'sync', 'forum', [
-//                'forum' => $forum,
-//                'flush' => true]);
         }
     }
 
@@ -1009,38 +992,21 @@ class TopicManager
     /**
      * joins two topics together.
      *
-     * @param $from_topic_id int this topic get integrated into to_topic (origin)
-     * @param $to_topic_id int the target topic that will contain the post from from_topic (destination)
-     * @param $topic TopicEntity The (origin) topic as object
-     *              must have *either* topic or from_topic_id
+     * @param $managedOriginTopic object this topic get integrated into $managedDestinationTopic (origin)
+     * @param $managedDestinationTopic object the target topic that will contain the post from $managedOriginTopic (destination)
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return int Destination topic ID
      */
-    public function join($from_topic_id, $to_topic_id, $topic)
+    public function join($managedOriginTopic, $managedDestinationTopic)
     {
-        if (!$topic instanceof TopicEntity && !isset($from_topic_id)) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f('Either "%1$s" or "%2$s" must be set.', ['topic', 'from_topic_id']));
+        if (!$managedOriginTopic instanceof TopicManager || !$managedDestinationTopic instanceof TopicManager) {
+            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
 
             throw new \InvalidArgumentException();
         }
-        if (!isset($to_topic_id)) {
-            throw new \InvalidArgumentException();
-        }
-        if (isset($topic) && isset($from_topic_id)) {
-            // unset the id and use the Object
-            $from_topic_id = null;
-        }
-        $managedOriginTopic = $this->getManager($from_topic_id, $topic); //new TopicManager($from_topic_id, $topic);
-        // one param will be null
-        $managedDestinationTopic = $this->getManager($to_topic_id); //new TopicManager($to_topic_id);
-        if ($managedDestinationTopic->get() === null) {
-            // can't use isset() and ->get() at the same time
-            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__('Destination topic does not exist.'));
 
-            throw new \InvalidArgumentException();
-        }
         // move posts from Origin to Destination topic
         $posts = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->findBy(['topic' => $managedOriginTopic->get()]);
         $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
@@ -1051,24 +1017,17 @@ class TopicManager
             }
             $previousPostTime = $post->getPost_time();
         }
-        $this->entityManager->flush();
-        // remove the originTopic from the DB (manual dql to avoid cascading deletion errors)
-        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDelete($managedOriginTopic->getId());
-        $managedDestinationTopic->setLastPost($post);
-        $managedDestinationTopic->get()->setTopic_time($previousPostTime);
-        // resync destination topic and all forums
 
+        $this->entityManager->flush();
+        $originTopicForum = $managedOriginTopic->get()->getForum();
+        $this->entityManager->remove($managedOriginTopic->get());
+
+        // resync destination topic and all forums
         $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
-        $this->synchronizationHelper->forum($managedOriginTopic->get()->getForum(), false);
-        $this->synchronizationHelper->forumLastPost($managedOriginTopic->get()->getForum(), true);
+        $this->synchronizationHelper->forum($originTopicForum, false);
+        $this->synchronizationHelper->forumLastPost($originTopicForum, true);
         $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
         $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
-
-//        ModUtil::apiFunc($this->name, 'sync', 'topic', ['topic' => $managedDestinationTopic->get(), 'flush' => true]);
-//        ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $managedOriginTopic->get()->getForum(), 'flush' => false]);
-//        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $managedOriginTopic->get()->getForum(), 'flush' => true]);
-//        ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $managedDestinationTopic->get()->getForum(), 'flush' => false]);
-//        ModUtil::apiFunc($this->name, 'sync', 'forumLastPost', ['forum' => $managedDestinationTopic->get()->getForum(), 'flush' => true]);
 
         return $managedDestinationTopic->getId();
     }

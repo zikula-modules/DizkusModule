@@ -62,7 +62,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -71,7 +71,6 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        // @todo rank helper
         list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]); //ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
 
         $managedTopic->incrementViewsCount();
@@ -114,7 +113,7 @@ class TopicController extends AbstractController
         $forum = (int) $request->query->get('forum');
 
         if (!isset($forum)) {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing forum id.'));
+            $this->addFlash('error', $this->__('Error! Missing forum id.'));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -122,7 +121,7 @@ class TopicController extends AbstractController
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);    //new ForumManager($this->_forumId);
         if ($managedForum->get()->isLocked()) {
             // it should be impossible for a user to get here, but this is just a sanity check
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
+            $this->addFlash('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL));
         }
@@ -140,7 +139,7 @@ class TopicController extends AbstractController
         $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             foreach ($postHookValidators->getErrors() as $error) {
-                $request->getSession()->getFlashBag()->add('error', "Error! $error");
+                $this->addFlash('error', "Error! $error");
             }
         }
 
@@ -150,7 +149,7 @@ class TopicController extends AbstractController
         $topicHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
         if ($topicHookValidators->hasErrors()) {
             foreach ($postHookValidators->getErrors() as $error) {
-                $request->getSession()->getFlashBag()->add('error', "Error! $error");
+                $this->addFlash('error', "Error! $error");
             }
         }
 
@@ -166,7 +165,7 @@ class TopicController extends AbstractController
 
             // @todo this maybe should be done by hooks?
 //            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
-//                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+//                $this->addFlash('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
 //                return false;
 //            }
 
@@ -229,7 +228,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -246,7 +245,7 @@ class TopicController extends AbstractController
         if ($hookvalidators->hasErrors()) {
             foreach ($hookvalidators->getErrors() as $error) {
                 // This need to be tested!!
-                //$request->getSession()->getFlashBag()->add('error', "Error! $error");
+                //$this->addFlash('error', "Error! $error");
                 $form->get('message')->addError(new FormError($this->__($error)));
             }
         }
@@ -321,7 +320,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -339,7 +338,7 @@ class TopicController extends AbstractController
         $hook = new ValidationHook(new ValidationProviders());
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_delete', $hook)->getValidators();
         if ($hookvalidators->hasErrors()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+            $this->addFlash('error', $this->__('Error! Hooked content does not validate.'));
         }
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
@@ -394,7 +393,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
         if (!$managedTopic->exists()) {
-            $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -405,13 +404,15 @@ class TopicController extends AbstractController
                     ['topic' => $managedTopic->getId(), 'forum' => $managedTopic->getForumId()]
         );
 
+
+        $topicUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
-
             if ($form->get('cancel')->isClicked()) {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($topicUrl);
             }
 
             if ($form->get('move')->isClicked()) {
@@ -422,32 +423,34 @@ class TopicController extends AbstractController
                 }
                 $this->get('zikula_dizkus_module.topic_manager')->move($managedTopic->getId(), $data['forum_id'], $data['createshadowtopic']);
 
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($topicUrl);
             }
 
             if ($form->get('join')->isClicked()) {
+                if (empty($data['to_topic_id'])){
+                    $this->addFlash('error', $this->__('Error! The topic ID cannot be empty.'));
+
+                    return new RedirectResponse($topicUrl);
+                }
                 $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($data['to_topic_id']);
                 if (!$managedDestinationTopic->exists()) {
-                    $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$data['to_topic_id']]));
+                    $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$data['to_topic_id']]));
 
-                    return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                    return new RedirectResponse($topicUrl);
                 }
                 if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
                         || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedDestinationTopic->getForumId()])) {
                     throw new AccessDeniedException();
                 }
+                if ($managedDestinationTopic->getId() == $managedTopic->getId()) {
+                    $this->addFlash('error', $this->__('Error! You cannot copy topic to itself.'));
 
-//            if (!empty($data['to_topic_id']) && ($data['to_topic_id'] == $this->topic_id)) {
-//                // user wants to copy topic to itself
-//                return $view->redirect($url);
-//            }
-//
-//            $data['from_topic_id'] = $this->topic_id;
-//            $data['topicObj'] = $this->topic;
-//
-//            ModUtil::apiFunc($this->name, 'topic', 'join', $data);
+                    return new RedirectResponse($topicUrl);
+                }
+                //@todo we asume everything will be ok
+                $this->get('zikula_dizkus_module.topic_manager')->join($managedTopic, $managedDestinationTopic);
 
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -713,12 +716,12 @@ class TopicController extends AbstractController
 //        $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
 //        // check for maximum message size
 //        if (strlen($message) + strlen('[addsig]') > 65535) {
-//            $request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+//            $this->addFlash('status', $this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
 //            // switch to preview mode
 //            $isPreview = true;
 //        }
 //        if (empty($message)) {
-//            $request->getSession()->getFlashBag()->add('status', $this->__('Error! The message is empty. Please add some text.'));
+//            $this->addFlash('status', $this->__('Error! The message is empty. Please add some text.'));
 //            // switch to preview mode
 //            $isPreview = true;
 //        }
@@ -727,7 +730,7 @@ class TopicController extends AbstractController
 //            $hook = new ValidationHook(new ValidationProviders());
 //            $hookvalidators = $this->dispatchHooks('dizkus.ui_hooks.post.validate_edit', $hook)->getValidators();
 //            if ($hookvalidators->hasErrors()) {
-//                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Hooked content does not validate.'));
+//                $this->addFlash('error', $this->__('Error! Hooked content does not validate.'));
 //                $isPreview = true;
 //            }
 //        }
@@ -740,7 +743,7 @@ class TopicController extends AbstractController
 //            $managedPost->create($data);
 //            // check to see if the post contains spam
 //            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-//                $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+//                $this->addFlash('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
 //                return new Response('', Response::HTTP_NOT_ACCEPTABLE);
 //            }
 //            $managedPost->persist();
@@ -865,13 +868,13 @@ class TopicController extends AbstractController
 //        /** @var $hookvalidators \Zikula\Core\Hook\ValidationProviders */
 //        if ($hookvalidators->hasErrors()) {
 //            foreach ($hookvalidators->getErrors() as $error) {
-//                $request->getSession()->getFlashBag()->add('error', "Error! $error");
+//                $this->addFlash('error', "Error! $error");
 //            }
 //            $preview = true;
 //        }
 //        // check to see if the post contains spam
 //        if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $managedPost->get())) {
-//            $request->getSession()->getFlashBag()->add('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+//            $this->addFlash('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
 //            $preview = true;
 //        }
 //        if ($preview == false) {

@@ -551,9 +551,6 @@ class ForumManager
      */
     public function getParents($id = null, $includeLocked = true, $includeRoot = true)
     {
-        //        $id = isset($args['id']) ? $args['id'] : null;
-//        $includeLocked = isset($args['includeLocked']) ? $args['includeLocked'] : true;
-//        $includeRoot = isset($args['includeRoot']) && $args['includeRoot'] == false ? false : true;
         if (!$includeRoot) {
             $forumRoot = null;
         } else {

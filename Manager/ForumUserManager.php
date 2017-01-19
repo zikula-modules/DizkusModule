@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use UserUtil;
+use DataUtil;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\PostEntity;

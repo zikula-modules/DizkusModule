@@ -14,9 +14,8 @@ namespace Zikula\DizkusModule\Form\Type\Topic;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,16 +47,8 @@ class JoinMoveType extends AbstractType
                     'choice_label'   => function ($key) {
                         return $key == $this->forum ? $this->forums[$key] . ' ' .  $this->translator->__('current') : $this->forums[$key];
                     },
-//                  'data'          => 0,
                 ])
-
-//                ->add('topic', HiddenType::class, [
-//                    'required' => false,
-//                    'mapped'   => false,
-//                    'data'     => $options['topic'],
-//                ])
-
-                ->add('to_topic_id', TextType::class, [
+                ->add('to_topic_id', IntegerType::class, [
                     'required' => false,
                 ])
                 ->add('createshadowtopic', ChoiceType::class, [

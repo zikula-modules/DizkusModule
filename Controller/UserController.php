@@ -12,20 +12,18 @@
 
 namespace Zikula\DizkusModule\Controller;
 
+use UserUtil;
 use ModUtil;
-use SecurityUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-//use Zikula\DizkusModule\Manager\PostManager;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface; // used in annotations - do not remove
 use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
-use UserUtil;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Form\Type\UserPreferencesType;
 use Zikula\DizkusModule\Manager\ForumUserManager;
@@ -101,7 +99,7 @@ class UserController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([]) || !$loggedIn) {
             throw new AccessDeniedException();
         }
-
+        // @todo use service !
         $managedForumUser = new ForumUserManager($request->getSession()->get('uid'));
 
 //        if (!$view->isValid()) {
@@ -153,7 +151,7 @@ class UserController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([]) || !$loggedIn) {
             throw new AccessDeniedException();
         }
-
+        // @todo use service
         $managedForumUser = new ForumUserManager($request->getSession()->get('uid'));
 
 //        $data = $view->getValues();
@@ -302,7 +300,7 @@ class UserController extends AbstractController
     public function mineAction($action = 'posts', $start = 0)
     {
         // Permission check
-        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
         if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
@@ -334,12 +332,12 @@ class UserController extends AbstractController
      */
     public function getUsersAction(Request $request)
     {
-        $this->checkAjaxToken();
-        if (!SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
+        // Permission check
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
         $fragment = $request->query->get('fragment', null);
-        $users = ModUtil::apiFunc($this->name, 'user', 'getUsersByFragments', ['fragments' => [$fragment]]);
+        $users = $this->get('zikula_dizkus_module.forum_user_manager')->getUsersByFragments(['fragments' => [$fragment]]);
         $reply = [];
         $reply['query'] = $fragment;
         $reply['suggestions'] = [];
