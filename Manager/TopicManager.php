@@ -1001,7 +1001,7 @@ class TopicManager
      */
     public function join($managedOriginTopic, $managedDestinationTopic)
     {
-        if (!$managedOriginTopic instanceof TopicManager || !$managedDestinationTopic instanceof TopicManager) {
+        if (!$managedOriginTopic instanceof self || !$managedDestinationTopic instanceof self) {
             $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
 
             throw new \InvalidArgumentException();

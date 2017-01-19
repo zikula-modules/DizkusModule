@@ -427,7 +427,7 @@ class TopicController extends AbstractController
             }
 
             if ($form->get('join')->isClicked()) {
-                if (empty($data['to_topic_id'])){
+                if (empty($data['to_topic_id'])) {
                     $this->addFlash('error', $this->__('Error! The topic ID cannot be empty.'));
 
                     return new RedirectResponse($topicUrl);

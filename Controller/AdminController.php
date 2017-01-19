@@ -23,7 +23,6 @@ use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
-use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
 use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Doctrine\ORM\Tools\Pagination\Paginator;
