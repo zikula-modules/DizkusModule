@@ -928,7 +928,6 @@ class TopicManager
             $this->synchronizationHelper->forumLastPost($forum, false);
             $this->synchronizationHelper->forum($oldForumId, false);
             $this->synchronizationHelper->forum($forum, true);
-
         }
     }
 

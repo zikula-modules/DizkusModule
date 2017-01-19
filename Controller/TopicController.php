@@ -404,7 +404,6 @@ class TopicController extends AbstractController
                     ['topic' => $managedTopic->getId(), 'forum' => $managedTopic->getForumId()]
         );
 
-
         $topicUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
 
         $form->handleRequest($request);
