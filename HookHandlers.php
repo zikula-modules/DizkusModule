@@ -18,40 +18,44 @@
 
 namespace Zikula\DizkusModule;
 
-use ServiceUtil;
-use SecurityUtil;
 use ModUtil;
 use PageUtil;
-use ZLanguage;
-use Zikula_View;
+use SecurityUtil;
+use ServiceUtil;
 use Zikula\Bundle\HookBundle\Hook\AbstractHookListener;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
-use Zikula\Bundle\HookBundle\Hook\ProcessHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
+use Zikula\Bundle\HookBundle\Hook\ProcessHook;
 use Zikula\Bundle\HookBundle\Hook\ValidationHook;
-use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Container\HookContainer;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\HookedTopicMeta\Generic;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
-use Zikula\DizkusModule\HookedTopicMeta\Generic;
+use Zikula_View;
+use ZLanguage;
 
 class HookHandlers extends AbstractHookListener
 {
     /**
-     * Zikula_View instance
+     * Zikula_View instance.
+     *
      * @var Zikula_View
      */
     private $view;
 
     /**
-     * Zikula entity manager instance
+     * Zikula entity manager instance.
+     *
      * @var \Doctrine\ORM\EntityManager
      */
     private $_em;
 
     /**
-     * Module name
+     * Module name.
+     *
      * @var string
      */
     const MODULENAME = 'ZikulaDizkusModule';
@@ -83,7 +87,7 @@ class HookHandlers extends AbstractHookListener
             return;
         }
         $request = $this->view->getRequest();
-        $start = (int)$request->query->get('start', 1);
+        $start = (int) $request->query->get('start', 1);
         $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
         if (isset($topic)) {
             $managedTopic = new TopicManager(null, $topic);
@@ -103,7 +107,7 @@ class HookHandlers extends AbstractHookListener
         }
         $returnUrl = htmlspecialchars(json_encode($urlParams));
         $this->view->assign('returnUrl', $returnUrl);
-        list(, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', array('ranktype' => RankEntity::TYPE_POSTCOUNT));
+        list(, $ranks) = ModUtil::apiFunc(self::MODULENAME, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         $this->view->assign('ranks', $ranks);
         $this->view->assign('start', $start);
         $this->view->assign('topic', $managedTopic->get()->toArray());
@@ -117,8 +121,8 @@ class HookHandlers extends AbstractHookListener
         //$this->view->assign('last_visit', $last_visit);
         //$this->view->assign('last_visit_unix', $last_visit_unix);
         $managedTopic->incrementViewsCount();
-        PageUtil::addVar('stylesheet', "@ZikulaDizkusModule/Resources/public/css/style.css");
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/topicview.tpl'));
+        PageUtil::addVar('stylesheet', '@ZikulaDizkusModule/Resources/public/css/style.css');
+      //  $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/topicview.tpl'));
     }
 
     /**
@@ -144,7 +148,7 @@ class HookHandlers extends AbstractHookListener
             $this->view->assign('newTopic', true);
         }
         // add this response to the event stack
-        $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
+       // $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
     }
 
     /**
@@ -163,7 +167,7 @@ class HookHandlers extends AbstractHookListener
             // lock or remove
             $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
             $this->view->assign('actionWord', $actionWord);
-            $hook->setResponse(new DisplayHookResponse(DizkusModuleVersion::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
+         //   $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
         }
     }
 
@@ -176,7 +180,6 @@ class HookHandlers extends AbstractHookListener
      */
     public function validateEdit(ValidationHook $hook)
     {
-        return;
     }
 
     /**
@@ -188,7 +191,6 @@ class HookHandlers extends AbstractHookListener
      */
     public function validateDelete(ValidationHook $hook)
     {
-        return;
     }
 
     /**
@@ -196,7 +198,7 @@ class HookHandlers extends AbstractHookListener
      *
      * @param ProcessHook $hook the hook
      *
-     * @return boolean
+     * @return bool
      */
     public function processEdit(ProcessHook $hook)
     {
@@ -211,12 +213,12 @@ class HookHandlers extends AbstractHookListener
                 // create the new topic
                 $newManagedTopic = new TopicManager();
                 // format data for topic creation
-                $data = array(
-                    'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
-                    'title' => $topicMetaInstance->getTitle(),
-                    'message' => $topicMetaInstance->getContent(),
+                $data = [
+                    'forum_id'        => $hookconfig[$hook->getAreaId()]['forum'],
+                    'title'           => $topicMetaInstance->getTitle(),
+                    'message'         => $topicMetaInstance->getContent(),
                     'subscribe_topic' => false,
-                    'attachSignature' => false);
+                    'attachSignature' => false, ];
                 $newManagedTopic->prepare($data);
                 // add hook data to topic
                 $newManagedTopic->setHookData($hook);
@@ -224,11 +226,11 @@ class HookHandlers extends AbstractHookListener
                 $newManagedTopic->create();
             } else {
                 // create new post
-                $managedPost = new PostManager();
-                $data = array(
-                    'topic_id' => $topic->getTopic_id(),
-                    'post_text' => $topicMetaInstance->getContent(),
-                    'attachSignature' => false);
+                $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager(); //new PostManager();
+                $data = [
+                    'topic_id'        => $topic->getTopic_id(),
+                    'post_text'       => $topicMetaInstance->getContent(),
+                    'attachSignature' => false, ];
                 // create the post in the existing topic
                 $managedPost->create($data);
                 // store the post
@@ -249,7 +251,7 @@ class HookHandlers extends AbstractHookListener
      *
      * @param ProcessHook $hook the hook
      *
-     * @return boolean
+     * @return bool
      */
     public function processDelete(ProcessHook $hook)
     {
@@ -259,7 +261,7 @@ class HookHandlers extends AbstractHookListener
         if (isset($topic)) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc(self::MODULENAME, 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc(self::MODULENAME, 'Topic', 'delete', ['topic' => $topic]);
                     break;
                 case 'lock':
                 default:
@@ -275,9 +277,10 @@ class HookHandlers extends AbstractHookListener
     }
 
     /**
-     * Factory class to find Meta Class and instantiate
+     * Factory class to find Meta Class and instantiate.
      *
-     * @param  ProcessHook $hook
+     * @param ProcessHook $hook
+     *
      * @return object of found class
      */
     private function getClassInstance(ProcessHook $hook)
@@ -286,7 +289,7 @@ class HookHandlers extends AbstractHookListener
             return false;
         }
         $moduleName = $hook->getCaller();
-        $locations = array($moduleName, self::MODULENAME); // locations to search for the class
+        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
         foreach ($locations as $location) {
             $moduleObj = ModUtil::getModule($location);
             $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
@@ -303,23 +306,24 @@ class HookHandlers extends AbstractHookListener
 
     /**
      * get the modvar settings for hook
-     * generates value if not yet set
+     * generates value if not yet set.
      *
      * @param $hook
+     *
      * @return array
      */
     private function getHookConfig($hook)
     {
         // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
-        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig', array());
+        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig', []);
         if (!isset($hookconfig[$hook->getAreaId()]['forum'])) {
             // admin didn't choose a forum, so create one and set as choice
             $managedForum = new ForumManager();
-            $data = array(
-                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
+            $data = [
+                'name'   => __f('Discussion for %s', $hook->getCaller(), $this->domain),
                 'status' => ForumEntity::STATUS_LOCKED,
-                'parent' => $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(array(
-                        'name' => ForumEntity::ROOTNAME)));
+                'parent' => $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy([
+                        'name' => ForumEntity::ROOTNAME, ]), ];
             $managedForum->store($data);
             $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
             ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);

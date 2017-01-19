@@ -17,7 +17,7 @@
                     </a>
                 {% endif %}               
                 <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_modifyforum',{ 'id': item.forum_id}) }}" title='{{ __("edit forum #{item.name}")}}'><i class="fa fa-pencil fa-150x"></i></a>
-                <a class="tooltips" href="{{ path('zikuladizkusmodule_user_viewforum',{ 'forum': item.forum_id}) }}" title='{{ __("view forum #{item.name}")}}'><i class="fa fa-eye fa-blue fa-150x"></i></a>
+                <a class="tooltips" href="{{ path('zikuladizkusmodule_forum_viewforum',{ 'forum': item.forum_id}) }}" title='{{ __("view forum #{item.name}")}}'><i class="fa fa-eye fa-blue fa-150x"></i></a>
                 <a class="tooltips" href="{{ path('zikuladizkusmodule_admin_deleteforum',{ 'id': item.forum_id}) }}" title='{{ __("delete forum #{item.name}")}}'><i class="fa fa-trash-o fa-red fa-150x"></i></a>              
             </div>  
         </li>

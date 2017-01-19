@@ -32,7 +32,7 @@ function modifyForum(e) {
             forum: jQuery('#forum_id').val(),
             action: action
         },
-        url: Routing.generate('zikuladizkusmodule_ajax_modifyforum'),
+        url: Routing.generate('zikuladizkusmodule_forum_modifyforum'),
         success: function(result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {

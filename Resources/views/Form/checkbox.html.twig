@@ -1,0 +1,16 @@
+{% block checkbox_widget -%}  
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {% if 'checkbox-inline' in parent_label_class %}
+        {{- form_label(form, null, { widget: block('checkbox_widget_icon') }) -}}
+    {% else -%}
+        <div class="checkbox">
+                {{- form_label(form, null, { widget: block('checkbox_widget_icon') }) -}}
+        </div>
+    {%- endif %}    
+{%- endblock checkbox_widget %}
+
+{%- block checkbox_widget_icon -%}
+{%- set icon = attr.icon|default('') -%}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% if icon != '' %} <i class="{{ icon }}"></i> {% endif %}
+{%- endblock checkbox_widget_icon -%}

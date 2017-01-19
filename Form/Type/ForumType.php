@@ -23,7 +23,7 @@ class ForumType extends AbstractType
 {
     public function __construct()
     {
-        //@todo use service injection
+        //@todo use service injection?
 
         // assign all users for the moderator selection
         $em = \ServiceUtil::get('doctrine.entitymanager');

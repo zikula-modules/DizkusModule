@@ -1,0 +1,38 @@
+{{ include("@ZikulaDizkusModule/User/header.html.twig") }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2>{{ __('User IP and account information') }}</h2>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ __("IP address") }}</td>
+            <td width="100%">{{ viewip.poster_ip }}</td>
+        </tr>
+        <tr>
+            <td>{{ __("Host") }}</td>
+            <td>{{ viewip.poster_host }}</td>
+        </tr>
+        <tr>
+            <td style='white-space:nowrap;'>{{ __("Usernames posting from same IP") }}</td>
+            <td>
+                <ul>
+                {% for user in viewip.users %}
+{#     |profilelinkbyuname               #}
+                <li>{{ user.uname }}&nbsp;({{ __("%s posts", {'%s':user.postcount}) }} )</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="panel-footer">
+        <a class="btn btn-warning" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topicId}) }}" title="{{ __("Back to the topic") }}">{{ __("Back to the topic") }}</a>
+    </div>
+</div>
+
+{{ include("@ZikulaDizkusModule/User/footer.html.twig") }}
+

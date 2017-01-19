@@ -1,0 +1,51 @@
+{{ pageSetVar('title', __("Manage forum subscriptions")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+
+<div id="dzk_userprefs">
+
+    {{ moduleLinks('prefs') }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2>{{ __("Manage forum subscriptions") }}</h2>
+    </div>
+
+{#    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_manageforumsubscriptions'*}  #}  
+
+    <table class="table table-striped">
+        <thead>
+        <tr class="active">
+            <th class="col-lg-3">{{ __("Forum") }}</th>
+            <th>{{ __("Unsubscribe from forum") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if subscriptions|length > 0 %}
+            <tr class="warning">
+                <td></td>
+                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{{ __("Remove all forum subscriptions") }}</label></td>
+            </tr>
+        {% endif %}
+        {% for subscription in subscriptions %}
+            <tr>
+                <td><a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': subscription.forum.forum_id}) }}" title="{{ subscription.forum.name|escape('html') }}">{{ subscription.forum.name|escape('html') }}</a></td>
+                <td>{#{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}#}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan='2' class="text-center danger">
+                    {{ __("No forum subscriptions found.") }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if subscriptions|length > 0 %}
+    <div class="col-lg-offset-3 col-lg-9">
+
+    </div>
+{% endif %} 
+    
+</div>
+
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

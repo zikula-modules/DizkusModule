@@ -1,0 +1,40 @@
+{% if topforumscount > 0 %}
+    <h5>{{ _fn("%s Most-active forum", "%s Most-active forums", topforumscount, {'%s':topforumscount}) }} <small>({{ __('topics')}}/{{ __('posts') }})</small>:</h5>
+    <ul class="fa-ul" style="margin-left:0;padding-left:40px;">
+        {% for topforum in topforums %}
+        <li><i class="fa-li fa fa-comments text-muted"></i>
+            <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':topforum.forum_id}) }}" title="{{ topforum.cat_title }} :: {{ topforum.name }}">{{ topforum.name }}</a>
+            <small>({{ topforum.topicCount }}/{{ topforum.postCount }})</small>
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if lastpostcount > 0 %}
+    <h5>{{ _fn("%s Recent topic", "%s Recent topics", lastpostcount, {'%s':lastpostcount}) }}:</h5>
+    {% include "@ZikulaDizkusModule/Block/recentposts.html.twig" with {'showfooter': false } %}
+{% endif %}
+
+{% if toppostercount > 0 %}
+    <h5>{{ _fn("%s Most-active poster in last %n months", "%s Most-active posters in last %n months", toppostercount , {'%s': toppostercount ,'%n': months}) }}:</h5>
+    <ul class="fa-ul" style="margin-left:0;padding-left:40px;">
+        {% for topposter in topposters %}
+{#     |profilelinkbyuname       #}
+        <li><i class="fa-li fa fa-user text-muted"></i>{{ topposter.user_name }}&nbsp;<small>{{ topposter.postCount }} {{ __("Posts") }}</small></li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<h5>{{ __("Total") }}:</h5>
+<ul class="fa-ul" style="margin-left:0;padding-left:40px;">
+    <li><i class="fa-li fa fa-check text-muted"></i>{{ __("Forums") }}: {{ total_forums }}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{{ __("Topics") }}: {{ total_topics }}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{{ __("Posts") }}: {{ total_posts }}</li>
+    <li><i class="fa-li fa fa-check text-muted"></i>{{ __("Last User") }}: {{ last_user }}</li>
+</ul>
+
+{% if showfooter == true %}
+    <p class="text-center">
+        <a style="font-size: 0.8em;" href="{{ path('zikuladizkusmodule_forum_index') }}" title="{{ __("Go to forum") }}">{{ __("Go to forum") }}</a>
+    </p>
+{% endif %}

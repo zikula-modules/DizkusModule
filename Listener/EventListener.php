@@ -1,26 +1,27 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @see https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Listener;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use ModUtil;
-use HookUtil;
-use Symfony\Component\Routing\RouterInterface;
-use ZLanguage;
-use Zikula\Core\Event\GenericEvent;
-use Zikula\DizkusModule\ZikulaDizkusModule;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\ORM\EntityManager;
+use HookUtil;
+use ModUtil;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Zikula\Core\Event\GenericEvent;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
+use Zikula\DizkusModule\ZikulaDizkusModule;
+use ZLanguage;
 
 class EventListener implements EventSubscriberInterface
 {
@@ -37,16 +38,16 @@ class EventListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            'module_dispatch.service_links' => array('serviceLinks'),
-            'installer.module.uninstalled' => array('moduleDelete'),
-            'user.account.delete' => array('deleteUser'),
-        );
+        return [
+            'module_dispatch.service_links' => ['serviceLinks'],
+            'installer.module.uninstalled'  => ['moduleDelete'],
+            'user.account.delete'           => ['deleteUser'],
+        ];
     }
 
     /**
      * respond to event 'module_dispatch.service_links'
-     * populate Services menu with hook option link
+     * populate Services menu with hook option link.
      *
      * @param GenericEvent $event
      *
@@ -57,18 +58,18 @@ class EventListener implements EventSubscriberInterface
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $moduleName = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
-        if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array(array(
-                    'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', array('moduleName' => $moduleName)),
-                    'text' => __('Dizkus Hook Settings', $dom)), $event->data))) {
-            $event->data[] = array(
-                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', array('moduleName' => $moduleName)),
-                'text' => __('Dizkus Hook Settings', $dom));
+        if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
+                    'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                    'text' => __('Dizkus Hook Settings', $dom), ], $event->data))) {
+            $event->data[] = [
+                'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                'text' => __('Dizkus Hook Settings', $dom), ];
         }
     }
 
     /**
      * respond to event "installer.module.uninstalled".
-     * Receives $modinfo as event $args
+     * Receives $modinfo as event $args.
      *
      * On module delete handle associated hooked topics
      *
@@ -83,13 +84,13 @@ class EventListener implements EventSubscriberInterface
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $deleteHookAction = ModUtil::getVar(ZikulaDizkusModule::NAME, 'deletehookaction');
         // lock or remove
-        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(array('hookedModule' => $module));
+        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(['hookedModule' => $module]);
         $count = 0;
         $total = 0;
         foreach ($topics as $topic) {
             switch ($deleteHookAction) {
                 case 'remove':
-                    ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', array('topic' => $topic));
+                    ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', ['topic' => $topic]);
                     break;
                 case 'lock':
                 default:

@@ -1,0 +1,49 @@
+{% set templatetitle=__('Delete topic') %}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig", {'parent':topic.topic_id}) }}
+
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3> 
+                {{ __("Delete Topic") }}      
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-offset-3 col-md-9 alert alert-danger">
+            {{ __("Confirmation prompt: Do you really want to permanently delete this topic and all posts under this topic?") }}
+        </div>        
+        <div class="form-group">       
+            {{ form_label(form.sendReason, __('Send a reason to the poster') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
+            <div class="col-md-9">           
+                {{ form_widget(form.sendReason, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            </div>
+        </div> 
+        <div class="form-group">
+            {{ form_label(form.reason, __('Write a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">              
+                {{ form_widget(form.reason, {'value': __f('Your post "%s" was deleted, because ', {'%s': topic.title }), 'attr': {'rows' : '3', 'cols' : '40'}} ) }}
+            </div> 
+        </div>
+        <div class="form-group">                        
+            <div class="col-md-8">
+                {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_delete', id=topic.topic_id) }}
+            </div>             
+        </div>             
+        <div class="form-group">           
+            <div class="col-md-offset-3 col-md-9">  
+            {{ form_widget(form.delete, {'attr': {'class': 'btn btn-danger'}}) }}
+            {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-default'}}) }}
+            </div> 
+        </div>            
+    </div>
+</div>
+{{ form_end(form) }}
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
