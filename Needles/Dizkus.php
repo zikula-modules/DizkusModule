@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Needles;
@@ -22,10 +21,10 @@ class Dizkus extends \Zikula_AbstractHelper
 
     public function info()
     {
-        $info = array(
+        $info = [
             'module' => self::NAME,
             'info' => 'DIZKUS{F-forumid|T-topicid}',
-            'inspect' => true);
+            'inspect' => true];
         //reverse lookup possible, needs MultiHook_needleapi_dizkus_inspect() function
         return $info;
     }
@@ -44,7 +43,7 @@ class Dizkus extends \Zikula_AbstractHelper
         // cache the results
         static $cache;
         if (!isset($cache)) {
-            $cache = array();
+            $cache = [];
         }
         if (!empty($nid)) {
             if (!isset($cache[$nid])) {
@@ -65,7 +64,7 @@ class Dizkus extends \Zikula_AbstractHelper
                                 $managedForum = new ForumManager($id);
                                 if (!empty($managedForum)) {
                                     if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedForum->get())) {
-                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $id));
+                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $id]);
                                         $title = DataUtil::formatForDisplay($managedForum->get()->getName());
                                         $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                     } else {
@@ -79,7 +78,7 @@ class Dizkus extends \Zikula_AbstractHelper
                                 $managedTopic = new TopicManager($id);
                                 if (!empty($managedTopic)) {
                                     if (ModUtil::apiFunc(self::NAME, 'Permission', 'canRead', $managedTopic->get()->getForum())) {
-                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $id));
+                                        $url = \ServiceUtil::getService('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $id]);
                                         $title = DataUtil::formatForDisplay($managedTopic->get()->getTitle());
                                         $cache[$nid] = '<a href="' . $url . '" title="' . $title . '">' . $title . '</a>';
                                     } else {

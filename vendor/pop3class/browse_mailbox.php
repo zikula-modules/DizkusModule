@@ -59,7 +59,7 @@
                     */
                     $mime->decode_bodies = 1;
 
-                    $parameters=array(
+                    $parameters=[
                         'File'=>$message_file,
 
                         /* Read a message from a string instead of a file */
@@ -70,7 +70,7 @@
 
                         /* Do not retrieve or save message body parts     */
                             'SkipBody'=>1,
-                    );
+                    ];
                     $success=$mime->Decode($parameters, $decoded);
 
                     if (!$success) {

@@ -7,7 +7,6 @@
  * Contributor Agreements and licensed to You under the following license:
  *
  * @license GNU/LGPLv3 (or at your option, any later version).
- * @package Dizkus
  * @see https://github.com/zikula-modules/Dizkus
  *
  * Please see the NOTICE file distributed with this source code for further
@@ -107,7 +106,7 @@ class Pop3Connection
      */
     public function getConnection()
     {
-        return array(
+        return [
             'server' => $this->server,
             'port' => $this->port,
             'login' => $this->login,
@@ -115,7 +114,7 @@ class Pop3Connection
             'interval' => $this->interval,
             'lastconnect' => $this->lastconnect,
             'coreUser' => $this->coreUser,
-            'matchstring' => $this->matchstring);
+            'matchstring' => $this->matchstring];
     }
 
     /**

@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Entity;
@@ -239,7 +238,7 @@ class PostEntity extends EntityAccess
 
     public function getPoster_data()
     {
-        return array(
+        return [
             'image' => 'a',
             'rank' => 'a',
             'rank_link' => 'a',
@@ -248,7 +247,7 @@ class PostEntity extends EntityAccess
             'edit' => 'a',
             'reply' => 'a',
             'postCount' => 'a',
-            'seeip' => 'a');
+            'seeip' => 'a'];
     }
 
     /**

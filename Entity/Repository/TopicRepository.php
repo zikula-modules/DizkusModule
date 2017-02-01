@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Entity\Repository;
@@ -63,10 +62,10 @@ class TopicRepository extends EntityRepository
             AND a.hookedObjectId = :objectid
             AND a.hookedAreaId = :area ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameters(array(
+        $query->setParameters([
             'modulename' => $hook->getCaller(),
             'objectid' => $hook->getId(),
-            'area' => $hook->getAreaId()));
+            'area' => $hook->getAreaId()]);
         try {
             $result = $query->getOneOrNullResult();
         } catch (\Exception $e) {

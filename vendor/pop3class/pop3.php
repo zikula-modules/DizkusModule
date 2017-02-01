@@ -236,9 +236,9 @@ class pop3_class
             && function_exists("class_exists")
             && class_exists("sasl_client_class")) {
                 if (strlen($this->authentication_mechanism)) {
-                    $mechanisms=array($this->authentication_mechanism);
+                    $mechanisms=[$this->authentication_mechanism];
                 } else {
-                    $mechanisms=array();
+                    $mechanisms=[];
                     if ($this->PutLine("CAPA") == 0) {
                         return $this->SetError("Could not send the CAPA command");
                     }
@@ -415,7 +415,7 @@ class pop3_class
             return $this->SetError("Could not get the message listing: ".$this->Tokenize("\r\n"));
         }
         if ($message == "") {
-            for ($messages=array(); ;) {
+            for ($messages=[]; ;) {
                 $response=$this->GetLine();
                 if (gettype($response) != "string") {
                     return $this->SetError("Could not get message list response");
@@ -468,7 +468,7 @@ class pop3_class
         if ($this->Tokenize($response, " ") != "+OK") {
             return $this->SetError("Could not retrieve the message: ".$this->Tokenize("\r\n"));
         }
-        for ($headers=$body=array(), $line=0; ;) {
+        for ($headers=$body=[], $line=0; ;) {
             $response=$this->GetLine();
             if (gettype($response) != "string") {
                 return $this->SetError("Could not retrieve the message");
@@ -663,7 +663,7 @@ class pop3_class
 
     public function &SetConnection($set, &$current_name, &$pop3)
     {
-        static $connections = array();
+        static $connections = [];
 
         if ($set > 0) {
             $current_name = strval(count($connections));
