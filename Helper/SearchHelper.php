@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Helper;
@@ -29,7 +28,7 @@ class SearchHelper extends AbstractSearchable
     {
         if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ)) {
             $this->view->assign('active', $active);
-            $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', array('includeRoot' => false)));
+            $this->view->assign('forums', ModUtil::apiFunc($this->name, 'Forum', 'getParents', ['includeRoot' => false]));
 
             return $this->view->fetch('Search/options.tpl');
         }
@@ -48,7 +47,7 @@ class SearchHelper extends AbstractSearchable
     public function getResults(array $words, $searchType = 'AND', $modVars = null)
     {
         if (!SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ)) {
-            return array();
+            return [];
         }
 
         $forums = isset($modVars['forum']) ? $modVars['forum'] : null;
@@ -58,23 +57,23 @@ class SearchHelper extends AbstractSearchable
         $maxLength = ModUtil::getVar($this->name, 'maxsearchlength', 30);
         foreach ($words as $word) {
             if (strlen($word) < $minLength || strlen($word) > $maxLength) {
-                $this->addError($this->__f('For forum searches, each search term must be between %1$s and %2$s characters in length.', array($minLength, $maxLength)));
+                $this->addError($this->__f('For forum searches, each search term must be between %1$s and %2$s characters in length.', [$minLength, $maxLength]));
 
-                return array();
+                return [];
             }
         }
         if (!is_array($forums) || count($forums) == 0) {
             // set default
             $forums[0] = -1;
         }
-        $location = (in_array($location, array('post', 'author'))) ? $location : 'post';
+        $location = (in_array($location, ['post', 'author'])) ? $location : 'post';
 
         // get all forums the user is allowed to read
         $allowedForums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
         if (!is_array($allowedForums) || count($allowedForums) == 0) {
             $this->addError($this->__('You do not have permission to search any of the forums.'));
 
-            return array();
+            return [];
         }
 
         $qb = $this->entityManager->createQueryBuilder();
@@ -84,7 +83,7 @@ class SearchHelper extends AbstractSearchable
 
         switch ($location) {
             case 'author':
-                $authorIds = array();
+                $authorIds = [];
                 foreach ($words as $word) {
                     $authorId = \UserUtil::getIDFromName($word);
                     if ($authorId > 0) {
@@ -95,12 +94,12 @@ class SearchHelper extends AbstractSearchable
                     $qb->andWhere($qb->expr()->in('p.poster', ':authorIds'))
                         ->setParameter('authorIds', $authorIds);
                 } else {
-                    return array();
+                    return [];
                 }
                 break;
             case 'post':
             default:
-                $whereExpr = $this->formatWhere($qb, $words, array('t.title', 'p.post_text'), $searchType);
+                $whereExpr = $this->formatWhere($qb, $words, ['t.title', 'p.post_text'], $searchType);
                 $qb->andWhere($whereExpr);
         }
         // check forums (multiple selection is possible!)
@@ -115,7 +114,7 @@ class SearchHelper extends AbstractSearchable
                 // return empty result set without even doing a db access
                 $this->addError($this->__('You do not have permission to search the requested forums.'));
 
-                return array();
+                return [];
             }
             $qb->andWhere($qb->expr()->in('t.forum', ':forums'))->setParameter('forums', $forums);
         }
@@ -124,17 +123,17 @@ class SearchHelper extends AbstractSearchable
         $sessionId = session_id();
         $showTextInSearchResults = ModUtil::getVar($this->name, 'showtextinsearchresults', false);
         // Process the result set and insert into search result table
-        $records = array();
+        $records = [];
         foreach ($topics as $topic) {
             /** @var $topic \Zikula\Module\DizkusModule\Entity\TopicEntity */
-            $records[] = array(
+            $records[] = [
                 'title' => $topic->getTitle(),
                 'text' => $showTextInSearchResults ? $topic->getPosts()->first()->getPost_text() : '',
                 'created' => $topic->getTopic_time(),
                 'module' => $this->name,
                 'sesid' => $sessionId,
-                'url' => RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', array('topic' => $topic->getTopic_id())),
-            );
+                'url' => RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', ['topic' => $topic->getTopic_id()]),
+            ];
         }
 
         return $records;

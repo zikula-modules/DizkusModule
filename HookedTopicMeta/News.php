@@ -24,7 +24,7 @@ class News extends AbstractHookedTopicMeta
 
     public function setup()
     {
-        $newsItem = ModUtil::apiFunc('News', 'user', 'get', array('sid' => $this->getObjectId()));
+        $newsItem = ModUtil::apiFunc('News', 'user', 'get', ['sid' => $this->getObjectId()]);
         // the api takes care of the permissions check. we must check for pending/expiration & status
         $expired = isset($newsItem['to']) && strtotime($newsItem['to']) < strtotime('now');
         $pending = strtotime($newsItem['from']) > strtotime('now');

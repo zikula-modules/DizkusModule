@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule\Form\Type;
@@ -21,7 +20,7 @@ class PreferencesType extends AbstractType
 {
     public function __construct()
     {
-        $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', array('gid' => 2));
+        $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', ['gid' => 2]);
         $admins = ['-1' => 'disable'];
         foreach ($adminGroup['members'] as $admin) {
             $admins[$admin['uid']] = UserUtil::getVar('uname', $admin['uid']);

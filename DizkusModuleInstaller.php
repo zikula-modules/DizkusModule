@@ -6,7 +6,6 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
- * @package Dizkus
  */
 
 namespace Zikula\DizkusModule;
@@ -30,7 +29,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
      */
     const MODULENAME = 'ZikulaDizkusModule';
 
-    private $entities = array(
+    private $entities = [
         'Zikula\DizkusModule\Entity\ForumEntity',
         'Zikula\DizkusModule\Entity\PostEntity',
         'Zikula\DizkusModule\Entity\TopicEntity',
@@ -41,7 +40,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         'Zikula\DizkusModule\Entity\RankEntity',
         'Zikula\DizkusModule\Entity\ModeratorUserEntity',
         'Zikula\DizkusModule\Entity\ModeratorGroupEntity',
-    );
+    ];
 
     /**
      *  Initialize a new install of the Dizkus module
@@ -105,63 +104,63 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     private function setUpSampleRanks()
     {
         //title, description, minimumCount, maximumCount, type, image
-        $ranks = array(
-            array(
+        $ranks = [
+            [
                 'title' => 'Level 1',
                 'description' => 'New forum user',
                 'minimumCount' => 1,
                 'maximumCount' => 9,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'zerostar.gif'),
-            array(
+                'image' => 'zerostar.gif'],
+            [
                 'title' => 'Level 2',
                 'description' => 'Basic forum user',
                 'minimumCount' => 10,
                 'maximumCount' => 49,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'onestar.gif'),
-            array(
+                'image' => 'onestar.gif'],
+            [
                 'title' => 'Level 3',
                 'description' => 'Moderate forum user',
                 'minimumCount' => 50,
                 'maximumCount' => 99,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'twostars.gif'),
-            array(
+                'image' => 'twostars.gif'],
+            [
                 'title' => 'Level 4',
                 'description' => 'Advanced forum user',
                 'minimumCount' => 100,
                 'maximumCount' => 199,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'threestars.gif'),
-            array(
+                'image' => 'threestars.gif'],
+            [
                 'title' => 'Level 5',
                 'description' => 'Expert forum user',
                 'minimumCount' => 200,
                 'maximumCount' => 499,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'fourstars.gif'),
-            array(
+                'image' => 'fourstars.gif'],
+            [
                 'title' => 'Level 6',
                 'description' => 'Superior forum user',
                 'minimumCount' => 500,
                 'maximumCount' => 999,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'fivestars.gif'),
-            array(
+                'image' => 'fivestars.gif'],
+            [
                 'title' => 'Level 7',
                 'description' => 'Senior forum user',
                 'minimumCount' => 1000,
                 'maximumCount' => 4999,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'spezstars.gif'),
-            array(
+                'image' => 'spezstars.gif'],
+            [
                 'title' => 'Legend',
                 'description' => 'Legend forum user',
                 'minimumCount' => 5000,
                 'maximumCount' => 1000000,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'adminstars.gif'));
+                'image' => 'adminstars.gif']];
         foreach ($ranks as $rank) {
             $r = new RankEntity();
             $r->merge($rank);
@@ -235,7 +234,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $dom = ZLanguage::getModuleDomain(self::MODULENAME);
         $relativePath = self::generateRelativePath(__DIR__, 'modules');
 
-        return array(
+        return [
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
@@ -266,7 +265,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'indexTo' => '',
             'notifyAdminAsMod' => 2,
             'defaultPoster' => 2,
-        );
+        ];
     }
 
     /**
@@ -353,25 +352,25 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         // update all the tables to 4.0.0
         try {
-            $this->schemaTool->update(array($this->entities[0]));
+            $this->schemaTool->update([$this->entities[0]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[1]));
+            $this->schemaTool->update([$this->entities[1]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[2]));
+            $this->schemaTool->update([$this->entities[2]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[3]));
+            $this->schemaTool->update([$this->entities[3]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[4]));
+            $this->schemaTool->update([$this->entities[4]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[5]));
+            $this->schemaTool->update([$this->entities[5]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[6]));
+            $this->schemaTool->update([$this->entities[6]]);
             sleep(1);
-            $this->schemaTool->update(array($this->entities[7]));
+            $this->schemaTool->update([$this->entities[7]]);
             sleep(2);
-            $this->schemaTool->update(array($this->entities[8]));
+            $this->schemaTool->update([$this->entities[8]]);
             sleep(2);
-            $this->schemaTool->update(array($this->entities[9]));
+            $this->schemaTool->update([$this->entities[9]]);
             sleep(2);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
@@ -385,7 +384,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->upgrade_to_4_0_0_migratePop3Connections($forumdata);
         // @todo use $forumdata to migrate forum modulerefs
         $this->upgrade_to_4_0_0_migrateHookedTopics($hookedTopicData);
-        $sqls = array();
+        $sqls = [];
         $sqls[] = "UPDATE `dizkus_topics` SET `poster`=1 WHERE poster='-1'";
         $sqls[] = "UPDATE `dizkus_posts` SET `poster_id`=1 WHERE poster_id='-1'";
         $sqls[] = "DELETE FROM `dizkus_subscription` WHERE `user_id` < 2";
@@ -429,7 +428,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $stmt = $connection->prepare($sql);
             $stmt->execute();
         }
-        $repArray = array('Dizkus_Centerblock::', 'Dizkus_Statisticsblock', "{$this->name}::RecentPostsBlock", "{$this->name}::StatisticsBlock");
+        $repArray = ['Dizkus_Centerblock::', 'Dizkus_Statisticsblock', "{$this->name}::RecentPostsBlock", "{$this->name}::StatisticsBlock"];
         $this->addFlash('status', $this->__f('The permission schemas %1$s and %2$s were changed into %3$s and %4$s, respectively. If you were using them please modify your permission table.', $repArray));
 
         return true;
@@ -442,7 +441,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     {
         $connection = $this->entityManager->getConnection();
         // remove table prefixes
-        $dizkusTables = array(
+        $dizkusTables = [
             'dizkus_categories',
             'dizkus_forum_mods',
             'dizkus_forums',
@@ -452,7 +451,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'dizkus_topics',
             'dizkus_topic_subscription',
             'dizkus_forum_favorites',
-            'dizkus_users');
+            'dizkus_users'];
         foreach ($dizkusTables as $value) {
             $sql = 'RENAME TABLE ' . $prefix . $value . ' TO ' . $value;
             $stmt = $connection->prepare($sql);
@@ -471,7 +470,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     private function upgrade_to_4_0_0_renameColumns()
     {
         $connection = $this->entityManager->getConnection();
-        $sqls = array();
+        $sqls = [];
         // a list of column changes
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_desc description TEXT DEFAULT NULL';
         $sqls[] = 'ALTER TABLE dizkus_forums CHANGE forum_topics topicCount INT UNSIGNED NOT NULL DEFAULT 0';
@@ -527,7 +526,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // Move old categories into new tree as Forums
         $sql = 'SELECT * FROM dizkus_categories ORDER BY cat_order ASC';
         $categories = $connection->fetchAll($sql);
-        $sqls = array();
+        $sqls = [];
         foreach ($categories as $category) {
             // create new category forum with old name
             $newCatForum = new ForumEntity();
@@ -546,7 +545,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // correct the forum tree MANUALLY
         // we know that the forum can only be two levels deep (root -> parent -> child)
         $count = 1;
-        $sqls = array();
+        $sqls = [];
         $categories = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE lvl = 1");
         foreach ($categories as $category) {
             $category['l'] = ++$count;
@@ -674,10 +673,10 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     list($moduleId, $objectId) = explode('-', $row['topic_reference']);
                     $moduleInfo = ModUtil::getInfo($moduleId);
                     if ($moduleInfo) {
-                        $searchCritera = array(
+                        $searchCritera = [
                             'owner' => $moduleInfo['name'],
                             'areatype' => 's',
-                            'category' => 'ui_hooks');
+                            'category' => 'ui_hooks'];
                         $subscriberArea = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->findBy($searchCritera);
                         if (count($subscriberArea) != 1) {
                             // found either too many areas or none. cannot migrate
