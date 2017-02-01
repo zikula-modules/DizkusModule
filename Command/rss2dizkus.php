@@ -6,6 +6,7 @@
  * @copyright (c) 2001-now, Dizkus Development Team
  * @see https://github.com/zikula-modules/Dizkus
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
+ * @package Dizkus
  */
 //
 // store the absolute path to your Zikula folder here
@@ -61,16 +62,16 @@ foreach ($forums as $forum) {
         $loggedin = true;
     }
     if ($loggedin == true) {
-        $rss = ModUtil::apiFunc('Feeds', 'user', 'get', [
-                    'fid' => $connection['server']]);
+        $rss = ModUtil::apiFunc('Feeds', 'user', 'get', array(
+                    'fid' => $connection['server']));
         if (!$rss) {
             // this feed does not exist
             die;
         }
         // Get the feed
-        $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', [
+        $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', array(
                     'fid' => $rss['fid'],
-                    'url' => $rss['url']]);
+                    'url' => $rss['url']));
         if (!$dump) {
             // this feed does not exist
             die;
@@ -82,9 +83,9 @@ foreach ($forums as $forum) {
         // Important information is in the $dump->items
         $items = $dump['feed']->get_items();
         // See the function below...
-        $insert = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'insertrss', [
+        $insert = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'insertrss', array(
                     'items' => $items,
-                    'forum' => $forum]);
+                    'forum' => $forum));
         if (!$insert) {
         }
     }

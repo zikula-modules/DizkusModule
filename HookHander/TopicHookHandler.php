@@ -37,7 +37,7 @@ use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula_View;
 use ZLanguage;
 
-class HookHandlers extends AbstractHookListener
+class TopicHookHandler extends AbstractHookListener
 {
     /**
      * Zikula_View instance.

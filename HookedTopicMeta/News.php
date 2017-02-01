@@ -16,7 +16,6 @@ namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use ModUtil;
 use News_Api_User;
-use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class News extends AbstractHookedTopicMeta
 {
