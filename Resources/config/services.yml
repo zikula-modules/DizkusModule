@@ -168,3 +168,13 @@ services:
             - "@zikula_dizkus_module.forum_manager"
             - "@zikula_dizkus_module.topic_manager"
             - "@zikula_dizkus_module.synchronization_helper"
+
+    # Hooks
+    zikula_dizkus_module.hook_handler.base:
+      abstract: true
+      arguments: 
+            - "@doctrine.orm.default_entity_manager"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_dizkus_module.security"
+            - "@translator"
