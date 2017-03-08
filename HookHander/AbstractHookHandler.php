@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -27,7 +26,6 @@ use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
  */
 abstract class AbstractHookHandler
 {
-
     /**
      * @var EntityManagerInterface
      */
@@ -55,8 +53,7 @@ abstract class AbstractHookHandler
 
     public function __construct(
     EntityManagerInterface $entityManager, RequestStack $requestStack, EngineInterface $renderEngine, Permission $permission, TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
         $this->renderEngine = $renderEngine;
@@ -91,5 +88,4 @@ abstract class AbstractHookHandler
     {
         return 'provider.dizkus.ui_hooks.' . $this->getType();
     }
-
 }

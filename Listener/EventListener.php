@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus.
  *
@@ -25,7 +24,6 @@ use ZLanguage;
 
 class EventListener implements EventSubscriberInterface
 {
-
     private $entityManager;
     private $requestStack;
     private $router;
@@ -151,5 +149,4 @@ class EventListener implements EventSubscriberInterface
         ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
         ->execute();
     }
-
 }

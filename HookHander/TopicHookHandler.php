@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -32,7 +31,6 @@ namespace Zikula\DizkusModule;
 
 class TopicHookHandler extends AbstractHookHandler
 {
-
     /**
      * Display hook for view.
      *
@@ -95,8 +93,6 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function uiEdit(DisplayHook $hook)
     {
-
-
 //        $hookconfig = $this->getHookConfig($hook);
 //        $forum = $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($hookconfig[$hook->getAreaId()]['forum']);
 //        $this->view->assign('forum', $forum->getName());
@@ -142,7 +138,6 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function validateEdit(ValidationHook $hook)
     {
-
     }
 
     /**
@@ -154,7 +149,6 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function validateDelete(ValidationHook $hook)
     {
-
     }
 
     /**
@@ -295,5 +289,4 @@ class TopicHookHandler extends AbstractHookHandler
 //
 //        return $hookconfig;
     }
-
 }
