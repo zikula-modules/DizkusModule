@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus
  *
@@ -36,10 +35,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotati
 /**
  * @Route("/admin")
  */
-
 class AdminController extends AbstractController
 {
-
     /**
      * @Route("")
      *
@@ -361,7 +358,7 @@ class AdminController extends AbstractController
         if ($id) {
             $forum = $this->getDoctrine()->getManager()->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
             if ($forum) {
-
+                //nothing to do here? @todo rearange this if
             } else {
                 $this->addFlash('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
 

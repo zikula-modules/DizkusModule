@@ -55,7 +55,7 @@ foreach ($forums as $forum) {
             $lastuser = $connection['coreUser']->getUid();
             $loggedin = true;
         } else {
-
+            //something should happend here?
         }
     } else {
         // we have been here before
@@ -87,7 +87,7 @@ foreach ($forums as $forum) {
             'items' => $items,
             'forum' => $forum]);
         if (!$insert) {
-
+            // something should happend here as well
         }
     }
 }
