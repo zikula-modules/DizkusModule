@@ -93,7 +93,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function uiEdit(DisplayHook $hook)
     {
-//        $hookconfig = $this->getHookConfig($hook);
+        //        $hookconfig = $this->getHookConfig($hook);
 //        $forum = $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($hookconfig[$hook->getAreaId()]['forum']);
 //        $this->view->assign('forum', $forum->getName());
 //        $itemId = $hook->getId();
@@ -118,7 +118,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function uiDelete(DisplayHook $hook)
     {
-//        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        //        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
 //        if (isset($topic)) {
 //            $this->view->assign('forum', $topic->getForum()->getName());
 //            $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
@@ -160,7 +160,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function processEdit(ProcessHook $hook)
     {
-//        $data = $this->view->getRequest()->request->get('dizkus', null);
+        //        $data = $this->view->getRequest()->request->get('dizkus', null);
 //        $createTopic = isset($data['createTopic']) ? true : false;
 //        if ($createTopic) {
 //            $hookconfig = $this->getHookConfig($hook);
@@ -213,7 +213,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     public function processDelete(ProcessHook $hook)
     {
-//        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
+        //        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
 //        // lock or remove
 //        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
 //        if (isset($topic)) {
@@ -243,7 +243,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     private function getClassInstance(ProcessHook $hook)
     {
-//        if (empty($hook)) {
+        //        if (empty($hook)) {
 //            return false;
 //        }
 //        $moduleName = $hook->getCaller();
@@ -272,7 +272,7 @@ class TopicHookHandler extends AbstractHookHandler
      */
     private function getHookConfig($hook)
     {
-//        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
+        //        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
 //        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig', []);
 //        if (!isset($hookconfig[$hook->getAreaId()]['forum'])) {
 //            // admin didn't choose a forum, so create one and set as choice

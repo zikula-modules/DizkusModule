@@ -59,10 +59,10 @@ class EventListener implements EventSubscriberInterface
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
         if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
             'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-            'text' => __('Dizkus Hook Settings', $dom),], $event->data))) {
+            'text' => __('Dizkus Hook Settings', $dom), ], $event->data))) {
             $event->data[] = [
                 'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-                'text' => __('Dizkus Hook Settings', $dom),];
+                'text' => __('Dizkus Hook Settings', $dom), ];
         }
     }
 
