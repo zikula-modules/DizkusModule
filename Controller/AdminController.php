@@ -48,6 +48,7 @@ class AdminController extends AbstractController
     {
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
+
     /**
      * @Route("/order/{action}/{forum}", requirements={"action" = "moveUp|moveDown", "forum" = "^[1-9]\d*$"})
      * @Method("GET")
@@ -79,6 +80,7 @@ class AdminController extends AbstractController
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
+
     /**
      * @Route("/prefs")
      *
@@ -112,6 +114,7 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/sync")
      *
@@ -148,6 +151,7 @@ class AdminController extends AbstractController
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
+
     /**
      * @Route("/ranks")
      *
@@ -186,6 +190,7 @@ class AdminController extends AbstractController
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', ['ranktype' => $ranktype], RouterInterface::ABSOLUTE_URL));
     }
+
     /**
      * @Route("/assignranks")
      *
@@ -259,6 +264,7 @@ class AdminController extends AbstractController
             'usercount' => $count
         ]);
     }
+
     /**
      * @Route("/tree")
      *
@@ -278,6 +284,7 @@ class AdminController extends AbstractController
             'tree' => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false)
         ]);
     }
+
     /**
      * @Route("/modify/{id}")
      *
@@ -336,6 +343,7 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/delete/{id}")
      *
@@ -446,6 +454,7 @@ class AdminController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/subscriptions/{uid}", options={"expose"=true})
      *
@@ -493,6 +502,7 @@ class AdminController extends AbstractController
             'forumsubscriptions' => $forumsubscriptions
         ]);
     }
+
     /**
      * @Route("/hookconfig/{moduleName}")
      * @Method("GET")
@@ -529,6 +539,7 @@ class AdminController extends AbstractController
             'forums' => $this->get('zikula_dizkus_module.forum_manager')->getParents(null, true),
         ]);
     }
+
     /**
      * @Route("/hookconfig")
      * @Method("POST")
