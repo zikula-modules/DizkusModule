@@ -78,7 +78,7 @@ abstract class AbstractHookHandler
     public function getType()
     {
         $class = get_class($this);
-        
+
         return lcfirst(substr($class, strrpos($class, '\\') + 1, -strlen('HookHandler')));
     }
 
