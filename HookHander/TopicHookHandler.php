@@ -30,7 +30,8 @@ namespace Zikula\DizkusModule;
 //use Zikula\DizkusModule\Manager\PostManager;
 //use Zikula\DizkusModule\Manager\TopicManager;
 
-class TopicHookHandler extends AbstractHookHandler {
+class TopicHookHandler extends AbstractHookHandler
+{
 
     /**
      * Display hook for view.
@@ -39,7 +40,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return string
      */
-    public function uiView(DisplayHook $hook) {
+    public function uiView(DisplayHook $hook)
+    {
         // first check if the user is allowed to do any comments for this module/objectid
 //        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
 //            return;
@@ -91,7 +93,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return string
      */
-    public function uiEdit(DisplayHook $hook) {
+    public function uiEdit(DisplayHook $hook)
+    {
 
 
 //        $hookconfig = $this->getHookConfig($hook);
@@ -117,7 +120,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return string
      */
-    public function uiDelete(DisplayHook $hook) {
+    public function uiDelete(DisplayHook $hook)
+    {
 //        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
 //        if (isset($topic)) {
 //            $this->view->assign('forum', $topic->getForum()->getName());
@@ -136,7 +140,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return void (unused)
      */
-    public function validateEdit(ValidationHook $hook) {
+    public function validateEdit(ValidationHook $hook)
+    {
 
     }
 
@@ -147,7 +152,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return void (unused)
      */
-    public function validateDelete(ValidationHook $hook) {
+    public function validateDelete(ValidationHook $hook)
+    {
 
     }
 
@@ -158,7 +164,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return bool
      */
-    public function processEdit(ProcessHook $hook) {
+    public function processEdit(ProcessHook $hook)
+    {
 //        $data = $this->view->getRequest()->request->get('dizkus', null);
 //        $createTopic = isset($data['createTopic']) ? true : false;
 //        if ($createTopic) {
@@ -210,7 +217,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return bool
      */
-    public function processDelete(ProcessHook $hook) {
+    public function processDelete(ProcessHook $hook)
+    {
 //        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
 //        // lock or remove
 //        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
@@ -239,7 +247,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return object of found class
      */
-    private function getClassInstance(ProcessHook $hook) {
+    private function getClassInstance(ProcessHook $hook)
+    {
 //        if (empty($hook)) {
 //            return false;
 //        }
@@ -267,7 +276,8 @@ class TopicHookHandler extends AbstractHookHandler {
      *
      * @return array
      */
-    private function getHookConfig($hook) {
+    private function getHookConfig($hook)
+    {
 //        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
 //        $hookconfig = ModUtil::getVar($hook->getCaller(), 'dizkushookconfig', []);
 //        if (!isset($hookconfig[$hook->getAreaId()]['forum'])) {

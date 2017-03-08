@@ -37,7 +37,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotati
  * @Route("/admin")
  */
 
-class AdminController extends AbstractController {
+class AdminController extends AbstractController
+{
 
     /**
      * @Route("")
@@ -46,7 +47,8 @@ class AdminController extends AbstractController {
      *
      * @return RedirectResponse
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
 
@@ -64,7 +66,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException on Perm check failure
      */
-    public function changeForumOrderAction($action, ForumEntity $forum) {
+    public function changeForumOrderAction($action, ForumEntity $forum)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -88,7 +91,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException
      */
-    public function preferencesAction(Request $request) {
+    public function preferencesAction(Request $request)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -123,7 +127,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException
      */
-    public function syncforumsAction(Request $request) {
+    public function syncforumsAction(Request $request)
+    {
         $showstatus = !$request->request->get('silent', 0);
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
@@ -161,7 +166,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException
      */
-    public function ranksAction(Request $request) {
+    public function ranksAction(Request $request)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -197,7 +203,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException
      */
-    public function assignranksAction(Request $request) {
+    public function assignranksAction(Request $request)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -270,7 +277,8 @@ class AdminController extends AbstractController {
      *
      * @throws AccessDeniedException
      */
-    public function treeAction() {
+    public function treeAction()
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -285,7 +293,8 @@ class AdminController extends AbstractController {
      *
      * @return Response
      */
-    public function modifyForumAction(Request $request, $id = null) {
+    public function modifyForumAction(Request $request, $id = null)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -343,7 +352,8 @@ class AdminController extends AbstractController {
      *
      * @return Response
      */
-    public function deleteforumAction(Request $request, $id = null) {
+    public function deleteforumAction(Request $request, $id = null)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -453,7 +463,8 @@ class AdminController extends AbstractController {
      *
      * @return Response
      */
-    public function manageSubscriptionsAction(Request $request, $uid = null) {
+    public function manageSubscriptionsAction(Request $request, $uid = null)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -504,7 +515,8 @@ class AdminController extends AbstractController {
      * @param $moduleName
      * @return Response
      */
-    public function hookConfigAction($moduleName) {
+    public function hookConfigAction($moduleName)
+    {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
@@ -540,7 +552,8 @@ class AdminController extends AbstractController {
      * @param Request $request
      * @return RedirectResponse
      */
-    public function hookConfigProcessAction(Request $request) {
+    public function hookConfigProcessAction(Request $request)
+    {
         $hookdata = $request->request->get('dizkus', []);
         $moduleName = $request->request->get('activeModule');
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {

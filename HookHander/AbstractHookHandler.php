@@ -25,7 +25,8 @@ use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
 /**
  * Provides convenience methods for hook handling.
  */
-abstract class AbstractHookHandler {
+abstract class AbstractHookHandler
+{
 
     /**
      * @var EntityManagerInterface
@@ -54,7 +55,8 @@ abstract class AbstractHookHandler {
 
     public function __construct(
     EntityManagerInterface $entityManager, RequestStack $requestStack, EngineInterface $renderEngine, Permission $permission, TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
         $this->renderEngine = $renderEngine;
@@ -68,14 +70,16 @@ abstract class AbstractHookHandler {
      * @param DisplayHook $hook
      * @param string      $content
      */
-    public function uiResponse(DisplayHook $hook, $content) {
+    public function uiResponse(DisplayHook $hook, $content)
+    {
         $hook->setResponse(new DisplayHookResponse($this->getProvider(), $content));
     }
 
     /**
      * @return string
      */
-    public function getType() {
+    public function getType()
+    {
         $class = get_class($this);
         return lcfirst(substr($class, strrpos($class, '\\') + 1, -strlen('HookHandler')));
     }
@@ -83,7 +87,8 @@ abstract class AbstractHookHandler {
     /**
      * @return string
      */
-    protected function getProvider() {
+    protected function getProvider()
+    {
         return 'provider.dizkus.ui_hooks.' . $this->getType();
     }
 

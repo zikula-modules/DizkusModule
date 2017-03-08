@@ -23,19 +23,22 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use ZLanguage;
 
-class EventListener implements EventSubscriberInterface {
+class EventListener implements EventSubscriberInterface
+{
 
     private $entityManager;
     private $requestStack;
     private $router;
 
-    public function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router) {
+    public function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router)
+    {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->router = $router;
     }
 
-    public static function getSubscribedEvents() {
+    public static function getSubscribedEvents()
+    {
         return [
             'zikula.link_collector' => ['serviceLinks'],
             'installer.module.uninstalled' => ['moduleDelete'],
@@ -51,7 +54,8 @@ class EventListener implements EventSubscriberInterface {
      *
      * @return void
      */
-    public function serviceLinks(GenericEvent $event) {
+    public function serviceLinks(GenericEvent $event)
+    {
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $moduleName = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
@@ -74,7 +78,8 @@ class EventListener implements EventSubscriberInterface {
      *
      * @return void
      */
-    public function moduleDelete(GenericEvent $z_event) {
+    public function moduleDelete(GenericEvent $z_event)
+    {
         $args = $z_event->getArguments(); // $modinfo
         $module = $args['name'];
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
@@ -118,7 +123,8 @@ class EventListener implements EventSubscriberInterface {
      *
      * @return void
      */
-    public function deleteUser(GenericEvent $event) {
+    public function deleteUser(GenericEvent $event)
+    {
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
         // remove subscriptions - topic
         $dql = 'DELETE Zikula\DizkusModule\Entity\TopicSubscriptionEntity u
