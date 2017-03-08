@@ -23,25 +23,23 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\ZikulaDizkusModule;
 use ZLanguage;
 
-class EventListener implements EventSubscriberInterface
-{
+class EventListener implements EventSubscriberInterface {
+
     private $entityManager;
     private $requestStack;
     private $router;
 
-    public function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router)
-    {
+    public function __construct(RequestStack $requestStack, EntityManager $entityManager, RouterInterface $router) {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->router = $router;
     }
 
-    public static function getSubscribedEvents()
-    {
+    public static function getSubscribedEvents() {
         return [
-            'module_dispatch.service_links' => ['serviceLinks'],
-            'installer.module.uninstalled'  => ['moduleDelete'],
-            'user.account.delete'           => ['deleteUser'],
+            'zikula.link_collector' => ['serviceLinks'],
+            'installer.module.uninstalled' => ['moduleDelete'],
+            'user.account.delete' => ['deleteUser'],
         ];
     }
 
@@ -53,17 +51,16 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public function serviceLinks(GenericEvent $event)
-    {
+    public function serviceLinks(GenericEvent $event) {
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
         $moduleName = $event['modname'];
         $bindingCount = count(HookUtil::getBindingsBetweenOwners($moduleName, ZikulaDizkusModule::NAME));
         if ($bindingCount > 0 && $moduleName != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
-                    'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-                    'text' => __('Dizkus Hook Settings', $dom), ], $event->data))) {
+            'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+            'text' => __('Dizkus Hook Settings', $dom),], $event->data))) {
             $event->data[] = [
-                'url'  => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
-                'text' => __('Dizkus Hook Settings', $dom), ];
+                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName]),
+                'text' => __('Dizkus Hook Settings', $dom),];
         }
     }
 
@@ -77,8 +74,7 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public function moduleDelete(GenericEvent $z_event)
-    {
+    public function moduleDelete(GenericEvent $z_event) {
         $args = $z_event->getArguments(); // $modinfo
         $module = $args['name'];
         $dom = ZLanguage::getModuleDomain(ZikulaDizkusModule::NAME);
@@ -122,8 +118,7 @@ class EventListener implements EventSubscriberInterface
      *
      * @return void
      */
-    public function deleteUser(GenericEvent $event)
-    {
+    public function deleteUser(GenericEvent $event) {
         $user = $event->getSubject(); // user is an array formed by UserUtil::getVars();
         // remove subscriptions - topic
         $dql = 'DELETE Zikula\DizkusModule\Entity\TopicSubscriptionEntity u
@@ -146,8 +141,9 @@ class EventListener implements EventSubscriberInterface
             SET u.level = :level
             WHERE u.user_id = :uid';
         $this->entityManager->createQuery($dql)
-            ->setParameter('uid', $user['uid'])
-            ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
-            ->execute();
+        ->setParameter('uid', $user['uid'])
+        ->setParameter('level', ForumUserEntity::USER_LEVEL_DELETED)
+        ->execute();
     }
+
 }
