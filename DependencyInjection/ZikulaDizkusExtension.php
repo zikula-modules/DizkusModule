@@ -30,5 +30,4 @@ class ZikulaDizkusExtension extends Extension
 
         $loader->load('services.yml');
     }
-
 }
