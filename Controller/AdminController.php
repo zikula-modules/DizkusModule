@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus
  *
@@ -112,7 +111,7 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/preferences.html.twig', [
-                    'form' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 
@@ -207,12 +206,12 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $page = (int)$request->query->get('page', 1);
+        $page = (int) $request->query->get('page', 1);
         $letter = $request->query->get('letter');
 
         if ($request->getMethod() == 'POST') {
             $letter = $request->request->get('letter');
-            $page = (int)$request->request->get('page', 1);
+            $page = (int) $request->request->get('page', 1);
 
             $setrank = $request->request->get('setrank');
 
@@ -226,15 +225,15 @@ class AdminController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('u')
-                ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
-                ->orderBy('u.uname', 'ASC');
+        ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
+        ->orderBy('u.uname', 'ASC');
         if ($letter != '*') {
             $qb->andWhere('u.uname LIKE :letter')
-                ->setParameter('letter', strtolower($letter) . '%');
+            ->setParameter('letter', strtolower($letter) . '%');
         }
         $query = $qb->getQuery();
         $query->setFirstResult(($page - 1) * $perpage)
-            ->setMaxResults($perpage);
+        ->setMaxResults($perpage);
 
         // Paginator
         $allusers = new Paginator($query);
@@ -256,13 +255,13 @@ class AdminController extends AbstractController
         list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
 
         return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
-                    'ranks' => $ranks,
-                    'rankimages' => $rankimages,
-                    'allusers' => $userArray,
-                    'letter' => $letter,
-                    'page' => $page,
-                    'perpage' => $perpage,
-                    'usercount' => $count
+            'ranks' => $ranks,
+            'rankimages' => $rankimages,
+            'allusers' => $userArray,
+            'letter' => $letter,
+            'page' => $page,
+            'perpage' => $perpage,
+            'usercount' => $count
         ]);
     }
 
@@ -282,8 +281,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/tree.html.twig', [
-                    'tree' => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false)
-            ]);
+            'tree' => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false)
+        ]);
     }
 
     /**
@@ -338,11 +337,11 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/modifyforum.html.twig', [
-                    'topiccount' => $topiccount,
-                    'postcount' => $postcount,
-                    'forum' => $forum,
-                    'form' => $form->createView(),
-            ]);
+            'topiccount' => $topiccount,
+            'postcount' => $postcount,
+            'forum' => $forum,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -359,6 +358,7 @@ class AdminController extends AbstractController
         if ($id) {
             $forum = $this->getDoctrine()->getManager()->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
             if ($forum) {
+                //nothing to do here? @todo rearange this if
             } else {
                 $this->addFlash('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
 
@@ -375,36 +375,36 @@ class AdminController extends AbstractController
 
         // @todo move to form handler
         $form = $this->createFormBuilder([])
-                ->add('action', 'choice', [
-                    'choices' => ['0' => $this->__('Remove them'),
-                                  '1' => $this->__('Move them to a new parent forum')],
-                    'multiple' => false,
-                    'expanded' => false,
-                    'required' => true])
-                ->add('destination', 'choice', [
-                    'choices' => $destinations,
-                    'choice_value' => function ($destination) {
-                        //for some reason last element is null @FIXME
-                        return $destination === null ? null : $destination->getForum_id();
-                    },
-                    'choice_label' => function ($destination) use ($forum) {
-                        $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? ' (' . $this->__("is child forum") . ')' : '';
-                        $current = $destination->getForum_id() === $forum->getForum_id() ? ' (' . $this->__("current") . ')' : '';
-                        $locked = $destination->isLocked() ? ' (' . $this->__("is locked") . ')' : '';
+        ->add('action', 'choice', [
+            'choices' => ['0' => $this->__('Remove them'),
+                '1' => $this->__('Move them to a new parent forum')],
+            'multiple' => false,
+            'expanded' => false,
+            'required' => true])
+        ->add('destination', 'choice', [
+            'choices' => $destinations,
+            'choice_value' => function ($destination) {
+                //for some reason last element is null @FIXME
+                return $destination === null ? null : $destination->getForum_id();
+            },
+            'choice_label' => function ($destination) use ($forum) {
+                $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? ' (' . $this->__("is child forum") . ')' : '';
+                $current = $destination->getForum_id() === $forum->getForum_id() ? ' (' . $this->__("current") . ')' : '';
+                $locked = $destination->isLocked() ? ' (' . $this->__("is locked") . ')' : '';
 
-                        return str_repeat("--", $destination->getLvl()) . $destination->getName() . $current . $locked. $isChild;
-                    },
-                    'choice_attr' => function ($destination) use ($forum) {
-                        $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? true : false;
+                return str_repeat("--", $destination->getLvl()) . $destination->getName() . $current . $locked . $isChild;
+            },
+            'choice_attr' => function ($destination) use ($forum) {
+                $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? true : false;
 
-                        return $destination->getForum_id() === $forum->getForum_id() || $destination->isLocked() || $isChild ? ['disabled' => 'disabled'] : [];
-                    },
-                    'choices_as_values' => true,
-                    'multiple' => false,
-                    'expanded' => false,
-                    'required' => true])
-                ->add('remove', 'submit')
-                ->getForm();
+                return $destination->getForum_id() === $forum->getForum_id() || $destination->isLocked() || $isChild ? ['disabled' => 'disabled'] : [];
+            },
+            'choices_as_values' => true,
+            'multiple' => false,
+            'expanded' => false,
+            'required' => true])
+        ->add('remove', 'submit')
+        ->getForm();
 
         $form->handleRequest($request);
 
@@ -450,9 +450,9 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/deleteforum.html.twig', [
-                    'forum' => $forum,
-                    'form' => $form->createView(),
-            ]);
+            'forum' => $forum,
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -496,11 +496,11 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/managesubscriptions.html.twig', [
-                    'uid' => $uid,
-                    'username' => $username,
-                    'topicsubscriptions' => $topicsubscriptions,
-                    'forumsubscriptions' => $forumsubscriptions
-            ]);
+            'uid' => $uid,
+            'username' => $username,
+            'topicsubscriptions' => $topicsubscriptions,
+            'forumsubscriptions' => $forumsubscriptions
+        ]);
     }
 
     /**
@@ -520,12 +520,10 @@ class AdminController extends AbstractController
 
         $hookconfig = $this->get('zikula_extensions_module.api.variable')->get($moduleName, 'dizkushookconfig');
         // looks like module should always exist it would not be hooked
-        $module = $this->get('zikula_extensions_module.api.extension')->getModule($moduleName);
-        $moduleCapabilities = $module->getCapabilities();
-        // same hook_subscriber class should always exist right?
-        // maybe use CapabilityApi here ??
-        // $capabilities = $this->get('zikula_extensions_module.api.capability')->isCapable($moduleName, 'hook_subscriber');
-        $moduleHookContainerClass = $moduleCapabilities['hook_subscriber']['class'];
+        $module = $this->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull($moduleName);
+        $moduleHookCapable = $this->get('zikula_extensions_module.api.capability')->isCapable($moduleName, 'hook_subscriber');
+
+        $moduleHookContainerClass = $moduleHookCapable['class'];
         $moduleHookContainer = new $moduleHookContainerClass($this->get('translator.default'));
         $bindingsBetweenOwners = $this->get('hook_dispatcher')->getBindingsBetweenOwners($moduleName, $this->name);
         foreach ($bindingsBetweenOwners as $k => $binding) {
@@ -535,11 +533,11 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Hook/modifyconfig.html.twig', [
-                    'areas' => $bindingsBetweenOwners,
-                    'dizkushookconfig' => $hookconfig,
-                    'activeModule' => $module,
-                    'forums' => $this->get('zikula_dizkus_module.synchronization_helper')->getParents(null, true),
-            ]);
+            'areas' => $bindingsBetweenOwners,
+            'dizkushookconfig' => $hookconfig,
+            'activeModule' => $module,
+            'forums' => $this->get('zikula_dizkus_module.forum_manager')->getParents(null, true),
+        ]);
     }
 
     /**

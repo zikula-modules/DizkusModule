@@ -15,7 +15,6 @@
 namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use ZLanguage;
-use Zikula\DizkusModule\AbstractHookedTopicMeta;
 
 class Generic extends AbstractHookedTopicMeta
 {

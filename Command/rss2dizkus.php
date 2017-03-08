@@ -55,6 +55,7 @@ foreach ($forums as $forum) {
             $lastuser = $connection['coreUser']->getUid();
             $loggedin = true;
         } else {
+            //something should happend here?
         }
     } else {
         // we have been here before
@@ -62,15 +63,15 @@ foreach ($forums as $forum) {
     }
     if ($loggedin == true) {
         $rss = ModUtil::apiFunc('Feeds', 'user', 'get', [
-                    'fid' => $connection['server']]);
+            'fid' => $connection['server']]);
         if (!$rss) {
             // this feed does not exist
             die;
         }
         // Get the feed
         $dump = ModUtil::apiFunc('Feeds', 'user', 'getfeed', [
-                    'fid' => $rss['fid'],
-                    'url' => $rss['url']]);
+            'fid' => $rss['fid'],
+            'url' => $rss['url']]);
         if (!$dump) {
             // this feed does not exist
             die;
@@ -83,9 +84,10 @@ foreach ($forums as $forum) {
         $items = $dump['feed']->get_items();
         // See the function below...
         $insert = ModUtil::apiFunc('ZikulaDizkusModule', 'user', 'insertrss', [
-                    'items' => $items,
-                    'forum' => $forum]);
+            'items' => $items,
+            'forum' => $forum]);
         if (!$insert) {
+            // something should happend here as well
         }
     }
 }
