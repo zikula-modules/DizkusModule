@@ -30,7 +30,7 @@ class PostController extends AbstractController
      * Edit a post.
      *
      * @param Request $request
-     * @param integer $post The post id to edit.
+     * @param integer $post The post id to edit
      *
      * @throws \InvalidArgumentException
      * @throws AccessDeniedException
@@ -39,7 +39,7 @@ class PostController extends AbstractController
      */
     public function editAction(Request $request, $post)
     {
-//        $this->errorIfForumDisabled();
+        //        $this->errorIfForumDisabled();
 //        $this->checkAjaxToken();
 //        $post_id = $request->request->get('post', null);
 //        $currentUserId = UserUtil::getVar('uid');
@@ -87,7 +87,7 @@ class PostController extends AbstractController
      */
     public function updateAction(Request $request, $post)
     {
-//        $this->errorIfForumDisabled();
+        //        $this->errorIfForumDisabled();
 //        $this->checkAjaxToken();
 //        $post_id = $request->request->get('postId', '');
 //        $title = $request->request->get('title', '');
@@ -144,7 +144,7 @@ class PostController extends AbstractController
      */
     public function moveAction(Request $request, $post)
     {
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
 //            throw new AccessDeniedException();
 //        }
 //
@@ -203,7 +203,7 @@ class PostController extends AbstractController
      */
     public function reportAction(Request $request, $post)
     {
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
 //            throw new AccessDeniedException();
 //        }
 //        // get the input
@@ -281,7 +281,7 @@ class PostController extends AbstractController
      */
     public function posterAction(Request $request, $post)
     {
-//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
+        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
 //            throw new AccessDeniedException();
 //        }
 //        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post); //new PostManager();

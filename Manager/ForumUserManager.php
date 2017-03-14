@@ -63,8 +63,7 @@ class ForumUserManager
 
     public function __construct(
     TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi
-    )
-    {
+    ) {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -209,7 +208,7 @@ class ForumUserManager
     {
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get(), ]);
 
         if (!$forumSubscription) {
             return false;
@@ -289,7 +288,7 @@ class ForumUserManager
             $viewip['users'][] = [
                 'uid' => $post->getPoster()->getUser_id(),
                 'uname' => $coreUser['uname'],
-                'postcount' => $post->getPoster()->getPostCount(),];
+                'postcount' => $post->getPoster()->getPostCount(), ];
         }
 
         return $viewip;
@@ -339,7 +338,7 @@ class ForumUserManager
                     'forum_id' => $args['forum']['forum_id'],
                     'attachSignature' => false,
                     'subscribe_topic' => false,
-                    'reference' => $reference,];
+                    'reference' => $reference, ];
                 $newManagedTopic->prepare($data);
                 $topicId = $newManagedTopic->create();
                 if (!$topicId) {
@@ -383,7 +382,7 @@ class ForumUserManager
             'yahoo!',
             'msnbot',
             'jeeves',
-            'lycos',];
+            'lycos', ];
         $request = ServiceUtil::get('request');
         $useragent = $request->server->get('HTTP_USER_AGENT');
         for ($cnt = 0; $cnt < count($robotslist); $cnt++) {

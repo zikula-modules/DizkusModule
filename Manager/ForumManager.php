@@ -24,7 +24,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Security\Permission;
-use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
@@ -400,7 +399,7 @@ class ForumManager
             }
             $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
         }
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
 
         return $managedForumUser->get()->getForumSubscriptions();
     }

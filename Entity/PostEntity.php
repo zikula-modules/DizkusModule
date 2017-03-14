@@ -286,7 +286,7 @@ class PostEntity extends EntityAccess
      */
     public function getUserAllowedToEdit($uid = null)
     {
-//        if (!isset($this->post_time)) {
+        //        if (!isset($this->post_time)) {
 //            return false;
 //        }
 //

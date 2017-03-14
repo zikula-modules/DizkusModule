@@ -521,7 +521,7 @@ class PostManager
 
         $qb->setParameter('uid', $uid);
         $perPageVar = $action.'_per_page';
-        $limit = $this->variableApi->get('ZikulaDizkusModule', $perPageVar);//$this->variableApi->get($perPageVar);
+        $limit = $this->variableApi->get('ZikulaDizkusModule', $perPageVar); //$this->variableApi->get($perPageVar);
         $qb->setFirstResult($offset)
             ->setMaxResults($limit);
         $topics = new Paginator($qb);

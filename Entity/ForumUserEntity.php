@@ -139,7 +139,7 @@ class ForumUserEntity extends EntityAccess
      */
     public function getUser()
     {
-//        if (empty($this->user)) {
+        //        if (empty($this->user)) {
 //            $this->user = UserUtil::getVars($this->user_id);
 //            if (empty($this->user['uname'])) {
 //                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
