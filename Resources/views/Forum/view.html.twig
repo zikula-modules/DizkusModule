@@ -18,7 +18,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-                <a class="navbar-brand" href="#">{{ forum.name|escape('html') }}&nbsp;{{ __('forum') }}</a>
+            <a class="navbar-brand" href="#">{{ forum.name|escape('html') }}&nbsp;{{ __('forum') }}</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -27,8 +27,8 @@
 
                 {% if permissions.comment and not forum.isLocked() %}
                     <li><a class="fa fa-comment-o" title="{{ __("Start a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':forum.forum_id}) }}">&nbsp;{{ __("New topic") }}</a></li>
-                {% endif %}
-                {% if currentUser.loggedIn %}
+                    {% endif %}
+                    {% if currentUser.loggedIn %}
                     <li>
                         {% set isSubscribed=isSubscribed(forum) %}
                         {% if isSubscribed %}
@@ -57,7 +57,7 @@
 
                 {% if isModerator or permissions.moderate %}
                     <li><a class="fa fa-wrench" title="{{ __("Moderate") }}" href="{{ path('zikuladizkusmodule_forum_moderateforum', {'forum': forum.forum_id}) }}">&nbsp;{{ __("Moderate") }}</a></li>
-                {% endif %}
+                    {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>
@@ -67,24 +67,24 @@
 * SUBFORUM DISPLAY
 ******************************************************* #}
 {% if forum.children|length > 0 %}
-<div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <h2 class="dizkus-clean pull-left">
-            <span class="fa-stack">
-              <i class="fa fa-comments fa-stack-2x"></i>
-              {% if forum.isLocked() %}<i class="fa fa-lock fa-stack-1x fa-overlay-lower-right"></i>{% endif %}
-            </span>
-              &nbsp;{{ forum.name|escape('html') }}&nbsp;{{ __('subforums') }}
-        </h2>
-    </div>
-    {% if forum.description != '' %}
-        <div class="panel-body">{{ forum.description|escape('html') }}</div>
-    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h2 class="dizkus-clean pull-left">
+                <span class="fa-stack">
+                    <i class="fa fa-comments fa-stack-2x"></i>
+                    {% if forum.isLocked() %}<i class="fa fa-lock fa-stack-1x fa-overlay-lower-right"></i>{% endif %}
+                </span>
+                &nbsp;{{ forum.name|escape('html') }}&nbsp;{{ __('subforums') }}
+            </h2>
+        </div>
+        {% if forum.description != '' %}
+            <div class="panel-body">{{ forum.description|escape('html') }}</div>
+        {% endif %}
         {{ include("@ZikulaDizkusModule/Forum/singleforumtable.html.twig" , {'parent': forum }) }}
-    {% if topics is not defined or topics|length == 0 %}
-        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
-    {% endif %}
-</div>
+        {% if topics is not defined or topics|length == 0 %}
+            {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+        {% endif %}
+    </div>
 {% endif %}
 
 
@@ -93,24 +93,24 @@
 ******************************************************* #}
 {% if topics is defined %}
     {% if topics|length > 0 %}
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2>{{ forum.name|escape('html') }}&nbsp;{{ __('topics') }}</h2>
-    </div>
-{{ pager({rowcount:pager.numitems, limit:pager.itemsperpage, posvar:'start', route:'zikuladizkusmodule_forum_viewforum'}) }}       
-    {{ include("@ZikulaDizkusModule/Forum/forumtopicstable.html.twig") }}
-{{ pager({rowcount:pager.numitems, limit:pager.itemsperpage, posvar:'start', route:'zikuladizkusmodule_forum_viewforum'}) }} 
-{{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
-</div>
-{% elseif not forum.isLocked() %}
-<div class="alert alert-info text-center">
-    {{ __("There are no topics in this forum yet.") }}&nbsp;<a class="fa fa-comment-o btn btn-info btn-sm" title="{{ __("Start a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':forum.forum_id}) }}">&nbsp;{{ __("Start a new topic") }}</a>
-</div>
-{% endif %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>{{ forum.name|escape('html') }}&nbsp;{{ __('topics') }}</h2>
+            </div>
+            {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage, posvar:'start', route:'zikuladizkusmodule_forum_viewforum'}) }}       
+            {{ include("@ZikulaDizkusModule/Forum/forumtopicstable.html.twig") }}
+            {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage, posvar:'start', route:'zikuladizkusmodule_forum_viewforum'}) }} 
+            {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+        </div>
+    {% elseif not forum.isLocked() %}
+        <div class="alert alert-info text-center">
+            {{ __("There are no topics in this forum yet.") }}&nbsp;<a class="fa fa-comment-o btn btn-info btn-sm" title="{{ __("Start a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':forum.forum_id}) }}">&nbsp;{{ __("Start a new topic") }}</a>
+        </div>
+    {% endif %}
 {% endif %}
 
 <div id="dzk_displayhooks">
-   {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_view', id=forum.forum_id) }}
+    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_view', id=forum.forum_id) }}
 </div>
 {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':forum, 'well': true}) }}
 

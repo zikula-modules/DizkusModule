@@ -1,51 +1,70 @@
 {{ pageSetVar('title', __("Manage forum subscriptions")) }}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
-
 <div id="dzk_userprefs">
-
     {{ moduleLinks('prefs') }}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h2>{{ __("Manage forum subscriptions") }}</h2>
-    </div>
-
-{#    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_manageforumsubscriptions'*}  #}  
-
-    <table class="table table-striped">
-        <thead>
-        <tr class="active">
-            <th class="col-lg-3">{{ __("Forum") }}</th>
-            <th>{{ __("Unsubscribe from forum") }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if subscriptions|length > 0 %}
-            <tr class="warning">
-                <td></td>
-                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{{ __("Remove all forum subscriptions") }}</label></td>
-            </tr>
-        {% endif %}
-        {% for subscription in subscriptions %}
-            <tr>
-                <td><a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': subscription.forum.forum_id}) }}" title="{{ subscription.forum.name|escape('html') }}">{{ subscription.forum.name|escape('html') }}</a></td>
-                <td>{#{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}#}</td>
-            </tr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{{ __("Manage forum subscriptions") }}</h2>
+        </div>
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-5">
+                    {{ __('Forum')}}
+                </div>
+                <div class="col-md-5">
+                    {{ __('Forum description')}}
+                </div>
+                <div class="col-md-2">
+                    {{ __('Actions')}}
+                </div>
+            </div>
+        </div>
+        <ul class="list-group">
+            {% for subscription in subscriptions %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': subscription.forum.forum_id}) }}" title="{{ subscription.forum.name|escape('html') }}">
+                                <h4>{{ subscription.forum.name|escape('html') }}</h4>
+                            </a>
+                            {% for parent in subscription.forum.parents %}
+                                {% if loop.first %}
+                                    <a href="{{ path('zikuladizkusmodule_forum_index') }}" title="{{ parent.name|escape('html') }}">
+                                        {{ parent.name|escape('html') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id}) }}" title="{{ parent.name|escape('html') }}">
+                                        {{ parent.name|escape('html') }}
+                                    </a>
+                                {% endif %}
+                                {% if not loop.last %}/{% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-5">
+                            <p> {{ subscription.forum.description|escape('html') }} </p>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ path('zikuladizkusmodule_user_manageforumsubscriptions', {'unsubscribe': subscription.forum.forum_id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Unsubscribe") }}
+                            </a>
+                        </div>
+                    </div>
+                </li>
             {% else %}
-            <tr>
-                <td colspan='2' class="text-center danger">
-                    {{ __("No forum subscriptions found.") }}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% if subscriptions|length > 0 %}
-    <div class="col-lg-offset-3 col-lg-9">
-
+                <li class="list-group-item">
+                    <div class="text-center danger">
+                        {{ __("No forum subscriptions found.") }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if subscriptions|length > 0 %}
+            <div class="list-group-item list-group-item-warning clearfix">
+                <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_manageforumsubscriptions', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forum subscriptions')}}">
+                    <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forum subscriptions')}}</span>
+                </a>
+            </div>
+        {% endif %}
     </div>
-{% endif %} 
-    
 </div>
-
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

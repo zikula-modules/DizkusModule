@@ -99,7 +99,8 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
-                $this->setVars($form->getData());
+                dump($form->getData());
+               // $this->setVars($form->getData());
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
             if ($form->get('restore')->isClicked()) {
@@ -107,7 +108,7 @@ class AdminController extends AbstractController
                 $this->addFlash('status', $this->__('Done! Reset configuration to default values.'));
             }
 
-            return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
+            //return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/preferences.html.twig', [

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus.
  *
@@ -15,11 +14,8 @@ namespace Zikula\DizkusModule\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use ServiceUtil;
 use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\DizkusModule\Connection\Pop3Connection;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use ZLanguage;
 
 /**
  * Forum entity class.
@@ -32,7 +28,9 @@ use ZLanguage;
 class ForumEntity extends EntityAccess
 {
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
+
     const STATUS_LOCKED = true;
+
     const STATUS_UNLOCKED = false;
 
     /**
@@ -195,14 +193,7 @@ class ForumEntity extends EntityAccess
 
     public function getName()
     {
-        if ($this->name == self::ROOTNAME) {
-            // do not display actual rootname
-            $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
-
-            return __('Forum Index', $dom);
-        }
-
-        return $this->name;
+        return $this->name == self::ROOTNAME ? 'Forum Index' : $this->name;
     }
 
     public function setName($name)
@@ -285,6 +276,19 @@ class ForumEntity extends EntityAccess
     public function getRoot()
     {
         return $this->root;
+    }
+
+    public function getParents()
+    {
+        $parents = [];
+        $parent = $this->getParent();
+        while ($parent != null) {
+            $parents[$parent->getForum_id()] = $parent;
+            $parent = $parent->getParent();
+        }
+        ksort($parents);
+
+        return $parents;
     }
 
     /**
@@ -413,15 +417,15 @@ class ForumEntity extends EntityAccess
         return $output;
     }
 
-    public function setModeratorUsers($users)
+    public function setModeratorUsers($moderators)
     {
         // clear the associated users
         $this->moderatorUsers->clear();
-        // add users
-        foreach ($users as $uid) {
-            $moderator = new ModeratorUserEntity();
-            $managedForumUser = new ForumUserManager($uid);
-            $moderator->setForumUser($managedForumUser->get());
+        // @todo - add users - we need to do this in forumManager
+        // $moderator = new ModeratorUserEntity();
+        // $managedForumUser = new ForumUserManager($uid);
+        // $moderator->setForumUser($managedForumUser->get());
+        foreach ($moderators as $moderator) {
             $moderator->setForum($this);
             $this->moderatorUsers->add($moderator);
         }
@@ -458,16 +462,16 @@ class ForumEntity extends EntityAccess
         return $output;
     }
 
-    public function setModeratorGroups($gids)
+    public function setModeratorGroups($moderatorGroups)
     {
         // remove the associated moderators
         $this->moderatorGroups->clear();
-        // add moderators
-        foreach ($gids as $gid) {
-            $moderatorGroup = new ModeratorGroupEntity();
-            $em = ServiceUtil::get('doctrine.entitymanager');
-            $group = $em->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $gid);
-            $moderatorGroup->setGroup($group);
+        // @todo - add users - we need to do this in forumManager
+        foreach ($moderatorGroups as $moderatorGroup) {
+            // $moderatorGroup = new ModeratorGroupEntity();
+            // $em = ServiceUtil::get('doctrine.entitymanager');
+            // $group = $em->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $gid);
+            // $moderatorGroup->setGroup($group);
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);
         }

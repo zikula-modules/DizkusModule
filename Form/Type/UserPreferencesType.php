@@ -43,9 +43,6 @@ class UserPreferencesType extends AbstractType
         $builder->add('save', 'submit', [
             'label' => 'Save',
         ]);
-        $builder->add('cancel', 'submit', [
-            'label' => 'Cancel',
-        ]);
     }
 
     public function getName()

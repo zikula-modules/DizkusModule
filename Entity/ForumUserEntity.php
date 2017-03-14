@@ -15,9 +15,8 @@ namespace Zikula\DizkusModule\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use UserUtil;
 use Zikula\Core\Doctrine\EntityAccess;
-use ZLanguage;
+use Zikula\UsersModule\Entity\UserEntity;
 
 /**
  * ForumUser entity class.
@@ -31,10 +30,13 @@ class ForumUserEntity extends EntityAccess
     const USER_LEVEL_DELETED = -1;
 
     /**
+     * user id to which the attribute belongs
+     *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
      */
-    private $user_id;
+    private $user;
 
     /**
      * postCount.
@@ -76,11 +78,12 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * postOrder.
+     * ASC (oldest to newest)
      *
      * @ORM\Column(type="boolean")
      */
     private $postOrder = false;
-    // ASC (oldest to newest)
+
     /**
      * @ORM\ManyToOne(targetEntity="RankEntity", cascade={"persist"} )
      * @ORM\JoinColumn(name="rank", referencedColumnName="rank_id", nullable=true)
@@ -109,41 +112,24 @@ class ForumUserEntity extends EntityAccess
     private $forumSubscriptions;
 
     /**
-     * NON-PERSISTED property
-     * array of core vars for user.
-     *
-     * @var array
-     */
-    private $user = [];
-
-    /**
      * constructor.
      *
-     * @param int $uid the core user id
+     * @param int $zuser the core user object
      */
-    public function __construct($uid)
+    public function __construct(UserEntity $zuser)
     {
-        $this->user_id = $uid;
-        $this->user = $this->getUser();
+        $this->user = $zuser;
         $this->favoriteForums = new ArrayCollection();
         $this->topicSubscriptions = new ArrayCollection();
         $this->forumSubscriptions = new ArrayCollection();
     }
 
     /**
-     * @param mixed $user_id
+     * @param obj $zuser
      */
-    public function setUser_id($user_id)
+    public function setUser(UserEntity $zuser)
     {
-        $this->user_id = $user_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser_id()
-    {
-        return $this->user_id;
+        $this->user = $zuser;
     }
 
     /**
@@ -153,13 +139,13 @@ class ForumUserEntity extends EntityAccess
      */
     public function getUser()
     {
-        if (empty($this->user)) {
-            $this->user = UserUtil::getVars($this->user_id);
-            if (empty($this->user['uname'])) {
-                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
-                $this->user['uname'] = __('Deleted user', $dom);
-            }
-        }
+//        if (empty($this->user)) {
+//            $this->user = UserUtil::getVars($this->user_id);
+//            if (empty($this->user['uname'])) {
+//                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+//                $this->user['uname'] = __('Deleted user', $dom);
+//            }
+//        }
 
         return $this->user;
     }

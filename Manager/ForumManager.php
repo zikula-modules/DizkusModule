@@ -24,6 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Security\Permission;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
@@ -71,6 +72,11 @@ class ForumManager
     private $permissionApi;
 
     /**
+     * @var forumUserManagerService
+     */
+    private $forumUserManagerService;
+
+    /**
      * managed forum.
      *
      * @var ForumEntity
@@ -90,7 +96,8 @@ class ForumManager
             CurrentUserApi $userApi,
             Permission $permission,
             VariableApi $variableApi,
-            PermissionApi $permissionApi
+            PermissionApi $permissionApi,
+            ForumUserManager $forumUserManagerService
          ) {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
@@ -102,6 +109,7 @@ class ForumManager
         $this->permission = $permission;
         $this->variableApi = $variableApi;
         $this->permissionApi = $permissionApi;
+        $this->forumUserManagerService = $forumUserManagerService;
 
         $this->_itemsPerPage = $this->variableApi->get($this->name, 'topics_per_page');
     }
@@ -447,7 +455,7 @@ class ForumManager
         if (!$this->permission->canRead(['forum' => $forum])) {
             throw new AccessDeniedException();
         }
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
         $searchParams = [
             'forum'     => $forum,
             'forumUser' => $managedForumUser->get(), ];
@@ -487,7 +495,7 @@ class ForumManager
         if (!$this->permission->canRead(['forum' => $forum])) {
             throw new AccessDeniedException();
         }
-        $managedForumUser = new ForumUserManager($user_id);
+        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
         if (isset($forum)) {
             $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
                 'forum'     => $forum,
@@ -514,7 +522,7 @@ class ForumManager
         if (empty($forum) || empty($action)) {
             throw new \InvalidArgumentException();
         }
-        $managedForumUser = new ForumUserManager();
+        $managedForumUser = $this->forumUserManagerService->getManager();
         $managedForum = $this->getManager($forum); //new ForumManager($forum);
         switch ($action) {
             case 'addToFavorites':

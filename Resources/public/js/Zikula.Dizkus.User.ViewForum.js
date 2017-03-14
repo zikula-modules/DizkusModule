@@ -1,20 +1,19 @@
 /**
  * Zikula.Dizkus.User.ViewForum.js
- * 
+ *
  * jQuery based JS
  */
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     jQuery("#forum-favourite").attr('href', '#').click(modifyForum);
     jQuery("#forum-subscription").attr('href', '#').click(modifyForum);
 });
-
 function modifyForum(e) {
     e.preventDefault();
     var action;
     var i = jQuery(this);
     i.prepend(" <i class='fa fa-cog fa-spin text-danger'></i>");
-    switch(i.attr('id')) {
+    switch (i.attr('id')) {
         case 'forum-subscription':
             action = i.data('status') == 0 ? 'subscribe' : 'unsubscribe';
             break;
@@ -28,12 +27,9 @@ function modifyForum(e) {
 
     jQuery.ajax({
         type: "POST",
-        data: {
-            forum: jQuery('#forum_id').val(),
-            action: action
-        },
-        url: Routing.generate('zikuladizkusmodule_forum_modifyforum'),
-        success: function(result) {
+        url: Routing.generate('zikuladizkusmodule_forum_modifyforum', {'forum': jQuery('#forum_id').val(), 'action': action}
+        ),
+        success: function (result) {
             if (result == 'successful') {
                 if (action == 'addToFavorites') {
                     i.text(unfavouriteForum);
@@ -49,10 +45,12 @@ function modifyForum(e) {
             } else {
                 alert('Error! Erroneous result from modifyForum request.');
             }
-        },
-        error: function(result) {
+        }
+        ,
+        error: function (result) {
             DizkusShowAjaxError(result.responseJSON.core.statusmsg);
             return;
         }
-    });
+    }
+    );
 }

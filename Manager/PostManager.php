@@ -500,17 +500,18 @@ class PostManager
      *
      * @return array
      */
-    public function search($args)
+    public function search($action, $offset)
     {
-        $args['action'] = !empty($args['action']) && in_array($args['action'], ['posts', 'topics']) ? $args['action'] : 'posts';
-        $args['offset'] = !empty($args['offset']) ? $args['offset'] : 0;
+        $action = !empty($action) && in_array($action, ['posts', 'topics']) ? $action : 'posts';
+        $offset = !empty($offset) ? $offset : 0;
+
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
             ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->leftJoin('t.last_post', 'l')
             ->leftJoin('t.posts', 'p')
             ->orderBy('l.post_time', 'DESC');
-        if ($args['action'] == 'topics') {
+        if ($action == 'topics') {
             $qb->where('t.poster = :uid');
         } else {
             $qb->where('p.poster = :uid');
@@ -519,9 +520,9 @@ class PostManager
         $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1;
 
         $qb->setParameter('uid', $uid);
-        $perPageVar = $args['action'].'_per_page';
-        $limit = $this->getVar($perPageVar);
-        $qb->setFirstResult($args['offset'])
+        $perPageVar = $action.'_per_page';
+        $limit = $this->variableApi->get('ZikulaDizkusModule', $perPageVar);//$this->variableApi->get($perPageVar);
+        $qb->setFirstResult($offset)
             ->setMaxResults($limit);
         $topics = new Paginator($qb);
         $pager = [

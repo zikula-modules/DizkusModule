@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Dizkus
+ * Dizkus.
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @see https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
-
 namespace Zikula\DizkusModule;
 
 use ModUtil;
@@ -24,7 +25,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 {
     /**
      * Module name
-     * (needed for static methods)
+     * (needed for static methods).
+     *
      * @var string
      */
     const MODULENAME = 'ZikulaDizkusModule';
@@ -43,7 +45,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     ];
 
     /**
-     *  Initialize a new install of the Dizkus module
+     *  Initialize a new install of the Dizkus module.
      *
      *  This function will initialize a new installation of Dizkus.
      *  It is accessed via the Zikula Admin interface and should
@@ -77,7 +79,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Set up example forums on install
+     * Set up example forums on install.
      */
     private function setUpExampleForums($forumRoot)
     {
@@ -111,56 +113,56 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 'minimumCount' => 1,
                 'maximumCount' => 9,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'zerostar.gif'],
+                'image' => 'zerostar.gif', ],
             [
                 'title' => 'Level 2',
                 'description' => 'Basic forum user',
                 'minimumCount' => 10,
                 'maximumCount' => 49,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'onestar.gif'],
+                'image' => 'onestar.gif', ],
             [
                 'title' => 'Level 3',
                 'description' => 'Moderate forum user',
                 'minimumCount' => 50,
                 'maximumCount' => 99,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'twostars.gif'],
+                'image' => 'twostars.gif', ],
             [
                 'title' => 'Level 4',
                 'description' => 'Advanced forum user',
                 'minimumCount' => 100,
                 'maximumCount' => 199,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'threestars.gif'],
+                'image' => 'threestars.gif', ],
             [
                 'title' => 'Level 5',
                 'description' => 'Expert forum user',
                 'minimumCount' => 200,
                 'maximumCount' => 499,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'fourstars.gif'],
+                'image' => 'fourstars.gif', ],
             [
                 'title' => 'Level 6',
                 'description' => 'Superior forum user',
                 'minimumCount' => 500,
                 'maximumCount' => 999,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'fivestars.gif'],
+                'image' => 'fivestars.gif', ],
             [
                 'title' => 'Level 7',
                 'description' => 'Senior forum user',
                 'minimumCount' => 1000,
                 'maximumCount' => 4999,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'spezstars.gif'],
+                'image' => 'spezstars.gif', ],
             [
                 'title' => 'Legend',
                 'description' => 'Legend forum user',
                 'minimumCount' => 5000,
                 'maximumCount' => 1000000,
                 'type' => RankEntity::TYPE_POSTCOUNT,
-                'image' => 'adminstars.gif']];
+                'image' => 'adminstars.gif', ], ];
         foreach ($ranks as $rank) {
             $r = new RankEntity();
             $r->merge($rank);
@@ -170,7 +172,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     *  Deletes an install of the Dizkus module
+     *  Deletes an install of the Dizkus module.
      *
      *  This function removes Dizkus from your
      *  Zikula install and should be accessed via
@@ -225,7 +227,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * get the default module var values
+     * get the default module var values.
      *
      * @return array
      */
@@ -269,10 +271,11 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * find the relative path of this script from current full path
+     * find the relative path of this script from current full path.
      *
      * @param string $path default __DIR__
      * @param string $from default 'modules'
+     *
      * @return string
      */
     public static function generateRelativePath($path = __DIR__, $from = 'modules')
@@ -283,7 +286,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             if ($part == $from) {
                 return $path;
             } else {
-                $path = substr($path, strlen($part . DIRECTORY_SEPARATOR));
+                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
             }
         }
 
@@ -291,20 +294,20 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * upgrade to 4.0.0
+     * upgrade to 4.0.0.
      */
     private function upgrade_to_4_0_0()
     {
         // do a check here for tables containing the prefix and fail if existing tables cannot be found.
         $configPrefix = System::getVar('prefix');
-        $prefix = !empty($configPrefix) ? $configPrefix . '_' : '';
+        $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
         $connection = $this->entityManager->getConnection();
-        $sql = 'SELECT * FROM ' . $prefix . 'dizkus_categories';
+        $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
         $stmt = $connection->prepare($sql);
         try {
             $stmt->execute();
         } catch (\Exception $e) {
-            $this->addFlash('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
+            $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', $prefix));
 
             return false;
         }
@@ -333,16 +336,16 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 WHERE topic_reference <> \'\'';
         $hookedTopicData = $connection->fetchAll($sql);
         // delete orphaned topics with no posts to maintain referential integrity
-        $sql = "DELETE from dizkus_topics WHERE topic_last_post_id = 0";
+        $sql = 'DELETE from dizkus_topics WHERE topic_last_post_id = 0';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         // NOTE: do not delete users from the dizkus_users table - they must remain for data integrity
         // change default value of rank in dizkus_users from `0` to NULL
-        $sql = "UPDATE dizkus_users SET rank=NULL WHERE rank=0";
+        $sql = 'UPDATE dizkus_users SET rank=NULL WHERE rank=0';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         // set rank to NULL where rank no longer available
-        $sql = "UPDATE dizkus_users set rank=NULL WHERE rank NOT IN (SELECT DISTINCT rank_id from dizkus_ranks)";
+        $sql = 'UPDATE dizkus_users set rank=NULL WHERE rank NOT IN (SELECT DISTINCT rank_id from dizkus_ranks)';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
 
@@ -387,9 +390,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $sqls = [];
         $sqls[] = "UPDATE `dizkus_topics` SET `poster`=1 WHERE poster='-1'";
         $sqls[] = "UPDATE `dizkus_posts` SET `poster_id`=1 WHERE poster_id='-1'";
-        $sqls[] = "DELETE FROM `dizkus_subscription` WHERE `user_id` < 2";
-        $sqls[] = "DELETE FROM `dizkus_topic_subscription` WHERE `user_id` < 2";
-        $sqls[] = "DELETE FROM `dizkus_topic_subscription` WHERE topic_id NOT IN (SELECT topic_id from dizkus_topics)";
+        $sqls[] = 'DELETE FROM `dizkus_subscription` WHERE `user_id` < 2';
+        $sqls[] = 'DELETE FROM `dizkus_topic_subscription` WHERE `user_id` < 2';
+        $sqls[] = 'DELETE FROM `dizkus_topic_subscription` WHERE topic_id NOT IN (SELECT topic_id from dizkus_topics)';
         foreach ($sqls as $sql) {
             $stmt = $connection->prepare($sql);
             try {
@@ -435,7 +438,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * remove all table prefixes
+     * remove all table prefixes.
      */
     private function upgrade_to_4_0_0_removeTablePrefixes($prefix)
     {
@@ -451,9 +454,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'dizkus_topics',
             'dizkus_topic_subscription',
             'dizkus_forum_favorites',
-            'dizkus_users'];
+            'dizkus_users', ];
         foreach ($dizkusTables as $value) {
-            $sql = 'RENAME TABLE ' . $prefix . $value . ' TO ' . $value;
+            $sql = 'RENAME TABLE '.$prefix.$value.' TO '.$value;
             $stmt = $connection->prepare($sql);
             try {
                 $stmt->execute();
@@ -465,7 +468,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
     /**
      * rename some table columns
-     * This must be done before updateSchema takes place
+     * This must be done before updateSchema takes place.
      */
     private function upgrade_to_4_0_0_renameColumns()
     {
@@ -512,7 +515,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Migrate categories from 3.1 > 4.0.0
+     * Migrate categories from 3.1 > 4.0.0.
      */
     private function upgrade_to_4_0_0_migrateCategories()
     {
@@ -536,7 +539,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             $this->entityManager->persist($newCatForum);
             $this->entityManager->flush();
             // create sql to update parent on child forums
-            $sqls[] = "UPDATE dizkus_forums SET parent = ".$newCatForum->getForum_id().", lvl=2 WHERE cat_id = ".$category['cat_id'];
+            $sqls[] = 'UPDATE dizkus_forums SET parent = '.$newCatForum->getForum_id().', lvl=2 WHERE cat_id = '.$category['cat_id'];
         }
         // update child forums
         foreach ($sqls as $sql) {
@@ -546,7 +549,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // we know that the forum can only be two levels deep (root -> parent -> child)
         $count = 1;
         $sqls = [];
-        $categories = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE lvl = 1");
+        $categories = $connection->fetchAll('SELECT * FROM dizkus_forums WHERE lvl = 1');
         foreach ($categories as $category) {
             $category['l'] = ++$count;
             $children = $connection->fetchAll("SELECT * FROM dizkus_forums WHERE parent = $category[forum_id]");
@@ -560,7 +563,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         $right = ++$count;
         $sqls[] = "UPDATE dizkus_forums SET forum_order = 1, rgt = $right WHERE parent IS NULL";
-        $sqls[] = "UPDATE dizkus_forums SET cat_id = 1 WHERE 1";
+        $sqls[] = 'UPDATE dizkus_forums SET cat_id = 1 WHERE 1';
 
         foreach ($sqls as $sql) {
             $connection->executeQuery($sql);
@@ -573,12 +576,12 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Update Poster Data from 3.1 > 4.0.0
+     * Update Poster Data from 3.1 > 4.0.0.
      */
     private function upgrade_to_4_0_0_updatePosterData()
     {
         $connection = $this->entityManager->getConnection();
-        $Posters = $connection->executeQuery("SELECT DISTINCT poster_id from dizkus_posts WHERE poster_id NOT IN (SELECT DISTINCT user_id FROM dizkus_users)");
+        $Posters = $connection->executeQuery('SELECT DISTINCT poster_id from dizkus_posts WHERE poster_id NOT IN (SELECT DISTINCT user_id FROM dizkus_users)');
         $newUserCount = 0;
         foreach ($Posters as $poster) {
             $posterId = $poster['poster_id'];
@@ -588,7 +591,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 if (!$forumUser) {
                     $forumUser = new ForumUserEntity($posterId);
                     $this->entityManager->persist($forumUser);
-                    $newUserCount++;
+                    ++$newUserCount;
                 }
             }
             if ($newUserCount > 20) {
@@ -604,7 +607,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
     /**
      * Migrate the Moderator Groups out of the `dizkus_forum_mods` table and put
-     * in the new `dizkus_forum_mods_group` table
+     * in the new `dizkus_forum_mods_group` table.
      */
     private function upgrade_to_4_0_0_migrateModGroups()
     {
@@ -630,7 +633,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * migrate pop3 connection data from multiple columns to one object
+     * migrate pop3 connection data from multiple columns to one object.
      *
      * @param type $connections
      */
@@ -646,7 +649,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * migrate hooked topics data to maintain hook connection with original object
+     * migrate hooked topics data to maintain hook connection with original object.
      *
      * This routine will only attempt to migrate references where the topic_reference field
      * looks like `moduleID-objectId` -> e.g. '14-57'. If the field contains any underscores
@@ -676,7 +679,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                         $searchCritera = [
                             'owner' => $moduleInfo['name'],
                             'areatype' => 's',
-                            'category' => 'ui_hooks'];
+                            'category' => 'ui_hooks', ];
                         $subscriberArea = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->findBy($searchCritera);
                         if (count($subscriberArea) != 1) {
                             // found either too many areas or none. cannot migrate
@@ -689,7 +692,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                         }
                     }
                 }
-                $count++;
+                ++$count;
                 if ($count > 20) {
                     $this->entityManager->flush();
                     $count = 0;
@@ -701,7 +704,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * upgrade to 4.1.0
+     * upgrade to 4.1.0.
      */
     private function upgrade_to_4_1_0()
     {

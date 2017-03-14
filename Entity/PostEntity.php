@@ -10,10 +10,6 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use ServiceUtil;
-use ModUtil;
-use DateTime;
-use UserUtil;
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -109,17 +105,18 @@ class PostEntity extends EntityAccess
      */
     public function __construct()
     {
-        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
-            // for privacy issues ip logging can be deactivated
-            $this->poster_ip = 'unrecorded';
-        } else {
-            $request = ServiceUtil::get('request');
-            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
-                $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
-            } else {
-                $this->poster_ip = $request->server->get('REMOTE_ADDR');
-            }
-        }
+        $this->poster_ip = 'unrecorded';
+//        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
+//            // for privacy issues ip logging can be deactivated
+//            $this->poster_ip = 'unrecorded';
+//        } else {
+//            $request = ServiceUtil::get('request');
+//            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
+//                $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
+//            } else {
+//                $this->poster_ip = $request->server->get('REMOTE_ADDR');
+//            }
+//        }
     }
 
     public function getPost_id()
@@ -281,6 +278,7 @@ class PostEntity extends EntityAccess
     }
 
     /**
+     * @todo move somewhere else this do not belong here
      * determine if a user is allowed to edit this post
      *
      * @param  integer $uid
@@ -288,19 +286,21 @@ class PostEntity extends EntityAccess
      */
     public function getUserAllowedToEdit($uid = null)
     {
-        if (!isset($this->post_time)) {
-            return false;
-        }
-        // default to current user
-        $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
-        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
-        // in hours
-        $postTime = clone $this->post_time;
-        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
-        $now = new \DateTime();
-        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
-            return true;
-        }
+//        if (!isset($this->post_time)) {
+//            return false;
+//        }
+//
+//        // default to current user
+//        $uid = isset($uid) ? $uid : Use
+//
+//        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
+//        // in hours
+//        $postTime = clone $this->post_time;
+//        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
+//        $now = new \DateTime();
+//        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
+//            return true;
+//        }
 
         return false;
     }

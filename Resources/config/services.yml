@@ -134,6 +134,7 @@ services:
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
             - "@zikula_permissions_module.api.permission"
+            - "@zikula_dizkus_module.forum_user_manager"
 
     zikula_dizkus_module.topic_manager:
         class: %zikula_dizkus_module.topic_manager.class%

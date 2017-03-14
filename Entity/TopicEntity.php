@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus
  *
@@ -10,7 +9,6 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use ModUtil;
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -339,12 +337,9 @@ class TopicEntity extends EntityAccess
         return count($this->posts);
     }
 
-    public function getHot_topic()
+    public function isHotTopic($hotThreshold = 25)
     {
-        $hotThreshold = ModUtil::getVar(self::MODULENAME, 'hot_threshold');
-        $totalPosts = $this->getTotal_posts();
-
-        return $totalPosts >= $hotThreshold;
+        return $this->getTotal_posts() >= $hotThreshold;
     }
 
     /**

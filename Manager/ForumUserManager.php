@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright Dizkus Team 2012.
  *
@@ -63,14 +62,9 @@ class ForumUserManager
     protected $name;
 
     public function __construct(
-            TranslatorInterface $translator,
-            RouterInterface $router,
-            RequestStack $requestStack,
-            EntityManager $entityManager,
-            CurrentUserApi $userApi,
-            Permission $permission,
-            VariableApi $variableApi
-         ) {
+    TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi
+    )
+    {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -95,7 +89,8 @@ class ForumUserManager
         }
         $this->_forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
         if (!$this->_forumUser && $create) {
-            $this->_forumUser = new ForumUserEntity($uid);
+            $zuser = $this->entityManager->find('Zikula\UsersModule\Entity\UserEntity', $uid);
+            $this->_forumUser = new ForumUserEntity($zuser);
             $this->entityManager->persist($this->_forumUser);
             $this->entityManager->flush();
         }
@@ -179,6 +174,54 @@ class ForumUserManager
     }
 
     /**
+     * Get user signature.
+     *
+     * @param string
+     */
+    public function getSignature()
+    {
+        return $this->_forumUser->getUser()->getAttributes()->offsetExists('signature') ? $this->_forumUser->getUser()->getAttributeValue('signature') : '';
+    }
+
+    /**
+     * Set user signature.
+     *
+     * @param string $signature
+     */
+    public function setSignature($signature)
+    {
+        $zuser = $this->_forumUser->getUser();
+        $zuser->setAttribute('signature', $signature);
+        $this->entityManager->persist($zuser);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Unsubscribe a forum by forum id.
+     *
+     * @param int $forum  The forum
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
+     */
+    public function unsubscribeFromForum($forum)
+    {
+        $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
+            'forum' => $forum,
+            'forumUser' => $this->get(),]);
+
+        if (!$forumSubscription) {
+            return false;
+        }
+
+        $this->get()->removeForumSubscription($forumSubscription);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    /**
      * lastvisit.
      *
      * reads the cookie, updates it and returns the last visit date in unix timestamp
@@ -231,7 +274,7 @@ class ForumUserManager
     {
         $pip = $args['pip'];
         $viewip = [
-            'poster_ip'   => $pip,
+            'poster_ip' => $pip,
             'poster_host' => ($pip != 'unrecorded') ? gethostbyaddr($pip) : $this->__('Host unknown'),
         ];
         $dql = 'SELECT p
@@ -244,9 +287,9 @@ class ForumUserManager
             /* @var $post \Zikula\Module\DizkusModule\Entity\PostEntity */
             $coreUser = $post->getPoster()->getUser();
             $viewip['users'][] = [
-                'uid'       => $post->getPoster()->getUser_id(),
-                'uname'     => $coreUser['uname'],
-                'postcount' => $post->getPoster()->getPostCount(), ];
+                'uid' => $post->getPoster()->getUser_id(),
+                'uname' => $coreUser['uname'],
+                'postcount' => $post->getPoster()->getPostCount(),];
         }
 
         return $viewip;
@@ -255,7 +298,6 @@ class ForumUserManager
     /**
      * Old userApi Below.
      */
-
     /**
      * insert rss.
      *
@@ -278,7 +320,7 @@ class ForumUserManager
                 $reference = md5($item->get_link());
                 $dateTimestamp = date('Y-m-d H:i:s', time());
             } else {
-                $reference = md5($item->get_link().'-'.$dateTimestamp);
+                $reference = md5($item->get_link() . '-' . $dateTimestamp);
             }
             $topicTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimestamp);
             // Checking if the forum already has that news.
@@ -287,17 +329,17 @@ class ForumUserManager
                 // Not found, add the feed item
                 $subject = $item->get_title();
                 // create message
-                $message = '<strong>'.$this->__('Summary').' :</strong>\\n\\n'.$item->get_description().'\\n\\n<a href="'.$item->get_link().'">'.$item->get_title().'</a>\\n\\n';
+                $message = '<strong>' . $this->__('Summary') . ' :</strong>\\n\\n' . $item->get_description() . '\\n\\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\\n\\n';
                 // store message
                 $newManagedTopic = new TopicManager();
                 $data = [
-                    'title'           => $subject,
-                    'message'         => $message,
-                    'topic_time'      => $topicTime,
-                    'forum_id'        => $args['forum']['forum_id'],
+                    'title' => $subject,
+                    'message' => $message,
+                    'topic_time' => $topicTime,
+                    'forum_id' => $args['forum']['forum_id'],
                     'attachSignature' => false,
                     'subscribe_topic' => false,
-                    'reference'       => $reference, ];
+                    'reference' => $reference,];
                 $newManagedTopic->prepare($data);
                 $topicId = $newManagedTopic->create();
                 if (!$topicId) {
@@ -314,9 +356,9 @@ class ForumUserManager
     {
         $user = $post->getPoster()->getUser();
         $args = [
-            'author'      => $user['uname'], // use 'viagra-test-123' to test
+            'author' => $user['uname'], // use 'viagra-test-123' to test
             'authoremail' => $user['email'],
-            'content'     => $post->getPost_text(),
+            'content' => $post->getPost_text(),
         ];
         // Akismet
         if (ModUtil::available('Akismet')) {
@@ -341,7 +383,7 @@ class ForumUserManager
             'yahoo!',
             'msnbot',
             'jeeves',
-            'lycos', ];
+            'lycos',];
         $request = ServiceUtil::get('request');
         $useragent = $request->server->get('HTTP_USER_AGENT');
         for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
@@ -362,7 +404,7 @@ class ForumUserManager
         // remove code tags
         $codecount1 = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/si', $text, $codes1);
         for ($i = 0; $i < $codecount1; $i++) {
-            $text = preg_replace('/('.preg_quote($codes1[0][$i], '/').')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
+            $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
         }
         // the real work
         $text = nl2br(DataUtil::formatForDisplayHTML($text));
@@ -397,7 +439,7 @@ class ForumUserManager
         $sql = 'SELECT u.uid, u.uname FROM users u WHERE ';
         $subSql = [];
         foreach ($fragments as $fragment) {
-            $subSql[] = 'u.uname REGEXP \'('.DataUtil::formatForStore($fragment).')\'';
+            $subSql[] = 'u.uname REGEXP \'(' . DataUtil::formatForStore($fragment) . ')\'';
         }
         $sql .= implode(' OR ', $subSql);
         $sql .= ' ORDER BY u.uname ASC';
@@ -422,10 +464,10 @@ class ForumUserManager
     public static function truncate($text, $chars = 25)
     {
         $originalText = $text;
-        $text = $text.' ';
+        $text = $text . ' ';
         $text = substr($text, 0, $chars);
         $text = substr($text, 0, strrpos($text, ' '));
-        $text = strlen($originalText) == strlen($text) ? $text : $text.'...';
+        $text = strlen($originalText) == strlen($text) ? $text : $text . '...';
 
         return $text;
     }
@@ -455,7 +497,7 @@ class ForumUserManager
         $query = $this->entityManager->createQuery($dql);
         $activetime = new DateTime();
         // maybe need to check TZ here
-        $activetime->modify('-'.System::getVar('secinactivemins').' minutes');
+        $activetime->modify('-' . System::getVar('secinactivemins') . ' minutes');
         $query->setParameter('activetime', $activetime);
         $query->setParameter('uid', $args['uid']);
         $uid = $query->execute(null, \Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR);
@@ -464,4 +506,5 @@ class ForumUserManager
 
         return $isOnline;
     }
+
 }

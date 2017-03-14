@@ -12,8 +12,8 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;// used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;// used in annotations - do not remove
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,8 +21,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\PlainResponse;
-use Zikula\DizkusModule\Form\Type\ModerateType; // used in annotations - do not remove
-use Zikula\DizkusModule\Manager\ForumUserManager; // used in annotations - do not remove
+use Zikula\DizkusModule\Form\Type\ModerateType;
 
 class ForumController extends AbstractController
 {

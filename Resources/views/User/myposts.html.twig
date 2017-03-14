@@ -1,0 +1,37 @@
+{{ pageSetVar('title', __("My posts")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div class="panel panel-default">
+    <div class="panel-heading"><h2 class="fa fa-home">&nbsp;{{ __("Forums index page") }}</h2>
+        {% if numposts is defined %}
+            <div style='position:absolute; top:0; right:0; padding: 1.25em;'>
+                <a class="btn btn-default btn-sm tooltips" title="{{ __("RSS Feed") }}" href="{{ path('zikuladizkusmodule_user_feed') }}"><i class="fa fa-rss-square fa-150x fa-orange"></i>
+                    {{ __("Total posts: %s", {'%s':numposts}) }}</a>
+            </div>
+        {% endif %}
+    </div>
+    {#    {% for parent in topics %}
+            {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+        {% endfor %}
+    #}
+
+</div>
+{#
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h2 class="fa fa-home">&nbsp;{{ __("Forums index page") }}</h2>
+                    {if isset($numposts)}
+                    <div style='position:absolute; top:0; right:0; padding: 1.25em;'>
+                        <a class="btn btn-default btn-sm tooltips" title="{gt text="RSS Feed"}" href="{route name='zikuladizkusmodule_user_feed'}"><i class="fa fa-rss-square fa-150x fa-orange"></i>
+                            {gt text="Total posts: %s" tag1=$numposts}</a>
+                    </div>
+                    {/if}
+            </div>
+            {foreach item='parent' from=$forums}
+            {include file='User/forum/singleforumtable.tpl'}
+            {/foreach}
+            {include file='User/forum/panelfooter.tpl'}
+        </div>
+
+        #}
+{{ dump() }}
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
