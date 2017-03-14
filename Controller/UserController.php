@@ -78,7 +78,7 @@ class UserController extends AbstractController
         if (!$loggedIn) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login' ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -125,7 +125,7 @@ class UserController extends AbstractController
         if (!$loggedIn) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login' ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -197,7 +197,7 @@ class UserController extends AbstractController
         if (!$loggedIn) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_signaturemanagement', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login' ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
