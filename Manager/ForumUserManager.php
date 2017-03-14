@@ -297,6 +297,7 @@ class ForumUserManager
     /**
      * Old userApi Below.
      */
+
     /**
      * insert rss.
      *
@@ -505,5 +506,4 @@ class ForumUserManager
 
         return $isOnline;
     }
-
 }
