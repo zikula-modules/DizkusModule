@@ -183,20 +183,19 @@ class ForumController extends AbstractController
                     case 'del':
                     case 'delete':
                         foreach ($topic_ids as $topic_id) {
-                            dump('delete topic'.$topic_id);
+                            // dump('delete topic'.$topic_id);
                             $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($topic_id);
-                          // $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', ['topic' => $topic_id]);
                         }
                         break;
 
                     case 'move':
                         if (empty($moveto)) {
                             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
-                            dump('move to forum'.$moveto); //
+                            // dump('move to forum'.$moveto); //
                             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_moderateforum', ['forum' => $this->_managedForum->getId()], RouterInterface::ABSOLUTE_URL));
                         }
                         foreach ($topic_ids as $topic_id) {
-                            dump('move topic #'.$topic_id.' to forum #'.$moveto); //
+                            // dump('move topic #'.$topic_id.' to forum #'.$moveto);
                             $this->get('zikula_dizkus_module.topic_manager')->move($topic_id, $moveto, $shadow);
 //                          ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
 //                                'forum_id' => $moveto,
@@ -211,7 +210,8 @@ class ForumController extends AbstractController
                     case 'sticky':
                     case 'unsticky':
                         foreach ($topic_ids as $topic_id) {
-                            dump($action.' '.$topic_id); //
+                            // dump($action.' '.$topic_id); // no post no title
+                            //$this->get('zikula_dizkus_module.topic_manager')->changeStatus($topic_id, $action, $post, $title);
 //                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
 //                                'topic' => $topic_id,
 //                                'action' => $action]);
@@ -236,7 +236,7 @@ class ForumController extends AbstractController
                             $topic_ids = array_flip($fliparray);
                         }
                         foreach ($topic_ids as $from_topic_id) {
-                            dump('join from'.$from_topic_id.' to '.$jointo); //
+                            //dump('join from'.$from_topic_id.' to '.$jointo); // @todo
 //                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
 //                                'to_topic_id' => $jointo]);
                         }
@@ -253,7 +253,7 @@ class ForumController extends AbstractController
             'form'            => $form->createView(),
             'forum'           => $this->_managedForum->get(),
             'pager'           => $this->_managedForum->getPager(),
-            'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit(),
+            'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
             'settings'        => $this->getVars(),
         ]);
     }

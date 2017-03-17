@@ -419,12 +419,7 @@ class ForumEntity extends EntityAccess
 
     public function setModeratorUsers($moderators)
     {
-        // clear the associated users
         $this->moderatorUsers->clear();
-        // @todo - add users - we need to do this in forumManager
-        // $moderator = new ModeratorUserEntity();
-        // $managedForumUser = new ForumUserManager($uid);
-        // $moderator->setForumUser($managedForumUser->get());
         foreach ($moderators as $moderator) {
             $moderator->setForum($this);
             $this->moderatorUsers->add($moderator);
@@ -464,14 +459,8 @@ class ForumEntity extends EntityAccess
 
     public function setModeratorGroups($moderatorGroups)
     {
-        // remove the associated moderators
         $this->moderatorGroups->clear();
-        // @todo - add users - we need to do this in forumManager
         foreach ($moderatorGroups as $moderatorGroup) {
-            // $moderatorGroup = new ModeratorGroupEntity();
-            // $em = ServiceUtil::get('doctrine.entitymanager');
-            // $group = $em->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $gid);
-            // $moderatorGroup->setGroup($group);
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);
         }

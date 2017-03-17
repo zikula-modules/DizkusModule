@@ -9,20 +9,15 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use ModUtil;
-use System;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
-use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Form\Type\PreferencesType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
-use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
-use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -304,16 +299,15 @@ class AdminController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        if ($id) {
-            $forum = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($id);
-        } else {
-            $forum = new ForumEntity();
-        }
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
 
-        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($id);
-        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($id);
+        // count only in this forum or subforums as well?
+        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
+        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
 
-        $form = $this->createForm('Zikula\DizkusModule\Form\Type\ForumType', $forum, []);
+        $forum = $managedForum->get();
+
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $forum , []);
 
         $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
@@ -323,6 +317,7 @@ class AdminController extends AbstractController
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
+
             $em->persist($forum);
             $em->flush();
 

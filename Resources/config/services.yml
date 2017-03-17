@@ -1,19 +1,24 @@
 parameters:
+    # Common
     zikula_dizkus_module.security.class: Zikula\DizkusModule\Security\Permission
     zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
     zikula_dizkus_module.twig.extension.class: Zikula\DizkusModule\Twig\TwigExtension
     zikula_dizkus_module.links.class: Zikula\DizkusModule\Container\LinkContainer
-
+    # Forms
+    zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
+    # Helpers
     zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
     zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
     zikula_dizkus_module.synchronization_helper.class: Zikula\DizkusModule\Helper\SynchronizationHelper
     zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper
-
+    # Managers
     zikula_dizkus_module.forum_user_manager.class: Zikula\DizkusModule\Manager\ForumUserManager
     zikula_dizkus_module.forum_manager.class: Zikula\DizkusModule\Manager\ForumManager
     zikula_dizkus_module.topic_manager.class: Zikula\DizkusModule\Manager\TopicManager
     zikula_dizkus_module.post_manager.class: Zikula\DizkusModule\Manager\PostManager
+    # Hooks
+    
 
 services:
     
@@ -58,8 +63,18 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@router"
 
+# Forms
+
+    zikula_dizkus_module.form.type.admin_modify_forum:
+        class: %zikula_dizkus_module.admin_modify_forum.class%
+        tags:
+            - { name: form.type, alias: zikuladizkusmodule_admin_modify_forum }
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@zikula_dizkus_module.forum_user_manager"
+            
 # Helpers
-          
+        
     zikula_dizkus_module.favorites_helper:
         class: %zikula_dizkus_module.favorites_helper.class%
         tags:
@@ -171,6 +186,7 @@ services:
             - "@zikula_dizkus_module.synchronization_helper"
 
     # Hooks
+    
     zikula_dizkus_module.hook_handler.base:
       abstract: true
       arguments: 

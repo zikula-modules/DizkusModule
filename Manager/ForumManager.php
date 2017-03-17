@@ -16,7 +16,6 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-use DataUtil;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -342,7 +341,7 @@ class ForumManager
         }
         // check zikula perms
         if ($this->permissionApi->hasPermission($this->name, $this->_forum->getForum_id().'::', ACCESS_MODERATE)) {
-            //   return true;
+               return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
         if (in_array($uid, $moderatorUsers)) {
@@ -650,10 +649,10 @@ class ForumManager
             foreach ($forums as $forum) {
                 if ($this->permission->canRead($forum)) {
                     $topforum = $forum->toArray();
-                    $topforum['name'] = DataUtil::formatForDisplay($forum->getName());
+                    $topforum['name'] = $forum->getName();
                     $parent = $forum->getParent();
                     $parentName = isset($parent) ? $parent->getName() : $this->translator->__('Root');
-                    $topforum['cat_title'] = DataUtil::formatForDisplay($parentName);
+                    $topforum['cat_title'] = $parentName;
                     array_push($topForums, $topforum);
                 }
             }

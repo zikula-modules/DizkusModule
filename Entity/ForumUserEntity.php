@@ -30,7 +30,7 @@ class ForumUserEntity extends EntityAccess
     const USER_LEVEL_DELETED = -1;
 
     /**
-     * user id to which the attribute belongs
+     * Zikula user
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
@@ -133,21 +133,20 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * Core user vars.
+     * Get user.
      *
-     * @return array|bool (if core user doesn't exist, method returns false)
+     * @return
      */
     public function getUser()
     {
-        //        if (empty($this->user)) {
-//            $this->user = UserUtil::getVars($this->user_id);
-//            if (empty($this->user['uname'])) {
-//                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
-//                $this->user['uname'] = __('Deleted user', $dom);
-//            }
-//        }
+        // 0 deleted user
+        return empty($this->user) ? null : $this->user;
+    }
 
-        return $this->user;
+    public function getUserId()
+    {
+        // 0 deleted user
+        return empty($this->user) ? -1 : $this->user->getUid();
     }
 
     public function getPostCount()
