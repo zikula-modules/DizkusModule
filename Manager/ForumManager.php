@@ -330,33 +330,28 @@ class ForumManager
      *
      * @return bool
      */
-    public function isModerator($uid = null)
+    public function isModerator()
     {
-        if (!isset($uid)) {
-            $loggedIn = $this->userApi->isLoggedIn();
-            if (!$loggedIn) {
-                return false;
-            }
-            $uid = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
+        $currentUser = $this->forumUserManagerService->getManager();
+
         // check zikula perms
         if ($this->permissionApi->hasPermission($this->name, $this->_forum->getForum_id().'::', ACCESS_MODERATE)) {
                return true;
         }
         $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
-        if (in_array($uid, $moderatorUsers)) {
-            //  return true;
+        if (in_array($currentUser->getId(), $moderatorUsers)) {
+              return true;
         }
         $gids = $this->_forum->getModeratorGroupsAsIdArray(true);
         if (empty($gids)) {
-            //   return false;
+               return false;
         }
         // is this user in any of the groups?
         $dql = 'SELECT m FROM Zikula\\UsersModule\\Entity\\UserEntity m
             WHERE m.uid = :uid';
         $user = $this->entityManager
             ->createQuery($dql)
-            ->setParameter('uid', $uid)
+            ->setParameter('uid', $currentUser->getId())
             ->setMaxResults(1)
             ->getOneOrNullResult();
 
@@ -391,14 +386,11 @@ class ForumManager
      */
     public function getSubscriptions($user_id = null)
     {
-        if (empty($user_id)) {
-            $loggedIn = $this->userApi->isLoggedIn();
-            if (!$loggedIn) {
-                throw new AccessDeniedException();
-            }
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
         $managedForumUser = $this->forumUserManagerService->getManager($user_id);
+
+        if ($managedForumUser->isAnonymous()) {
+            throw new AccessDeniedException();
+        }
 
         return $managedForumUser->get()->getForumSubscriptions();
     }

@@ -164,6 +164,16 @@ class PostManager
         return $this->_topic->getId();
     }
 
+    public function getPreview($data)
+    {
+
+        $this->_post->setPost_text($data['message']);
+
+
+
+        return true;
+    }
+
     /**
      * get the Post entity.
      *
@@ -491,46 +501,7 @@ class PostManager
         return $lastPosts;
     }
 
-    /**
-     * retrieve all my posts or topics.
-     *
-     * @param $args
-     *  string 'action' = 'posts'|'topics'
-     *  integer 'offset' pager offset
-     *
-     * @return array
-     */
-    public function search($action, $offset)
-    {
-        $action = !empty($action) && in_array($action, ['posts', 'topics']) ? $action : 'posts';
-        $offset = !empty($offset) ? $offset : 0;
 
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t', 'l')
-            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
-            ->leftJoin('t.last_post', 'l')
-            ->leftJoin('t.posts', 'p')
-            ->orderBy('l.post_time', 'DESC');
-        if ($action == 'topics') {
-            $qb->where('t.poster = :uid');
-        } else {
-            $qb->where('p.poster = :uid');
-        }
-
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1;
-
-        $qb->setParameter('uid', $uid);
-        $perPageVar = $action.'_per_page';
-        $limit = $this->variableApi->get('ZikulaDizkusModule', $perPageVar); //$this->variableApi->get($perPageVar);
-        $qb->setFirstResult($offset)
-            ->setMaxResults($limit);
-        $topics = new Paginator($qb);
-        $pager = [
-            'numitems'     => $topics->count(),
-            'itemsperpage' => $limit, ];
-
-        return [$topics, $pager];
-    }
 
     /**
      * movepost.

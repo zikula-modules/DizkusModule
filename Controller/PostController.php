@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
+use Zikula\Core\Response\PlainResponse;
 
 class PostController extends AbstractController
 {
@@ -60,6 +61,36 @@ class PostController extends AbstractController
 //            }
 //        }
 //        throw new \InvalidArgumentException($this->__f('Error! No post ID in %s.', '\'Dizkus/Ajax/editpost()\''));
+    }
+
+    /**
+     * @Route("/post/preview", options={"expose"=true})
+     * @Method("POST")
+     *
+     * Edit a post.
+     *
+     * @param Request $request
+     * @param integer $post The post id to edit
+     *
+     * @throws \InvalidArgumentException
+     * @throws AccessDeniedException
+     *
+     * @return AjaxResponse
+     */
+    public function previewAction(Request $request)
+    {
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
+
+        $postData = $request->get('topic_reply_form');
+        $managedPost->getPreview($request->get('topic_reply_form'));
+
+        return $this->render("@ZikulaDizkusModule/Post/preview.html.twig", [
+            'currentForumUser' => $currentForumUser,
+            'postManager'      => $managedPost,
+            'request' => $postData,
+            'settings'  => $this->getVars(),
+            ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
     }
 
     /**

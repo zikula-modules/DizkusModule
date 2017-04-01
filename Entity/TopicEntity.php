@@ -391,11 +391,6 @@ class TopicEntity extends EntityAccess
         $this->hookedUrlObject = $hookedUrlObject;
     }
 
-    public function userAllowedToEdit($uid = null)
-    {
-        return $this->posts->first()->getUserAllowedToEdit($uid);
-    }
-
     public function getFirstPostTime()
     {
         return $this->posts->first()->getPost_time();

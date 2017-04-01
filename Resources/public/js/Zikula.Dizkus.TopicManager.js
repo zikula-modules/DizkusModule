@@ -1,5 +1,5 @@
 /**
- * Zikula.Dizkus.User.ViewTopic.js
+ * Zikula.Dizkus.TopicManager.js
  *
  * $ based JS
  */
@@ -17,8 +17,8 @@
         $('ul.post_list').on('click', '.quotepostlink', function (e) {
             e.preventDefault();
             var post = $(this).data('post');
-            var quote_text = $('#post_content_'+post).text();
-            var poster_name = $('#post_poster_name_'+post).text();
+            var quote_text = $('#post_content_' + post).text();
+            var poster_name = $('#post_poster_name_' + post).text();
             quote(quote_text, poster_name);
         });
         $('ul.post_list').on('click', '.editpostlink', function (e) {
@@ -38,15 +38,20 @@
             createQuickReply($(this));
         });
 
+        $('#quickreply').on('click', '#quickreply_preview_tab', function (e) {
+            //e.preventDefault();
+            previewQuickReply($(this));
+        });
+
         $('#quickreply').on('click', '#topic_reply_form_preview', function (e) {
             e.preventDefault();
             previewQuickReply($(this));
         });
-        
+
         $('#quickreply').on('click', '#topic_reply_form_cancel', function (e) {
             e.preventDefault();
             cancelQuickReply($(this));
-        }); 
+        });
 
 //        // Show cancel button.
 //        $('#btnCancelQuickReply').show();
@@ -71,6 +76,8 @@
                 }
         );
         if (typeof $('#userAllowedToEdit').val() !== "undefined") {
+
+
             $('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
             $('#edittopicsubjectbutton').click(function () {
                 $('#topicsubjectedit_editor').show();
@@ -409,22 +416,22 @@
      */
     function createQuickReply($el) {
         if (!quickReplying) {
-            
-            $form = $el.parents('form').first();   
+
+            $form = $el.parents('form').first();
             $form.submit(function (e) {
                 e.preventDefault();
             });
-            
+
             var formData = $form.serializeArray();
-            formData.push({ name: $el.attr('name'), value: 1 });
-            
+            formData.push({name: $el.attr('name'), value: 1});
+
             quickReplying = true;
 
             var successHandler = function (result, message, request) {
                 //cancelQuickReply();
-                 $('#quickreply').html(result);
+                $('#quickreply').html(result);
 
-                 $('ul.post_list').append($('#quickreplynewpost').html());
+                $('ul.post_list').append($('#quickreplynewpost').html());
 
                 quickReplying = false;
 
@@ -455,36 +462,35 @@
 
         if (!quickReplying) {
 
-            $form = $el.parents('form').first();   
-            $form.submit(function (e) {
-                e.preventDefault();
-            });
-            
+            $('#previewAjaxStatus').toggleClass('hide');
+            $form = $el.parents('form').first();
+
             var formData = $form.serializeArray();
-            formData.push({ name: $el.attr('name'), value: 1 });
-            
+            formData.push({name: $el.attr('name'), value: 1});
+
             quickReplying = true;
 
             var successHandler = function (result, message, request) {
                 // Show preview.
-                $('#quickreply').html(result);
-
+                $('#quickreply_preview').html(result);
+                $('#quickreply_tabs a[href="#quickreply_preview"]').tab('show');
                 // Scroll to preview.
-                scrollTo('#quickreply');
-
+                //scrollTo('#quickreply');
                 quickReplying = false;
             }, errorHandler = function (request, message, detail) {
                 DizkusShowAjaxError(request.responseText);
                 quickReplying = false;
+                $('#previewAjaxStatus').toggleClass('hide');
             };
             $.ajax({
+                method: "POST",
+                dataType: "html",
                 data: formData,
-                url: Routing.generate('zikuladizkusmodule_topic_replytopic', {'topic': $('#topic_reply_form_topic').val()})
+                url: Routing.generate('zikuladizkusmodule_post_preview')
 
             }).done(successHandler).fail(errorHandler).always(function () {
-                hideAjaxIndicator('quickreply');
+                $('#previewAjaxStatus').toggleClass('hide');
             });
-            showAjaxIndicator(zPreparingPreview + '...', 'quickreply');
         }
     }
 
@@ -492,7 +498,7 @@
      * Aborts quick replying by emptying the message field and hiding previews.
      */
     function cancelQuickReply($el) {
-        
+
         $('#topic_reply_form_message').val("");
         $('#replypreview').addClass('hidden');
         quickReplying = false;

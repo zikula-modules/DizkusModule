@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Form\Type\ModerateType;
 
 class ForumController extends AbstractController
@@ -51,33 +50,28 @@ class ForumController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
-
+        // currentforumuser
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         // get the forums to display
-        $showOnlyFavorites = $this->get('zikula_dizkus_module.favorites_helper')->getStatus();   //ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
         $siteFavoritesAllowed = $this->getVar('favorites_enabled');
-        $uid = ($request->getSession()->get('uid') > 1) ? $request->getSession()->get('uid') : 1;
-        $loggedIn = $uid > 1 ? true : false;
         $qb = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
-        if ($loggedIn && $siteFavoritesAllowed && $showOnlyFavorites) {
+        if (!$forumUserManager->isAnonymous() && $siteFavoritesAllowed && $forumUserManager->get()->getDisplayOnlyFavorites()) {
             // display only favorite forums
             $qb->join('node.favorites', 'fa');
             $qb->andWhere('fa.forumUser = :uid');
-            $qb->setParameter('uid', $uid);
+            $qb->setParameter('uid', $forumUserManager->getId());
         } else {
             //display an index of the level 1 forums
             $qb->andWhere('node.lvl = 1');
         }
-        $forums = $qb->getQuery()->getResult();
+        $rawForums = $qb->getQuery()->getResult();
         // filter the forum array by permissions
-        $forums = $this->get('zikula_dizkus_module.security')->filterForumArrayByPermission($forums);
+        $forums = $this->get('zikula_dizkus_module.security')->filterForumArrayByPermission($rawForums);
         // check to make sure there are forums to display
         if (count($forums) < 1) {
-            if ($showOnlyFavorites) {
+            if ($forumUserManager->get()->getDisplayOnlyFavorites()) {
                 $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
-                $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid); //new ForumUserManager($uid);
-                $managedForumUser->displayFavoriteForumsOnly(false);
-
+                $forumUserManager->setForumViewSettings(false);
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
             } else {
                 $request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
@@ -85,8 +79,9 @@ class ForumController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Forum/main.html.twig', [
-                    'last_visit_unix' => $lastVisitUnix,
+                    'last_visit_unix' => $forumUserManager->getLastVisit(),
                     'forums'          => $forums,
+                    'currentForumUser' => $forumUserManager,
                     'totalposts'      => $this->get('zikula_dizkus_module.count_helper')->getAllPostsCount(),
                     'settings'        => $this->getVars(),
         ]);
@@ -115,8 +110,9 @@ class ForumController extends AbstractController
                         'forum_disabled_info' => $this->getVar('forum_disabled_info'),
             ]);
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
-
+        // currentforumuser
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        // current forum
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum); //new ForumManager($forum);
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', [$forum]));
@@ -129,8 +125,9 @@ class ForumController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Forum/view.html.twig', [
+                    'last_visit_unix' => $forumUserManager->getLastVisit(),
+                    'currentForumUser' => $forumUserManager,
                     'topics'          => $managedForum->getTopics($start),
-                    'last_visit_unix' => $lastVisitUnix,
                      // filter the forum children by permissions
                     'forum'       => $this->get('zikula_dizkus_module.security')->filterForumChildrenByPermission($managedForum->get()),
                     'pager'       => $managedForum->getPager(),
@@ -256,67 +253,5 @@ class ForumController extends AbstractController
             'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
             'settings'        => $this->getVars(),
         ]);
-    }
-
-    /**
-     * AJAX.
-     */
-
-    /**
-     * @Route("/forum/modify/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action" = "addToFavorites|removeFromFavorites|subscribe|unsubscribe"}, options={"expose"=true})
-     * @ Method("POST")
-     *
-     * @param Request $request
-     *                         forum
-     *                         action
-     *
-     * @throws AccessDeniedException on failed perm check
-     *
-     * @return string PlainResponse|BadDataResponse|UnavailableResponse
-     */
-    public function modifyForumAction(Request $request, $forum, $action)
-    {
-        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            if ($request->isXmlHttpRequest()) {
-                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
-                            'forum_disabled_info' => $this->getVar('forum_disabled_info'),
-                ]);
-            }
-        }
-
-        if (!$this->getVar('favorites_enabled')) {
-            return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
-        }
-
-        if (empty($forum)) {
-            return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-        }
-        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
-            // only need read perms to make a favorite
-            throw new AccessDeniedException();
-        }
-        $this->get('zikula_dizkus_module.forum_manager')->modify($forum, $action);
-
-        return new PlainResponse('successful');
-
-//        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum), RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
-     * @Route("/forumusers", options={"expose"=true})
-     *
-     * update the "users online" section in the footer
-     *
-     * used in User/footer_with_ajax.tpl
-     *
-     * @return UnavailableResponse
-     */
-    public function forumusersAction()
-    {
-        if (!$this->getVar('forum_enabled')) {
-            return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-        }
     }
 }

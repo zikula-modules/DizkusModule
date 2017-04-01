@@ -1,26 +1,26 @@
-{{ pageSetVar('title', __("Manage forum subscriptions")) }}
+{{ pageSetVar('title', __("Manage favorite forums")) }}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 <div id="dzk_userprefs">
     {{ moduleLinks('prefs') }}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h2>{{ __("Manage forum subscriptions") }}</h2>
+            <h2>{{ __("Manage favorite forums") }}</h2>
         </div>
         <div class="list-group-item list-group-item-info">
             <div class="row">
                 <div class="col-md-5">
                     {{ __('Forum')}}
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     {{ __('Forum description')}}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     {{ __('Actions')}}
                 </div>
             </div>
         </div>
         <ul class="list-group">
-            {% for subscription in currentForumUser.ForumSubscriptionsCollection %}
+            {% for subscription in currentForumUser.FavoriteForumsCollection %}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">
@@ -40,12 +40,12 @@
                                 {% if not loop.last %}/{% endif %}
                             {% endfor %}
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <p> {{ subscription.forum.description|escape('html') }} </p>
                         </div>
-                        <div class="col-md-2">
-                            <a href="{{ path('zikuladizkusmodule_user_manageforumsubscriptions', {'unsubscribe': subscription.forum.forum_id}) }}" class="btn btn-sm btn-default">
-                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Unsubscribe") }}
+                        <div class="col-md-3">
+                            <a href="{{ path('zikuladizkusmodule_user_managefavoriteforums', {'unsubscribe': subscription.forum.forum_id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Remove from favorites") }}
                             </a>
                         </div>
                     </div>
@@ -53,15 +53,15 @@
             {% else %}
                 <li class="list-group-item">
                     <div class="text-center danger">
-                        {{ __("No forum subscriptions found.") }}
+                        {{ __("No favorite forum found.") }}
                     </div>
                 </li>
             {% endfor %}
         </ul>
-        {% if currentForumUser.ForumSubscriptionsCollection|length > 0 %}
+        {% if currentForumUser.FavoriteForumsCollection|length > 0 %}
             <div class="list-group-item list-group-item-warning clearfix">
-                <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_manageforumsubscriptions', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forum subscriptions')}}">
-                    <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forum subscriptions')}}</span>
+                <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_managefavoriteforums', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forums from favorites')}}">
+                    <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forums from favorites')}}</span>
                 </a>
             </div>
         {% endif %}

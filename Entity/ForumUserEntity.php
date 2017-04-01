@@ -34,7 +34,7 @@ class ForumUserEntity extends EntityAccess
      *
      * @ORM\Id
      * @ORM\OneToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid", nullable=true)
      */
     private $user;
 
@@ -139,13 +139,13 @@ class ForumUserEntity extends EntityAccess
      */
     public function getUser()
     {
-        // 0 deleted user
+        // null look for user level
         return empty($this->user) ? null : $this->user;
     }
 
     public function getUserId()
     {
-        // 0 deleted user
+        // null look for user level
         return empty($this->user) ? -1 : $this->user->getUid();
     }
 

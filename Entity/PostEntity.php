@@ -277,38 +277,9 @@ class PostEntity extends EntityAccess
         return $this->topic->getTopic_id();
     }
 
-    /**
-     * @todo move somewhere else this do not belong here
-     * determine if a user is allowed to edit this post
-     *
-     * @param  integer $uid
-     * @return boolean
-     */
-    public function getUserAllowedToEdit($uid = null)
-    {
-        //        if (!isset($this->post_time)) {
-//            return false;
-//        }
-//
-//        // default to current user
-//        $uid = isset($uid) ? $uid : Use
-//
-//        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
-//        // in hours
-//        $postTime = clone $this->post_time;
-//        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
-//        $now = new \DateTime();
-//        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
-//            return true;
-//        }
-
-        return false;
-    }
-
     public function toArray()
     {
         $array = parent::toArray();
-        $array['userAllowedToEdit'] = $this->getUserAllowedToEdit();
 
         return $array;
     }

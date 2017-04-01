@@ -12,7 +12,7 @@
     padding:0;
     list-style: none;
 }
-#dizkus h2 .editabletopicheader {
+#dizkus .editabletopicheader {
     display: inline;
     cursor: pointer;
 }
@@ -23,6 +23,14 @@
 #dizkus .quotepostlink:hover {
     cursor: hand;
     cursor: pointer;
+}
+
+#dizkus .noborder {
+    border: 0;
+}
+#dizkus .nothing {
+    border: 0;
+    outline: none;
 }
 
 /***********************

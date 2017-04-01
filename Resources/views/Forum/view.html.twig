@@ -28,29 +28,29 @@
                 {% if permissions.comment and not forum.isLocked() %}
                     <li><a class="fa fa-comment-o" title="{{ __("Start a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':forum.forum_id}) }}">&nbsp;{{ __("New topic") }}</a></li>
                     {% endif %}
-                    {% if currentUser.loggedIn %}
+                    {% if currentForumUser.loggedIn %}
                     <li>
-                        {% set isSubscribed=isSubscribed(forum) %}
-                        {% if isSubscribed %}
-                            {% set url=path('zikuladizkusmodule_forum_modifyforum', {'action':'unsubscribe', 'forum':forum.forum_id}) %}
+                        {% set isForumSubscribed=currentForumUser.forumSubscribed(forum) %}
+                        {% if isForumSubscribed %}
+                            {% set url=path('zikuladizkusmodule_user_removeforumsubscription', {'forum':forum.forum_id}) %}
                             {% set msg= __("Unsubscribe from forum") %}                                                       
                         {% else %}
-                            {% set url=path('zikuladizkusmodule_forum_modifyforum', {'action':'subscribe', 'forum':forum.forum_id}) %}
+                            {% set url=path('zikuladizkusmodule_user_addforumsubscription', {'forum':forum.forum_id}) %}
                             {% set msg= __("Subscribe to forum") %}                           
                         {% endif %}
-                        <a class="fa fa-envelope-o" id="forum-subscription" data-status="{% if isSubscribed %}1{% else %}0{% endif %}" href="{{ url }}" title="{{ msg }}">&nbsp;{{ msg }}</a>
+                        <a class="fa fa-envelope-o" id="forum-subscription" data-status="{% if isForumSubscribed %}1{% else %}0{% endif %}" href="{{ url }}" title="{{ msg }}">&nbsp;{{ msg }}</a>
                     </li>
                     {% if settings.favorites_enabled %}
                         <li>
-                            {% set isFavorite=isFavorite(forum) %}
-                            {% if isFavorite %}
-                                {% set url=path('zikuladizkusmodule_forum_modifyforum', {'action':'removeFromFavorites', 'forum':forum.forum_id}) %}
+                            {% set isForumFavorite=currentForumUser.forumFavorite(forum) %}
+                            {% if isForumFavorite %}
+                                {% set url=path('zikuladizkusmodule_user_removefavoriteforum', {'forum':forum.forum_id}) %}
                                 {% set msg= __("Remove forum from favourites") %}
                             {% else %}
-                                {% set url=path('zikuladizkusmodule_forum_modifyforum', {'action':'addToFavorites', 'forum':forum.forum_id}) %}
+                                {% set url=path('zikuladizkusmodule_user_addfavoriteforum', {'forum':forum.forum_id}) %}
                                 {% set msg= __("Add forum to favourites") %}
                             {% endif %}
-                            <a class="fa fa-heart-o" id="forum-favourite" data-status="{% if isFavorite %}1{% else %}0{% endif %}" href="{{ url }}" title="{{ msg }}">&nbsp;{{ msg }}</a>
+                            <a class="fa fa-heart-o" id="forum-favourite" data-status="{% if isForumFavorite %}1{% else %}0{% endif %}" href="{{ url }}" title="{{ msg }}">&nbsp;{{ msg }}</a>
                         </li>
                     {% endif %} 
                 {% endif %}

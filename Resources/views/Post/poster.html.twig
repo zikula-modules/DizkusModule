@@ -1,0 +1,52 @@
+{# empty Twig template #}
+<div class="dzk_avatar">
+    {#        @todo   |profilelinkbyuname      #}
+    <span id="post_poster_name_"><strong>{{ poster.userName }}</strong></span>
+    <br />
+    <div> {#{useravatar uid=$post.poster.user_id class="img-rounded"}#}
+        {#       @todo                #}
+        <img src="/{{ currentUser.attributes.avatar is defined ? currentUser.attributes.avatar.value : 'web/test.jpg' }}" class="img-rounded" />
+    </div>
+
+    {#                    {% if post.poster.rank is not empty and post.poster.rank.image is not empty%}
+                            {% if post.poster.rank.rank_link != '' %}
+                                <a href="{{ post.poster.rank.rank_link }}" title="{{ post.poster.rank.rank_link }}">
+                                {% endif %}
+                                <img class="userinforankimage" src="/{{ post.poster.rank.imageLink }}" alt="{{ post.poster.rank.title }}" title="{{ post.poster.rank.description }}" />
+                                {% if post.poster.rank.rank_link == '' %}</a>{% endif %}
+                            {% else %}
+                                {% set posterRank=getRankByPostCount(post.poster.postCount) %}
+
+                            {% if posterRank.rank_link !='' %}
+                                <a href="{{ posterRank.rank_link }}" title="{{ posterRank.rank_link }}">
+                                {% endif %}
+                                {% if posterRank.image != '' %}
+                                    <img class="userinforankimage" src="/{{ posterRank.imageLink }}" alt="{{ posterRank.title }}" title="{{ posterRank.description }}" />
+                                {% endif %}
+                                {% if posterRank.rank_link != '' %}</a>{% endif %}
+                            {% endif %}#}
+</div>
+
+<ul>
+    {#                    {% if post.poster.rank is not empty and post.poster.rank.title is not empty %}
+                            <li><strong>{{ __("Rank") }}: </strong>{{ post.poster.rank.title|escape('html') }}</li>
+                            {% else %}
+                            <li><strong>{{ __("Rank") }}: </strong>{{ posterRank.title|escape('html') }}</li>
+                            {% endif %}#}
+    <li><strong>{{ __("Registered") }}: </strong>{{ poster.get.user_regdate|default('01-01-1970 00:00:00')|date('d-m-Y') }}</li>
+        {%if currentForumUser.online != true %}
+        <li><strong>{{ __("Last visit") }}: </strong>{{ poster.get.lastVisit|date('d-m-Y') }}</li>
+        {% endif %}
+    <li><strong>{{ __("Posts") }}: </strong>{{ poster.get.postCount }}</li>
+        {% if currentForumUser.loggedIn == true %}
+        <li>
+            {% if msgmodule == false %}
+                <a class="tooltips" title="{{ __("Send private message") }}" href="{#  @todo finish InterCom {modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}#}"><i class="fa fa-envelope-o fa-150x"></i></a>
+                {% endif %}
+                {% if poster.data is defined and poster.data.moderate == true and poster.data.seeip == true %}
+                    {# {{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }} #}
+                    {#<a class="tooltips" title="{{ __("View IP address") }}" href="{{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }}"><i class="fa fa-info-circle fa-150x"></i></a>#}
+                {% endif %}
+        </li>
+    {% endif %}
+</ul>

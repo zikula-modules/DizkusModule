@@ -7,51 +7,86 @@
 {{ form_start(form) }}
 {{ form_errors(form) }}
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3>
-            {% if templatetitle is defined %}
-                {{ templatetitle }}
-            {% else %}    
-                {{ __("Quick reply") }}
-            {% endif %}        
-        </h3>
-    </div>
-    <div class="panel-body">
-        <div class="form-group {% if not form.message.vars.valid %}has-error{% endif %}">    
-            {% if not form.message.vars.valid %}
-                <div class="alert alert-danger" role="alert">{{ form_errors(form.message) }}</div>
-            {% endif %}
-            {{ form_widget(form.message, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
-            {% if settings.striptags == 'yes' %}
-                <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
-            {% endif %}
-        </div>
-        <div class="form-group">
-             {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.ui_edit', id=null) }}
-        </div>
-        <div class="form-group">
-            <div class="col-md-4">
-            <div><strong>{{ __("Options") }}</strong></div>
-                        {{ form_row(form.attachSignature,  {   'label': __("Attach my signature")
-                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
-                            ,'attr': {'class': '','icon': 'fa fa-user'} }) }}                           
-                            
-                        {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
-                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
-                            ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}                            
+<div class="panel panel-default">
+    <div class="panel-heading" style="border-bottom:0px;padding-bottom: 0px;">
+        <ul id="quickreply_tabs"  class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="{% if preview is defined and preview == true %}{% else %} active{% endif %}"><a href="#quickreply_message" aria-controls="quickreply_message" role="tab" data-toggle="tab">
+                    {% if templatetitle is defined %}
+                        {{ templatetitle }}
+                    {% else %}
+                        {{ __("Quick reply") }}
+                    {% endif %} 
+                </a></li>
 
-                        {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
-                        {{ form_widget(form.preview, {'attr': {'class': 'btn btn-primary'}}) }}
-                        
-                        {#   #}
-                        <a id="topic_reply_form_cancel" class="btn btn-danger" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topic.topic_id}) }}" role="button">{{ __('Cancel') }}</a> 
-                        
-            </div>
-            <div class="col-md-8">
-                {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
+            <li role="presentation" class="{% if preview is defined and preview == true %} active{% else %}{% endif %}">
+                <a id="quickreply_preview_tab" href="#quickreply_preview" aria-controls="quickreply_preview" role="tab" data-toggle="tab">
+                    {{ __("Preview") }}
+                    <span id="previewAjaxStatus" class="hide">
+                        <i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i>
+                        <span class="sr-only">Loading...</span>
+                    </span>
+                </a></li>
+            <li role="presentation" class="pull-right"><a href="#quickreply_options" aria-controls="quickreply_options" role="tab" data-toggle="tab">{{ __("Options") }} <i class="fa fa-cog" aria-hidden="true"></i></a></li>
+        </ul>
+
+    </div>
+    <div class="panel-body" style="border-top:0px;min-height:300px;">
+        <div class="tab-content">
+
+            <div role="tabpanel" class="tab-pane {% if preview is defined and preview == true %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
+                <div class="form-group {% if not form.message.vars.valid %}has-error{% endif %}">
+                    {% if not form.message.vars.valid %}
+                        <div class="alert alert-danger" role="alert">{{ form_errors(form.message) }}</div>
+                    {% endif %}
+                    {{ form_widget(form.message, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
+                    {% if settings.striptags == 'yes' %}
+                    <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
+                    {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.ui_edit', id=null) }}
+                    </div>
+
+                </div>
+
+
+                <div role="tabpanel" class="tab-pane" id="quickreply_options" style="border:0px;">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div><strong>{{ __("Options") }}</strong></div>
+                            {{ form_row(form.attachSignature,  {   'label': __("Attach my signature")
+                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
+                            ,'attr': {'class': '','icon': 'fa fa-user'} }) }}
+
+                            {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
+                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
+                            ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
+
+                        </div>
+                        <div class="col-md-8">
+                            {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane {% if preview is defined and preview == true %} active{% endif %}" id="quickreply_preview" style="border:0px;">
+
+                    <div id="replypreview" style="margin:0 0;">
+                        {{ render(controller(
+            'ZikulaDizkusModule:Post:preview',
+            {'message': 'test'}
+        )) }}
+                    </div>
+
+                </div>
             </div>
         </div>
+
+        <div class="panel-footer text-right">
+            <a id="topic_reply_form_cancel" class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topic.topic_id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.preview, {'attr': {'class': 'btn btn-default btn-sm'}}) }}
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-sm'}}) }}
+
+            {#   #}
+        </div>
     </div>
-</div>
-{{ form_end(form) }}
+    {{ form_end(form) }}

@@ -92,6 +92,8 @@ class TopicManager
     private $_defaultPostSortOrder;
     private $_numberOfItems;
 
+    private $posts;
+
     private $managedForum;
 
     /**
@@ -226,6 +228,16 @@ class TopicManager
     }
 
     /**
+     * return topic forum id.
+     *
+     * @return int
+     */
+    public function getForum()
+    {
+        return $this->_topic->getForum();
+    }
+
+    /**
      * @return ForumManager
      */
     public function getManagedForum()
@@ -248,16 +260,27 @@ class TopicManager
      *
      * @return object
      */
-    public function getPosts($startNumber = 1)
+    public function getPosts()
     {
-        if ($this->userApi->isLoggedIn()) {
-            $managedForumUser = $this->forumUserManagerService->getManager(); //new ForumUserManager();
+        return $this->posts;
+    }
+
+
+    /**
+     * return posts of a topic as doctrine2 object.
+     *
+     * @return object
+     */
+    public function loadPosts($start = 0)
+    {
+        $managedForumUser = $this->forumUserManagerService->getManager();
+
+        if ($managedForumUser->isLoggedIn()) {
            $postSortOrder = $managedForumUser->getPostOrder();
         } else {
-            $postSortOrder = $this->_defaultPostSortOrder;
+           $postSortOrder = $this->_defaultPostSortOrder;
         }
-        // do not allow negative first result
-        $startNumber = $startNumber > 0 ? $startNumber : 0;
+
         // Do a new query in order to limit maxresults, firstresult, order, etc.
         $query = $this->entityManager->createQueryBuilder()
             ->select('p, u, r')
@@ -268,24 +291,71 @@ class TopicManager
             ->leftJoin('u.rank', 'r')
             ->orderBy('p.post_time', $postSortOrder)
             ->getQuery();
-        $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
-        $paginator = new Paginator($query, false);
-        $this->_numberOfItems = $paginator->count();
+        $query->setFirstResult($start)->setMaxResults($this->_itemsPerPage);
+        $this->posts = new Paginator($query, false);
+        $this->_numberOfItems = $this->posts->count();
 
-        return $paginator;
     }
 
     /**
-     * return pager.
+     * Posts collection management
+     *
+     * @return integer
+     */
+    public function getPostsPerPage()
+    {
+        return $this->_itemsPerPage;
+    }
+
+    /**
+     * Posts collection management
      *
      * @return array
      */
-    public function getPager()
+    public function getPostsCount()
     {
-        return [
-            'itemsperpage' => $this->_itemsPerPage,
-            'numitems'     => $this->_numberOfItems, ];
+        return $this->_numberOfItems;
+
     }
+
+    public function userAllowedToEdit()
+    {
+          $currentForumUser = $this->forumUserManagerService->getManager();
+//        $this->_topic->
+//        return $this->posts->first()->getUserAllowedToEdit($uid);
+
+
+        return true;
+    }
+
+
+//        /**
+//     * @todo move somewhere else this do not belong here
+//     * determine if a user is allowed to edit this post
+//     *
+//     * @param  integer $uid
+//     * @return boolean
+//     */
+//    public function getUserAllowedToEdit($uid = null)
+//    {
+        //        if (!isset($this->post_time)) {
+//            return false;
+//        }
+//
+//        // default to current user
+//        $uid = isset($uid) ? $uid : Use
+//
+//        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
+//        // in hours
+//        $postTime = clone $this->post_time;
+//        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
+//        $now = new \DateTime();
+//        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     /**
      * get forum bread crumbs.
@@ -361,7 +431,7 @@ class TopicManager
         $this->_subscribe = $data['subscribeTopic'];
         unset($data['subscribeTopic']);
         $this->_forumId = $data['forum_id'];
-        $this->managedForum = $this->forumManagerService->getManager($this->_forumId); //new ForumManager($this->_forumId);
+        $this->managedForum = $this->forumManagerService->getManager($this->_forumId);
         $this->_topic->setForum($this->managedForum->get());
         unset($data['forum_id']);
         $solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
@@ -369,16 +439,16 @@ class TopicManager
         unset($data['isSupportQuestion']);
         $this->_topic->setLast_post($this->_firstPost);
         $this->_topic->merge($data);
-        // prepare poster data or assign anonymous creations to the admin
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2);
 
-        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
-        if (!$forumUser) {
-            $forumUser = new ForumUserEntity($uid);
+        $managedForumUser = $this->forumUserManagerService->getManager();
+        if($managedForumUser->isAnonymous()){
+            $managedForumUser = $this->forumUserManagerService->getManager($this->variableApi->get($this->name, 'defaultPoster', 2));
         }
-        $forumUser->incrementPostCount();
-        $this->_firstPost->setPoster($forumUser);
-        $this->_topic->setPoster($forumUser);
+
+        $managedForumUser->incrementPostCount();
+
+        $this->_firstPost->setPoster($managedForumUser->getUser());
+        $this->_topic->setPoster($managedForumUser->getUser());
     }
 
     /**

@@ -12,7 +12,7 @@
                     {{ __('Topic')}}
                 </div>
                 <div class="col-md-5">
-                    {{ __('Forum description')}}
+                    {{ __('Info')}}
                 </div>
                 <div class="col-md-2">
                     {{ __('Actions')}}
@@ -20,7 +20,7 @@
             </div>
         </div>
         <ul class="list-group">
-            {% for subscription in subscriptions %}
+            {% for subscription in currentForumUser.TopicSubscriptionsCollection %}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">
@@ -58,7 +58,7 @@
                 </li>
             {% endfor %}
         </ul>
-        {% if subscriptions|length > 0 %}
+        {% if currentForumUser.TopicSubscriptionsCollection|length > 0 %}
             <div class="list-group-item list-group-item-warning clearfix">
                 <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_managetopicsubscriptions', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forum subscriptions')}}">
                     <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forum subscriptions')}}</span>

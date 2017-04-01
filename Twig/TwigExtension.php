@@ -14,8 +14,6 @@ namespace Zikula\DizkusModule\Twig;
 use DataUtil;
 use ModUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use ThemeUtil;
-use UserUtil;
 use Zikula\DizkusModule\Entity\TopicEntity;
 
 /**
@@ -478,12 +476,10 @@ class TwigExtension extends \Twig_Extension
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      */
-    public function getRankByPostCount($posts, $ranks)
+    public function getRankByPostCount($posts = 0)
     {
-        $posts = !empty($posts) ? $posts : 0;
-        if (!isset($ranks)) {
-            throw new \InvalidArgumentException();
-        }
+ 
+        list($rankimages, $ranks) = $this->container->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
 
         $posterRank = $ranks[0];
 

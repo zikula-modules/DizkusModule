@@ -31,9 +31,6 @@ use Zikula\DizkusModule\Form\Type\Topic\DeleteType;
 use Zikula\DizkusModule\Form\Type\Topic\JoinMoveType;
 use Zikula\DizkusModule\Form\Type\Topic\NewType;
 use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
-use Zikula\DizkusModule\Manager\ForumManager;
-use Zikula\DizkusModule\Manager\ForumUserManager; // used in annotations - do not remove
-use Zikula\DizkusModule\Manager\TopicManager; // used in annotations - do not remove
 
 class TopicController extends AbstractController
 {
@@ -58,36 +55,29 @@ class TopicController extends AbstractController
             ]);
         }
 
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
-
-        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
-        if (!$managedTopic->exists()) {
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        $currentTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
+        if (!$currentTopic->exists()) {
             $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
-        if (!$this->get('zikula_dizkus_module.security')->canRead($managedTopic->get()->getForum())) {
+        if (!$this->get('zikula_dizkus_module.security')->canRead($currentTopic->get()->getForum())) {
             throw new AccessDeniedException();
         }
 
         list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]); //ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
 
-        $managedTopic->incrementViewsCount();
+        $currentTopic->loadPosts(--$start);
+        $currentTopic->incrementViewsCount();
 
         return $this->render('@ZikulaDizkusModule/Topic/view.html.twig', [
+            'currentForumUser' => $currentForumUser,
+            'currentTopic'    => $currentTopic,
             'ranks'           => $ranks,
             'start'           => $start,
-            'topic'           => $managedTopic->get(),
-            'posts'           => $managedTopic->getPosts(--$start),
-            'pager'           => $managedTopic->getPager(),
-            'permissions'     => $this->get('zikula_dizkus_module.security')->get($managedTopic->get()->getForum()),
-            'isModerator'     => $managedTopic->getManagedForum()->isModerator(),
-            'breadcrumbs'     => $managedTopic->getBreadcrumbs(),
-            'isSubscribed'    => $managedTopic->isSubscribed(),
-            'nextTopic'       => $managedTopic->getNext(),
-            'previousTopic'   => $managedTopic->getPrevious(),
-            'last_visit_unix' => $lastVisitUnix,
+            'permissions'     => $this->get('zikula_dizkus_module.security')->get($currentTopic->get()->getForum()),
             'preview'         => false,
             'settings'        => $this->getVars(),
             ]);
@@ -118,22 +108,30 @@ class TopicController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);    //new ForumManager($this->_forumId);
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
+
+        if (!$managedForum->exists()){
+            $this->addFlash('error', $this->__('Error! Missing forum id.'));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+
         if ($managedForum->get()->isLocked()) {
-            // it should be impossible for a user to get here, but this is just a sanity check
             $this->addFlash('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL));
         }
 
-        $form = $this->createForm(new NewType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], []);
+        $form = $this->createForm(new NewType($forumUserManager->isLoggedIn()), [], []);
         $form->handleRequest($request);
 
         // check hooked modules for validation
         $hook = new ValidationHook(new ValidationProviders()); //
         $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
 
-        // check hooked modules for validation for POST
+        // check hooked modules for validation for post
         $postHook = new ValidationHook(new ValidationProviders());
         /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
         $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
@@ -143,7 +141,7 @@ class TopicController extends AbstractController
             }
         }
 
-        // check hooked modules for validation for TOPIC
+        // check hooked modules for validation for topic
         $topicHook = new ValidationHook(new ValidationProviders());
         /** @var $topicHookValidators \Zikula\Core\Hook\ValidationProviders */
         $topicHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
@@ -199,8 +197,9 @@ class TopicController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Topic/new.html.twig', [
+            'last_visit_unix' => $forumUserManager->getLastVisit(),
+            'currentForumUser' => $forumUserManager,
             'ranks'         => isset($ranks) ? $ranks : false,
-            'lastVisitUnix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
             'form'          => $form->createView(),
             'breadcrumbs'   => $managedForum->getBreadcrumbs(false),
             'preview'       => isset($preview) ? $preview : false,
@@ -226,7 +225,8 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic); //new TopicManager($topic);
+
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
             $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
 
@@ -267,6 +267,7 @@ class TopicController extends AbstractController
 
             if ($form->get('preview')->isClicked()) {
                 $preview = true;
+                //$template = 'reply.preview';
                 $post = $managedPost->toArray();
                 $post['post_id'] = -1;
                 $post['post_time'] = time();

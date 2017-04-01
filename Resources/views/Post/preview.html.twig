@@ -1,0 +1,43 @@
+{% set msgmodule=getModVar('ZConfig', 'messagemodule', false) %}
+<div id="posting_" class="panel panel-default">
+    {% if currentForumUser.online %}<div class="ribbon-wrapper-right"><div class="ribbon-right ribbon-blue">{{ __("ONLINE") }}</div></div>{% endif %}
+    <div class="ribbon-wrapper-left"><div class="ribbon-left ribbon-red">{{ __("PREVIEW") }}</div></div>
+    <div class="panel-heading">
+        <div class="postdate{% if currentForumUser.online %} padright{% endif %}">
+            {#            {% if postManager.topic is defined %}<a class="tooltips" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':postManager.topicId, 'start':start }) }}#pid{{ post.post_id }}" title="{{ __("Link to this post") }}"><i class="fa fa-file-o"></i></a>{% endif %}#}
+            <strong>{{ __("Posted") }}: </strong>{{ postManager.get.post_time|date('Y-m-d H:i:s') }}
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div id="posting__userinfo" class="post_author col-md-3">
+                {{ include("@ZikulaDizkusModule/Post/poster.html.twig", {'poster': currentForumUser}) }}
+            </div>
+
+            <div class="postbody col-md-9">
+                <div class="content" id="postingtext_">
+
+                    {# post.post_text|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'|transformtags  #}
+                    <span id="post_content_preview" >{{ postManager.get.post_text|notifyFilters('dizkus.filter_hooks.post.filter')|transform }}</span>
+
+
+                    {# {% if post.attachSignature and settings.removesignature == true %}#}
+                    {#                  {usergetvar name='signature' assign="signature" uid=$post.poster.user_id}#}
+                    {# {% if signature is not empty %}#}
+                    {#                    <div class="dzk_postSignature">
+                                            {{ settings.signature_start }}#}
+                    {# signature|dzkVarPrepHTMLDisplay|notifyfilters:'dizkus.filter_hooks.post.filter'}#}
+                    {#                        <br />{{ signature|notifyFilters('dizkus.filter_hooks.post.filter') }}
+                                            <br />{{ settings.signature_end }}
+                                        </div>#}
+                    {#                    {% endif %}
+                                            {% endif %}#}
+                </div>
+                {# {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_view', id=post.post_id) }}#}
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+
+    </div>
+</div>
