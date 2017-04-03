@@ -81,8 +81,27 @@ class ForumManager
      */
     private $_forum;
 
-    private $_itemsPerPage;
+    /**
+     * Doctrine Paginated
+     *
+     * @var ForumEntity
+     */
+    private $current_subforums;
+    private $current_subforums_count;
+    /**
+     * Doctrine Paginated
+     *
+     * @var ForumEntity
+     */
+    private $current_topics;
+    private $current_topics_count;
     private $_numberOfItems;
+
+
+   /**
+    * Collection view settings
+     */
+    private $_itemsPerPage;
 
     protected $name;
 
@@ -182,7 +201,7 @@ class ForumManager
      *
      * @return array
      */
-    public function getBreadcrumbs($withoutCurrent = true)
+    public function getBreadcrumbs($withoutCurrent = false)
     {
         if ($this->_forum->getLvl() == 0) {
             // already root
@@ -201,50 +220,74 @@ class ForumManager
                 'url'   => $url,
                 'title' => $forum->getName(), ];
         }
-        if ($withoutCurrent) {
-            // last element added in template instead
-            array_pop($output);
-        }
+//        if ($withoutCurrent) {
+//            // last element added in template instead
+//            array_pop($output);
+//        }
 
         return $output;
     }
 
     /**
-     * return posts of a forum as doctrine2 object.
+     * Return topics of a forum as Doctrine Paginator
+     * Here Forum becomes topics collection controller
      *
      * @return Paginator collection of paginated topics
      */
     public function getTopics($startNumber = 1)
     {
-        $id = $this->_forum->getForum_id();
         $query = $this->entityManager
             ->createQueryBuilder()
-            ->select('p')
-            ->from('Zikula\DizkusModule\Entity\TopicEntity', 'p')
-            ->where('p.forum = :forumId')
-            ->setParameter('forumId', $id)
-            ->leftJoin('p.last_post', 'l')
-            ->orderBy('p.sticky', 'DESC')
+            ->select('t')
+            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
+            ->where('t.forum = :forumId')
+            ->setParameter('forumId', $this->_forum->getForum_id())
+            ->leftJoin('t.last_post', 'l')
+            ->orderBy('t.sticky', 'DESC')
             ->addOrderBy('l.post_time', 'DESC')
             ->getQuery();
+
         $query->setFirstResult($startNumber - 1)
             ->setMaxResults($this->_itemsPerPage);
         $paginator = new Paginator($query, false);
-        $this->_numberOfItems = count($paginator);
+        $this->current_topics_count = count($paginator);
+        $this->current_topics = $paginator;
 
-        return $paginator;
     }
 
     /**
-     * get the pager.
+     * Return topics of a forum as Doctrine Paginator
+     * Here Forum becomes topics collection controller
      *
-     * @return array
+     * @return Paginator collection of paginated topics
      */
-    public function getPager()
+    public function getCurrentTopics()
     {
-        return [
-            'itemsperpage' => $this->_itemsPerPage,
-            'numitems'     => $this->_numberOfItems, ];
+        //loaded using getTopics
+        return $this->current_topics;
+    }
+
+
+    /**
+     * Return topics of a forum as Doctrine Paginator
+     * Here Forum becomes topics collection controller
+     *
+     * @return Paginator collection of paginated topics
+     */
+    public function getCurrentTopicsCount()
+    {
+        $this->current_topics_count;
+    }
+
+    /**
+     * Return topics of a forum as Doctrine Paginator
+     * Here Forum becomes topics collection controller
+     *
+     * @return Paginator collection of paginated topics
+     */
+    public function getTotalTopicsCount()
+    {
+        return $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->countForumTopics($this->_forum);
     }
 
     /**
@@ -324,48 +367,6 @@ class ForumManager
     }
 
     /**
-     * Is the current user (provided user) a forum moderator?
-     *
-     * @param int $uid (optional, default: null)
-     *
-     * @return bool
-     */
-    public function isModerator()
-    {
-        $currentUser = $this->forumUserManagerService->getManager();
-
-        // check zikula perms
-        if ($this->permissionApi->hasPermission($this->name, $this->_forum->getForum_id().'::', ACCESS_MODERATE)) {
-               return true;
-        }
-        $moderatorUsers = $this->_forum->getModeratorUsersAsIdArray(true);
-        if (in_array($currentUser->getId(), $moderatorUsers)) {
-              return true;
-        }
-        $gids = $this->_forum->getModeratorGroupsAsIdArray(true);
-        if (empty($gids)) {
-               return false;
-        }
-        // is this user in any of the groups?
-        $dql = 'SELECT m FROM Zikula\\UsersModule\\Entity\\UserEntity m
-            WHERE m.uid = :uid';
-        $user = $this->entityManager
-            ->createQuery($dql)
-            ->setParameter('uid', $currentUser->getId())
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
-
-        $groupMembership = [];
-        foreach ($user->getGroups()->toArray() as $group) {
-            if (in_array($group->getGid(), $gids)) {
-                $groupMembership[] = $group->getGid();
-            }
-        }
-
-        return count($groupMembership) > 0 ? true : false;
-    }
-
-    /**
      * Is this forum a child of the provided forum?
      *
      * @param ForumEntity $forum
@@ -375,126 +376,6 @@ class ForumManager
     public function isChildOf(ForumEntity $forum)
     {
         return $this->get()->getLft() > $forum->getLft() && $this->get()->getRgt() < $forum->getRgt();
-    }
-
-    /**
-     * Get forum subscriptions of a user.
-     *
-     * @param $user_id  User id (optional)
-     *
-     * @return \Zikula\Module\DizkusModule\Entity\ForumSubscriptionEntity collection, may be empty
-     */
-    public function getSubscriptions($user_id = null)
-    {
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
-
-        if ($managedForumUser->isAnonymous()) {
-            throw new AccessDeniedException();
-        }
-
-        return $managedForumUser->get()->getForumSubscriptions();
-    }
-
-    /**
-     * Get forum subscription status.
-     *
-     * @param int $forum   The forum
-     * @param int $user_id the user id (optional)
-     *
-     * @return bool True if the user is subscribed or false if not
-     */
-    public function isSubscribed($forum, $user_id)
-    {
-        if (empty($forum)) {
-            throw new \InvalidArgumentException();
-        }
-        if (empty($user_id)) {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        $forumSubscription = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
-            ->findOneBy([
-                'forum'     => $forum,
-                'forumUser' => $user_id, ]
-            );
-
-        return isset($forumSubscription);
-    }
-
-    /**
-     * subscribe a forum.
-     *
-     * @param int $forum   The forum
-     * @param int $user_id the user id (optional: needs ACCESS_ADMIN)
-     *
-     * @return bool
-     */
-    public function subscribe($forum, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            if (!$loggedIn) {
-                throw new AccessDeniedException();
-            }
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        // Permission check
-        if (!$this->permission->canRead(['forum' => $forum])) {
-            throw new AccessDeniedException();
-        }
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
-        $searchParams = [
-            'forum'     => $forum,
-            'forumUser' => $managedForumUser->get(), ];
-        $forumSubscription = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')
-            ->findOneBy($searchParams);
-        if (!$forumSubscription) {
-            $forum = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
-            ->findOneBy(['forum_id' => $forum]);
-            $managedForumUser->get()->addForumSubscription($forum);
-            $this->entityManager->flush();
-        }
-
-        return true;
-    }
-
-    /**
-     * Unsubscribe a forum.
-     *
-     * @param int $forum   The forum
-     * @param int $user_id the user id (optional: needs ACCESS_ADMIN)
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return bool
-     */
-    public function unsubscribe($forum, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        // Permission check
-        if (!$this->permission->canRead(['forum' => $forum])) {
-            throw new AccessDeniedException();
-        }
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
-        if (isset($forum)) {
-            $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
-                'forum'     => $forum,
-                'forumUser' => $managedForumUser->get(), ]);
-            $managedForumUser->get()->removeForumSubscription($forumSubscription);
-        }
-        $this->entityManager->flush();
-
-        return true;
     }
 
     /**
@@ -513,7 +394,7 @@ class ForumManager
             throw new \InvalidArgumentException();
         }
         $managedForumUser = $this->forumUserManagerService->getManager();
-        $managedForum = $this->getManager($forum); //new ForumManager($forum);
+        $managedForum = $this->getManager($forum);
         switch ($action) {
             case 'addToFavorites':
                 $managedForumUser->get()->addFavoriteForum($managedForum->get());
@@ -558,6 +439,18 @@ class ForumManager
         $output = $this->getNode($parents, $id, 0, $includeLocked);
 
         return $output;
+    }
+
+
+    /**
+     * Get all tree nodes that are not root
+     * Format as array.
+     *
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->getNode($tree, null);
     }
 
     /**
@@ -613,43 +506,4 @@ class ForumManager
         return $output;
     }
 
-    /**
-     * gets the last $maxforums forums.
-     *
-     * @param mixed[] $params {
-     * @var int maxforums    number of forums to read, default = 5
-     *                        }
-     *
-     * @return array $topForums
-     *
-     * @todo Maybe move to count helper ?
-     */
-    public function getTopForums($params)
-    {
-        $forumMax = (!empty($params['maxforums'])) ? $params['maxforums'] : 5;
-
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('f')
-            ->from('Zikula\DizkusModule\Entity\ForumEntity', 'f')
-            ->orderBy('f.lvl', 'DESC')
-            ->addOrderBy('f.postCount', 'DESC');
-        $qb->setMaxResults($forumMax);
-        $forums = $qb->getQuery()->getResult();
-
-        $topForums = [];
-        if (!empty($forums)) {
-            foreach ($forums as $forum) {
-                if ($this->permission->canRead($forum)) {
-                    $topforum = $forum->toArray();
-                    $topforum['name'] = $forum->getName();
-                    $parent = $forum->getParent();
-                    $parentName = isset($parent) ? $parent->getName() : $this->translator->__('Root');
-                    $topforum['cat_title'] = $parentName;
-                    array_push($topForums, $topforum);
-                }
-            }
-        }
-
-        return $topForums;
-    }
 }

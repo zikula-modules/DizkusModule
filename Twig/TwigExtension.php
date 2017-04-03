@@ -55,6 +55,8 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('lastTopicUrl', [$this, 'lastTopicUrl']),
             new \Twig_SimpleFunction('userLoggedIn', [$this, 'userLoggedIn']),
             new \Twig_SimpleFunction('getRankByPostCount', [$this, 'getRankByPostCount']),
+            new \Twig_SimpleFunction('getPostManager', [$this, 'getPostManager']),
+            new \Twig_SimpleFunction('getForumManager', [$this, 'getForumManager']),
         ];
     }
 
@@ -66,15 +68,18 @@ class TwigExtension extends \Twig_Extension
         ];
     }
 
-    public function countFreeTopics($id = 0)
-    {
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $query = $this->container->get('doctrine.orm.entity_manager')->createQuery('SELECT COUNT(t.topic_id) FROM Zikula\DizkusModule\Entity\TopicEntity t WHERE t.forum=:fid');
-        $query->setParameter('fid', $id);
-        $count = $query->getSingleScalarResult();
 
-        return $count;
+
+    public function getPostManager($post)
+    {
+        return $this->container->get('zikula_dizkus_module.post_manager')->getManager(null, $post);
     }
+
+    public function getForumManager($forum)
+    {
+        return $this->container->get('zikula_dizkus_module.forum_manager')->getManager(null, $forum);
+    }
+
 
     public function favoritesStatus()
     {
@@ -238,13 +243,13 @@ class TwigExtension extends \Twig_Extension
      *
      * @return string the modified output
      */
-    public function viewTopicLink($topic_id = null, $subject = null, $forum_name = null, $class = '', $start = null, $last_post_id = null)
+    public function viewTopicLink($topic_id = null, $subject = null, $tooltip = '', $forum_name = null, $class = '', $start = null, $last_post_id = null)
     {
         if (!isset($topic_id)) {
             return '';
         }
 
-        $class = 'class="tooltips '.DataUtil::formatForDisplay($class).'"';
+        $class = 'class="tooltips '.$class.'"';
 
         $args = ['topic' => (int) $topic_id];
         if (isset($start)) {
@@ -256,10 +261,9 @@ class TwigExtension extends \Twig_Extension
             $url .= '#pid'.(int) $last_post_id;
         }
 
-        // @todo - maybe allow title to be added as a parameter
-        $title = $this->translator->__('go to topic');
+        $title = $tooltip . ' '. $subject;
 
-        return "<a $class href='".DataUtil::formatForDisplay($url)."' title=".$title.">$subject</a>";
+        return "<a $class href='".$url."' title=". $title .">$subject</a>";
     }
 
     /**
@@ -478,7 +482,7 @@ class TwigExtension extends \Twig_Extension
      */
     public function getRankByPostCount($posts = 0)
     {
- 
+
         list($rankimages, $ranks) = $this->container->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
 
         $posterRank = $ranks[0];

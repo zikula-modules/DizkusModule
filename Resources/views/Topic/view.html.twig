@@ -1,24 +1,33 @@
 {# CREATE ICON VARIABLES #}
+{% set top_icon %}<i class="fa fa-chevron-circle-up"></i>{% endset %}
+{% set bottom_icon %}<i class="fa fa-chevron-circle-down"></i>{% endset %}
+{% set prev_icon %}<i class="fa fa-chevron-left"></i>{% endset %}
+{% set next_icon %}<i class="fa fa-chevron-right"></i>{% endset %}
 {% set unsubscribe_icon %}<i class='fa fa-envelope-o'></i>{% endset %}
 {% set subscribe_icon %}<i class='fa fa-envelope-open-o'></i>{% endset %}
+{% set lock_icon %}<i class='fa fa-lock'></i>{% endset %}
+{% set unlock_icon %}<i class='fa fa-unlock'></i>{% endset %}
 {% set unsticky_icon %}<i class="fa fa-thumb-tack"></i>{% endset %}
 {% set sticky_icon %}<i class="fa fa-thumb-tack fa-rotate-180"></i>{% endset %}
+{% set create_icon %}<i class="fa fa-comments-o fa-flip-horizontal"></i>{% endset %}
+{% set send_icon %}<i class="fa fa-paper-plane"></i>{% endset %}
+{% set print_icon %}<i class="fa fa-print"></i>{% endset %}
+{% set delete_icon %}<i class="fa fa-times"></i>{% endset %}
+{% set split_icon %}<i class='fa fa-chevron-circle-down'></i>{% endset %}
+{% set joinmove_icon %}<i class="fa fa-arrow-right"></i>{% endset %}
+
+{% set sort_up_icon %}<i class='fa fa-sort-amount-desc'></i>{% endset %}
+{% set sort_down_icon %}<i class='fa fa-sort-amount-asc'></i>{% endset %}
 {# ------- #}
 
 {% set templatetitle=currentTopic.title|escape('html') %}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig", {'parent':currentTopic.forumId}) }}
 <input id="topic_id" name="topic" type="hidden" value="{{ currentTopic.id }}">
 {% if settings.ajax %}
-    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Tools.js')) }}
-    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.UserManager.js')) }}
-    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.TopicManager.js')) }}
+    {#    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Tools.js')) }}
+        {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.UserManager.js')) }}
+        {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.TopicManager.js')) }}#}
 {% endif %}
-
-{# topic inline edit #}
-{% if (settings.ajax and (currentTopic.managedForum.isModerator or currentTopic.userAllowedToEdit())) %}
-    {% set templatetitle=currentTopic.title|escape('html') %}
-    {{ include("@ZikulaDizkusModule/Topic/editInline.html.twig") }}
-{% endif %}    
 
 {# ******************************************************
 * TOPIC NAVBAR
@@ -39,79 +48,91 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div id="navbar-topic-collapse" class="collapse navbar-collapse">
         <ul class="nav navbar-nav navbar-left">
-
-
-    {% if currentTopic.previous is not empty and currentTopic.id != currentTopic.previous %}{% set disabled='' %}{% else %}{% set disabled=' disabled' %}{% endif %}
-
-
-    <li><a class="tooltips {{ disabled }}" title="{{ __("Previous topic") }}" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.previous}) }}"><i class="fa fa-chevron-left"></i></a></li>
-
-{% if currentTopic.next is not empty and currentTopic.id != currentTopic.next %}{% set disabled='' %}{% else %}{% set disabled=' disabled' %}{% endif %}
-<li><a class="tooltips {{ disabled }}" title="{{ __("Next topic") }}" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': currentTopic.next}) }}"><i class="fa fa-chevron-right"></i></a></li>
-
-{% if permissions.comment %}
-    <li><a class="tooltips" title="{{ __("Create a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':currentTopic.forumId}) }}"><i class="fa fa-comments-o"></i>&nbsp;{{ __("New topic") }}</a></li>
-    {% endif %}
-
-{% if currentForumUser.loggedIn %}
-    <li><a class="tooltips" title="{{ __("Send the posts within this topic as an e-mail message to someone") }}" href="{{ path('zikuladizkusmodule_topic_emailtopic', {'topic': currentTopic.id}) }}">
-            <i class="fa fa-paper-plane"></i>
-        </a></li>
-    {% endif %}
-    {#    @todo        <li>{printtopic_button topic_id=$topic.topic_id forum=$topic.forum}</li>#}
-    {% if currentForumUser.loggedIn %}
-    <li>
-        {% if currentForumUser.topicSubscribed(currentTopic.get) %}
-            {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'unsubscribe', 'topic':currentTopic.id}) %}
-            {% set msg=__("Unsubscribe from topic") %}                   
-        {% else %}
-            {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'subscribe', 'topic':currentTopic.id}) %}
-            {% set msg=__("Subscribe to topic") %}                     
-        {% endif %}
-        <a id="toggletopicsubscription" class="tooltips" data-action="{% if currentForumUser.topicSubscribed(currentTopic.get) %}unsubscribe{% else %}subscribe{% endif %}" href="{{ url }}" title="{{ msg }}">
-            {% if currentForumUser.topicSubscribed(currentTopic.get) %}{{ unsubscribe_icon }}{% else %}{{ subscribe_icon }}{% endif %}
-        </a>
-    </li>
-{% endif %}
-</ul>
-<ul class="nav navbar-nav navbar-right">
-    {% if currentTopic.managedForum.isModerator %}
-        <li>
-            {% if currentTopic.get.status == 0 %}
-                {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'lock', 'topic':currentTopic.id}) %}
-                {% set msg=__("Lock topic") %}
-                {% set iconclass="fa fa-lock" %}
+            {% if currentTopic.previous is not empty and currentTopic.id != currentTopic.previous %}
+                {% set disabled='' %}
             {% else %}
-                {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'unlock', 'topic':currentTopic.id }) %}
-                {% set msg=__("Unlock topic") %}
-                {% set iconclass="fa fa-unlock" %}
+                {% set disabled=' disabled' %}
             {% endif %}
-            <a id="toggletopiclock" class="tooltips" title="{{ msg }}" data-action="{% if currentTopic.get.status %}unlock{% else %}lock{% endif %}" href="{{ url }}"><i class="{{ iconclass }}"></i></a>
-        </li>
-        <li>
-            {% if currentTopic.get.sticky == 0 %}
-                {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'sticky', 'topic':currentTopic.id}) %}
-                {% set msg=__("Give this topic 'sticky' status") %}                    
+            <li><a class="tooltips {{ disabled }}" title="{{ __("Previous topic") }}" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.previous}) }}">{{ prev_icon }}</a></li>
+
+            {% if currentTopic.next is not empty and currentTopic.id != currentTopic.next %}
+                {% set disabled='' %}
             {% else %}
-                {% set url=path('zikuladizkusmodule_topic_changetopicstatus', {'action':'unsticky', 'topic':currentTopic.id}) %}
-                {% set msg=__("Remove 'sticky") %}                   
+                {% set disabled=' disabled' %}
             {% endif %}
-            <a id="toggletopicsticky" class="tooltips" title="{{ msg }}" data-action="{% if currentTopic.get.sticky %}unsticky{% else %}sticky{% endif %}" href="{{ url }}">
-                {% if currentTopic.get.sticky == 0 %}{{ sticky_icon }}{% else %}{{ unsticky_icon }}{% endif %}
-            </a>
-        </li>
-        <li><a class="tooltips" title="{{ __("Move or join topic") }}" href="{{ path('zikuladizkusmodule_topic_joinmovetopic', {'topic':currentTopic.id}) }}"><i class="fa fa-arrow-right"></i></a></li>
-        <li><a class="tooltips" title="{{ __("Delete topic") }}" href="{{ path('zikuladizkusmodule_topic_deletetopic', {'topic':currentTopic.id}) }}"><i class="fa fa-times"></i></a></li>
-        {% endif %}
-    <li><a class="tooltips" title="{{ __("To bottom of page") }}" href="#bottom"><i class="fa fa-chevron-circle-down"></i></a></li>
-</ul>
-</div><!-- /.navbar-collapse -->
+            <li><a class="tooltips {{ disabled }}" title="{{ __("Next topic") }}" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': currentTopic.next}) }}">{{ next_icon }}</a></li>
+
+            {% if currentForumUser.allowedToComment(currentTopic) %}
+                <li><a class="tooltips" title="{{ __("Create a new topic") }}" href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':currentTopic.forumId}) }}">{{ create_icon }}&nbsp;{{ __("New topic") }}</a></li>
+                {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if currentForumUser.loggedIn %}
+                <li><a class="tooltips" title="{{ __("Send the posts within this topic as an e-mail message to someone") }}" href="{{ path('zikuladizkusmodule_topic_emailtopic', {'topic': currentTopic.id}) }}">
+                        {{ send_icon }}
+                    </a></li>
+                {% endif %}
+
+            <li><a class="tooltips" title="{{ __("Click to see printable version of this topic") }}" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': currentTopic.id, 'template':'print'}) }}">
+                    {{ print_icon }}
+                </a></li>
+                {% if currentForumUser.loggedIn %}
+                <li>
+                    {% if currentForumUser.topicSubscribed(currentTopic.get) %}
+                        {% set url=path('zikuladizkusmodule_user_removetopicsubscription', {'topic':currentTopic.id}) %}
+                        {% set msg=__("Unsubscribe from topic") %}
+                    {% else %}
+                        {% set url=path('zikuladizkusmodule_user_addtopicsubscription', {'topic':currentTopic.id}) %}
+                        {% set msg=__("Subscribe to topic") %}
+                    {% endif %}
+                    <a id="toggletopicsubscription" class="tooltips" data-action="{% if currentForumUser.topicSubscribed(currentTopic.get) %}unsubscribe{% else %}subscribe{% endif %}" href="{{ url }}" title="{{ msg }}">
+                        {% if currentForumUser.topicSubscribed(currentTopic.get) %}{{ unsubscribe_icon }}{% else %}{{ subscribe_icon }}{% endif %}
+                    </a>
+                </li>
+            {% endif %}
+            {% if currentForumUser.allowedToModerate(currentTopic) %}
+                <li>
+                    {% if currentTopic.get.status == 0 %}
+                        {% set url=path('zikuladizkusmodule_topic_changetopic', {'action':'lock', 'topic':currentTopic.id}) %}
+                        {% set msg=__("Topic unlocked click to lock") %}
+                        {% set lock_status_icon=lock_icon %}
+                    {% else %}
+                        {% set url=path('zikuladizkusmodule_topic_changetopic', {'action':'unlock', 'topic':currentTopic.id }) %}
+                        {% set msg=__("Topic locked click to unlock") %}
+                        {% set lock_status_icon=unlock_icon %}
+                    {% endif %}
+                    <a id="toggletopiclock" class="tooltips" title="{{ msg }}" data-action="{% if currentTopic.get.status %}unlock{% else %}lock{% endif %}" href="{{ url }}">
+                        {{ lock_status_icon }}
+                    </a>
+                </li>
+                <li>
+                    {% if currentTopic.get.sticky == 0 %}
+                        {% set url=path('zikuladizkusmodule_topic_changetopic', {'action':'sticky', 'topic':currentTopic.id}) %}
+                        {% set msg=__("Give this topic 'sticky' status") %}                    
+                    {% else %}
+                        {% set url=path('zikuladizkusmodule_topic_changetopic', {'action':'unsticky', 'topic':currentTopic.id}) %}
+                        {% set msg=__("Remove 'sticky") %}                   
+                    {% endif %}
+                    <a id="toggletopicsticky" class="tooltips" title="{{ msg }}" data-action="{% if currentTopic.get.sticky %}unsticky{% else %}sticky{% endif %}" href="{{ url }}">
+                        {% if currentTopic.get.sticky == 0 %}{{ sticky_icon }}{% else %}{{ unsticky_icon }}{% endif %}
+                    </a>
+                </li>
+                <li><a class="tooltips" title="{{ __("Move or join topic") }}" href="{{ path('zikuladizkusmodule_topic_joinmovetopic', {'topic':currentTopic.id}) }}">{{ joinmove_icon }}</a></li>
+                <li><a class="tooltips" title="{{ __("Delete topic") }}" href="{{ path('zikuladizkusmodule_topic_deletetopic', {'topic':currentTopic.id}) }}">{{ delete_icon }}</a></li>
+                {% endif %}
+            <li><a class="tooltips" title="{{ __("To bottom of page") }}" href="#bottom">{{ bottom_icon }}</a></li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
 </nav>
+
+{# ******************************************************
+* TOPIC TITLE
+******************************************************* #}
+{{ include("@ZikulaDizkusModule/Topic/topicTitle.html.twig") }}
 
 {# ******************************************************
 * TOPIC LIST
 ******************************************************* #}
-
 {{ pager({rowcount:currentTopic.postCount, limit:currentTopic.postsPerPage|default(15), posvar:'start', route:'zikuladizkusmodule_topic_viewtopic'}) }}
 <div id="dzk_postinglist">
     <ul class="post_list">
@@ -119,11 +140,7 @@
             <li class="post post_{{ post.post_id }}">
                 {{ include("@ZikulaDizkusModule/Post/single.html.twig") }}
             </li>
-
         {% endfor %}
-        {#  Not needed
-        <li id="quickreplyposting" class="hidden">&nbsp;</li>
-        <li id="quickreplypreview" class="hidden">&nbsp;</li>#}
     </ul>
 </div>
 {{ pager({rowcount:currentTopic.postCount, limit:currentTopic.postsPerPage|default(15), posvar:'start', route:'zikuladizkusmodule_topic_viewtopic'}) }}
@@ -131,7 +148,7 @@
 {# ******************************************************
 * QUICK REPLY FORM
 ******************************************************* #}
-{% if permissions.comment == true %}
+{% if currentForumUser.allowedToComment(currentTopic) %}
     <div id="quickreply">    
         {{ render(controller(
             'ZikulaDizkusModule:Topic:replyTopic',
@@ -141,8 +158,8 @@
 {% endif %}
 
 {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':currentTopic.forum, 'well': true}) }}
-
-{{ include("@ZikulaDizkusModule/Topic/translations.html.twig") }}
+{# use bazinga translations #}
+{#{{ include("@ZikulaDizkusModule/Topic/translations.html.twig")}}#}
 
 <a id="bottom" accesskey="b"></a>
-{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig")}}

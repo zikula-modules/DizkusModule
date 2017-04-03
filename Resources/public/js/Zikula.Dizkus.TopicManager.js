@@ -78,7 +78,7 @@
         if (typeof $('#userAllowedToEdit').val() !== "undefined") {
 
 
-            $('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', clickToEdit).tooltip();
+            $('#edittopicsubjectbutton').addClass('editabletopicheader tooltips').attr('title', Translator.__('Foo bar baz')).tooltip();
             $('#edittopicsubjectbutton').click(function () {
                 $('#topicsubjectedit_editor').show();
             });
@@ -125,14 +125,14 @@
                             i.attr('title', stickyTopic).empty().html(stickyTopicIcon);
                             i.data('action', 'sticky');
                             break;
-                        case 'subscribe':
-                            i.attr('title', unsubscribeTopic).empty().html(unsubscribeTopicIcon);
-                            i.data('action', 'unsubscribe');
-                            break;
-                        case 'unsubscribe':
-                            i.attr('title', subscribeTopic).empty().html(subscribeTopicIcon);
-                            i.data('action', 'subscribe');
-                            break;
+//                        case 'subscribe':
+//                            i.attr('title', unsubscribeTopic).empty().html(unsubscribeTopicIcon);
+//                            i.data('action', 'unsubscribe');
+//                            break;
+//                        case 'unsubscribe':
+//                            i.attr('title', subscribeTopic).empty().html(subscribeTopicIcon);
+//                            i.data('action', 'subscribe');
+//                            break;
                         case 'solve':
                             $('#solutionPost_' + i.data('post')).show();
                             $('.solvetopic').hide();

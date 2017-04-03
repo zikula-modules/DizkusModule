@@ -11,6 +11,7 @@
 
 namespace Zikula\DizkusModule\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -134,6 +135,7 @@ class ForumEntity extends EntityAccess
 
     /**
      * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"sticky" = "DESC", "time" = "ASC"})
      */
     private $topics;
 
@@ -383,7 +385,13 @@ class ForumEntity extends EntityAccess
      */
     public function getTopics()
     {
-        return $this->topics;
+        $criteria = Criteria::create()
+            ->orderBy(["sticky" => Criteria::DESC])
+            ->orderBy(["topic_time" => Criteria::ASC])
+        ;
+        $topics = $this->topics->matching($criteria);
+        dump($topics);
+        return $topics;
     }
 
     /**
@@ -403,18 +411,19 @@ class ForumEntity extends EntityAccess
      *
      * @return array
      */
-    public function getModeratorUsersAsIdArray($includeParents = false)
+    public function getNodeModeratorUsers()
     {
-        $output = [];
+        $nodeModeratorsCollection = new ArrayCollection();
         $thisForum = $this;
         while (isset($thisForum) && $thisForum->getForum_id() > 1) {
             foreach ($thisForum->getModeratorUsers() as $moderatorUser) {
-                $output[] = $moderatorUser->getForumUser()->getUser_id();
+                $nodeModeratorsCollection->add($moderatorUser->getForumUser());
             }
-            $thisForum = $includeParents ? $thisForum->getParent() : null;
+            // set thisForum to null to stop
+            $thisForum = $thisForum->getParent();
         }
 
-        return $output;
+        return $nodeModeratorsCollection;
     }
 
     public function setModeratorUsers($moderators)
@@ -443,18 +452,18 @@ class ForumEntity extends EntityAccess
      *
      * @return array
      */
-    public function getModeratorGroupsAsIdArray($includeParents = false)
+    public function getNodeModeratorGroups()
     {
-        $output = [];
+        $nodeModeratorGroupsCollection = new ArrayCollection();
         $thisForum = $this;
         while (isset($thisForum) && $thisForum->getForum_id() > 1) {
             foreach ($thisForum->getModeratorGroups() as $moderatorGroup) {
-                $output[] = $moderatorGroup->getGroup()->getGid();
+                $nodeModeratorGroupsCollection->add($moderatorGroup->getGroup());
             }
-            $thisForum = $includeParents ? $thisForum->getParent() : null;
+            $thisForum = $thisForum->getParent();
         }
 
-        return $output;
+        return $nodeModeratorGroupsCollection;
     }
 
     public function setModeratorGroups($moderatorGroups)

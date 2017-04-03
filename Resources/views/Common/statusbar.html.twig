@@ -1,0 +1,11 @@
+<ol class="statusbar">
+    <li class="text-right"><em >{{ __('Current forum time:') }} {{ "now"|date("Y-m-d H:i") }} </em></li>
+    <li class="text-right">
+        <a class="tooltips" title="{{ __("View latest topics") }}" href="{{ path('zikuladizkusmodule_topic_viewlatest') }}">
+            <i class="fa fa-comments-o fa-flip-horizontal"></i> &nbsp;{{ __('View latest topics') }}
+        </a>
+        <a class="tooltips" title="{{ __("View latest posts") }}" href="{{ path('zikuladizkusmodule_post_viewlatest') }}">
+            <i class="fa fa-comment-o fa-flip-horizontal"></i> &nbsp;{{ __('View latest posts') }}
+        </a>
+    </li>
+</ol>

@@ -23,22 +23,21 @@
                 <div class="col-md-9">           
                     {{ form_widget(form.displayOnlyFavorites, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
                 </div>
-            </div>            
+            </div>
         {% endif %}
-        <div class="form-group">       
+        <div class="form-group">
             {{ form_label(form.autosubscribe, __('Autosubscribe to new topics') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
-            <div class="col-md-9">           
+            <div class="col-md-9">
                 {{ form_widget(form.autosubscribe, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
             </div>
-        </div>  
+        </div>
     </fieldset>
     <div class="form-group">
         <div class="col-md-12">
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
         </div>
-    </div>  
-    {{ form_end(form) }}    
-
+    </div>
+    {{ form_end(form) }}
 </div>
 
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

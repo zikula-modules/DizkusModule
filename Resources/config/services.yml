@@ -116,7 +116,6 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-            - "@zikula_dizkus_module.forum_user_manager"
         
 # Managers
 
@@ -133,7 +132,7 @@ services:
             - "@zikula_users_module.current_user"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-            - "@zikula_permissions_module.api.permission"
+            - "@zikula_dizkus_module.rank_helper"
 
     zikula_dizkus_module.forum_manager:
         class: %zikula_dizkus_module.forum_manager.class%
@@ -181,6 +180,7 @@ services:
             - "@zikula_users_module.current_user"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
+            - "@zikula_dizkus_module.forum_user_manager"
             - "@zikula_dizkus_module.forum_manager"
             - "@zikula_dizkus_module.topic_manager"
             - "@zikula_dizkus_module.synchronization_helper"

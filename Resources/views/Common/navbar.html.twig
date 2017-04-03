@@ -22,8 +22,10 @@
                         <li><a class="fa fa-heart" href="{{ path('zikuladizkusmodule_user_changeview', {'setting':'favorites'}) }}" title="{{ __("Show favourite forums only") }}">&nbsp;{{ __("Showing all forums") }}</a></li>
                         {% endif %}
                     {% endif %}
-                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_mineposts' %} class="active" {% endif %} ><a class="fa fa-comment" title="{{ __('View my posts') }}" href="{{ path('zikuladizkusmodule_user_mineposts') }}">&nbsp;{{ __('View my posts') }}</a></li>
-                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_minetopics' %} class="active" {% endif %} ><a class="fa fa-comment" title="{{ __('View my topics') }}" href="{{ path('zikuladizkusmodule_user_minetopics') }}">&nbsp;{{ __('View my topics') }}</a></li>
+                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_minetopics' %} class="active" {% endif %} >
+                    <a class="" title="{{ __('View my topics') }}" href="{{ path('zikuladizkusmodule_user_minetopics') }}"><i class="fa fa-comments-o fa-flip-horizontal"></i>&nbsp;{{ __('View my topics') }}</a></li>
+                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_mineposts' %} class="active" {% endif %} >
+                    <a class="" title="{{ __('View my posts') }}" href="{{ path('zikuladizkusmodule_user_mineposts') }}"><i class="fa fa-comment fa-flip-horizontal"></i>&nbsp;{{ __('View my posts') }}</a></li>
                 <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_prefs'
                                                            or 'zikuladizkusmodule_user_manageforumsubscriptions'
                                                            or 'zikuladizkusmodule_user_managetopicsubscriptions'

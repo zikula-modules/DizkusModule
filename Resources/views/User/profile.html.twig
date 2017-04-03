@@ -2,9 +2,60 @@
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 <div id="dzk_userprofile">
     {{ moduleLinks('prefs') }}
-    <h2>{{ __("Personal info") }}</h2>
     {{ showflashes() }}
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>{{ managedForumUser.userName }}</strong> {{ __("personal info") }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="dzk_avatar">
+                <div>
+                    <img src="/{{ managedForumUser.avatar }}" class="img-rounded" />
+                </div>
+            </div>
+
+
+            {#                    {% if post.poster.rank is not empty and post.poster.rank.image is not empty%}
+                                    {% if post.poster.rank.rank_link != '' %}
+                                        <a href="{{ post.poster.rank.rank_link }}" title="{{ post.poster.rank.rank_link }}">
+                                        {% endif %}
+                                        <img class="userinforankimage" src="/{{ post.poster.rank.imageLink }}" alt="{{ post.poster.rank.title }}" title="{{ post.poster.rank.description }}" />
+                                        {% if post.poster.rank.rank_link == '' %}</a>{% endif %}
+                                    {% else %}
+                                        {% set posterRank=getRankByPostCount(post.poster.postCount) %}
+
+                                    {% if posterRank.rank_link !='' %}
+                                        <a href="{{ posterRank.rank_link }}" title="{{ posterRank.rank_link }}">
+                                        {% endif %}
+                                        {% if posterRank.image != '' %}
+                                            <img class="userinforankimage" src="/{{ posterRank.imageLink }}" alt="{{ posterRank.title }}" title="{{ posterRank.description }}" />
+                                        {% endif %}
+                                        {% if posterRank.rank_link != '' %}</a>{% endif %}
+                                    {% endif %}#}
+
+
+            <ul>
+                <li><strong>{{ __("Rank") }}: </strong>  {{ managedForumUser.rank.title|escape('html') }}
+                    <img class="userinforankimage" src="{{ zasset("@ZikulaDizkusModule:images/#{settings.url_ranks_images}/#{managedForumUser.rank.image}")}}" alt="{{ managedForumUser.rank.title }}" title="{{ managedForumUser.rank.description }}" />
+                </li>
+                <li><strong>{{ __("Registered") }}: </strong>{{ managedForumUser.get.user_regdate|default('01-01-1970 00:00:00')|date('d-m-Y') }}</li>
+                    {% if managedForumUser.online != true %}
+                    <li><strong>{{ __("Last visit") }}: </strong>{{ managedForumUser.get.lastVisit|date('d-m-Y') }}</li>
+                    {% endif %}
+                <li><strong>{{ __("Posts") }}: </strong>{{ managedForumUser.get.postCount }}</li>
+
+                {% if currentForumUser.allowedToModerate(managedForumUser) %}
+
+                    user ips status
+                    {#{% if poster.data is defined and poster.data.moderate == true and poster.data.seeip == true %}#}
+                    {# {{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }} #}
+
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
 
 </div>
 

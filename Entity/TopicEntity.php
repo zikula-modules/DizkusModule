@@ -172,6 +172,11 @@ class TopicEntity extends EntityAccess
         return $this->topic_id;
     }
 
+    public function getId()
+    {
+        return $this->topic_id;
+    }
+
     public function setTopic_id($id)
     {
         $this->topic_id = $id;
@@ -233,6 +238,17 @@ class TopicEntity extends EntityAccess
     {
         return $this->poster;
     }
+
+    /**
+     * get the topic poster
+     *
+     * @return ForumUserEntity
+     */
+    public function getPosterId()
+    {
+        return $this->poster->getUserId();
+    }
+
 
     public function getTitle()
     {

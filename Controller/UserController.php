@@ -11,7 +11,6 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,6 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface; // used in annotations - do not remove
 use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Form\Type\UserPreferencesType;
@@ -29,7 +29,43 @@ use Zikula\DizkusModule\Form\Type\UserPreferencesType;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/profile")
+     * @Route("/users", options={"expose"=true})
+     * @Method("GET")
+     *
+     * Performs a user search based on the user name fragment entered so far.
+     *
+     * @param Request $request
+     *                         fragment A partial user name entered by the user
+     *
+     * @throws AccessDeniedException
+     *
+     * @return string plainResponse with json_encoded object of users matching the criteria
+     */
+    public function getUsersAction(Request $request)
+    {
+        // Permission check
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+        $fragment = $request->query->get('fragment', null);
+        $users = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getUsersByFragments(['fragments' => [$fragment]]);
+
+        $reply = [];
+        $reply['query'] = $fragment;
+        $reply['suggestions'] = [];
+        /** @var $user \Zikula\UsersModule\Entity\UserEntity */
+        foreach ($users as $user) {
+            $reply['suggestions'][] = [
+                'value' => htmlentities(stripslashes($user->getUname())),
+                'data' => $user->getUid(),];
+        }
+
+        return new PlainResponse(json_encode($reply));
+    }
+
+    /**
+     *
+     * @Route("/user/profile/{user}", defaults={"user"=null})
      *
      * prefs
      *
@@ -37,39 +73,28 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function profileAction(Request $request)
+    public function profileAction(Request $request, ForumUserEntity $user = null)
     {
         $currentForumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        //Anons are logged in but do not have prefs access
-        if (!$currentForumUserManager->isLoggedIn() || $currentForumUserManager->isAnonymous()) {
-            throw new AccessDeniedException();
+        if ($user) {
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($user->getUserId());
+        } else {
+            $managedForumUser = $currentForumUserManager;
         }
-
-        $form = $this->createForm(new UserPreferencesType(), $currentForumUserManager->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')]);
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            if ($form->get('save')->isClicked()) {
-                $data = $form->getData();
-
-                $currentForumUserManager->setPostOrder($data['postOrder']);
-                $currentForumUserManager->setForumViewSettings((bool) $data['displayOnlyFavorites']);
-                $currentForumUserManager->setAutosubscribe($data['autosubscribe']);
-
-                $this->addFlash('status', $this->__('Done! Updated configuration.'));
-            }
-
-            return $this->redirect($this->generateUrl('zikuladizkusmodule_user_prefs'));
+        //Anons are logged in but do not have prefs access
+        if ((!$currentForumUserManager->isLoggedIn() || $currentForumUserManager->isAnonymous()) && is_null($user)) {
+            throw new AccessDeniedException($this->__('Anonymos users do not have access to this part. Please log in.'));
         }
 
         return $this->render('@ZikulaDizkusModule/User/profile.html.twig', [
-            'form' => $form->createView(),
             'currentForumUser' => $currentForumUserManager,
+            'managedForumUser' => $managedForumUser,
             'settings' => $this->getVars(),
         ]);
     }
 
     /**
-     * @Route("/prefs")
+     * @Route("/user/preferences/{user}", defaults={"user"=null})
      *
      * prefs
      *
@@ -77,23 +102,32 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function prefsAction(Request $request)
+    public function prefsAction(Request $request, ForumUserEntity $user = null)
     {
-        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        //Anons are logged in but do not have prefs access
-        if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            throw new AccessDeniedException();
+        $currentForumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        if ($user) {
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($user->getUserId());
+        } else {
+            $managedForumUser = $currentForumUserManager;
         }
 
-        $form = $this->createForm(new UserPreferencesType(), $forumUserManager->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')]);
+        if (!$currentForumUserManager->isLoggedIn()
+            || $currentForumUserManager->isAnonymous()
+        ) {
+            throw new AccessDeniedException($this->__('Anonymos users do not have access to this page. Please log in.'));
+        } elseif (!$currentForumUserManager->allowedToEdit($managedForumUser)) {
+            throw new AccessDeniedException($this->__('Sorry, you have no permissions to access this page.'));
+        }
+
+        $form = $this->createForm(new UserPreferencesType(), $managedForumUser->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
 
-                $forumUserManager->setPostOrder($data['postOrder']);
-                $forumUserManager->setForumViewSettings((bool) $data['displayOnlyFavorites']);
-                $forumUserManager->setAutosubscribe($data['autosubscribe']);
+                $managedForumUser->setPostOrder($data['postOrder']);
+                $managedForumUser->setForumViewSettings((bool) $data['displayOnlyFavorites']);
+                $managedForumUser->setAutosubscribe($data['autosubscribe']);
 
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
@@ -103,13 +137,14 @@ class UserController extends AbstractController
 
         return $this->render('@ZikulaDizkusModule/User/preferences.html.twig', [
             'form' => $form->createView(),
-            'currentForumUser' => $forumUserManager,
+            'currentForumUser' => $currentForumUserManager,
+            'managedForumUser' => $managedForumUser,
             'settings' => $this->getVars(),
         ]);
     }
 
     /**
-     * @Route("/prefs/forum-subscriptions")
+     * @Route("/user/forum-subscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -155,7 +190,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/forum-subscriptions/add/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/forum-subscriptions/add/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add forum subscription
      *
@@ -213,7 +248,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/forum-subscriptions/remove/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/forum-subscriptions/remove/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add forum subscription
      *
@@ -271,7 +306,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/topic-subscriptions")
+     * @Route("/user/topic-subscriptions")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -316,9 +351,8 @@ class UserController extends AbstractController
         ]);
     }
 
-
     /**
-     * @Route("/prefs/topic-subscriptions/add/{topic}", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/topic-subscriptions/add/{topic}", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add topic subscription
      *
@@ -376,7 +410,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/topic-subscriptions/remove/{topic}", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/topic-subscriptions/remove/{topic}", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add forum subscription
      *
@@ -433,7 +467,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/favorite-forums")
+     * @Route("/user/favorite-forums")
      *
      * Interface for a user to manage topic subscriptions
      *
@@ -478,9 +512,8 @@ class UserController extends AbstractController
         ]);
     }
 
-
     /**
-     * @Route("/prefs/favorite-forums/add/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/favorite-forums/add/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add forum subscription
      *
@@ -538,7 +571,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/favorite-forums/remove/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/user/favorite-forums/remove/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      * @ Method("POST")
      * Interface for a user to add forum subscription
      *
@@ -596,7 +629,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/view-{setting}", requirements={"setting"="all-forums|favorites"})
+     * @Route("/user/view-{setting}", requirements={"setting"="all-forums|favorites"})
      * Show only favorite forums in index view instead of all forums.
      *
      * @param string $setting
@@ -619,7 +652,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/prefs/sig")
+     * @Route("/user/sig")
      *
      * Interface for a user to manage signature
      *
@@ -693,7 +726,7 @@ class UserController extends AbstractController
      *
      * @return Response|RedirectResponse
      */
-    public function minePostsAction(Request $request,  $start = 0)
+    public function minePostsAction(Request $request, $start = 0)
     {
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
@@ -720,13 +753,9 @@ class UserController extends AbstractController
             'currentForumUser' => $forumUserManager,
             'settings' => $this->getVars(),
             'posts' => $posts,
-            'pager' => $pager,
-            'last_visit_unix' => $forumUserManager->getLastVisit()
+            'pager' => $pager
         ]);
     }
-
-
-
 
     /**
      * @Route("/mine/topics/{start}", requirements={"start" = "^[1-9]\d*$"})
@@ -768,44 +797,7 @@ class UserController extends AbstractController
             'currentForumUser' => $forumUserManager,
             'settings' => $this->getVars(),
             'topics' => $topics,
-            'pager' => $pager,
-            'last_visit_unix' => $forumUserManager->getLastVisit()
+            'pager' => $pager
         ]);
     }
-
-    /**
-     * @Route("/getusers", options={"expose"=true})
-     * @Method("GET")
-     *
-     * Performs a user search based on the user name fragment entered so far.
-     *
-     * @param Request $request
-     *                         fragment A partial user name entered by the user
-     *
-     * @throws AccessDeniedException
-     *
-     * @return string plainResponse with json_encoded object of users matching the criteria
-     */
-    public function getUsersAction(Request $request)
-    {
-        // Permission check
-        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
-            throw new AccessDeniedException();
-        }
-        $fragment = $request->query->get('fragment', null);
-        $users = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getUsersByFragments(['fragments' => [$fragment]]);
-
-        $reply = [];
-        $reply['query'] = $fragment;
-        $reply['suggestions'] = [];
-        /** @var $user \Zikula\UsersModule\Entity\UserEntity */
-        foreach ($users as $user) {
-            $reply['suggestions'][] = [
-                'value' => htmlentities(stripslashes($user->getUname())),
-                'data' => $user->getUid(),];
-        }
-
-        return new PlainResponse(json_encode($reply));
-    }
-
 }

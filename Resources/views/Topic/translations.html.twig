@@ -1,27 +1,27 @@
 <script type="text/javascript">
     // <![CDATA[
-    var clickToEdit = "{{ __("Click to edit") }}";
-    var subscribeTopic = " {{ __('Subscribe to topic') }}";
-{#  |strip|addslashes  #}
-    {% if subscribe_icon is defined %} var subscribeTopicIcon = "{{ subscribe_icon }}";{% endif %}
-    var unsubscribeTopic = " {{ __('Unsubscribe from topic') }}";
-    {% if unsubscribe_icon is defined %}var unsubscribeTopicIcon = "{{ unsubscribe_icon }}";{% endif %}
-    var lockTopic = " {{ __('Lock topic') }}";
-    var unlockTopic = " {{ __('Unlock topic') }}";
-    var stickyTopic = " {{ __("Give this topic 'sticky' status") }}";
-{#  |strip|addslashes  #}
-    {% if sticky_icon is defined %}var stickyTopicIcon = "{{ sticky_icon }}";{% endif %}
-    var unstickyTopic = " {{ __("Remove 'sticky' status") }}";
-    {% if unsticky_icon is defined %}var unstickyTopicIcon = "{{ unsticky_icon }}";{% endif %}
-    var solveTopic = " {{ __("Mark as solved by this post") }}";
-    {% if solve_icon is defined %}var solveTopicIcon = "{{ solve_icon }}";{% endif %}
-    var unsolveTopic = " {{ __("Mark as unsolved") }}";
-    {% if unsolve_icon is defined %}var unsolveTopicIcon = "{{ unsolve_icon }}"; {% endif %}
-    var zChanged = "{{ __("Changed") }}";
-    var zLoadingPost = "{{ __("Loading post") }}";
-    var zDeletingPost = "{{ __("Deleting post") }}";
-    var zUpdatingPost = "{{ __("Updating post") }}";
-    var zStoringReply = "{{ __("Storing reply") }}";
-    var zPreparingPreview = "{{ __("Preparing preview") }}";
-    // ]]>
+    {#    var clickToEdit = "{{ __("Click to edit") }}";
+        var subscribeTopic = " {{ __('Subscribe to topic') }}";#}
+    {#  |strip|addslashes  #}
+    {#    {% if subscribe_icon is defined %} var subscribeTopicIcon = "{{ subscribe_icon }}";{% endif %}
+            var unsubscribeTopic = " {{ __('Unsubscribe from topic') }}";
+        {% if unsubscribe_icon is defined %}var unsubscribeTopicIcon = "{{ unsubscribe_icon }}";{% endif %}#}
+    {#        var lockTopic = " {{ __('Lock topic') }}";
+            var unlockTopic = " {{ __('Unlock topic') }}";
+            var stickyTopic = " {{ __("Give this topic 'sticky' status") }}";#}
+    {#  |strip|addslashes  #}
+    {#    {% if sticky_icon is defined %}var stickyTopicIcon = "{{ sticky_icon }}";{% endif %}
+            var unstickyTopic = " {{ __("Remove 'sticky' status") }}";
+        {% if unsticky_icon is defined %}var unstickyTopicIcon = "{{ unsticky_icon }}";{% endif %}
+            var solveTopic = " {{ __("Mark as solved by this post") }}";
+        {% if solve_icon is defined %}var solveTopicIcon = "{{ solve_icon }}";{% endif %}
+            var unsolveTopic = " {{ __("Mark as unsolved") }}";
+        {% if unsolve_icon is defined %}var unsolveTopicIcon = "{{ unsolve_icon }}";{% endif %}#}
+    {#    var zChanged = "{{ __("Changed") }}";
+        var zLoadingPost = "{{ __("Loading post") }}";
+        var zDeletingPost = "{{ __("Deleting post") }}";
+        var zUpdatingPost = "{{ __("Updating post") }}";
+        var zStoringReply = "{{ __("Storing reply") }}";
+        var zPreparingPreview = "{{ __("Preparing preview") }}";#}
+            // ]]>
 </script>

@@ -3,9 +3,8 @@
     {#        @todo   |profilelinkbyuname      #}
     <span id="post_poster_name_"><strong>{{ poster.userName }}</strong></span>
     <br />
-    <div> {#{useravatar uid=$post.poster.user_id class="img-rounded"}#}
-        {#       @todo                #}
-        <img src="/{{ currentUser.attributes.avatar is defined ? currentUser.attributes.avatar.value : 'web/test.jpg' }}" class="img-rounded" />
+    <div> 
+        <img src="/{{ poster.avatar }}" class="img-rounded" />
     </div>
 
     {#                    {% if post.poster.rank is not empty and post.poster.rank.image is not empty%}
@@ -34,19 +33,23 @@
                             <li><strong>{{ __("Rank") }}: </strong>{{ posterRank.title|escape('html') }}</li>
                             {% endif %}#}
     <li><strong>{{ __("Registered") }}: </strong>{{ poster.get.user_regdate|default('01-01-1970 00:00:00')|date('d-m-Y') }}</li>
-        {%if currentForumUser.online != true %}
+        {% if poster.online != true %}
         <li><strong>{{ __("Last visit") }}: </strong>{{ poster.get.lastVisit|date('d-m-Y') }}</li>
         {% endif %}
     <li><strong>{{ __("Posts") }}: </strong>{{ poster.get.postCount }}</li>
         {% if currentForumUser.loggedIn == true %}
         <li>
-            {% if msgmodule == false %}
+            <a class="tooltips" title="{{ __("View profile") }}" href="{{ path('zikuladizkusmodule_user_profile', {'user':poster.id} ) }}"><i class="fa fa-info-circle fa-150x"></i></a>
+                {% if msgmodule == false %}
                 <a class="tooltips" title="{{ __("Send private message") }}" href="{#  @todo finish InterCom {modurl modname=$msgmodule func="user" func="newpm" uid=$post.poster.user_id}#}"><i class="fa fa-envelope-o fa-150x"></i></a>
-                {% endif %}
-                {% if poster.data is defined and poster.data.moderate == true and poster.data.seeip == true %}
-                    {# {{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }} #}
-                    {#<a class="tooltips" title="{{ __("View IP address") }}" href="{{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }}"><i class="fa fa-info-circle fa-150x"></i></a>#}
                 {% endif %}
         </li>
     {% endif %}
+
+    {#{% if poster.data is defined and poster.data.moderate == true and poster.data.seeip == true %}#}
+    {# {{ path('zikuladizkusmodule_post_poster', {'post':post.post_id} ) }} #}
+
+    {#{% endif %}#}
+
 </ul>
+{#{{ dump() }}#}

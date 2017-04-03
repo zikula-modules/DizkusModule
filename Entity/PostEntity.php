@@ -124,7 +124,17 @@ class PostEntity extends EntityAccess
         return $this->post_id;
     }
 
+    public function getId()
+    {
+        return $this->post_id;
+    }
+
     public function getPost_text()
+    {
+        return $this->post_text;
+    }
+
+    public function getPostText()
     {
         return $this->post_text;
     }
@@ -228,9 +238,9 @@ class PostEntity extends EntityAccess
      *
      * @return integer
      */
-    public function getPoster_id()
+    public function getPosterId()
     {
-        return $this->poster->getUser_id();
+        return $this->poster->getUserId();
     }
 
     public function getPoster_data()
@@ -272,7 +282,7 @@ class PostEntity extends EntityAccess
      *
      * @return integer
      */
-    public function getTopic_id()
+    public function getTopicId()
     {
         return $this->topic->getTopic_id();
     }

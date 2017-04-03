@@ -8,10 +8,10 @@
 
 {% if app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_index' %}
     {% set maintitle=__('Forum') %}
-{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_viewforum' and forum is defined %}
-    {% set maintitle=forum.name %}
-{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_user_viewtopic' and topic is defined %}
-    {% set maintitle=topic.title %}
+{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_viewforum' and currentForum is defined %}
+    {% set maintitle=currentForum.get.name %}
+{% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_user_viewtopic' and currentTopic is defined %}
+    {% set maintitle=currentTopic.get.title %}
 {% elseif app.request.attributes.get('_route') == 'zikuladizkusmodule_user_newtopic' %}
     {% set maintitle=__('New topic in forum') %}
 {% endif %}
@@ -29,5 +29,12 @@
 <div id="dizkus">
 
     <a id="top" accesskey="t"></a>
-    {{ include("@ZikulaDizkusModule/Common/breadcrumbs.html.twig") }}
+    <div class="row">
+        <div class="col-md-6">
+            {{ include("@ZikulaDizkusModule/Common/breadcrumbs.html.twig") }}
+        </div>
+        <div class="col-md-6">
+            {{ include("@ZikulaDizkusModule/Common/statusbar.html.twig") }}
+        </div>
+    </div>
     {{ include("@ZikulaDizkusModule/Common/navbar.html.twig") }}

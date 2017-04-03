@@ -1,0 +1,7 @@
+{{ pageSetVar('title', __("Notify moderator.")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.PostManager.js')) }}
+<div id="post_report">
+    {{ include("@ZikulaDizkusModule/Post/report.ajax.html.twig") }}
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

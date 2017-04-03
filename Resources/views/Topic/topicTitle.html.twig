@@ -9,10 +9,9 @@
     {% set topic_solved_class='' %}
     {% endif %}
 
-
-        <div class="panel">
+        <div class="panel nothing">
             <div class="panel-body">
-                <input type='hidden' id='userAllowedToEdit' value='1{{ currentTopic.userAllowedToEdit() }}'>
+                <input type='hidden' id='userAllowedToEdit' value='1{#{{ currentTopic.userAllowedToEdit() }}#}'>
                 <h2 id="edittopicsubjectbutton">
 
                     <span class="text-warning {{ topic_unsolved_class }}" id="topic_unsolved">
@@ -29,8 +28,9 @@
                                 {{ currentTopic.title|escape('html')|notifyFilters('dizkus.filter_hooks.post.filter') }}
                             </span>
                         </span>
-
-                        <span id='edittopicicon' style='display:none;'>&nbsp;<i class="fa fa-pencil fa fa-red"></i></span>
+                        {% if (settings.ajax and (currentForumUser.allowedToModerate(currentTopic) or currentForumUser.allowedToEdit(currentTopic))) %}
+                            <span id='edittopicicon' style='display:none;'>&nbsp;<i class="fa fa-pencil fa fa-red"></i></span>
+                            {% endif %} 
                     </span>
                 </h2>
 

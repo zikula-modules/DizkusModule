@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Hook\ProcessHook;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
@@ -141,7 +140,9 @@ class TopicManager
     }
 
     /**
-     * construct.
+     * Start managing.
+     *
+     * @return TopicManager
      */
     public function getManager($id = null, TopicEntity $topic = null)
     {
@@ -174,7 +175,7 @@ class TopicManager
     }
 
     /**
-     * return page as array.
+     * Return page as array
      *
      * @return mixed array or false
      */
@@ -188,7 +189,7 @@ class TopicManager
     }
 
     /**
-     * return topic id.
+     * Return topic id
      *
      * @return int
      */
@@ -198,7 +199,7 @@ class TopicManager
     }
 
     /**
-     * return topic title.
+     * Return topic title
      *
      * @return string
      */
@@ -208,7 +209,7 @@ class TopicManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Return topic as doctrine2 object
      *
      * @return TopicEntity
      */
@@ -218,7 +219,7 @@ class TopicManager
     }
 
     /**
-     * return topic forum id.
+     * Return topic forum id
      *
      * @return int
      */
@@ -228,9 +229,9 @@ class TopicManager
     }
 
     /**
-     * return topic forum id.
+     * Return topic forum
      *
-     * @return int
+     * @return ForumEntity
      */
     public function getForum()
     {
@@ -238,6 +239,8 @@ class TopicManager
     }
 
     /**
+     * Return managed topic forum
+     *
      * @return ForumManager
      */
     public function getManagedForum()
@@ -245,31 +248,52 @@ class TopicManager
         return $this->managedForum;
     }
 
+    /**
+     * Get the Poster as managed forum user
+     *
+     * @return ForumUserManager
+     */
+    public function getManagedPoster()
+    {
+        return $this->forumUserManagerService->getManager($this->_topic->getPosterId());
+    }
+
+    /**
+     * Get the Poster as managed forum user
+     *
+     * @return ForumUserManager
+     */
     public function getFirstPost()
     {
         return $this->_firstPost;
     }
 
+    /**
+     * Get topic permissions
+     *
+     * @deprecated will be moved
+     *
+     * @return array
+     */
     public function getPermissions()
     {
         return $this->permission->get($this->_topic->getForum());
     }
 
     /**
-     * return posts of a topic as doctrine2 object.
+     * Return posts of a topic as doctrine2 collection
      *
-     * @return object
+     * @return Collection
      */
     public function getPosts()
     {
         return $this->posts;
     }
 
-
     /**
-     * return posts of a topic as doctrine2 object.
+     * Sets current page of paginated topic posts collection.
      *
-     * @return object
+     * @return Collection
      */
     public function loadPosts($start = 0)
     {
@@ -316,55 +340,6 @@ class TopicManager
     {
         return $this->_numberOfItems;
 
-    }
-
-    public function userAllowedToEdit()
-    {
-          $currentForumUser = $this->forumUserManagerService->getManager();
-//        $this->_topic->
-//        return $this->posts->first()->getUserAllowedToEdit($uid);
-
-
-        return true;
-    }
-
-
-//        /**
-//     * @todo move somewhere else this do not belong here
-//     * determine if a user is allowed to edit this post
-//     *
-//     * @param  integer $uid
-//     * @return boolean
-//     */
-//    public function getUserAllowedToEdit($uid = null)
-//    {
-        //        if (!isset($this->post_time)) {
-//            return false;
-//        }
-//
-//        // default to current user
-//        $uid = isset($uid) ? $uid : Use
-//
-//        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
-//        // in hours
-//        $postTime = clone $this->post_time;
-//        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
-//        $now = new \DateTime();
-//        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
-    /**
-     * get forum bread crumbs.
-     *
-     * @return string
-     */
-    public function getBreadcrumbs()
-    {
-        return $this->managedForum->getBreadcrumbs(false);
     }
 
     /**
@@ -445,10 +420,8 @@ class TopicManager
             $managedForumUser = $this->forumUserManagerService->getManager($this->variableApi->get($this->name, 'defaultPoster', 2));
         }
 
-        $managedForumUser->incrementPostCount();
-
-        $this->_firstPost->setPoster($managedForumUser->getUser());
-        $this->_topic->setPoster($managedForumUser->getUser());
+        $this->_firstPost->setPoster($managedForumUser->get());
+        $this->_topic->setPoster($managedForumUser->get());
     }
 
     /**
@@ -476,10 +449,13 @@ class TopicManager
      */
     public function create()
     {
+
         // write topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
-        // increment forum post count
+        // increment post count
+        $managedForumUser = $this->forumUserManagerService->getManager();
+        $managedForumUser->incrementPostCount();
         $this->managedForum->incrementPostCount();
         $this->managedForum->incrementTopicCount();
         $this->managedForum->setLastPost($this->_firstPost);
@@ -577,26 +553,8 @@ class TopicManager
     }
 
     /**
-     * get if the current user is subscribed.
+     * @todo event for maintaining forum node last post ?
      *
-     * @return bool
-     */
-    public function isSubscribed()
-    {
-        if (!$this->userApi->isLoggedIn()) {
-            return false;
-        }
-
-        $uid = $this->request->getSession()->get('uid');
-
-        $topicSubscription = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
-            ->findOneBy(['topic' => $this->_topic, 'forumUser' => $uid]);
-
-        return isset($topicSubscription);
-    }
-
-    /**
      * find last post by post_time and set.
      */
     public function resetLastPost($flush = false)
@@ -686,156 +644,39 @@ class TopicManager
             throw new \InvalidArgumentException();
         }
         $managedTopic = $this->getManager($topic);
-        $perms = $managedTopic->getPermissions();
         switch ($action) {
-            case 'subscribe':
-                if ($this->userApi->isLoggedIn()) {
-                    $this->subscribe($managedTopic->get());
-                }
-                break;
-            case 'unsubscribe':
-                if ($this->userApi->isLoggedIn()) {
-                    $this->unsubscribe($managedTopic->get());
-                }
-                break;
             case 'sticky':
-                if ($perms['moderate']) {
                     $managedTopic->sticky();
-                }
                 break;
             case 'unsticky':
-                if ($perms['moderate']) {
                     $managedTopic->unsticky();
-                }
                 break;
             case 'lock':
-                if ($perms['moderate']) {
                     $managedTopic->lock();
-                }
                 break;
             case 'unlock':
-                if ($perms['moderate']) {
                     $managedTopic->unlock();
-                }
                 break;
             case 'solve':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
                     if (empty($post)) {
                         throw new \InvalidArgumentException();
                     }
                     $managedTopic->solve($post);
-                }
                 break;
             case 'unsolve':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
                     $managedTopic->unsolve();
-                }
                 break;
             case 'setTitle':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
                     if (empty($title)) {
                         throw new \InvalidArgumentException();
                     }
                     $managedTopic->setTitle($title);
-                }
                 break;
         }
     }
 
     /**
-     * Subscribe a topic.
-     *
-     * @param int|object $topic   topic id or object
-     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
-     *
-     * @return bool|void
-     */
-    public function subscribe($topic, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        if (!is_object($topic)) {
-            // @todo what if topic is not found
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
-        }
-        // Permission check
-        if (!$this->permission->canRead($topic->getForum())) {
-            throw new AccessDeniedException();
-        }
-
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
-        $searchParams = [
-            'topic'     => $topic,
-            'forumUser' => $managedForumUser->get(), ];
-        $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy($searchParams);
-        if (!$topicSubscription) {
-            $managedForumUser->get()->addTopicSubscription($topic);
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * Unsubscribe a topic.
-     *
-     * @param int|object $topic   topic id or object
-     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
-     *
-     * @return void|bool
-     */
-    public function unsubscribe($topic, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        if (!is_object($topic)) {
-            // @todo what if topic is not found
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
-        }
-        // Permission check
-        if (!$this->permission->canRead($topic->getForum())) {
-            throw new AccessDeniedException();
-        }
-
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
-        if (isset($topic)) {
-            $topicSubscription = $this->entityManager
-                ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
-                ->findOneBy(['topic' => $topic, 'forumUser' => $managedForumUser->get()]);
-            $managedForumUser->get()->removeTopicSubscription($topicSubscription);
-        } else {
-            // not used in the code...
-            $managedForumUser->get()->clearTopicSubscriptions();
-        }
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Get topic subscriptions.
-     *
-     * @param int $user_id user id (optional)
-     *
-     * @return \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
-     */
-    public function getSubscriptions($user_id = null)
-    {
-        if (empty($user_id)) {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
-
-        return $managedForumUser->get()->getTopicSubscriptions();
-    }
-
-    /**
-     * getIdByReference.
+     * topic by reference
      *
      * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
      *

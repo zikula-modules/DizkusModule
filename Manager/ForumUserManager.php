@@ -24,7 +24,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Helper\RankHelper;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
@@ -52,6 +54,11 @@ class ForumUserManager
     private $translator;
 
     /**
+     * @var RankHelper
+     */
+    private $ranksHelper;
+
+    /**
      * managed forum user.
      *
      * @var ForumUserEntity
@@ -60,10 +67,12 @@ class ForumUserManager
 
     private $loggedIn = false;
 
+    private $lastVisit;
+
     protected $name;
 
     public function __construct(
-    TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi
+    TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi, RankHelper $ranksHelper
     )
     {
         $this->name = 'ZikulaDizkusModule';
@@ -75,6 +84,7 @@ class ForumUserManager
         $this->userApi = $userApi;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
+        $this->ranksHelper = $ranksHelper;
     }
 
     //General object manager methods
@@ -86,6 +96,7 @@ class ForumUserManager
      */
     public function getManager($uid = null)
     {
+        //$this->variableApi->get($this->name, 'defaultPoster', 2); ???
         if (empty($uid)) {
             $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1; // zikula guest account
         }
@@ -98,13 +109,14 @@ class ForumUserManager
             $this->_forumUser = new ForumUserEntity();
             //last try there is zikula user
             $zuser = $this->entityManager->find('Zikula\UsersModule\Entity\UserEntity', $uid);
-            if($zuser){
+            if ($zuser) {
                 $this->_forumUser->setUser($zuser);
                 $this->entityManager->persist($this->_forumUser);
                 $this->entityManager->flush();
                 $this->loggedIn = true;
             }
         }
+        $this->checkLastVisit();
 
         return $this;
     }
@@ -119,7 +131,6 @@ class ForumUserManager
         return $this->_forumUser ? true : false;
     }
 
-
     /**
      * return topic as doctrine2 object.
      *
@@ -130,6 +141,15 @@ class ForumUserManager
         return $this->_forumUser;
     }
 
+    /**
+     * return topic as doctrine2 object.
+     *
+     * @return ForumUserEntity
+     */
+    public function getUser()
+    {
+        return $this->_forumUser->getUser();
+    }
 
     /**
      * return topic as doctrine2 object.
@@ -138,8 +158,8 @@ class ForumUserManager
      */
     public function getUserName()
     {
-        if($this->isAnonymous()){
-           return 'Anonymous';
+        if ($this->isAnonymous()) {
+            return 'Anonymous';
         } else {
             return $this->_forumUser->getUser()->getUname();
         }
@@ -160,11 +180,20 @@ class ForumUserManager
      *
      * @param array $data forum user data
      */
-    public function store($data)
+    public function store()
     {
-        $this->_forumUser->merge($data);
         $this->entityManager->persist($this->_forumUser);
         $this->entityManager->flush();
+    }
+
+    /**
+     * persist and flush.
+     *
+     * @param array $data forum user data
+     */
+    public function merge($data)
+    {
+        $this->_forumUser->merge($data);
     }
 
     /**
@@ -209,12 +238,123 @@ class ForumUserManager
 
     public function getCurrentPosition()
     {
-        //app.request.attributes.get('_route') ;
         return $this->request->attributes->get('_route');
     }
 
+    public function allowedToComment($object)
+    {
+        if ($object instanceof PostManager) {
+            return $this->permission->canWrite($object->getManagedTopic()->getForum());
+        }
+
+        if ($object instanceof TopicManager) {
+            return $this->permission->canWrite($object->get()->getForum());
+        }
+
+        if ($object instanceof ForumManager) {
+            return $this->permission->canWrite($object->get());
+        }
+
+        if ($object instanceof ForumUserManager) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function allowedToEdit($object)
+    {
+        if ($object instanceof PostManager) {
+            if($object->getManagedPoster()->getId() == $this->getId()){
+                return true;
+            }
+
+            return false;
+        }
+
+        if ($object instanceof TopicManager) {
+            return ($object->getManagedPoster()->getId() == $this->getId() ? true : false);
+        }
+
+        if ($object instanceof ForumManager) {
+            return false;
+        }
+
+        if ($object instanceof ForumUserManager) {
+            if($object->getId() == $this->getId()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public function allowedToModerate($object)
+    {
+        //this should be moved to permissions
+        if ($object instanceof PostManager) {
+            return $this->permission->canModerate($object->getManagedTopic()->getForum());
+        }
+
+        if ($object instanceof TopicManager) {
+            return $this->permission->canModerate($object->get()->getForum());
+        }
+
+        if ($object instanceof ForumManager) {
+            //is node or forum moderator
+            $nodeModeratorUsersCollection = $object->get()->getNodeModeratorUsers();
+            if ($nodeModeratorUsersCollection->indexOf($this->_forumUser)) {
+                return true;
+            }
+            //belongs to group that is node or forum moderator
+            $nodeModeratorGroups = $object->get()->getNodeModeratorGroups();
+            if (!$nodeModeratorGroups->isEmpty()) {
+                //dump($nodeModeratorGroups);
+                $userGroups = $this->_forumUser->getUser()->getGroups();
+                foreach ($nodeModeratorGroups as $group) {
+                    return $userGroups->indexOf($group) === false ? false : true;
+                }
+            }
+            // check zikula perms
+            if ($this->permission->canModerate($object->get())) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if ($object instanceof ForumUserManager) {
+            return $object->getId() == $this->getId();
+        }
+
+        return false;
+    }
 
     //Posts collection display settings
+    /**
+     * postOrder.
+     *
+     * @return string
+     */
+    public function incrementPostCount()
+    {
+        $this->_forumUser->incrementPostCount();
+        $this->entityManager->persist($this->_forumUser);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * check to remove...
+     *
+     * @return string
+     */
+    public function isUser($user)
+    {
+        return $this->_forumUser->getUserId() == $user->getUserId() ? true : false;
+    }
 
     /**
      * postOrder.
@@ -238,38 +378,23 @@ class ForumUserManager
         $this->entityManager->flush();
     }
 
-    // forums collection display settings
-
     /**
-     * Set forum view setting
+     * return topic as doctrine2 object.
      *
-     * @param string $setting
+     * @return string
      */
-    public function getForumViewSettings()
+    public function getAvatar()
     {
-        return $this->_forumUser->getDisplayOnlyFavorites();
-    }
-
-    /**
-     * Set forum view setting
-     *
-     * @param string $setting
-     */
-    public function setForumViewSettings($setting)
-    {
-        if($setting){
-                $this->_forumUser->showFavoritesOnly();
-        }else {
-                $this->_forumUser->showAllForums();
+        $userAttr = $this->_forumUser->getUser()->getAttributes();
+        if ($userAttr->offsetExists('avatar')) {
+            //@todo add anonymous avatar setting
+            return $this->_forumUser->getUser()->getAttributeValue('avatar');
+        } else {
+            return 'anonymous.png';
         }
-
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
-
     }
 
-   // Signature management
-
+    // Signature management
     /**
      * Get user signature.
      *
@@ -293,9 +418,48 @@ class ForumUserManager
         $this->entityManager->flush();
     }
 
+    // Rank management
+    // User ranks
+    public function getRank()
+    {
+
+        if ($this->_forumUser->getRank()) {
+            return $this->_forumUser->getRank();
+        }
+
+        $ranks = $this->ranksHelper->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+        $posterRank = $ranks[0];
+        foreach ($ranks as $rank) {
+            if (($this->_forumUser->getPostCount() >= $rank->getMinimumCount()) && ($this->_forumUser->getPostCount() <= $rank->getMaximumCount())) {
+                $posterRank = $rank;
+                //$posterRank->setImage($this->ranksHelper->getImageLink($posterRank->getImage()));
+            }
+        }
+
+        return $posterRank;
+    }
+
+    public function setRank($rank)
+    {
+        if (!$this->permission->canAdministrate()) {
+            throw new AccessDeniedException();
+        }
+
+        $rank = $this->entityManager->getReference('Zikula\DizkusModule\Entity\RankEntity', $rank);
+
+        if (isset($rank)) {
+            $this->_forumUser->setRank($rank);
+        } else {
+            $this->_forumUser->clearRank();
+        }
+
+        $this->entityManager->persist($this->_forumUser);
+        $this->entityManager->flush();
+
+        return true;
+    }
 
     // Subscriptions
-
     /**
      * Change the value of Autosubscribe setting.
      *
@@ -307,11 +471,8 @@ class ForumUserManager
         $this->entityManager->flush();
     }
 
-
     //Forum subscriptions
-
-
-     /**
+    /**
      * Subscribe a forum.
      *
      * @param obj $page  The forum
@@ -324,8 +485,6 @@ class ForumUserManager
     {
         return $this->_forumUser->getForumSubscriptions();
     }
-
-
 
     /**
      * Subscribe a forum.
@@ -379,7 +538,7 @@ class ForumUserManager
         return true;
     }
 
-     /**
+    /**
      * Is forum subscribed.
      *
      * @param int $forum  The forum
@@ -402,8 +561,7 @@ class ForumUserManager
     }
 
     //Topic Subscriptions
-
-     /**
+    /**
      * Subscribe a forum.
      *
      * @param obj $page  The forum
@@ -416,6 +574,7 @@ class ForumUserManager
     {
         return $this->_forumUser->getTopicSubscriptions();
     }
+
     /**
      * Subscribe a topic.
      *
@@ -468,7 +627,7 @@ class ForumUserManager
         return true;
     }
 
-     /**
+    /**
      * Is topic subscribed.
      *
      * @param int $topic  Thetopic
@@ -491,8 +650,34 @@ class ForumUserManager
     }
 
     //Favorites
+    /**
+     * Set forum view setting
+     *
+     * @param string $setting
+     */
+    public function getForumViewSettings()
+    {
+        return $this->_forumUser->getDisplayOnlyFavorites();
+    }
 
-     /**
+    /**
+     * Set forum view setting
+     *
+     * @param string $setting
+     */
+    public function setForumViewSettings($setting)
+    {
+        if ($setting) {
+            $this->_forumUser->showFavoritesOnly();
+        } else {
+            $this->_forumUser->showAllForums();
+        }
+
+        $this->entityManager->persist($this->_forumUser);
+        $this->entityManager->flush();
+    }
+
+    /**
      * Subscribe a forum.
      *
      * @param obj $page  The forum
@@ -554,7 +739,6 @@ class ForumUserManager
     }
 
     // Topics
-
     /**
      * retrieve all user topics.
      *
@@ -567,10 +751,10 @@ class ForumUserManager
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t', 'l')
-            ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
-            ->leftJoin('t.last_post', 'l')
-            ->leftJoin('t.posts', 'p')
-            ->orderBy('l.post_time', 'DESC');
+        ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
+        ->leftJoin('t.last_post', 'l')
+        ->leftJoin('t.posts', 'p')
+        ->orderBy('l.post_time', 'DESC');
 
         $qb->where('t.poster = :uid');
 
@@ -578,17 +762,16 @@ class ForumUserManager
 
         $limit = $this->variableApi->get('ZikulaDizkusModule', 'topics_per_page');
         $qb->setFirstResult($offset)
-            ->setMaxResults($limit);
+        ->setMaxResults($limit);
         $topics = new Paginator($qb);
         $pager = [
-            'numitems'     => $topics->count(),
-            'itemsperpage' => $limit, ];
+            'numitems' => $topics->count(),
+            'itemsperpage' => $limit,];
 
         return [$topics, $pager];
     }
 
     // Posts
-
     /**
      * retrieve all my posts
      *
@@ -601,17 +784,17 @@ class ForumUserManager
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
-            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-            ->orderBy('p.post_time', 'DESC');
+        ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+        ->orderBy('p.post_time', 'DESC');
         $qb->where('p.poster = :uid');
         $qb->setParameter('uid', $this->getId());
         $limit = $this->variableApi->get('ZikulaDizkusModule', 'posts_per_page'); //$this->variableApi->get($perPageVar);
         $qb->setFirstResult($offset)
-            ->setMaxResults($limit);
+        ->setMaxResults($limit);
         $posts = new Paginator($qb);
         $pager = [
-            'numitems'     => $posts->count(),
-            'itemsperpage' => $limit, ];
+            'numitems' => $posts->count(),
+            'itemsperpage' => $limit,];
 
         return [$posts, $pager];
     }
@@ -625,36 +808,44 @@ class ForumUserManager
      *
      * @return unix timestamp last visit date
      */
-    public function getLastVisit()
+    public function checkLastVisit()
     {
         /**
          * set last visit cookies and get last visit time
          * set LastVisit cookie, which always gets the current time and lasts one year.
          */
-        $path = $this->request->getBasePath();
-        if (empty($path)) {
-            $path = '/';
-        } elseif (substr($path, -1, 1) != '/') {
-            $path .= '/';
-        }
         $time = time();
-
-        //CookieUtil::setCookie('DizkusLastVisit', "{$time}", $time + 31536000, $path, null, null, false);
         $response = new Response();
-        $cookie = new Cookie('DizkusLastVisit', $time, $time + 31536000);
-        $response->headers->setCookie($cookie);
+        $cookie = new Cookie('DizkusLastVisit', $time, $time + 1800);
+        $cookies = $this->request->cookies;
+        if ($cookies->has('DizkusLastVisit')){
+            $this->lastVisit = $cookies->get('DizkusLastVisit');
+            if ($this->lastVisit < $time - 1800 ) {
+//                $response->headers->setCookie($cookie);
+//                $response->sendHeaders();
+                dump('expired');
+                return true;
+            }
+        } else {
+            $response->headers->setCookie($cookie);
+            $response->sendHeaders();
+            $this->lastVisit = $time;
+        }
+    }
 
-        //$lastVisitTemp = CookieUtil::getCookie('DizkusLastVisitTemp', false, null);
-        $lastVisitTemp = $this->request->cookies->get('DizkusLastVisit');
+    /**
+     * lastvisit.
+     *
+     * reads the cookie, updates it and returns the last visit date in unix timestamp
+     *
+     * @param none
+     *
+     * @return unix timestamp last visit date
+     */
+    public function getLastVisit()
+    {
 
-        $temptime = empty($lastVisitTemp) ? $time : $lastVisitTemp;
-        // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
-        //CookieUtil::setCookie('DizkusLastVisitTemp', "{$temptime}", time() + 1800, $path, null, null, false);
-
-        $cookie2 = new Cookie('DizkusLastVisitTemp', $temptime, $time + 1800);
-        $response->headers->setCookie($cookie2);
-
-        return $temptime;
+        return $this->lastVisit;
     }
 
     /**
@@ -689,11 +880,6 @@ class ForumUserManager
     }
 
 }
-
-
-
-
-
 
 //    /**
 //     * Old userApi Below.

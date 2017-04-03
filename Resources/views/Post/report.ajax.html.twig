@@ -1,0 +1,31 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-titl">{{ __("Notify moderator about bad behaviour") }}</h3>
+    </div>
+
+    {{ include("@ZikulaDizkusModule/Post/single.html.twig", {'post': managedPost.get}) }}
+
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form_label(form.message, __('Message') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.message, { 'attr': {'class': '', 'rows': 5} }) }}
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="form-group">
+            <div class="col-md-12 text-center">
+                {{ form_widget(form.send, {'attr': {'class': 'btn btn-primary'}, 'label': __('Send notification')}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}

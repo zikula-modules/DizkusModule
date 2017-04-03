@@ -2,7 +2,7 @@
 /**
  * Dizkus.
  *
- * @copyright (c) 2001-now, Dizkus Development Team
+ * @copyright (c) Dizkus Development Team
  *
  * @see https://github.com/zikula-modules/Dizkus
  *
@@ -15,15 +15,75 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
 use Zikula\Core\Response\PlainResponse;
+use Zikula\DizkusModule\Entity\PostEntity;
+
+
 
 class PostController extends AbstractController
 {
+    /**
+     * @Route("/posts/view-latest")
+     *
+     * View latest topics
+     *
+     * @param Request $request
+     *                         string 'selorder'
+     *                         integer 'nohours'
+     *                         integer 'unanswered'
+     *                         integer 'last_visit_unix'
+     *
+     * @throws AccessDeniedException on failed perm check
+     *
+     * @return Response|RedirectResponse
+     */
+    public function viewlatestAction(Request $request)
+    {
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        $since = $request->query->get('since', null) == null ? null: (int)$request->query->get('since');
+
+        $posts = [];
+//        // get the input
+//        $params = [];
+//        $params['selorder'] = $request->get('selorder', 1);
+//        $params['nohours'] = (int)$request->request->get('nohours', 24);
+//        $params['unanswered'] = (int)$request->query->get('unanswered', 0);
+//        $params['amount'] = (int)$request->query->get('amount', null);
+
+//        getLastPosts($params)
+
+        // Permission check
+//        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
+//            throw new AccessDeniedException();
+//        }
+
+//        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
+//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
+//        }
+
+
+
+//        list($topics, $text, $pager) = ModUtil::apiFunc($this->name, 'post', 'getLatest', $params);
+//        $this->view->assign('topics', $topics);
+//        $this->view->assign('text', $text);
+//        $this->view->assign('pager', $pager);
+
+        return $this->render('@ZikulaDizkusModule/Post/latest.html.twig', [
+            'currentForumUser' => $forumUserManager,
+            'since' => $since,
+            'latestPosts' => $posts,
+//            'posts' => $posts,
+//            'pager', $pager,
+            'settings' => $this->getVars(),
+            ]);
+    }
+
     /**
      * @Route("/post/{post}/edit", requirements={"post" = "^[1-9]\d*$"}, options={"expose"=true})
      * @Method("GET")
@@ -82,15 +142,13 @@ class PostController extends AbstractController
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
 
-        $postData = $request->get('topic_reply_form');
         $managedPost->getPreview($request->get('topic_reply_form'));
 
         return $this->render("@ZikulaDizkusModule/Post/preview.html.twig", [
             'currentForumUser' => $currentForumUser,
-            'postManager'      => $managedPost,
-            'request' => $postData,
-            'settings'  => $this->getVars(),
-            ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
+            'postManager' => $managedPost,
+            'settings' => $this->getVars(),
+        ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
     }
 
     /**
@@ -217,7 +275,6 @@ class PostController extends AbstractController
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $data['to_topic_id'], 'start' => $start], RouterInterface::ABSOLUTE_URL) . '#pid' . $this->post_id;
 //
 //        return $view->redirect($url);
-
 //        $form = FormUtil::newForm($this->name, $this);
 //
 //        return new Response($form->execute('User/post/move.tpl', new MovePost()));
@@ -234,40 +291,31 @@ class PostController extends AbstractController
      */
     public function reportAction(Request $request, $post)
     {
-        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canRead')) {
-//            throw new AccessDeniedException();
-//        }
-//        // get the input
-//        $id = (int) $this->request->query->get('post');
-//
-//        if (!isset($id)) {
-//            $this->request->getSession()->getFlashBag()->add('error', $this->__('Error! Missing post id.'));
-//            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL);
-//
-//            return $view->redirect($url);
-//        }
-//
-//        $this->_post = new PostManager($id);
-//        $view->assign('post', $this->_post->get());
-//        $view->assign('notify', true);
-//        list(, $ranks) = ModUtil::apiFunc($this->name, 'Rank', 'getAll', ['ranktype' => RankEntity::TYPE_POSTCOUNT]);
-//        $this->view->assign('ranks', $ranks);
-//
-//        return true;
-//
-//        if ($args['commandName'] == 'cancel') {
-//            $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $this->_post->getTopicId(), 'start' => 1], RouterInterface::ABSOLUTE_URL) . '#pid' . $this->_post->getId();
-//
-//            return $view->redirect($url);
-//        }
-//
-//        // check for valid form
-//        if (!$view->isValid()) {
-//            return false;
-//        }
-//
-//        $data = $view->getValues();
-//
+        $format = $this->decodeFormat($request);
+
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        if (!$managedPost->exists()){
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            if ($format == 'json' || $format == 'ajax.html') {
+                return new Response(json_encode(['error' => $error])); //add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        // return json response
+        if ($format == 'json') {
+            if ($request->isMethod('POST')) {
+
+                //get message
+                //
 //        // some spam checks:
 //        // - remove html and compare with original comment
 //        // - use censor and compare with original comment
@@ -285,23 +333,81 @@ class PostController extends AbstractController
 //
 //        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', ['post' => $this->_post->get(),
 //            'comment' => $data['comment'],]);
-//
-//        $start = ModUtil::apiFunc($this->name, 'user', 'getTopicPage', ['replyCount' => $this->_post->get()->getTopic()->getReplyCount()]);
-//
-//        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $this->_post->getTopicId(), 'start' => $start], RouterInterface::ABSOLUTE_URL);
-//
-//        return $view->redirect($url);
 
-//        $form = FormUtil::newForm($this->name, $this);
+
+            $status = $this->__('Done! Moderators will be notified.');
+                    return new Response(json_encode(['status' => $status]));
+            }
+            return new Response(json_encode(['currentForumUser' => $currentForumUser->toArray(),
+                    'managedPost' => $managedPost->toArray(),
+                    'settings' => $this->getVars()
+                                                ]));
+        }
+
+        //html only part
+        $form = $this->createFormBuilder(['message' => ''])
+        ->add('message', 'textarea', [
+            'required' => false,
+        ])
+        ->add('send', 'submit')
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if ($form->get('send')->isClicked()) {
+                $data = $form->getData();
+
+
+//        // some spam checks:
+//        // - remove html and compare with original comment
+//        // - use censor and compare with original comment
+//        // if only one of this comparisons fails -> trash it, it is spam.
+//        if (!UserUtil::isLoggedIn()) {
+//            if (strip_tags($data['comment']) != $data['comment']) {
+//                // possibly spam, stop now
+//                // get the users ip address and store it in zTemp/Dizkus_spammers.txt
+//                $this->dzk_blacklist();
+//                // set 403 header and stop
+//                header('HTTP/1.0 403 Forbidden');
+//                System::shutDown();
+//            }
+//        }
 //
-//        return new Response($form->execute('User/notifymod.tpl', new Report()));
+//        ModUtil::apiFunc($this->name, 'notify', 'notify_moderator', ['post' => $this->_post->get(),
+//            'comment' => $data['comment'],]);
+
+
+
+                $status = $this->__('Done! Moderators will be notified.');
+                if ($format == 'ajax.html') {
+                    return new Response(json_encode(['html' => $status]));
+                }
+                $this->addFlash('status', $status);
+            }
+
+            $start =  $managedPost->getManagedTopic()->getTopicPage($managedPost->get()->getTopic()->getReplyCount());
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getTopicId(), 'start' => $start], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/report.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'form' => $form->createView(),
+                    'managedPost' => $managedPost,
+                    'settings' => $this->getVars()
+                ]);
+        if ($format == 'ajax.html') {
+            return new Response(json_encode(['html' => $contentHtml]));
+        }
+        // full html page
+        return new Response($contentHtml);
     }
 
     /**
      * @Route("/post/{post}/poster", requirements={"post" = "^[1-9]\d*$"})
      * @Method("GET")
      *
-     * View the posters IP information
+     * Get poster data as forum user and send it as json/html or redirect
      *
      * @param int $post
      *
@@ -312,36 +418,61 @@ class PostController extends AbstractController
      */
     public function posterAction(Request $request, $post)
     {
-        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
-//            throw new AccessDeniedException();
-//        }
-//        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post); //new PostManager();
-//        $pip = $managedPost->get()->getPoster_ip();
-//        $this->view->assign('viewip', ModUtil::apiFunc($this->name, 'user', 'get_viewip_data', ['pip' => $pip]))
-//            ->assign('topicId', $managedPost->getTopicId());
-//
-//        return new Response($this->view->fetch('User/viewip.tpl'));
-    }
-}
+        $format = $this->decodeFormat($request);
 
-//    /**
-//
-//
-    /**
-     * @Route("/post/edit")
-     *
-     * Edit post
-     *
-     * User interface to edit a new post
-     *
-     * @return string
-     */
-//    public function editpostAction()
-//    {
-//        $form = FormUtil::newForm($this->name, $this);
-//
-//        return new Response($form->execute('User/post/edit.tpl', new EditPost()));
-//    }
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        if (!$managedPost->exists()){
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            if ($format == 'json' || $format == 'ajax.html') {
+                return new Response(json_encode(['error' => $error])); //add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        //$managedTopic = $managedPost->getManagedTopic();
+        $managedPoster = $managedPost->getManagedPoster();
+
+
+        // return json response
+        if ($format == 'json') {
+            if ($request->isMethod('POST')) {
+
+
+
+            }
+        }
+
+        if ($format == 'ajax.html') {
+            $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/preview.html.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'postManager' => $managedPost,
+                    'settings' => $this->getVars(),
+                ]);
+
+            return new Response(json_encode(['html' => $contentHtml]));
+        }
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_profile', ['user' => $managedPoster->getUserId()], RouterInterface::ABSOLUTE_URL));
+    }
+
+
+    private function decodeFormat(Request $request) {
+
+        if (0 === strpos($request->headers->get('Accept'), 'application/json')) {
+            $format = 'json';
+        } elseif ($request->isXmlHttpRequest()) {
+            $format = 'ajax.html';
+        } else {
+            $format = 'html';
+        }
+
+        return $format;
+    }
+
+}
 
 ////    /**
 //     * Checks if a message is shorter than 65535 - 8 characters.

@@ -50,4 +50,46 @@ class ForumUserRepository extends EntityRepository
         return $users;
     }
 
+    /**
+     * gets the top $maxposters users depending on their post count.
+     *
+     * @param mixed[] $params {
+     *
+     * @var int maxposters    number of users to read, default = 3
+     * @var int months        number months back to search, default = 6
+     *          }
+     *
+     * @return array $topPosters
+     */
+    public function getTopPosters($params)
+    {
+        $posterMax = (!empty($params['maxposters'])) ? $params['maxposters'] : 3;
+        $months = (!empty($params['months'])) ? $params['months'] : 6;
+
+        $qb = $this->entityManager->createQueryBuilder();
+        $timePeriod = new \DateTime();
+        $timePeriod->modify("-$months months");
+        $qb->select('u')
+            ->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')
+            ->where('u.user_id > 1')
+            ->andWhere('u.lastvisit > :timeperiod')
+            ->setParameter('timeperiod', $timePeriod)
+            ->orderBy('u.postCount', 'DESC');
+        $qb->setMaxResults($posterMax);
+        $forumUsers = $qb->getQuery()->getResult();
+
+        $topPosters = [];
+        if (!empty($forumUsers)) {
+            foreach ($forumUsers as $forumUser) {
+                $coreUser = $forumUser->getUser();
+                $topPosters[] = [
+                    'user_name' => $coreUser['uname'],
+                    // for BC reasons
+                    'postCount' => $forumUser->getPostCount(),
+                    'user_id'   => $forumUser->getUser_id(), ];
+            }
+        }
+
+        return $topPosters;
+    }
 }
