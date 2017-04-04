@@ -135,7 +135,7 @@ class ForumEntity extends EntityAccess
 
     /**
      * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"}, fetch="EXTRA_LAZY")
-     * @ORM\OrderBy({"sticky" = "DESC", "time" = "ASC"})
+     * @ORM\OrderBy({"sticky" = "DESC", "topic_time" = "ASC"})
      */
     private $topics;
 

@@ -12,9 +12,6 @@
 
 namespace Zikula\DizkusModule;
 
-use ModUtil;
-use ZLanguage;
-use System;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
@@ -63,7 +60,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         // ToDo: create FULLTEXT index
         // set the module vars
-        $this->setVars(self::getDefaultVars());
+        $this->setVars(self::getDefaultVars($this->variableApi->getAll('ZConfig')));
         $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
         $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
@@ -232,17 +229,21 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
      *
      * @return array
      */
-    public static function getDefaultVars()
+    public static function getDefaultVars($systemSettings = null)
     {
-        $dom = ZLanguage::getModuleDomain(self::MODULENAME);
-        $relativePath = self::generateRelativePath(__DIR__, 'modules');
+
+        if ($systemSettings  == null){
+            $adminEmail = null;
+        }else{
+            $adminEmail= $systemSettings['adminmail'];
+        }
 
         return [
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
-            'email_from' => System::getVar('adminmail'),
-            'url_ranks_images' => "$relativePath/Resources/public/images/ranks",
+            'email_from' => $adminEmail,
+            'url_ranks_images' => "ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => false,
             'extendedsearch' => false,
@@ -254,7 +255,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'rss2f_enabled' => false,
             'timespanforchanges' => 24,
             'forum_enabled' => true,
-            'forum_disabled_info' => __('Sorry! The forums are currently off-line for maintenance. Please try later.', $dom),
+            'forum_disabled_info' => 'Sorry! The forums are currently off-line for maintenance. Please try later.',
             'signaturemanagement' => false,
             'signature_start' => '--',
             'signature_end' => '--',
@@ -271,28 +272,28 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         ];
     }
 
-    /**
-     * find the relative path of this script from current full path.
-     *
-     * @param string $path default __DIR__
-     * @param string $from default 'modules'
-     *
-     * @return string
-     */
-    public static function generateRelativePath($path = __DIR__, $from = 'modules')
-    {
-        $path = realpath($path);
-        $parts = explode(DIRECTORY_SEPARATOR, $path);
-        foreach ($parts as $part) {
-            if ($part == $from) {
-                return $path;
-            } else {
-                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
-            }
-        }
-
-        return $path;
-    }
+//    /**
+//     * find the relative path of this script from current full path.
+//     *
+//     * @param string $path default __DIR__
+//     * @param string $from default 'modules'
+//     *
+//     * @return string
+//     */
+//    public static function generateRelativePath($path = __DIR__, $from = 'modules')
+//    {
+//        $path = realpath($path);
+//        $parts = explode(DIRECTORY_SEPARATOR, $path);
+//        foreach ($parts as $part) {
+//            if ($part == $from) {
+//                return $path;
+//            } else {
+//                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
+//            }
+//        }
+//
+//        return $path;
+//    }
 
     /**
      * upgrade to 4.0.0.
@@ -300,7 +301,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     private function upgrade_to_4_0_0()
     {
         // do a check here for tables containing the prefix and fail if existing tables cannot be found.
-        $configPrefix = System::getVar('prefix');
+        $configPrefix = $this->container->getParameter("prefix");
         $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
         $connection = $this->entityManager->getConnection();
         $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
@@ -346,7 +347,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         // set rank to NULL where rank no longer available
-        $sql = 'UPDATE dizkus_users set rank=NULL WHERE rank NOT IN (SELECT DISTINCT rank_id from dizkus_ranks)';
+        $sql = 'UPDATE dizkus_users set user_rank=NULL WHERE user_rank NOT IN (SELECT DISTINCT rank_id from dizkus_ranks)';
         $stmt = $connection->prepare($sql);
         $stmt->execute();
 
@@ -408,7 +409,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->delVar('hideusers');
         $this->delVar('newtopicconfirmation');
         $this->delVar('slimforum');
-        $defaultModuleVars = self::getDefaultVars();
+        $defaultModuleVars = self::getDefaultVars($this->variableApi->getAll('ZConfig'));
         $this->setVar('url_ranks_images', $defaultModuleVars['url_ranks_images']);
         $this->setVar('fulltextindex', $defaultModuleVars['fulltextindex']); // disable until technology catches up with InnoDB
         $this->setVar('solved_enabled', $defaultModuleVars['solved_enabled']);
@@ -603,7 +604,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         if ($newUserCount > 0) {
             $this->entityManager->flush();
         }
-        ModUtil::apiFunc($this->name, 'Sync', 'all');
+        $this->container->get('zikula_dizkus_module.synchronization_helper')->all();
     }
 
     /**
@@ -675,10 +676,11 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     $topic->lock();
                 } else {
                     list($moduleId, $objectId) = explode('-', $row['topic_reference']);
-                    $moduleInfo = ModUtil::getInfo($moduleId);
-                    if ($moduleInfo) {
+                    //$moduleInfo = ModUtil::getInfo($moduleId);
+                    $module = $this->entityManager->getRepository('Zikula\ExtensionsModule\Entity\ExtensionEntity')->find($moduleId);
+                    if ($module) {
                         $searchCritera = [
-                            'owner' => $moduleInfo['name'],
+                            'owner' => $module->getName(),
                             'areatype' => 's',
                             'category' => 'ui_hooks', ];
                         $subscriberArea = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->findBy($searchCritera);
@@ -687,12 +689,13 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                             $topic->lock();
                         } else {
                             // finally set the information
-                            $topic->setHookedModule($moduleInfo['name']);
+                            $topic->setHookedModule($module->getName());
                             $topic->setHookedAreaId($subscriberArea->getId());
                             $topic->setHookedObjectId($objectId);
                         }
                     }
                 }
+
                 ++$count;
                 if ($count > 20) {
                     $this->entityManager->flush();
