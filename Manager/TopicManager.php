@@ -82,7 +82,7 @@ class TopicManager
     private $synchronizationHelper;
 
     /**
-     * managed topic.
+     * Managed topic
      *
      * @var TopicEntity
      */
@@ -96,7 +96,7 @@ class TopicManager
     private $managedForum;
 
     /**
-     * first post in topic.
+     * First post in topic
      *
      * @var PostEntity
      */
@@ -140,7 +140,7 @@ class TopicManager
     }
 
     /**
-     * Start managing.
+     * Start managing
      *
      * @return TopicManager
      */
@@ -165,7 +165,7 @@ class TopicManager
     }
 
     /**
-     * Check if topic exists.
+     * Check if topic exists
      *
      * @return bool
      */
@@ -175,7 +175,7 @@ class TopicManager
     }
 
     /**
-     * Return page as array
+     * Return topic as array
      *
      * @return mixed array or false
      */
@@ -268,17 +268,17 @@ class TopicManager
         return $this->_firstPost;
     }
 
-    /**
-     * Get topic permissions
-     *
-     * @deprecated will be moved
-     *
-     * @return array
-     */
-    public function getPermissions()
-    {
-        return $this->permission->get($this->_topic->getForum());
-    }
+//    /**
+//     * Get topic permissions
+//     *
+//     * @deprecated will be moved
+//     *
+//     * @return array
+//     */
+//    public function getPermissions()
+//    {
+//        return $this->permission->get($this->_topic->getForum());
+//    }
 
     /**
      * Return posts of a topic as doctrine2 collection
@@ -291,7 +291,7 @@ class TopicManager
     }
 
     /**
-     * Sets current page of paginated topic posts collection.
+     * Sets current page of paginated topic posts collection
      *
      * @return Collection
      */
@@ -343,7 +343,8 @@ class TopicManager
     }
 
     /**
-     * add to views count.
+     * Increment topic views count
+     *
      */
     public function incrementViewsCount()
     {
@@ -351,11 +352,19 @@ class TopicManager
         $this->entityManager->flush();
     }
 
+    /**
+     * Set topic last post
+     *
+     */
     public function setLastPost(PostEntity $lastPost)
     {
         $this->_topic->setLast_post($lastPost);
     }
 
+    /**
+     * Set topic title
+     *
+     */
     public function setTitle($title)
     {
         $this->_topic->setTitle($title);
@@ -363,7 +372,8 @@ class TopicManager
     }
 
     /**
-     * add to replies count.
+     * Increment topic replies count
+     *
      */
     public function incrementRepliesCount()
     {
@@ -372,7 +382,8 @@ class TopicManager
     }
 
     /**
-     * subtract from replies count.
+     * Decrement topic replies count
+     *
      */
     public function decrementRepliesCount()
     {
@@ -381,6 +392,8 @@ class TopicManager
     }
 
     /**
+     * Prepare new topic from recived data
+     *
      * @param int    $data['forum_id']
      * @param string $data['message']
      * @param bool   $data['attachSignature']
@@ -392,7 +405,7 @@ class TopicManager
         // prepare first post
         $this->_firstPost = new PostEntity();
 
-        // @todo this was in controller but should be moved to Post manager.
+        // @todo this should be done in post event
         //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
         //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
 
@@ -425,7 +438,7 @@ class TopicManager
     }
 
     /**
-     * Add hook data to topic.
+     * Add hook data to topic
      *
      * @param ProcessHook $hook
      */
@@ -437,19 +450,23 @@ class TopicManager
         $this->_topic->setHookedUrlObject($hook->getUrl());
     }
 
+    /**
+     * Get topic preview
+     *
+     * @param ProcessHook $hook
+     */
     public function getPreview()
     {
         return $this->_firstPost;
     }
 
     /**
-     * create topic and post.
+     * Create topic and post
      *
      * @return int topic id
      */
     public function create()
     {
-
         // write topic
         $this->entityManager->persist($this->_topic);
         $this->entityManager->persist($this->_firstPost);
@@ -462,11 +479,7 @@ class TopicManager
         $this->entityManager->flush();
         // subscribe
         if ($this->_subscribe) {
-            //            $params = [
-//                'topic' => $this->_topic->getTopic_id(),
-//                'action' => 'subscribe'];
-//            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
-            $this->changeStatus($this->_topic->getTopic_id(), 'subscribe');
+            $managedForumUser->subscribeTopic($this->_topic);
         }
 
         return $this->_topic->getTopic_id();
@@ -486,7 +499,7 @@ class TopicManager
     }
 
     /**
-     * set topic unsticky.
+     * Set topic unsticky
      *
      * @return bool
      */
@@ -499,7 +512,7 @@ class TopicManager
     }
 
     /**
-     * lock topic.
+     * Lock topic
      *
      * @return bool
      */
@@ -512,7 +525,7 @@ class TopicManager
     }
 
     /**
-     * unlock topic.
+     * Unlock topic
      *
      * @return bool
      */
@@ -525,7 +538,7 @@ class TopicManager
     }
 
     /**
-     * set topic solved.
+     * Set topic solved
      *
      * @param int $postid
      *
@@ -540,7 +553,7 @@ class TopicManager
     }
 
     /**
-     * set topic unsolved.
+     * Set topic unsolved
      *
      * @return bool
      */
@@ -553,9 +566,10 @@ class TopicManager
     }
 
     /**
-     * @todo event for maintaining forum node last post ?
+     * Find last post by post_time and set
      *
-     * find last post by post_time and set.
+     * @todo event for maintaining last post???
+     *
      */
     public function resetLastPost($flush = false)
     {
@@ -574,7 +588,7 @@ class TopicManager
     }
 
     /**
-     * get the number of posts in this topic.
+     * Get the number of posts in this topic
      *
      * @return int
      */
@@ -584,7 +598,7 @@ class TopicManager
     }
 
     /**
-     * Get the next topic (by time) in the same Forum.
+     * Get the next topic (by time) in the same Forum
      *
      * @return int
      */
@@ -594,7 +608,7 @@ class TopicManager
     }
 
     /**
-     * Get the previous topic (by time) in the same Forum.
+     * Get the previous topic (by time) in the same Forum
      *
      * @return int
      */
@@ -604,7 +618,7 @@ class TopicManager
     }
 
     /**
-     * Get the adjacent topic (by time) in the same Forum.
+     * Get the adjacent topic (by time) in the same Forum
      *
      * @param $oper string less than or greater than operator < or >
      * @param $dir string Sort direction ASC/DESC
@@ -631,6 +645,8 @@ class TopicManager
     }
 
     /**
+     *
+     *
      * @param $topic
      * @param $action
      * @param $post
@@ -696,7 +712,8 @@ class TopicManager
     }
 
     /**
-     * getTopicPage
+     * Get topic page
+     *
      * Uses the number of replyCount and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
      *
@@ -731,7 +748,7 @@ class TopicManager
     }
 
     /**
-     * delete a topic.
+     * Delete a topic
      *
      * This function deletes a topic given by id or object
      *
@@ -771,14 +788,6 @@ class TopicManager
         // delete the topic
         $this->entityManager->remove($topic);
 
-        // remove all posts in topic
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDeletePosts($topic->getTopic_id());
-        // remove topic subscriptions
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->deleteTopicSubscriptions($topic->getTopic_id());
-        // delete the topic (manual dql to avoid cascading deletion errors)
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
-        // sync the forum up with the changes
-
         $this->synchronizationHelper->forum($forum, false);
         $this->synchronizationHelper->forumLastPost($forum, true);
 
@@ -786,7 +795,7 @@ class TopicManager
     }
 
     /**
-     * Move topic.
+     * Move topic
      *
      * This function moves a given topic to another forum
      *
@@ -843,7 +852,7 @@ class TopicManager
     }
 
     /**
-     * split the topic at the provided post.
+     * Split the topic at the provided post
      *
      * @param PostManager $managedPost
      * @param string      $newsubject
@@ -900,7 +909,7 @@ class TopicManager
     }
 
     /**
-     * joins two topics together.
+     * Joins two topics together
      *
      * @param $managedOriginTopic object this topic get integrated into $managedDestinationTopic (origin)
      * @param $managedDestinationTopic object the target topic that will contain the post from $managedOriginTopic (destination)

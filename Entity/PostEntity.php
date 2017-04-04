@@ -106,17 +106,6 @@ class PostEntity extends EntityAccess
     public function __construct()
     {
         $this->poster_ip = 'unrecorded';
-//        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
-//            // for privacy issues ip logging can be deactivated
-//            $this->poster_ip = 'unrecorded';
-//        } else {
-//            $request = ServiceUtil::get('request');
-//            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
-//                $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
-//            } else {
-//                $this->poster_ip = $request->server->get('REMOTE_ADDR');
-//            }
-//        }
     }
 
     public function getPost_id()

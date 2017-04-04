@@ -59,7 +59,7 @@ class ForumUserManager
     private $ranksHelper;
 
     /**
-     * managed forum user.
+     * Managed forum user
      *
      * @var ForumUserEntity
      */
@@ -87,9 +87,8 @@ class ForumUserManager
         $this->ranksHelper = $ranksHelper;
     }
 
-    //General object manager methods
     /**
-     * get manager.
+     * Get manager
      *
      * @param int  $uid    user id (optional: defaults to current user)
      * @param bool $create create the ForumUser if does not exist (default: true)
@@ -116,13 +115,14 @@ class ForumUserManager
                 $this->loggedIn = true;
             }
         }
+
         $this->checkLastVisit();
 
         return $this;
     }
 
     /**
-     * Check if user exists.
+     * Check if user exists
      *
      * @return bool
      */
@@ -132,7 +132,7 @@ class ForumUserManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Return forum user as doctrine2 object
      *
      * @return ForumUserEntity
      */
@@ -142,7 +142,7 @@ class ForumUserManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Return zikula user as doctrine2 object
      *
      * @return ForumUserEntity
      */
@@ -152,7 +152,7 @@ class ForumUserManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Return username
      *
      * @return string
      */
@@ -166,7 +166,7 @@ class ForumUserManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Get user id
      *
      * @return ForumUserEntity
      */
@@ -176,7 +176,7 @@ class ForumUserManager
     }
 
     /**
-     * persist and flush.
+     * Persist and flush
      *
      * @param array $data forum user data
      */
@@ -187,7 +187,7 @@ class ForumUserManager
     }
 
     /**
-     * persist and flush.
+     * Merge
      *
      * @param array $data forum user data
      */
@@ -197,7 +197,7 @@ class ForumUserManager
     }
 
     /**
-     * return topic as array.
+     * Return forum user as array
      *
      * @return array
      */
@@ -207,7 +207,7 @@ class ForumUserManager
     }
 
     /**
-     * return forum user logged in status.
+     * Return forum user logged in status
      *
      * @return ForumUserEntity
      */
@@ -217,8 +217,9 @@ class ForumUserManager
     }
 
     /**
-     * return forum user logged in status.
+     * Return forum user online in status
      *
+     * @todo remove this duplicate
      * @return ForumUserEntity
      */
     public function isOnline()
@@ -227,7 +228,17 @@ class ForumUserManager
     }
 
     /**
-     * return forum user logged in status.
+     * check to remove... or rename to isCurrent()
+     *
+     * @return string
+     */
+    public function isUser($user)
+    {
+        return $this->_forumUser->getUserId() == $user->getUserId() ? true : false;
+    }
+
+    /**
+     * Return forum user logged in status.
      *
      * @return ForumUserEntity
      */
@@ -236,11 +247,25 @@ class ForumUserManager
         return ($this->loggedIn && $this->getId() == 1) ? true : false;
     }
 
+    /**
+     * Return current user page
+     *
+     * @deprecated to remove
+     *
+     * @return ForumUserEntity
+     */
     public function getCurrentPosition()
     {
         return $this->request->attributes->get('_route');
     }
 
+    /**
+     * Is user allowed to comment check
+     *
+     * @param object Object to chceck comment permissions for
+     *
+     * @return bool
+     */
     public function allowedToComment($object)
     {
         if ($object instanceof PostManager) {
@@ -263,6 +288,13 @@ class ForumUserManager
         return false;
     }
 
+    /**
+     * Is user allowed to edit check
+     *
+     * @param object Object to chceck edit permissions for
+     *
+     * @return bool
+     */
     public function allowedToEdit($object)
     {
         if ($object instanceof PostManager) {
@@ -292,6 +324,13 @@ class ForumUserManager
         return false;
     }
 
+    /**
+     * Is user allowed to moderate check
+     *
+     * @param object Object to chceck moderate permissions for
+     *
+     * @return bool
+     */
     public function allowedToModerate($object)
     {
         //this should be moved to permissions
@@ -333,9 +372,8 @@ class ForumUserManager
         return false;
     }
 
-    //Posts collection display settings
     /**
-     * postOrder.
+     * Increment user post count
      *
      * @return string
      */
@@ -347,17 +385,7 @@ class ForumUserManager
     }
 
     /**
-     * check to remove...
-     *
-     * @return string
-     */
-    public function isUser($user)
-    {
-        return $this->_forumUser->getUserId() == $user->getUserId() ? true : false;
-    }
-
-    /**
-     * postOrder.
+     * Get user post order setting
      *
      * @return string
      */
@@ -367,7 +395,7 @@ class ForumUserManager
     }
 
     /**
-     * set postOrder.
+     * Set user post order setting
      *
      * @param string $sort asc|desc
      */
@@ -379,7 +407,9 @@ class ForumUserManager
     }
 
     /**
-     * return topic as doctrine2 object.
+     * Get user avatar
+     *
+     * @todo - add deleted user and anonymous avatar image
      *
      * @return string
      */
@@ -394,9 +424,8 @@ class ForumUserManager
         }
     }
 
-    // Signature management
     /**
-     * Get user signature.
+     * Get user signature
      *
      * @param string
      */
@@ -406,7 +435,7 @@ class ForumUserManager
     }
 
     /**
-     * Set user signature.
+     * Set user signature
      *
      * @param string $signature
      */
@@ -418,8 +447,11 @@ class ForumUserManager
         $this->entityManager->flush();
     }
 
-    // Rank management
-    // User ranks
+    /**
+     * Get user rank
+     *
+     * @param string $signature
+     */
     public function getRank()
     {
 
@@ -439,6 +471,11 @@ class ForumUserManager
         return $posterRank;
     }
 
+    /**
+     * Set user rank
+     *
+     * @param string $rank
+     */
     public function setRank($rank)
     {
         if (!$this->permission->canAdministrate()) {
@@ -459,9 +496,8 @@ class ForumUserManager
         return true;
     }
 
-    // Subscriptions
     /**
-     * Change the value of Autosubscribe setting.
+     * Change the value of Autosubscribe setting
      *
      * @param bool $value
      */
@@ -471,15 +507,10 @@ class ForumUserManager
         $this->entityManager->flush();
     }
 
-    //Forum subscriptions
     /**
-     * Subscribe a forum.
+     * Get forum subscriptions
      *
-     * @param obj $page  The forum
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return bool
+     * @return ArrayCollection
      */
     public function getForumSubscriptionsCollection()
     {
@@ -487,11 +518,9 @@ class ForumUserManager
     }
 
     /**
-     * Subscribe a forum.
+     * Subscribe a forum
      *
      * @param obj $forum  The forum
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return bool
      */
@@ -513,11 +542,9 @@ class ForumUserManager
     }
 
     /**
-     * Unsubscribe a forum.
+     * Unsubscribe a forum
      *
      * @param int $forum  The forum
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return bool
      */
@@ -539,11 +566,9 @@ class ForumUserManager
     }
 
     /**
-     * Is forum subscribed.
+     * Is forum subscribed
      *
      * @param int $forum  The forum
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return bool
      */
@@ -560,15 +585,10 @@ class ForumUserManager
         return false;
     }
 
-    //Topic Subscriptions
     /**
-     * Subscribe a forum.
+     * Get topic subscriptions
      *
-     * @param obj $page  The forum
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return bool
+     * @return ArrayCollection
      */
     public function getTopicSubscriptionsCollection()
     {
@@ -576,11 +596,9 @@ class ForumUserManager
     }
 
     /**
-     * Subscribe a topic.
+     * Subscribe a topic
      *
      * @param obj $topic  The topic
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return bool
      */
@@ -602,11 +620,9 @@ class ForumUserManager
     }
 
     /**
-     * Unsubscribe a topic.
+     * Unsubscribe a topic
      *
      * @param int $topic  The topic
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return bool
      */
@@ -628,11 +644,9 @@ class ForumUserManager
     }
 
     /**
-     * Is topic subscribed.
+     * Is topic subscribed
      *
-     * @param int $topic  Thetopic
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     * @param int $topic  The topic
      *
      * @return bool
      */
@@ -649,9 +663,8 @@ class ForumUserManager
         return false;
     }
 
-    //Favorites
     /**
-     * Set forum view setting
+     * Get forum view setting
      *
      * @param string $setting
      */
@@ -678,7 +691,7 @@ class ForumUserManager
     }
 
     /**
-     * Subscribe a forum.
+     * Add forum to favorites
      *
      * @param obj $page  The forum
      *
@@ -691,6 +704,15 @@ class ForumUserManager
         return $this->_forumUser->getFavoriteForums();
     }
 
+    /**
+     * Add forum to favorites
+     *
+     * @param obj $page  The forum
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
+     */
     public function addFavoriteForum(ForumEntity $forum)
     {
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
@@ -708,6 +730,15 @@ class ForumUserManager
         return true;
     }
 
+    /**
+     * Add forum to favorites
+     *
+     * @param obj $page  The forum
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
+     */
     public function removeFavoriteForum($forum)
     {
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
@@ -725,6 +756,15 @@ class ForumUserManager
         return true;
     }
 
+    /**
+     * Add forum to favorites
+     *
+     * @param obj $page  The forum
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
+     */
     public function isForumFavorite($forum)
     {
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
@@ -738,12 +778,10 @@ class ForumUserManager
         return false;
     }
 
-    // Topics
     /**
-     * retrieve all user topics.
+     * Retrieve all user topics
      *
-     * @param $offset
-     *  integer 'offset' pager offset
+     * @param integer $offset 'offset' pager offset (default=0)
      *
      * @return array
      */
@@ -771,11 +809,10 @@ class ForumUserManager
         return [$topics, $pager];
     }
 
-    // Posts
     /**
-     * retrieve all my posts
+     * Retrieve all my posts
      *
-     * @param $offset integer 'offset' pager offset
+     * @param $offset integer 'offset' pager offset (default=0)
      *
      * @return array
      */
@@ -800,8 +837,7 @@ class ForumUserManager
     }
 
     /**
-     * lastvisit.
-     *
+     * Check last visit
      * reads the cookie, updates it and returns the last visit date in unix timestamp
      *
      * @param none
@@ -834,11 +870,7 @@ class ForumUserManager
     }
 
     /**
-     * lastvisit.
-     *
-     * reads the cookie, updates it and returns the last visit date in unix timestamp
-     *
-     * @param none
+     * Get last visit
      *
      * @return unix timestamp last visit date
      */
@@ -849,7 +881,7 @@ class ForumUserManager
     }
 
     /**
-     * Get user activity based on same ip usage.
+     * Get user activity based on same ip usage
      *
      * @param int $ip The posters IP.
      *
@@ -878,157 +910,4 @@ class ForumUserManager
 
         return $viewip;
     }
-
 }
-
-//    /**
-//     * Old userApi Below.
-//     */
-//    /**
-//     * insert rss.
-//     *
-//     * @see rss2dizkus.php - only used there
-//     *
-//     * @param $args['forum']    array with forum data
-//     * @param $args['items']    array with feed data as returned from Feeds module
-//     *
-//     * @return bool true or false
-//
-//    public function insertrss($args)
-//    {
-//        if (!$args['forum'] || !$args['items']) {
-//            return false;
-//        }
-//        foreach ($args['items'] as $item) {
-//            // create the reference
-//            $dateTimestamp = $item->get_date('Y-m-d H:i:s');
-//            if (empty($dateTimestamp)) {
-//                $reference = md5($item->get_link());
-//                $dateTimestamp = date('Y-m-d H:i:s', time());
-//            } else {
-//                $reference = md5($item->get_link() . '-' . $dateTimestamp);
-//            }
-//            $topicTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimestamp);
-//            // Checking if the forum already has that news.
-//            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference]);
-//            if (!isset($topic)) {
-//                // Not found, add the feed item
-//                $subject = $item->get_title();
-//                // create message
-//                $message = '<strong>' . $this->__('Summary') . ' :</strong>\\n\\n' . $item->get_description() . '\\n\\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\\n\\n';
-//                // store message
-//                $newManagedTopic = new TopicManager();
-//                $data = [
-//                    'title' => $subject,
-//                    'message' => $message,
-//                    'topic_time' => $topicTime,
-//                    'forum_id' => $args['forum']['forum_id'],
-//                    'attachSignature' => false,
-//                    'subscribe_topic' => false,
-//                    'reference' => $reference,];
-//                $newManagedTopic->prepare($data);
-//                $topicId = $newManagedTopic->create();
-//                if (!$topicId) {
-//                    // An error occured
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
-// */
-
-
-//    public function isSpam(PostEntity $post)
-//    {
-//        $user = $post->getPoster()->getUser();
-//        $args = [
-//            'author' => $user['uname'], // use 'viagra-test-123' to test
-//            'authoremail' => $user['email'],
-//            'content' => $post->getPost_text(),
-//        ];
-//        // Akismet
-//        if (ModUtil::available('Akismet')) {
-//            return ModUtil::apiFunc('Akismet', 'user', 'isspam', $args);
-//        }
-//
-//        return false;
-//    }
-
-//    /**
-//     * Check if the useragent is a bot (blacklisted).
-//     *
-//     * @return bool
-//     */
-//    public function useragentIsBot()
-//    {
-//        // check the user agent - if it is a bot, return immediately
-//        $robotslist = [
-//            'ia_archiver',
-//            'googlebot',
-//            'mediapartners-google',
-//            'yahoo!',
-//            'msnbot',
-//            'jeeves',
-//            'lycos',];
-//        $request = ServiceUtil::get('request');
-//        $useragent = $request->server->get('HTTP_USER_AGENT');
-//        for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
-//            if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-
-//    /**
-//     * dzkVarPrepHTMLDisplay
-//     * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML().
-//     */
-//    public function dzkVarPrepHTMLDisplay($text)
-//    {
-//        // remove code tags
-//        $codecount1 = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/si', $text, $codes1);
-//        for ($i = 0; $i < $codecount1; $i++) {
-//            $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
-//        }
-//
-//
-//        // the real work
-//        $text = nl2br(DataUtil::formatForDisplayHTML($text));
-//        // re-insert code tags
-//        for ($i = 0; $i < $codecount1; $i++) {
-//            // @todo should use htmlentities here???? dzkstriptags too vvv
-//            $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
-//        }
-//
-//        return $text;
-//    }
-
-
-
-
-/**
-     * @todo move to Twig?
-     *
-     * Truncate text to desired length to nearest word.
-     *
-     * @see http://stackoverflow.com/a/9219884/2600812
-     *
-     * @param string $text
-     * @param int    $chars
-     *
-     * @return string
-     */
-//    public static function truncate($text, $chars = 25)
-//    {
-//        $originalText = $text;
-//        $text = $text . ' ';
-//        $text = substr($text, 0, $chars);
-//        $text = substr($text, 0, strrpos($text, ' '));
-//        $text = strlen($originalText) == strlen($text) ? $text : $text . '...';
-//
-//        return $text;
-//    }

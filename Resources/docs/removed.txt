@@ -1,0 +1,668 @@
+
+//    /**
+//     * Old userApi Below.
+//     */
+//    /**
+//     * insert rss.
+//     *
+//     * @see rss2dizkus.php - only used there
+//     *
+//     * @param $args['forum']    array with forum data
+//     * @param $args['items']    array with feed data as returned from Feeds module
+//     *
+//     * @return bool true or false
+//
+//    public function insertrss($args)
+//    {
+//        if (!$args['forum'] || !$args['items']) {
+//            return false;
+//        }
+//        foreach ($args['items'] as $item) {
+//            // create the reference
+//            $dateTimestamp = $item->get_date('Y-m-d H:i:s');
+//            if (empty($dateTimestamp)) {
+//                $reference = md5($item->get_link());
+//                $dateTimestamp = date('Y-m-d H:i:s', time());
+//            } else {
+//                $reference = md5($item->get_link() . '-' . $dateTimestamp);
+//            }
+//            $topicTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimestamp);
+//            // Checking if the forum already has that news.
+//            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference]);
+//            if (!isset($topic)) {
+//                // Not found, add the feed item
+//                $subject = $item->get_title();
+//                // create message
+//                $message = '<strong>' . $this->__('Summary') . ' :</strong>\\n\\n' . $item->get_description() . '\\n\\n<a href="' . $item->get_link() . '">' . $item->get_title() . '</a>\\n\\n';
+//                // store message
+//                $newManagedTopic = new TopicManager();
+//                $data = [
+//                    'title' => $subject,
+//                    'message' => $message,
+//                    'topic_time' => $topicTime,
+//                    'forum_id' => $args['forum']['forum_id'],
+//                    'attachSignature' => false,
+//                    'subscribe_topic' => false,
+//                    'reference' => $reference,];
+//                $newManagedTopic->prepare($data);
+//                $topicId = $newManagedTopic->create();
+//                if (!$topicId) {
+//                    // An error occured
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        return true;
+//    }
+// */
+
+
+//    public function isSpam(PostEntity $post)
+//    {
+//        $user = $post->getPoster()->getUser();
+//        $args = [
+//            'author' => $user['uname'], // use 'viagra-test-123' to test
+//            'authoremail' => $user['email'],
+//            'content' => $post->getPost_text(),
+//        ];
+//        // Akismet
+//        if (ModUtil::available('Akismet')) {
+//            return ModUtil::apiFunc('Akismet', 'user', 'isspam', $args);
+//        }
+//
+//        return false;
+//    }
+
+//    /**
+//     * Check if the useragent is a bot (blacklisted).
+//     *
+//     * @return bool
+//     */
+//    public function useragentIsBot()
+//    {
+//        // check the user agent - if it is a bot, return immediately
+//        $robotslist = [
+//            'ia_archiver',
+//            'googlebot',
+//            'mediapartners-google',
+//            'yahoo!',
+//            'msnbot',
+//            'jeeves',
+//            'lycos',];
+//        $request = ServiceUtil::get('request');
+//        $useragent = $request->server->get('HTTP_USER_AGENT');
+//        for ($cnt = 0; $cnt < count($robotslist); $cnt++) {
+//            if (strpos(strtolower($useragent), $robotslist[$cnt]) !== false) {
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+
+//    /**
+//     * dzkVarPrepHTMLDisplay
+//     * removes the  [code]...[/code] before really calling DataUtil::formatForDisplayHTML().
+//     */
+//    public function dzkVarPrepHTMLDisplay($text)
+//    {
+//        // remove code tags
+//        $codecount1 = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/si', $text, $codes1);
+//        for ($i = 0; $i < $codecount1; $i++) {
+//            $text = preg_replace('/(' . preg_quote($codes1[0][$i], '/') . ')/', " DIZKUSCODEREPLACEMENT{$i} ", $text, 1);
+//        }
+//
+//
+//        // the real work
+//        $text = nl2br(DataUtil::formatForDisplayHTML($text));
+//        // re-insert code tags
+//        for ($i = 0; $i < $codecount1; $i++) {
+//            // @todo should use htmlentities here???? dzkstriptags too vvv
+//            $text = preg_replace("/ DIZKUSCODEREPLACEMENT{$i} /", $codes1[0][$i], $text, 1);
+//        }
+//
+//        return $text;
+//    }
+
+
+
+
+/**
+     * @todo move to Twig?
+     *
+     * Truncate text to desired length to nearest word.
+     *
+     * @see http://stackoverflow.com/a/9219884/2600812
+     *
+     * @param string $text
+     * @param int    $chars
+     *
+     * @return string
+     */
+//    public static function truncate($text, $chars = 25)
+//    {
+//        $originalText = $text;
+//        $text = $text . ' ';
+//        $text = substr($text, 0, $chars);
+//        $text = substr($text, 0, strrpos($text, ' '));
+//        $text = strlen($originalText) == strlen($text) ? $text : $text . '...';
+//
+//        return $text;
+//    }
+
+
+// @todo move to validation
+//    /**
+//     * Checks if the given message isn't too long.
+//     *
+//     * @param $message the message to check
+//     *
+//     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+//     *
+//     * @return bool false if the message is to long, else true
+//     */
+//    public function checkMessageLength($message)
+//    {
+//        if (!isset($message)) {
+//            throw new \InvalidArgumentException();
+//        }
+//        if (strlen($message) + 8 > 65535) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
+// @todo move to filter hooks
+
+//
+//    /**
+//     * dzkstriptags
+//     * strip all html tags outside of [code][/code].
+//     *
+//     * @param  $text     string the text
+//     *
+//     * @return string the sanitized text
+//     */
+//    public function dzkstriptags($text = '')
+//    {
+//        if (!empty($text) && ModUtil::getVar($this->name, 'striptags')) {
+//            // save code tags
+//            $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
+//            for ($i = 0; $i < $codecount; $i++) {
+//                $text = preg_replace('/('.preg_quote($codes[0][$i], '/').')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
+//            }
+//            // strip all html
+//            $text = strip_tags($text);
+//            // replace code tags saved before
+//            for ($i = 0; $i < $codecount; $i++) {
+//                // @todo should use htmlentities here???? dzkstriptagst too ^^^
+//                $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
+//            }
+//        }
+//
+//        return $text;
+//    }
+
+
+
+////    /**
+//     * Checks if a message is shorter than 65535 - 8 characters.
+//     *
+//     * @param string $message the message to check
+//     *
+//     * @throws \LengthException
+//     *
+//     * @return void
+//     */
+//    private function checkMessageLength($message)
+//    {
+////        if (!ModUtil::apiFunc($this->name, 'post', 'checkMessageLength', ['message' => $message])) {
+////            throw new \LengthException($this->__('Error! The message is too long. The maximum length is 65,535 characters.'));
+////        }
+//    }
+//    Report
+//
+//
+//     * dzk_blacklist()
+//     * blacklist the users ip address if considered a spammer
+//     */
+//    private function dzk_blacklist()
+//    {
+//        $ztemp = System::getVar('temp');
+//        $blacklistfile = $ztemp . '/Dizkus_spammer.txt';
+//        $request = ServiceUtil::get('request');
+//
+//        $fh = fopen($blacklistfile, 'a');
+//        if ($fh) {
+//            $ip = $this->dzk_getip();
+//            $line = implode(',', array(strftime('%Y-%m-%d %H:%M:%S'),
+//                $ip,
+//                $request->server->get('REQUEST_METHOD'),
+//                $request->server->get('REQUEST_URI'),
+//                $request->server->get('SERVER_PROTOCOL'),
+//                $request->server->get('HTTP_REFERRER'),
+//                $request->server->get('HTTP_USER_AGENT')));
+//            fwrite($fh, DataUtil::formatForStore($line) . "\n");
+//            fclose($fh);
+//        }
+//
+//        return;
+//    }
+//
+//    /**
+//     * check for valid ip address
+//     * original code taken form spidertrap
+//     * @author       Thomas Zeithaml <info@spider-trap.de>
+//     * @copyright    (c) 2005-2006 Spider-Trap Team
+//     */
+//    private function dzk_validip($ip)
+//    {
+//        if (!empty($ip) && ip2long($ip) != -1) {
+//            $reserved_ips = array(
+//                array('0.0.0.0', '2.255.255.255'),
+//                array('10.0.0.0', '10.255.255.255'),
+//                array('127.0.0.0', '127.255.255.255'),
+//                array('169.254.0.0', '169.254.255.255'),
+//                array('172.16.0.0', '172.31.255.255'),
+//                array('192.0.2.0', '192.0.2.255'),
+//                array('192.168.0.0', '192.168.255.255'),
+//                array('255.255.255.0', '255.255.255.255')
+//            );
+//
+//            foreach ($reserved_ips as $r) {
+//                $min = ip2long($r[0]);
+//                $max = ip2long($r[1]);
+//                if ((ip2long($ip) >= $min) && (ip2long($ip) <= $max))
+//                    return false;
+//            }
+//
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    /**
+//     * get the users ip address
+//     * changes: replaced references to $_SERVER with System::serverGetVar()
+//     * original code taken form spidertrap
+//     * @author       Thomas Zeithaml <info@spider-trap.de>
+//     * @copyright    (c) 2005-2006 Spider-Trap Team
+//     */
+//    private function dzk_getip()
+//    {
+//        $request = ServiceUtil::get('request');
+//        if ($this->dzk_validip($request->server->get("HTTP_CLIENT_IP"))) {
+//            return $request->server->get("HTTP_CLIENT_IP");
+//        }
+//
+//        foreach (explode(',', $request->server->get("HTTP_X_FORWARDED_FOR")) as $ip) {
+//            if ($this->dzk_validip(trim($ip))) {
+//                return $ip;
+//            }
+//        }
+//
+//        if ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+//            return $request->server->get("HTTP_X_FORWARDED");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED_FOR"))) {
+//            return $request->server->get("HTTP_FORWARDED_FOR");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_FORWARDED"))) {
+//            return $request->server->get("HTTP_FORWARDED");
+//        } elseif ($this->dzk_validip($request->server->get("HTTP_X_FORWARDED"))) {
+//            return $request->server->get("HTTP_X_FORWARDED");
+//        } else {
+//            return $request->server->get("REMOTE_ADDR");
+//        }
+//    }
+
+
+//        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
+//            // for privacy issues ip logging can be deactivated
+//            $this->poster_ip = 'unrecorded';
+//        } else {
+//            $request = ServiceUtil::get('request');
+//            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
+//                $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
+//            } else {
+//                $this->poster_ip = $request->server->get('REMOTE_ADDR');
+//            }
+//        }
+
+
+    /*
+     * Counts posts in forums, topics
+     * or counts forum users
+     *
+     * @param $id int the id, forum id
+     * @param $type string, defines the id parameter
+     * @param $force boolean, default false, if true, do not use cached
+     * @return int (depending on type and id)
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     */
+//    public function getStats($id = null, $type = null, $force = false)
+//    {
+//
+//        static $cache = [];
+//
+////        switch ($type) {
+////            case 'all':
+////            case 'allposts':
+////                if (!isset($cache[$type])) {
+////                    $cache[$type] = $this->countEntity('Post');
+////                }
+////
+////                //return $cache[$type];
+////                //break;
+////            case 'forum':
+////                if (!isset($cache[$type])) {
+////                    $cache[$type] = $this->countEntity('Forum');
+////                }
+////
+//////                return $cache[$type];
+//////                break;
+////            case 'topic':
+////                if (!isset($cache[$type][$id])) {
+////                    $cache[$type][$id] = $this->countEntity('Post', 'topic', $id);
+////                }
+////
+////                return $cache[$type][$id];
+////                break;
+////            case 'forumposts':
+////                if ($force || !isset($cache[$type][$id])) {
+////                    $dql = 'SELECT count(p)
+////                        FROM Zikula\DizkusModule\Entity\PostEntity p
+////                        WHERE p.topic IN (
+////                            SELECT t.topic_id
+////                            FROM Zikula\DizkusModule\Entity\TopicEntity t
+////                            WHERE t.forum = :forum)';
+////                    $query = $this->entityManager->createQuery($dql)->setParameter('forum', $id);
+////                    $cache[$type][$id] = $query->getSingleScalarResult();
+////                }
+////
+//////                return $cache[$type][$id];
+//////                break;
+////            case 'forumtopics':
+////                if ($force || !isset($cache[$type][$id])) {
+////                    $cache[$type][$id] = $this->countEntity('Topic', 'forum', $id);
+////                }
+////
+//////                return $cache[$type][$id];
+//////                break;
+////            case 'alltopics':
+////                if (!isset($cache[$type])) {
+////                    $cache[$type] = $this->countEntity('Topic');
+////                }
+////
+//////                return $cache[$type];
+//////                break;
+//////            case 'allmembers':
+//////                if (!isset($cache[$type])) {
+//////                    $cache[$type] = count(UserUtil::getUsers());
+//////                }
+////
+//////                return $cache[$type];
+//////                break;
+////            case 'lastmember':
+////            case 'lastuser':
+////                if (!isset($cache[$type])) {
+////                    $qb = $this->entityManager->createQueryBuilder();
+////                    $qb->select('u')->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user_id', 'DESC')->setMaxResults(1);
+////                    $forumUser = $qb->getQuery()->getSingleResult();
+////                    $user = $forumUser->getUser();
+////                    $cache[$type] = $user['uname'];
+////                }
+////
+//////                return $cache[$type];
+//////                break;
+////            default:
+////                throw new \InvalidArgumentException($this->__('Error! Wrong parameters in countstats().'));
+////        }
+////
+//        return $cache;
+//    }
+    /*
+     * Counts posts in forums, topics
+     * or counts forum users
+     *
+     * @param $args['id'] int the id, depends on 'type' parameter
+     * @param $args['type'] string, defines the id parameter
+     * @param $args['force'] boolean, default false, if true, do not use cached
+     * @return int (depending on type and id)
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     */
+//    public function countstats($args)
+//    {
+//        $id = isset($args['id']) ? $args['id'] : null;
+//        $type = isset($args['type']) ? $args['type'] : null;
+//        $force = isset($args['force']) ? (bool) $args['force'] : false;
+//        static $cache = array();
+//        switch ($type) {
+//            case 'all':
+//            case 'allposts':
+//                if (!isset($cache[$type])) {
+//                    $cache[$type] = $this->countEntity('Post');
+//                }
+//
+//                return $cache[$type];
+//                break;
+//            case 'forum':
+//                if (!isset($cache[$type])) {
+//                    $cache[$type] = $this->countEntity('Forum');
+//                }
+//
+//                return $cache[$type];
+//                break;
+//            case 'topic':
+//                if (!isset($cache[$type][$id])) {
+//                    $cache[$type][$id] = $this->countEntity('Post', 'topic', $id);
+//                }
+//
+//                return $cache[$type][$id];
+//                break;
+//            case 'forumposts':
+//                if ($force || !isset($cache[$type][$id])) {
+//                    $dql = 'SELECT count(p)
+//                        FROM Zikula\DizkusModule\Entity\PostEntity p
+//                        WHERE p.topic IN (
+//                            SELECT t.topic_id
+//                            FROM Zikula\DizkusModule\Entity\TopicEntity t
+//                            WHERE t.forum = :forum)';
+//                    $query = $this->entityManager->createQuery($dql)->setParameter('forum', $id);
+//                    $cache[$type][$id] = $query->getSingleScalarResult();
+//                }
+//
+//                return $cache[$type][$id];
+//                break;
+//            case 'forumtopics':
+//                if ($force || !isset($cache[$type][$id])) {
+//                    $cache[$type][$id] = $this->countEntity('Topic', 'forum', $id);
+//                }
+//
+//                return $cache[$type][$id];
+//                break;
+//            case 'alltopics':
+//                if (!isset($cache[$type])) {
+//                    $cache[$type] = $this->countEntity('Topic');
+//                }
+//
+//                return $cache[$type];
+//                break;
+//            case 'allmembers':
+//                if (!isset($cache[$type])) {
+//                    $cache[$type] = count(UserUtil::getUsers());
+//                }
+//
+//                return $cache[$type];
+//                break;
+//            case 'lastmember':
+//            case 'lastuser':
+//                if (!isset($cache[$type])) {
+//                    $qb = $this->entityManager->createQueryBuilder();
+//                    $qb->select('u')->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')->orderBy('u.user_id', 'DESC')->setMaxResults(1);
+//                    $forumUser = $qb->getQuery()->getSingleResult();
+//                    $user = $forumUser->getUser();
+//                    $cache[$type] = $user['uname'];
+//                }
+//
+//                return $cache[$type];
+//                break;
+//            default:
+//                throw new \InvalidArgumentException($this->translator->__('Error! Wrong parameters in countstats().'));
+//        }
+//    }
+
+    /*
+     * setcookies
+     *
+     * reads the cookie, updates it and returns the last visit date in unix timestamp
+     *
+     * @param none
+     * @return unix timestamp last visit date
+     *
+     */
+//    public function setcookies()
+//    {
+//        /**
+//         * set last visit cookies and get last visit time
+//         * set LastVisit cookie, which always gets the current time and lasts one year
+//         */
+//        $request = ServiceUtil::getManager()->get('request');
+//        $path = $request->getBasePath();
+//        if (empty($path)) {
+//            $path = '/';
+//        } elseif (substr($path, -1, 1) != '/') {
+//            $path .= '/';
+//        }
+//        $time = time();
+//        CookieUtil::setCookie('DizkusLastVisit', "{$time}", $time + 31536000, $path, null, null, false);
+//        $lastVisitTemp = CookieUtil::getCookie('DizkusLastVisitTemp', false, null);
+//        $temptime = empty($lastVisitTemp) ? $time : $lastVisitTemp;
+//        // set LastVisitTemp cookie, which only gets the time from the LastVisit and lasts for 30 min
+//        CookieUtil::setCookie('DizkusLastVisitTemp', "{$temptime}", time() + 1800, $path, null, null, false);
+//
+//        return $temptime;
+//    }
+
+//    /**
+//     * Count the number of items in a provided entity
+//     *
+//     * @param $entityname
+//     * @param null $where
+//     * @param null $parameter
+//     * @return int
+//     */
+//    private function countEntity($entityname, $where = null, $parameter = null)
+//    {
+//        $qb = $this->entityManager->createQueryBuilder();
+//        $qb->select('count(a)')->from("Zikula\\DizkusModule\\Entity\\{$entityname}Entity", 'a');
+//        if (isset($where) && isset($parameter)) {
+//            $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
+//        }
+//
+//        return (int)$qb->getQuery()->getSingleScalarResult();
+//    }
+
+
+
+//    /**
+//     * Smarty modifier to create a link to a topic.
+//     *
+//     * Available parameters:
+//
+//     * Example
+//     *
+//     *   {$topic_id|viewtopiclink}
+//     *
+//     *
+//     * @author       Frank Schummertz
+//     * @author       The Dizkus team
+//     *
+//     * @since        16. Sept. 2003
+//     *
+//     * @param array $string the contents to transform
+//     *
+//     * @return string the modified output
+//     */
+//    public function viewTopicLink($topic_id = null, $subject = null, $tooltip = '', $forum_name = null, $class = '', $start = null, $last_post_id = null)
+//    {
+//        if (!isset($topic_id)) {
+//            return '';
+//        }
+//
+//        $class = 'class="tooltips '.$class.'"';
+//
+//        $args = ['topic' => (int) $topic_id];
+//        if (isset($start)) {
+//            $args['start'] = (int) $start;
+//        }
+//
+//        $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $args);
+//        if (isset($last_post_id)) {
+//            $url .= '#pid'.(int) $last_post_id;
+//        }
+//
+//        $title = $tooltip . ' '. $subject;
+//
+//        return "<a $class href='".$url."' title=". $title .">$subject</a>";
+//    }
+
+    /**
+     * printtopic_button plugin
+     * adds the print topic button
+     * requires the Printer theme.
+     *
+     * @param $forum_id int forum id
+     * @param $topic_id int topic id
+     */
+//    function printTopicButton($forum_id, $topic_id)
+//    {
+//        //$dom = ZLanguage::getModuleDomain($dizkusModuleName);
+//
+//        if (ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $params['forum'])) {
+//            $themeinfo = ThemeUtil::getInfo(ThemeUtil::getIDFromName('Printer'));
+//            if ($themeinfo['state'] == ThemeUtil::STATE_ACTIVE) {
+//                $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']));
+//                return '<a class="fa fa-print tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay($url) . '"></a>';
+//            }
+//        }
+//
+//        return '';
+//    }
+
+    /**
+     * This part provides the api functions for rudimentary parsing of
+     * bracket-tag code for [quote] and [code].
+     */
+
+    /**
+     * dizkus quote plugin.
+     *
+     *
+     * Not used - javascript used instead
+     *
+     *
+     * @param $uid    int user id
+     * @param $text    string text to quote
+     */
+//    public function dzkquote($uid, $text)
+//    {
+//        if (empty($text)) {
+//            return '';
+//        }
+//
+//        if (!empty($uid)) {
+//            $user = '='.UserUtil::getVar('uname', $uid);
+//        } else {
+//            $user = '';
+//        }
+//
+//        // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
+//        // and therefore cannot have multiple lines.
+//        $text = str_replace(["\r", "\n"], '_____LINEFEED_DIZKUS_____', addslashes($text));
+//
+//        return '[quote'.$user.']'.$text.'[/quote]';
+//    }

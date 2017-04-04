@@ -1,34 +1,9 @@
 <div class="panel-footer clearfix">
     <div class="pull-left">
-        {% set online=onlineUsers() %}
-        {% set anonsessions=getSystemSetting('anonymoussessions') %}
-        {% set mins=getSystemSetting('secinactivemins') %}
-
-        <h3>{{ __("Users on-line") }}</h3>
-        <div class="z-clearfix">
-            {% if online.numusers > 0 %}
-                <span>
-                    {% for  user in online.unames %}
-                        {% if user.admin == '1'%}{{ user.uname }}{% else %}{{ user.uname }}{% endif %}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                </span>
-            {% else %}
-                <span>{{ __("0 users") }}</span>
-            {% endif %}
-            {% if online.numguests > 0 and anonsessions == 1 %}
-                <span>{{ _fn('and %1$s anonymous guest','and %1$s anonymous guests', online.numguests, {'%1$s':online.numguests}) }}</span>
-            {% endif %}
-        </div>
-        {% set mins = 10 %}
-        <p class="z-sub">{{ __f('This list is based on users active over the last %s minutes.', {'%s': mins}) }}</p>
+        {{ render(controller(
+        'ZikulaDizkusModule:Users:getOnlineUsers'
+    )) }}
     </div>
-    {#    <div id='forum-legend' class="pull-right">
-            <span class="fa-stack">
-                <i class="fa fa-comments fa-stack-2x"></i>
-                <i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>
-            </span>
-            {{ __f('New posts since %s', {'%s': currentForumUser.getLastVisit()|date('Y-m-d H:i:s')}) }}
-        </div>#}
     <div id='forum-legend' class="pull-right">
         <i class="fa fa-commenting fa-flip-horizontal fa-orange fa-2x"></i>
         {{ __f('New posts since your last visit %s', {'%s': currentForumUser.getLastVisit()|date('Y-m-d H:i:s')}) }}

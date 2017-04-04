@@ -20,6 +20,7 @@ class PreferencesType extends AbstractType
 {
     public function __construct()
     {
+        //@todo remove api calls use services etc...
         $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', ['gid' => 2]);
         $admins = ['-1' => 'disable'];
         foreach ($adminGroup['members'] as $admin) {

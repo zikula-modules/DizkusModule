@@ -62,8 +62,51 @@ class RecentPostsBlock extends AbstractBlockHandler
             }
         }
 
+        $posts = $this->get('doctrine')->getEntityManager()->getRepository('Zikula\DizkusModule\Entity\PostEntity')->getLastPosts();
+
+//        $lastPosts = [];
+//        if (!empty($topics)) {
+//            $posts_per_page = $this->variableApi->get($this->name, 'posts_per_page');
+//            /* @var $topic \Zikula\Module\DizkusModule\Entity\TopicEntity */
+//            foreach ($topics as $topic) {
+//                $lastPost = [];
+//                $lastPost['title'] = DataUtil::formatforDisplay($topic->getTitle());
+//                $lastPost['replyCount'] = DataUtil::formatforDisplay($topic->getReplyCount());
+//                $lastPost['name'] = DataUtil::formatforDisplay($topic->getForum()->getName());
+//                $lastPost['forum_id'] = DataUtil::formatforDisplay($topic->getForum()->getForum_id());
+//                $lastPost['cat_title'] = DataUtil::formatforDisplay($topic->getForum()->getParent()->getName());
+//
+//                $start = 1;
+//                if ($postSortOrder == 'ASC') {
+//                    $start = ((ceil(($topic->getReplyCount() + 1) / $posts_per_page) - 1) * $posts_per_page) + 1;
+//                }
+//
+//                if ($topic->getPoster()->getUserId() > 0) {
+//                    $coreUser = $topic->getLast_post()->getPoster()->getUser();
+//                    $user_name = $coreUser['uname'];
+//                    if (empty($user_name)) {
+//                        // user deleted from the db?
+//                        $user_name = $this->variableApi->get('ZikulaUsersModule', 'anonymous'); // @todo replace with "deleted user"?
+//                    }
+//                } else {
+//                    $user_name = $this->variableApi->get('ZikulaUsersModule', 'anonymous');
+//                }
+//                $lastPost['poster_name'] = DataUtil::formatForDisplay($user_name);
+//                // @todo see ticket #184 maybe this should be using UserApi::dzkVarPrepHTMLDisplay ????
+//                $lastPost['post_text'] = DataUtil::formatForDisplay(nl2br($topic->getLast_post()->getPost_text()));
+//                $lastPost['posted_time'] = DateUtil::formatDatetime($topic->getLast_post()->getPost_time(), 'datetimebrief');
+//                $lastPost['last_post_url'] = DataUtil::formatForDisplay($this->router->generate('zikuladizkusmodule_topic_viewtopic', [
+//                    'topic' => $topic->getTopic_id(),
+//                    'start' => $start, ]));
+//                $lastPost['last_post_url_anchor'] = $lastPost['last_post_url'].'#pid'.$topic->getLast_post()->getPost_id();
+//                $lastPost['word'] = $topic->getReplyCount() >= 1 ? $this->translator->__('Last') : $this->translator->__('New');
+//
+//                array_push($lastPosts, $lastPost);
+//            }
+//        }
+
         return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [
-            'lastposts'  => $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramarray),
+            'lastposts'  => $posts,
             'showfooter' => $properties['showfooter'],
         ]);
     }

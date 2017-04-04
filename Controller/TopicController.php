@@ -67,6 +67,10 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
+
+//        dump($this->getDoctrine()->getRepository('Zikula\DizkusModule\Entity\PostEntity')->getLastPosts(5,3));
+//        dump($this->get('zikula_dizkus_module.synchronization_helper')->posters());
+
         $currentTopic->loadPosts($start - 1);
         $currentTopic->incrementViewsCount();
 

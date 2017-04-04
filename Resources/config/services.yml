@@ -74,15 +74,6 @@ services:
             - "@zikula_dizkus_module.forum_user_manager"
             
 # Helpers
-        
-    zikula_dizkus_module.favorites_helper:
-        class: %zikula_dizkus_module.favorites_helper.class%
-        tags:
-            - { name: zikula.dizkus.favorites_helper }
-        arguments:
-            - "@request_stack"
-            - "@doctrine.orm.default_entity_manager"
-            - "@zikula_users_module.current_user"
 
     zikula_dizkus_module.count_helper:
         class: %zikula_dizkus_module.count_helper.class%
@@ -92,13 +83,6 @@ services:
             - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_users_module.current_user"
-          
-    zikula_dizkus_module.moderators_helper:
-        class: %zikula_dizkus_module.moderators_helper.class%
-        tags:
-            - { name: zikula.dizkus.moderators_helper }
-        arguments:
-            - "@doctrine.orm.default_entity_manager"
         
     zikula_dizkus_module.synchronization_helper:
         class: %zikula_dizkus_module.synchronization_helper.class%
@@ -185,8 +169,8 @@ services:
             - "@zikula_dizkus_module.topic_manager"
             - "@zikula_dizkus_module.synchronization_helper"
 
-    # Hooks
-    
+# Hooks
+
     zikula_dizkus_module.hook_handler.base:
       abstract: true
       arguments: 

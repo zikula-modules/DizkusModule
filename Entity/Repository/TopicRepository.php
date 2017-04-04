@@ -51,13 +51,14 @@ class TopicRepository extends EntityRepository
     }
 
     /**
-     * Get Topics.
+     * Get Topics
      *
-     * @param $selection int 1-6, see below
-     * @param $args['nohours'] int posting within these hours
-     * @param $args['unanswered'] int 0 or 1(= postings with no answers)
-     * @param $args['last_visit_unix'] string the users last visit data as unix timestamp
-     * @param $args['limit'] int limits the numbers hits read (per list), defaults and limited to 250
+     * @param $since int topics since (hours)
+     * @param $unanswered bool true topics with no answers
+     * @param $unsolved bool true unsolved topics
+     * @param $page int limit listing page (default=1)
+     * @param $limit int limit listing (default=25)
+     *
      *
      * @return array (postings, mail2forumpostings, rsspostings, text_to_display)
      */
@@ -92,7 +93,7 @@ class TopicRepository extends EntityRepository
         if($unanswered) {
             $qb->andWhere('t.replyCount = 0');
         }
-//
+
         if($unsolved) {
             $qb->andWhere('t.solved = :status')->setParameter('status', -1);
         }
@@ -108,7 +109,7 @@ class TopicRepository extends EntityRepository
     }
 
     /**
-     * retrieve a topic from hook parameters
+     * Retrieve a topic from hook parameters
      *
      * @param  Hook $hook
      * @return TopicEntity/NULL

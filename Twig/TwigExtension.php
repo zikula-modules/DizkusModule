@@ -11,8 +11,6 @@
 
 namespace Zikula\DizkusModule\Twig;
 
-use DataUtil;
-use ModUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Zikula\DizkusModule\Entity\TopicEntity;
 
@@ -68,8 +66,6 @@ class TwigExtension extends \Twig_Extension
         ];
     }
 
-
-
     public function getPostManager($post)
     {
         return $this->container->get('zikula_dizkus_module.post_manager')->getManager(null, $post);
@@ -80,137 +76,14 @@ class TwigExtension extends \Twig_Extension
         return $this->container->get('zikula_dizkus_module.forum_manager')->getManager(null, $forum);
     }
 
-
-    public function favoritesStatus()
-    {
-        return $this->container->get('zikula_dizkus_module.favorites_helper')->getStatus();
-    }
-
-    public function isFavorite($forum, $user_id = null)
-    {
-        return $this->container->get('zikula_dizkus_module.favorites_helper')->isFavorite($forum, $user_id);
-    }
-
-    public function isSubscribed($forum, $user_id = null)
-    {
-        return $this->container->get('zikula_dizkus_module.forum_manager')->isSubscribed($forum, $user_id);
-    }
-
     public function getSystemSetting($settingName = false)
     {
         return $this->container->get('zikula_extensions_module.api.variable')->get('ZConfig', $settingName);
     }
 
-    public function userLoggedIn()
-    {
-        return $this->container->get('zikula_users_module.current_user')->isLoggedIn();
-    }
-
-    /**
-     * Smarty function to read the users who are online
-     * This function returns an array (ig assign is used) or four variables
-     * numguests : number of guests online
-     * numusers: number of users online
-     * total: numguests + numusers
-     * unames: array of 'uid', (int, userid), 'uname' (string, username) and 'admin' (boolean, true if users is a moderator)
-     * Available parameters:
-     *   - checkgroups:  If set, checks if the users found are in the moderator groups (perforance issue!) default is no group check.
-     *
-     * @author       Frank Chestnut
-     *
-     * @since        10/10/2005
-     *
-     * @param array                   $params All attributes passed to this function from the template
-     * @param object      Zikula_View $view   Reference to the Smarty object
-     *
-     * @return array
-     */
-    public function onlineUsers($checkgroups = false)
-    {
-        // set some defaults
-        $numguests = 0;
-        $numusers = 0;
-        $unames = [];
-
-        $moderators = $this->container->get('zikula_dizkus_module.moderators_helper')->get(false);
-
-        /** @var $em Doctrine\ORM\EntityManager */
-        $dql = "SELECT s.uid, u.uname
-                FROM Zikula\UsersModule\Entity\UserSessionEntity s, Zikula\UsersModule\Entity\UserEntity u
-                WHERE s.lastused > :activetime
-                AND (s.uid >= 2
-                AND s.uid = u.uid)
-                OR s.uid = 0
-                GROUP BY s.ipaddr, s.uid";
-        $query = $this->container->get('doctrine.orm.entity_manager')->createQuery($dql);
-        $activetime = new \DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify('-'.$this->getSystemSetting('secinactivemins').' minutes');
-        $query->setParameter('activetime', $activetime);
-
-        $onlineusers = $query->getArrayResult();
-
-        $total = 0;
-        if (is_array($onlineusers)) {
-            $total = count($onlineusers);
-            foreach ($onlineusers as $onlineuser) {
-                if ($onlineuser['uid'] != 0) {
-                    $params['user_id'] = $onlineuser['uid'];
-                    $onlineuser['admin'] = (isset($moderators['users'][$onlineuser['uid']])
-                    && $moderators['users'][$onlineuser['uid']] == $onlineuser['uname'])
-                    || $this->container->get('zikula_dizkus_module.security')->canAdministrate($params);
-                    $unames[$onlineuser['uid']] = $onlineuser;
-                    $numusers++;
-                } else {
-                    $numguests++;
-                }
-            }
-        }
-
-        $users = [];
-        if ($checkgroups == true) {
-            foreach ($unames as $user) {
-                if ($user['admin'] == false) {
-                    // @todo use service when ready
-                    $groups = ModUtil::apiFunc('Groups', 'user', 'getusergroups', ['uid' => $user['uid']]);
-
-                    foreach ($groups as $group) {
-                        if (isset($moderators['groups'][$group['gid']])) {
-                            $user['admin'] = true;
-                        } else {
-                            $user['admin'] = false;
-                        }
-                    }
-                }
-
-                $users[$user['uid']] = [
-                    'uid'   => $user['uid'],
-                    'uname' => $user['uname'],
-                    'admin' => $user['admin'], ];
-            }
-            $unames = $users;
-        }
-        usort($unames, [$this, 'cmp_userorder']);
-
-        $dizkusonline['numguests'] = $numguests;
-
-        $dizkusonline['numusers'] = $numusers;
-        $dizkusonline['total'] = $total;
-        $dizkusonline['unames'] = $unames;
-
-        return $dizkusonline;
-    }
-
-    /**
-     * sorting user lists by ['uname'].
-     */
-    private function cmp_userorder($a, $b)
-    {
-        return strcmp($a['uname'], $b['uname']);
-    }
-
     public function lastTopicUrl($topic)
     {
-        // @todo replace with instance of check
+        // @todo recreate in template
         if (!$topic instanceof TopicEntity) {
             return false;
         }
@@ -223,76 +96,6 @@ class TwigExtension extends \Twig_Extension
 
         return $url;
     }
-
-    /**
-     * Smarty modifier to create a link to a topic.
-     *
-     * Available parameters:
-
-     * Example
-     *
-     *   {$topic_id|viewtopiclink}
-     *
-     *
-     * @author       Frank Schummertz
-     * @author       The Dizkus team
-     *
-     * @since        16. Sept. 2003
-     *
-     * @param array $string the contents to transform
-     *
-     * @return string the modified output
-     */
-    public function viewTopicLink($topic_id = null, $subject = null, $tooltip = '', $forum_name = null, $class = '', $start = null, $last_post_id = null)
-    {
-        if (!isset($topic_id)) {
-            return '';
-        }
-
-        $class = 'class="tooltips '.$class.'"';
-
-        $args = ['topic' => (int) $topic_id];
-        if (isset($start)) {
-            $args['start'] = (int) $start;
-        }
-
-        $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $args);
-        if (isset($last_post_id)) {
-            $url .= '#pid'.(int) $last_post_id;
-        }
-
-        $title = $tooltip . ' '. $subject;
-
-        return "<a $class href='".$url."' title=". $title .">$subject</a>";
-    }
-
-    /**
-     * printtopic_button plugin
-     * adds the print topic button
-     * requires the Printer theme.
-     *
-     * @param $forum_id int forum id
-     * @param $topic_id int topic id
-     */
-//    function printTopicButton($forum_id, $topic_id)
-//    {
-//        //$dom = ZLanguage::getModuleDomain($dizkusModuleName);
-//
-//        if (ModUtil::apiFunc($dizkusModuleName, 'Permission', 'canRead', $params['forum'])) {
-//            $themeinfo = ThemeUtil::getInfo(ThemeUtil::getIDFromName('Printer'));
-//            if ($themeinfo['state'] == ThemeUtil::STATE_ACTIVE) {
-//                $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('theme' => 'Printer', 'topic' => $params['topic_id']));
-//                return '<a class="fa fa-print tooltips" title="' . DataUtil::formatForDisplay(__('Print topic', $dom)) . '" href="' . DataUtil::formatForDisplay($url) . '"></a>';
-//            }
-//        }
-//
-//        return '';
-//    }
-
-    /**
-     * This part provides the api functions for rudimentary parsing of
-     * bracket-tag code for [quote] and [code].
-     */
 
     /**
      * transform only [quote] and [code] tags.
@@ -380,9 +183,9 @@ class TwigExtension extends \Twig_Extension
                         $start_tag_end = strpos($message, ']', $start_index);
                         $start_tag_len = $start_tag_end - $start_index + 1;
                         if ($start_tag_len > 7) {
-                            $username = DataUtil::formatForDisplay(substr($message, $start_index + 7, $start_tag_len - 8));
+                            $username = substr($message, $start_index + 7, $start_tag_len - 8);
                         } else {
-                            $username = DataUtil::formatForDisplay($this->__('Quote'));
+                            $username = $this->__('Quote');
                         }
 
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.
@@ -453,7 +256,7 @@ class TwigExtension extends \Twig_Extension
                 $containsLineEndings = !strstr($after_replace, PHP_EOL) ? false : true;
 
                 if ($containsLineEndings) {
-                    $after_replace = '<pre class="pre-scrollable">'.DataUtil::formatForDisplay($after_replace).'</pre>';
+                    $after_replace = '<pre class="pre-scrollable">'. $after_replace .'</pre>';
                     // replace %h with 'Code'
                     $codetext = str_replace('%h', $this->__('Code'), $codebodyblock);
                     // replace %c with code
@@ -461,7 +264,6 @@ class TwigExtension extends \Twig_Extension
                     // replace %e with urlencoded code (prepared for javascript)
                     $codetext = str_replace('%e', urlencode(nl2br($after_replace)), $codetext);
                 } else {
-                    $after_replace = DataUtil::formatForDisplay($after_replace);
                     // replace %c with code
                     $codetext = str_replace('%c', $after_replace, $codebodyinline);
                     // replace %e with urlencoded code (prepared for javascript)
@@ -474,56 +276,6 @@ class TwigExtension extends \Twig_Extension
 
         return $message;
     }
-
-    /**
-     * {getRankByPostCount posts=$post.poster.postCount ranks=$ranks }.
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     */
-    public function getRankByPostCount($posts = 0)
-    {
-
-        list($rankimages, $ranks) = $this->container->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
-
-        $posterRank = $ranks[0];
-
-        foreach ($ranks as $rank) {
-            if (($posts >= $rank->getMinimumCount()) && ($posts <= $rank->getMaximumCount())) {
-                $posterRank = $rank;
-            }
-        }
-
-        return $posterRank;
-    }
-
-    /**
-     * dizkus quote plugin.
-     *
-     *
-     * Not used - javascript used instead
-     *
-     *
-     * @param $uid    int user id
-     * @param $text    string text to quote
-     */
-//    public function dzkquote($uid, $text)
-//    {
-//        if (empty($text)) {
-//            return '';
-//        }
-//
-//        if (!empty($uid)) {
-//            $user = '='.UserUtil::getVar('uname', $uid);
-//        } else {
-//            $user = '';
-//        }
-//
-//        // Convert linefeeds to a special string. This is necessary because this string will be in an onclick atrribute
-//        // and therefore cannot have multiple lines.
-//        $text = str_replace(["\r", "\n"], '_____LINEFEED_DIZKUS_____', addslashes($text));
-//
-//        return '[quote'.$user.']'.$text.'[/quote]';
-//    }
 
     /**
      * Returns internal name of this extension.

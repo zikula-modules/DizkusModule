@@ -150,7 +150,7 @@
     {% if currentForum.get.children|length > 0 %}
         <div class="panel-heading clearfix">
             <h3 class="dizkus-clean pull-left">
-                {{ __('Subforums') }}
+                {{ __('Forums') }}
             </h3>
         </div>
         {{ include("@ZikulaDizkusModule/Forum/singleforumtable.html.twig" , {'managedForum': currentForum }) }}
@@ -195,9 +195,12 @@
         {% endif %}
 
     {% endif %}
-    {% if topics is not defined or topics|length == 0 %}
-        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
-    {% endif %}
+
+    {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':currentForum.get, 'panel': true}) }}
+
+    {#    {% if topics is not defined or topics|length == 0 %}#}
+    {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+    {#    {% endif %}#}
 
 </div>
 
@@ -205,7 +208,6 @@
     {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_view', id=currentForum.id) }}
 </div>
 
-{{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':currentForum.get, 'well': true}) }}
 
 {# @todo translations using bazinga js translator
 <script type="text/javascript">

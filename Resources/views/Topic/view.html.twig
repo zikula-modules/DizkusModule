@@ -158,8 +158,9 @@
 {% endif %}
 
 {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':currentTopic.forum, 'well': true}) }}
-{# use bazinga translations #}
-{#{{ include("@ZikulaDizkusModule/Topic/translations.html.twig")}}#}
 
 <a id="bottom" accesskey="b"></a>
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig")}}
+
+{# use bazinga translations #}
+{#{{ include("@ZikulaDizkusModule/Topic/translations.html.twig")}}#}

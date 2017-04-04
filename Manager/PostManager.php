@@ -83,14 +83,14 @@ class PostManager
     private $synchronizationHelper;
 
     /**
-     * managed post.
+     * Managed post
      *
      * @var PostEntity
      */
     private $_post;
 
     /**
-     * Post topic.
+     * Post topic
      *
      * @var TopicManager
      */
@@ -117,7 +117,7 @@ class PostManager
     }
 
     /**
-     * Start managing.
+     * Start managing
      *
      * @return PostManager
      */
@@ -143,7 +143,7 @@ class PostManager
     }
 
     /**
-     * Check if topic exists.
+     * Check if topic exists
      *
      * @return bool
      */
@@ -153,7 +153,7 @@ class PostManager
     }
 
     /**
-     * get the Post entity.
+     * Get the Post entity
      *
      * @return PostEntity
      */
@@ -163,7 +163,7 @@ class PostManager
     }
 
     /**
-     * return page as array.
+     * Get post as array
      *
      * @return mixed array or false
      */
@@ -190,7 +190,7 @@ class PostManager
     }
 
     /**
-     * get topic as managedObject.
+     * Get topic as managedObject
      *
      * @return TopicManager
      */
@@ -200,7 +200,7 @@ class PostManager
     }
 
     /**
-     * get the Poster as managedObject.
+     * Get the Poster as managedObject
      *
      * @return ForumUserManager
      */
@@ -223,7 +223,7 @@ class PostManager
     }
 
     /**
-     * update the post.
+     * Update post
      *
      * @todo event
      * @return bool
@@ -287,7 +287,7 @@ class PostManager
     }
 
     /**
-     * delete a post.
+     * Delete post
      *
      * @todo event
      *
@@ -359,55 +359,3 @@ class PostManager
     }
 
 }
-// @todo move to validation
-//    /**
-//     * Checks if the given message isn't too long.
-//     *
-//     * @param $message the message to check
-//     *
-//     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-//     *
-//     * @return bool false if the message is to long, else true
-//     */
-//    public function checkMessageLength($message)
-//    {
-//        if (!isset($message)) {
-//            throw new \InvalidArgumentException();
-//        }
-//        if (strlen($message) + 8 > 65535) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
-// @todo move to filter hooks
-
-//
-//    /**
-//     * dzkstriptags
-//     * strip all html tags outside of [code][/code].
-//     *
-//     * @param  $text     string the text
-//     *
-//     * @return string the sanitized text
-//     */
-//    public function dzkstriptags($text = '')
-//    {
-//        if (!empty($text) && ModUtil::getVar($this->name, 'striptags')) {
-//            // save code tags
-//            $codecount = preg_match_all('/\\[code(.*)\\](.*)\\[\\/code\\]/siU', $text, $codes);
-//            for ($i = 0; $i < $codecount; $i++) {
-//                $text = preg_replace('/('.preg_quote($codes[0][$i], '/').')/', " DZKSTREPLACEMENT{$i} ", $text, 1);
-//            }
-//            // strip all html
-//            $text = strip_tags($text);
-//            // replace code tags saved before
-//            for ($i = 0; $i < $codecount; $i++) {
-//                // @todo should use htmlentities here???? dzkstriptagst too ^^^
-//                $text = preg_replace("/ DZKSTREPLACEMENT{$i} /", $codes[0][$i], $text, 1);
-//            }
-//        }
-//
-//        return $text;
-//    }

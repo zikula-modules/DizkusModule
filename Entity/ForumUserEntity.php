@@ -145,7 +145,7 @@ class ForumUserEntity extends EntityAccess
 
     public function getUserId()
     {
-        // null look for user level
+        // null look for user level 1 guest -1 deleted
         return empty($this->user) ? -1 : $this->user->getUid();
     }
 
