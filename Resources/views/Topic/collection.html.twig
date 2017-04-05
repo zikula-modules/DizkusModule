@@ -36,7 +36,7 @@
                         {% elseif topic.solved == -1 %}
                             <i title='{{ __("This topic is a support request.")  }}' class="fa fa-question fa-red tooltips"></i>
                         {% endif %}
-                        {{ topic.topic_id|viewTopicLink(topic.title|striptags|truncate(50, true)) }}
+                        <a class="" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id}) }}" title="{{__('Go to')}} {{ topic.title|striptags }}">{{ topic.title|striptags|truncate(50, true) }}</a>
                     </h4>
                     <div class="text-muted">
                         {#   @todo    |profilelinkbyuname             #}

@@ -73,7 +73,7 @@ class UsersController extends AbstractController
      *
      * @return string plainResponse with json_encoded object of users matching the criteria
      */
-    public function getUsersByFragmentAction(Request $request)
+    public function getUsersByFragmentsAction(Request $request)
     {
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
