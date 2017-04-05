@@ -140,7 +140,7 @@ class ForumController extends AbstractController
     }
 
     /**
-     * @Route("/forum/moderate/{forum}", requirements={"forum" = "^[1-9]\d*$"})
+     * @Route("/forum/{forum}/moderate", requirements={"forum" = "^[1-9]\d*$"})
      *
      * Moderate forum
      *

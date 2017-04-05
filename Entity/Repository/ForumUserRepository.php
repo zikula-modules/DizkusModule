@@ -71,105 +71,90 @@ class ForumUserRepository extends EntityRepository
 
     /**
      * Read the users who are online
-     * This function returns an array (ig assign is used) or four variables
+     * This function returns an array
      * numguests : number of guests online
      * numusers: number of users online
      * total: numguests + numusers
-     * unames: array of 'uid', (int, userid), 'uname' (string, username) and 'admin' (boolean, true if users is a moderator)
-     * Available parameters:
-     *   - checkgroups:  If set, checks if the users found are in the moderator groups (perforance issue!) default is no group check.
+     *
+     * @param int $secinactivemins Time interval
+     * @param bool $moderatorCheck Moderator check setting
      *
      * @author       Frank Chestnut
      *
      * @since        10/10/2005
      *
-     * @param array                   $params All attributes passed to this function from the template
-     * @param object      Zikula_View $view   Reference to the Smarty object
-     *
      * @return array
      */
-    public function onlineUsers($checkgroups = false)
+    public function getOnlineUsers($secinactivemins = 20, $moderatorCheck = false)
     {
         // set some defaults
         $numguests = 0;
         $numusers = 0;
         $unames = [];
 
-//      Moderators
-//        $mods = ['users' => [], 'groups' => []];
-//        if ($forum_id !== false) {
-//            // get array of parents
-//            $forum = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($forum_id);
-//            $conn = $this->entityManager->getConnection();
-//            // resort to brute SQL because no easy DQL way here.
-//            $sql = "SELECT parent FROM dizkus_forums WHERE forum_order <= {$forum->getLft()} AND rgt >= {$forum->getRgt()} AND parent > 1";
-//            $parents = $conn->fetchAll($sql);
-//        }
-//        // get moderator users
-//        $qb = $this->entityManager->createQueryBuilder();
-//        $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorUserEntity', 'm')->leftJoin('m.forumUser', 'u');
-//        if ($forum_id !== false) {
-//            $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
-//            // check parents also
-//            if (!empty($parents)) {
-//                $qb->orWhere('m.forum IN (:forums)')->setParameter('forums', $parents);
-//            }
-//        } else {
-//            $qb->groupBy('m.forumUser');
-//        }
-//        $moderatorUserCollection = $qb->getQuery()->getResult();
-//        if (is_array($moderatorUserCollection) && !empty($moderatorUserCollection)) {
-//            foreach ($moderatorUserCollection as $moderatorUser) {
-//                $coreUser = $moderatorUser->getForumUser()->getUser();
-//                $mods['users'][$coreUser['uid']] = $coreUser['uname'];
-//            }
-//        }
-//        // get moderator groups
-//        $qb = $this->entityManager->createQueryBuilder();
-//        $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorGroupEntity', 'm')->leftJoin('m.group', 'g');
-//        if ($forum_id !== false) {
-//            $qb->where('m.forum = :forum')->setParameter('forum', $forum_id);
-//            // check parents also
-//            if (!empty($parents)) {
-//                $qb->orWhere('m.forum IN (:forums)')->setParameter('forums', $parents);
-//            }
-//        } else {
-//            $qb->groupBy('m.group');
-//        }
-//        $moderatorGroupCollection = $qb->getQuery()->getResult();
-//        if (is_array($moderatorGroupCollection) && !empty($moderatorGroupCollection)) {
-//            foreach ($moderatorGroupCollection as $moderatorGroup) {
-//                $mods['groups'][$moderatorGroup->getGroup()->getGid()] = $moderatorGroup->getGroup()->getName();
-//            }
-//        }
-//
-//        return $mods;
+        if ($moderatorCheck){
+            $moderators = ['users' => [], 'groups' => []];
+            // get moderator users
+            $qb = $this->_em->createQueryBuilder();
+            $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorUserEntity', 'm')->leftJoin('m.forumUser', 'u');
+            $qb->groupBy('m.forumUser');
+            $moderatorUserCollection = $qb->getQuery()->getResult();
+            if (is_array($moderatorUserCollection) && !empty($moderatorUserCollection)) {
+                foreach ($moderatorUserCollection as $moderatorUser) {
+                    $coreUser = $moderatorUser->getForumUser()->getUser();
+                    $moderators['users'][$coreUser['uid']] = $coreUser['uname'];
+                }
+            }
+            // get moderator groups
+            $qb = $this->_em->createQueryBuilder();
+            $qb->select('m')->from('Zikula\DizkusModule\Entity\ModeratorGroupEntity', 'm')->leftJoin('m.group', 'g');
+            $qb->groupBy('m.group');
+            $moderatorGroupCollection = $qb->getQuery()->getResult();
+            if (is_array($moderatorGroupCollection) && !empty($moderatorGroupCollection)) {
+                foreach ($moderatorGroupCollection as $moderatorGroup) {
+                    $moderators['groups'][$moderatorGroup->getGroup()->getGid()] = $moderatorGroup->getGroup()->getName();
+                }
+            }
+        }
 
-        /** @var $em Doctrine\ORM\EntityManager */
-        $dql = "SELECT s.uid, u.uname
-                FROM Zikula\UsersModule\Entity\UserSessionEntity s, Zikula\UsersModule\Entity\UserEntity u
-                WHERE s.lastused > :activetime
-                AND (s.uid >= 2
-                AND s.uid = u.uid)
-                OR s.uid = 0
-                GROUP BY s.ipaddr, s.uid";
-        $query = $this->container->get('doctrine.orm.entity_manager')->createQuery($dql);
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select(['s.uid', 'u', 'g'])
+            ->from('Zikula\UsersModule\Entity\UserSessionEntity', 's')
+            ->leftJoin(
+            'Zikula\UsersModule\Entity\UserEntity',
+            'u',
+            \Doctrine\ORM\Query\Expr\Join::WITH,
+            's.uid = u.uid')
+            ->leftJoin('u.groups', 'g')
+            ->where('s.lastused > :activetime')
+            ->andWhere('s.uid >= 2')
+            ->orWhere('s.uid = 0')
+            ->groupBy('s.ipaddr, s.uid')
+            ;
+
         $activetime = new \DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify('-'.$this->getSystemSetting('secinactivemins').' minutes');
-        $query->setParameter('activetime', $activetime);
+        $activetime->modify('-'.$secinactivemins.' minutes');
+        $qb->setParameter('activetime', $activetime);
 
-        $onlineusers = $query->getArrayResult();
+        $onlineusers = $qb->getQuery()->getResult();
 
         $total = 0;
         if (is_array($onlineusers)) {
             $total = count($onlineusers);
             foreach ($onlineusers as $onlineuser) {
                 if ($onlineuser['uid'] != 0) {
-                    $params['user_id'] = $onlineuser['uid'];
-                    $onlineuser['admin'] = (isset($moderators['users'][$onlineuser['uid']])
-                    && $moderators['users'][$onlineuser['uid']] == $onlineuser['uname'])
-                    || $this->container->get('zikula_dizkus_module.security')->canAdministrate($params);
-                    $unames[$onlineuser['uid']] = $onlineuser;
+                    $unames[$onlineuser['uid']]['user'] = $onlineuser[0];
+                    $unames[$onlineuser['uid']]['isModerator'] = false;
+                    if ($moderatorCheck){
+                        if(array_key_exists($onlineuser['uid'], $moderators['users'])){
+                            $unames[$onlineuser['uid']]['isModerator'] = true;
+                        }
+                        if(count($moderators['groups']) > 0) {
+                            foreach($moderators['groups'] as $gKey => $gName){
+                                $unames[$onlineuser['uid']]['isModerator'] = $onlineuser[0]->getGroups()->offsetExists($gKey);
+                            }
+                        }
+                    }
                     $numusers++;
                 } else {
                     $numguests++;
@@ -177,36 +162,13 @@ class ForumUserRepository extends EntityRepository
             }
         }
 
-        $users = [];
-        if ($checkgroups == true) {
-            foreach ($unames as $user) {
-                if ($user['admin'] == false) {
-                    // @todo use service when ready
-                    $groups = ModUtil::apiFunc('Groups', 'user', 'getusergroups', ['uid' => $user['uid']]);
-
-                    foreach ($groups as $group) {
-                        if (isset($moderators['groups'][$group['gid']])) {
-                            $user['admin'] = true;
-                        } else {
-                            $user['admin'] = false;
-                        }
-                    }
-                }
-
-                $users[$user['uid']] = [
-                    'uid'   => $user['uid'],
-                    'uname' => $user['uname'],
-                    'admin' => $user['admin'], ];
-            }
-            $unames = $users;
-        }
         usort($unames, [$this, 'cmp_userorder']);
 
         $dizkusonline['numguests'] = $numguests;
 
         $dizkusonline['numusers'] = $numusers;
         $dizkusonline['total'] = $total;
-        $dizkusonline['unames'] = $unames;
+        $dizkusonline['users'] = $unames;
 
         return $dizkusonline;
     }
@@ -216,6 +178,6 @@ class ForumUserRepository extends EntityRepository
      */
     private function cmp_userorder($a, $b)
     {
-        return strcmp($a['uname'], $b['uname']);
+        return strcmp($b['user']->getUname(), $a['user']->getUname());
     }
 }

@@ -39,10 +39,23 @@ class UsersController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-        //$users = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getUsersByFragments(['fragments' => [$fragment]]);
 
+        $secinactivemins = $this->get('zikula_extensions_module.api.variable')->getSystemVar('secinactivemins');
+        //@todo add module setting for isModerator
+        $moderatorCheck = false;
+        $online = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getOnlineUsers($secinactivemins, $moderatorCheck);
+        if(count($online['users']) > 0 && $moderatorCheck){
+            foreach($online['users'] as $uid => $user){
+                if($user['isModerator'] == false){
+                   $online['users'][$uid]['isModerator'] = $this->hasPermission('ZikulaDizkusModule::', '::', ACCESS_MODERATE);
+                }
+            }
+        }
 
         return $this->render('@ZikulaDizkusModule/User/users.online.html.twig', [
+            'online' => $online,
+            'secinactivemins' => $secinactivemins,
+            'anonymoussessions'=> $this->get('zikula_extensions_module.api.variable')->getSystemVar('anonymoussessions'),
             'settings' => $this->getVars(),
         ]);
     }
@@ -60,7 +73,7 @@ class UsersController extends AbstractController
      *
      * @return string plainResponse with json_encoded object of users matching the criteria
      */
-    public function getUsersAction(Request $request)
+    public function getUsersByFragmentAction(Request $request)
     {
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {

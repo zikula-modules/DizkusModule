@@ -23,6 +23,7 @@ use Zikula\UsersModule\Entity\UserEntity;
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumUserRepository")
  */
 class ForumUserEntity extends EntityAccess
 {

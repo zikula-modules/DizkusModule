@@ -666,3 +666,48 @@
 //
 //        return '[quote'.$user.']'.$text.'[/quote]';
 //    }
+
+
+// Below code is refactored this is for future reference if needed
+        /** @var $em Doctrine\ORM\EntityManager */
+//        $dql = "SELECT s.uid, u, g
+//                FROM Zikula\UsersModule\Entity\UserSessionEntity s, Zikula\UsersModule\Entity\UserEntity u, Zikula\GroupsModule\Entity\GroupEntity g
+//                WHERE s.lastused > :activetime
+//                AND (s.uid >= 2
+//                AND s.uid = u.uid)
+//                OR s.uid = 0
+//                AND
+//                GROUP BY s.ipaddr, s.uid";
+//        $query = $this->_em->createQuery($dql);
+//        $activetime = new \DateTime(); // @todo maybe need to check TZ here
+//        $activetime->modify('-'.$secinactivemins.' minutes');
+//        $query->setParameter('activetime', $activetime);
+//
+//        $onlineusers = $query->getArrayResult();
+
+//        $users = [];
+//        if ($checkgroups == true) {
+//            foreach ($unames as $user) {
+//                if ($user['admin'] == false) {
+//                    // @todo use service when ready
+//                    $groups = ModUtil::apiFunc('Groups', 'user', 'getusergroups', ['uid' => $user['uid']]);
+//
+//                    foreach ($groups as $group) {
+//                        if (isset($moderators['groups'][$group['gid']])) {
+//                            $user['admin'] = true;
+//                        } else {
+//                            $user['admin'] = false;
+//                        }
+//                    }
+//                }
+//
+//                $users[$user['uid']] = [
+//                    'uid'   => $user['uid'],
+//                    'uname' => $user['uname'],
+//                    'admin' => $user['admin'], ];
+//            }
+//            $unames = $users;
+//        }
+
+//                    $onlineuser['isModerator'] = (isset($moderators['users'][$onlineuser['uid']]) && $moderators['users'][$onlineuser['uid']] == $onlineuser['uname'])
+//                     ;
