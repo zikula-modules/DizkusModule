@@ -14,7 +14,7 @@
  * Hooks Handlers.
  */
 
-namespace Zikula\DizkusModule;
+namespace Zikula\DizkusModule\HookHandler;
 
 //use Zikula\Bundle\HookBundle\Hook\AbstractHookListener;
 //use Zikula\Bundle\HookBundle\Hook\DisplayHook;

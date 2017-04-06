@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\DizkusModule;
+namespace Zikula\DizkusModule\HookHandler;
 
 use Zikula\DizkusModule\Security\Permission;
 use Doctrine\ORM\EntityManagerInterface;
