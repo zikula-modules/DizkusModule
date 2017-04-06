@@ -1,17 +1,13 @@
 <?php
 
 /**
- * Copyright Dizkus Team 2012.
+ * Dizkus
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
- *
- * @license GNU/LGPLv3 (or at your option, any later version).
+ * @copyright (c) 2001-now, Dizkus Development Team
  *
  * @see https://github.com/zikula-modules/Dizkus
  *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Manager;
@@ -379,48 +375,6 @@ class ForumManager
     }
 
     /**
-     * modify user/forum association.
-     *
-     * @param int    $forum
-     * @param string $action = 'addToFavorites'|'removeFromFavorites'|'subscribe'|'unsubscribe'
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return bool
-     */
-    public function modify($forum, $action)
-    {
-        if (empty($forum) || empty($action)) {
-            throw new \InvalidArgumentException();
-        }
-        $managedForumUser = $this->forumUserManagerService->getManager();
-        $managedForum = $this->getManager($forum);
-        switch ($action) {
-            case 'addToFavorites':
-                $managedForumUser->get()->addFavoriteForum($managedForum->get());
-                break;
-            case 'removeFromFavorites':
-                $forumUserFavorite = $this->entityManager
-                    ->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')
-                    ->findOneBy([
-                        'forum'     => $managedForum->get(),
-                        'forumUser' => $managedForumUser->get(), ]
-                    );
-                $managedForumUser->get()->removeFavoriteForum($forumUserFavorite);
-                break;
-            case 'subscribe':
-                $this->subscribe(['forum' => $managedForum->get()]);
-                break;
-            case 'unsubscribe':
-                $this->unsubscribe(['forum' => $managedForum->get()]);
-                break;
-        }
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
      * get tree
      * format as array.
      *
@@ -440,22 +394,24 @@ class ForumManager
 
         return $output;
     }
-
+//
+//  @todo remove this
+//    /**
+//     * Get all tree nodes that are not root
+//     * Format as array.
+//     *
+//     * @return array
+//     */
+//    public function getChildren()
+//    {
+//        return $this->getNode($tree, null);
+//    }
 
     /**
      * Get all tree nodes that are not root
      * Format as array.
      *
-     * @return array
-     */
-    public function getChildren()
-    {
-        return $this->getNode($tree, null);
-    }
-
-    /**
-     * Get all tree nodes that are not root
-     * Format as array.
+     * @todo move to forum repository
      *
      * @return array
      */
@@ -505,5 +461,4 @@ class ForumManager
 
         return $output;
     }
-
 }

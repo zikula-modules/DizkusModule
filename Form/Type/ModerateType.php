@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dizkus.
+ * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *

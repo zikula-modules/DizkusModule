@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dizkus.
+ * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *
@@ -82,7 +82,6 @@ class ForumController extends AbstractController
 //        }
 
         return $this->render('@ZikulaDizkusModule/Forum/main.html.twig', [
-                    'last_visit_unix' => $forumUserManager->getLastVisit(),
                     'managedRootForum' => $managedRootForum,
                     'currentForumUser' => $forumUserManager,
                     'totalposts'      => $this->get('zikula_dizkus_module.count_helper')->getAllPostsCount(),
@@ -251,7 +250,6 @@ class ForumController extends AbstractController
             'form'            => $form->createView(),
             'forum'           => $this->_managedForum->get(),
             'pager'           => $this->_managedForum->getPager(),
-            'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit(),
             'settings'        => $this->getVars(),
         ]);
     }
