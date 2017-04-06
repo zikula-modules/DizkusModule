@@ -235,7 +235,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         if ($systemSettings  == null){
             $adminEmail = null;
         }else{
-            $adminEmail= $systemSettings['adminmail'];
+            $adminEmail = $systemSettings['adminmail'];
         }
 
         return [
@@ -724,6 +724,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->setVar('signaturemanagement', $currentModVars['signaturemanagement'] === 'yes' ? true : false);
         $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);
         $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
+        $this->setVar('onlineusers_moderatorcheck', false);
 
         return true;
     }

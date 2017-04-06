@@ -16,7 +16,7 @@ use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Form\Type\PreferencesType;
+use Zikula\DizkusModule\Form\Type\DizkusSettingsType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -89,24 +89,29 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm(new PreferencesType(), $this->getVars(), []);
+        $adminsGroup = $this->getDoctrine()->getManager()->getRepository('Zikula\GroupsModule\Entity\GroupEntity')->find(2);
+        $admins = ['-1' => $this->__('disabled')];
+        foreach ($adminsGroup['users'] as $admin) {
+            $admins[$admin->getUid()] = $admin->getUname();
+        }
 
+        $form = $this->createForm(new DizkusSettingsType(), $this->getVars(), ['admins' => $admins]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
-                dump($form->getData());
-               // $this->setVars($form->getData());
+                //dump($form->getData());
+                $this->setVars($form->getData());
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
             if ($form->get('restore')->isClicked()) {
-                $this->setVars(DizkusModuleInstaller::getDefaultVars());
+                $this->setVars(DizkusModuleInstaller::getDefaultVars($this->getVars()));
                 $this->addFlash('status', $this->__('Done! Reset configuration to default values.'));
             }
 
-            //return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
+            return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
         }
 
-        return $this->render('@ZikulaDizkusModule/Admin/preferences.html.twig', [
+        return $this->render('@ZikulaDizkusModule/Admin/settings.html.twig', [
             'form' => $form->createView(),
         ]);
     }

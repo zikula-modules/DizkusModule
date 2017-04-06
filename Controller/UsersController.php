@@ -40,11 +40,10 @@ class UsersController extends AbstractController
             throw new AccessDeniedException();
         }
 
+        $settings = $this->getVars();
         $secinactivemins = $this->get('zikula_extensions_module.api.variable')->getSystemVar('secinactivemins');
-        //@todo add module setting for isModerator
-        $moderatorCheck = false;
-        $online = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getOnlineUsers($secinactivemins, $moderatorCheck);
-        if(count($online['users']) > 0 && $moderatorCheck){
+        $online = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getOnlineUsers($secinactivemins, $settings['onlineusers_moderatorcheck']);
+        if(count($online['users']) > 0 && $settings['onlineusers_moderatorcheck']){
             foreach($online['users'] as $uid => $user){
                 if($user['isModerator'] == false){
                    $online['users'][$uid]['isModerator'] = $this->hasPermission('ZikulaDizkusModule::', '::', ACCESS_MODERATE);
@@ -56,7 +55,7 @@ class UsersController extends AbstractController
             'online' => $online,
             'secinactivemins' => $secinactivemins,
             'anonymoussessions'=> $this->get('zikula_extensions_module.api.variable')->getSystemVar('anonymoussessions'),
-            'settings' => $this->getVars(),
+            'settings' => $settings,
         ]);
     }
 

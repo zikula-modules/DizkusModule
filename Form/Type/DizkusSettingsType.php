@@ -10,25 +10,12 @@
 
 namespace Zikula\DizkusModule\Form\Type;
 
-use ModUtil;
-use UserUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PreferencesType extends AbstractType
+class DizkusSettingsType extends AbstractType
 {
-    public function __construct()
-    {
-        //@todo remove api calls use services etc...
-        $adminGroup = ModUtil::apiFunc('ZikulaGroupsModule', 'user', 'get', ['gid' => 2]);
-        $admins = ['-1' => 'disable'];
-        foreach ($adminGroup['members'] as $admin) {
-            $admins[$admin['uid']] = UserUtil::getVar('uname', $admin['uid']);
-        }
-        $this->admins = $admins;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('forum_enabled', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
@@ -122,7 +109,7 @@ class PreferencesType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
-                ->add('notifyAdminAsMod', 'choice', ['choices' => $this->admins,
+                ->add('notifyAdminAsMod', 'choice', ['choices' => $options['admins'],
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
@@ -144,6 +131,10 @@ class PreferencesType extends AbstractType
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
+                ->add('onlineusers_moderatorcheck', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
+                    'multiple' => false,
+                    'expanded' => true,
+                    'required' => true])
                 ->add('restore', 'submit', [
                     'label' => 'Restore defaults'
                 ])
@@ -154,17 +145,16 @@ class PreferencesType extends AbstractType
 
     public function getName()
     {
-        return 'preferences_form';
+        return 'zikuladizkusmodule_admin_settings_forum';
     }
 
     /**
-     * OptionsResolverInterface is @deprecated and is supposed to be replaced by
-     * OptionsResolver but docs not clear on implementation
-     *
-     * @param OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'admins' => [],
+        ]);
     }
 }
