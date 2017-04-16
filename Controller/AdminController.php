@@ -107,7 +107,7 @@ class AdminController extends AbstractController
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
             if ($form->get('restore')->isClicked()) {
-                $this->setVars(DizkusModuleInstaller::getDefaultVars($this->getVars()));
+                $this->setVars(DizkusModuleInstaller::getDefaultVars());
                 $this->addFlash('status', $this->__('Done! Reset configuration to default values.'));
             }
 

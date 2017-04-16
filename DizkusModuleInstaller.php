@@ -60,7 +60,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         // ToDo: create FULLTEXT index
         // set the module vars
-        $this->setVars(self::getDefaultVars($this->variableApi->getAll('ZConfig')));
+        $this->setVars(self::getDefaultVars());
         $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
         $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
@@ -229,20 +229,13 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
      *
      * @return array
      */
-    public static function getDefaultVars($systemSettings = null)
+    public static function getDefaultVars()
     {
-
-        if ($systemSettings  == null){
-            $adminEmail = null;
-        }else{
-            $adminEmail = $systemSettings['adminmail'];
-        }
-
         return [
             'posts_per_page' => 15,
             'topics_per_page' => 15,
             'hot_threshold' => 20,
-            'email_from' => $adminEmail,
+            'email_from' => '', // use system default email
             'url_ranks_images' => "ranks",
             'post_sort_order' => 'ASC',
             'log_ip' => false,
