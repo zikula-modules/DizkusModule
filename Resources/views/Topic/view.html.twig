@@ -20,7 +20,7 @@
 {% set sort_down_icon %}<i class='fa fa-sort-amount-asc'></i>{% endset %}
 {# ------- #}
 
-{% set templatetitle=currentTopic.title|escape('html') %}
+{#{% set templatetitle=currentTopic.title|escape('html') %}#}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig", {'parent':currentTopic.forumId}) }}
 <input id="topic_id" name="topic" type="hidden" value="{{ currentTopic.id }}">
 {% if settings.ajax %}

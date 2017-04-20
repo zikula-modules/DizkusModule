@@ -10,13 +10,16 @@
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
-namespace Zikula\DizkusModule\Form\Type\Topic;
+namespace Zikula\DizkusModule\Form\Type\Post;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NewType extends AbstractType
+class EditPostType extends AbstractType
 {
     protected $loggedIn;
 
@@ -27,36 +30,26 @@ class NewType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', [
+        $builder->add('post_text', TextareaType::class, [
                     'required' => true, ])
-                ->add('message', 'textarea', [
-                    'required' => true, ])
-                ->add('attachSignature', 'checkbox', [
-//                    'label_attr' => ['class' => $this->loggedIn ? '' : ' text-muted'], moved to template
+                ->add('attachSignature', CheckboxType::class, [
                     'required' => false,
                     'data'     => $this->loggedIn,
                     'disabled' => !$this->loggedIn,
                     ])
-                ->add('isSupportQuestion', 'checkbox', [
+                ->add('subscribeTopic', CheckboxType::class, [
                     'required' => false,
-                    ])
-                ->add('subscribeTopic', 'checkbox', [
-//                    'label_attr' => ['class' => $this->loggedIn ? '' : ' text-muted'], moved to template
-                    'required' => false,
+                    'mapped' => false,
                     'data'     => $this->loggedIn,
                     'disabled' => !$this->loggedIn,
                     ])
-                ->add('save', 'submit', [
-                    'label' => 'Submit',
-                ])
-                ->add('preview', 'submit', [
-                    'label' => 'Preview',
-                ]);
+                ->add('save', SubmitType::class)
+                ->add('preview', SubmitType::class);
     }
 
     public function getName()
     {
-        return 'topic_new_form';
+        return 'zikula_dizkus_form_post_edit';
     }
 
     /**

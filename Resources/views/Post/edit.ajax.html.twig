@@ -1,4 +1,3 @@
-{{ include("@ZikulaDizkusModule/Common/header.html.twig", {'templatetitle':__('New topic')}) }}
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaDizkusModule:Form:checkbox.html.twig',
     'ZikulaDizkusModule:Form:radio.html.twig'
@@ -11,14 +10,15 @@
 <div class="panel panel-default">
     <div class="panel-heading" style="border-bottom:0px;padding-bottom: 0px;">
         <ul id="quickreply_tabs"  class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="{% if preview %}{% else %} active{% endif %}"><a href="#quickreply_message" aria-controls="quickreply_message" role="tab" data-toggle="tab">
+            <li role="presentation" class="{% if preview is defined and preview == true %}{% else %} active{% endif %}">
+                <a href="#quickreply_message" aria-controls="quickreply_message" role="tab" data-toggle="tab">
                     {% if templatetitle is defined %}
                         {{ templatetitle }}
                     {% else %}
-                        {{ __f("New topic in '%s' forum", {'%s':currentForum.get.name}) }}
+                        {{ __f("Edit post in '%s' topic", {'%s':managedPost.getManagedTopic().get().title}) }}
                     {% endif %}
-                </a>
-            </li>
+                </a></li>
+
             <li role="presentation" class="{% if preview %} active{% else %}{% endif %}">
                 {{ form_widget(form.preview, {'attr': {'class': 'btn btn-tab' }, 'label': __('Preview')}) }}
                 <span id="previewAjaxStatus" class="hide">
@@ -26,19 +26,17 @@
                     <span class="sr-only">Loading...</span>
                 </span>
             </li>
-            <li role="presentation" class="pull-right"><a href="#quickreply_options" aria-controls="quickreply_options" role="tab" data-toggle="tab">{{ __("Options") }} <i class="fa fa-cog" aria-hidden="true"></i></a></li>
+            <li role="presentation" class="pull-right">
+                <a href="#quickreply_options" aria-controls="quickreply_options" role="tab" data-toggle="tab">{{ __("Options") }} <i class="fa fa-cog" aria-hidden="true"></i></a>
+            </li>
         </ul>
     </div>
     <div class="panel-body" style="border-top:0px;min-height:300px;">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane {% if preview %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
                 <div class="form-group">
-                    {{ form_label(form.title, __("Subject line"), { 'label_attr': {'class': 'col-md-12'} }) }}
-                    {{ form_widget(form.title, { 'attr': {'class': ''} }) }}
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.message, __("Message"), { 'label_attr': {'class': 'col-md-12'} }) }}
-                    {{ form_widget(form.message, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
+                    {{ form_label(form.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12'} }) }}
+                    {{ form_widget(form.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
                 </div>
                 <div class="form-group">
                     {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
@@ -56,16 +54,13 @@
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '','icon': 'fa fa-user'} }) }}
 
-                            {{ form_row(form.isSupportQuestion,  {   'label': __("Mark as support question")
-                            ,'label_attr': {'class': ''}
-                            ,'attr': {'class': '','icon': 'fa fa-question fa-red'} }) }}
-
                             {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
 
                         </div>
                         <div class="col-md-8">
+
                         </div>
                     </div>
                 </div>
@@ -81,9 +76,8 @@
             </div>
         </div>
         <div class="panel-footer text-right">
-            <a class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':currentForum.id}) }}" role="button">{{ __('Cancel') }}</a>
+            <a class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':managedPost.getManagedTopic().getManagedForum().id}) }}" role="button">{{ __('Cancel') }}</a>
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-sm'},  'label': __('Submit')}) }}
         </div>
     </div>
     {{ form_end(form) }}
-    {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

@@ -81,8 +81,9 @@ class RankHelper
      */
     public function getAllRankImages()
     {
+
         // read images
-        $handle = opendir($this->imagesPath);
+        $handle = opendir(\Zikula\DizkusModule\DizkusModuleInstaller::generateRelativePath().'/Resources/public/images/'.$this->imagesPath);
         $filelist = [];
         while ($file = readdir($handle)) {
             if ($this->isImageFile($this->imagesPath.'/'.$file)) {

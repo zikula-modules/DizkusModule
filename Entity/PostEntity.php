@@ -10,9 +10,11 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Zikula\Core\Doctrine\EntityAccess;
+
 
 /**
  * Post entity class
@@ -63,6 +65,12 @@ class PostEntity extends EntityAccess
     /**
      * post_text
      *
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 65535,
+     *      minMessage = "Your post must be at least {{ limit }} characters long",
+     *      maxMessage = "Your post cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="text")
      */
     private $post_text = '';
@@ -129,6 +137,11 @@ class PostEntity extends EntityAccess
     }
 
     public function setPost_text($text)
+    {
+        return $this->post_text = stripslashes($text);
+    }
+
+    public function setPostText($text)
     {
         return $this->post_text = stripslashes($text);
     }

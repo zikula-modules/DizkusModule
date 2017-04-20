@@ -52,7 +52,11 @@ abstract class AbstractHookHandler
     protected $translator;
 
     public function __construct(
-    EntityManagerInterface $entityManager, RequestStack $requestStack, EngineInterface $renderEngine, Permission $permission, TranslatorInterface $translator
+        EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        EngineInterface $renderEngine,
+        Permission $permission,
+        TranslatorInterface $translator
     ) {
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;

@@ -42,6 +42,30 @@
     border-radius: 4px;
 }
 
+.nav>li>button {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.nav-tabs>li>button {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0
+}
+
+.nav-tabs>li>button:hover {
+    border-color: #eeeeee #eeeeee #dddddd
+}
+
+.nav-tabs>li.active>button,.nav-tabs>li.active>button:hover,.nav-tabs>li.active>button:focus {
+    color: #555555;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+    cursor: default
+}
 
 /***********************
 /* Post body styles

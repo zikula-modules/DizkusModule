@@ -262,31 +262,32 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'indexTo' => '',
             'notifyAdminAsMod' => 2,
             'defaultPoster' => 2,
+            'onlineusers_moderatorcheck' => false,
         ];
     }
 
-//    /**
-//     * find the relative path of this script from current full path.
-//     *
-//     * @param string $path default __DIR__
-//     * @param string $from default 'modules'
-//     *
-//     * @return string
-//     */
-//    public static function generateRelativePath($path = __DIR__, $from = 'modules')
-//    {
-//        $path = realpath($path);
-//        $parts = explode(DIRECTORY_SEPARATOR, $path);
-//        foreach ($parts as $part) {
-//            if ($part == $from) {
-//                return $path;
-//            } else {
-//                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
-//            }
-//        }
-//
-//        return $path;
-//    }
+    /**
+     * find the relative path of this script from current full path.
+     *
+     * @param string $path default __DIR__
+     * @param string $from default 'modules'
+     *
+     * @return string
+     */
+    public static function generateRelativePath($path = __DIR__, $from = 'modules')
+    {
+        $path = realpath($path);
+        $parts = explode(DIRECTORY_SEPARATOR, $path);
+        foreach ($parts as $part) {
+            if ($part == $from) {
+                return $path;
+            } else {
+                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
+            }
+        }
+
+        return $path;
+    }
 
     /**
      * upgrade to 4.0.0.

@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DeleteType extends AbstractType
+class DeleteTopicType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -39,17 +39,13 @@ class DeleteType extends AbstractType
                     'required'  => true,
                     'data'      => 0,
                 ])
-                ->add('delete', SubmitType::class, [
-                    'label' => 'Delete',
-                ])
-                ->add('cancel', SubmitType::class, [
-                    'label' => 'Cancel',
-        ]);
+                ->add('delete', SubmitType::class)
+                ->add('cancel', SubmitType::class);
     }
 
     public function getName()
     {
-        return 'topic_delete_form';
+        return 'zikula_dizkus_module_form_topic_delete';
     }
 
     /**

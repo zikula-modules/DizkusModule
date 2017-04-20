@@ -93,23 +93,25 @@ class ForumUserManager
      * @param int  $uid    user id (optional: defaults to current user)
      * @param bool $create create the ForumUser if does not exist (default: true)
      */
-    public function getManager($uid = null)
+    public function getManager($uid = null, $create = true)
     {
-        //$this->variableApi->get($this->name, 'defaultPoster', 2); ???
-        if (empty($uid)) {
-            $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1; // zikula guest account
+        if (!empty($uid)) {
+            $this->_forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
+        } elseif (empty($uid)) {
+            $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : 1;
+            $this->_forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
+        } else {
+            $this->_forumUser = null;
         }
-
-        $this->_forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
-
         if ($this->exists()) {
             $this->loggedIn = true;
-        } else {
-            $this->_forumUser = new ForumUserEntity();
-            //last try there is zikula user
+        } elseif ($create) {
+            //$this->variableApi->get($this->name, 'defaultPoster', 2); ???
+             // zikula guest account
             $zuser = $this->entityManager->find('Zikula\UsersModule\Entity\UserEntity', $uid);
             if ($zuser) {
-                $this->_forumUser->setUser($zuser);
+                $this->_forumUser = new ForumUserEntity($zuser);
+                //$this->_forumUser->setUser();
                 $this->entityManager->persist($this->_forumUser);
                 $this->entityManager->flush();
                 $this->loggedIn = true;
@@ -126,9 +128,23 @@ class ForumUserManager
      *
      * @return bool
      */
+    public function getManagedByUserName($uname, $create = false)
+    {
+        $zuser = $this->entityManager->getRepository('Zikula\UsersModule\Entity\UserEntity')->findOneBy(['uname' => $uname]);
+        if($zuser){
+            return $this->getManager($zuser->getUid(), $create);
+        }
+        return $this;
+    }
+
+    /**
+     * Check if user exists
+     *
+     * @return bool
+     */
     public function exists()
     {
-        return $this->_forumUser ? true : false;
+        return $this->_forumUser instanceof ForumUserEntity ? true : false;
     }
 
     /**
@@ -158,11 +174,7 @@ class ForumUserManager
      */
     public function getUserName()
     {
-        if ($this->isAnonymous()) {
-            return 'Anonymous';
-        } else {
-            return $this->_forumUser->getUser()->getUname();
-        }
+        return ($this->exists() && !$this->isAnonymous()) ? $this->_forumUser->getUser()->getUname() : 'Anonymous';
     }
 
     /**
@@ -172,7 +184,7 @@ class ForumUserManager
      */
     public function getId()
     {
-        return $this->_forumUser->getUserId();
+        return $this->exists() ? $this->_forumUser->getUserId() : false;
     }
 
     /**
@@ -333,7 +345,6 @@ class ForumUserManager
      */
     public function allowedToModerate($object)
     {
-        //this should be moved to permissions
         if ($object instanceof PostManager) {
             return $this->permission->canModerate($object->getManagedTopic()->getForum());
         }
@@ -454,7 +465,6 @@ class ForumUserManager
      */
     public function getRank()
     {
-
         if ($this->_forumUser->getRank()) {
             return $this->_forumUser->getRank();
         }
@@ -612,7 +622,7 @@ class ForumUserManager
             return true;
         }
 
-        $this->_forumUser->addTopicSubscription($topicSubscription);
+        $this->_forumUser->addTopicSubscription($topic);
         $this->entityManager->persist($this->_forumUser);
         $this->entityManager->flush();
 
@@ -632,7 +642,7 @@ class ForumUserManager
             'topic' => $topic,
             'forumUser' => $this->get(),]);
 
-        if ($topicSubscription) {
+        if (!$topicSubscription) {
             return true;
         }
 

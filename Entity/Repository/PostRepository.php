@@ -11,7 +11,6 @@
 namespace Zikula\DizkusModule\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostRepository extends EntityRepository
 {

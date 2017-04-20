@@ -20,17 +20,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Hook\ProcessHook;
-use Zikula\Core\Hook\ValidationHook;
-use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Bundle\HookBundle\Hook\ProcessHook;
+use Zikula\Bundle\HookBundle\Hook\ValidationHook;
+use Zikula\Bundle\HookBundle\Hook\ValidationProviders;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Form\Type\Topic\DeleteType;
-use Zikula\DizkusModule\Form\Type\Topic\JoinMoveType;
-use Zikula\DizkusModule\Form\Type\Topic\NewType;
-use Zikula\DizkusModule\Form\Type\Topic\ReplyType;
+use Zikula\DizkusModule\Events\DizkusEvents;
+use Zikula\DizkusModule\Form\Type\Topic\DeleteTopicType;
+use Zikula\DizkusModule\Form\Type\Topic\JoinMoveTopicType;
+use Zikula\DizkusModule\Form\Type\Topic\NewTopicType;
+use Zikula\DizkusModule\Form\Type\Topic\ReplyTopicType;
 
 class TopicController extends AbstractController
 {
@@ -67,10 +69,6 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-
-//        dump($this->getDoctrine()->getRepository('Zikula\DizkusModule\Entity\PostEntity')->getLastPosts(5,3));
-//        dump($this->get('zikula_dizkus_module.synchronization_helper')->posters());
-
         $currentTopic->loadPosts($start - 1);
         $currentTopic->incrementViewsCount();
 
@@ -101,7 +99,6 @@ class TopicController extends AbstractController
 
         // get the input
         $forum = (int) $request->query->get('forum');
-
         if (!isset($forum)) {
             $this->addFlash('error', $this->__('Error! Missing forum id.'));
 
@@ -124,87 +121,87 @@ class TopicController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL));
         }
 
-        $form = $this->createForm(new NewType($forumUserManager->isLoggedIn()), [], []);
+        $form = $this->createForm(new NewTopicType($forumUserManager->isLoggedIn()), [], []);
         $form->handleRequest($request);
 
         // check hooked modules for validation
-        $hook = new ValidationHook(new ValidationProviders()); //
-        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
-
+        $forumHook = new ValidationHook(new ValidationProviders()); //
+        $forumHookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $forumHook)->getValidators();
+        if ($forumHookvalidators->hasErrors()) {
+            foreach ($forumHookvalidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto add_error;
+        }
+        // check hooked modules for validation for topic
+        $topicHook = new ValidationHook(new ValidationProviders());
+        /** @var $topicHookValidators \Zikula\Core\Hook\ValidationProviders */
+        $topicHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
+        if ($topicHookValidators->hasErrors()) {
+            foreach ($topicHookValidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto add_error;
+        }
         // check hooked modules for validation for post
         $postHook = new ValidationHook(new ValidationProviders());
         /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
         $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
         if ($postHookValidators->hasErrors()) {
             foreach ($postHookValidators->getErrors() as $error) {
-                $this->addFlash('error', "Error! $error");
+                $form->addError(new FormError($this->__($error)));
             }
+            goto add_error;
         }
 
-        // check hooked modules for validation for topic
-        $topicHook = new ValidationHook(new ValidationProviders());
-        /** @var $topicHookValidators \Zikula\Core\Hook\ValidationProviders */
-        $topicHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.validate_edit', $topicHook)->getValidators();
-        if ($topicHookValidators->hasErrors()) {
-            foreach ($postHookValidators->getErrors() as $error) {
-                $this->addFlash('error', "Error! $error");
-            }
+        if (!$form->isValid()) {
+            goto add_error;
         }
 
-        if ($form->isValid() && !$hookvalidators->hasErrors() && !$postHookValidators->hasErrors() && !$topicHookValidators->hasErrors()) {
-            $data = $form->getData();
-            $data['forum_id'] = $forum;
-            $data['attachSignature'] = isset($data['attachSignature']) ? $data['attachSignature'] : false;
-            $data['subscribeTopic'] = isset($data['subscribeTopic']) ? $data['subscribeTopic'] : false;
-            $data['isSupportQuestion'] = isset($data['isSupportQuestion']) ? $data['isSupportQuestion'] : false;
+        $data = $form->getData();
+        $data['forum_id'] = $forum;
+        $data['attachSignature'] = isset($data['attachSignature']) ? $data['attachSignature'] : false;
+        $data['subscribeTopic'] = isset($data['subscribeTopic']) ? $data['subscribeTopic'] : false;
+        $data['isSupportQuestion'] = isset($data['isSupportQuestion']) ? $data['isSupportQuestion'] : false;
 
-            $newManagedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager();
-            $newManagedTopic->prepare($data);
+        $newManagedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager();
+        $newManagedTopic->prepare($data);
 
-            // @todo this maybe should be done by hooks?
-//            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
-//                $this->addFlash('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
-//                return false;
-//            }
+        $prepareTopicEvent = new GenericEvent(['topic' => $newManagedTopic->get()]);
+        $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_PREPARE, $prepareTopicEvent);
 
-            if ($form->get('preview')->isClicked()) {
-                $preview = true;
-                $post = $newManagedTopic->getPreview()->toArray();
-                $post['post_id'] = 0;
-                $post['post_time'] = time();
-                $post['topic_id'] = 0;
-                $post['attachSignature'] = $data['attachSignature'];
-                $post['subscribeTopic'] = $data['subscribeTopic'];
-                $post['isSupportQuestion'] = $data['isSupportQuestion'];
-
-                list(, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
-            }
-
-            if ($form->get('save')->isClicked()) {
-                // store new topic
-                $newManagedTopic->create();
-                $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()]);
-                // notify hooks for both POST and TOPIC
-                $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
-                $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));
-
-                // @todo notify topic & forum subscribers
-//              ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
-
-                // redirect to the new topic
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
-            }
+        if ($form->get('preview')->isClicked()) {
+            $preview = $newManagedTopic->getPreview()->toArray();
+            $preview['post_id'] = 0;
+            $preview['post_time'] = time();
+            $preview['topic_id'] = 0;
+            $preview['attachSignature'] = $data['attachSignature'];
+            $preview['subscribeTopic'] = $data['subscribeTopic'];
+            $preview['isSupportQuestion'] = $data['isSupportQuestion'];
+            $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         }
+
+        if ($form->get('save')->isClicked()) {
+            $newManagedTopic->create();
+            $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()]);
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.process_edit', new ProcessHook($newManagedTopic->getFirstPost()->getPost_id(), $url));
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.topic.process_edit', new ProcessHook($newManagedTopic->getId(), $url));
+            // @todo notify topic & forum subscribers ModUtil::apiFunc($this->name, 'notify', 'emailSubscribers', array('post' => $newManagedTopic->getFirstPost()));
+            $createdTopicEvent = new GenericEvent(['topic' => $createdTopicEvent->get()]);
+            $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_CREATE, $createdTopicEvent);
+
+            // redirect to the new topic
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+        }
+
+        add_error:
 
         return $this->render('@ZikulaDizkusModule/Topic/new.html.twig', [
-            'last_visit_unix' => $forumUserManager->getLastVisit(),
             'currentForumUser' => $forumUserManager,
-            'ranks'         => isset($ranks) ? $ranks : false,
+            'currentForum'  => $managedForum,
             'form'          => $form->createView(),
-            'breadcrumbs'   => $managedForum->getBreadcrumbs(false),
+            'ranks'         => isset($ranks) ? $ranks : false,
             'preview'       => isset($preview) ? $preview : false,
-            'post'          => isset($post) ? $post : false,
-            'forum'         => $managedForum->get(),
             'settings'      => $this->getVars(),
             ]);
     }
@@ -225,7 +222,6 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
             $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
@@ -237,7 +233,7 @@ class TopicController extends AbstractController
 
         $template = $request->get('template') == 'quick.reply' || $request->isXmlHttpRequest() ? 'quick.reply' : 'reply';
         $action = $this->get('router')->generate('zikuladizkusmodule_topic_replytopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
-        $form = $this->createForm(new ReplyType($forumUserManager->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
+        $form = $this->createForm(new ReplyTopicType($forumUserManager->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
         $form->handleRequest($request);
 
         // process validation hooks
@@ -266,19 +262,17 @@ class TopicController extends AbstractController
             $managedPost->create($reply);
 
             if ($form->get('preview')->isClicked()) {
-                $preview = true;
                 //$template = 'reply.preview';
-                $post = $managedPost->toArray();
-                $post['post_id'] = -1;
-                $post['post_time'] = time();
-                $post['topic_id'] = $topic;
-                $post['attachSignature'] = $data['attachSignature'];
-                $post['subscribeTopic'] = $data['subscribeTopic'];
+                $preview = $managedPost->toArray();
+                $preview['post_id'] = -1;
+                $preview['post_time'] = time();
+                $preview['topic_id'] = $topic;
+                $preview['attachSignature'] = $data['attachSignature'];
+                $preview['subscribeTopic'] = $data['subscribeTopic'];
             }
 
             if ($form->get('save')->isClicked()) {
                 $managedPost->persist();
-                $post = $managedPost->toArray();
                     //if not ajax redirect to topic page
                     if (!$request->isXmlHttpRequest()) {
                         // everything is good no ajax return to to topic view
@@ -286,7 +280,7 @@ class TopicController extends AbstractController
                     }
 
                 unset($form);
-                $form = $this->createForm(new ReplyType($forumUserManager->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
+                $form = $this->createForm(new ReplyTopicType($forumUserManager->isLoggedIn()), [], ['action' => $action, 'topic' => $managedTopic->getId()]);
             }
         } else {
             // error - no preview just form with error information!
@@ -298,7 +292,6 @@ class TopicController extends AbstractController
             'form'      => $form->createView(),
             'currentForumUser' => $forumUserManager,
             'preview'   => isset($preview) ? $preview : false,
-            'post'      => isset($post) ? $post : false,
             'start'     => isset($start) ? $start : 1,
             'settings'  => $this->getVars(),
             ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
@@ -334,7 +327,7 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm(new DeleteType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['topic' => $managedTopic->getId()]);
+        $form = $this->createForm(new DeleteTopicType($this->get('zikula_users_module.current_user')->isLoggedIn()), [], ['topic' => $managedTopic->getId()]);
         $form->handleRequest($request);
 
         $hook = new ValidationHook(new ValidationProviders());
@@ -401,7 +394,7 @@ class TopicController extends AbstractController
         }
 
         $form = $this->createForm(
-                    new JoinMoveType($this->get('translator'), $this->get('zikula_dizkus_module.forum_manager')->getAllChildren()),
+                    new JoinMoveTopicType($this->get('translator'), $this->get('zikula_dizkus_module.forum_manager')->getAllChildren()),
                     [],
                     ['topic' => $managedTopic->getId(), 'forum' => $managedTopic->getForumId()]
         );
@@ -653,3 +646,8 @@ class TopicController extends AbstractController
             ]);
     }
 }
+        // @todo this maybe should be done by hooks?
+//            if (ModUtil::apiFunc($this->name, 'user', 'isSpam', $newManagedTopic->getFirstPost())) {
+//                $this->addFlash('error', $this->__('Error! Your post contains unacceptable content and has been rejected.'));
+//                return false;
+//            }

@@ -96,8 +96,19 @@ class PostManager
      */
     private $_topic;
 
-    public function __construct(
-    TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi, ForumUserManager $forumUserManagerService, ForumManager $forumManagerService, TopicManager $topicManagerService, SynchronizationHelper $synchronizationHelper
+    public function __construct
+    (
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        RequestStack $requestStack,
+        EntityManager $entityManager,
+        CurrentUserApi $userApi,
+        Permission $permission,
+        VariableApi $variableApi,
+        ForumUserManager $forumUserManagerService,
+        ForumManager $forumManagerService,
+        TopicManager $topicManagerService,
+        SynchronizationHelper $synchronizationHelper
     )
     {
         $this->name = 'ZikulaDizkusModule';
@@ -225,17 +236,23 @@ class PostManager
     /**
      * Update post
      *
-     * @todo event
+     * @param array/object $data Post data or post object to save
+     *
      * @return bool
      */
     public function update($data = null)
     {
-        if (!is_null($data)) {
+        if (is_null($data)) {
+            throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
+        } elseif ($data instanceof PostEntity) {
+            $this->entityManager->persist($data);
+        } elseif (is_array($data)) {
             $this->_post->merge($data);
+            $this->entityManager->persist($this->_post);
         }
-        // update topic
-        $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
+
+        return true;
     }
 
     /**
@@ -254,7 +271,7 @@ class PostManager
             unset($data['topic_id']);
             $this->_post->merge($data);
         } else {
-            throw new \InvalidArgumentException('Cannot create Post, no data provided.');
+            throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
         }
         $managedForumUser = $this->forumUserManagerService->getManager();
         $this->_post->setPoster($managedForumUser->get());

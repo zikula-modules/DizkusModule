@@ -348,6 +348,14 @@ class ForumManager
     {
         $this->_forum->setLast_post($post);
         $this->entityManager->flush();
+        // @todo fix last post for parents SQLSTATE[23000]: Integrity constraint violation: 1062
+        // something is wrong with field definition does not allowe duplicates for last posts
+//        $parents = $this->_forum->getParents();
+//        foreach ($parents as $parent) {
+//            $parent->setLast_post($post);
+//            $this->entityManager->flush();
+//        }
+
     }
 
     /**

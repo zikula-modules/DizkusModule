@@ -109,10 +109,10 @@ class TwigExtension extends \Twig_Extension
         // If there is a "[" and a "]" in the message, process it.
         if ((strpos($message, '[') && strpos($message, ']'))) {
             // [CODE] and [/CODE] for posting code (HTML, PHP, C etc etc) in your posts.
-            $message = $this->encode_code($message);
+            //$message = $this->encode_code($message);
 
             // [QUOTE] and [/QUOTE] for posting replies with quote, or just for quoting stuff.
-            $message = $this->encode_quote($message);
+           $message = $this->encode_quote($message);
         }
 
         // Remove added padding from the string..
@@ -185,7 +185,7 @@ class TwigExtension extends \Twig_Extension
                         if ($start_tag_len > 7) {
                             $username = substr($message, $start_index + 7, $start_tag_len - 8);
                         } else {
-                            $username = $this->__('Quote');
+                            $username = 'Quote';//$this->__('Quote');
                         }
 
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.

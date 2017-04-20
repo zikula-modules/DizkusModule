@@ -129,6 +129,18 @@ class Permission
      *
      * @return bool
      */
+    public function canDelete($args)
+    {
+        return $this->checkPermission($args, ACCESS_DELETE);
+    }
+
+    /**
+     * Check if a user is allowed to moderate forum.
+     *
+     * @param array $args arguments
+     *
+     * @return bool
+     */
     public function canModerate($args)
     {
         return $this->checkPermission($args, ACCESS_MODERATE);
@@ -180,13 +192,15 @@ class Permission
                 }
             }
         }
+
         if (!$this->variableApi->get($this->name, 'forum_enabled') && !$this->permissionApi->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $this->request->getSession()->getFlashBag()->add('error', $this->variableApi->get($this->name, 'forum_disabled_info'));
 
             return false;
         }
+
         if (empty($userId)) {
-            $userId = null;
+            $userId = $this->request->getSession()->get('uid') > 1 ? $this->request->getSession()->get('uid') : 1;
         }
         if (!isset($forum)) {
             return $this->permissionApi->hasPermission($this->name.'::', '::', $level, $userId);

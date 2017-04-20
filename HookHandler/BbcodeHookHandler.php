@@ -17,7 +17,7 @@
 namespace Zikula\DizkusModule\HookHandler;
 
 //use Zikula\Bundle\HookBundle\Hook\AbstractHookListener;
-//use Zikula\Bundle\HookBundle\Hook\DisplayHook;
+use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 //use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
 //use Zikula\Bundle\HookBundle\Hook\ProcessHook;
 //use Zikula\Bundle\HookBundle\Hook\ValidationHook;
@@ -29,7 +29,7 @@ namespace Zikula\DizkusModule\HookHandler;
 //use Zikula\DizkusModule\Manager\PostManager;
 //use Zikula\DizkusModule\Manager\TopicManager;
 
-class TopicHookHandler extends AbstractHookHandler
+class BbcodeHookHandler extends AbstractHookHandler
 {
     /**
      * Display hook for view.
@@ -84,7 +84,7 @@ class TopicHookHandler extends AbstractHookHandler
 
 //        $repository = $this->entityManager->getRepository('CmfcmfMediaModule:HookedObject\HookedObjectEntity');
 //        $hookedObject = $repository->getByHookOrCreate($hook);
-        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.view.html.twig', [
+        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.view.html.twig', [
 //            'hookedObjectMedia' => $hookedObject->getHookedObjectMedia(),
 //            'mediaTypeCollection' => $this->mediaTypeCollection
         ]);
@@ -117,7 +117,7 @@ class TopicHookHandler extends AbstractHookHandler
         // add this response to the event stack
         // $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/edit.tpl'));
 
-        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.edit.html.twig', [
+        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.edit.html.twig', [
 //            'hookedObjectMedia' => $hookedObject->getHookedObjectMedia(),
 //            'mediaTypeCollection' => $this->mediaTypeCollection
         ]);
@@ -142,17 +142,6 @@ class TopicHookHandler extends AbstractHookHandler
 //            $this->view->assign('actionWord', $actionWord);
 //            //   $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
 //        }
-    }
-
-    /**
-     * Validate hook for edit.
-     *
-     * @param ValidationHook $hook the hook
-     *
-     * @return void (unused)
-     */
-    public function validateEdit(ValidationHook $hook)
-    {
     }
 
     /**
@@ -303,5 +292,23 @@ class TopicHookHandler extends AbstractHookHandler
 //        }
 //
 //        return $hookconfig;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        $class = get_class($this);
+
+        return lcfirst(substr($class, strrpos($class, '\\') + 1, -strlen('HookHandler')));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getProvider()
+    {
+        return 'provider.dizkus.ui_hooks.' . $this->getType();
     }
 }

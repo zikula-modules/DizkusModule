@@ -1,9 +1,12 @@
 parameters:
     # Common
     zikula_dizkus_module.security.class: Zikula\DizkusModule\Security\Permission
-    zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
     zikula_dizkus_module.twig.extension.class: Zikula\DizkusModule\Twig\TwigExtension
     zikula_dizkus_module.links.class: Zikula\DizkusModule\Container\LinkContainer
+    # Listeners 
+    zikula_dizkus_module.module_listener.class: Zikula\DizkusModule\Listener\ModuleListener
+    zikula_dizkus_module.user_listener.class: Zikula\DizkusModule\Listener\UserListener
+    zikula_dizkus_module.spam_listener.class: Zikula\DizkusModule\Listener\SpamListener
     # Forms
     zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
     # Helpers
@@ -54,15 +57,35 @@ services:
             - "@zikula_extensions_module.api.variable"
             - "@zikula_users_module.current_user"
         
-    zikula_dizkus_module.event_listener:
-        class: %zikula_dizkus_module.event_listener.class%
+# Event listeners        
+        
+    zikula_dizkus_module.module_listener:
+        class: %zikula_dizkus_module.module_listener.class%
         tags:
             - { name: kernel.event_subscriber }
         arguments:
             - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
             - "@router"
+            - "@hook_dispatcher.storage"
+            - "@translator.default"
+            - "@service_container"
 
+    zikula_dizkus_module.user_listener:
+        class: %zikula_dizkus_module.user_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+
+    zikula_dizkus_module.spam_listener:
+        class: %zikula_dizkus_module.spam_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@zikula_extensions_module.api.variable"
+          - "@translator.default"
+          - "@router"
 # Forms
 
     zikula_dizkus_module.form.type.admin_modify_forum:
@@ -179,3 +202,11 @@ services:
             - "@templating"
             - "@zikula_dizkus_module.security"
             - "@translator"
+            
+    zikula_dizkus_module.hook_handler.topic:
+      class: Zikula\DizkusModule\HookHandler\TopicHookHandler
+      parent: zikula_dizkus_module.hook_handler.base            
+            
+    zikula_dizkus_module.hook_handler.bbcode:
+      class: Zikula\DizkusModule\HookHandler\BbcodeHookHandler
+      parent: zikula_dizkus_module.hook_handler.base

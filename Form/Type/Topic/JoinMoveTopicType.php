@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class JoinMoveType extends AbstractType
+class JoinMoveTopicType extends AbstractType
 {
     protected $translator;
 
@@ -58,20 +58,15 @@ class JoinMoveType extends AbstractType
                     'required'  => true,
                     'data'      => 0,
                 ])
-                ->add('move', SubmitType::class, [
-                    'label' => 'Move topic',
-                ])
-                ->add('join', SubmitType::class, [
-                    'label' => 'Join topic',
-                ])
-                ->add('cancel', SubmitType::class, [
-                    'label' => 'Cancel',
-        ]);
+
+                ->add('move', SubmitType::class)
+                ->add('join', SubmitType::class)
+                ->add('cancel', SubmitType::class);
     }
 
     public function getName()
     {
-        return 'topic_joinmove_form';
+        return 'zikula_dizkus_form_topic_joinmove';
     }
 
     /**

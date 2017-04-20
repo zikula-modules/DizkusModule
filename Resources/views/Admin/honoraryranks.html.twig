@@ -9,7 +9,7 @@
     <form class="form-horizontal" action="{{ path('zikuladizkusmodule_admin_ranks', {'ranktype':'1'}) }}" method="post">
         <div>
             <input type="hidden" name="ranks[-1][type]" value="1" />
-            <input type="hidden" id="rankImagesPath" value="{{ settings.url_ranks_images }}" />
+            <input type="hidden" id="rankImagesPath" value="{{ zasset('@ZikulaDizkusModule:images/' ~ settings.url_ranks_images ~ '/') }}" />
             <fieldset>
                 <legend>{{ __("Create new rank") }}</legend>
                 <div class="form-group">
@@ -23,13 +23,13 @@
                     <div class="col-lg-9">
                         <div class="col-lg-3">
                             <select name="ranks[-1][image]" id="newrank_image" class="form-control input-sm">
-                            {% set selectedimage = rankimages.0 %}
-                            {% for rankimage in rankimages %}
-                                <option value="{{ rankimage }}" {% if loop.first %}selected="selected"{% set selectedimage = rankimage %}{% endif %}>{{ rankimage }}</option>
-                            {% endfor %}
+                                {% set selectedimage = rankimages.0 %}
+                                {% for rankimage in rankimages %}
+                                    <option value="{{ rankimage }}" {% if loop.first %}selected="selected"{% set selectedimage = rankimage %}{% endif %}>{{ rankimage }}</option>
+                                {% endfor %}
                             </select>
                         </div>
-                        <img id="newimage" src="{{ settings.url_ranks_images }}/{{ selectedimage }}" alt="rankimage" />
+                        <img id="newimage" src="{{ zasset('@ZikulaDizkusModule:images/' ~ settings.url_ranks_images ~ '/' ~ selectedimage) }}" alt="rankimage" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="col-lg-offset-3 col-lg-9">
-                      <button type="submit" name="submit" class="btn btn-success" alt="{{ __('Create') }}" title="{{ __('Create') }}">{{ __('Create') }}</button>
+                    <button type="submit" name="submit" class="btn btn-success" alt="{{ __('Create') }}" title="{{ __('Create') }}">{{ __('Create') }}</button>
                 </div>
             </fieldset>
         </div>
@@ -63,20 +63,20 @@
                         <td><input type="text" class="form-control input-sm" name="ranks[{{ rank.rank_id }}][maximumCount]" value="{{ rank.maximumCount }}" maxlength="8" size="4" /></td>
                         <td>
                             <div class="col-lg-7">
-                            <select name="ranks[{{ rank.rank_id }}][image]" id="rank_image{{ num }}" data-id='{{ num }}' class="rankimageselect form-control input-sm">
-                                {% for rankimage in rankimages %}
-                                    <option value="{{ rankimage }}" {% if rankimage == rank.image %}selected="selected"{% endif %}>{{ rankimage }}</option>
-                                {% endfor %}
-                            </select>
+                                <select name="ranks[{{ rank.rank_id }}][image]" id="rank_image{{ num }}" data-id='{{ num }}' class="rankimageselect form-control input-sm">
+                                    {% for rankimage in rankimages %}
+                                        <option value="{{ rankimage }}" {% if rankimage == rank.image %}selected="selected"{% endif %}>{{ rankimage }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                            <img id="image{{ num }}" src="/{{ settings.url_ranks_images }}/{{ rank.image }}" alt="rankimage" />
+                            <img id="image{{ num }}" src="{{ zasset('@ZikulaDizkusModule:images/' ~ settings.url_ranks_images ~ '/' ~ rank.image) }}" alt="rankimage" />
                         </td>
                         <td><input type="text" class="form-control input-sm" name="ranks[{{ rank.rank_id }}][description]" value="{{ rank.description }}" maxlength="255" size="40" /></td>
                         <td><input type="checkbox" value="1" name="ranks[{{ rank.rank_id }}][rank_delete]" /></td>
                     </tr>
                 {% else %}
                     <tr class="danger"><td colspan="6">{{ __('No items found.') }}</td></tr>
-                {% endfor %}
+                    {% endfor %}
             </tbody>
         </table>
         <div class="col-lg-offset-3 col-lg-9">

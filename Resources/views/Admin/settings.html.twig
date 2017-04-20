@@ -16,6 +16,8 @@
         <li role="presentation"><a href="#forums" aria-controls="forums" role="tab" data-toggle="tab">{{ __('Forums') }}</a></li>
         <li role="presentation"><a href="#topics" aria-controls="topics" role="tab" data-toggle="tab">{{ __('Topics') }}</a></li>
         <li role="presentation"><a href="#posts" aria-controls="posts" role="tab" data-toggle="tab">{{ __('Posts') }}</a></li>
+        <li role="presentation"><a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab">{{ __('Notifications settings') }}</a></li>
+            {#        <li role="presentation"><a href="#hooks" aria-controls="hooks" role="tab" data-toggle="tab">{{ __('Hooks settings') }}</a></li>#}
         <li role="presentation"><a href="#security" aria-controls="security" role="tab" data-toggle="tab">{{ __('Security settings') }}</a></li>
         <li role="presentation"><a href="#external" aria-controls="external" role="tab" data-toggle="tab">{{ __('External sources') }}</a></li>
     </ul>
@@ -56,12 +58,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.email_from, __('Sender address for e-mail messages from forums'), { 'label_attr': {'class': 'col-md-4'} }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(form.email_from, { 'attr': {'class': '', 'size': 30, 'maxlength':200} }) }}
-                    </div>
-                </div>
-                <div class="form-group">
                     {{ form_label(form.ajax, __('Enable user-side ajax') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.ajax, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
@@ -73,7 +69,7 @@
         <div role="tabpanel" class="tab-pane" id="users">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("Forum supports simple user profile page.")}}
                 </p>
             </div>
             <fieldset>
@@ -135,7 +131,7 @@
         <div role="tabpanel" class="tab-pane" id="forums">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("Some forum search settings are not available at the moment.")}}
                 </p>
             </div>
             <fieldset>
@@ -156,10 +152,8 @@
                     </div>
                 </div>
             </fieldset>
-
             <fieldset>
                 <legend>{{ __("Forum Search settings") }}</legend>
-
                 <div class="form-group">
                     {{ form_label(form.fulltextindex, __('Enable full-text index field searching') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
@@ -211,7 +205,7 @@
         <div role="tabpanel" class="tab-pane" id="topics">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("Topics settings.")}}
                 </p>
             </div>
             <fieldset>
@@ -235,18 +229,33 @@
                     </div>
                 </div>
             </fieldset>
-
+            <fieldset>
+                <legend>{{ __("Hooks settings") }}</legend>
+                <div class="form-group">
+                    {{ form_label(form.deletehookaction, __("Action to be performed when 'delete' hook is called") ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.deletehookaction, { 'attr': {'class': ''} }) }}
+                    </div>
+                </div>
+            </fieldset>
         </div>
         <!-- Posts -->
         <div role="tabpanel" class="tab-pane" id="posts">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("Topic preferences.")}}
                 </p>
             </div>
             <fieldset>
                 <legend>{{ __("Posts features") }}</legend>
                 <div class="form-group">
+                    {{ form_label(form.striptags, __('Strip html tags from posts') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.striptags, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                        <p class="col-md-12 help-block alert alert-info pull-right">
+                            {{ __("Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags.")}}
+                        </p>
+                    </div>
                 </div>
             </fieldset>
         </div>
@@ -254,7 +263,7 @@
         <div role="tabpanel" class="tab-pane" id="security">
             <div class="col-md-12">
                 <p class="col-md-12 help-block alert ">
-                    {{ __("If the 'Forums are accessible to visitors' setting is deactivated then only administrators will have access to the forums. You can temporarily deactivate this setting to take the forums off-line when you need to perform maintenance.")}}
+                    {{ __("Logging IP may cause legal actions depend on your country law.")}}
                 </p>
             </div>
             <fieldset>
@@ -266,22 +275,33 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.striptags, __('Strip user signatures from posts') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(form.striptags, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
-                        <p class="col-md-12 help-block alert alert-info pull-right">
-                            {{ __("Notice: Setting 'Strip HTML tags from new posts' to enabled does not affect the content of '[code][/code]' BBCode tags.")}}
-                        </p>
-                    </div>
-                </div>
-                <div class="form-group">
                     {{ form_label(form.timespanforchanges, __("Number of hours during which non-moderators are allowed to edit their post (leave blank for unlimited)"), { 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.timespanforchanges, { 'attr': {'class': '', 'size': 3, 'maxlength': 3 } }) }}
                     </div>
                 </div>
+            </fieldset>
+        </div>
+        <!-- Notifications -->
+        <div role="tabpanel" class="tab-pane" id="notifications">
+            <div class="col-md-12">
+                <p class="col-md-12 help-block alert ">
+                    {{ __("Here you can adjust notification settings.")}}
+                </p>
+            </div>
+            <fieldset>
+                <legend>{{ __("Notification settings") }}</legend>
                 <div class="form-group">
-                    {{ form_label(form.striptagsfromemail, __('Strip HTML tags from outgoing email post content') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    {{ form_label(form.email_from, __('Sender address for e-mail messages from forums'), { 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.email_from, { 'attr': {'class': '', 'size': 30, 'maxlength':200} }) }}
+                        <p class="col-md-12 help-block alert alert-info pull-right">
+                            {{ __("Leave empty to use system admin email.")}}
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.striptagsfromemail, __('Strip HTML tags from outgoing email') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.striptagsfromemail, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
                         <p class="col-md-12 help-block alert alert-info pull-right">
@@ -297,6 +317,15 @@
                 </div>
             </fieldset>
         </div>
+        <!-- Hook -->
+        {#        <div role="tabpanel" class="tab-pane" id="hooks">
+                    <div class="col-md-12">
+                        <p class="col-md-12 help-block alert ">
+                            {{ __("This features are disabled at the moment")}}
+                        </p>
+                    </div>
+        
+                </div>#}
         <!-- External -->
         <div role="tabpanel" class="tab-pane" id="external">
             <div class="col-md-12">
@@ -322,12 +351,6 @@
                         <p class="help-block alert alert-danger">
                             {{ __("This setting is disabled.")}}
                         </p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.deletehookaction, __("Action to be performed when 'delete' hook is called") ,{ 'label_attr': {'class': 'col-md-4'} }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(form.deletehookaction, { 'attr': {'class': ''} }) }}
                     </div>
                 </div>
             </fieldset>  

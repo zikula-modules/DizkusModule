@@ -20,12 +20,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Hook\ProcessHook;
+use Zikula\Bundle\HookBundle\Hook\ProcessHook;
+use Zikula\Bundle\HookBundle\Hook\ValidationHook;
+use Zikula\Bundle\HookBundle\Hook\ValidationProviders;
 use Zikula\Core\RouteUrl;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Entity\PostEntity;
-
-
+use Zikula\DizkusModule\Form\Type\Post\EditPostType;
+use Zikula\DizkusModule\Form\Type\Post\DeletePostType;
+use Zikula\DizkusModule\Entity\RankEntity;
 
 class PostController extends AbstractController
 {
@@ -87,9 +90,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("/post/{post}/edit", requirements={"post" = "^[1-9]\d*$"}, options={"expose"=true})
-     * @Method("GET")
      *
-     * Edit a post.
+     * Edit a post
      *
      * @param Request $request
      * @param integer $post The post id to edit
@@ -101,34 +103,80 @@ class PostController extends AbstractController
      */
     public function editAction(Request $request, $post)
     {
-        //        $this->errorIfForumDisabled();
-//        $this->checkAjaxToken();
-//        $post_id = $request->request->get('post', null);
-//        $currentUserId = UserUtil::getVar('uid');
-//        if (!empty($post_id)) {
-//            $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id); // new PostManager($post_id);
-//            $forum = $managedPost->get()->getTopic()->getForum();
-//            $managedForum = new ForumManager(null, $forum);
-//            if ($managedPost->get()->getPoster()->getUser_id() == $currentUserId || $managedForum->isModerator()) {
-//                $this->view->setCaching(false);
-//                $this->view->assign('post', $managedPost->get());
-//                // simplify our live
-//                $this->view->assign('postingtextareaid', 'postingtext_' . $managedPost->getId() . '_edit');
-//                $this->view->assign('isFirstPost', $managedPost->get()->isFirst());
-//
-//                return new AjaxResponse($this->view->fetch('Ajax/editpost.tpl'));
-//            } else {
-//                throw new AccessDeniedException();
-//            }
-//        }
-//        throw new \InvalidArgumentException($this->__f('Error! No post ID in %s.', '\'Dizkus/Ajax/editpost()\''));
+        $format = $this->decodeFormat($request);
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        if (!$managedPost->exists()){
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            if ($format == 'json' || $format == 'ajax.html') {
+                return new Response(json_encode(['error' => $error])); // add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        if(!$currentForumUser->allowedToEdit($managedPost)) {
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->createForm(new EditPostType($currentForumUser->isLoggedIn()), $managedPost->get(), []);
+        $form->handleRequest($request);
+
+        // check hooked modules for validation for post
+        $postHook = new ValidationHook(new ValidationProviders());
+        /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
+        $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_edit', $postHook)->getValidators();
+        if ($postHookValidators->hasErrors()) {
+            foreach ($postHookValidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto edit_error;
+        }
+
+        if (!$form->isValid()) {
+            goto edit_error;
+        }
+
+        if ($form->get('preview')->isClicked()) {
+              $preview = $form->getData();
+              $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+        }
+
+        if ($form->get('save')->isClicked()) {
+            $managedPost->update($form->getData());
+            $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()]);
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
+
+            // redirect to the topic
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
+        }
+
+        edit_error:
+
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/edit.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'currentTopic' => $managedPost->getManagedTopic(),
+                    'form' => $form->createView(),
+                    'managedPost' => $managedPost,
+                    'ranks'       => isset($ranks) ? $ranks : false,
+                    'preview'     => isset($preview) ? $preview : false,
+                    'settings' => $this->getVars()
+                ]);
+        if ($format == 'ajax.html') {
+            return new Response(json_encode(['html' => $contentHtml]));
+        }
+        // full html page
+        return new Response($contentHtml);
     }
 
     /**
-     * @Route("/post/preview", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/post/{post}/delete", requirements={"post" = "^[1-9]\d*$"}, options={"expose"=true})
      *
-     * Edit a post.
+     * Delete a post
      *
      * @param Request $request
      * @param integer $post The post id to edit
@@ -138,92 +186,76 @@ class PostController extends AbstractController
      *
      * @return AjaxResponse
      */
-    public function previewAction(Request $request)
+    public function deleteAction(Request $request, $post)
     {
+        $format = $this->decodeFormat($request);
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        if (!$managedPost->exists()){
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            if ($format == 'json' || $format == 'ajax.html') {
+                return new Response(json_encode(['error' => $error])); // add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager();
-
-        $managedPost->getPreview($request->get('topic_reply_form'));
-
-        return $this->render("@ZikulaDizkusModule/Post/preview.html.twig", [
-            'currentForumUser' => $currentForumUser,
-            'postManager' => $managedPost,
-            'settings' => $this->getVars(),
-        ], $request->isXmlHttpRequest() ? new PlainResponse() : null);
-    }
-
-    /**
-     * @Route("/post/{post}/update", requirements={"post" = "^[1-9]\d*$"}, options={"expose"=true})
-     * @Method("POST")
-     *
-     * Update a post.
-     *
-     * @param Request $request
-     *                         postId           The post id to update.
-     *                         title
-     *                         message          The new post message.
-     *                         delete_post      Delete this post?
-     *                         attach_signature Attach signature?
-     *
-     * RETURN: array($action The executed action.
-     *               $newText The new post text (can be empty).
-     *               $redirect The page to redirect to (can be empty).
-     *              )
-     *
-     * @throws \InvalidArgumentException
-     * @throws AccessDeniedException     if the user tries to delete the only post of a topic
-     *
-     * @return AjaxResponse
-     */
-    public function updateAction(Request $request, $post)
-    {
-        //        $this->errorIfForumDisabled();
-//        $this->checkAjaxToken();
-//        $post_id = $request->request->get('postId', '');
-//        $title = $request->request->get('title', '');
-//        $message = $request->request->get('message', '');
-//        $delete = $request->request->get('delete_post', 0) == '1' ? true : false;
-//        $attach_signature = $request->request->get('attach_signature', 0) == '1' ? true : false;
-//        if (!empty($post_id)) {
-//            $message = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $message);
-//            $this->checkMessageLength($message);
-//            $managedOriginalPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post_id); //new PostManager($post_id);
-//            if ($delete) {
-//                if ($managedOriginalPost->get()->isFirst()) {
-//                    throw new AccessDeniedException($this->__('Error! Cannot delete the first post in a topic. Delete the topic instead.'));
-//                } else {
-//                    $response = ['action' => 'deleted'];
-//                }
-//                $managedOriginalPost->delete();
-//                $this->dispatchHooks('dizkus.ui_hooks.post.process_delete', new ProcessHook($managedOriginalPost->getId()));
-//            } else {
-//                $data = [
-//                    'title' => $title,
-//                    'post_text' => $message,
-//                    'attachSignature' => $attach_signature,];
-//                $managedOriginalPost->update($data);
-//                $url = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewtopic', ['topic' => $managedOriginalPost->getTopicId()], 'pid' . $managedOriginalPost->getId());
-//                $this->dispatchHooks('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedOriginalPost->getId(), $url));
-//                if ($attach_signature && !$this->getVar('removesignature')) {
-//                    // include signature in response text
-//                    $sig = UserUtil::getVar('signature', $managedOriginalPost->get()->getPoster_id());
-//                    $message .= !empty($sig) ? "<div class='dzk_postSignature'>{$this->getVar('signature_start')}<br />{$sig}<br />{$this->getVar('signature_end')}</div>" : '';
-//                }
-//                // must dzkVarPrepHTMLDisplay the message content here because the template modifies cannot be run in ajax
-//                $newText = ModUtil::apiFunc($this->name, 'user', 'dzkVarPrepHTMLDisplay', $message);
-//                // process hooks
-//                $newText = $this->dispatchHooks('dizkus.filter_hooks.post.filter', new FilterHook($newText))->getData();
-//                // process internal quotes/hooks
-//                $newText = ModUtil::apiFunc($this->name, 'ParseTags', 'transform', ['message' => $newText]);
-//                $response = [
-//                    'action' => 'updated',
-//                    'newText' => $newText,];
-//            }
-//
-//            return new AjaxResponse($response);
+//        if(!$currentForumUser->allowedToEdit($managedPost) || !$currentForumUser->allowedToModerate($managedPost)) {
+//            throw new AccessDeniedException();
 //        }
-//        throw new \InvalidArgumentException($this->__f('Error! No post_id in %s.', '\'Dizkus/Ajax/updatepost()\''));
+
+        $form = $this->createForm(new DeletePostType($currentForumUser->isLoggedIn()), $managedPost->get(), []);
+        $form->handleRequest($request);
+
+        // check hooked modules for validation for post
+        $postHook = new ValidationHook(new ValidationProviders());
+        /** @var $postHookValidators \Zikula\Core\Hook\ValidationProviders */
+        $postHookValidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.validate_delete', $postHook)->getValidators();
+        if ($postHookValidators->hasErrors()) {
+            foreach ($postHookValidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto delete_error;
+        }
+
+        if (!$form->isValid()) {
+            goto delete_error;
+        }
+
+        if ($form->get('delete')->isClicked()) {
+            $managedPost->update($form->getData());
+
+            // @todo delete
+
+            $url = new RouteUrl('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()]);
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.post.process_edit', new ProcessHook($managedPost->getId(), $url));
+
+            // redirect to the topic
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
+        }
+
+        delete_error:
+
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/delete.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'currentTopic' => $managedPost->getManagedTopic(),
+                    'form' => $form->createView(),
+                    'managedPost' => $managedPost,
+                    'settings' => $this->getVars()
+                ]);
+        if ($format == 'ajax.html') {
+            return new Response(json_encode(['html' => $contentHtml]));
+        }
+        // full html page
+        return new Response($contentHtml);
     }
+
+
+
 
     /**
      * @Route("/post/{post}/move", requirements={"post" = "^[1-9]\d*$"}, options={"expose"=true})
@@ -234,9 +266,10 @@ class PostController extends AbstractController
      */
     public function moveAction(Request $request, $post)
     {
-        //        if (!ModUtil::apiFunc($this->name, 'Permission', 'canModerate')) {
-//            throw new AccessDeniedException();
-//        }
+        $format = $this->decodeFormat($request);
+        if (!$this->get('zikula_dizkus_module.security')->canModerate([])) {
+            throw new AccessDeniedException();
+        }
 //
 //        // get the input
 //        $id = (int) $this->request->query->get('post');

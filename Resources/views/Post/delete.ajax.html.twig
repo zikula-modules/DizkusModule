@@ -1,0 +1,23 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaDizkusModule:Form:checkbox.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="text-danger">{{ __('You are about to delete below post. Please confirm.') }}</h4>
+    </div>
+    <div class="panel-body" style="border-top:0px;">
+        {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': managedPost.get()}) }}
+        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_delete', id=managedPost.id) }}
+    </div>
+    <div class="panel-footer text-right">
+        <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':managedPost.getManagedTopic().id}) }}" role="button">{{ __('Cancel') }}</a>
+        {{ form_widget(form.delete, {'attr': {'class': 'btn btn-danger btn-sm'},  'label': __('Delete post')}) }}
+    </div>
+</div>
+{{ form_end(form) }}

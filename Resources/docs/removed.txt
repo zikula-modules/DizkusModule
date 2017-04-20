@@ -152,27 +152,6 @@
 //    }
 
 
-// @todo move to validation
-//    /**
-//     * Checks if the given message isn't too long.
-//     *
-//     * @param $message the message to check
-//     *
-//     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-//     *
-//     * @return bool false if the message is to long, else true
-//     */
-//    public function checkMessageLength($message)
-//    {
-//        if (!isset($message)) {
-//            throw new \InvalidArgumentException();
-//        }
-//        if (strlen($message) + 8 > 65535) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
 
 // @todo move to filter hooks
 

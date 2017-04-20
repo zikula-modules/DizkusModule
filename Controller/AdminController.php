@@ -175,7 +175,7 @@ class AdminController extends AbstractController
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
-            list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+            $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
             if ($ranktype == 0) {
                 $template = 'ranks';
@@ -184,7 +184,7 @@ class AdminController extends AbstractController
             return $this->render("@ZikulaDizkusModule/Admin/$template.html.twig", [
                 'ranks' => $ranks,
                 'ranktype' => $ranktype,
-                'rankimages' => $rankimages,
+                'rankimages' => $this->get('zikula_dizkus_module.rank_helper')->getAllRankImages(),
                 'settings' => $this->getVars()
             ]);
         } else {
@@ -256,11 +256,11 @@ class AdminController extends AbstractController
             }
         }
 
-        list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
+        $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
 
         return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
             'ranks' => $ranks,
-            'rankimages' => $rankimages,
+            'rankimages' => $this->get('zikula_dizkus_module.rank_helper')->getAllRankImages(),
             'allusers' => $userArray,
             'letter' => $letter,
             'page' => $page,
@@ -470,40 +470,32 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $topicsubscriptions = [];
-        $forumsubscriptions = [];
-
-        $username = null;
-        if (!empty($uid)) {
-            $username = \UserUtil::getVar('uname', $uid);
-        }
-
-        if (!empty($uid)) {
-            $topicsubscriptions = $this->get('zikula_dizkus_module.topic_manager')->getSubscriptions($uid);
-            $forumsubscriptions = $this->get('zikula_dizkus_module.forum_manager')->getSubscriptions($uid);
+        if ($request->isMethod('POST') && $request->request->get('username', false)){
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManagedByUserName($request->request->get('username'), false);
+        }else{
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid, false);
         }
 
         if ($request->isMethod('POST')) {
-            $forumSub = $request->request->get('forumsubscriptions', []);
-            foreach ($forumSub as $id => $selected) {
-                if ($selected) {
-                    $this->get('zikula_dizkus_module.forum_manager')->unsubscribe($id, $uid);
+            if ($managedForumUser->exists()){
+                $forumSub = $request->request->get('forumsubscriptions', []);
+                foreach ($forumSub as $id => $selected) {
+                    if ($selected) {
+                        $managedForumUser->unsubscribeForum($id);
+                    }
                 }
-            }
 
-            $topicSub = $request->request->get('topicsubscriptions', []);
-            foreach ($topicSub as $id => $selected) {
-                if ($selected) {
-                    $this->get('zikula_dizkus_module.topic_manager')->unsubscribe($id, $uid);
+                $topicSub = $request->request->get('topicsubscriptions', []);
+                foreach ($topicSub as $id => $selected) {
+                    if ($selected) {
+                        $managedForumUser->unsubscribeFromTopic($id);
+                    }
                 }
             }
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/managesubscriptions.html.twig', [
-            'uid' => $uid,
-            'username' => $username,
-            'topicsubscriptions' => $topicsubscriptions,
-            'forumsubscriptions' => $forumsubscriptions
+            'managedForumUser' => $managedForumUser
         ]);
     }
 
