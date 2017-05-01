@@ -95,6 +95,5 @@ class HookContainer extends AbstractHookContainer
         $bundle8->addEvent('process_edit', 'dizkus.ui_hooks.post_text.process_edit');
         $bundle8->addEvent('process_delete', 'dizkus.ui_hooks.post_text.process_delete');
         $this->registerHookSubscriberBundle($bundle8);
-
     }
 }

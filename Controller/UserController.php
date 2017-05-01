@@ -59,14 +59,13 @@ class UserController extends AbstractController
         foreach ($users as $user) {
             $reply['suggestions'][] = [
                 'value' => htmlentities(stripslashes($user->getUname())),
-                'data' => $user->getUid(),];
+                'data' => $user->getUid(), ];
         }
 
         return new PlainResponse(json_encode($reply));
     }
 
     /**
-     *
      * @Route("/user/profile/{user}", defaults={"user"=null})
      *
      * prefs
@@ -161,7 +160,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -219,7 +218,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -252,7 +251,6 @@ class UserController extends AbstractController
 
         if ($format == 'json') {
         } elseif ($format == 'ajax.html') {
-
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -283,7 +281,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -317,7 +315,6 @@ class UserController extends AbstractController
 
         if ($format == 'json') {
         } elseif ($format == 'ajax.html') {
-
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -337,7 +334,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -395,7 +392,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -428,9 +425,9 @@ class UserController extends AbstractController
 
         if ($format == 'json') {
         } elseif ($format == 'ajax.html') {
-
         } else {
             $this->addFlash('status', $status);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
@@ -460,7 +457,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -492,8 +489,8 @@ class UserController extends AbstractController
 
         if ($format == 'json') {
         } elseif ($format == 'ajax.html') {
-
         } else {
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
@@ -512,7 +509,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -570,7 +567,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -628,7 +625,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -698,7 +695,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -733,7 +730,7 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
-                $forumUserManager->setSignature($data['signature']);// this stores itself automaticaly
+                $forumUserManager->setSignature($data['signature']); //this stores itself automaticaly
                 $this->addFlash('status', $this->__('Done! Signature has been updated.'));
             }
 
@@ -765,7 +762,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -809,7 +806,7 @@ class UserController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');

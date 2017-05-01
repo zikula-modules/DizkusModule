@@ -167,14 +167,14 @@ class LinkContainer implements LinkContainerInterface
                 'title' => $this->translator->__('Modify personal settings'),
                 'icon'  => 'wrench', ];
             if ($this->variableApi->get('ZikulaDizkusModule', 'forum_subscriptions_enabled')) {
-            $links[] = [
+                $links[] = [
                 'url'   => $this->router->generate('zikuladizkusmodule_user_manageforumsubscriptions'),
                 'text'  => $this->translator->__('Forum subscriptions'),
                 'title' => $this->translator->__('Manage forum subscriptions'),
                 'icon'  => 'envelope-alt', ];
             }
             if ($this->variableApi->get('ZikulaDizkusModule', 'topic_subscriptions_enabled')) {
-            $links[] = [
+                $links[] = [
                 'url'   => $this->router->generate('zikuladizkusmodule_user_managetopicsubscriptions'),
                 'text'  => $this->translator->__('Topic subscriptions'),
                 'title' => $this->translator->__('Manage topic subscriptions'),

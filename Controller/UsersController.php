@@ -44,10 +44,10 @@ class UsersController extends AbstractController
         $settings = $this->getVars();
         $secinactivemins = $this->get('zikula_extensions_module.api.variable')->getSystemVar('secinactivemins');
         $online = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getOnlineUsers($secinactivemins, $settings['onlineusers_moderatorcheck']);
-        if(count($online['users']) > 0 && $settings['onlineusers_moderatorcheck']){
-            foreach($online['users'] as $uid => $user){
-                if($user['isModerator'] == false){
-                   $online['users'][$uid]['isModerator'] = $this->hasPermission('ZikulaDizkusModule::', '::', ACCESS_MODERATE);
+        if (count($online['users']) > 0 && $settings['onlineusers_moderatorcheck']) {
+            foreach($online['users'] as $uid => $user) {
+                if ($user['isModerator'] == false) {
+                    $online['users'][$uid]['isModerator'] = $this->hasPermission('ZikulaDizkusModule::', '::', ACCESS_MODERATE);
                 }
             }
         }
@@ -89,10 +89,9 @@ class UsersController extends AbstractController
         foreach ($users as $user) {
             $reply['suggestions'][] = [
                 'value' => htmlentities(stripslashes($user->getUname())),
-                'data' => $user->getUid(),];
+                'data' => $user->getUid(), ];
         }
 
         return new PlainResponse(json_encode($reply));
     }
-
 }

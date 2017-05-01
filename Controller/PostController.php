@@ -60,10 +60,9 @@ class PostController extends AbstractController
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        $since = $request->query->get('since', null) == null ? null: (int)$request->query->get('since');
+        $since = $request->query->get('since', null) == null ? null : (int)$request->query->get('since');
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 25);
-
 
         list($posts, $pager) = $this->getDoctrine()->getManager()
             ->getRepository('Zikula\DizkusModule\Entity\PostEntity')
@@ -71,8 +70,8 @@ class PostController extends AbstractController
             ->getPosts($since, $page, $limit);
 
         $managedPosts = [];
-        foreach($posts as $post){
-           $managedPosts[] = $this->get('zikula_dizkus_module.post_manager')->getManager(null, $post);
+        foreach ($posts as $post) {
+            $managedPosts[] = $this->get('zikula_dizkus_module.post_manager')->getManager(null, $post);
         }
 
 //        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
@@ -111,7 +110,7 @@ class PostController extends AbstractController
         }
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
-        if (!$managedPost->exists()){
+        if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error]));
@@ -122,7 +121,7 @@ class PostController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToEdit($managedPost) && !$currentForumUser->allowedToModerate($managedPost)) {
+        if (!$currentForumUser->allowedToEdit($managedPost) && !$currentForumUser->allowedToModerate($managedPost)) {
             throw new AccessDeniedException();
         }
 
@@ -136,7 +135,7 @@ class PostController extends AbstractController
                 ]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -145,7 +144,7 @@ class PostController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('GET')) {
+        if ($request->isMethod('GET')) {
             goto edit_error;
         }
 
@@ -169,12 +168,11 @@ class PostController extends AbstractController
             );
 
         if ($form->get('preview')->isClicked()) {
-              $preview = $managedPost;
-              $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+            $preview = $managedPost;
+            $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
         }
 
         if ($form->get('save')->isClicked()) {
-
             $managedPost->store();
 
             $this->get('hook_dispatcher')
@@ -190,7 +188,7 @@ class PostController extends AbstractController
                 ->dispatch(DizkusEvents::POST_UPDATE,
                     new GenericEvent($managedPost->get(),
                     ['reason' => $form->has('reason') ? $form->get('reason')->getData() : null,
-                     'notifier' => $currentForumUser ]
+                     'notifier' => $currentForumUser]
                     )
                 );
 
@@ -249,7 +247,7 @@ class PostController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToEdit($managedPost) && !$currentForumUser->allowedToModerate($managedPost)) {
+        if (!$currentForumUser->allowedToEdit($managedPost) && !$currentForumUser->allowedToModerate($managedPost)) {
             throw new AccessDeniedException();
         }
 
@@ -259,10 +257,10 @@ class PostController extends AbstractController
             ->createBuilder(
                 new DeletePostType(),
                 $managedPost->get(),
-                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true ]
+                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('delete', SubmitType::class);
         }
 
@@ -288,7 +286,6 @@ class PostController extends AbstractController
         }
         // we need to simulate delete button in ajax forms both json and html
         if ($form->get('delete')->isClicked()) {
-
             $managedPost->update($form->getData());
 
             // id is null beyond this point
@@ -301,7 +298,7 @@ class PostController extends AbstractController
                 ->dispatch('dizkus.ui_hooks.post.process_delete',
                     new ProcessHook($managedPost->getManagedTopic()->getId(),
                         new RouteUrl('zikuladizkusmodule_topic_viewtopic',
-                            ['topic' => $managedPost->getManagedTopic()->getId() ]
+                            ['topic' => $managedPost->getManagedTopic()->getId()]
                         )
                     )
                 );
@@ -310,7 +307,7 @@ class PostController extends AbstractController
                 ->dispatch(DizkusEvents::POST_DELETE,
                     new GenericEvent($managedPost->get(),
                     ['reason' => $form->has('reason') ? $form->get('reason')->getData() : null,
-                     'notifier' => $currentForumUser ]
+                     'notifier' => $currentForumUser]
                     )
                 );
 
@@ -351,7 +348,7 @@ class PostController extends AbstractController
         }
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
-        if (!$managedPost->exists()){
+        if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
@@ -362,7 +359,7 @@ class PostController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToModerate($managedPost)) {
+        if (!$currentForumUser->allowedToModerate($managedPost)) {
             throw new AccessDeniedException();
         }
 
@@ -372,10 +369,10 @@ class PostController extends AbstractController
             ->createBuilder(
                 new MovePostType(),
                 $managedPost->get(),
-                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true ]
+                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('move', SubmitType::class);
         }
 
@@ -401,7 +398,6 @@ class PostController extends AbstractController
         }
         // we need to simulate delete button in ajax forms both json and html
         if ($form->get('move')->isClicked()) {
-
             $managedOriginTopic = $managedPost->getManagedTopic();
 
             $managedPost
@@ -424,7 +420,7 @@ class PostController extends AbstractController
                 ->dispatch('dizkus.ui_hooks.post.process_edit',
                     new ProcessHook($managedPost->getManagedTopic()->getId(),
                         new RouteUrl('zikuladizkusmodule_topic_viewtopic',
-                            ['topic' => $managedPost->getManagedTopic()->getId() ]
+                            ['topic' => $managedPost->getManagedTopic()->getId()]
                         )
                     )
                 );
@@ -434,7 +430,7 @@ class PostController extends AbstractController
                     new GenericEvent($managedPost->get(),
                     ['reason' => $form->has('reason') ? $form->get('reason')->getData() : null,
                      'original_topic' => $managedOriginTopic->get(),
-                     'notifier' => $currentForumUser ]
+                     'notifier' => $currentForumUser]
                     )
                 );
 
@@ -486,7 +482,7 @@ class PostController extends AbstractController
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
-        if (!$managedPost->exists()){
+        if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error])); //add not found error code etc
@@ -497,7 +493,7 @@ class PostController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['message' => ''])
-                ->add('message', 'textarea', ['required' => false, ])
+                ->add('message', 'textarea', ['required' => false])
                 ->add('send', 'submit')
                 ->getForm();
 
@@ -506,18 +502,16 @@ class PostController extends AbstractController
         if ($form->isValid()) {
             if ($form->get('send')->isClicked()) {
 
-            $this->get('event_dispatcher')
+                $this->get('event_dispatcher')
                 ->dispatch(DizkusEvents::POST_NOTIFY_MODERATOR,
                     new GenericEvent($managedPost->get(),
                     ['message' => $form->get('message')->getData(),
-                    'notifier' => $currentForumUser ]
+                    'notifier' => $currentForumUser]
                     )
                 );
 
                 $status = $this->__('Done! Moderators will be notified.');
                 if ($format == 'json') {
-
-
                 } elseif ($format == 'ajax.html') {
                     return new Response(json_encode(['html' => $status]));
                 }
@@ -526,6 +520,7 @@ class PostController extends AbstractController
             }
 
             $start =  $managedPost->getManagedTopic()->getTopicPage($managedPost->get()->getTopic()->getReplyCount());
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getTopicId(), 'start' => $start], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -561,7 +556,7 @@ class PostController extends AbstractController
         $format = $this->decodeFormat($request);
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
-        if (!$managedPost->exists()){
+        if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error])); //add not found error code etc
@@ -576,9 +571,6 @@ class PostController extends AbstractController
         // return json response
         if ($format == 'json') {
             if ($request->isMethod('POST')) {
-
-
-
             }
         }
 

@@ -17,7 +17,6 @@ use Zikula\Core\Controller\AbstractController;
 
 /**
  * BaseController class
- *
  */
 abstract class AbstractBaseController extends AbstractController
 {
@@ -28,8 +27,8 @@ abstract class AbstractBaseController extends AbstractController
      *
      * @return string
      */
-    public function decodeFormat(Request $request) {
-
+    public function decodeFormat(Request $request)
+    {
         if (0 === strpos($request->headers->get('Accept'), 'application/json')) {
             $format = 'json';
         } elseif ($request->isXmlHttpRequest()) {

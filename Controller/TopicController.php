@@ -12,7 +12,7 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; //unused at the moment
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -113,12 +113,12 @@ class TopicController extends AbstractController
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
 
-        $since = $request->query->get('since', null) == null ? null: (int)$request->query->get('since');
-        $unanswered = $request->query->get('unanswered') == 'on' ? 1 : true ;
-        $unsolved = $request->query->get('unsolved') == 'on' ? 1 : false ;
+        $since = $request->query->get('since', null) == null ? null : (int)$request->query->get('since');
+        $unanswered = $request->query->get('unanswered') == 'on' ? 1 : true;
+        $unsolved = $request->query->get('unsolved') == 'on' ? 1 : false;
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 25);
-            list($topics, $pager) = $this->getDoctrine()->getManager()
+        list($topics, $pager) = $this->getDoctrine()->getManager()
             ->getRepository('Zikula\DizkusModule\Entity\TopicEntity')
             ->getTopics($since, $unanswered, $unsolved, $page, $limit
             );
@@ -161,7 +161,7 @@ class TopicController extends AbstractController
         }
 
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
-        if (!$managedForum->exists()){
+        if (!$managedForum->exists()) {
             $this->addFlash('error', $this->__('Error! Missing forum id.'));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
@@ -204,7 +204,7 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('GET')) {
+        if ($request->isMethod('GET')) {
             goto add_error;
         }
 
@@ -276,7 +276,7 @@ class TopicController extends AbstractController
                     ->store();
 
             $currentForumUser
-                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $newManagedTopic->get() : null )
+                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $newManagedTopic->get() : null)
                     ->store();
 
             $this->get('hook_dispatcher')
@@ -359,11 +359,12 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToEdit($managedTopic) && !$currentForumUser->allowedToModerate($managedTopic)) {
+        if (!$currentForumUser->allowedToEdit($managedTopic) && !$currentForumUser->allowedToModerate($managedTopic)) {
             throw new AccessDeniedException();
         }
 
@@ -374,7 +375,7 @@ class TopicController extends AbstractController
                 ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars()]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('save', SubmitType::class);
         }
 
@@ -382,7 +383,7 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('GET')) {
+        if ($request->isMethod('GET')) {
             goto edit_error;
         }
 
@@ -408,7 +409,6 @@ class TopicController extends AbstractController
                 new GenericEvent($managedTopic->get()));
 
         if ($form->get('save')->isClicked()) {
-
             $managedTopic->store();
 
             $this->get('hook_dispatcher')
@@ -490,7 +490,7 @@ class TopicController extends AbstractController
             'settings' => $this->getVars()]
             );
 
-        if ($format == 'html' || $format == 'quick.html'){
+        if ($format == 'html' || $format == 'quick.html') {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -522,12 +522,11 @@ class TopicController extends AbstractController
         }
 
         if ($form->get('save')->isClicked()) {
-
             $postManager->store();
 
             $currentForumUser
                     ->incrementPostCount()
-                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $managedTopic->get() : null )
+                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $managedTopic->get() : null)
                     ->store();
 
             $managedTopic
@@ -553,7 +552,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
 
-            }else {
+            } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
@@ -600,11 +599,12 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToEdit($managedTopic) && !$currentForumUser->allowedToModerate($managedTopic)) {
+        if (!$currentForumUser->allowedToEdit($managedTopic) && !$currentForumUser->allowedToModerate($managedTopic)) {
             throw new AccessDeniedException();
         }
 
@@ -616,7 +616,7 @@ class TopicController extends AbstractController
                 'settings' => $this->getVars()]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('delete', SubmitType::class);
         }
 
@@ -624,7 +624,7 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('GET')) {
+        if ($request->isMethod('GET')) {
             goto delete_error;
         }
 
@@ -650,7 +650,6 @@ class TopicController extends AbstractController
                 new GenericEvent($managedTopic->get()));
 
         if ($form->get('save')->isClicked()) {
-
             $managedTopic->store();
 
             $this->get('hook_dispatcher')
@@ -720,7 +719,7 @@ class TopicController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToModerate($managedTopic)) {
+        if (!$currentForumUser->allowedToModerate($managedTopic)) {
             throw new AccessDeniedException();
         }
 
@@ -737,7 +736,7 @@ class TopicController extends AbstractController
                 ]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('move', SubmitType::class);
             $formBuilder->add('join', SubmitType::class);
         }
@@ -772,8 +771,7 @@ class TopicController extends AbstractController
                 new GenericEvent($managedTopic->get()));
 
         if ($form->get('move')->isClicked()) {
-
-//            // require perms for both subject topic and destination forum
+            //            require perms for both subject topic and destination forum
 //            if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
 //                    || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $data['forum_id']])) {
 //                throw new AccessDeniedException();
@@ -798,16 +796,14 @@ class TopicController extends AbstractController
                 );
 
             if ($format == 'json') {
-
             } elseif ($format == 'ajax.html') {
-
-            }else {
+            } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
         if ($form->get('join')->isClicked()) {
-//            if (empty($data['to_topic_id'])) {
+            //            if (empty($data['to_topic_id'])) {
 //                $this->addFlash('error', $this->__('Error! The topic ID cannot be empty.'));
 //
 //                return new RedirectResponse($topicUrl);
@@ -849,8 +845,7 @@ class TopicController extends AbstractController
 
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
-
-            }else {
+            } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
@@ -893,6 +888,7 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -904,21 +900,23 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
         if (!$managedTopic->get()->getPosts()->indexOf($managedPost->get())) {
-           $error = $this->__f('Error! The post you selected (ID: %s) do not belong to selected topic (ID %t).', [$post, $topic]);
+            $error = $this->__f('Error! The post you selected (ID: %s) do not belong to selected topic (ID %t).', [$post, $topic]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error]));
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        if(!$currentForumUser->allowedToModerate($managedTopic)) {
+        if (!$currentForumUser->allowedToModerate($managedTopic)) {
             throw new AccessDeniedException();
         }
 
@@ -932,7 +930,7 @@ class TopicController extends AbstractController
                 ]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('split', SubmitType::class);
         }
 
@@ -940,15 +938,11 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
 
-
-//
 //        $postId = (int) $this->request->query->get('post');
 //        $this->post = new PostManager($postId);
 //
 //        $this->view->assign($this->post->toArray());
 //        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());
-
-
 
         split_error:
 
@@ -989,6 +983,7 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -1007,14 +1002,14 @@ class TopicController extends AbstractController
                 ]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('send', SubmitType::class);
         }
 
         $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
-//
+
 //        $view->assign($managedTopic->get()->toArray());
 //        $view->assign('emailsubject', $managedTopic->get()->getTitle());
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
@@ -1025,7 +1020,6 @@ class TopicController extends AbstractController
 //            'message' => $data['message'],
 //            'subject' => $data['emailsubject']
 //        ));
-
 
         email_error:
 
@@ -1042,7 +1036,6 @@ class TopicController extends AbstractController
         return new Response($contentHtml);
     }
 
-
     /**
      * @Route("/topic/{topic}/{action}", requirements={"topic" = "^[1-9]\d*$", "action"="lock|unlock"}, options={"expose"=true})
      *
@@ -1054,7 +1047,7 @@ class TopicController extends AbstractController
      */
     public function lockAction(Request $request, $topic, $action)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -1079,7 +1072,7 @@ class TopicController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -1114,6 +1107,7 @@ class TopicController extends AbstractController
      */
     public function stickyAction(Request $request, $topic, $action)
     {
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -1138,7 +1132,7 @@ class TopicController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
@@ -1197,7 +1191,7 @@ class TopicController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');

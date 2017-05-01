@@ -313,7 +313,7 @@ class AdminController extends AbstractController
         $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
         $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
 
-        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get() , []);
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
 
         $form->handleRequest($request);
 
@@ -325,7 +325,6 @@ class AdminController extends AbstractController
             )->getValidators();
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
-
             $managedForum->update($form->getData());
             $managedForum->store();
             // notify hooks
@@ -473,14 +472,14 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        if ($request->isMethod('POST') && $request->request->get('username', false)){
+        if ($request->isMethod('POST') && $request->request->get('username', false)) {
             $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManagedByUserName($request->request->get('username'), false);
-        }else{
+        } else {
             $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid, false);
         }
 
         if ($request->isMethod('POST')) {
-            if ($managedForumUser->exists()){
+            if ($managedForumUser->exists()) {
                 $forumSub = $request->request->get('forumsubscriptions', []);
                 foreach ($forumSub as $id => $selected) {
                     if ($selected) {

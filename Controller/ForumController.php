@@ -175,7 +175,7 @@ class ForumController extends AbstractController
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
             $path = [
                 'returnpage' => $this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login',];
+                '_controller' => 'ZikulaUsersModule:User:login', ];
 
             $subRequest = $request->duplicate([], null, $path);
             $httpKernel = $this->get('http_kernel');
