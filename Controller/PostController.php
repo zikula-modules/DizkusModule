@@ -565,7 +565,7 @@ class PostController extends AbstractController
             }
 
             $this->addFlash('error', $error);
-            
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 

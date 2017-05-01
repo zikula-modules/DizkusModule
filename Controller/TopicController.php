@@ -666,8 +666,7 @@ class TopicController extends AbstractController
 
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
-
-            }else {
+            } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
@@ -712,6 +711,7 @@ class TopicController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -742,7 +742,7 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($request->isMethod('GET')) {
+        if ($request->isMethod('GET')) {
             goto delete_error;
         }
 
