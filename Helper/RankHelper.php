@@ -81,7 +81,6 @@ class RankHelper
      */
     public function getAllRankImages()
     {
-
         // read images
         $handle = opendir(\Zikula\DizkusModule\DizkusModuleInstaller::generateRelativePath().'/Resources/public/images/'.$this->imagesPath);
         $filelist = [];
@@ -137,7 +136,6 @@ class RankHelper
     {
         return $this->imagesPath . '/' . $image;
     }
-
 
     /**
      * Get user rank data.

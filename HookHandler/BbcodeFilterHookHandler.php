@@ -30,8 +30,7 @@ class BbcodeFilterHookHandler
 
     public function __construct(
         VariableApi $variableApi
-    )
-    {
+    ) {
         $this->settings = null;
         $this->variableApi = $variableApi;
     }
@@ -42,7 +41,6 @@ class BbcodeFilterHookHandler
     }
 
     /**
-     *
      * @param FilterHook $hook the hook
      *
      * @return void (unused)
@@ -59,8 +57,7 @@ class BbcodeFilterHookHandler
      */
     public function transform($message)
     {
-
-//        if(!$this->settings['favorites_enabled']) {
+        //        if(!$this->settings['favorites_enabled']) {
 //            return $message;
 //        }
 
@@ -70,7 +67,6 @@ class BbcodeFilterHookHandler
 
         // If there is a "[" and a "]" in the message, process it.
         if ((strpos($message, '[') && strpos($message, ']'))) {
-
             // [b] and [/b] for posting bold text in your posts.
             $message = $this->encode_bold($message);
             // [i] and [/i] for posting italic text in your posts. (you can post fa fonts with [i="fa fa-cogs"] [/i])
@@ -172,7 +168,6 @@ class BbcodeFilterHookHandler
         } // while
 
         return $message;
-
     }
 
     /**
@@ -408,7 +403,7 @@ class BbcodeFilterHookHandler
                         if ($start_tag_len > 7) {
                             $username = substr($message, $start_index + 7, $start_tag_len - 8);
                         } else {
-                            $username = 'Quote';//$this->__('Quote');
+                            $username = 'Quote'; //$this->__('Quote');
                         }
 
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.

@@ -70,8 +70,7 @@ class ForumSubscriptionListener implements EventSubscriberInterface
         VariableApi $variableApi,
         MailerApi $mailerApi,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->twig = $twig;
         $this->variableApi = $variableApi;
@@ -89,6 +88,5 @@ class ForumSubscriptionListener implements EventSubscriberInterface
      */
     public function mailForumSubscribers(GenericEvent $event)
     {
-        
     }
 }

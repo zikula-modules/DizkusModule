@@ -35,21 +35,21 @@ class EditTopicType extends AbstractType
                     'required' => false,
                     ]);
 
-                if($options['settings']['solved_enabled']){
-                    $builder->add('solved', CheckboxType::class, [
-                        'required' => false,
-                        'data' => false,
-                        ]);
-                }
+        if ($options['settings']['solved_enabled']) {
+            $builder->add('solved', CheckboxType::class, [
+                'required' => false,
+                'data' => false,
+                ]);
+        }
 
-                if($options['settings']['topic_subscriptions_enabled']){
-                    $builder->add('subscribeTopic', CheckboxType::class, [
-                        'required' => false,
-                        'mapped' => false,
-                        'data'     => $options['loggedIn'],
-                        'disabled' => !$options['loggedIn'],
-                        ]);
-                }
+        if ($options['settings']['topic_subscriptions_enabled']) {
+            $builder->add('subscribeTopic', CheckboxType::class, [
+                'required' => false,
+                'mapped' => false,
+                'data'     => $options['loggedIn'],
+                'disabled' => !$options['loggedIn'],
+                ]);
+        }
     }
 
     /**

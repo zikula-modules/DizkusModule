@@ -51,7 +51,6 @@ class AdminModifyForumType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $moderatorUsersTransformer = new ModeratorUsersTransformer($this->em, $this->forumUserManagerService);
         $moderatorGroupsTransformer = new ModeratorGroupsTransformer($this->em);
 

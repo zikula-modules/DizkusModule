@@ -13,7 +13,7 @@
 namespace Zikula\DizkusModule\Events;
 
 /**
- *
+ * Dizkus custom events
  */
 class DizkusEvents
 {
@@ -30,7 +30,6 @@ class DizkusEvents
     const FORUM_CREATE = 'dizkus.forum.create';
 
     /**
-     *
      * TOPIC EVENTS
      */
 
@@ -83,7 +82,6 @@ class DizkusEvents
     const TOPIC_DELETE = 'dizkus.topic.delete';
 
     /**
-     *
      * POST EVENTS
      */
 

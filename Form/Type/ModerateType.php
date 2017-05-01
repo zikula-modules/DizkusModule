@@ -67,26 +67,30 @@ class ModerateType extends AbstractType
             'choices' => $this->actions,
             'multiple' => false,
             'expanded' => false,
-            'required' => false,])
+            'required' => false
+            ])
         ->add('moveto', 'choice', [
             'choices' => $this->forums,
             'data' => 'default',
             'multiple' => false,
             'expanded' => false,
-            'required' => false,])
+            'required' => false
+            ])
         ->add('createshadowtopic', 'choice', ['choices' => ['0' => 'No', '1' => 'Yes'],
             'data' => '0',
             'multiple' => false,
             'expanded' => true,
-            'required' => true,])
+            'required' => true
+            ])
         ->add('jointotopic', 'choice', [
             'choices' => $this->topics,
             'multiple' => false,
             'expanded' => false,
-            'required' => false,])
+            'required' => false
+            ])
         ->add('jointo', 'integer', [
             'required' => false,
-        ])
+            ])
         ->add('submit', 'submit');
     }
 
@@ -104,5 +108,4 @@ class ModerateType extends AbstractType
             'translator' => null,
         ]);
     }
-
 }

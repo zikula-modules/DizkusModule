@@ -28,7 +28,6 @@ class JoinMoveTopicType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->options = $options;
-        //dump($options);
         $builder
             ->add('forum', EntityType::class, [
                 'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
@@ -37,6 +36,7 @@ class JoinMoveTopicType extends AbstractType
                         ->where('f.lvl != 0')
                         ->orderBy('f.root', 'ASC')
                         ->addOrderBy('f.lft', 'ASC');
+                    
                         return $forums;
                 },
                 'choice_label' => function ($forum) {

@@ -25,7 +25,7 @@ class EditPostType extends AbstractType
         $builder->add('post_text', TextareaType::class, [
                     'required' => true, ]);
 
-        if($options['settings']['signaturemanagement']){
+        if ($options['settings']['signaturemanagement']) {
             $builder->add('attachSignature', CheckboxType::class, [
                         'required' => false,
                         'data'     => $options['loggedIn'],
@@ -33,7 +33,7 @@ class EditPostType extends AbstractType
                         ]);
         }
 
-        if($options['settings']['topic_subscriptions_enabled']){
+        if ($options['settings']['topic_subscriptions_enabled']) {
             $builder->add('subscribeTopic', CheckboxType::class, [
                     'required' => false,
                     'mapped' => false,

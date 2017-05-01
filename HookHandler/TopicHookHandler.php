@@ -89,7 +89,6 @@ class TopicHookHandler
 //            'mediaTypeCollection' => $this->mediaTypeCollection
         ]);
         $this->uiResponse($hook, $content);
-
     }
 
     /**

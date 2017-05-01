@@ -48,7 +48,7 @@ class TopicSubscriptionEntity extends EntityAccess
 
     /**
      * Constructor
-     * 
+     *
      * @param ForumUserEntity $forumUser
      * @param TopicEntity     $topic
      */

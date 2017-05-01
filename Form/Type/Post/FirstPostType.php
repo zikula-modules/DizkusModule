@@ -26,7 +26,7 @@ class FirstPostType extends AbstractType
                     'required' => true
             ]);
 
-        if($options['settings']['signaturemanagement']){
+        if ($options['settings']['signaturemanagement']) {
             $builder->add('attachSignature', CheckboxType::class, [
                         'required' => false,
                         'data'     => $options['loggedIn'],

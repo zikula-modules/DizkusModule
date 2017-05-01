@@ -79,8 +79,7 @@ class TopicMovedNotifyPosterListener implements EventSubscriberInterface
         VariableApi $variableApi,
         MailerApi $mailerApi,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->twig = $twig;
         $this->variableApi = $variableApi;
@@ -100,7 +99,7 @@ class TopicMovedNotifyPosterListener implements EventSubscriberInterface
     {
         $post = $event->getSubject();
         if ($post instanceof PostEntity) {
-            if($event->hasArgument('reason') && $event->getArgument('reason')) {
+            if ($event->hasArgument('reason') && $event->getArgument('reason')) {
                   $this->sendPosterPostNotification($post, $event->getArgument('reason'));
             }
         }

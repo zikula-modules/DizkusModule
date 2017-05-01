@@ -80,8 +80,7 @@ class PostBadNotifyModeratorListener implements EventSubscriberInterface
         VariableApi $variableApi,
         MailerApi $mailerApi,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->twig = $twig;
         $this->variableApi = $variableApi;
@@ -102,12 +101,11 @@ class PostBadNotifyModeratorListener implements EventSubscriberInterface
     {
         $post = $event->getSubject();
         if ($post instanceof PostEntity) {
-            if($event->hasArgument('message') && $event->hasArgument('notifier')) {
+            if ($event->hasArgument('message') && $event->hasArgument('notifier')) {
                 $nodeModerators = $post->getTopic()->getForum()->getAllNodeModeratorsAsUsers();
                 foreach ($nodeModerators as $moderator) {
-                  $this->sendModeratorPostNotification($post, $moderator, $event->getArgument('message'), $event->getArgument('notifier'));
+                    $this->sendModeratorPostNotification($post, $moderator, $event->getArgument('message'), $event->getArgument('notifier'));
                 }
-
             }
         }
     }

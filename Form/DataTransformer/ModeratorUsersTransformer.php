@@ -55,7 +55,7 @@ class ModeratorUsersTransformer implements DataTransformerInterface
      *
      * @param  array $moderatorUsersArray
      * @return Issue|null
-     * @throws TransformationFailedException if object (issue) is not found.
+     * @throws TransformationFailedException if object (issue) is not found
      */
     public function reverseTransform($moderatorUsersArray)
     {

@@ -79,8 +79,7 @@ class PostEditedNotifyPosterListener implements EventSubscriberInterface
         VariableApi $variableApi,
         MailerApi $mailerApi,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->twig = $twig;
         $this->variableApi = $variableApi;
@@ -98,11 +97,9 @@ class PostEditedNotifyPosterListener implements EventSubscriberInterface
      */
     public function notifyPoster(GenericEvent $event)
     {
-        dump($event);
         $post = $event->getSubject();
         if ($post instanceof PostEntity) {
-            dump($event);
-            if($event->hasArgument('reason') && $event->getArgument('reason')) {
+            if ($event->hasArgument('reason') && $event->getArgument('reason')) {
                   $this->sendPosterPostNotification($post, $event->getArgument('reason'));
             }
         }

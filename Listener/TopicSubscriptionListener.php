@@ -53,8 +53,6 @@ class TopicSubscriptionListener implements EventSubscriberInterface
      */
     protected $router;
 
-
-    
     public static function getSubscribedEvents()
     {
         return [
@@ -74,8 +72,7 @@ class TopicSubscriptionListener implements EventSubscriberInterface
         VariableApi $variableApi,
         MailerApi $mailerApi,
         RouterInterface $router
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->twig = $twig;
         $this->variableApi = $variableApi;
@@ -99,10 +96,10 @@ class TopicSubscriptionListener implements EventSubscriberInterface
         }
         $post = $event->getSubject();
         if ($post instanceof PostEntity) {
-            if(!$post->isFirst()){
+            if (!$post->isFirst()) {
                 $topic = $post->getTopic();
                 $subscriptions = $topic->getSubscriptions();
-                if ($subscriptions->isEmpty()){
+                if ($subscriptions->isEmpty()) {
                     return;
                 }
                 foreach ($subscriptions as $subscription) {

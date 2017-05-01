@@ -723,6 +723,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->setVar('onlineusers_moderatorcheck', false);
         $this->setVar('forum_subscriptions_enabled', false);
         $this->setVar('topic_subscriptions_enabled', false);
+        
         return true;
     }
 }

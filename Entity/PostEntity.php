@@ -15,7 +15,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use Zikula\Core\Doctrine\EntityAccess;
 
-
 /**
  * Post entity class
  *
@@ -133,13 +132,15 @@ class PostEntity extends EntityAccess
 
     public function setPost_text($text)
     {
-        return $this->setPostText($text);
+        $this->setPostText($text);
 
+        return $this;
     }
 
     public function setPostText($text)
     {
         $this->post_text = stripslashes($text);
+
         return $this;
     }
 
@@ -151,6 +152,7 @@ class PostEntity extends EntityAccess
     public function setAttachSignature($attachSignature)
     {
         $this->attachSignature = $attachSignature;
+
         return $this;
     }
 
@@ -162,6 +164,7 @@ class PostEntity extends EntityAccess
     public function setIsFirstPost($first = true)
     {
         $this->isFirstPost = $first;
+
         return $this;
     }
 
@@ -184,6 +187,7 @@ class PostEntity extends EntityAccess
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -195,6 +199,7 @@ class PostEntity extends EntityAccess
     public function setPost_time(\DateTime $time)
     {
         $this->post_time = $time;
+
         return $this;
     }
 
@@ -234,6 +239,7 @@ class PostEntity extends EntityAccess
     public function setPoster(ForumUserEntity $poster)
     {
         $this->poster = $poster;
+
         return $this;
     }
 
@@ -279,6 +285,7 @@ class PostEntity extends EntityAccess
     public function setTopic(TopicEntity $topic)
     {
         $this->topic = $topic;
+
         return $this;
     }
 
@@ -295,6 +302,7 @@ class PostEntity extends EntityAccess
     public function toArray()
     {
         $array = parent::toArray();
+        
         return $array;
     }
 }

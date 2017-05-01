@@ -24,7 +24,6 @@ use Zikula\DizkusModule\Connection\Pop3Connection;
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumRepository")
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- *
  */
 class ForumEntity extends EntityAccess
 {
@@ -425,7 +424,7 @@ class ForumEntity extends EntityAccess
             ->orderBy(["topic_time" => Criteria::ASC])
         ;
         $topics = $this->topics->matching($criteria);
-        dump($topics);
+
         return $topics;
     }
 
@@ -530,7 +529,7 @@ class ForumEntity extends EntityAccess
 
         $nodeModeratorGroups = $this->getNodeModeratorGroups();
         foreach ($nodeModeratorGroups as $nodeModeratorGroup) {
-                $nodeModeratorGroupUsers = $nodeModeratorGroup->getUsers();
+            $nodeModeratorGroupUsers = $nodeModeratorGroup->getUsers();
             foreach ($nodeModeratorGroupUsers as $nodeModeratorGroupUser) {
                 $allNodeModeratorsAsUsers->set($nodeModeratorGroupUser->getUid(), $nodeModeratorGroupUser);
             }

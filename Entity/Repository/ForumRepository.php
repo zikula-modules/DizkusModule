@@ -60,7 +60,7 @@ class ForumRepository extends NestedTreeRepository
      */
     public function resetLastPost($forum, $flush = true)
     {
-//        if (!isset($forum) || !$forum instanceof ForumEntity) {
+        //        if (!isset($forum) || !$forum instanceof ForumEntity) {
 //            throw new \InvalidArgumentException();
 //        }
 

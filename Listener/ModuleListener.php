@@ -32,16 +32,14 @@ class ModuleListener implements EventSubscriberInterface
     private $variableApi;
     protected $container;
 
-    public function __construct
-    (
+    public function __construct(
         RequestStack $requestStack,
         EntityManager $entityManager,
         RouterInterface $router,
         DoctrineStorage $hookDispatcherStorage,
         TranslatorInterface $translator,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->router = $router;

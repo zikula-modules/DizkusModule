@@ -52,11 +52,10 @@ class TopicRepository extends EntityRepository
 
     /**
      * Find last post by post_time and set as topic last post
-     *
      */
     public function resetLastPost($topic, $flush = false)
     {
-//        $query = $this->_em->createQueryBuilder();
+        //        $query = $this->_em->createQueryBuilder();
 //        $post = $query->select('p')
 //            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
 //            ->where('p.topic =:topic')
@@ -69,10 +68,6 @@ class TopicRepository extends EntityRepository
 //        $topic->setLast_post($post);
         // update topic time ?? @todo consider remove
         //$topic->setTopic_time($post->getPost_time());
-
-        
-
-
 
         if ($flush) {
             $this->_em->flush();
@@ -121,11 +116,11 @@ class TopicRepository extends EntityRepository
                 $qb->where('l.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-'. $since .' hours'));
         }
 
-        if($unanswered) {
+        if ($unanswered) {
             $qb->andWhere('t.replyCount = 0');
         }
 
-        if($unsolved) {
+        if ($unsolved) {
             $qb->andWhere('t.solved = :status')->setParameter('status', -1);
         }
 

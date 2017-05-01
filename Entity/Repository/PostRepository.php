@@ -16,7 +16,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostRepository extends EntityRepository
 {
-
     protected $postManagementService = null;
 
     /**
@@ -45,7 +44,7 @@ class PostRepository extends EntityRepository
         return $this;
     }
 
-       /**
+    /**
      * gets the last $maxPosts postings of forum $forum_id.
      *
      * @param int limit number of posts to read, default = 5
@@ -62,12 +61,14 @@ class PostRepository extends EntityRepository
 
         list($posts, $pager) = $this->getPosts($since, $page, $limit, $user, $forums);
         $managedPosts = new ArrayCollection();
-        foreach($posts->getIterator() as $key => $post){
-           $postManager = $this->postManagementService->getManager(null, $post);
-           $managedPosts->set($key, $postManager);
+        foreach ($posts->getIterator() as $key => $post) {
+            $postManager = $this->postManagementService->getManager(null, $post);
+            $managedPosts->set($key, $postManager);
         }
+
         return [$managedPosts, $pager];
     }
+
     /**
      * gets the last $maxPosts postings of forum $forum_id.
      *
@@ -110,7 +111,6 @@ class PostRepository extends EntityRepository
                 $qb->where('p.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-'. $since .' hours'));
         }
 
-
         if (!empty($forums)) {
             $qb->andWhere('t.forum IN (:forums)')
                 ->setParameter('forums', $forums);
@@ -132,5 +132,4 @@ class PostRepository extends EntityRepository
 
         return [$posts, $pager];
     }
-
 }

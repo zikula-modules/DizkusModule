@@ -30,9 +30,7 @@ class BbcodeHookHandler extends AbstractHookHandler
      */
     public function uiView(DisplayHook $hook)
     {
-        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.view.html.twig', [
-
-        ]);
+        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.view.html.twig', []);
 
         $this->uiResponse($hook, $content);
     }
@@ -47,9 +45,7 @@ class BbcodeHookHandler extends AbstractHookHandler
      */
     public function uiEdit(DisplayHook $hook)
     {
-
-        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.edit.html.twig', [
-        ]);
+        $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.edit.html.twig', []);
         $this->uiResponse($hook, $content);
     }
 
@@ -63,7 +59,7 @@ class BbcodeHookHandler extends AbstractHookHandler
     public function processEdit(ProcessHook $hook)
     {
 
-//        return true;
+        //        return true;
     }
 
     /**
@@ -76,7 +72,6 @@ class BbcodeHookHandler extends AbstractHookHandler
      */
     private function getHookConfig($hook)
     {
-
     }
 
     /**

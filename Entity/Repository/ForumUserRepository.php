@@ -92,7 +92,7 @@ class ForumUserRepository extends EntityRepository
         $numusers = 0;
         $unames = [];
 
-        if ($moderatorCheck){
+        if ($moderatorCheck) {
             $moderators = ['users' => [], 'groups' => []];
             // get moderator users
             $qb = $this->_em->createQueryBuilder();
@@ -145,12 +145,12 @@ class ForumUserRepository extends EntityRepository
                 if ($onlineuser['uid'] != 0) {
                     $unames[$onlineuser['uid']]['user'] = $onlineuser[0];
                     $unames[$onlineuser['uid']]['isModerator'] = false;
-                    if ($moderatorCheck){
-                        if(array_key_exists($onlineuser['uid'], $moderators['users'])){
+                    if ($moderatorCheck) {
+                        if (array_key_exists($onlineuser['uid'], $moderators['users'])) {
                             $unames[$onlineuser['uid']]['isModerator'] = true;
                         }
-                        if(count($moderators['groups']) > 0) {
-                            foreach($moderators['groups'] as $gKey => $gName){
+                        if (count($moderators['groups']) > 0) {
+                            foreach ($moderators['groups'] as $gKey => $gName) {
                                 $unames[$onlineuser['uid']]['isModerator'] = $onlineuser[0]->getGroups()->offsetExists($gKey);
                             }
                         }
