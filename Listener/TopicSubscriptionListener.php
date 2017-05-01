@@ -109,7 +109,6 @@ class TopicSubscriptionListener implements EventSubscriberInterface
         }
     }
 
-
     private function sendNewPostNotification(PostEntity $post, TopicSubscriptionEntity $subscription)
     {
         $sitename = $this->variableApi->getSystemVar('sitename', $this->variableApi->getSystemVar('sitename_en'));

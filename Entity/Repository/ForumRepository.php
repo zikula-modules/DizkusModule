@@ -17,7 +17,6 @@ use Zikula\DizkusModule\Entity\ForumEntity;
 
 class ForumRepository extends NestedTreeRepository
 {
-
     public function getRssForums()
     {
         $dql = 'SELECT f FROM Zikula\DizkusModule\Entity\ForumEntity f

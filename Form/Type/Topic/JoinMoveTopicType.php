@@ -36,8 +36,8 @@ class JoinMoveTopicType extends AbstractType
                         ->where('f.lvl != 0')
                         ->orderBy('f.root', 'ASC')
                         ->addOrderBy('f.lft', 'ASC');
-                    
-                        return $forums;
+
+                    return $forums;
                 },
                 'choice_label' => function ($forum) {
                     return ($forum->getId() == $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' .  $this->options['translator']->__('current') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();

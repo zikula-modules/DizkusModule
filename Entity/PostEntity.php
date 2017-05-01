@@ -302,7 +302,7 @@ class PostEntity extends EntityAccess
     public function toArray()
     {
         $array = parent::toArray();
-        
+
         return $array;
     }
 }

@@ -58,7 +58,6 @@ class BbcodeHookHandler extends AbstractHookHandler
      */
     public function processEdit(ProcessHook $hook)
     {
-
         //        return true;
     }
 

@@ -100,7 +100,7 @@ class PostEditedNotifyPosterListener implements EventSubscriberInterface
         $post = $event->getSubject();
         if ($post instanceof PostEntity) {
             if ($event->hasArgument('reason') && $event->getArgument('reason')) {
-                  $this->sendPosterPostNotification($post, $event->getArgument('reason'));
+                $this->sendPosterPostNotification($post, $event->getArgument('reason'));
             }
         }
     }

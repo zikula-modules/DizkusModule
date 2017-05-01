@@ -40,10 +40,10 @@ class NewTopicType extends AbstractType
                  ]);
 
         if ($options['settings']['solved_enabled']) {
-        $builder->add('solved', CheckboxType::class, [
-            'required' => false,
-            'data' => false,
-            ]);
+            $builder->add('solved', CheckboxType::class, [
+                'required' => false,
+                'data' => false,
+                ]);
         }
 
         if ($options['settings']['topic_subscriptions_enabled']) {
