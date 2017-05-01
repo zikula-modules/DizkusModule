@@ -76,6 +76,10 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
+                ->add('forum_subscriptions_enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                    'multiple' => false,
+                    'expanded' => true,
+                    'required' => true])
                 ->add('topics_per_page', IntegerType::class, [
                     'required' => false
                 ])
@@ -101,6 +105,10 @@ class DizkusSettingsType extends AbstractType
                 ])
                 // Topics
                 ->add('solved_enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                    'multiple' => false,
+                    'expanded' => true,
+                    'required' => true])
+                ->add('topic_subscriptions_enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])

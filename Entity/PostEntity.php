@@ -32,13 +32,13 @@ class PostEntity extends EntityAccess
     const MODULENAME = 'ZikulaDizkusModule';
 
     /**
-     * post_id
+     * id
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="post_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $post_id;
+    private $id;
 
     /**
      * post_time
@@ -116,14 +116,9 @@ class PostEntity extends EntityAccess
         $this->poster_ip = 'unrecorded';
     }
 
-    public function getPost_id()
-    {
-        return $this->post_id;
-    }
-
     public function getId()
     {
-        return $this->post_id;
+        return $this->id;
     }
 
     public function getPost_text()
@@ -138,12 +133,14 @@ class PostEntity extends EntityAccess
 
     public function setPost_text($text)
     {
-        return $this->post_text = stripslashes($text);
+        return $this->setPostText($text);
+
     }
 
     public function setPostText($text)
     {
-        return $this->post_text = stripslashes($text);
+        $this->post_text = stripslashes($text);
+        return $this;
     }
 
     public function getAttachSignature()
@@ -153,7 +150,8 @@ class PostEntity extends EntityAccess
 
     public function setAttachSignature($attachSignature)
     {
-        return $this->attachSignature = $attachSignature;
+        $this->attachSignature = $attachSignature;
+        return $this;
     }
 
     public function getIsFirstPost()
@@ -161,9 +159,10 @@ class PostEntity extends EntityAccess
         return $this->isFirstPost;
     }
 
-    public function setIsFirstPost($first)
+    public function setIsFirstPost($first = true)
     {
-        return $this->isFirstPost = $first;
+        $this->isFirstPost = $first;
+        return $this;
     }
 
     /**
@@ -184,7 +183,8 @@ class PostEntity extends EntityAccess
 
     public function setTitle($title)
     {
-        return $this->title = $title;
+        $this->title = $title;
+        return $this;
     }
 
     public function getPost_time()
@@ -195,6 +195,7 @@ class PostEntity extends EntityAccess
     public function setPost_time(\DateTime $time)
     {
         $this->post_time = $time;
+        return $this;
     }
 
     public function updatePost_time(\DateTime $time = null)
@@ -233,6 +234,7 @@ class PostEntity extends EntityAccess
     public function setPoster(ForumUserEntity $poster)
     {
         $this->poster = $poster;
+        return $this;
     }
 
     /**
@@ -277,6 +279,7 @@ class PostEntity extends EntityAccess
     public function setTopic(TopicEntity $topic)
     {
         $this->topic = $topic;
+        return $this;
     }
 
     /**
@@ -286,13 +289,12 @@ class PostEntity extends EntityAccess
      */
     public function getTopicId()
     {
-        return $this->topic->getTopic_id();
+        return $this->topic->getId();
     }
 
     public function toArray()
     {
         $array = parent::toArray();
-
         return $array;
     }
 }

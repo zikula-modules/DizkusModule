@@ -189,20 +189,7 @@
         e.preventDefault();
     }
 
-    /**
-     * Quote a text.
-     *
-     * @param text
-     */
-    function quote(text, uname) {
-        //text = text.replace(/_____LINEFEED_DIZKUS_____/g, "\n");
 
-        text = '[quote=' + uname + ']' + text + '[/quote]';
-
-        $('#topic_reply_form_message').val($('#topic_reply_form_message').val() + text);
-
-        scrollTo("#quickreply");
-    }
 
 // Quick edit features
 

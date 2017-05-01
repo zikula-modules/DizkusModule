@@ -7,6 +7,12 @@ parameters:
     zikula_dizkus_module.module_listener.class: Zikula\DizkusModule\Listener\ModuleListener
     zikula_dizkus_module.user_listener.class: Zikula\DizkusModule\Listener\UserListener
     zikula_dizkus_module.spam_listener.class: Zikula\DizkusModule\Listener\SpamListener
+    zikula_dizkus_module.forum_subscription_listener.class: Zikula\DizkusModule\Listener\ForumSubscriptionListener
+    zikula_dizkus_module.topic_subscription_listener.class: Zikula\DizkusModule\Listener\TopicSubscriptionListener
+    zikula_dizkus_module.post_edited_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostEditedNotifyPosterListener
+    zikula_dizkus_module.post_bad_notify_moderator_listener.class: Zikula\DizkusModule\Listener\PostBadNotifyModeratorListener
+    zikula_dizkus_module.post_deleted_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostDeletedNotifyPosterListener
+    zikula_dizkus_module.post_moved_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostMovedNotifyPosterListener
     # Forms
     zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
     # Helpers
@@ -85,6 +91,72 @@ services:
         arguments:
           - "@zikula_extensions_module.api.variable"
           - "@translator.default"
+          - "@router"
+          
+    zikula_dizkus_module.forum_subscription_listener:
+        class: %zikula_dizkus_module.forum_subscription_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"        
+  
+    zikula_dizkus_module.topic_subscription_listener:
+        class: %zikula_dizkus_module.topic_subscription_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+      
+    zikula_dizkus_module.post_edited_notify_poster_listener:
+        class: %zikula_dizkus_module.post_edited_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+      
+    zikula_dizkus_module.post_bad_notify_moderator_listener:
+        class: %zikula_dizkus_module.post_bad_notify_moderator_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+          
+    zikula_dizkus_module.post_moved_notify_poster_listener:
+        class: %zikula_dizkus_module.post_moved_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+          
+    zikula_dizkus_module.post_deleted_notify_poster_listener:
+        class: %zikula_dizkus_module.post_deleted_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
           - "@router"
 # Forms
 
@@ -202,11 +274,13 @@ services:
             - "@templating"
             - "@zikula_dizkus_module.security"
             - "@translator"
-            
-    zikula_dizkus_module.hook_handler.topic:
-      class: Zikula\DizkusModule\HookHandler\TopicHookHandler
-      parent: zikula_dizkus_module.hook_handler.base            
+                       
             
     zikula_dizkus_module.hook_handler.bbcode:
       class: Zikula\DizkusModule\HookHandler\BbcodeHookHandler
       parent: zikula_dizkus_module.hook_handler.base
+      
+    zikula_dizkus_module.hook_handler.bbcode.filter:
+        class: Zikula\DizkusModule\HookHandler\BbcodeFilterHookHandler
+        arguments:
+            - "@zikula_extensions_module.api.variable"

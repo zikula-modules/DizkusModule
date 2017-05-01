@@ -51,6 +51,37 @@ class TopicRepository extends EntityRepository
     }
 
     /**
+     * Find last post by post_time and set as topic last post
+     *
+     */
+    public function resetLastPost($topic, $flush = false)
+    {
+//        $query = $this->_em->createQueryBuilder();
+//        $post = $query->select('p')
+//            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+//            ->where('p.topic =:topic')
+//            ->setParameter('topic', $topic->getId())
+//            ->orderBy('p.post_time', 'DESC')
+//            ->setMaxResults(1)
+//            ->getFirstResult();
+//        // set
+//        dump($post);
+//        $topic->setLast_post($post);
+        // update topic time ?? @todo consider remove
+        //$topic->setTopic_time($post->getPost_time());
+
+        
+
+
+
+        if ($flush) {
+            $this->_em->flush();
+        }
+
+        return $this;
+    }
+
+    /**
      * Get Topics
      *
      * @param $since int topics since (hours)

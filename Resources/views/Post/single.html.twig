@@ -25,18 +25,20 @@
                 <div class="content" id="postingtext_{{ managedPost.id }}">
                     <div id='solutionPost_{{ managedPost.id }}' class="alert alert-success {% if managedPost.getManagedTopic.get.solved != managedPost.id  %} hide{% endif %}">
                         {% if currentForumUser.allowedToEdit(managedPost.getManagedTopic) %}
-                            <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{{ managedPost.id }}" href="{#{route name='zikuladizkusmodule_user_changetopicstatus' action='unsolve' topic=$topic.topic_id}#}" title="{{ __("Remove: this is not the solution") }}">&times;</a>
+                            <a class="unsolvetopic close tooltips" aria-hidden="true" data-action="unsolve" data-post="{{ managedPost.id }}" href="{{ path('zikuladizkusmodule_topic_solve', {'action':'unsolve', 'topic': managedPost.getManagedTopic.id }) }}" title="{{ __("Remove: this is not the solution") }}">&times;</a>
                         {% endif %}
                         <i class="fa fa-check fa-2x"></i> {{ __('This post has been marked as the solution.') }}
                     </div>
-                    <span id="post_content_{{ managedPost.id }}" >{{ managedPost.get.postText|notifyFilters('dizkus.filter_hooks.post.filter')|transform }}</span>
-                    {% if managedPost.get.getAttachSignature() and settings.removesignature == false %}
-                    {% if managedPost.getManagedPoster.signature is not empty %}
-                        <div class="dzk_postSignature">
-                            {{ settings.signature_start }}
-                            <br />{{ managedPost.getManagedPoster.signature|notifyFilters('dizkus.filter_hooks.post.filter') }}
-                            <br />{{ settings.signature_end }}
-                        </div>
+                    <span id="post_content_{{ managedPost.id }}" >{{ managedPost.get.postText|notifyFilters('dizkus.filter_hooks.post.filter') }}</span>
+                    {% if settings.signaturemanagement %}
+                        {% if managedPost.get.getAttachSignature() and settings.removesignature == false %}
+                        {% if managedPost.getManagedPoster.signature is not empty %}
+                            <div class="dzk_postSignature">
+                                {{ settings.signature_start }}
+                                <br />{{ managedPost.getManagedPoster.signature|notifyFilters('dizkus.filter_hooks.post.filter')|raw }}
+                                <br />{{ settings.signature_end }}
+                            </div>
+                        {% endif %}
                     {% endif %}
                     {% endif %}
                     </div>
@@ -44,25 +46,37 @@
                 </div>
             </div>
         </div>
-
-
         <div class="panel-footer">
             {% if not preview %}
                 <div class="pull-right">
                     <ul id="postingoptions_{{ managedPost.id }}" class="javascriptpostingoptions list-inline">
                         {% if currentForumUser.allowedToModerate(managedPost) %}
-                            {% if ((num is defined and num != 0) or (topic is defined and start != 0)) and not managedPost.get.isFirstPost %}
-                                <li><a class="movepostlink  fa fa-arrow-right fa-150x tooltips" title="{{ __("Move post") }}" href="{#{route name='zikuladizkusmodule_user_movepost' post=$post.post_id}#}"></a></li>
-                                <li><a class="splitpostlink fa fa-scissors fa-150x tooltips" title="{{ __("Split topic") }}" href="{#{route name='zikuladizkusmodule_user_splittopic' post=$post.post_id}#}"></a></li>
-                                {% endif %}
+                            {#                            ((num is defined and num != 0) or (topic is defined and start != 0)) and #}
+                            {% if not managedPost.get.isFirstPost %}
+                                <li>
+                                    <a class="movepostlink  fa fa-arrow-right fa-150x tooltips"
+                                       title="{{ __("Move post") }}"
+                                       data-post="{{ managedPost.id }}"
+                                       id="movebutton_{{ managedPost.id }}"
+                                       title="{{ __("Edit post") }}"
+                                       href="{{ path('zikuladizkusmodule_post_move', {'post': managedPost.id }) }}">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="splitpostlink fa fa-scissors fa-150x tooltips"
+                                       title="{{ __("Split topic") }}"
+                                       href="{{ path('zikuladizkusmodule_topic_splittopic', {'topic': managedPost.managedTopic.id ,'post': managedPost.id }) }}">
+                                    </a>
+                                </li>
                             {% endif %}
-                            {% if managedPost.getManagedTopic.get.status != 1 %}
-                                {% if currentForumUser.allowedToComment(managedPost) %}
-                                    {#  quote changed to plain js   onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"#}
+                        {% endif %}
+                        {% if managedPost.getManagedTopic.get.locked != 1 %}
+                            {% if currentForumUser.allowedToComment(managedPost) %}
+                                {#  quote changed to plain js   onclick="quote('{dzkquote text=$post.post_text|htmlentities uid=$post.poster.user_id}');"#}
                                 <li><a class="quotepostlink fa fa-quote-left fa-150x tooltips" id="quotebutton_{{ managedPost.id }}" data-post="{{ managedPost.id }}" title="{{ __("Quote post") }}" ></a></li>
                                 {% endif %}
                                 {% if currentForumUser.allowedToEdit(managedPost) or currentForumUser.allowedToModerate(managedPost) %}
-                                <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{{ managedPost.id }}" id="editbutton_{{ managedPost.id }}" title="{{ __("Edit post") }}" href="{{ path('zikuladizkusmodule_post_edit', {'post': managedPost.id}) }}"></a></li>
+                                <li><a class="editpostlink fa fa-pencil-square-o fa-150x tooltips" data-post="{{ managedPost.id }}" id="editbutton_{{ managedPost.id }}" title="{{ __("Edit post") }}" href="{{ path('zikuladizkusmodule_post_edit', {'post': managedPost.id }) }}"></a></li>
                                 {% endif %}
                                 {% if (currentForumUser.allowedToEdit(managedPost) and (settings.solved_enabled|default(0)) and not managedPost.get.isFirstPost) or currentForumUser.allowedToModerate(managedPost) %}
                                     {% if managedPost.getManagedTopic.get.solved < 0 %}
@@ -70,30 +84,34 @@
                                     {% else %}
                                         {% set stylestmt='style="display:none" ' %}
                                     {% endif %}
+
+                                {% if settings.solved_enabled and currentTopic.get.solved != 0 %}
                                 <li>
-                                    <a {{ stylestmt }}class="solvetopic tooltips" data-post="{{ managedPost.id }}" data-action="solve" href="{#{route name='zikuladizkusmodule_user_changetopicstatus' action='solve' topic=$topic.topic_id post=$post.post_id}#}" title="{{ __("Mark as solved by this post") }}">
+                                    <a {{ stylestmt }}class="solvetopic tooltips" data-post="{{ managedPost.id }}" data-action="solve" href="{{ path('zikuladizkusmodule_topic_solve', {'action':'solve', 'topic': managedPost.getManagedTopic.id, 'post': managedPost.id }) }}" title="{{ __("Mark as solved by this post") }}">
                                         <i class="fa fa-check fa-150x"></i>
                                     </a>
                                 </li>
                             {% endif %}
-                        {% elseif topic is defined %}
-                            <li><i class="fa fa-lock fa-150x tooltips" title='{{ __('This topic is locked') }}'></i></li>
+
+                        {% endif %}
+                    {% elseif topic is defined %}
+                        <li><i class="fa fa-lock fa-150x tooltips" title='{{ __('This topic is locked') }}'></i></li>
+                        {% endif %}
+                        {% if notify is not defined or notify == false %}
+                            {% if currentForumUser.allowedToComment(managedPost) %}
+                            <li><a class="notifypostlink fa fa-bell-o fa-150x tooltips" href="{{ path('zikuladizkusmodule_post_report', {'post': managedPost.id}) }}" title="{{ __("Notify moderator about this posting") }}"></a></li>
                             {% endif %}
-                            {% if notify is not defined or notify == false %}
-                                {% if currentForumUser.allowedToComment(managedPost) %}
-                                <li><a class="notifypostlink fa fa-bell-o fa-150x tooltips" href="{{ path('zikuladizkusmodule_post_report', {'post': managedPost.id}) }}" title="{{ __("Notify moderator about this posting") }}"></a></li>
-                                {% endif %}
-                            <li><a class="fa fa-chevron-circle-up fa-150x tooltips" title="{{ __("Top") }}" href="#top">&nbsp;</a></li>
-                            {% endif %}
+                        <li><a class="fa fa-chevron-circle-up fa-150x tooltips" title="{{ __("Top") }}" href="#top">&nbsp;</a></li>
+                        {% endif %}
 
 
 
-                        {% if currentForumUser.allowedToEdit(managedPost) or currentForumUser.allowedToModerate(managedPost) %}
-                            <li><a class="deletepostlink fa fa-trash fa-150x tooltips" href="{{ path('zikuladizkusmodule_post_delete', {'post': managedPost.id}) }}" title="{{ __("Delete this post") }}"></a></li>
-                            {% endif %}
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
+                    {% if currentForumUser.allowedToEdit(managedPost) or currentForumUser.allowedToModerate(managedPost) %}
+                        <li><a class="deletepostlink fa fa-trash fa-150x tooltips" href="{{ path('zikuladizkusmodule_post_delete', {'post': managedPost.id}) }}" title="{{ __("Delete this post") }}"></a></li>
+                        {% endif %}
+                </ul>
+            </div>
+            <div class="clearfix"></div>
             {% endif %}
+            </div>
         </div>
-    </div>

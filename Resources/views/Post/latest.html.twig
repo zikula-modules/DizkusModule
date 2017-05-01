@@ -54,102 +54,23 @@
         <div class="panel-heading">
             <h3 class="">{{ __("Latest posts") }}</h2>
         </div>
-        {#        <div class="panel-body">
-                    <#}
-        <div class="list-group-item list-group-item-info noborder">
-            <div class="row">
-                <div class="col-md-2">
-                    {#               {% if forum is not defined %}
-                                       <a id="forumlink_{{ parent.name}}"
-                                          class="tooltips"
-                                          title="{{ __("Go to forum")}} '{{ parent.name | escape('html')}}'"
-                                          href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id})}}">
-                                           <i class="fa fa-comments"></i>&nbsp;{{ parent.name | upper | escape('html')}}</a>
-                                       {% endif %}#}
-                    {{ __('Status')}}
-                </div>
-                <div class="col-md-4">
-                    {{ __('Topic')}}
-                </div>
-                <div class="col-md-1">
-                    {{ __("Replies") | upper}}
-                </div>
-                <div class="col-md-1">
-                    {{ __("Views") | upper}}
-                </div>
-                <div class="col-md-4 pull-right">
-                    {{ __('Last post') | upper}}
-                </div>
-            </div>
+    </div>
+
+    {% for post in latestPosts %}
+        {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': post, 'hide_badge': '', 'show_topic': 1}) }}
+    {% else %}
+        <div class="list-group-item list-group-item-info">
+            {{ __('No posts found.')}}
         </div>
-        {#        <ul class="list-group">
-                    {% for post in posts.iterator %}
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="data col-md-2">
-                                    {% if topic.last_post is not null and topic.last_post.post_time is defined and (date(topic.last_post.post_time) > date(currentForumUser.getLastVisit())) %}
-                                        <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-2x fa-flip-horizontal fa-orange"></i>
-                                    {% else %}
-                                        <i title='{{ __("No reply since your last visit.")}}' class="fa fa-comment-o fa-2x fa-flip-horizontal"></i>
-                                    {% endif %}
-                                    {% if topic.sticky == 1 %}
-                                        <i title='{{ __("Topic is pinned to top of list.")}}' class="{{ sticky_icon_class }}} fa-blue tooltips"></i>
-                                    {% else %}
-                                    {% endif %}
-                                    {% if topic.status == 1 %}
-                                        <i title='{{ __("This topic is locked.")}}' class="fa fa-lock tooltips"></i>
-                                    {% endif %}
-                                    {% if topic.solved > 0 %}
-                                        <i title='{{ __("This topic is solved.")}}' class="fa fa-check fa-green tooltips"></i>
-                                    {% elseif topic.solved == -1 %}
-                                        <i title='{{ __("This topic is a support request.")}}' class="fa fa-question fa-red tooltips"></i>
-                                    {% endif %}
-                                </div>
-                                <div class="description col-md-4">
-                                    <a class="topictitle tooltips"
-                                       href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ '#/post/' ~ topic.last_post.id }}"
-                                       title="{{ __('Go to topic') }} {{ topic.title }}">
-                                        {{ topic.title }}
-                                    </a>
-                                    <div class="text-muted">
-                                        <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
-                                        {% set total_posts=topic.replyCount+50 %}
-                                        {% for i in range(0, total_posts, settings.posts_per_page) %}
-                                            <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div class="data col-md-1 text-center">
-                                    {% if topic.replyCount >= 1 %}
-                                        <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
-                                    {% else %}
-                                        {{ topic.replyCount | escape('html')}}
-                                    {% endif %}
-                                </div>
-                                <div class="data col-md-1 text-center">
-                                    {{ topic.viewCount | escape('html')}}
-                                </div>
-                                <div class="lastpost col-md-4 pull-right">
-                                    {% if topic.last_post is defined %}
-                                        {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item">
-                            <div class="text-center warning">
-                                {{ __('No topics found.')}}
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-                {{ pager({rowcount:pager.numitems,
-                                limit:settings.topics_per_page,
+    {% endfor %}
+
+    <div class="panel panel-default">
+        {{ pager({rowcount:pager.numitems,
+                                limit:settings.posts_per_page,
                                 class:'pull-right',
                                 posvar:'page',
-                                route:'zikuladizkusmodule_topic_viewlatest',
-                                template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}#}
+                                route:'zikuladizkusmodule_post_viewlatest',
+                                template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
         {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
     </div>
 </div>

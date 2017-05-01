@@ -63,6 +63,7 @@
                 <div class="col-lg-9">
                     <span id="forum_info">
                         <a title="{{ __('Visit this forum') }}" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': forum.forum_id}) }}">
+                            {{ forum.children|length }}&nbsp;{% if forum.children|length == 1 %}{{ __('Forum') }}{% else %}{{ __('Forums') }}{% endif %}&nbsp;/&nbsp;
                             {{ topiccount }}&nbsp;{% if topiccount == 1 %}{{ __('Topic') }}{% else %}{{ __('Topics') }}{% endif %}&nbsp;/&nbsp;
                             {{ postcount }}&nbsp;{% if postcount == 1 %}{{ __('Post') }}{% else %}{{ __('Posts') }}{% endif %}
                         </a>

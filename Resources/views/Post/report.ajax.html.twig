@@ -9,9 +9,9 @@
     <div class="panel-heading">
         <h3 class="panel-titl">{{ __("Notify moderator about bad behaviour") }}</h3>
     </div>
-
-    {{ include("@ZikulaDizkusModule/Post/single.html.twig", {'post': managedPost.get}) }}
-
+</div>
+{{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': managedPost, 'hide_badge' : ''}) }}
+<div class="panel panel-default">
     <div class="panel-body">
         <div class="form-group">
             {{ form_label(form.message, __('Message') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
@@ -20,12 +20,12 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <div class="form-group">
-            <div class="col-md-12 text-center">
-                {{ form_widget(form.send, {'attr': {'class': 'btn btn-primary'}, 'label': __('Send notification')}) }}
-            </div>
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer text-right">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':managedPost.getManagedTopic().id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.send, {'attr': {'class': 'btn btn-primary'}, 'label': __('Send notification')}) }}
         </div>
-    </div>
+    {% endif %}
 </div>
 {{ form_end(form) }}

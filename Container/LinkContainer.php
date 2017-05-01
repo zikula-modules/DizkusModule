@@ -166,21 +166,27 @@ class LinkContainer implements LinkContainerInterface
                 'text'  => $this->translator->__('Personal settings'),
                 'title' => $this->translator->__('Modify personal settings'),
                 'icon'  => 'wrench', ];
+            if ($this->variableApi->get('ZikulaDizkusModule', 'forum_subscriptions_enabled')) {
             $links[] = [
                 'url'   => $this->router->generate('zikuladizkusmodule_user_manageforumsubscriptions'),
                 'text'  => $this->translator->__('Forum subscriptions'),
                 'title' => $this->translator->__('Manage forum subscriptions'),
                 'icon'  => 'envelope-alt', ];
+            }
+            if ($this->variableApi->get('ZikulaDizkusModule', 'topic_subscriptions_enabled')) {
             $links[] = [
                 'url'   => $this->router->generate('zikuladizkusmodule_user_managetopicsubscriptions'),
                 'text'  => $this->translator->__('Topic subscriptions'),
                 'title' => $this->translator->__('Manage topic subscriptions'),
                 'icon'  => 'envelope-alt', ];
-            $links[] = [
-                'url'   => $this->router->generate('zikuladizkusmodule_user_managefavoriteforums'),
-                'text'  => $this->translator->__('Favorite forums'),
-                'title' => $this->translator->__('Manage favorite forums'),
-                'icon'  => 'envelope-alt', ];
+            }
+            if ($this->variableApi->get('ZikulaDizkusModule', 'favorites_enabled')) {
+                $links[] = [
+                    'url'   => $this->router->generate('zikuladizkusmodule_user_managefavoriteforums'),
+                    'text'  => $this->translator->__('Favorite forums'),
+                    'title' => $this->translator->__('Manage favorite forums'),
+                    'icon'  => 'envelope-alt', ];
+            }
             if ($this->variableApi->get('ZikulaDizkusModule', 'signaturemanagement')) {
                 $links[] = [
                     'url'   => $this->router->generate('zikuladizkusmodule_user_signaturemanagement'),

@@ -35,12 +35,11 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane {% if preview %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
                 <div class="form-group">
-                    {{ form_label(form.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12'} }) }}
+                    {{ form_label(form.post_text, __("Edit post text"), { 'label_attr': {'class': 'col-md-12'} }) }}
                     {{ form_widget(form.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
                 </div>
                 <div class="form-group">
-                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
-                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.ui_edit', id=null) }}
+                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.ui_edit', id=form.post_text.vars.id) }}
                     {% if settings.striptags == 'yes' %}
                     <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
                     {% endif %}
@@ -48,20 +47,41 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="quickreply_options" style="border:0px;">
                     <div class="form-group">
-                        <div class="col-md-4">
-                            <div><strong>{{ __("Options") }}</strong></div>
-                            {{ form_row(form.attachSignature,  {   'label': __("Attach my signature")
+                        {% if settings.signaturemanagement %}
+                            <div class="col-md-4">
+                                <div><strong>{{ __("Signature options") }}</strong></div>
+                                {{ form_row(form.posts.0.attachSignature,  {   'label': __("Attach my signature")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '','icon': 'fa fa-user'} }) }}
 
-                            {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
+                            </div>
+                        {% endif %}
+
+                        {% if settings.topic_subscriptions_enabled %}
+                            <div class="col-md-4">
+                                <div><strong>{{ __("Subscriptions") }}</strong></div>
+                                {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
+                            </div>
+                        {% endif %}
 
-                        </div>
-                        <div class="col-md-8">
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=managedPost.id) }}
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic_post.ui_edit', id=managedPost.topicId) }}
 
-                        </div>
+                        {% if managedPost.managedPoster.id != currentForumUser.id %}
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <h4 class="text-warning">{{ __("Moderator options") }}</h4>
+                                    {{ form_label(form.reason, __('Inform user about edit') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.') } }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">

@@ -101,7 +101,7 @@
                                 <i title='{{ __("Topic is pinned to top of list.")}}' class="{#{{ sticky_icon_class }}#} fa-blue tooltips"></i>
                             {% else %}
                             {% endif %}
-                            {% if topic.status == 1 %}
+                            {% if topic.locked == 1 %}
                                 <i title='{{ __("This topic is locked.")}}' class="fa fa-lock tooltips"></i>
                             {% endif %}
                             {% if topic.solved > 0 %}
@@ -118,44 +118,44 @@
                             </a>
                             <div class="text-muted">
                                 <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
-                                {% set total_posts=topic.replyCount+50 %}
+                                {% set total_posts=topic.replyCount %}
                                 {% for i in range(0, total_posts, settings.posts_per_page) %}
-                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
+                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
                         <div class="data col-md-1 text-center">
-                            {% if topic.replyCount >= 1 %}
-                                <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
-                            {% else %}
-                                {{ topic.replyCount | escape('html')}}
+                            {% if topic.replyCount >= settings.hot_threshold %}
+                            <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
+                        {% else %}
+                            {{ topic.replyCount | escape('html')}}
                             {% endif %}
+                            </div>
+                            <div class="data col-md-1 text-center">
+                                {{ topic.viewCount | escape('html')}}
+                            </div>
+                            <div class="lastpost col-md-4 pull-right">
+                                {% if topic.last_post is defined %}
+                                    {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="data col-md-1 text-center">
-                            {{ topic.viewCount | escape('html')}}
-                        </div>
-                        <div class="lastpost col-md-4 pull-right">
-                            {% if topic.last_post is defined %}
-                                {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
-                            {% endif %}
-                        </div>
-                    </div>
-                </li>
-            {% else %}
-                <li class="list-group-item">
-                    <div class="text-center warning">
-                        {{ __('No topics found.')}}
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        {{ pager({rowcount:pager.numitems,
-                        limit:settings.topics_per_page,
+                    </li>
+                    {% else %}
+                        <li class="list-group-item">
+                            <div class="text-center warning">
+                                {{ __('No topics found.')}}
+                            </div>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                        {{ pager({rowcount:pager.numitems,
+                        limit:settings.posts_per_page,
                         class:'pull-right',
                         posvar:'page',
                         route:'zikuladizkusmodule_topic_viewlatest',
                         template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
-        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
-    </div>
-</div>
-{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+                        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+                    </div>
+                </div>
+                {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

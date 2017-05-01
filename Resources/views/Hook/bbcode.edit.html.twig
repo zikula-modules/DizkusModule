@@ -1,19 +1,23 @@
 <div class="dizkus-bbcode">
-    <div class="btn-group btn-group-xs" role="group" aria-label="...">
-        <button type="button" class="btn btn-default">
+    <div class="bbcode-buttons btn-group btn-group-sm" role="group" aria-label="...">
+        <button type="button" class="bold btn btn-default tooltips" title="{{ __('You can bold text by enclosing in [b] [/b] brackets. Click to bold selected text') }}">
             <i class="fa fa-bold" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="italic btn btn-default tooltips" title="{{ __('You can make text italic by enclosing in [i] [/i] brackets. Click to italic selected text') }}">
             <i class="fa fa-italic" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="link btn btn-default tooltips" title="{{ __('You add link by enclosing in [url] [/url] brackets. Click to make selected text url') }}">
             <i class="fa fa-link" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="quote btn btn-default tooltips" title="{{ __('You can make a quote text by enclosing in [quote] [/quote] brackets. Click to quote selected text') }}">
             <i class="fa fa-quote-right" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn btn-default">
+        <button type="button" class="code btn btn-default tooltips" title="{{ __('Computer code must by enclosed in [code] [/code] brackets. Click to enclose selected text') }}">
             <i class="fa fa-code" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="smile btn btn-default tooltips" title="{{ __('Click to open smiles browser') }}">
+            <i class="fa fa-smile-o" aria-hidden="true"></i>
         </button>
     </div>
 </div>
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.bbcode.js')) }}

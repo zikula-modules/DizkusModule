@@ -1,0 +1,72 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3> 
+            {{ templatetitle }}      
+        </h3>
+    </div>
+    <div class="panel-body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#move" aria-controls="move" role="tab" data-toggle="tab"><h4>{{ __("Move topic to another forum") }}</h4></a></li>
+            <li role="presentation"><a href="#join" aria-controls="join" role="tab" data-toggle="tab"><h4>{{ __("Join topic with another topic") }}</h4></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="move">
+                <p class="alert alert-info">{{ __("When you press the 'Move' button at the bottom of this form, the topic you have selected (and all its related posts) will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move the topic to a forum for which you are moderator. An administrator is allowed to move any topic to any forum.") }}</p>
+                <div class="form-group">
+                    {{ form_label(form.forum, __('Target forum') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
+                    <div class="col-md-9">
+                        {{ form_widget(form.forum, { 'attr': {'class': ''} }) }} 
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.createshadowtopic, __('Create shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                    <div class="col-lg-9">
+                        {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                    </div>
+                </div>
+                {% if app.request.xmlHttpRequest %}
+                {% else %}
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            {{ form_widget(form.move, {'attr': {'class': 'btn btn-warning pull-right'}}) }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="join">
+                <div class="form-group">
+                    {{ form_label(form.to_topic_id, __('ID of target topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                    <div class="col-md-9">
+                        {{ form_widget(form.to_topic_id, {'attr': {'class': ''}}) }}
+                    </div>
+                </div>
+                {% if app.request.xmlHttpRequest %}
+                {% else %}
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            {{ form_widget(form.join, {'attr': {'class': 'btn btn-warning pull-right'}}) }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer text-right">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

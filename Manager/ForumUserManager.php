@@ -31,6 +31,10 @@ use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
+/**
+ * Forum User manager
+ *
+ */
 class ForumUserManager
 {
     /**
@@ -71,8 +75,27 @@ class ForumUserManager
 
     protected $name;
 
+    /**
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
+     * @param EntityManager $entityManager
+     * @param CurrentUserApi $userApi
+     * @param Permission $permission
+     * @param VariableApi $variableApi
+     * @param RankHelper $ranksHelper
+     */
     public function __construct(
-    TranslatorInterface $translator, RouterInterface $router, RequestStack $requestStack, EntityManager $entityManager, CurrentUserApi $userApi, Permission $permission, VariableApi $variableApi, RankHelper $ranksHelper
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        RequestStack $requestStack,
+        EntityManager $entityManager,
+        CurrentUserApi $userApi,
+        Permission $permission,
+        VariableApi $variableApi,
+        RankHelper $ranksHelper
     )
     {
         $this->name = 'ZikulaDizkusModule';
@@ -110,17 +133,15 @@ class ForumUserManager
              // zikula guest account
             $zuser = $this->entityManager->find('Zikula\UsersModule\Entity\UserEntity', $uid);
             if ($zuser) {
-                $this->_forumUser = new ForumUserEntity($zuser);
-                //$this->_forumUser->setUser();
+                $this->_forumUser = new ForumUserEntity();
+                $this->_forumUser->setUser($zuser);
                 $this->entityManager->persist($this->_forumUser);
                 $this->entityManager->flush();
                 $this->loggedIn = true;
             }
         }
-
-        $this->checkLastVisit();
-
-        return $this;
+        // $this
+        return $this->checkLastVisit();
     }
 
     /**
@@ -134,6 +155,7 @@ class ForumUserManager
         if($zuser){
             return $this->getManager($zuser->getUid(), $create);
         }
+
         return $this;
     }
 
@@ -158,6 +180,87 @@ class ForumUserManager
     }
 
     /**
+     * Get user id
+     *
+     * @return ForumUserEntity
+     */
+    public function getId()
+    {
+        return $this->exists() ? $this->_forumUser->getUserId() : false;
+    }
+
+    /**
+     * Create user from provided data but do not yet persist
+     *
+     * @todo Add create validation
+     * @todo event
+     *
+     * @return bool
+     */
+    public function create($data = null)
+    {
+        if (!is_null($data)) {
+            $this->_forumUser = new ForumUserEntity();
+
+        } else {
+            // throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
+            $this->_forumUser = new ForumUserEntity();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update
+     *
+     * @param array $data forum user data
+     */
+    public function update($data)
+    {
+        if ($data instanceof ForumUserEntity) {
+            $this->_forumUser = $data;
+        }
+
+        $this->_forumUser->merge($data);
+
+        return $this;
+    }
+
+    /**
+     * Persist and flush
+     *
+     * @param array $data forum user data
+     */
+    public function store()
+    {
+        $this->entityManager->persist($this->_forumUser);
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    /**
+     * Delete user
+     *
+     * @param array $data forum user data
+     */
+    public function delete()
+    {
+
+        return $this;
+    }
+
+    /**
+     * Return forum user as array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->_forumUser->toArray();
+    }
+
+    /**
      * Return zikula user as doctrine2 object
      *
      * @return ForumUserEntity
@@ -175,47 +278,6 @@ class ForumUserManager
     public function getUserName()
     {
         return ($this->exists() && !$this->isAnonymous()) ? $this->_forumUser->getUser()->getUname() : 'Anonymous';
-    }
-
-    /**
-     * Get user id
-     *
-     * @return ForumUserEntity
-     */
-    public function getId()
-    {
-        return $this->exists() ? $this->_forumUser->getUserId() : false;
-    }
-
-    /**
-     * Persist and flush
-     *
-     * @param array $data forum user data
-     */
-    public function store()
-    {
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Merge
-     *
-     * @param array $data forum user data
-     */
-    public function merge($data)
-    {
-        $this->_forumUser->merge($data);
-    }
-
-    /**
-     * Return forum user as array
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->_forumUser->toArray();
     }
 
     /**
@@ -244,7 +306,7 @@ class ForumUserManager
      *
      * @return string
      */
-    public function isUser($user)
+    public function isMe($user)
     {
         return $this->_forumUser->getUserId() == $user->getUserId() ? true : false;
     }
@@ -391,8 +453,8 @@ class ForumUserManager
     public function incrementPostCount()
     {
         $this->_forumUser->incrementPostCount();
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -402,7 +464,7 @@ class ForumUserManager
      */
     public function getPostOrder()
     {
-        return ($this->_forumUser->getPostOrder() == 1) ? 'ASC' : 'DESC';
+        return (!$this->isAnonymous() && $this->_forumUser->getPostOrder() == 1) ? 'ASC' : 'DESC';
     }
 
     /**
@@ -413,8 +475,8 @@ class ForumUserManager
     public function setPostOrder($sort)
     {
         $this->_forumUser->setPostOrder($sort);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -431,7 +493,7 @@ class ForumUserManager
             //@todo add anonymous avatar setting
             return $this->_forumUser->getUser()->getAttributeValue('avatar');
         } else {
-            return 'anonymous.png';
+            return 'web/modules/zikuladizkus/images/anonymous.png';
         }
     }
 
@@ -500,10 +562,7 @@ class ForumUserManager
             $this->_forumUser->clearRank();
         }
 
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
-
-        return true;
+        return $this;
     }
 
     /**
@@ -513,8 +572,13 @@ class ForumUserManager
      */
     public function setAutosubscribe($value)
     {
+        if (!$this->variableApi->get($this->name, 'topic_subscriptions_enabled')) {
+            return $this;
+        }
+
         $this->_forumUser->setAutosubscribe($value);
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -536,6 +600,10 @@ class ForumUserManager
      */
     public function subscribeForum(ForumEntity $forum)
     {
+        if (!$this->variableApi->get($this->name, 'forum_subscriptions_enabled')) {
+            return $this;
+        }
+
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
@@ -545,10 +613,8 @@ class ForumUserManager
         }
 
         $this->_forumUser->addForumSubscription($forum);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -560,19 +626,21 @@ class ForumUserManager
      */
     public function unsubscribeForum($forum)
     {
+        if (!$this->variableApi->get($this->name, 'forum_subscriptions_enabled')) {
+            return $this;
+        }
+
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
 
         if (!$forumSubscription) {
-            return true; //nothing to do
+            return $this;
         }
 
         $this->_forumUser->removeForumSubscription($forumSubscription);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -584,6 +652,10 @@ class ForumUserManager
      */
     public function isForumSubscribed($forum)
     {
+        if (!$this->variableApi->get($this->name, 'forum_subscriptions_enabled')) {
+            return $this;
+        }
+
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
@@ -602,6 +674,10 @@ class ForumUserManager
      */
     public function getTopicSubscriptionsCollection()
     {
+        if (!$this->variableApi->get($this->name, 'topic_subscriptions_enabled')) {
+            return [];
+        }
+
         return $this->_forumUser->getTopicSubscriptions();
     }
 
@@ -612,21 +688,23 @@ class ForumUserManager
      *
      * @return bool
      */
-    public function subscribeTopic(TopicEntity $topic)
+    public function subscribeTopic(TopicEntity $topic = null)
     {
+        if (!$this->variableApi->get($this->name, 'topic_subscriptions_enabled')) {
+            return $this;
+        }
+
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
             'forumUser' => $this->get(),]);
 
         if ($topicSubscription) {
-            return true;
+            return $this;
         }
 
         $this->_forumUser->addTopicSubscription($topic);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -638,19 +716,21 @@ class ForumUserManager
      */
     public function unsubscribeFromTopic($topic)
     {
+        if (!$this->variableApi->get($this->name, 'topic_subscriptions_enabled')) {
+            return $this;
+        }
+
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
             'forumUser' => $this->get(),]);
 
         if (!$topicSubscription) {
-            return true;
+            return $this;
         }
 
         $this->_forumUser->removeTopicSubscription($topicSubscription);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -660,11 +740,15 @@ class ForumUserManager
      *
      * @return bool
      */
-    public function isTopicSubscribed($topic)
+    public function isTopicSubscribed(TopicEntity $topic)
     {
+        if (!$this->variableApi->get($this->name, 'topic_subscriptions_enabled')) {
+            return false;
+        }
+
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get(), ]);
 
         if ($topicSubscription) {
             return true;
@@ -680,6 +764,10 @@ class ForumUserManager
      */
     public function getForumViewSettings()
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return false;
+        }
+
         return $this->_forumUser->getDisplayOnlyFavorites();
     }
 
@@ -690,14 +778,17 @@ class ForumUserManager
      */
     public function setForumViewSettings($setting)
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return $this;
+        }
+
         if ($setting) {
             $this->_forumUser->showFavoritesOnly();
         } else {
             $this->_forumUser->showAllForums();
         }
 
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
+        return $this;
     }
 
     /**
@@ -711,6 +802,10 @@ class ForumUserManager
      */
     public function getFavoriteForumsCollection()
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return [];
+        }
+
         return $this->_forumUser->getFavoriteForums();
     }
 
@@ -725,6 +820,10 @@ class ForumUserManager
      */
     public function addFavoriteForum(ForumEntity $forum)
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return $this;
+        }
+
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
@@ -734,10 +833,8 @@ class ForumUserManager
         }
 
         $this->_forumUser->addFavoriteForum($forum);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -751,6 +848,10 @@ class ForumUserManager
      */
     public function removeFavoriteForum($forum)
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return $this;
+        }
+
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
@@ -760,10 +861,8 @@ class ForumUserManager
         }
 
         $this->_forumUser->removeFavoriteForum($forumIsFav);
-        $this->entityManager->persist($this->_forumUser);
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -777,6 +876,10 @@ class ForumUserManager
      */
     public function isForumFavorite($forum)
     {
+        if (!$this->variableApi->get($this->name, 'favorites_enabled')) {
+            return false;
+        }
+
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
             'forumUser' => $this->get(),]);
@@ -870,13 +973,14 @@ class ForumUserManager
 //                $response->headers->setCookie($cookie);
 //                $response->sendHeaders();
                 dump('expired');
-                return true;
             }
         } else {
             $response->headers->setCookie($cookie);
             $response->sendHeaders();
             $this->lastVisit = $time;
         }
+
+        return $this;
     }
 
     /**
@@ -886,7 +990,6 @@ class ForumUserManager
      */
     public function getLastVisit()
     {
-
         return $this->lastVisit;
     }
 

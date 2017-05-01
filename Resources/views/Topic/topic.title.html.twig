@@ -1,0 +1,42 @@
+<div class="panel nothing">
+    <div class="panel-body">
+        <div class="row">
+            {#<input type='hidden' id='userAllowedToEdit' value='1{{ currentTopic.userAllowedToEdit() }}'>#}
+            {# ******************************************************
+            * TOPIC Title
+            ******************************************************* #}
+            {% if settings.solved_enabled and currentTopic.get.solved == -1 %}
+            {% set topic_unsolved_class='' %}
+            {% set topic_solved_class=' hide' %}
+            {% elseif settings.solved_enabled and currentTopic.get.solved == 0 %}
+            {% set topic_unsolved_class=' hide' %}
+            {% set topic_solved_class=' hide' %}
+            {% elseif settings.solved_enabled and currentTopic.get.solved > 0 %}
+                {% set topic_unsolved_class=' hide' %}
+                {% set topic_solved_class=' ' %}
+                {% else %}
+                    {% set topic_unsolved_class=' hide' %}
+                    {% set topic_solved_class=' hide' %}
+                    {% endif %}
+                        <h2 id="edittopicsubjectbutton">
+                            <span class="text-warning {{ topic_unsolved_class }}" id="topic_unsolved">
+                                [<span class="fa fa-question">&nbsp;{{ __("Support request") }}</span>]
+                            </span>
+                            <span class="text-success {{ topic_solved_class }}" id="topic_solved">
+                                [<span class="fa fa-check">&nbsp;{{ __("Solved") }}</span>]
+                            </span>
+                            <span id="edittopic">
+                                <span id="topic_title">
+                                    <label class="sr-only" for="topicsubjectedit_subject">{{ __('topic title') }}</label>
+                                    <span type="text" class="noborder topic-title-input" id="topicsubjectedit_subject" name="topicsubjectedit_subject">
+                                        {{ currentTopic.title|escape('html')|notifyFilters('dizkus.filter_hooks.post.filter') }}
+                                    </span>
+                                </span>
+                                {% if (settings.ajax and (currentForumUser.allowedToModerate(currentTopic) or currentForumUser.allowedToEdit(currentTopic))) %}
+                                    <span id='edittopicicon' style='display:none;'>&nbsp;<i class="fa fa-pencil fa fa-red"></i></span>
+                                    {% endif %} 
+                            </span>
+                        </h2>
+                    </div>
+                </div>
+            </div>

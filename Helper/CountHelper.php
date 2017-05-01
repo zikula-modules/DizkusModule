@@ -100,7 +100,7 @@ class CountHelper
             $dql = 'SELECT count(p)
                 FROM Zikula\DizkusModule\Entity\PostEntity p
                 WHERE p.topic IN (
-                    SELECT t.topic_id
+                    SELECT t.id
                     FROM Zikula\DizkusModule\Entity\TopicEntity t
                     WHERE t.forum = :forum)';
             $query = $this->entityManager->createQuery($dql)->setParameter('forum', $forum);

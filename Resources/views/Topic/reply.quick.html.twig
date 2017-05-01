@@ -31,14 +31,14 @@
     <div class="panel-body" style="border-top:0px;min-height:300px;">
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane {% if preview is defined and preview == true %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
-                <div class="form-group {% if not form.message.vars.valid %}has-error{% endif %}">
-                    {% if not form.message.vars.valid %}
-                        <div class="alert alert-danger" role="alert">{{ form_errors(form.message) }}</div>
+                <div class="form-group {% if not form.post_text.vars.valid %}has-error{% endif %}">
+                    {% if not form.post_text.vars.valid %}
+                        <div class="alert alert-danger" role="alert">{{ form_errors(form.post_text) }}</div>
                     {% endif %}
-                    {{ form_widget(form.message, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
+                    {{ form_widget(form.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
                 </div>
                 <div class="form-group">
-                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
+                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.ui_edit', id=form.post_text.vars.id) }}
                     {% if settings.striptags == 'yes' %}
                     <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
                     {% endif %}
@@ -46,16 +46,26 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="quickreply_options" style="border:0px;">
                     <div class="form-group">
-                        <div class="col-md-12">
-                            <div><strong>{{ __("Options") }}</strong></div>
-                            {{ form_row(form.attachSignature,  {   'label': __("Attach my signature")
+                        {% if settings.signaturemanagement %}
+                            <div class="col-md-4">
+                                <div><strong>{{ __("Signature options") }}</strong></div>
+                                {{ form_row(form.posts.0.attachSignature,  {   'label': __("Attach my signature")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '','icon': 'fa fa-user'} }) }}
 
-                            {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
+                            </div>
+                        {% endif %}
+
+                        {% if settings.topic_subscriptions_enabled %}
+                            <div class="col-md-4">
+                                <div><strong>{{ __("Subscriptions") }}</strong></div>
+                                {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
-                        </div>
+                            </div>
+                        {% endif %}
+
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">
@@ -69,8 +79,9 @@
                 </div>
             </div>
         </div>
+
         <div class="panel-footer text-right">
-            <a id="topic_reply_form_cancel" class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':topic.topic_id}) }}" role="button">{{ __('Cancel') }}</a>
+            <a id="topic_reply_form_cancel" class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-sm'}, 'label': __('Submit')} ) }}
         </div>
     </div>

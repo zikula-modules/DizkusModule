@@ -117,9 +117,8 @@ class ForumUserEntity extends EntityAccess
      *
      * @param int $zuser the core user object
      */
-    public function __construct(UserEntity $zuser)
+    public function __construct()
     {
-        $this->user = $zuser;
         $this->favoriteForums = new ArrayCollection();
         $this->topicSubscriptions = new ArrayCollection();
         $this->forumSubscriptions = new ArrayCollection();
@@ -128,7 +127,7 @@ class ForumUserEntity extends EntityAccess
     /**
      * @param obj $zuser
      */
-    public function setUser(UserEntity $zuser)
+    public function setUser(UserEntity $zuser = null)
     {
         $this->user = $zuser;
     }
@@ -148,6 +147,16 @@ class ForumUserEntity extends EntityAccess
     {
         // null look for user level 1 guest -1 deleted
         return empty($this->user) ? -1 : $this->user->getUid();
+    }
+
+    /**
+     * Get user email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return empty($this->user) ? null : $this->user->getEmail();
     }
 
     public function getPostCount()

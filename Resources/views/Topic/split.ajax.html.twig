@@ -1,0 +1,50 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>
+            {% if templatetitle is defined %}
+                {{ templatetitle }}
+            {% else %}
+                {{ __f("Split topic '%s'", {'%s': currentTopic.title|escape('html')}) }}
+            {% endif %}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p class="alert alert-info">
+            {{ __('Notice: This will split the topic before the selected posting.') }}
+        </p>
+        {% if hide_preview is not defined %}
+            {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': currentPost, 'hide_badge': 1}) }}
+        {% endif %}
+        <div class="form-group">
+            {{ form_label(form.subject, __("New topic subject line"), { 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.subject, { 'attr': {'class': ''} }) }}
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+            </div>
+        </div>
+    </div>
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer text-right">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.split, {'attr': {'class': 'btn btn-warning btn-sm'},  'label': __('Split')}) }}
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

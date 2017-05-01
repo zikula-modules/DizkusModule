@@ -1,4 +1,4 @@
-{% set templatetitle=__f("Reply to '%s'", {'%s':topic.title|escape('html')}) %}
+{% set templatetitle=__f("Reply to '%s'", {'%s':currentTopic.title|escape('html')}) %}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
-{{ include("@ZikulaDizkusModule/Topic/reply.form.html.twig", {'settings': settings, 'topic': topic}) }}
+{{ include("@ZikulaDizkusModule/Topic/reply.quick.html.twig") }}
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

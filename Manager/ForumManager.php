@@ -23,6 +23,10 @@ use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
+/**
+ * Forum manager
+ *
+ */
 class ForumManager
 {
     /**
@@ -101,6 +105,19 @@ class ForumManager
 
     protected $name;
 
+    /**
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
+     * @param EntityManager $entityManager
+     * @param CurrentUserApi $userApi
+     * @param Permission $permission
+     * @param VariableApi $variableApi
+     * @param PermissionApi $permissionApi
+     * @param ForumUserManager $forumUserManagerService
+     */
     public function __construct(
             TranslatorInterface $translator,
             RouterInterface $router,
@@ -127,6 +144,12 @@ class ForumManager
         $this->_itemsPerPage = $this->variableApi->get($this->name, 'topics_per_page');
     }
 
+    /**
+     * Construct the manager
+     *
+     * @param integer $id
+     * @param ForumEntity $forum
+     */
     public function getManager($id = null, ForumEntity $forum = null)
     {
         if (isset($forum)) {
@@ -154,20 +177,6 @@ class ForumManager
     /**
      * return page as array.
      *
-     * @return array|bool false
-     */
-    public function toArray()
-    {
-        if (!$this->_forum) {
-            return false;
-        }
-
-        return $this->_forum->toArray();
-    }
-
-    /**
-     * return page as array.
-     *
      * @return int
      */
     public function getId()
@@ -185,6 +194,71 @@ class ForumManager
         return $this->_forum;
     }
 
+    /**
+     * Persist the forum
+     *
+     * @param array $data page data
+     */
+    public function create()
+    {
+
+        return true;
+    }
+
+   /**
+     * Persist the forum
+     *
+     * @param array $data page data
+     */
+    public function update($data = null)
+    {
+        if ($data instanceof ForumEntity) {
+            $this->_forum = $data;
+        }
+    }
+
+    /**
+     * Persist the forum
+     *
+     * @param array $data page data
+     */
+    public function store()
+    {
+        $this->entityManager->persist($this->_forum);
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    /**
+     * Delete the forum
+     *
+     * @param array $data page data
+     */
+    public function delete()
+    {
+        return $this;
+    }
+
+    /**
+     * return page as array.
+     *
+     * @return array|bool false
+     */
+    public function toArray()
+    {
+        if (!$this->_forum) {
+            return false;
+        }
+
+        return $this->_forum->toArray();
+    }
+
+    /**
+     * return permissions
+     *
+     * @return bool false
+     */
     public function getPermissions()
     {
         return $this->permission->get($this->_forum);
@@ -237,7 +311,7 @@ class ForumManager
             ->select('t')
             ->from('Zikula\DizkusModule\Entity\TopicEntity', 't')
             ->where('t.forum = :forumId')
-            ->setParameter('forumId', $this->_forum->getForum_id())
+            ->setParameter('forumId', $this->_forum->getId())
             ->leftJoin('t.last_post', 'l')
             ->orderBy('t.sticky', 'DESC')
             ->addOrderBy('l.post_time', 'DESC')
@@ -249,6 +323,7 @@ class ForumManager
         $this->current_topics_count = count($paginator);
         $this->current_topics = $paginator;
 
+        return $this;
     }
 
     /**
@@ -294,9 +369,8 @@ class ForumManager
     public function incrementReadCount()
     {
         $this->_forum->incrementCounter();
-        $this->entityManager->flush();
 
-        return true;
+        return $this;
     }
 
     /**
@@ -306,7 +380,8 @@ class ForumManager
     {
         $this->_forum->incrementPostCount();
         $this->modifyParentCount($this->_forum->getParent());
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -316,7 +391,8 @@ class ForumManager
     {
         $this->_forum->decrementPostCount();
         $this->modifyParentCount($this->_forum->getParent(), 'decrement');
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -326,7 +402,8 @@ class ForumManager
     {
         $this->_forum->incrementTopicCount();
         $this->modifyParentCount($this->_forum->getParent(), 'increment', 'Topic');
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
@@ -347,27 +424,34 @@ class ForumManager
     public function setLastPost($post)
     {
         $this->_forum->setLast_post($post);
-        $this->entityManager->flush();
-        // @todo fix last post for parents SQLSTATE[23000]: Integrity constraint violation: 1062
-        // something is wrong with field definition does not allowe duplicates for last posts
-//        $parents = $this->_forum->getParents();
-//        foreach ($parents as $parent) {
-//            $parent->setLast_post($post);
-//            $this->entityManager->flush();
-//        }
 
+        return $this;
+    }
+
+    public function setParentsLastPost($post)
+    {
+        $parents = $this->_forum->getParents();
+        foreach ($parents as $parent) {
+            $this->entityManager->persist($parent->setLast_post($post));
+            $this->entityManager->flush();
+        }
+
+        return $this;
     }
 
     /**
-     * store the forum.
+     * Find last post by last topic post
+     * This relays on topic last post is in sync
+     * Recursive
      *
-     * @param array $data page data
      */
-    public function store($data)
+    public function resetLastPost($flush = false)
     {
-        $this->_forum->merge($data);
-        $this->entityManager->persist($this->_forum);
-        $this->entityManager->flush();
+        $this->entityManager
+            ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
+                ->resetLastPost($this->_forum, $flush);
+
+        return $this;
     }
 
     /**

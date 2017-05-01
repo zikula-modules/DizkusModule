@@ -25,12 +25,14 @@
                 </div>
             </div>
         {% endif %}
-        <div class="form-group">
-            {{ form_label(form.autosubscribe, __('Autosubscribe to new topics') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
-            <div class="col-md-9">
-                {{ form_widget(form.autosubscribe, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+        {% if settings.topic_subscriptions_enabled %}
+            <div class="form-group">
+                {{ form_label(form.autosubscribe, __('Autosubscribe to new topics') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
+                <div class="col-md-9">
+                    {{ form_widget(form.autosubscribe, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </fieldset>
     <div class="form-group">
         <div class="col-md-12">

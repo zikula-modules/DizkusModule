@@ -12,58 +12,65 @@
 
 namespace Zikula\DizkusModule\Form\Type\Topic;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class JoinMoveTopicType extends AbstractType
 {
-    protected $translator;
-
-    private $forums;
-
-    public function __construct($translator, $forums)
-    {
-        $this->translator = $translator;
-        $this->forums = (['' => '<< '.$this->translator->__('Select target forum').' >>'] + $forums);
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->forum = $options['forum'];
-
+        $this->options = $options;
+        //dump($options);
         $builder
-                ->add('forum_id', ChoiceType::class, [
-                    'choices'       => $this->forums,
-                    'multiple'      => false,
-                    'expanded'      => false,
-                    'required'      => false,
-                    'choice_attr'   => function ($key) {
-                        return $key == $this->forum ? ['disabled' => 'disabled'] : [];
-                    },
-                    'choice_label'   => function ($key) {
-                        return $key == $this->forum ? $this->forums[$key] . ' ' .  $this->translator->__('current') : $this->forums[$key];
-                    },
-                ])
-                ->add('to_topic_id', IntegerType::class, [
-                    'required' => false,
-                ])
-                ->add('createshadowtopic', ChoiceType::class, [
-                    'choices'   => ['0' => 'Off', '1' => 'On'],
-                    'multiple'  => false,
-                    'expanded'  => true,
-                    'required'  => true,
-                    'data'      => 0,
-                ])
-
-                ->add('move', SubmitType::class)
-                ->add('join', SubmitType::class)
-                ->add('cancel', SubmitType::class);
+            ->add('forum', EntityType::class, [
+                'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
+                'query_builder' => function (EntityRepository $er) {
+                    $forums =$er->createQueryBuilder('f')
+                        ->where('f.lvl != 0')
+                        ->orderBy('f.root', 'ASC')
+                        ->addOrderBy('f.lft', 'ASC');
+                        return $forums;
+                },
+                'choice_label' => function ($forum) {
+                    return ($forum->getId() == $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' .  $this->options['translator']->__('current') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
+                },
+                'multiple'      => false,
+                'expanded'      => false,
+                'choice_attr'   => function ($forum) {
+                    return $forum->getId() == $this->options['forum'] ? ['disabled' => 'disabled'] : [];
+                }
+            ])
+            ->add('to_topic_id', IntegerType::class, [
+                'required' => false,
+                'mapped' => false
+            ])
+            ->add('createshadowtopic', ChoiceType::class, [
+                'choices'   => ['0' => 'Off', '1' => 'On'],
+                'multiple'  => false,
+                'expanded'  => true,
+                'required'  => true,
+                'mapped'    => false,
+                'data'      => 0,
+            ]);
+        if ($options['addReason']) {
+            $builder->add('reason', TextareaType::class, [
+                'mapped' => false,
+                'required' =>false,
+            ]);
+        }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'zikula_dizkus_form_topic_joinmove';
@@ -75,8 +82,11 @@ class JoinMoveTopicType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'topic'      => null,
             'forum'      => null,
+            'forums'     => null,
+            'translator' => null,
+            'addReason' => false,
+            'settings' => null
         ]);
     }
 }

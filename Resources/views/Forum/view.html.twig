@@ -21,11 +21,11 @@
 {% set subforums_icon %}<i class="fa fa-chevron-circle-down"></i>{% endset %}
 {% set topics_icon %}<i class="fa fa-chevron-circle-down"></i>{% endset %}
 
-{% set lock_icon %}<i class="fa fa-lock"></i>{% endset %}
-{% set unlock_icon %}<i class="fa fa-unlock"></i>{% endset %}
+{% set lock_icon %}<i class="fa fa-lock fa-red"></i>{% endset %}
+{% set unlock_icon %}<i class="fa fa-unlock fa-green"></i>{% endset %}
 
 
-{# topic status icons #}
+{# topic icons #}
 {% set sticky_icon_class="fa fa-thumb-tack" %}
 
 {# ------- #}
@@ -48,17 +48,35 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div id="navbar-forum-collapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-
-                {% if currentForum.get.isLocked() and currentForumUser.allowedToModerate(currentForum) %}
-                    <li>
-                        <a class="tooltips"
-                           title="{{ __("Forum is locked click to unlock forum") }}"
-                           href="{{ path('zikuladizkusmodule_topic_newtopic', {'forum':currentForum.id}) }}"
-                           >
-                            {{ lock_icon }}&nbsp;{{ __("") }}
-                        </a>
-                    </li>
-                {% endif %}
+                <li>
+                    {% if currentForum.get.isLocked() %}
+                        {% if currentForumUser.allowedToModerate(currentForum) %}
+                            {% set url=path('zikuladizkusmodule_forum_lock', {'forum':currentForum.id, 'action': 'unlock'}) %}
+                            {% set tooltip= __("Forum is locked click to unlock forum") %}
+                        {% else %}
+                            {% set url='#' %}
+                            {% set tooltip= __("This forum is locked no new topics are allowed.") %}
+                        {% endif %}
+                        {% set msg='' %}
+                        {% set locked_status_icon=lock_icon %}
+                    {% else %}
+                        {% if currentForumUser.allowedToModerate(currentForum) %}
+                            {% set url=path('zikuladizkusmodule_forum_lock', {'forum':currentForum.id, 'action': 'unlock'}) %}
+                            {% set tooltip= __("Forum is unlocked click to lock forum") %}
+                        {% else %}
+                            {% set url=path('zikuladizkusmodule_topic_newtopic', {'forum':currentForum.id}) %}
+                            {% set tooltip= __("Forum is unlocked click to add new topic") %}
+                        {% endif %}
+                        {% set msg='' %}
+                        {% set locked_status_icon=unlock_icon %}
+                    {% endif %}
+                    <a class="tooltips"
+                       href="{{ url }}"
+                       title="{{ tooltip }}"
+                       >
+                        {{ locked_status_icon }} &nbsp; {{ msg }}
+                    </a>
+                </li>
 
                 {% if currentForumUser.allowedToComment(currentForum)  %}
                     {% if currentForumUser.allowedToModerate(currentForum) or not currentForum.get.isLocked() %}
@@ -73,27 +91,29 @@
                     {% endif %}
 
                     {% if currentForumUser.loggedIn %}
-                        <li>
-                            {% if currentForumUser.isForumSubscribed(currentForum.get) %}
-                                {% set url=path('zikuladizkusmodule_user_removeforumsubscription', {'forum':currentForum.id}) %}
-                                {% set tooltip= __("Unsubscribe this forum and stop reciving new topics on email!") %}
-                                {% set msg= __("Unsubscribe from forum") %}
-                                {% set subscribed_status_icon=unsubscribe_icon %}
-                            {% else %}
-                                {% set url=path('zikuladizkusmodule_user_addforumsubscription', {'forum':currentForum.id}) %}
-                                {% set tooltip= __("Subscribe to this forum and recive new topics on email!") %}
-                                {% set msg= __("Subscribe to this forum") %}
-                                {% set subscribed_status_icon=subscribe_icon %}
-                            {% endif %}
-                            <a class="tooltips"
-                               id="forum-subscription"
-                               data-status="{% if currentForumUser.isForumSubscribed(currentForum.get) %}1{% else %}0{% endif %}"
-                               href="{{ url }}"
-                               title="{{ tooltip }}"
-                               >
-                                {{ subscribed_status_icon }}&nbsp;{{ msg }}
-                            </a>
-                        </li>
+                        {% if settings.forum_subscriptions_enabled %}
+                            <li>
+                                {% if currentForumUser.isForumSubscribed(currentForum.get) %}
+                                    {% set url=path('zikuladizkusmodule_user_removeforumsubscription', {'forum':currentForum.id}) %}
+                                    {% set tooltip= __("Unsubscribe this forum and stop reciving new topics on email!") %}
+                                    {% set msg= __("Unsubscribe from forum") %}
+                                    {% set subscribed_status_icon=unsubscribe_icon %}
+                                {% else %}
+                                    {% set url=path('zikuladizkusmodule_user_addforumsubscription', {'forum':currentForum.id}) %}
+                                    {% set tooltip= __("Subscribe to this forum and recive new topics on email!") %}
+                                    {% set msg= __("Subscribe to this forum") %}
+                                    {% set subscribed_status_icon=subscribe_icon %}
+                                {% endif %}
+                                <a class="tooltips"
+                                   id="forum-subscription"
+                                   data-status="{% if currentForumUser.isForumSubscribed(currentForum.get) %}1{% else %}0{% endif %}"
+                                   href="{{ url }}"
+                                   title="{{ tooltip }}"
+                                   >
+                                    {{ subscribed_status_icon }}&nbsp;{{ msg }}
+                                </a>
+                            </li>
+                        {% endif %}
                         {% if settings.favorites_enabled %}
                             <li>
                                 {% if currentForumUser.isForumFavorite(currentForum.get) %}
@@ -153,7 +173,7 @@
                 {{ __('Forums') }}
             </h3>
         </div>
-        {{ include("@ZikulaDizkusModule/Forum/singleforumtable.html.twig" , {'managedForum': currentForum }) }}
+        {{ include("@ZikulaDizkusModule/Forum/single.forum.table.html.twig" , {'managedForum': currentForum }) }}
 
     {% endif %}
 
@@ -180,7 +200,7 @@
                     </div>
                 </div>
             </div>
-            {{ include("@ZikulaDizkusModule/Forum/forumtopicstable.html.twig", {'managedForum': currentForum}) }}
+            {{ include("@ZikulaDizkusModule/Forum/forum.topics.table.html.twig", {'managedForum': currentForum}) }}
 
         {% elseif not currentForum.get.isLocked() %}
             <div class="alert alert-info text-center">

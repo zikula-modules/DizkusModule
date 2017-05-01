@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus.
  *
@@ -13,33 +12,33 @@
 namespace Zikula\DizkusModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserPreferencesType extends AbstractType
 {
-    public function __construct()
-    {
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('postOrder', 'choice', ['choices' => ['1' => 'Ascending', '0' => 'Descending'],
-            'multiple'                                  => false,
-            'expanded'                                  => false,
-            'required'                                  => true, ]);
+        $builder->add('postOrder', ChoiceType::class, ['choices' => ['1' => 'Ascending', '0' => 'Descending'],
+            'multiple' => false,
+            'expanded' => false,
+            'required' => true,]);
 
-        if ($options['favorites_enabled']) {
-            $builder->add('displayOnlyFavorites', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
-                'multiple'                                             => false,
-                'expanded'                                             => true,
-                'required'                                             => true, ]);
+        if ($options['settings']['favorites_enabled']) {
+            $builder->add('displayOnlyFavorites', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                'multiple' => false,
+                'expanded' => true,
+                'required' => true,]);
         }
-        $builder->add('autosubscribe', 'choice', ['choices' => ['0' => 'Off', '1' => 'On'],
-            'multiple'                                      => false,
-            'expanded'                                      => true,
-            'required'                                      => true, ]);
-
+        if ($options['settings']['topic_subscriptions_enabled']) {
+            $builder->add('autosubscribe', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                'multiple' => false,
+                'expanded' => true,
+                'required' => true,]);
+        }
         $builder->add('save', 'submit', [
             'label' => 'Save',
         ]);
@@ -47,17 +46,17 @@ class UserPreferencesType extends AbstractType
 
     public function getName()
     {
-        return 'user_preferences_form';
+        return 'zikula_dizkus_form_user_preferences';
     }
 
     /**
-     * OptionsResolverInterface is @deprecated and is supposed to be replaced by
-     * OptionsResolver but docs not clear on implementation.
-     *
-     * @param OptionsResolverInterface $resolver
+     * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['favorites_enabled' => false]);
+        $resolver->setDefaults([
+            'translator' => null,
+            'settings' => false,
+        ]);
     }
 }

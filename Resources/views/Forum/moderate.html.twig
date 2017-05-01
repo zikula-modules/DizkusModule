@@ -16,7 +16,7 @@
         <h2 class="text-warning"><i class="fa fa-wrench"></i>&nbsp;{{ __('Moderating') }}&nbsp;{{ forum.name }}&nbsp;{{ __('topics') }}</h2>
     </div>
     {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage|default(15), posvar:'start', route:'zikuladizkusmodule_forum_moderateforum'}) }} 
-    {{ include("@ZikulaDizkusModule/Forum/forumtopicstable.html.twig" , {'topics': forum.topics, 'moderate': true }) }}               
+    {{ include("@ZikulaDizkusModule/Forum/forum.topics.table.html.twig" , {'topics': forum.topics, 'moderate': true }) }}
     {{ pager({rowcount:pager.numitems, limit:pager.itemsperpage|default(15), posvar:'start', route:'zikuladizkusmodule_forum_moderateforum'}) }}    
 
 </div>    

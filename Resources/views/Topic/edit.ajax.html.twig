@@ -1,0 +1,69 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaDizkusModule:Form:checkbox.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {% if templatetitle is defined %}
+            <h3 class="panel-title">{{ templatetitle }}</h3>
+        {% else %}
+            <h3>{{ __f("Edit topic '%s'", {'%s':currentTopic.get.title}) }}</h3>
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form_label(form.title, __("Topic title"), { 'label_attr': {'class': 'col-md-12'} }) }}
+            {{ form_widget(form.title, { 'attr': {'class': ''} }) }}
+        </div>
+
+        <div class="form-group">
+            {% if settings.signaturemanagement %}
+                <div class="col-md-4">
+                    <div><strong>{{ __("Signature options") }}</strong></div>
+                    {{ form_row(form.posts.0.attachSignature,  {   'label': __("Attach my signature")
+                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
+                            ,'attr': {'class': '','icon': 'fa fa-user'} }) }}
+
+                </div>
+            {% endif %}
+
+            {% if settings.topic_subscriptions_enabled %}
+                <div class="col-md-4">
+                    <div><strong>{{ __("Subscriptions") }}</strong></div>
+                    {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
+                            ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
+                            ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
+                </div>
+            {% endif %}
+
+            <div class="col-md-4">
+                <div><strong>{{ __("Topic options") }}</strong></div>
+
+                {% if settings.solved_enabled %}
+                    {{ form_row(form.solved,  {   'label': __("Mark topic as support question")
+                            ,'label_attr': {'class': ''}
+                            ,'attr': {'class': '','icon': 'fa fa-question fa-red'} }) }}
+                {% endif %}
+
+                {{ form_row(form.locked,  {   'label': __("Is topic locked")
+                            ,'label_attr': {'class': ''}
+                            ,'attr': {'class': '','icon': 'fa fa-lock'} }) }}
+
+                {{ form_row(form.sticky,  {   'label': __("Is topic sticky")
+                            ,'label_attr': {'class': ''}
+                            ,'attr': {'class': '','icon': 'fa fa-thumb-tack fa-orange'} }) }}
+            </div>
+            {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.ui_edit', id=null) }}
+        </div>
+    </div>
+
+    <div class="panel-footer text-right">
+        <a class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+        {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-sm'},  'label': __('Submit')}) }}
+    </div>
+</div>
+{{ form_end(form) }}

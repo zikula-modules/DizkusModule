@@ -71,7 +71,7 @@ class SpamListener implements EventSubscriberInterface
      */
     public function newTopicCheck(GenericEvent $event)
     {
-        dump($event);
+
     }
 
     /**
@@ -84,6 +84,6 @@ class SpamListener implements EventSubscriberInterface
      */
     public function newPostCheck(GenericEvent $event)
     {
-        dump($event);
+        
     }
 }

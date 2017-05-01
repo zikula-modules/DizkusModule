@@ -17,6 +17,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotatio
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
@@ -136,6 +138,65 @@ class ForumController extends AbstractController
                     'permissions' => $managedForum->getPermissions(),
                     'settings'    => $this->getVars(),
         ]);
+    }
+
+    /**
+     * @Route("/forum/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action"="lock|unlock"})
+     *
+     * Lock forum
+     *
+     * User interface for forum locking
+     *
+     * @return string
+     */
+    public function lockAction(Request $request, $forum, $action)
+    {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            if ($request->isXmlHttpRequest()) {
+                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
+            } else {
+                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+                    'forum_disabled_info' => $this->getVar('forum_disabled_info'),
+                ]);
+            }
+        }
+
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
+        if (!$managedForum->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/ForumController/lockAction()\'.'));
+        }
+
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        //nicer redirect form of access denied
+        if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
+            $path = [
+                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login',];
+
+            $subRequest = $request->duplicate([], null, $path);
+            $httpKernel = $this->get('http_kernel');
+            $response = $httpKernel->handle(
+            $subRequest, HttpKernelInterface::SUB_REQUEST
+            );
+
+            return $response;
+        }
+
+        if (!$forumUserManager->allowedToModerate($managedForum)) {
+            throw new AccessDeniedException();
+        }
+
+        $managedForum->get()->{$action}();
+        $managedForum->store();
+
+        if (!$request->isXmlHttpRequest()) {
+            // everything is good no ajax return to to topic view
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
+        }
     }
 
     /**

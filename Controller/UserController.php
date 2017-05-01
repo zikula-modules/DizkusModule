@@ -23,7 +23,8 @@ use Symfony\Component\Routing\RouterInterface; // used in annotations - do not r
 use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Zikula\Core\Controller\AbstractController;
+use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Form\Type\UserPreferencesType;
 
@@ -120,15 +121,17 @@ class UserController extends AbstractController
             throw new AccessDeniedException($this->__('Sorry, you have no permissions to access this page.'));
         }
 
-        $form = $this->createForm(new UserPreferencesType(), $managedForumUser->toArray(), ['favorites_enabled' => $this->getVar('favorites_enabled')]);
+        $form = $this->createForm(new UserPreferencesType(), $managedForumUser->toArray(), ['settings' => $this->getVars()]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
 
-                $managedForumUser->setPostOrder($data['postOrder']);
-                $managedForumUser->setForumViewSettings((bool) $data['displayOnlyFavorites']);
-                $managedForumUser->setAutosubscribe($data['autosubscribe']);
+                $managedForumUser
+                            ->setPostOrder($data['postOrder'])
+                            ->setForumViewSettings((bool) $data['displayOnlyFavorites'])
+                            ->setAutosubscribe($data['autosubscribe'])
+                            ->store();
 
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
@@ -180,6 +183,7 @@ class UserController extends AbstractController
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromForum($unsubscribe);
             }
+            $forumUserManager->store();
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -192,14 +196,14 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/forum-subscriptions/add/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
-     * @ Method("POST")
+     *
      * Interface for a user to add forum subscription
      *
      * @return string
      */
-    public function addForumSubscriptionAction(Request $request, ForumEntity $forum = null)
+    public function addForumSubscriptionAction(Request $request, ForumEntity $forum)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -232,19 +236,25 @@ class UserController extends AbstractController
 
         // forum subscriptions on off
         if ($this->getVar('forum_subscriptions_enabled')) {
-            throw new AccessDeniedException($this->__('Error! Subscriptions have been disabled.'));
-            //return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
+            throw new AccessDeniedException($this->__('Error! Forum subscriptions have been disabled.'));
         }
 
-        if (empty($forum)) {
-            //return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
+        if (!$managedForum->exists()) {
             throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/UserController/addForumSubscriptionAction()\'.'));
         }
 
-        if ($forumUserManager->subscribeForum($forum)) {
-            return new PlainResponse('successful');
+        if ($forumUserManager->subscribeForum($forum)->store()) {
+            $status = $this->__('Forum was subscribed.');
         } else {
-            return new PlainResponse('something went wrong');
+            $status = $this->__('Something went wrong.');
+        }
+
+        if ($format == 'json') {
+        } elseif ($format == 'ajax.html') {
+
+        } else {
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
 
@@ -255,9 +265,9 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function removeForumSubscriptionAction(Request $request, ForumEntity $forum = null)
+    public function removeForumSubscriptionAction(Request $request, ForumEntity $forum)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -294,15 +304,22 @@ class UserController extends AbstractController
             //return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
         }
 
-        if (empty($forum)) {
-            //return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-            throw new NotFoundHttpException($this->__('Error! No forum ID in \'Dizkus/UserController/removeForumSubscriptionAction()\'.'));
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
+        if (!$managedForum->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/UserController/removeForumSubscriptionAction()\'.'));
         }
 
-        if ($forumUserManager->unsubscribeForum($forum)) {
-            return new PlainResponse('successful');
+        if ($forumUserManager->unsubscribeForum($forum)->store()) {
+            $status = $this->__('Forum was unsubscribed.');
         } else {
-            return new PlainResponse('something went wrong');
+            $status = $this->__('Something went wrong.');
+        }
+
+        if ($format == 'json') {
+        } elseif ($format == 'ajax.html') {
+
+        } else {
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
 
@@ -342,6 +359,7 @@ class UserController extends AbstractController
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromTopic($unsubscribe);
             }
+            $forumUserManager->store();
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -359,9 +377,9 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function addTopicSubscriptionAction(Request $request, TopicEntity $topic = null)
+    public function addTopicSubscriptionAction(Request $request, TopicEntity $topic)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -392,21 +410,28 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        // forum subscriptions on off
-        if ($this->getVar('forum_subscriptions_enabled')) {
-            throw new AccessDeniedException($this->__('Error! Subscriptions have been disabled.'));
-            //return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
+        // topic subscriptions on off
+        if (!$this->getVar('topic_subscriptions_enabled')) {
+            throw new AccessDeniedException($this->__('Error! Topic subscriptions have been disabled.'));
         }
 
-        if (empty($topic)) {
-            //return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-            throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/UserController/addForumSubscriptionAction()\'.'));
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager(null, $topic);
+        if (!$managedTopic->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Topic not found in \'Dizkus/UserController/addTopicSubscriptionAction()\'.'));
         }
 
-        if ($forumUserManager->subscribeTopic($topic)) {
-            return new PlainResponse('successful');
+        if ($forumUserManager->subscribeTopic($topic)->store()) {
+            $status = $this->__('Topic was subscribed.');
         } else {
-            return new PlainResponse('something went wrong');
+            $status = $this->__('Something went wrong.');
+        }
+
+        if ($format == 'json') {
+        } elseif ($format == 'ajax.html') {
+
+        } else {
+            $this->addFlash('status', $status);
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
 
@@ -417,8 +442,9 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function removeTopicSubscriptionAction(Request $request, TopicEntity $topic = null)
+    public function removeTopicSubscriptionAction(Request $request, TopicEntity $topic)
     {
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -449,21 +475,26 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        // forum subscriptions on/off add ! @todo
         if ($this->getVar('forum_subscriptions_enabled')) {
             throw new AccessDeniedException($this->__('Error! Subscriptions have been disabled.'));
-            //return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
         }
 
-        if (empty($topic)) {
-            //return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-            throw new NotFoundHttpException($this->__('Error! No forum ID in \'Dizkus/UserController/removeTopicSubscriptionAction()\'.'));
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager(null, $topic);
+        if (!$managedTopic->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Topic not found in \'Dizkus/UserController/removeTopicSubscriptionAction()\'.'));
         }
 
-        if ($forumUserManager->unsubscribeTopic($topic)) {
-            return new PlainResponse('successful');
+        if ($forumUserManager->unsubscribeFromTopic($topic)->store()) {
+            $status = $this->__('Topic was unsubscribed.');
         } else {
-            return new PlainResponse('something went wrong');
+            $status = $this->__('Something went wrong.');
+        }
+
+        if ($format == 'json') {
+        } elseif ($format == 'ajax.html') {
+
+        } else {
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
 
@@ -503,6 +534,7 @@ class UserController extends AbstractController
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->removeFavoriteForum($unsubscribe);
             }
+            $forumUserManager->store();
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_managefavotites', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -520,9 +552,9 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function addFavoriteForumAction(Request $request, ForumEntity $forum = null)
+    public function addFavoriteForumAction(Request $request, ForumEntity $forum)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -564,7 +596,7 @@ class UserController extends AbstractController
             throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/UserController/addFavoriteForumAction()\'.'));
         }
 
-        if ($forumUserManager->addFavoriteForum($forum)) {
+        if ($forumUserManager->addFavoriteForum($forum)->store()) {
             return new PlainResponse('successful');
         } else {
             return new PlainResponse('something went wrong');
@@ -578,9 +610,9 @@ class UserController extends AbstractController
      *
      * @return string
      */
-    public function removeFavoriteForumAction(Request $request, ForumEntity $forum = null)
+    public function removeFavoriteForumAction(Request $request, ForumEntity $forum)
     {
-
+        $format = $this->decodeFormat($request);
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
@@ -622,7 +654,7 @@ class UserController extends AbstractController
             throw new NotFoundHttpException($this->__('Error! No forum ID in \'Dizkus/UserController/removeForumSubscriptionAction()\'.'));
         }
 
-        if ($forumUserManager->removeFavoriteForum($forum)) {
+        if ($forumUserManager->removeFavoriteForum($forum)->store()) {
             return new PlainResponse('successful');
         } else {
             return new PlainResponse('something went wrong');
@@ -647,7 +679,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $forumUserManager->setForumViewSettings($setting == 'favorities' ? true : false);
+        $forumUserManager->setForumViewSettings($setting == 'favorities' ? true : false)->store();
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
     }
@@ -701,7 +733,7 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
-                $forumUserManager->setSignature($data['signature']);
+                $forumUserManager->setSignature($data['signature']);// this stores itself automaticaly
                 $this->addFlash('status', $this->__('Done! Signature has been updated.'));
             }
 
@@ -750,7 +782,7 @@ class UserController extends AbstractController
 
         list($posts, $pager) = $forumUserManager->getPosts($start);
 
-        return $this->render('@ZikulaDizkusModule/User/myposts.html.twig', [
+        return $this->render('@ZikulaDizkusModule/User/my.posts.html.twig', [
             'currentForumUser' => $forumUserManager,
             'settings' => $this->getVars(),
             'posts' => $posts,
@@ -794,7 +826,7 @@ class UserController extends AbstractController
 
         list($topics, $pager) = $forumUserManager->getTopics($start);
 
-        return $this->render('@ZikulaDizkusModule/User/mytopics.html.twig', [
+        return $this->render('@ZikulaDizkusModule/User/my.topics.html.twig', [
             'currentForumUser' => $forumUserManager,
             'settings' => $this->getVars(),
             'topics' => $topics,

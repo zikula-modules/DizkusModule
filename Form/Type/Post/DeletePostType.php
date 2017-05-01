@@ -13,26 +13,28 @@
 namespace Zikula\DizkusModule\Form\Type\Post;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DeletePostType extends AbstractType
 {
-    protected $loggedIn;
-
-    public function __construct($loggedIn)
-    {
-        $this->loggedIn = $loggedIn;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-                ->add('delete', SubmitType::class);
+        $builder->add('title', HiddenType::class);
+
+        if ($options['addReason']) {
+            $builder->add('reason', TextareaType::class, [
+                'mapped' => false,
+                'required' =>false,
+            ]);
+        }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'zikula_dizkus_form_post_delete';
@@ -45,6 +47,7 @@ class DeletePostType extends AbstractType
     {
         $resolver->setDefaults([
             'translator' => null,
+            'addReason' => false
         ]);
     }
 }

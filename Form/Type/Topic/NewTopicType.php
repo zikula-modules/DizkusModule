@@ -13,45 +13,52 @@
 namespace Zikula\DizkusModule\Form\Type\Topic;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Zikula\DizkusModule\Form\Type\Post\FirstPostType;
 
 class NewTopicType extends AbstractType
 {
-    protected $loggedIn;
-
-    public function __construct($loggedIn)
-    {
-        $this->loggedIn = $loggedIn;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title', TextType::class, [
-                    'required' => true, ])
-                ->add('message', TextareaType::class, [
-                    'required' => true, ])
-                ->add('attachSignature', CheckboxType::class, [
-                    'required' => false,
-                    'data'     => $this->loggedIn,
-                    'disabled' => !$this->loggedIn,
-                    ])
-                ->add('isSupportQuestion', CheckboxType::class, [
+                    'required' => true,
+                ])
+                ->add('locked', CheckboxType::class, [
                     'required' => false,
                     ])
-                ->add('subscribeTopic', CheckboxType::class, [
+                ->add('sticky', CheckboxType::class, [
                     'required' => false,
-                    'data'     => $this->loggedIn,
-                    'disabled' => !$this->loggedIn,
                     ])
-                ->add('save', SubmitType::class)
-                ->add('preview', SubmitType::class);
+                ->add('posts', CollectionType::class, [
+                     'allow_add' => true,
+                     'entry_type' => new FirstPostType(),
+                     'entry_options'  => [],
+                 ]);
+
+                if($options['settings']['solved_enabled']){
+                $builder->add('solved', CheckboxType::class, [
+                    'required' => false,
+                    'data' => false,
+                    ]);
+                }
+
+                if($options['settings']['topic_subscriptions_enabled']){
+                    $builder->add('subscribeTopic', CheckboxType::class, [
+                        'required' => false,
+                        'mapped' => false,
+                        'data'     => $options['loggedIn'],
+                        'disabled' => !$options['loggedIn'],
+                        ]);
+                }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return 'zikula_dizkus_form_topic_new';
@@ -64,6 +71,8 @@ class NewTopicType extends AbstractType
     {
         $resolver->setDefaults([
             'translator' => null,
+            'loggedIn' => false,
+            'settings' => false
         ]);
     }
 }

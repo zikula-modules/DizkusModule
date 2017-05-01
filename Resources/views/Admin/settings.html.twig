@@ -151,6 +151,12 @@
                         {{ form_widget(form.favorites_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
                     </div>
                 </div>
+                <div class="form-group">
+                    {{ form_label(form.forum_subscriptions_enabled, __('Enable forum subscriptions') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.forum_subscriptions_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                    </div>
+                </div>
             </fieldset>
             <fieldset>
                 <legend>{{ __("Forum Search settings") }}</legend>
@@ -214,6 +220,12 @@
                     {{ form_label(form.solved_enabled, __('Enable solved option in topics') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
                     <div class="col-md-8">
                         {{ form_widget(form.solved_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.topic_subscriptions_enabled, __('Enable topic subscriptions') ,{ 'label_attr': {'class': 'col-md-4'} }) }}
+                    <div class="col-md-8">
+                        {{ form_widget(form.topic_subscriptions_enabled, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
                     </div>
                 </div>
                 <div class="form-group">

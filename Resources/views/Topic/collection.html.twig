@@ -1,4 +1,3 @@
-{# empty Twig template #}
 {% if moderate is not defined %}{% set moderate=false %}{% endif %}
 <table class="table table-condensed">
     <thead>
@@ -15,7 +14,7 @@
             <tr>
                 <td class="data">
                     {% if forum is defined and forum.last_post.post_time is defined %}
-                        {% set comp=(date(forum.last_post.post_time) > date(last_visit_unix)) %}
+                        {% set comp=(date(topic.last_post.post_time) > date(last_visit_unix)) %}
                     {% else %}
                         {% set comp=false %}
                     {% endif %}
@@ -25,7 +24,7 @@
                         {% else %}
                             <i class="fa fa-comment-o fa-stack-2x"></i>
                         {% endif %}
-                        {% if topic.status == 1 %}<i title='{{ __("This topic is locked.") }}' class="fa fa-lock fa-stack-1x fa-black fa-overlay-lower-right tooltips"></i>{% endif %}
+                        {% if topic.locked == 1 %}<i title='{{ __("This topic is locked.") }}' class="fa fa-lock fa-stack-1x fa-black fa-overlay-lower-right tooltips"></i>{% endif %}
                         {% if comp %}<i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>{% endif %}
                     </span>
                 </td>
@@ -36,15 +35,14 @@
                         {% elseif topic.solved == -1 %}
                             <i title='{{ __("This topic is a support request.")  }}' class="fa fa-question fa-red tooltips"></i>
                         {% endif %}
-                        <a class="" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id}) }}" title="{{__('Go to')}} {{ topic.title|striptags }}">{{ topic.title|striptags|truncate(50, true) }}</a>
+                        <a class="" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id}) }}" title="{{__('Go to')}} {{ topic.title|striptags }}">{{ topic.title|striptags|truncate(50, true) }}</a>
                     </h4>
                     <div class="text-muted">
                         {#   @todo    |profilelinkbyuname             #}
                         <small>{{ __f("by %s", {'%s': topic.poster.user.uname}) }} {{ __('on') }} {{ topic.firstPostTime|date('Y-m-d H:i:s') }}</small>
-                        {% set total_posts=topic.replyCount+50 %}
-                        {% for i in range(0, total_posts, settings.posts_per_page) %}
-                            <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.topic_id, 'page': loop.index}) }}">{{ loop.index }}</a>{% if loop.last %}{% else %}, {% endif %}
-                        {% endfor %}
+                        {#                        {% for i in range(0, topic.replyCount, settings.posts_per_page) %}
+                                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index}) }}">{{ loop.index }}</a>{% if loop.last %}{% else %}, {% endif %}
+                                                {% endfor %}#}
                     </div>
                 </td>
                 <td class="data">
@@ -60,7 +58,7 @@
                             {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':topic.last_post}) }}
                         {% endif %}
                     </td>
-                    {% if moderate %}<td class="data"><input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{{ topic.topic_id }}"/></td>{% endif %}
+                    {% if moderate %}<td class="data"><input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{{ topic.id }}"/></td>{% endif %}
                 </tr>
                 {% else %}
                     <tr>

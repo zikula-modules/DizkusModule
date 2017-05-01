@@ -16,6 +16,7 @@
 namespace Zikula\DizkusModule\Manager;
 
 use Doctrine\ORM\EntityManager;
+//use Doctrine\Common\Collections\AbstractLazyCollection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
@@ -25,6 +26,10 @@ use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
+/**
+ * Post manager
+ *
+ */
 class PostManager
 {
     /**
@@ -89,13 +94,6 @@ class PostManager
      */
     private $_post;
 
-    /**
-     * Post topic
-     *
-     * @var TopicManager
-     */
-    private $_topic;
-
     public function __construct
     (
         TranslatorInterface $translator,
@@ -136,16 +134,11 @@ class PostManager
     {
         if ($post instanceof PostEntity){
             $this->_post = $post;
-            $this->_topic = $this->topicManagerService->getManager(null, $this->_post->getTopic());
-
             return $this;
         }
 
         if ($id > 0) {
             $this->_post = $this->entityManager->find('Zikula\DizkusModule\Entity\PostEntity', $id);
-            if($this->exists()){
-                $this->_topic = $this->topicManagerService->getManager(null, $this->_post->getTopic());
-            }
         } else {
             $this->_post = new PostEntity();
         }
@@ -174,6 +167,16 @@ class PostManager
     }
 
     /**
+     * Get post id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->_post->getId();
+    }
+
+    /**
      * Get post as array
      *
      * @return mixed array or false
@@ -185,74 +188,8 @@ class PostManager
         }
 
         $post = $this->_post->toArray();
-        $post['topic_subject'] = $this->_topic->getTitle();
 
         return $post;
-    }
-
-    public function getId()
-    {
-        return $this->_post->getPost_id();
-    }
-
-    public function getTopicId()
-    {
-        return $this->_topic->getId();
-    }
-
-    /**
-     * Get topic as managedObject
-     *
-     * @return TopicManager
-     */
-    public function getManagedTopic()
-    {
-        return $this->topicManagerService->getManager($this->_post->getTopicId());
-    }
-
-    /**
-     * Get the Poster as managedObject
-     *
-     * @return ForumUserManager
-     */
-    public function getManagedPoster()
-    {
-        return $this->forumUserManagerService->getManager($this->_post->getPosterId());
-    }
-
-    /**
-     * Set preview data to current post for preview
-     *
-     * @todo Add preview validation handling
-     * @return true
-     */
-    public function getPreview($data)
-    {
-        $this->_post->setPost_text($data['message']);
-
-        return true;
-    }
-
-    /**
-     * Update post
-     *
-     * @param array/object $data Post data or post object to save
-     *
-     * @return bool
-     */
-    public function update($data = null)
-    {
-        if (is_null($data)) {
-            throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
-        } elseif ($data instanceof PostEntity) {
-            $this->entityManager->persist($data);
-        } elseif (is_array($data)) {
-            $this->_post->merge($data);
-            $this->entityManager->persist($this->_post);
-        }
-        $this->entityManager->flush();
-
-        return true;
     }
 
     /**
@@ -276,7 +213,28 @@ class PostManager
         $managedForumUser = $this->forumUserManagerService->getManager();
         $this->_post->setPoster($managedForumUser->get());
 
-        return true;
+        return $this;
+    }
+
+    /**
+     * Update post
+     *
+     * @param array/object $data Post data or post object to save
+     *
+     * @return bool
+     */
+    public function update($data = null)
+    {
+        if (is_null($data)) {
+            throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
+        } elseif ($data instanceof PostEntity) {
+            $this->_post = $data;
+        } elseif (is_array($data)) {
+            $this->_post->merge($data);
+
+        }
+
+        return $this;
     }
 
     /**
@@ -287,92 +245,136 @@ class PostManager
      *
      * @return ...
      */
-    public function persist()
+    public function store()
     {
-        $this->_post->getPoster()->incrementPostCount();
+        //$this->_post->getPoster()->incrementPostCount();
         // increment topic posts
-        $this->_topic->setLastPost($this->_post);
-        $this->_topic->incrementRepliesCount();
+        //$this->_topic->setLastPost($this->_post);
+        //$this->_topic->incrementRepliesCount();
         // update topic time to last post time
-        $this->_topic->get()->setTopic_time($this->_post->getPost_time());
+        //$this->_topic->get()->setTopic_time($this->_post->getPost_time());
         // increment forum posts
-        $managedForum = $this->forumManagerService->getManager(null, $this->_topic->get()->getForum());
-        $managedForum->incrementPostCount();
-        $managedForum->setLastPost($this->_post);
+        //$managedForum = $this->forumManagerService->getManager(null, $this->_topic->get()->getForum());
+        //$managedForum->incrementPostCount();
+       // $managedForum->setLastPost($this->_post);
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
      * Delete post
      *
-     * @todo event
-     *
-     * @return bool
+     * @return $this
      */
     public function delete()
     {
         // preserve post_id
-        $id = $this->_post->getPost_id();
-        $topicLastPostId = $this->_topic->get()->getLast_post()->getPost_id();
-        $managedForum = $this->forumManagerService->getManager($this->_topic->getForumId());
-        $forumLastPostId = $managedForum->get()->getLast_post()->getPost_id();
-        // decrement user posts
-        $this->_post->getPoster()->decrementPostCount();
+        $id = $this->_post->getId();
+        $postArray = $this->toArray();
+        $managedTopic = $this->getManagedTopic();
+        $topicLastPost = $managedTopic->get()
+                ->decrementReplyCount()
+                ->getLast_post();
+
+        $managedForum = $managedTopic->getManagedForum();
+        $forumLastPost = $managedForum->get()
+                ->decrementPostCount()
+                ->getLast_post();
+
+        $this->_post
+            ->getPoster()
+                ->decrementPostCount();
+
         // remove the post
-        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->manualDelete($id);
-        // decrement forum post count
-        $managedForum->decrementPostCount();
-        // decrement replies count
-        $this->_topic->decrementRepliesCount();
+        $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
-        // resetLastPost in topic and forum if required
-        if ($id == $topicLastPostId) {
-            $this->_topic->resetLastPost(true);
+
+        if (!$topicLastPost instanceof PostEntity || $topicLastPost->getId() == $id) {
+            $managedTopic->resetLastPost(true);
         }
-        if ($id == $forumLastPostId) {
-            $this->synchronizationHelper->forumLastPost($managedForum->get(), true);
+
+        if (!$forumLastPost instanceof PostEntity || $forumLastPost->getId() == $id) {
+            $managedForum->resetLastPost(true);
         }
-        return true;
+
+        return $postArray;
     }
 
     /**
      * Move post
      *
-     * @todo clean
-     * @todo event
      *
-     * @param $args['post_id']
-     * @param $args['old_topic_id']
-     * @param $args['to_topic_id']
+     * @param TopicEntity $topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return int count of posts in destination topic
      */
-    public function move($args)
+    public function move($topic)
     {
-        $old_topic_id = isset($args['old_topic_id']) ? $args['old_topic_id'] : null;
-        $to_topic_id = isset($args['to_topic_id']) ? $args['to_topic_id'] : null;
-        $post_id = isset($args['post_id']) ? $args['post_id'] : null;
-        if (!isset($old_topic_id) || !isset($to_topic_id) || !isset($post_id)) {
-            throw new \InvalidArgumentException();
+        if (!$topic instanceof TopicEntity) {
+            return $this;
         }
-        $managedOriginTopic = $this->topicManagerService->getManager($old_topic_id);
-        $managedDestinationTopic = $this->topicManagerService->getManager($to_topic_id);
-        $managedPost = $this->getManager($post_id);
-        $managedOriginTopic->get()->getPosts()->removeElement($managedPost->get());
-        $managedPost->get()->setTopic($managedDestinationTopic->get());
-        $managedDestinationTopic->get()->addPost($managedPost->get());
-        $managedOriginTopic->decrementRepliesCount();
-        $managedDestinationTopic->incrementRepliesCount();
-        $managedPost->get()->updatePost_time();
-        $this->entityManager->flush();
 
-        $this->synchronizationHelper->topicLastPost($managedOriginTopic->get(), false);
-        $this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);
 
-        return $managedDestinationTopic->getPostCount();
+
+        $managedOriginTopic = $this->getManagedTopic();
+//                                        ->decrementRepliesCount()
+//                                         ->
+//                                        ->store()
+//                                        ->getManagedForum()->;
+
+        $this-
+
+        $managedDestinationTopic = $this->topicManagerService->getManager(null, $topic)
+                                        ->incrementRepliesCount()
+                                        ->store();
+
+        $this->_post->setTopic($managedDestinationTopic->get());
+
+
+        // ??
+        //$managedPost->get()->updatePost_time();
+        // this will be done by update
+        //  $managedPost->get()->setTopic($managedDestinationTopic->get());
+
+        //$this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);
+        //$managedOriginTopic->
+
+        //$this->entityManager->flush();
+
+        return $this;
     }
 
+    /**
+     * Get topic id
+     *
+     * @return integer
+     */
+    public function getTopicId()
+    {
+        return $this->_post->getTopicId();
+    }
+
+    /**
+     * Get topic as managedObject
+     *
+     * @return TopicManager
+     */
+    public function getManagedTopic()
+    {
+        return $this->topicManagerService->getManager($this->_post->getTopicId());
+    }
+
+    /**
+     * Get the Poster as managedObject
+     *
+     * @return ForumUserManager
+     */
+    public function getManagedPoster()
+    {
+        return $this->forumUserManagerService->getManager($this->_post->getPosterId());
+    }
 }

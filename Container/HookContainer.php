@@ -85,16 +85,16 @@ class HookContainer extends AbstractHookContainer
         $bundle7->addServiceHandler('filter', 'Zikula\DizkusModule\HookHandler\BbcodeFilterHookHandler', 'filter', 'zikula_dizkus_module.hook_handler.bbcode.filter');
         $this->registerHookProviderBundle($bundle7);
 
-        // Dizkus BBSmile Provider Hooks
-//        $bundle5 = new ProviderBundle('ZikulaDizkusModule', self::PROVIDER_UIAREANAME, 'ui_hooks', $this->__('Dizkus topic provider hook'));
-//        $bundle5->addServiceHandler('display_view', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'uiView', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('form_edit', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'uiEdit', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('form_delete', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'uiDelete', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('validate_edit', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'validateEdit', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('validate_delete', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'validateDelete', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('process_edit', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'processEdit', 'dizkus.hooks.topic');
-//        $bundle5->addServiceHandler('process_delete', 'Zikula\DizkusModule\HookHandler\TopicHookHandler', 'processDelete', 'dizkus.hooks.topic');
-//        $this->registerHookProviderBundle($bundle5);
+         // Post textarea Subscriber Hooks
+        $bundle8 = new SubscriberBundle('ZikulaDizkusModule', 'subscriber.dizkus.ui_hooks.post_text', 'ui_hooks', $this->__('Dizkus post text area hook'));
+        $bundle8->addEvent('display_view', 'dizkus.ui_hooks.post_text.ui_view');
+        $bundle8->addEvent('form_edit', 'dizkus.ui_hooks.post_text.ui_edit');
+        $bundle8->addEvent('form_delete', 'dizkus.ui_hooks.post_text.ui_delete');
+        $bundle8->addEvent('validate_edit', 'dizkus.ui_hooks.post_text.validate_edit');
+        $bundle8->addEvent('validate_delete', 'dizkus.ui_hooks.post_text.validate_delete');
+        $bundle8->addEvent('process_edit', 'dizkus.ui_hooks.post_text.process_edit');
+        $bundle8->addEvent('process_delete', 'dizkus.ui_hooks.post_text.process_delete');
+        $this->registerHookSubscriberBundle($bundle8);
 
     }
 }

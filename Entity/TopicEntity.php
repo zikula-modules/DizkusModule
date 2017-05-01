@@ -18,7 +18,6 @@ use Zikula\Core\UrlInterface;
 /**
  * Topic entity class
  *
- * @ORM\Entity
  * @ORM\Table(name="dizkus_topics")
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\TopicRepository")
  */
@@ -34,10 +33,10 @@ class TopicEntity extends EntityAccess
      * topic_id
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="topic_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $topic_id;
+    private $id;
 
     /**
      * poster
@@ -63,12 +62,12 @@ class TopicEntity extends EntityAccess
     private $topic_time;
 
     /**
-     * Topic status locked (1)/unlocked (0)
+     * Topic status locked (1)/unlocked (0) @todo change name to locked
      * locking a topic prevents new POSTS from being created within
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="boolean", name="status")
      */
-    private $status = 0;
+    private $locked = false;
 
     /**
      * viewCount
@@ -98,7 +97,7 @@ class TopicEntity extends EntityAccess
     private $forum;
 
     /**
-     * @ORM\OneToOne(targetEntity="PostEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true, onDelete="SET NULL")
      */
     private $last_post;
@@ -167,39 +166,16 @@ class TopicEntity extends EntityAccess
         $this->subscriptions = new ArrayCollection();
     }
 
-    public function getTopic_id()
-    {
-        return $this->topic_id;
-    }
-
     public function getId()
     {
-        return $this->topic_id;
+        return $this->id;
     }
 
-    public function setTopic_id($id)
+    public function setId($id)
     {
-        $this->topic_id = $id;
-    }
+        $this->id = $id;
 
-    public function getReplyCount()
-    {
-        return $this->replyCount;
-    }
-
-    public function setReplyCount($replies)
-    {
-        $this->replyCount = $replies;
-    }
-
-    public function incrementReplyCount()
-    {
-        $this->replyCount++;
-    }
-
-    public function decrementReplyCount()
-    {
-        $this->replyCount--;
+        return $this;
     }
 
     /**
@@ -214,19 +190,8 @@ class TopicEntity extends EntityAccess
     public function setForum(ForumEntity $forum)
     {
         $this->forum = $forum;
-    }
 
-    /**
-     * @return PostEntity
-     */
-    public function getLast_post()
-    {
-        return $this->last_post;
-    }
-
-    public function setLast_post(PostEntity $post = null)
-    {
-        return $this->last_post = $post;
+        return $this;
     }
 
     /**
@@ -240,6 +205,18 @@ class TopicEntity extends EntityAccess
     }
 
     /**
+     * set the Topic poster
+     *
+     * @param ForumUserEntity $poster
+     */
+    public function setPoster(ForumUserEntity $poster)
+    {
+        $this->poster = $poster;
+
+        return $this;
+    }
+
+    /**
      * get the topic poster
      *
      * @return ForumUserEntity
@@ -249,10 +226,41 @@ class TopicEntity extends EntityAccess
         return $this->poster->getUserId();
     }
 
-
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return PostEntity
+     */
+    public function getLast_post()
+    {
+        return $this->last_post;
+    }
+
+    public function setLast_post(PostEntity $post = null)
+    {
+        $this->last_post = $post;
+
+        return $this;
+    }
+
+    public function getFirstPost()
+    {
+        return $this->posts->first();
+    }
+
+    public function getFirstPostTime()
+    {
+        return $this->posts->first()->getPost_time();
     }
 
     public function getStatus()
@@ -268,6 +276,8 @@ class TopicEntity extends EntityAccess
     public function setTopic_time(\DateTime $time)
     {
         $this->topic_time = $time;
+
+        return $this;
     }
 
     public function getViewCount()
@@ -275,9 +285,49 @@ class TopicEntity extends EntityAccess
         return $this->viewCount;
     }
 
+    public function incrementViewCount()
+    {
+        $this->viewCount++;
+
+        return $this;
+    }
+
+    public function getReplyCount()
+    {
+        return $this->replyCount;
+    }
+
+    public function setReplyCount($replies)
+    {
+        $this->replyCount = $replies;
+
+        return $this;
+    }
+
+    public function incrementReplyCount()
+    {
+        $this->replyCount++;
+
+        return $this;
+    }
+
+    public function decrementReplyCount()
+    {
+        $this->replyCount--;
+
+        return $this;
+    }
+
     public function getSticky()
     {
         return $this->sticky;
+    }
+
+    public function setSticky($sticky = false)
+    {
+        $this->sticky = $sticky;
+
+        return $this;
     }
 
     public function getSolved()
@@ -285,49 +335,51 @@ class TopicEntity extends EntityAccess
         return $this->solved;
     }
 
+    public function getLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+
+        return $this;
+    }
+
     public function lock()
     {
-        $this->status = 1;
+        $this->locked = true;
+
+        return $this;
     }
 
     public function unlock()
     {
-        $this->status = 0;
+        $this->locked = false;
+
+        return $this;
     }
 
     public function sticky()
     {
         $this->sticky = true;
+
+        return $this;
     }
 
     public function unsticky()
     {
         $this->sticky = false;
-    }
 
-    public function incrementViewCount()
-    {
-        $this->viewCount++;
-    }
-
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * set the Topic poster
-     *
-     * @param ForumUserEntity $poster
-     */
-    public function setPoster(ForumUserEntity $poster)
-    {
-        $this->poster = $poster;
+        return $this;
     }
 
     public function setSolved($solved)
     {
         $this->solved = $solved;
+
+        return $this;
     }
 
     public function getPosts()
@@ -341,11 +393,15 @@ class TopicEntity extends EntityAccess
     public function unsetPosts()
     {
         $this->posts = null;
+
+        return $this;
     }
 
     public function addPost(PostEntity $post)
     {
         $this->posts[] = $post;
+
+        return $this;
     }
 
     public function getTotal_posts()
@@ -375,6 +431,8 @@ class TopicEntity extends EntityAccess
     public function setHookedModule($hookedModule)
     {
         $this->hookedModule = $hookedModule;
+
+        return $this;
     }
 
     public function getHookedAreaId()
@@ -385,6 +443,8 @@ class TopicEntity extends EntityAccess
     public function setHookedAreaId($hookedAreaId)
     {
         $this->hookedAreaId = $hookedAreaId;
+
+        return $this;
     }
 
     public function getHookedObjectId()
@@ -395,6 +455,8 @@ class TopicEntity extends EntityAccess
     public function setHookedObjectId($hookedObjectId)
     {
         $this->hookedObjectId = $hookedObjectId;
+
+        return $this;
     }
 
     public function getHookedUrlObject()
@@ -405,10 +467,7 @@ class TopicEntity extends EntityAccess
     public function setHookedUrlObject(UrlInterface $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
-    }
 
-    public function getFirstPostTime()
-    {
-        return $this->posts->first()->getPost_time();
+        return $this;
     }
 }

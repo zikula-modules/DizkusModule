@@ -3,8 +3,10 @@
     {#        @todo   |profilelinkbyuname      #}
     <span id="post_poster_name_"><strong>{{ poster.userName }}</strong></span>
     <br />
-    <div> 
-        <img src="/{{ poster.avatar }}" class="img-rounded" />
+    <div class="col-md-12">
+        <a href="#" >
+            <img src="/{{ poster.avatar }}" class="img-rounded" width="60px"/>
+        </a>
     </div>
 
     {#                    {% if post.poster.rank is not empty and post.poster.rank.image is not empty%}

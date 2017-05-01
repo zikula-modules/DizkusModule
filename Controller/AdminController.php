@@ -313,25 +313,28 @@ class AdminController extends AbstractController
         $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
         $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
 
-        $forum = $managedForum->get();
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get() , []);
 
-        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $forum , []);
-
-        $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
 
-        // check hooked modules for validation
-        $hook = new ValidationHook(new ValidationProviders());
-        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
+        $hookvalidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.forum.validate_edit',
+                new ValidationHook(
+                    new ValidationProviders()
+                )
+            )->getValidators();
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
 
-            $em->persist($forum);
-            $em->flush();
-
+            $managedForum->update($form->getData());
+            $managedForum->store();
             // notify hooks
-            $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()]);
-            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_edit', new ProcessHook($forum->getForum_id(), $hookUrl));
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.forum.process_edit',
+                    new ProcessHook($managedForum->getId(),
+                        RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $managedForum->getId()])
+                    )
+                );
 
             if ($id) {
                 $this->addFlash('status', $this->__('Forum successfully updated.'));
@@ -343,7 +346,7 @@ class AdminController extends AbstractController
         return $this->render('@ZikulaDizkusModule/Admin/modifyforum.html.twig', [
             'topiccount' => $topiccount,
             'postcount' => $postcount,
-            'forum' => $forum,
+            'forum' => $managedForum->get(),
             'form' => $form->createView(),
         ]);
     }

@@ -263,6 +263,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'notifyAdminAsMod' => 2,
             'defaultPoster' => 2,
             'onlineusers_moderatorcheck' => false,
+            'forum_subscriptions_enabled' => false,
+            'topic_subscriptions_enabled' => false,
         ];
     }
 
@@ -719,7 +721,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);
         $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
         $this->setVar('onlineusers_moderatorcheck', false);
-
+        $this->setVar('forum_subscriptions_enabled', false);
+        $this->setVar('topic_subscriptions_enabled', false);
         return true;
     }
 }

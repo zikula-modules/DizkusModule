@@ -29,7 +29,7 @@ namespace Zikula\DizkusModule\HookHandler;
 //use Zikula\DizkusModule\Manager\PostManager;
 //use Zikula\DizkusModule\Manager\TopicManager;
 
-class TopicHookHandler extends AbstractHookHandler
+class TopicHookHandler
 {
     /**
      * Display hook for view.
