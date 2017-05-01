@@ -195,7 +195,7 @@ class TopicController extends AbstractController
                 ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars()]
             );
 
-        if ($format == 'html'){
+        if ($format == 'html') {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -267,7 +267,6 @@ class TopicController extends AbstractController
         }
 
         if ($form->get('save')->isClicked()) {
-
             $newManagedTopic->store();
 
             $managedForum
@@ -428,8 +427,7 @@ class TopicController extends AbstractController
 
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
-
-            }else {
+            } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
@@ -551,7 +549,6 @@ class TopicController extends AbstractController
 
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
-
             } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }

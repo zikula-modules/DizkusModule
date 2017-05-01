@@ -490,7 +490,6 @@ class UserController extends AbstractController
         if ($format == 'json') {
         } elseif ($format == 'ajax.html') {
         } else {
-
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }

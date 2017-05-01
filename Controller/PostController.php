@@ -34,7 +34,6 @@ use Zikula\DizkusModule\Entity\RankEntity;
 
 /**
  * PostController class
- *
  */
 class PostController extends AbstractController
 {
@@ -117,6 +116,7 @@ class PostController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -236,13 +236,14 @@ class PostController extends AbstractController
         }
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
-        if (!$managedPost->exists()){
+        if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
             if ($format == 'json' || $format == 'ajax.html') {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -355,6 +356,7 @@ class PostController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -489,6 +491,7 @@ class PostController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
@@ -501,7 +504,6 @@ class PostController extends AbstractController
 
         if ($form->isValid()) {
             if ($form->get('send')->isClicked()) {
-
                 $this->get('event_dispatcher')
                 ->dispatch(DizkusEvents::POST_NOTIFY_MODERATOR,
                     new GenericEvent($managedPost->get(),
@@ -563,6 +565,7 @@ class PostController extends AbstractController
             }
 
             $this->addFlash('error', $error);
+            
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
