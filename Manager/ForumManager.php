@@ -25,7 +25,6 @@ use Zikula\UsersModule\Api\CurrentUserApi;
 
 /**
  * Forum manager
- *
  */
 class ForumManager
 {
@@ -100,7 +99,7 @@ class ForumManager
 
    /**
     * Collection view settings
-     */
+    */
     private $_itemsPerPage;
 
     protected $name;
@@ -195,18 +194,17 @@ class ForumManager
     }
 
     /**
-     * Persist the forum
+     * Create the forum
      *
      * @param array $data page data
      */
     public function create()
     {
-
         return true;
     }
 
-   /**
-     * Persist the forum
+    /**
+     * Update the forum
      *
      * @param array $data page data
      */
@@ -338,7 +336,6 @@ class ForumManager
         return $this->current_topics;
     }
 
-
     /**
      * Return topics of a forum as Doctrine Paginator
      * Here Forum becomes topics collection controller
@@ -443,7 +440,6 @@ class ForumManager
      * Find last post by last topic post
      * This relays on topic last post is in sync
      * Recursive
-     *
      */
     public function resetLastPost($flush = false)
     {
@@ -486,18 +482,6 @@ class ForumManager
 
         return $output;
     }
-//
-//  @todo remove this
-//    /**
-//     * Get all tree nodes that are not root
-//     * Format as array.
-//     *
-//     * @return array
-//     */
-//    public function getChildren()
-//    {
-//        return $this->getNode($tree, null);
-//    }
 
     /**
      * Get all tree nodes that are not root

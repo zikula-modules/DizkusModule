@@ -32,7 +32,6 @@ use Zikula\UsersModule\Api\CurrentUserApi;
 
 /**
  * Topic manager
- *
  */
 class TopicManager
 {
@@ -157,7 +156,6 @@ class TopicManager
         if (isset($topic)) {
             // topic has been injected
             $this->_topic = $topic;
-
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
@@ -213,8 +211,6 @@ class TopicManager
      */
     public function create($data)
     {
-
-
         // @todo this should be done in post event
         //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
         //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
@@ -247,8 +243,6 @@ class TopicManager
     }
 
     /**
-     *
-     *
      * @param $topic
      * @param $action
      * @param $post
@@ -260,7 +254,6 @@ class TopicManager
     {
         if ($data instanceof TopicEntity) {
             $this->_topic = $data;
-
         }
 
         return $this;
@@ -365,7 +358,6 @@ class TopicManager
 
     /**
      * Set topic title
-     *
      */
     public function setTitle($title)
     {
@@ -426,7 +418,6 @@ class TopicManager
 
     /**
      * Set topic last post
-     *
      */
     public function setLastPost(PostEntity $lastPost)
     {
@@ -437,7 +428,6 @@ class TopicManager
 
     /**
      * Find last post by post_time and set
-     *
      */
     public function resetLastPost($flush = false)
     {
@@ -456,7 +446,7 @@ class TopicManager
         // we use this property for ordering but this should be another field @todo
         // recent topics can mean recently replayed or recently added
         $this->_topic->setTopic_time($posts->first()->getPost_time());
-        
+
         if ($flush) {
             $this->entityManager->flush();
         }
@@ -471,7 +461,6 @@ class TopicManager
      */
     public function loadPosts($start = 0, $postsOrder = null)
     {
-
         if (empty($postsOrder)) {
            $postsOrder = $this->_defaultPostSortOrder;
         }
@@ -515,7 +504,6 @@ class TopicManager
     public function getPostsCount()
     {
         return $this->posts->count();
-
     }
 
     /**
@@ -530,7 +518,6 @@ class TopicManager
 
     /**
      * Increment topic views count
-     *
      */
     public function incrementViewsCount()
     {
@@ -541,7 +528,6 @@ class TopicManager
 
     /**
      * Increment topic replies count
-     *
      */
     public function incrementRepliesCount()
     {
@@ -552,7 +538,6 @@ class TopicManager
 
     /**
      * Decrement topic replies count
-     *
      */
     public function decrementRepliesCount()
     {

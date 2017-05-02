@@ -21,7 +21,6 @@ use Zikula\PermissionsModule\Api\PermissionApi;
 
 /**
  * Description of Permissions.
- * 
  */
 class Permission
 {

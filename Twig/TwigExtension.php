@@ -97,8 +97,6 @@ class TwigExtension extends \Twig_Extension
         return $url;
     }
 
-
-
     /**
      * Returns internal name of this extension.
      *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright Dizkus Team 2012.
  *
@@ -33,7 +34,6 @@ use Zikula\UsersModule\Api\CurrentUserApi;
 
 /**
  * Forum User manager
- *
  */
 class ForumUserManager
 {
@@ -96,8 +96,7 @@ class ForumUserManager
         Permission $permission,
         VariableApi $variableApi,
         RankHelper $ranksHelper
-    )
-    {
+    ) {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -152,7 +151,7 @@ class ForumUserManager
     public function getManagedByUserName($uname, $create = false)
     {
         $zuser = $this->entityManager->getRepository('Zikula\UsersModule\Entity\UserEntity')->findOneBy(['uname' => $uname]);
-        if($zuser){
+        if ($zuser) {
             return $this->getManager($zuser->getUid(), $create);
         }
 
@@ -201,7 +200,6 @@ class ForumUserManager
     {
         if (!is_null($data)) {
             $this->_forumUser = new ForumUserEntity();
-
         } else {
             // throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
             $this->_forumUser = new ForumUserEntity();
@@ -246,7 +244,6 @@ class ForumUserManager
      */
     public function delete()
     {
-
         return $this;
     }
 
@@ -354,8 +351,7 @@ class ForumUserManager
             return $this->permission->canWrite($object->get());
         }
 
-        if ($object instanceof ForumUserManager) {
-
+        if ($object instanceof self) {
             return true;
         }
 
@@ -372,7 +368,7 @@ class ForumUserManager
     public function allowedToEdit($object)
     {
         if ($object instanceof PostManager) {
-            if($object->getManagedPoster()->getId() == $this->getId()){
+            if ($object->getManagedPoster()->getId() == $this->getId()) {
                 return true;
             }
 
@@ -380,15 +376,15 @@ class ForumUserManager
         }
 
         if ($object instanceof TopicManager) {
-            return ($object->getManagedPoster()->getId() == $this->getId() ? true : false);
+            return $object->getManagedPoster()->getId() == $this->getId() ? true : false;
         }
 
         if ($object instanceof ForumManager) {
             return false;
         }
 
-        if ($object instanceof ForumUserManager) {
-            if($object->getId() == $this->getId()) {
+        if ($object instanceof self) {
+            if ($object->getId() == $this->getId()) {
                 return true;
             }
 
@@ -438,7 +434,7 @@ class ForumUserManager
             return false;
         }
 
-        if ($object instanceof ForumUserManager) {
+        if ($object instanceof self) {
             return $object->getId() == $this->getId();
         }
 
@@ -606,7 +602,8 @@ class ForumUserManager
 
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($forumSubscription) {
             return true; // nothing to do
@@ -632,7 +629,8 @@ class ForumUserManager
 
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if (!$forumSubscription) {
             return $this;
@@ -658,7 +656,8 @@ class ForumUserManager
 
         $forumSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumSubscriptionEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($forumSubscription) {
             return $forumSubscription;
@@ -696,7 +695,8 @@ class ForumUserManager
 
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($topicSubscription) {
             return $this;
@@ -722,7 +722,8 @@ class ForumUserManager
 
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if (!$topicSubscription) {
             return $this;
@@ -748,7 +749,8 @@ class ForumUserManager
 
         $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy([
             'topic' => $topic,
-            'forumUser' => $this->get(), ]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($topicSubscription) {
             return true;
@@ -826,7 +828,8 @@ class ForumUserManager
 
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($forumIsFav) {
             return true;
@@ -854,7 +857,8 @@ class ForumUserManager
 
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if (!$forumIsFav) {
             return true;
@@ -882,7 +886,8 @@ class ForumUserManager
 
         $forumIsFav = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\ForumUserFavoriteEntity')->findOneBy([
             'forum' => $forum,
-            'forumUser' => $this->get(),]);
+            'forumUser' => $this->get()
+        ]);
 
         if ($forumIsFav) {
             return true;
@@ -917,7 +922,8 @@ class ForumUserManager
         $topics = new Paginator($qb);
         $pager = [
             'numitems' => $topics->count(),
-            'itemsperpage' => $limit,];
+            'itemsperpage' => $limit
+        ];
 
         return [$topics, $pager];
     }
@@ -931,7 +937,6 @@ class ForumUserManager
      */
     public function getPosts($offset = 0)
     {
-
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
         ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
@@ -944,7 +949,8 @@ class ForumUserManager
         $posts = new Paginator($qb);
         $pager = [
             'numitems' => $posts->count(),
-            'itemsperpage' => $limit,];
+            'itemsperpage' => $limit
+        ];
 
         return [$posts, $pager];
     }
@@ -967,7 +973,7 @@ class ForumUserManager
         $response = new Response();
         $cookie = new Cookie('DizkusLastVisit', $time, $time + 1800);
         $cookies = $this->request->cookies;
-        if ($cookies->has('DizkusLastVisit')){
+        if ($cookies->has('DizkusLastVisit')) {
             $this->lastVisit = $cookies->get('DizkusLastVisit');
             if ($this->lastVisit < $time - 1800 ) {
 //                $response->headers->setCookie($cookie);
@@ -1018,7 +1024,8 @@ class ForumUserManager
             $viewip['users'][] = [
                 'uid' => $post->getPoster()->getUser_id(),
                 'uname' => $coreUser['uname'],
-                'postcount' => $post->getPoster()->getPostCount(),];
+                'postcount' => $post->getPoster()->getPostCount()
+            ];
         }
 
         return $viewip;

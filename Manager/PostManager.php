@@ -28,7 +28,6 @@ use Zikula\UsersModule\Api\CurrentUserApi;
 
 /**
  * Post manager
- *
  */
 class PostManager
 {
@@ -94,8 +93,7 @@ class PostManager
      */
     private $_post;
 
-    public function __construct
-    (
+    public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
         RequestStack $requestStack,
@@ -107,8 +105,7 @@ class PostManager
         ForumManager $forumManagerService,
         TopicManager $topicManagerService,
         SynchronizationHelper $synchronizationHelper
-    )
-    {
+    ) {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
@@ -132,8 +129,9 @@ class PostManager
      */
     public function getManager($id = null, PostEntity $post = null)
     {
-        if ($post instanceof PostEntity){
+        if ($post instanceof PostEntity) {
             $this->_post = $post;
+
             return $this;
         }
 
@@ -231,7 +229,6 @@ class PostManager
             $this->_post = $data;
         } elseif (is_array($data)) {
             $this->_post->merge($data);
-
         }
 
         return $this;
@@ -305,7 +302,6 @@ class PostManager
     /**
      * Move post
      *
-     *
      * @param TopicEntity $topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
@@ -318,15 +314,11 @@ class PostManager
             return $this;
         }
 
-
-
         $managedOriginTopic = $this->getManagedTopic();
 //                                        ->decrementRepliesCount()
 //                                         ->
 //                                        ->store()
 //                                        ->getManagedForum()->;
-
-        $this-
 
         $managedDestinationTopic = $this->topicManagerService->getManager(null, $topic)
                                         ->incrementRepliesCount()
@@ -334,8 +326,6 @@ class PostManager
 
         $this->_post->setTopic($managedDestinationTopic->get());
 
-
-        // ??
         //$managedPost->get()->updatePost_time();
         // this will be done by update
         //  $managedPost->get()->setTopic($managedDestinationTopic->get());
