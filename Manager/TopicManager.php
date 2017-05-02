@@ -462,7 +462,7 @@ class TopicManager
     public function loadPosts($start = 0, $postsOrder = null)
     {
         if (empty($postsOrder)) {
-           $postsOrder = $this->_defaultPostSortOrder;
+            $postsOrder = $this->_defaultPostSortOrder;
         }
 
         // Do a new query in order to limit maxresults, firstresult, order, etc.

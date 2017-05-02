@@ -96,10 +96,9 @@ class ForumManager
     private $current_topics_count;
     private $_numberOfItems;
 
-
-   /**
-    * Collection view settings
-    */
+    /**
+     * Collection view settings
+     */
     private $_itemsPerPage;
 
     protected $name;

@@ -975,7 +975,7 @@ class ForumUserManager
         $cookies = $this->request->cookies;
         if ($cookies->has('DizkusLastVisit')) {
             $this->lastVisit = $cookies->get('DizkusLastVisit');
-            if ($this->lastVisit < $time - 1800 ) {
+            if ($this->lastVisit < $time - 1800) {
 //                $response->headers->setCookie($cookie);
 //                $response->sendHeaders();
                 dump('expired');
@@ -1002,7 +1002,7 @@ class ForumUserManager
     /**
      * Get user activity based on same ip usage
      *
-     * @param int $ip The posters IP.
+     * @param int $ip The posters IP
      *
      * @return array with information
      */
