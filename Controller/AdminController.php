@@ -1,28 +1,26 @@
 <?php
-/**
+
+/*
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @see https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Controller;
 
-use ModUtil;
-use System;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
-use Zikula\DizkusModule\ZikulaDizkusModule;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
-use Zikula\DizkusModule\Form\Type\PreferencesType;
+use Zikula\DizkusModule\Form\Type\DizkusSettingsType;
 use Zikula\DizkusModule\DizkusModuleInstaller;
-use Zikula\DizkusModule\Form\Handler\Admin\DeleteForum;
-use Zikula\DizkusModule\Form\Handler\Admin\ManageSubscriptions;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -94,11 +92,17 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $form = $this->createForm(new PreferencesType(), $this->getVars(), []);
+        $adminsGroup = $this->getDoctrine()->getManager()->getRepository('Zikula\GroupsModule\Entity\GroupEntity')->find(2);
+        $admins = ['-1' => $this->__('disabled')];
+        foreach ($adminsGroup['users'] as $admin) {
+            $admins[$admin->getUid()] = $admin->getUname();
+        }
 
+        $form = $this->createForm(new DizkusSettingsType(), $this->getVars(), ['admins' => $admins]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
+                //dump($form->getData());
                 $this->setVars($form->getData());
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
@@ -110,7 +114,7 @@ class AdminController extends AbstractController
             return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
         }
 
-        return $this->render('@ZikulaDizkusModule/Admin/preferences.html.twig', [
+        return $this->render('@ZikulaDizkusModule/Admin/settings.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -171,7 +175,7 @@ class AdminController extends AbstractController
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
         if ($submit == 2) {
-            list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
+            $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
             if ($ranktype == 0) {
                 $template = 'ranks';
@@ -180,7 +184,7 @@ class AdminController extends AbstractController
             return $this->render("@ZikulaDizkusModule/Admin/$template.html.twig", [
                 'ranks' => $ranks,
                 'ranktype' => $ranktype,
-                'rankimages' => $rankimages,
+                'rankimages' => $this->get('zikula_dizkus_module.rank_helper')->getAllRankImages(),
                 'settings' => $this->getVars()
             ]);
         } else {
@@ -252,11 +256,11 @@ class AdminController extends AbstractController
             }
         }
 
-        list($rankimages, $ranks) = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
+        $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_HONORARY]);
 
         return $this->render('@ZikulaDizkusModule/Admin/assignranks.html.twig', [
             'ranks' => $ranks,
-            'rankimages' => $rankimages,
+            'rankimages' => $this->get('zikula_dizkus_module.rank_helper')->getAllRankImages(),
             'allusers' => $userArray,
             'letter' => $letter,
             'page' => $page,
@@ -268,7 +272,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/tree")
      *
-     * Show the forum tree.
+     * Show the forum tree
      *
      * @return Response
      *
@@ -303,31 +307,33 @@ class AdminController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        if ($id) {
-            $forum = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->find($id);
-        } else {
-            $forum = new ForumEntity();
-        }
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
 
-        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($id);
-        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($id);
+        // count only in this forum or subforums as well?
+        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
+        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
 
-        $form = $this->createForm('Zikula\DizkusModule\Form\Type\ForumType', $forum, []);
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
 
-        $em = $this->getDoctrine()->getManager();
         $form->handleRequest($request);
 
-        // check hooked modules for validation
-        $hook = new ValidationHook(new ValidationProviders());
-        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_edit', $hook)->getValidators();
+        $hookvalidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.forum.validate_edit',
+                new ValidationHook(
+                    new ValidationProviders()
+                )
+            )->getValidators();
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
-            $em->persist($forum);
-            $em->flush();
-
+            $managedForum->update($form->getData());
+            $managedForum->store();
             // notify hooks
-            $hookUrl = RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $forum->getForum_id()]);
-            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_edit', new ProcessHook($forum->getForum_id(), $hookUrl));
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.forum.process_edit',
+                    new ProcessHook($managedForum->getId(),
+                        RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $managedForum->getId()])
+                    )
+                );
 
             if ($id) {
                 $this->addFlash('status', $this->__('Forum successfully updated.'));
@@ -339,7 +345,7 @@ class AdminController extends AbstractController
         return $this->render('@ZikulaDizkusModule/Admin/modifyforum.html.twig', [
             'topiccount' => $topiccount,
             'postcount' => $postcount,
-            'forum' => $forum,
+            'forum' => $managedForum->get(),
             'form' => $form->createView(),
         ]);
     }
@@ -466,40 +472,32 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $topicsubscriptions = [];
-        $forumsubscriptions = [];
-
-        $username = null;
-        if (!empty($uid)) {
-            $username = \UserUtil::getVar('uname', $uid);
-        }
-
-        if (!empty($uid)) {
-            $topicsubscriptions = $this->get('zikula_dizkus_module.topic_manager')->getSubscriptions($uid);
-            $forumsubscriptions = $this->get('zikula_dizkus_module.forum_manager')->getSubscriptions($uid);
+        if ($request->isMethod('POST') && $request->request->get('username', false)) {
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManagedByUserName($request->request->get('username'), false);
+        } else {
+            $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid, false);
         }
 
         if ($request->isMethod('POST')) {
-            $forumSub = $request->request->get('forumsubscriptions', []);
-            foreach ($forumSub as $id => $selected) {
-                if ($selected) {
-                    $this->get('zikula_dizkus_module.forum_manager')->unsubscribe($id, $uid);
+            if ($managedForumUser->exists()) {
+                $forumSub = $request->request->get('forumsubscriptions', []);
+                foreach ($forumSub as $id => $selected) {
+                    if ($selected) {
+                        $managedForumUser->unsubscribeForum($id);
+                    }
                 }
-            }
 
-            $topicSub = $request->request->get('topicsubscriptions', []);
-            foreach ($topicSub as $id => $selected) {
-                if ($selected) {
-                    $this->get('zikula_dizkus_module.topic_manager')->unsubscribe($id, $uid);
+                $topicSub = $request->request->get('topicsubscriptions', []);
+                foreach ($topicSub as $id => $selected) {
+                    if ($selected) {
+                        $managedForumUser->unsubscribeFromTopic($id);
+                    }
                 }
             }
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/managesubscriptions.html.twig', [
-            'uid' => $uid,
-            'username' => $username,
-            'topicsubscriptions' => $topicsubscriptions,
-            'forumsubscriptions' => $forumsubscriptions
+            'managedForumUser' => $managedForumUser
         ]);
     }
 

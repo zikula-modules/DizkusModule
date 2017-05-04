@@ -21,7 +21,9 @@ use Zikula\UsersModule\Api\CurrentUserApi;
 use Zikula_View;
 
 /**
- * CronHelper.
+ * NotificationHelper
+ *
+ * @todo
  *
  * @author Kaik
  */

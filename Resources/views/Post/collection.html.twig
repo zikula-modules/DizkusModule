@@ -1,0 +1,22 @@
+{# empty Twig template #}
+{% if moderate is not defined %}{% set moderate=false %}{% endif %}
+
+<table class="table table-condensed">
+    <thead>
+        <tr class="active">
+            <th colspan='2'>{{ __("Post")|upper }}</th>
+            <th class="data">{{ __("Topic")|upper }}</th>
+            {% if moderate %}<th class="data">{{ __('All')|upper }}&nbsp;<input type="checkbox" id="alltopic" value="" onclick="jQuery('.topic_checkbox').attr('checked', this.checked);" /></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ include("@ZikulaDizkusModule/Post/single.html.twig") }}</td>
+                <td>{#{{ post.topic.title }}#}</td>
+            </tr>
+        {% endfor %}
+        {# @todo add pager #}
+
+    </tbody>
+</table>

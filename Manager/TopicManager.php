@@ -16,13 +16,13 @@
 
 namespace Zikula\DizkusModule\Manager;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Hook\ProcessHook;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
@@ -30,6 +30,9 @@ use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\UsersModule\Api\CurrentUserApi;
 
+/**
+ * Topic manager
+ */
 class TopicManager
 {
     /**
@@ -83,31 +86,34 @@ class TopicManager
     private $synchronizationHelper;
 
     /**
-     * managed topic.
+     * Managed topic
      *
      * @var TopicEntity
      */
     private $_topic;
-    private $_itemsPerPage;
+
+    private $posts;
     private $_defaultPostSortOrder;
-    private $_numberOfItems;
-
-    private $managedForum;
 
     /**
-     * first post in topic.
-     *
-     * @var PostEntity
-     */
-    private $_firstPost = null;
-    private $_subscribe = false;
-    private $_forumId;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var string
      */
     protected $name;
 
+    /**
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
+     * @param EntityManager $entityManager
+     * @param CurrentUserApi $userApi
+     * @param Permission $permission
+     * @param VariableApi $variableApi
+     * @param ForumUserManager $forumUserManagerService
+     * @param ForumManager $forumManagerService
+     * @param SynchronizationHelper $synchronizationHelper
+     */
     public function __construct(
             TranslatorInterface $translator,
             RouterInterface $router,
@@ -134,24 +140,27 @@ class TopicManager
         $this->forumManagerService = $forumManagerService;
         $this->synchronizationHelper = $synchronizationHelper;
 
-        $this->_itemsPerPage = $this->variableApi->get($this->name, 'posts_per_page');
         $this->_defaultPostSortOrder = $this->variableApi->get($this->name, 'post_sort_order');
     }
 
     /**
-     * construct.
+     * Start managing
+     *
+     * @param integer $id
+     * @param TopicEntity $topic
+     *
+     * @return TopicManager
      */
     public function getManager($id = null, TopicEntity $topic = null)
     {
         if (isset($topic)) {
             // topic has been injected
             $this->_topic = $topic;
-            $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
         } elseif ($id > 0) {
             // find existing topic
             $this->_topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
             if ($this->exists()) {
-                $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum()); //new ForumManager(null, $this->_topic->getForum());
+                $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum());
             }
         } else {
             // create new topic
@@ -162,7 +171,7 @@ class TopicManager
     }
 
     /**
-     * Check if topic exists.
+     * Check if topic exists
      *
      * @return bool
      */
@@ -172,7 +181,159 @@ class TopicManager
     }
 
     /**
-     * return page as array.
+     * Return topic as doctrine2 object
+     *
+     * @return TopicEntity
+     */
+    public function get()
+    {
+        return $this->_topic;
+    }
+
+    /**
+     * Return topic id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_topic->getId();
+    }
+
+    /**
+     * Prepare new topic from recived data
+     *
+     * @param int    $data['forum_id']
+     * @param string $data['message']
+     * @param bool   $data['attachSignature']
+     * @param string $data['title']
+     * @param bool   $data['subscribe_topic']
+     */
+    public function create($data)
+    {
+        // @todo this should be done in post event
+        //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
+        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
+
+        //$this->_firstPost->setTitle($data['title']);
+        //$this->_firstPost->setTopic($this->_topic);
+
+        //$this->_subscribe = $data['subscribeTopic'];
+        //unset($data['subscribeTopic']);
+
+        //$this->_forumId = $data['forum_id'];
+        //$this->managedForum = $this->forumManagerService->getManager($this->_forumId);
+        //$this->_topic->setForum($this->managedForum->get());
+
+        //unset($data['forum_id']);
+        //$solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
+        //$this->_topic->setSolved($solveStatus);
+        //unset($data['isSupportQuestion']);
+
+        //$this->_topic->setLast_post($this->_firstPost);
+        //$this->_topic->merge($data);
+
+//        $managedForumUser = $this->forumUserManagerService->getManager();
+//        if($managedForumUser->isAnonymous()){
+//            $managedForumUser = $this->forumUserManagerService->getManager($this->variableApi->get($this->name, 'defaultPoster', 2));
+//        }
+//
+//        $this->_firstPost->setPoster($managedForumUser->get());
+//        $this->_topic->setPoster($managedForumUser->get());
+    }
+
+    /**
+     * @param $topic
+     * @param $action
+     * @param $post
+     * @param $title
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function update($data = null)
+    {
+        if ($data instanceof TopicEntity) {
+            $this->_topic = $data;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Create topic and post
+     *
+     * @return int topic id
+     */
+    public function store()
+    {
+        // write topic
+        $this->entityManager->persist($this->_topic);
+        //$this->entityManager->persist($this->_firstPost);
+
+        // increment post count
+        //$managedForumUser = $this->forumUserManagerService->getManager();
+        //$managedForumUser->incrementPostCount();
+        //$this->getManagedForum()->incrementPostCount();
+        //$this->getManagedForum()->incrementTopicCount();
+        //$this->getManagedForum()->setLastPost($this->_firstPost);
+        $this->entityManager->flush();
+        // subscribe
+//        if ($this->_subscribe) {
+//            $managedForumUser->subscribeTopic($this->_topic);
+//        }
+
+        return $this;
+    }
+
+    /**
+     * Delete a topic
+     *
+     * This function deletes a topic given by id or object
+     *
+     * @param $topic The topic's id or object
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return int the forum's id for redirecting
+     */
+    public function delete($topic)
+    {
+        if (is_numeric($topic)) {
+            // @todo what if topic not found?
+            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
+        }
+
+        if (!$topic instanceof TopicEntity) {
+            throw new \InvalidArgumentException();
+        }
+
+        $forum = $topic->getForum();
+
+        // Permission check
+        if (!$this->permission->canModerate(['forum_id' => $forum->getId()])) {
+            throw new AccessDeniedException();
+        }
+
+        $posts = $topic->getPosts();
+        foreach ($posts as $post) {
+            $post->getPoster()->decrementPostCount();
+            $forum->decrementPostCount();
+        }
+        // decrement topicCount
+        $forum->decrementTopicCount();
+        // update the db
+        $this->entityManager->flush();
+        // delete the topic
+        $this->entityManager->remove($topic);
+
+        $this->synchronizationHelper->forum($forum, false);
+        $this->synchronizationHelper->forumLastPost($forum, true);
+
+        return $forum->getId();
+    }
+
+    /**
+     * Return topic as array
      *
      * @return mixed array or false
      */
@@ -186,17 +347,7 @@ class TopicManager
     }
 
     /**
-     * return topic id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->_topic->getTopic_id();
-    }
-
-    /**
-     * return topic title.
+     * Return topic title
      *
      * @return string
      */
@@ -206,357 +357,207 @@ class TopicManager
     }
 
     /**
-     * return topic as doctrine2 object.
-     *
-     * @return TopicEntity
+     * Set topic title
      */
-    public function get()
+    public function setTitle($title)
     {
-        return $this->_topic;
+        $this->_topic->setTitle($title);
+
+        return $this;
     }
 
     /**
-     * return topic forum id.
+     * Return topic forum id
      *
      * @return int
      */
     public function getForumId()
     {
-        return $this->_topic->getForum()->getForum_id();
+        return $this->_topic->getForum()->getId();
     }
 
     /**
+     * Return topic forum
+     *
+     * @return ForumEntity
+     */
+    public function getForum()
+    {
+        return $this->_topic->getForum();
+    }
+
+    /**
+     * Return managed topic forum
+     *
      * @return ForumManager
      */
     public function getManagedForum()
     {
-        return $this->managedForum;
-    }
-
-    public function getFirstPost()
-    {
-        return $this->_firstPost;
-    }
-
-    public function getPermissions()
-    {
-        return $this->permission->get($this->_topic->getForum());
+        return $this->forumManagerService->getManager(null, $this->_topic->getForum());
     }
 
     /**
-     * return posts of a topic as doctrine2 object.
+     * Get the Poster as managed forum user
      *
-     * @return object
+     * @return ForumUserManager
      */
-    public function getPosts($startNumber = 1)
+    public function getManagedPoster()
     {
-        if ($this->userApi->isLoggedIn()) {
-            $managedForumUser = $this->forumUserManagerService->getManager(); //new ForumUserManager();
-           $postSortOrder = $managedForumUser->getPostOrder();
-        } else {
-            $postSortOrder = $this->_defaultPostSortOrder;
+        return $this->forumUserManagerService->getManager($this->_topic->getPosterId());
+    }
+
+    /**
+     * Get the Poster as managed forum user
+     *
+     * @return ForumUserManager
+     */
+    public function getFirstPost()
+    {
+        return $this->_topic->getFirstPost();
+    }
+
+    /**
+     * Set topic last post
+     */
+    public function setLastPost(PostEntity $lastPost)
+    {
+        $this->_topic->setLast_post($lastPost);
+
+        return $this;
+    }
+
+    /**
+     * Find last post by post_time and set
+     */
+    public function resetLastPost($flush = false)
+    {
+        $posts = $this->_topic
+                        ->getPosts()
+                            ->matching(
+                                Criteria::create()
+                                ->orderBy(['post_time' => Criteria::DESC])
+                                ->setMaxResults(1)
+                            );
+
+        $this->setLastPost($posts->first());
+        // update topic time...
+        // topic time is set on create, then updated here (and reply etc) to last post date
+        // information about when topic was created is kind of lost (same as first post)
+        // we use this property for ordering but this should be another field @todo
+        // recent topics can mean recently replayed or recently added
+        $this->_topic->setTopic_time($posts->first()->getPost_time());
+
+        if ($flush) {
+            $this->entityManager->flush();
         }
-        // do not allow negative first result
-        $startNumber = $startNumber > 0 ? $startNumber : 0;
+
+        return $this;
+    }
+
+    /**
+     * Sets current page of paginated topic posts collection
+     *
+     * @return Collection
+     */
+    public function loadPosts($start = 0, $postsOrder = null)
+    {
+        if (empty($postsOrder)) {
+            $postsOrder = $this->_defaultPostSortOrder;
+        }
+
         // Do a new query in order to limit maxresults, firstresult, order, etc.
+        // @todo move to topic repository
         $query = $this->entityManager->createQueryBuilder()
             ->select('p, u, r')
             ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
             ->where('p.topic = :topicId')
-            ->setParameter('topicId', $this->_topic->getTopic_id())
+            ->setParameter('topicId', $this->_topic->getId())
             ->leftJoin('p.poster', 'u')
             ->leftJoin('u.rank', 'r')
-            ->orderBy('p.post_time', $postSortOrder)
+            ->orderBy('p.post_time', $postsOrder)
             ->getQuery();
-        $query->setFirstResult($startNumber)->setMaxResults($this->_itemsPerPage);
-        $paginator = new Paginator($query, false);
-        $this->_numberOfItems = $paginator->count();
+        $query->setFirstResult($start)
+              ->setMaxResults(
+                $this->variableApi->get($this->name, 'posts_per_page')
+              );
 
-        return $paginator;
+        $this->posts = new Paginator($query, false);
+
+        return $this;
     }
 
     /**
-     * return pager.
+     * Return posts of a topic as doctrine2 collection
+     *
+     * @return Collection
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * Posts collection management
      *
      * @return array
      */
-    public function getPager()
+    public function getPostsCount()
     {
-        return [
-            'itemsperpage' => $this->_itemsPerPage,
-            'numitems'     => $this->_numberOfItems, ];
+        return $this->posts->count();
     }
 
     /**
-     * get forum bread crumbs.
+     * Get the number of posts in this topic
      *
-     * @return string
+     * @return int
      */
-    public function getBreadcrumbs()
+    public function getReplyCount()
     {
-        return $this->managedForum->getBreadcrumbs(false);
+        return $this->_topic->getReplyCount();
     }
 
     /**
-     * add to views count.
+     * Increment topic views count
      */
     public function incrementViewsCount()
     {
         $this->_topic->incrementViewCount();
-        $this->entityManager->flush();
-    }
 
-    public function setLastPost(PostEntity $lastPost)
-    {
-        $this->_topic->setLast_post($lastPost);
-    }
-
-    public function setTitle($title)
-    {
-        $this->_topic->setTitle($title);
-        $this->entityManager->flush();
+        return $this;
     }
 
     /**
-     * add to replies count.
+     * Increment topic replies count
      */
     public function incrementRepliesCount()
     {
         $this->_topic->incrementReplyCount();
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
-     * subtract from replies count.
+     * Decrement topic replies count
      */
     public function decrementRepliesCount()
     {
         $this->_topic->decrementReplyCount();
-        $this->entityManager->flush();
+
+        return $this;
     }
 
     /**
-     * @param int    $data['forum_id']
-     * @param string $data['message']
-     * @param bool   $data['attachSignature']
-     * @param string $data['title']
-     * @param bool   $data['subscribe_topic']
-     */
-    public function prepare($data)
-    {
-        // prepare first post
-        $this->_firstPost = new PostEntity();
-
-        // @todo this was in controller but should be moved to Post manager.
-        //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
-        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
-
-        $this->_firstPost->setPost_text($data['message']);
-        unset($data['message']);
-        $this->_firstPost->setAttachSignature($data['attachSignature']);
-        unset($data['attachSignature']);
-        $this->_firstPost->setTitle($data['title']);
-        $this->_firstPost->setTopic($this->_topic);
-        $this->_firstPost->setIsFirstPost(true);
-        $this->_subscribe = $data['subscribeTopic'];
-        unset($data['subscribeTopic']);
-        $this->_forumId = $data['forum_id'];
-        $this->managedForum = $this->forumManagerService->getManager($this->_forumId); //new ForumManager($this->_forumId);
-        $this->_topic->setForum($this->managedForum->get());
-        unset($data['forum_id']);
-        $solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
-        $this->_topic->setSolved($solveStatus);
-        unset($data['isSupportQuestion']);
-        $this->_topic->setLast_post($this->_firstPost);
-        $this->_topic->merge($data);
-        // prepare poster data or assign anonymous creations to the admin
-        $uid = $this->userApi->isLoggedIn() ? $this->request->getSession()->get('uid') : $this->variableApi->get($this->name, 'defaultPoster', 2);
-
-        $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $uid);
-        if (!$forumUser) {
-            $forumUser = new ForumUserEntity($uid);
-        }
-        $forumUser->incrementPostCount();
-        $this->_firstPost->setPoster($forumUser);
-        $this->_topic->setPoster($forumUser);
-    }
-
-    /**
-     * Add hook data to topic.
+     * Get topic preview
      *
      * @param ProcessHook $hook
      */
-    public function setHookData(ProcessHook $hook)
-    {
-        $this->_topic->setHookedModule($hook->getCaller());
-        $this->_topic->setHookedObjectId($hook->getId());
-        $this->_topic->setHookedAreaId($hook->getAreaId());
-        $this->_topic->setHookedUrlObject($hook->getUrl());
-    }
-
     public function getPreview()
     {
         return $this->_firstPost;
     }
 
     /**
-     * create topic and post.
-     *
-     * @return int topic id
-     */
-    public function create()
-    {
-        // write topic
-        $this->entityManager->persist($this->_topic);
-        $this->entityManager->persist($this->_firstPost);
-        // increment forum post count
-        $this->managedForum->incrementPostCount();
-        $this->managedForum->incrementTopicCount();
-        $this->managedForum->setLastPost($this->_firstPost);
-        $this->entityManager->flush();
-        // subscribe
-        if ($this->_subscribe) {
-            //            $params = [
-//                'topic' => $this->_topic->getTopic_id(),
-//                'action' => 'subscribe'];
-//            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', $params);
-            $this->changeStatus($this->_topic->getTopic_id(), 'subscribe');
-        }
-
-        return $this->_topic->getTopic_id();
-    }
-
-    /**
-     * set topic sticky.
-     *
-     * @return bool
-     */
-    public function sticky()
-    {
-        $this->_topic->sticky();
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * set topic unsticky.
-     *
-     * @return bool
-     */
-    public function unsticky()
-    {
-        $this->_topic->unsticky();
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * lock topic.
-     *
-     * @return bool
-     */
-    public function lock()
-    {
-        $this->_topic->lock();
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * unlock topic.
-     *
-     * @return bool
-     */
-    public function unlock()
-    {
-        $this->_topic->unlock();
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * set topic solved.
-     *
-     * @param int $postid
-     *
-     * @return bool
-     */
-    public function solve($postid)
-    {
-        $this->_topic->setSolved($postid);
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * set topic unsolved.
-     *
-     * @return bool
-     */
-    public function unsolve()
-    {
-        $this->_topic->setSolved(-1);
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
-     * get if the current user is subscribed.
-     *
-     * @return bool
-     */
-    public function isSubscribed()
-    {
-        if (!$this->userApi->isLoggedIn()) {
-            return false;
-        }
-
-        $uid = $this->request->getSession()->get('uid');
-
-        $topicSubscription = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
-            ->findOneBy(['topic' => $this->_topic, 'forumUser' => $uid]);
-
-        return isset($topicSubscription);
-    }
-
-    /**
-     * find last post by post_time and set.
-     */
-    public function resetLastPost($flush = false)
-    {
-        $dql = 'SELECT p FROM Zikula\DizkusModule\Entity\PostEntity p
-            WHERE p.topic = :topic
-            ORDER BY p.post_time DESC';
-        $query = $this->entityManager->createQuery($dql);
-        $query->setParameter('topic', $this->_topic);
-        $query->setMaxResults(1);
-        $post = $query->getSingleResult();
-        $this->_topic->setLast_post($post);
-        $this->_topic->setTopic_time($post->getPost_time());
-        if ($flush) {
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * get the number of posts in this topic.
-     *
-     * @return int
-     */
-    public function getPostCount()
-    {
-        return $this->_topic->getReplyCount();
-    }
-
-    /**
-     * Get the next topic (by time) in the same Forum.
+     * Get the next topic (by time) in the same Forum
      *
      * @return int
      */
@@ -566,7 +567,7 @@ class TopicManager
     }
 
     /**
-     * Get the previous topic (by time) in the same Forum.
+     * Get the previous topic (by time) in the same Forum
      *
      * @return int
      */
@@ -576,7 +577,7 @@ class TopicManager
     }
 
     /**
-     * Get the adjacent topic (by time) in the same Forum.
+     * Get the adjacent topic (by time) in the same Forum
      *
      * @param $oper string less than or greater than operator < or >
      * @param $dir string Sort direction ASC/DESC
@@ -585,7 +586,7 @@ class TopicManager
      */
     private function getAdjacent($oper, $dir)
     {
-        $dql = "SELECT t.topic_id FROM Zikula\DizkusModule\Entity\TopicEntity t
+        $dql = "SELECT t.id FROM Zikula\DizkusModule\Entity\TopicEntity t
             WHERE t.topic_time {$oper} :time
             AND t.forum = :forum
             AND t.sticky = 0
@@ -596,196 +597,15 @@ class TopicManager
             ->setMaxResults(1)
             ->getScalarResult();
         if ($result) {
-            return $result[0]['topic_id'];
+            return $result[0]['id'];
         } else {
-            return $this->_topic->getTopic_id(); // return current value (checks in template for this)
+            return $this->_topic->getId(); // return current value (checks in template for this)
         }
     }
 
     /**
-     * @param $topic
-     * @param $action
-     * @param $post
-     * @param $title
+     * Get topic page
      *
-     * @throws \InvalidArgumentException
-     */
-    public function changeStatus($topic, $action, $post = null, $title = '')
-    {
-        if (empty($topic)) {
-            throw new \InvalidArgumentException();
-        }
-        $managedTopic = $this->getManager($topic);
-        $perms = $managedTopic->getPermissions();
-        switch ($action) {
-            case 'subscribe':
-                if ($this->userApi->isLoggedIn()) {
-                    $this->subscribe($managedTopic->get());
-                }
-                break;
-            case 'unsubscribe':
-                if ($this->userApi->isLoggedIn()) {
-                    $this->unsubscribe($managedTopic->get());
-                }
-                break;
-            case 'sticky':
-                if ($perms['moderate']) {
-                    $managedTopic->sticky();
-                }
-                break;
-            case 'unsticky':
-                if ($perms['moderate']) {
-                    $managedTopic->unsticky();
-                }
-                break;
-            case 'lock':
-                if ($perms['moderate']) {
-                    $managedTopic->lock();
-                }
-                break;
-            case 'unlock':
-                if ($perms['moderate']) {
-                    $managedTopic->unlock();
-                }
-                break;
-            case 'solve':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
-                    if (empty($post)) {
-                        throw new \InvalidArgumentException();
-                    }
-                    $managedTopic->solve($post);
-                }
-                break;
-            case 'unsolve':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
-                    $managedTopic->unsolve();
-                }
-                break;
-            case 'setTitle':
-                if ($perms['edit'] || $managedTopic->get()->userAllowedToEdit()) {
-                    if (empty($title)) {
-                        throw new \InvalidArgumentException();
-                    }
-                    $managedTopic->setTitle($title);
-                }
-                break;
-        }
-    }
-
-    /**
-     * Subscribe a topic.
-     *
-     * @param int|object $topic   topic id or object
-     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
-     *
-     * @return bool|void
-     */
-    public function subscribe($topic, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        if (!is_object($topic)) {
-            // @todo what if topic is not found
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
-        }
-        // Permission check
-        if (!$this->permission->canRead($topic->getForum())) {
-            throw new AccessDeniedException();
-        }
-
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
-        $searchParams = [
-            'topic'     => $topic,
-            'forumUser' => $managedForumUser->get(), ];
-        $topicSubscription = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')->findOneBy($searchParams);
-        if (!$topicSubscription) {
-            $managedForumUser->get()->addTopicSubscription($topic);
-            $this->entityManager->flush();
-        }
-    }
-
-    /**
-     * Unsubscribe a topic.
-     *
-     * @param int|object $topic   topic id or object
-     * @param int        $user_id user id (optional: needs ACCESS_ADMIN)
-     *
-     * @return void|bool
-     */
-    public function unsubscribe($topic, $user_id = null)
-    {
-        if (isset($user_id) && !$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        } else {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        if (!is_object($topic)) {
-            // @todo what if topic is not found
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['topic_id' => $topic]);
-        }
-        // Permission check
-        if (!$this->permission->canRead($topic->getForum())) {
-            throw new AccessDeniedException();
-        }
-
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id); //new ForumUserManager($user_id);
-        if (isset($topic)) {
-            $topicSubscription = $this->entityManager
-                ->getRepository('Zikula\DizkusModule\Entity\TopicSubscriptionEntity')
-                ->findOneBy(['topic' => $topic, 'forumUser' => $managedForumUser->get()]);
-            $managedForumUser->get()->removeTopicSubscription($topicSubscription);
-        } else {
-            // not used in the code...
-            $managedForumUser->get()->clearTopicSubscriptions();
-        }
-        $this->entityManager->flush();
-    }
-
-    /**
-     * Get topic subscriptions.
-     *
-     * @param int $user_id user id (optional)
-     *
-     * @return \Zikula\Module\DizkusModule\Entity\TopicSubscriptionEntity collection, may be empty
-     */
-    public function getSubscriptions($user_id = null)
-    {
-        if (empty($user_id)) {
-            $loggedIn = $this->userApi->isLoggedIn();
-            $user_id = $loggedIn ? $this->request->getSession()->get('uid') : 1;
-        }
-        $managedForumUser = $this->forumUserManagerService->getManager($user_id);
-
-        return $managedForumUser->get()->getTopicSubscriptions();
-    }
-
-    /**
-     * getIdByReference.
-     *
-     * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
-     *
-     * @param string $reference the reference
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return array Topic data as array
-     */
-    public function getIdByReference($reference)
-    {
-        if (empty($reference)) {
-            throw new \InvalidArgumentException();
-        }
-
-        return $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference])->toArray();
-    }
-
-    /**
-     * getTopicPage
      * Uses the number of replyCount and the posts_per_page settings to determine the page
      * number of the last post in the thread. This is needed for easier navigation.
      *
@@ -820,62 +640,81 @@ class TopicManager
     }
 
     /**
-     * delete a topic.
+     * set topic sticky.
      *
-     * This function deletes a topic given by id or object
-     *
-     * @param $topic The topic's id or object
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return int the forum's id for redirecting
+     * @return bool
      */
-    public function delete($topic)
+    public function sticky()
     {
-        if (is_numeric($topic)) {
-            // @todo what if topic not found?
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
-        }
+        $this->_topic->sticky();
 
-        if (!$topic instanceof TopicEntity) {
-            throw new \InvalidArgumentException();
-        }
-
-        $forum = $topic->getForum();
-
-        // Permission check
-        if (!$this->permission->canModerate(['forum_id' => $forum->getForum_id()])) {
-            throw new AccessDeniedException();
-        }
-
-        $posts = $topic->getPosts();
-        foreach ($posts as $post) {
-            $post->getPoster()->decrementPostCount();
-            $forum->decrementPostCount();
-        }
-        // decrement topicCount
-        $forum->decrementTopicCount();
-        // update the db
-        $this->entityManager->flush();
-        // delete the topic
-        $this->entityManager->remove($topic);
-
-        // remove all posts in topic
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDeletePosts($topic->getTopic_id());
-        // remove topic subscriptions
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->deleteTopicSubscriptions($topic->getTopic_id());
-        // delete the topic (manual dql to avoid cascading deletion errors)
-//        $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->manualDelete($topic->getTopic_id());
-        // sync the forum up with the changes
-
-        $this->synchronizationHelper->forum($forum, false);
-        $this->synchronizationHelper->forumLastPost($forum, true);
-
-        return $forum->getForum_id();
+        return $this;
     }
 
     /**
-     * Move topic.
+     * Set topic unsticky
+     *
+     * @return bool
+     */
+    public function unsticky()
+    {
+        $this->_topic->unsticky();
+
+        return $this;
+    }
+
+    /**
+     * Lock topic
+     *
+     * @return bool
+     */
+    public function lock()
+    {
+        $this->_topic->lock();
+
+        return $this;
+    }
+
+    /**
+     * Unlock topic
+     *
+     * @return bool
+     */
+    public function unlock()
+    {
+        $this->_topic->unlock();
+
+        return $this;
+    }
+
+    /**
+     * Set topic solved
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public function solve($status)
+    {
+        $this->_topic->setSolved($status);
+
+        return $this;
+    }
+
+    /**
+     * Set topic unsolved
+     *
+     * @return bool
+     */
+    public function unsolve($status = -1)
+    {
+        $this->_topic->setSolved($status);
+
+        return $this;
+    }
+
+    /**
+     * Move topic
      *
      * This function moves a given topic to another forum
      *
@@ -929,10 +768,12 @@ class TopicManager
             $this->synchronizationHelper->forum($oldForumId, false);
             $this->synchronizationHelper->forum($forum, true);
         }
+
+        return $this;
     }
 
     /**
-     * split the topic at the provided post.
+     * Split the topic at the provided post
      *
      * @param PostManager $managedPost
      * @param string      $newsubject
@@ -961,7 +802,7 @@ class TopicManager
             WHERE p.topic = :topic
             AND p.post_id >= :post
             ORDER BY p.post_id';
-        $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $managedPost->get()->getPost_id());
+        $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $managedPost->get()->getId());
         /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
         $posts = $query->getResult();
         // update the topic_id in the postings
@@ -985,11 +826,11 @@ class TopicManager
         //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
         $this->entityManager->flush();
 
-        return $newTopic->getTopic_id();
+        return $newTopic->getId();
     }
 
     /**
-     * joins two topics together.
+     * Joins two topics together
      *
      * @param $managedOriginTopic object this topic get integrated into $managedDestinationTopic (origin)
      * @param $managedDestinationTopic object the target topic that will contain the post from $managedOriginTopic (destination)
@@ -1029,5 +870,40 @@ class TopicManager
         $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
 
         return $managedDestinationTopic->getId();
+    }
+
+    /**
+     * Add hook data to topic
+     *
+     * @param ProcessHook $hook
+     */
+    public function setHookData(ProcessHook $hook)
+    {
+        $this->_topic->setHookedModule($hook->getCaller());
+        $this->_topic->setHookedObjectId($hook->getId());
+        $this->_topic->setHookedAreaId($hook->getAreaId());
+        $this->_topic->setHookedUrlObject($hook->getUrl());
+
+        return $this;
+    }
+
+    /**
+     * topic by reference
+     *
+     * Gets a topic reference as parameter and delivers the internal topic id used for Dizkus as comment module
+     *
+     * @param string $reference the reference
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return array Topic data as array
+     */
+    public function getIdByReference($reference)
+    {
+        if (empty($reference)) {
+            throw new \InvalidArgumentException();
+        }
+
+        return $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference])->toArray();
     }
 }

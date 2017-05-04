@@ -1,19 +1,33 @@
 parameters:
+    # Common
     zikula_dizkus_module.security.class: Zikula\DizkusModule\Security\Permission
-    zikula_dizkus_module.event_listener.class: Zikula\DizkusModule\Listener\EventListener
     zikula_dizkus_module.twig.extension.class: Zikula\DizkusModule\Twig\TwigExtension
     zikula_dizkus_module.links.class: Zikula\DizkusModule\Container\LinkContainer
-
+    # Listeners 
+    zikula_dizkus_module.module_listener.class: Zikula\DizkusModule\Listener\ModuleListener
+    zikula_dizkus_module.user_listener.class: Zikula\DizkusModule\Listener\UserListener
+    zikula_dizkus_module.spam_listener.class: Zikula\DizkusModule\Listener\SpamListener
+    zikula_dizkus_module.forum_subscription_listener.class: Zikula\DizkusModule\Listener\ForumSubscriptionListener
+    zikula_dizkus_module.topic_subscription_listener.class: Zikula\DizkusModule\Listener\TopicSubscriptionListener
+    zikula_dizkus_module.post_edited_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostEditedNotifyPosterListener
+    zikula_dizkus_module.post_bad_notify_moderator_listener.class: Zikula\DizkusModule\Listener\PostBadNotifyModeratorListener
+    zikula_dizkus_module.post_deleted_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostDeletedNotifyPosterListener
+    zikula_dizkus_module.post_moved_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostMovedNotifyPosterListener
+    # Forms
+    zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
+    # Helpers
     zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
     zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
     zikula_dizkus_module.synchronization_helper.class: Zikula\DizkusModule\Helper\SynchronizationHelper
     zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper
-
+    # Managers
     zikula_dizkus_module.forum_user_manager.class: Zikula\DizkusModule\Manager\ForumUserManager
     zikula_dizkus_module.forum_manager.class: Zikula\DizkusModule\Manager\ForumManager
     zikula_dizkus_module.topic_manager.class: Zikula\DizkusModule\Manager\TopicManager
     zikula_dizkus_module.post_manager.class: Zikula\DizkusModule\Manager\PostManager
+    # Hooks
+    
 
 services:
     
@@ -49,25 +63,112 @@ services:
             - "@zikula_extensions_module.api.variable"
             - "@zikula_users_module.current_user"
         
-    zikula_dizkus_module.event_listener:
-        class: %zikula_dizkus_module.event_listener.class%
+# Event listeners        
+        
+    zikula_dizkus_module.module_listener:
+        class: %zikula_dizkus_module.module_listener.class%
         tags:
             - { name: kernel.event_subscriber }
         arguments:
             - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
             - "@router"
+            - "@hook_dispatcher.storage"
+            - "@translator.default"
+            - "@service_container"
 
-# Helpers
-          
-    zikula_dizkus_module.favorites_helper:
-        class: %zikula_dizkus_module.favorites_helper.class%
+    zikula_dizkus_module.user_listener:
+        class: %zikula_dizkus_module.user_listener.class%
         tags:
-            - { name: zikula.dizkus.favorites_helper }
+            - { name: kernel.event_subscriber }
         arguments:
-            - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
-            - "@zikula_users_module.current_user"
+
+    zikula_dizkus_module.spam_listener:
+        class: %zikula_dizkus_module.spam_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@zikula_extensions_module.api.variable"
+          - "@translator.default"
+          - "@router"
+          
+    zikula_dizkus_module.forum_subscription_listener:
+        class: %zikula_dizkus_module.forum_subscription_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"        
+  
+    zikula_dizkus_module.topic_subscription_listener:
+        class: %zikula_dizkus_module.topic_subscription_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+      
+    zikula_dizkus_module.post_edited_notify_poster_listener:
+        class: %zikula_dizkus_module.post_edited_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+      
+    zikula_dizkus_module.post_bad_notify_moderator_listener:
+        class: %zikula_dizkus_module.post_bad_notify_moderator_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+          
+    zikula_dizkus_module.post_moved_notify_poster_listener:
+        class: %zikula_dizkus_module.post_moved_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+          
+    zikula_dizkus_module.post_deleted_notify_poster_listener:
+        class: %zikula_dizkus_module.post_deleted_notify_poster_listener.class%
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+          - "@translator.default"
+          - "@twig"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_mailer_module.api.mailer"
+          - "@router"
+# Forms
+
+    zikula_dizkus_module.form.type.admin_modify_forum:
+        class: %zikula_dizkus_module.admin_modify_forum.class%
+        tags:
+            - { name: form.type, alias: zikuladizkusmodule_admin_modify_forum }
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@zikula_dizkus_module.forum_user_manager"
+            
+# Helpers
 
     zikula_dizkus_module.count_helper:
         class: %zikula_dizkus_module.count_helper.class%
@@ -77,13 +178,6 @@ services:
             - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_users_module.current_user"
-          
-    zikula_dizkus_module.moderators_helper:
-        class: %zikula_dizkus_module.moderators_helper.class%
-        tags:
-            - { name: zikula.dizkus.moderators_helper }
-        arguments:
-            - "@doctrine.orm.default_entity_manager"
         
     zikula_dizkus_module.synchronization_helper:
         class: %zikula_dizkus_module.synchronization_helper.class%
@@ -101,7 +195,6 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-            - "@zikula_dizkus_module.forum_user_manager"
         
 # Managers
 
@@ -118,7 +211,7 @@ services:
             - "@zikula_users_module.current_user"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-            - "@zikula_permissions_module.api.permission"
+            - "@zikula_dizkus_module.rank_helper"
 
     zikula_dizkus_module.forum_manager:
         class: %zikula_dizkus_module.forum_manager.class%
@@ -134,6 +227,7 @@ services:
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
             - "@zikula_permissions_module.api.permission"
+            - "@zikula_dizkus_module.forum_user_manager"
 
     zikula_dizkus_module.topic_manager:
         class: %zikula_dizkus_module.topic_manager.class%
@@ -165,11 +259,13 @@ services:
             - "@zikula_users_module.current_user"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
+            - "@zikula_dizkus_module.forum_user_manager"
             - "@zikula_dizkus_module.forum_manager"
             - "@zikula_dizkus_module.topic_manager"
             - "@zikula_dizkus_module.synchronization_helper"
 
-    # Hooks
+# Hooks
+
     zikula_dizkus_module.hook_handler.base:
       abstract: true
       arguments: 
@@ -178,3 +274,13 @@ services:
             - "@templating"
             - "@zikula_dizkus_module.security"
             - "@translator"
+                       
+            
+    zikula_dizkus_module.hook_handler.bbcode:
+      class: Zikula\DizkusModule\HookHandler\BbcodeHookHandler
+      parent: zikula_dizkus_module.hook_handler.base
+      
+    zikula_dizkus_module.hook_handler.bbcode.filter:
+        class: Zikula\DizkusModule\HookHandler\BbcodeFilterHookHandler
+        arguments:
+            - "@zikula_extensions_module.api.variable"

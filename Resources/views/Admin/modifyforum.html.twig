@@ -24,7 +24,7 @@
     <fieldset>
 
         <legend>{{ __("Forum settings")}}</legend>
-        
+
         <div class="form-group">
             {{ form_label(form.name, __('Name') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
             <div class="col-lg-9">
@@ -63,6 +63,7 @@
                 <div class="col-lg-9">
                     <span id="forum_info">
                         <a title="{{ __('Visit this forum') }}" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': forum.forum_id}) }}">
+                            {{ forum.children|length }}&nbsp;{% if forum.children|length == 1 %}{{ __('Forum') }}{% else %}{{ __('Forums') }}{% endif %}&nbsp;/&nbsp;
                             {{ topiccount }}&nbsp;{% if topiccount == 1 %}{{ __('Topic') }}{% else %}{{ __('Topics') }}{% endif %}&nbsp;/&nbsp;
                             {{ postcount }}&nbsp;{% if postcount == 1 %}{{ __('Post') }}{% else %}{{ __('Posts') }}{% endif %}
                         </a>
@@ -83,28 +84,28 @@
             <div class="col-lg-9">
                 {{ form_widget(form.moderatorGroups, { 'attr': {'class': 'chzn-select', 'data-placeholder': __('Select Some Options') } }) }} 
             </div>
-        </div>        
+        </div>      
 
     </fieldset>    
 
     <fieldset>
-         <legend>{{ __("External sources")}}</legend>   
-    
-                <p class="col-md-12 help-block alert alert-warning ">
-                    {{ __("External sources are not supported in this version of Dzikus.")}}
-                </p>          
-    
+        <legend>{{ __("External sources")}}</legend>   
+
+        <p class="col-md-12 help-block alert alert-warning ">
+            {{ __("External sources are not supported in this version of Dzikus.")}}
+        </p>          
+
     </fieldset>     
-            
+
     {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.forum.ui_edit', id=forum.forum_id) }}
-    
+
     <div class="form-group">
         <div class="col-lg-offset-6 col-md-8">
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
             {{ form_widget(form.restore, {'attr': {'class': 'btn btn-danger'}}) }}
         </div>
     </div>   
-    
+
     {{ form_end(form) }}
 </div>    
 

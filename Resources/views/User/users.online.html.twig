@@ -1,0 +1,17 @@
+<h3>{{ __("Users on-line") }}</h3>
+<div class="z-clearfix">
+    {% if online.numusers > 0 %}
+        <span>
+            {% for user in online.users %}
+                {% if user.isModerator == '1' %}<span class="tooltips text-warning" title="{{ __('Forum moderator') }}" >{{ user.user.uname }}</span>{% else %}<span class="">{{ user.user.uname }}</span>{% endif %}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+        </span>
+    {% else %}
+        <span>{{ __("0 users") }}</span>
+    {% endif %}
+    {% if online.numguests > 0 and anonymoussessions == 1 %}
+        <span>{{ _fn('and %1$s anonymous guest','and %1$s anonymous guests', online.numguests, {'%1$s':online.numguests}) }}</span>
+    {% endif %}
+</div>
+<p class="z-sub">{{ __f('This list is based on users active over the last %s minutes.', {'%s': secinactivemins}) }}</p>
+{#{{ dump() }}#}

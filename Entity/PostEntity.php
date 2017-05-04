@@ -10,13 +10,10 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use ServiceUtil;
-use ModUtil;
-use DateTime;
-use UserUtil;
-use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Zikula\Core\Doctrine\EntityAccess;
 
 /**
  * Post entity class
@@ -34,13 +31,13 @@ class PostEntity extends EntityAccess
     const MODULENAME = 'ZikulaDizkusModule';
 
     /**
-     * post_id
+     * id
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="post_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $post_id;
+    private $id;
 
     /**
      * post_time
@@ -67,6 +64,12 @@ class PostEntity extends EntityAccess
     /**
      * post_text
      *
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 65535,
+     *      minMessage = "Your post must be at least {{ limit }} characters long",
+     *      maxMessage = "Your post cannot be longer than {{ limit }} characters"
+     * )
      * @ORM\Column(type="text")
      */
     private $post_text = '';
@@ -109,22 +112,12 @@ class PostEntity extends EntityAccess
      */
     public function __construct()
     {
-        if (!ModUtil::getVar(self::MODULENAME, 'log_ip')) {
-            // for privacy issues ip logging can be deactivated
-            $this->poster_ip = 'unrecorded';
-        } else {
-            $request = ServiceUtil::get('request');
-            if ($request->server->get('HTTP_X_FORWARDED_FOR')) {
-                $this->poster_ip = $request->server->get('REMOTE_ADDR') . '/' . $request->server->get('HTTP_X_FORWARDED_FOR');
-            } else {
-                $this->poster_ip = $request->server->get('REMOTE_ADDR');
-            }
-        }
+        $this->poster_ip = 'unrecorded';
     }
 
-    public function getPost_id()
+    public function getId()
     {
-        return $this->post_id;
+        return $this->id;
     }
 
     public function getPost_text()
@@ -132,9 +125,23 @@ class PostEntity extends EntityAccess
         return $this->post_text;
     }
 
+    public function getPostText()
+    {
+        return $this->post_text;
+    }
+
     public function setPost_text($text)
     {
-        return $this->post_text = stripslashes($text);
+        $this->setPostText($text);
+
+        return $this;
+    }
+
+    public function setPostText($text)
+    {
+        $this->post_text = stripslashes($text);
+
+        return $this;
     }
 
     public function getAttachSignature()
@@ -144,7 +151,9 @@ class PostEntity extends EntityAccess
 
     public function setAttachSignature($attachSignature)
     {
-        return $this->attachSignature = $attachSignature;
+        $this->attachSignature = $attachSignature;
+
+        return $this;
     }
 
     public function getIsFirstPost()
@@ -152,9 +161,11 @@ class PostEntity extends EntityAccess
         return $this->isFirstPost;
     }
 
-    public function setIsFirstPost($first)
+    public function setIsFirstPost($first = true)
     {
-        return $this->isFirstPost = $first;
+        $this->isFirstPost = $first;
+
+        return $this;
     }
 
     /**
@@ -175,7 +186,9 @@ class PostEntity extends EntityAccess
 
     public function setTitle($title)
     {
-        return $this->title = $title;
+        $this->title = $title;
+
+        return $this;
     }
 
     public function getPost_time()
@@ -186,6 +199,8 @@ class PostEntity extends EntityAccess
     public function setPost_time(\DateTime $time)
     {
         $this->post_time = $time;
+
+        return $this;
     }
 
     public function updatePost_time(\DateTime $time = null)
@@ -224,6 +239,8 @@ class PostEntity extends EntityAccess
     public function setPoster(ForumUserEntity $poster)
     {
         $this->poster = $poster;
+
+        return $this;
     }
 
     /**
@@ -231,9 +248,9 @@ class PostEntity extends EntityAccess
      *
      * @return integer
      */
-    public function getPoster_id()
+    public function getPosterId()
     {
-        return $this->poster->getUser_id();
+        return $this->poster->getUserId();
     }
 
     public function getPoster_data()
@@ -268,6 +285,8 @@ class PostEntity extends EntityAccess
     public function setTopic(TopicEntity $topic)
     {
         $this->topic = $topic;
+
+        return $this;
     }
 
     /**
@@ -275,40 +294,14 @@ class PostEntity extends EntityAccess
      *
      * @return integer
      */
-    public function getTopic_id()
+    public function getTopicId()
     {
-        return $this->topic->getTopic_id();
-    }
-
-    /**
-     * determine if a user is allowed to edit this post
-     *
-     * @param  integer $uid
-     * @return boolean
-     */
-    public function getUserAllowedToEdit($uid = null)
-    {
-        if (!isset($this->post_time)) {
-            return false;
-        }
-        // default to current user
-        $uid = isset($uid) ? $uid : UserUtil::getVar('uid');
-        $timeAllowedToEdit = ModUtil::getVar(self::MODULENAME, 'timespanforchanges');
-        // in hours
-        $postTime = clone $this->post_time;
-        $canEditUtil = $postTime->modify("+{$timeAllowedToEdit} hours");
-        $now = new \DateTime();
-        if ($uid == $this->poster->getUser_id() && $now <= $canEditUtil) {
-            return true;
-        }
-
-        return false;
+        return $this->topic->getId();
     }
 
     public function toArray()
     {
         $array = parent::toArray();
-        $array['userAllowedToEdit'] = $this->getUserAllowedToEdit();
 
         return $array;
     }

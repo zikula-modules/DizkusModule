@@ -10,7 +10,6 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use ModUtil;
 use Doctrine\ORM\Mapping as ORM;
 use Zikula\Core\Doctrine\EntityAccess;
 
@@ -125,11 +124,6 @@ class RankEntity extends EntityAccess
         $link = substr($this->description, 0, 7) == 'http://' ? $this->description : '';
 
         return $link;
-    }
-
-    public function getImageLink()
-    {
-        return ModUtil::getVar(self::MODULENAME, 'url_ranks_images') . '/' . $this->image;
     }
 
     public function setRank_id($rank_id)

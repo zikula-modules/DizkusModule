@@ -1,0 +1,48 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaDizkusModule:Form:checkbox.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="text-danger">{{ __('You are about to delete below post') }}</h4>
+    </div>
+</div>
+{% if hide_preview is not defined %}
+    {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': managedPost, 'hide_badge': 1}) }}
+{% endif %}
+
+{{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_delete', id=managedPost.id) }}
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        {% if managedPost.managedPoster.id == currentForumUser.id %}
+            <h4 class="">{{ __('Please confirm') }}</h4>
+        {% else %}
+            {{ form_label(form.reason, __('Send reason') ,{ 'label_attr': {'class': ''} }) }}
+        {% endif %}
+    </div>
+    {% if managedPost.managedPoster.id == currentForumUser.id %}
+    {% else %}
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-12">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5} }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer text-right">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':managedPost.getManagedTopic().id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.delete, {'attr': {'class': 'btn btn-danger btn-sm'},  'label': __('Delete post')}) }}
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

@@ -22,7 +22,7 @@ use Zikula\Core\Doctrine\EntityAccess;
 class TopicSubscriptionEntity extends EntityAccess
 {
     /**
-     * table id
+     * Table id
      *
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,7 +31,7 @@ class TopicSubscriptionEntity extends EntityAccess
     private $id;
 
     /**
-     * topic
+     * Topic
      *
      * @ORM\ManyToOne(targetEntity="TopicEntity", inversedBy="subscriptions")
      * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
@@ -39,7 +39,7 @@ class TopicSubscriptionEntity extends EntityAccess
     private $topic;
 
     /**
-     * forumUser
+     * ForumUser
      *
      * @ORM\ManyToOne(targetEntity="ForumUserEntity", inversedBy="topicSubscriptions", cascade={"persist"})
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
@@ -47,7 +47,8 @@ class TopicSubscriptionEntity extends EntityAccess
     private $forumUser;
 
     /**
-     * constructor
+     * Constructor
+     *
      * @param ForumUserEntity $forumUser
      * @param TopicEntity     $topic
      */
@@ -58,7 +59,8 @@ class TopicSubscriptionEntity extends EntityAccess
     }
 
     /**
-     * get the table id
+     * Get the subscription id
+     *
      * @return integer
      */
     public function getId()
@@ -67,7 +69,7 @@ class TopicSubscriptionEntity extends EntityAccess
     }
 
     /**
-     * get topic
+     * Get topic
      *
      * @return TopicEntity
      */
@@ -82,7 +84,8 @@ class TopicSubscriptionEntity extends EntityAccess
     }
 
     /**
-     * get the forumUser
+     * Get the ForumUser
+     *
      * @return ForumUserEntity
      */
     public function getForumUser()
@@ -91,7 +94,8 @@ class TopicSubscriptionEntity extends EntityAccess
     }
 
     /**
-     * set the forumUser
+     * Set the ForumUser
+     *
      * @param ForumUserEntity $forumUser
      */
     public function setUser(ForumUserEntity $forumUser)

@@ -1,9 +1,12 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of the Zikula package.
+ *
+ * Copyright Zikula Foundation - http://zikula.org/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Zikula\DizkusModule\Helper;
@@ -14,7 +17,7 @@ use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
 
 /**
- * SynchronizationHelper.
+ * SynchronizationHelper
  *
  * @author Kaik
  */
@@ -40,7 +43,7 @@ class SynchronizationHelper
     }
 
     /**
-     * perform sync on all forums, topics and posters.
+     * Perform sync on all forums, topics and posters.
      *
      * @param bool $silentMode (unused)
      */
@@ -52,7 +55,7 @@ class SynchronizationHelper
     }
 
     /**
-     * perform sync on all forums.
+     * Perform sync on all forums
      *
      * @return bool
      */
@@ -73,7 +76,7 @@ class SynchronizationHelper
     }
 
     /**
-     * recalculate topicCount and postCount counts.
+     * Recalculate topicCount and postCount counts
      *
      * @param ForumEntity $forum
      * @param bool        $flush
@@ -111,7 +114,7 @@ class SynchronizationHelper
     }
 
     /**
-     * recursive function to add counts to parents.
+     * Recursive function to add counts to parents
      *
      * @param ForumEntity $forum
      * @param string      $entity
@@ -136,7 +139,7 @@ class SynchronizationHelper
     }
 
     /**
-     * perform sync on all topics.
+     * Perform sync on all topics
      *
      * @return bool
      */
@@ -151,7 +154,7 @@ class SynchronizationHelper
     }
 
     /**
-     * recalcluate Topic replies for one topic.
+     * Recalcluate Topic replies for one topic
      *
      * @param TopicEntity $topic
      * @param bool        $flush
@@ -166,7 +169,7 @@ class SynchronizationHelper
             throw new \InvalidArgumentException();
         }
         if ($topic instanceof TopicEntity) {
-            $id = $topic->getTopic_id();
+            $id = $topic->getId();
         } else {
             $id = $topic;
             $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
@@ -189,36 +192,34 @@ class SynchronizationHelper
     }
 
     /**
-     * recalculate user posts for all users.
+     * Recalculate user posts for all users
      *
      * @return bool
      */
     public function posters()
     {
-        // @todo @FIXME this generates error [Semantical Error] line 0, col 28 near 'user) as user_id': Error: Class Zikula\DizkusModule\Entity\ForumUserEntity has no field or association named user
-//        $qb = $this->entityManager->createQueryBuilder();
-//        $posts = $qb->select('count(p)', 'IDENTITY(d.user_id) as user_id')
-//            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-//            ->leftJoin('p.poster', 'd')
-//            ->groupBy('d.user_id')
-//            ->getQuery()
-//            ->getArrayResult();
-//
-//        foreach ($posts as $post) {
-//
-//            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user_id']);
-//            if (!$forumUser) {
-//                $forumUser = new ForumUserEntity($post['user_id']);
-//            }
-//            $forumUser->setPostCount($post[1]);
-//        }
-//        $this->entityManager->flush();
+        $qb = $this->entityManager->createQueryBuilder();
+        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user')
+            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+            ->leftJoin('p.poster', 'd')
+            ->groupBy('d.user')
+            ->getQuery()
+            ->getArrayResult();
 
-        return false;
+        foreach ($posts as $post) {
+            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user']);
+            if (!$forumUser) {
+                $forumUser = new ForumUserEntity($post['user']);
+            }
+            $forumUser->setPostCount($post[1]);
+        }
+        $this->entityManager->flush();
+
+        return true;
     }
 
     /**
-     * reset the last post in a forum due to movement.
+     * Reset the last post in a forum due to movement
      *
      * @param ForumEntity $forum
      * @param bool        $flush default: true
@@ -255,7 +256,7 @@ class SynchronizationHelper
     }
 
     /**
-     * reset the last post in a topic due to movement.
+     * Reset the last post in a topic due to movement
      *
      * @param TopicEntity $topic
      * @param bool        $flush

@@ -2,53 +2,44 @@
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
     'ZikulaDizkusModule:Form:radio.html.twig'
 ] %}
-
 {{ pageSetVar('title', __("Personal settings")) }}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
-
 <div id="dzk_userprefs">
-
     {{ moduleLinks('prefs') }}
-
     <h2>{{ __("Personal Settings") }}</h2>
-
     {{ showflashes() }}
     {{ form_start(form) }}
     {{ form_errors(form) }}
-
     <fieldset>
         <div class="form-group">
             {{ form_label(form.postOrder, __('Post order') ,{ 'label_attr': {'class': 'col-md-3'} }) }} 
             <div class="col-lg-9">
-                 {{ form_widget(form.postOrder, { 'attr': {'class': ''} }) }} 
+                {{ form_widget(form.postOrder, { 'attr': {'class': ''} }) }} 
             </div>
         </div>
         {% if settings.favorites_enabled %}
-        <div class="form-group">       
-            {{ form_label(form.displayOnlyFavorites, __('Display only favorite forums') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
-            <div class="col-md-9">           
-                {{ form_widget(form.displayOnlyFavorites, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            <div class="form-group">       
+                {{ form_label(form.displayOnlyFavorites, __('Display only favorite forums') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
+                <div class="col-md-9">           
+                    {{ form_widget(form.displayOnlyFavorites, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                </div>
             </div>
-        </div>            
         {% endif %}
-        <div class="form-group">       
-            {{ form_label(form.autosubscribe, __('Autosubscribe to new topics') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
-            <div class="col-md-9">           
-                {{ form_widget(form.autosubscribe, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+        {% if settings.topic_subscriptions_enabled %}
+            <div class="form-group">
+                {{ form_label(form.autosubscribe, __('Autosubscribe to new topics') ,{ 'label_attr': {'class': 'col-md-3'} }) }}                  
+                <div class="col-md-9">
+                    {{ form_widget(form.autosubscribe, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                </div>
             </div>
-        </div>  
-        <div class="form-group">
-            <div class="col-lg-offset-6 col-md-8">
-                {{ form_widget(form.cancel, {'attr': {'class': 'btn btn-default'}}) }}                
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-success'}}) }}
-            </div>
-        </div>  
-
+        {% endif %}
     </fieldset>
-
-    {{ form_end(form) }}    
-    
+    <div class="form-group">
+        <div class="col-md-12">
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
 </div>
 
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
-

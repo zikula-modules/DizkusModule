@@ -1,0 +1,70 @@
+{{ pageSetVar('title', __("Manage favorite forums")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div id="dzk_userprefs">
+    {{ moduleLinks('prefs') }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{{ __("Manage favorite forums") }}</h2>
+        </div>
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-5">
+                    {{ __('Forum')}}
+                </div>
+                <div class="col-md-4">
+                    {{ __('Forum description')}}
+                </div>
+                <div class="col-md-3">
+                    {{ __('Actions')}}
+                </div>
+            </div>
+        </div>
+        <ul class="list-group">
+            {% for subscription in currentForumUser.FavoriteForumsCollection %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': subscription.forum.forum_id}) }}" title="{{ subscription.forum.name|escape('html') }}">
+                                <h4>{{ subscription.forum.name|escape('html') }}</h4>
+                            </a>
+                            {% for parent in subscription.forum.parents %}
+                                {% if loop.first %}
+                                    <a href="{{ path('zikuladizkusmodule_forum_index') }}" title="{{ parent.name|escape('html') }}">
+                                        {{ parent.name|escape('html') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id}) }}" title="{{ parent.name|escape('html') }}">
+                                        {{ parent.name|escape('html') }}
+                                    </a>
+                                {% endif %}
+                                {% if not loop.last %}/{% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <p> {{ subscription.forum.description|escape('html') }} </p>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ path('zikuladizkusmodule_user_managefavoriteforums', {'unsubscribe': subscription.forum.forum_id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Remove from favorites") }}
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item">
+                    <div class="text-center danger">
+                        {{ __("No favorite forum found.") }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if currentForumUser.FavoriteForumsCollection|length > 0 %}
+            <div class="list-group-item list-group-item-warning clearfix">
+                <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_managefavoriteforums', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forums from favorites')}}">
+                    <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forums from favorites')}}</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

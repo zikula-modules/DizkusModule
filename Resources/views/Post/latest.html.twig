@@ -1,0 +1,77 @@
+{{ pageSetVar('title', __("Latest posts")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div id="latestposts">
+    {{ showflashes() }}
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-latest-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">{{ __("Filter") }}</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-latest-collapse">
+                <form id="nohours-form" class="navbar-form navbar-right" action="{{ path('zikuladizkusmodule_post_viewlatest') }}" method="GET">
+                    {#                    <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-primary {% if unanswered == 1 %}active{% endif %}">
+                                                <input type="checkbox" name="unanswered"  autocomplete="off" {% if unanswered == 1 %}checked{% endif %}> {{ __("Unanswered") }}
+                                            </label>
+                                            <label class="btn btn-primary {% if unsolved == 1 %} active{% endif %}">
+                                                <input type="checkbox" name="unsolved" autocomplete="off" {% if unsolved == 1 %} checked{% endif %}> {{ __("Unsolved") }}
+                                            </label>
+                                        </div>#}
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary active">
+                            <input type="radio" name="since" value="24" autocomplete="off" {% if since == 24 or since == null %} checked {% endif %}> {{ __("Since Today") }}
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="since" value="48" autocomplete="off" {% if since == 48 %} checked {% endif %}> {{ __("Since Yesterday") }}
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="since" value="365" autocomplete="off" {% if since == 365  %} checked {% endif %}> {{ __("Since Last week") }}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        {# <div class="input-group">#}
+                        <input type="text" class="form-control input-sm" name="since" id="Dizkus_hours" size="3" value="" maxlength="3" tabindex="0" placeholder="hours">
+                        <button type="submit" class="btn btn-success">
+                            {{ __("Search") }}
+                        </button>
+                        {#  </div><!-- /input-group -->#}
+                    </div>
+                </form>
+            </div><!-- /.navbar-collapse -->
+
+        </div>
+    </nav>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="">{{ __("Latest posts") }}</h2>
+        </div>
+    </div>
+
+    {% for post in latestPosts %}
+        {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': post, 'hide_badge': '', 'show_topic': 1}) }}
+    {% else %}
+        <div class="list-group-item list-group-item-info">
+            {{ __('No posts found.')}}
+        </div>
+    {% endfor %}
+
+    <div class="panel panel-default">
+        {{ pager({rowcount:pager.numitems,
+                                limit:settings.posts_per_page,
+                                class:'pull-right',
+                                posvar:'page',
+                                route:'zikuladizkusmodule_post_viewlatest',
+                                template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
+        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+    </div>
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

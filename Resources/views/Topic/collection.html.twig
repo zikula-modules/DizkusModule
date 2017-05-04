@@ -1,0 +1,72 @@
+{% if moderate is not defined %}{% set moderate=false %}{% endif %}
+<table class="table table-condensed">
+    <thead>
+        <tr class="active">
+            <th colspan='2'>{{ __("Topic")|upper }}</th>
+            <th class="data">{{ __("Replies")|upper }}</th>
+            <th class="data">{{ __("Views")|upper }}</th>
+            <th class="lastpost">{{ __("Last post")|upper }}</th>
+            {% if moderate %}<th class="data">{{ __('All')|upper }}&nbsp;<input type="checkbox" id="alltopic" value="" onclick="jQuery('.topic_checkbox').attr('checked', this.checked);" /></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for topic in topics %}
+            <tr>
+                <td class="data">
+                    {% if forum is defined and forum.last_post.post_time is defined %}
+                        {% set comp=(date(topic.last_post.post_time) > date(last_visit_unix)) %}
+                    {% else %}
+                        {% set comp=false %}
+                    {% endif %}
+                    <span class="fa-stack fa-2x">
+                        {% if topic.sticky == 1 %}
+                            <i title='{{ __("Topic is pinned to top of list.") }}' class="fa fa-bullhorn fa-stack-2x tooltips"></i>
+                        {% else %}
+                            <i class="fa fa-comment-o fa-stack-2x"></i>
+                        {% endif %}
+                        {% if topic.locked == 1 %}<i title='{{ __("This topic is locked.") }}' class="fa fa-lock fa-stack-1x fa-black fa-overlay-lower-right tooltips"></i>{% endif %}
+                        {% if comp %}<i class="fa fa-star fa-stack-1x fa-overlay-upper-left fa-blue"></i>{% endif %}
+                    </span>
+                </td>
+                <td class="description">
+                    <h4>
+                        {% if topic.solved > 0 %}
+                            <i title='{{ __("This topic is solved.") }}' class="fa fa-check fa-green tooltips"></i>
+                        {% elseif topic.solved == -1 %}
+                            <i title='{{ __("This topic is a support request.")  }}' class="fa fa-question fa-red tooltips"></i>
+                        {% endif %}
+                        <a class="" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id}) }}" title="{{__('Go to')}} {{ topic.title|striptags }}">{{ topic.title|striptags|truncate(50, true) }}</a>
+                    </h4>
+                    <div class="text-muted">
+                        {#   @todo    |profilelinkbyuname             #}
+                        <small>{{ __f("by %s", {'%s': topic.poster.user.uname}) }} {{ __('on') }} {{ topic.firstPostTime|date('Y-m-d H:i:s') }}</small>
+                        {#                        {% for i in range(0, topic.replyCount, settings.posts_per_page) %}
+                                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index}) }}">{{ loop.index }}</a>{% if loop.last %}{% else %}, {% endif %}
+                                                {% endfor %}#}
+                    </div>
+                </td>
+                <td class="data">
+                    {% if topic.replyCount >= settings.hot_threshold %}
+                    <span title='{{ __("Hot topic") }}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount|escape('html') }}</span>
+                {% else %}
+                    {{ topic.replyCount|escape('html') }}
+                    {% endif %}
+                    </td>
+                    <td class="data">{{ topic.viewCount|escape('html') }}</td>
+                    <td class="lastpost">
+                        {% if topic.last_post is defined %}
+                            {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':topic.last_post}) }}
+                        {% endif %}
+                    </td>
+                    {% if moderate %}<td class="data"><input type="checkbox" class="topic_checkbox" name="topic_id[]" value="{{ topic.id }}"/></td>{% endif %}
+                </tr>
+                {% else %}
+                    <tr>
+                {% if moderate %}{% set cols='7' %}{% else %}{% set cols='6' %}{% endif %}
+                <td colspan='{{ cols }}' class="text-center warning">
+                    {{ __("No subforums available.") }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>

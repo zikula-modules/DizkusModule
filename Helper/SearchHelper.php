@@ -15,6 +15,9 @@ use SecurityUtil;
 use ModUtil;
 use Zikula\Core\RouteUrl;
 
+/**
+ * @todo Use new search api
+ */
 class SearchHelper extends AbstractSearchable
 {
     /**

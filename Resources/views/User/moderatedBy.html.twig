@@ -1,18 +1,16 @@
 {% if forum.moderatorUsers|length > 0 or forum.moderatorGroups|length > 0 %}
-    <div id='dzk_moderatedby' class="text-muted{% if well is defined and well %} well well-sm{% endif %}">
+    <div id='dzk_moderatedby' class="{% if panel is defined and panel %}list-group-item list-group-item-warning noborder{% endif %} text-muted{% if well is defined and well %} well well-sm{% endif %}">
         <em>{{ __("Moderated by") }}:</em>
     {% endif %}
-
     {# @todo |profilelinkbyuname      #}
-
     {% if forum.moderatorUsers|length > 0 %}
         <span>
             {% for modid, mod in forum.moderatorUsers %}
-                {{ mod.forumUser.user.uname}}{% if not loop.last %}, {% endif %}
+                {{ mod.forumUser.user.uname}}{% if not loop.last %}, {% endif %}{% if loop.last and forum.moderatorGroups|length > 0 %}, {% endif %}
             {% endfor %}
-            {% if forum.moderatorGroups|length > 0 %}, {% endif %}
         </span>
     {% endif %}
+
     {% if forum.moderatorGroups|length > 0 %}
         <span>
             {% for id, group in forum.moderatorGroups %}

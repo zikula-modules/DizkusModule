@@ -12,7 +12,7 @@
     padding:0;
     list-style: none;
 }
-#dizkus h2 .editabletopicheader {
+#dizkus .editabletopicheader {
     display: inline;
     cursor: pointer;
 }
@@ -23,6 +23,48 @@
 #dizkus .quotepostlink:hover {
     cursor: hand;
     cursor: pointer;
+}
+
+#dizkus .noborder {
+    border: 0;
+}
+#dizkus .nothing {
+    border: 0;
+    outline: none;
+    box-shadow: 0 0px 0px rgba(0,0,0,0);
+}
+
+#dizkus .statusbar {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.nav>li>button {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+
+.nav-tabs>li>button {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0
+}
+
+.nav-tabs>li>button:hover {
+    border-color: #eeeeee #eeeeee #dddddd
+}
+
+.nav-tabs>li.active>button,.nav-tabs>li.active>button:hover,.nav-tabs>li.active>button:focus {
+    color: #555555;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+    cursor: default
 }
 
 /***********************

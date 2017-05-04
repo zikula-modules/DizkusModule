@@ -1,59 +1,161 @@
-
-latest
-
-{# empty Twig template
-
-{gt text="Latest forum posts" assign='templatetitle'}
-{pagesetvar name=title value="`$templatetitle` - `$text`"}
-
-{include file='User/header.tpl'}
-
+{{ pageSetVar('title', __("Latest topics")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 <div id="latestposts">
-
+    {{ showflashes() }}
     <nav class="navbar navbar-default" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-latest-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-latest-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">{{ __("Filter") }}</a>
+            </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="navbar-latest-collapse">
-            <form id="nohours-form" class="navbar-form navbar-right" action="{route name='zikuladizkusmodule_user_viewlatest'}" method="post">
-                <span>{gt text='Last'}</span>&nbsp;
-                <div class="form-group">
-                    <input type='hidden' name='selorder' value='5'>
-                    <input type="text" class="form-control input-sm" name="nohours" id="Dizkus_hours" size="3" value="{$nohours}" maxlength="3" tabindex="0">
-                </div>
-                <button type="submit" class="btn btn-default btn-sm">{gt text="hours"}</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li{if $selorder eq "unanswered"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder='unanswered'}">{gt text="Unanswered"}</a></li>
-                <li{if $selorder eq "unsolved"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder='unsolved'}">{gt text="Unsolved"}</a></li>
-                <li{if $selorder eq "3"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder=3}">{gt text="Since Yesterday"}</a></li>
-                <li{if $selorder eq "2"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder=2}">{gt text="Today"}</a></li>
-                <li{if $selorder eq "4"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder=4}">{gt text="Last week"}</a></li>
-                {if $last_visit_unix neq 0}
-                    <li{if $selorder eq "6"} class="active"{/if}><a href="{route name='zikuladizkusmodule_user_viewlatest' selorder=6 last_visit_unix=$last_visit_unix}">{gt text="Last visit"}</a></li>
-                {/if}
-            </ul>
-        </div><!-- /.navbar-collapse -->
+            <div class="collapse navbar-collapse" id="navbar-latest-collapse">
+                <form id="nohours-form" class="navbar-form navbar-right" action="{{ path('zikuladizkusmodule_topic_viewlatest') }}" method="GET">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary {% if unanswered == 1 %}active{% endif %}">
+                            <input type="checkbox" name="unanswered"  autocomplete="off" {% if unanswered == 1 %}checked{% endif %}> {{ __("Unanswered") }}
+                        </label>
+                        <label class="btn btn-primary {% if unsolved == 1 %} active{% endif %}">
+                            <input type="checkbox" name="unsolved" autocomplete="off" {% if unsolved == 1 %} checked{% endif %}> {{ __("Unsolved") }}
+                        </label>
+                    </div>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary active">
+                            <input type="radio" name="since" value="24" autocomplete="off" {% if since == 24 or since == null %} checked {% endif %}> {{ __("Since Today") }}
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="since" value="48" autocomplete="off" {% if since == 48 %} checked {% endif %}> {{ __("Since Yesterday") }}
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="since" value="365" autocomplete="off" {% if since == 365  %} checked {% endif %}> {{ __("Since Last week") }}
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        {# <div class="input-group">#}
+                        <input type="text" class="form-control input-sm" name="since" id="Dizkus_hours" size="3" value="" maxlength="3" tabindex="0" placeholder="hours">
+                        <button type="submit" class="btn btn-success">
+                            {{ __("Search") }}
+                        </button>
+                        {#  </div><!-- /input-group -->#}
+                    </div>
+                </form>
+            </div><!-- /.navbar-collapse -->
+
+        </div>
     </nav>
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h2>{gt text="Latest forum posts"} ({$text})</h2>
+            <h3 class="">{{ __("Latest topics") }}</h2>
         </div>
-        {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_viewlatest'}
-        {include file='User/forum/forumtopicstable.tpl'}
-        {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start' route='zikuladizkusmodule_user_viewlatest'}
-        {include file='User/forum/panelfooter.tpl'}
-    </div>
-</div>
+        {#        <div class="panel-body">
+                    <#}
+        <div class="list-group-item list-group-item-info noborder">
+            <div class="row">
+                <div class="col-md-2">
+                    {#               {% if forum is not defined %}
+                                       <a id="forumlink_{{ parent.name}}"
+                                          class="tooltips"
+                                          title="{{ __("Go to forum")}} '{{ parent.name | escape('html')}}'"
+                                          href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id})}}">
+                                           <i class="fa fa-comments"></i>&nbsp;{{ parent.name | upper | escape('html')}}</a>
+                                       {% endif %}#}
+                    {{ __('Status')}}
+                </div>
+                <div class="col-md-4">
+                    {{ __('Topic')}}
+                </div>
+                <div class="col-md-1">
+                    {{ __("Replies") | upper}}
+                </div>
+                <div class="col-md-1">
+                    {{ __("Views") | upper}}
+                </div>
+                <div class="col-md-4 pull-right">
+                    {{ __('Last post') | upper}}
+                </div>
+            </div>
+        </div>
+        <ul class="list-group">
+            {% for topic in topics.iterator %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="data col-md-2">
+                            <span class="fa-stack">
+                                <i title='{{ __("No reply since your last visit.")}}' class="fa fa-stack-2x fa-comments-o fa-flip-horizontal"></i>
+                                {% if topic.last_post is not null and topic.last_post.post_time is defined and (date(topic.last_post.post_time) > date(currentForumUser.getLastVisit())) %}
+                                    <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>
+                                {% else %}
+                                    {# icons debug #}
+                                    {#<i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>#}
+                                {% endif %}
+                            </span>
 
-{include file='User/footer.tpl'}
-#}
+                            {% if topic.sticky == 1 %}
+                                <i title='{{ __("Topic is pinned to top of list.")}}' class="{#{{ sticky_icon_class }}#} fa-blue tooltips"></i>
+                            {% else %}
+                            {% endif %}
+                            {% if topic.locked == 1 %}
+                                <i title='{{ __("This topic is locked.")}}' class="fa fa-lock tooltips"></i>
+                            {% endif %}
+                            {% if topic.solved > 0 %}
+                                <i title='{{ __("This topic is solved.")}}' class="fa fa-check fa-green tooltips"></i>
+                            {% elseif topic.solved == -1 %}
+                                <i title='{{ __("This topic is a support request.")}}' class="fa fa-question fa-red tooltips"></i>
+                            {% endif %}
+                        </div>
+                        <div class="description col-md-4">
+                            <a class="topictitle tooltips"
+                               href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ '#/post/' ~ topic.last_post.id }}"
+                               title="{{ __('Go to topic') }} {{ topic.title }}">
+                                {{ topic.title }}
+                            </a>
+                            <div class="text-muted">
+                                <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
+                                {% set total_posts=topic.replyCount %}
+                                {% for i in range(0, total_posts, settings.posts_per_page) %}
+                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="data col-md-1 text-center">
+                            {% if topic.replyCount >= settings.hot_threshold %}
+                            <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
+                        {% else %}
+                            {{ topic.replyCount | escape('html')}}
+                            {% endif %}
+                            </div>
+                            <div class="data col-md-1 text-center">
+                                {{ topic.viewCount | escape('html')}}
+                            </div>
+                            <div class="lastpost col-md-4 pull-right">
+                                {% if topic.last_post is defined %}
+                                    {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    {% else %}
+                        <li class="list-group-item">
+                            <div class="text-center warning">
+                                {{ __('No topics found.')}}
+                            </div>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                        {{ pager({rowcount:pager.numitems,
+                        limit:settings.posts_per_page,
+                        class:'pull-right',
+                        posvar:'page',
+                        route:'zikuladizkusmodule_topic_viewlatest',
+                        template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
+                        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+                    </div>
+                </div>
+                {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

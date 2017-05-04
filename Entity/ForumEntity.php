@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Dizkus.
  *
@@ -12,27 +11,26 @@
 
 namespace Zikula\DizkusModule\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use ServiceUtil;
 use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\DizkusModule\Connection\Pop3Connection;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use ZLanguage;
 
 /**
  * Forum entity class.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumRepository")
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="dizkus_forums")
- * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumRepository")
  */
 class ForumEntity extends EntityAccess
 {
     const ROOTNAME = 'ROOT243fs546g1565h88u9fdjkh3tnbti8f2eo78f';
+
     const STATUS_LOCKED = true;
+
     const STATUS_UNLOCKED = false;
 
     /**
@@ -110,7 +108,7 @@ class ForumEntity extends EntityAccess
     private $children;
 
     /**
-     * @ORM\OneToOne(targetEntity="PostEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true, onDelete="SET NULL")
      */
     private $last_post;
@@ -136,6 +134,7 @@ class ForumEntity extends EntityAccess
 
     /**
      * @ORM\OneToMany(targetEntity="TopicEntity", mappedBy="forum", cascade={"remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"sticky" = "DESC", "topic_time" = "ASC"})
      */
     private $topics;
 
@@ -183,6 +182,11 @@ class ForumEntity extends EntityAccess
         $this->children = new ArrayCollection();
     }
 
+    public function getId()
+    {
+        return $this->forum_id;
+    }
+
     public function getForum_id()
     {
         return $this->forum_id;
@@ -191,30 +195,27 @@ class ForumEntity extends EntityAccess
     public function setForum_id($forum_id)
     {
         $this->forum_id = $forum_id;
+
+        return $this;
     }
 
     public function getName()
     {
-        if ($this->name == self::ROOTNAME) {
-            // do not display actual rootname
-            $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
-
-            return __('Forum Index', $dom);
-        }
-
-        return $this->name;
+        return $this->name == self::ROOTNAME ? 'Forum Index' : $this->name;
     }
 
     public function setName($name)
     {
         // dont' allow user to set another forum to rootname
         if ($name == self::ROOTNAME && $this->lvl != 0) {
-            return;
+            return $this;
         }
         // once root forum is set do not allow to change name
         if ($this->name != self::ROOTNAME) {
             $this->name = $name;
         }
+
+        return $this;
     }
 
     public function getDescription()
@@ -225,6 +226,8 @@ class ForumEntity extends EntityAccess
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
     }
 
     public function getTopicCount()
@@ -235,16 +238,22 @@ class ForumEntity extends EntityAccess
     public function setTopicCount($topics)
     {
         $this->topicCount = $topics;
+
+        return $this;
     }
 
     public function incrementTopicCount()
     {
         $this->topicCount++;
+
+        return $this;
     }
 
     public function decrementTopicCount()
     {
         $this->topicCount--;
+
+        return $this;
     }
 
     public function getPostCount()
@@ -255,16 +264,22 @@ class ForumEntity extends EntityAccess
     public function setPostCount($posts)
     {
         $this->postCount = $posts;
+
+        return $this;
     }
 
     public function incrementPostCount()
     {
         $this->postCount++;
+
+        return $this;
     }
 
     public function decrementPostCount()
     {
         $this->postCount--;
+
+        return $this;
     }
 
     public function getLft()
@@ -287,6 +302,19 @@ class ForumEntity extends EntityAccess
         return $this->root;
     }
 
+    public function getParents()
+    {
+        $parents = [];
+        $parent = $this->getParent();
+        while ($parent != null) {
+            $parents[$parent->getForum_id()] = $parent;
+            $parent = $parent->getParent();
+        }
+        ksort($parents);
+
+        return $parents;
+    }
+
     /**
      * get Forum parent.
      *
@@ -300,6 +328,8 @@ class ForumEntity extends EntityAccess
     public function setParent(ForumEntity $parent = null)
     {
         $this->parent = $parent;
+
+        return $this;
     }
 
     /**
@@ -318,6 +348,8 @@ class ForumEntity extends EntityAccess
     public function removeChildren()
     {
         $this->children->clear();
+
+        return $this;
     }
 
     /**
@@ -332,7 +364,9 @@ class ForumEntity extends EntityAccess
 
     public function setLast_post(PostEntity $post = null)
     {
-        return $this->last_post = $post;
+        $this->last_post = $post;
+
+        return $this;
     }
 
     public function getPop3Connection()
@@ -345,11 +379,15 @@ class ForumEntity extends EntityAccess
         if (is_null($connection) || $connection instanceof Pop3Connection) {
             $this->pop3Connection = $connection;
         }
+
+        return $this;
     }
 
     public function removePop3Connection()
     {
         $this->pop3Connection = null;
+
+        return $this;
     }
 
     public function getModuleref()
@@ -360,6 +398,8 @@ class ForumEntity extends EntityAccess
     public function setModuleref($moduleref)
     {
         $this->moduleref = $moduleref;
+
+        return $this;
     }
 
     /**
@@ -379,7 +419,13 @@ class ForumEntity extends EntityAccess
      */
     public function getTopics()
     {
-        return $this->topics;
+        $criteria = Criteria::create()
+            ->orderBy(["sticky" => Criteria::DESC])
+            ->orderBy(["topic_time" => Criteria::ASC])
+        ;
+        $topics = $this->topics->matching($criteria);
+
+        return $topics;
     }
 
     /**
@@ -399,32 +445,30 @@ class ForumEntity extends EntityAccess
      *
      * @return array
      */
-    public function getModeratorUsersAsIdArray($includeParents = false)
+    public function getNodeModeratorUsers()
     {
-        $output = [];
+        $nodeModeratorsCollection = new ArrayCollection();
         $thisForum = $this;
-        while (isset($thisForum) && $thisForum->getForum_id() > 1) {
+        while (isset($thisForum) && $thisForum->getId() > 1) {
             foreach ($thisForum->getModeratorUsers() as $moderatorUser) {
-                $output[] = $moderatorUser->getForumUser()->getUser_id();
+                $nodeModeratorsCollection->add($moderatorUser->getForumUser());
             }
-            $thisForum = $includeParents ? $thisForum->getParent() : null;
+            // set thisForum to null to stop
+            $thisForum = $thisForum->getParent();
         }
 
-        return $output;
+        return $nodeModeratorsCollection;
     }
 
-    public function setModeratorUsers($users)
+    public function setModeratorUsers($moderators)
     {
-        // clear the associated users
         $this->moderatorUsers->clear();
-        // add users
-        foreach ($users as $uid) {
-            $moderator = new ModeratorUserEntity();
-            $managedForumUser = new ForumUserManager($uid);
-            $moderator->setForumUser($managedForumUser->get());
+        foreach ($moderators as $moderator) {
             $moderator->setForum($this);
             $this->moderatorUsers->add($moderator);
         }
+
+        return $this;
     }
 
     /**
@@ -444,33 +488,54 @@ class ForumEntity extends EntityAccess
      *
      * @return array
      */
-    public function getModeratorGroupsAsIdArray($includeParents = false)
+    public function getNodeModeratorGroups()
     {
-        $output = [];
+        $nodeModeratorGroupsCollection = new ArrayCollection();
         $thisForum = $this;
-        while (isset($thisForum) && $thisForum->getForum_id() > 1) {
+        while (isset($thisForum) && $thisForum->getId() > 1) {
             foreach ($thisForum->getModeratorGroups() as $moderatorGroup) {
-                $output[] = $moderatorGroup->getGroup()->getGid();
+                $nodeModeratorGroupsCollection->add($moderatorGroup->getGroup());
             }
-            $thisForum = $includeParents ? $thisForum->getParent() : null;
+            $thisForum = $thisForum->getParent();
         }
 
-        return $output;
+        return $nodeModeratorGroupsCollection;
     }
 
-    public function setModeratorGroups($gids)
+    public function setModeratorGroups($moderatorGroups)
     {
-        // remove the associated moderators
         $this->moderatorGroups->clear();
-        // add moderators
-        foreach ($gids as $gid) {
-            $moderatorGroup = new ModeratorGroupEntity();
-            $em = ServiceUtil::get('doctrine.entitymanager');
-            $group = $em->find('Zikula\\GroupsModule\\Entity\\GroupEntity', $gid);
-            $moderatorGroup->setGroup($group);
+        foreach ($moderatorGroups as $moderatorGroup) {
             $moderatorGroup->setForum($this);
             $this->moderatorGroups->add($moderatorGroup);
         }
+
+        return $this;
+    }
+
+    /**
+     * get all (inc users in groups) forum moderators as users
+     *
+     * @return ArrayCollection
+     */
+    public function getAllNodeModeratorsAsUsers()
+    {
+        $allNodeModeratorsAsUsers = new ArrayCollection();
+
+        $nodeModeratorUsers = $this->getNodeModeratorUsers();
+        foreach ($nodeModeratorUsers as $forumUser) {
+            $allNodeModeratorsAsUsers->set($forumUser->getUserId(), $forumUser->getUser());
+        }
+
+        $nodeModeratorGroups = $this->getNodeModeratorGroups();
+        foreach ($nodeModeratorGroups as $nodeModeratorGroup) {
+            $nodeModeratorGroupUsers = $nodeModeratorGroup->getUsers();
+            foreach ($nodeModeratorGroupUsers as $nodeModeratorGroupUser) {
+                $allNodeModeratorsAsUsers->set($nodeModeratorGroupUser->getUid(), $nodeModeratorGroupUser);
+            }
+        }
+
+        return $allNodeModeratorsAsUsers;
     }
 
     /**
@@ -503,6 +568,8 @@ class ForumEntity extends EntityAccess
         if (is_bool($status)) {
             $this->status = $status;
         }
+
+        return $this;
     }
 
     /**
@@ -521,6 +588,8 @@ class ForumEntity extends EntityAccess
     public function lock()
     {
         $this->status = self::STATUS_LOCKED;
+
+        return $this;
     }
 
     /**
@@ -529,5 +598,7 @@ class ForumEntity extends EntityAccess
     public function unlock()
     {
         $this->status = self::STATUS_UNLOCKED;
+
+        return $this;
     }
 }

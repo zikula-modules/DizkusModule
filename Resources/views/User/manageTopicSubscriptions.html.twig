@@ -1,54 +1,125 @@
 {{ pageSetVar('title', __("Manage topic subscriptions")) }}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div id="dzk_userprefs">
+    {{ moduleLinks('prefs') }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{{ __("Manage topic subscriptions") }}</h2>
+        </div>
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-5">
+                    {{ __('Topic')}}
+                </div>
+                <div class="col-md-5">
+                    {{ __('Info')}}
+                </div>
+                <div class="col-md-2">
+                    {{ __('Actions')}}
+                </div>
+            </div>
+        </div>
+        <ul class="list-group">
+            {% for subscription in currentForumUser.TopicSubscriptionsCollection %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': subscription.topic.topic_id}) }}" title="{{ subscription.topic.name|escape('html') }}">
+                                <h4>{{ subscription.topic.title|escape('html') }}</h4>
+                            </a>
+                            {#                            {% for parent in subscription.forum.parents %}
+                                                            {% if loop.first %}
+                                                                <a href="{{ path('zikuladizkusmodule_forum_index') }}" title="{{ parent.name|escape('html') }}">
+                                                                    {{ parent.name|escape('html') }}
+                                                                </a>
+                                                            {% else %}
+                                                                <a href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': parent.forum_id}) }}" title="{{ parent.name|escape('html') }}">
+                                                                    {{ parent.name|escape('html') }}
+                                                                </a>
+                                                            {% endif %}
+                                                            {% if not loop.last %}/{% endif %}
+                                                        {% endfor %}#}
+                        </div>
+                        <div class="col-md-5">
+                            <p> {#{{ subscription.forum.description|escape('html') }}#} </p>{#{{ dump(subscription.topic.HotTopic) }}#}
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{ path('zikuladizkusmodule_user_managetopicsubscriptions', {'unsubscribe': subscription.topic.topic_id}) }}" class="btn btn-sm btn-default">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Unsubscribe") }}
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item">
+                    <div class="text-center danger">
+                        {{ __("No topic subscriptions found.") }}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if currentForumUser.TopicSubscriptionsCollection|length > 0 %}
+            <div class="list-group-item list-group-item-warning clearfix">
+                <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_user_managetopicsubscriptions', {'unsubscribe': 'all'}) }}" title="{{ __('Remove all forum subscriptions')}}">
+                    <span class="text-danger"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;{{ __('Remove all forum subscriptions')}}</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+
+{#{{ pageSetVar('title', __("Manage topic subscriptions")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 
 <div id="dzk_userprefs">
 
     {{ moduleLinks('prefs') }}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h2>{{ __("Manage topic subscriptions") }}</h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{{ __("Manage topic subscriptions") }}</h2>
+        </div>
+
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr class="active">
+                    <th class="col-lg-3">{{ __("Topic") }}</th>
+                    <th>{{ __("Unsubscribe from topic") }}</th>
+                    <th>{{ __("Last post") }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if subscriptions|length > 0 %}
+                    <tr class="warning">
+                        <td></td>
+                        <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{{ __("Remove all topic subscriptions") }}</label></td>
+                        <td></td>
+                    </tr>
+                {% endif %}
+                {% for subscription in subscriptions %}
+                    <tr>
+                        <td><a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'forum': subscription.topic.topic_id}) }}" title="{{ subscription.topic.title|escape('html') }}">{{ subscription.topic.title|escape('html') }}</a></td>
+
+                        <td>{{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':subscription.topic.last_post}) }} </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan='3' class="text-center danger">
+                            {{ __("No topic subscriptions found.") }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% if subscriptions|length > 0 %}
+        <div class="col-lg-offset-3 col-lg-9">
 
-{#    {*pager rowcount=$pager.numitems limit=$pager.itemsperpage posvar='start' route='zikuladizkusmodule_user_managetopicsubscriptions'*}  #}  
+        </div>
+    {% endif %} 
 
-    <table class="table table-striped">
-        <thead>
-        <tr class="active">
-            <th class="col-lg-3">{{ __("Topic") }}</th>
-            <th>{{ __("Unsubscribe from topic") }}</th>
-            <th>{{ __("Last post") }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if subscriptions|length > 0 %}
-            <tr class="warning">
-                <td></td>
-                <td><label for="alltopic"><input name="all" id="all" type="checkbox" value="1" onclick="jQuery('.forum_checkbox').attr('checked', this.checked);" />&nbsp;{{ __("Remove all topic subscriptions") }}</label></td>
-                <td></td>
-            </tr>
-        {% endif %}
-        {% for subscription in subscriptions %}
-            <tr>
-                <td><a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'forum': subscription.topic.topic_id}) }}" title="{{ subscription.topic.title|escape('html') }}">{{ subscription.topic.title|escape('html') }}</a></td>
-                <td>{#{formcheckbox cssClass="forum_checkbox" id=$subscription.forum.forum_id group="forumIds"}#}</td>
-                <td>{{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post':subscription.topic.last_post}) }} </td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan='3' class="text-center danger">
-                    {{ __("No topic subscriptions found.") }}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% if subscriptions|length > 0 %}
-    <div class="col-lg-offset-3 col-lg-9">
-
-    </div>
-{% endif %} 
-    
 </div>
 
-{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}#}

@@ -15,15 +15,15 @@ namespace Zikula\DizkusModule\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use UserUtil;
 use Zikula\Core\Doctrine\EntityAccess;
-use ZLanguage;
+use Zikula\UsersModule\Entity\UserEntity;
 
 /**
  * ForumUser entity class.
  *
  * @ORM\Entity
  * @ORM\Table(name="dizkus_users")
+ * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\ForumUserRepository")
  */
 class ForumUserEntity extends EntityAccess
 {
@@ -31,10 +31,13 @@ class ForumUserEntity extends EntityAccess
     const USER_LEVEL_DELETED = -1;
 
     /**
+     * Zikula user
+     *
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="Zikula\UsersModule\Entity\UserEntity")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="uid", nullable=true)
      */
-    private $user_id;
+    private $user;
 
     /**
      * postCount.
@@ -76,11 +79,12 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * postOrder.
+     * ASC (oldest to newest)
      *
      * @ORM\Column(type="boolean")
      */
     private $postOrder = false;
-    // ASC (oldest to newest)
+
     /**
      * @ORM\ManyToOne(targetEntity="RankEntity", cascade={"persist"} )
      * @ORM\JoinColumn(name="rank", referencedColumnName="rank_id", nullable=true)
@@ -109,59 +113,50 @@ class ForumUserEntity extends EntityAccess
     private $forumSubscriptions;
 
     /**
-     * NON-PERSISTED property
-     * array of core vars for user.
-     *
-     * @var array
-     */
-    private $user = [];
-
-    /**
      * constructor.
      *
-     * @param int $uid the core user id
+     * @param int $zuser the core user object
      */
-    public function __construct($uid)
+    public function __construct()
     {
-        $this->user_id = $uid;
-        $this->user = $this->getUser();
         $this->favoriteForums = new ArrayCollection();
         $this->topicSubscriptions = new ArrayCollection();
         $this->forumSubscriptions = new ArrayCollection();
     }
 
     /**
-     * @param mixed $user_id
+     * @param obj $zuser
      */
-    public function setUser_id($user_id)
+    public function setUser(UserEntity $zuser = null)
     {
-        $this->user_id = $user_id;
+        $this->user = $zuser;
     }
 
     /**
-     * @return mixed
-     */
-    public function getUser_id()
-    {
-        return $this->user_id;
-    }
-
-    /**
-     * Core user vars.
+     * Get user.
      *
-     * @return array|bool (if core user doesn't exist, method returns false)
+     * @return
      */
     public function getUser()
     {
-        if (empty($this->user)) {
-            $this->user = UserUtil::getVars($this->user_id);
-            if (empty($this->user['uname'])) {
-                $dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
-                $this->user['uname'] = __('Deleted user', $dom);
-            }
-        }
+        // null look for user level
+        return empty($this->user) ? null : $this->user;
+    }
 
-        return $this->user;
+    public function getUserId()
+    {
+        // null look for user level 1 guest -1 deleted
+        return empty($this->user) ? -1 : $this->user->getUid();
+    }
+
+    /**
+     * Get user email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return empty($this->user) ? null : $this->user->getEmail();
     }
 
     public function getPostCount()

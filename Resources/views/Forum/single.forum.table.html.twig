@@ -1,0 +1,88 @@
+{# Subforums collection  #}
+{% if forum is defined or managedForum is defined %}
+    {% if managedForum is defined %}
+    {% else %}
+        {% set managedForum=getForumManager(forum) %}
+    {% endif %}
+    <div class="list-group-item list-group-item-info noborder">
+        <div class="row">
+            <div class="col-md-2">
+                {{ __('Status')}}
+            </div>
+            <div class="col-md-3">
+                {{ __('Forum')}}
+            </div>
+            <div class="col-md-1">
+                {{ __('Forums') | upper}}
+            </div>
+            <div class="col-md-1">
+                {{ __('Topics') | upper}}
+            </div>
+            <div class="col-md-1">
+                {{ __('Posts') | upper}}
+            </div>
+            <div class="col-md-4 pull-right">
+                {{ __('Last post') | upper}}
+            </div>
+        </div>
+    </div>
+    <ul class="list-group">
+        {% for forum in managedForum.get.children %}
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-2">
+                        <span class="fa-stack fa-2x">
+                            <i class="fa fa-comments fa-stack-2x fa-flip-horizontal"></i>
+                            {% if forum.last_post is not null and forum.last_post.post_time is not null and (date(forum.last_post.post_time) > date(currentForumUser.getLastVisit())) %}
+                                <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-stack-1x fa-flip-horizontal fa-orange" style="font-size:1.9em; margin-left: 4px;"></i>
+                            {% else %}
+                                {#<i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 15px;"></i>#}
+                            {% endif %}
+                        </span>
+                        {#</a>#}
+                    </div>
+                    <div class="col-md-3">
+                        <h3><a class="tooltips" title="{{ __("Go to forum")}} '{{ forum.name | escape('html')}}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': forum.forum_id})}}">{{ forum.name}}</a></h3>
+                        {% if forum.description != '' %}<p>{{ forum.description | escape('html')}}</p>{% endif %}
+                        {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum': forum})}}
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{ forum.children | length}}
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{ forum.topicCount | escape('html')}}
+                    </div>
+                    <div class="col-md-1 text-center">
+                        {{ forum.postCount | escape('html')}}
+                    </div>
+                    <div class="col-md-4 pull-right">
+                        {% if forum.last_post != null %}
+                            {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': forum.last_post})}}
+                        {% else %}
+                            <span>{{ __('No post in this forum')}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        {% else %}
+            <li class="list-group-item">
+                <div class="text-center warning">
+                    {{ __('No subforums available.')}}
+                </div>
+            </li>
+        {% endfor %}
+    </ul> 
+
+    {% if managedForum.getTotalTopicsCount() > 0 and app.request.attributes.get('_route') == 'zikuladizkusmodule_forum_index' %}
+        <div class="list-group-item list-group-item-warning">
+            <div class="text-center success">{{ _fn("There is %s topic not in a subforum.", "There are %s topics not in a subforum.", managedForum.getTotalTopicsCount(), {'%s': managedForum.getTotalTopicsCount()})}}
+                <a id="forumlink_{{ managedForum.get.name}}" title="{{ __("Go to forum")}} '{{ managedForum.get.name | escape('html')}}'" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': managedForum.id})}}">{{ __("Go to forum")}} '{{ managedForum.get.name | escape('html')}}'</a>
+            </div>
+        </div>
+    {% endif %}
+
+{% else %}
+    <div class="list-group-item list-group-item-info">
+        {{  __('Forum not found in singleforumtable.html.twig')}}
+    </div>
+{% endif %}

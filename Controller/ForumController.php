@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dizkus.
+ * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
  *
@@ -12,17 +12,17 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; // used in annotations - do not remove
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; // used in annotations - do not remove
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Response\PlainResponse;
-use Zikula\DizkusModule\Form\Type\ModerateType; // used in annotations - do not remove
-use Zikula\DizkusModule\Manager\ForumUserManager; // used in annotations - do not remove
+use Zikula\DizkusModule\Form\Type\ModerateType;
 
 class ForumController extends AbstractController
 {
@@ -52,42 +52,40 @@ class ForumController extends AbstractController
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
+        // currentforumuser
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
 
-        // get the forums to display
-        $showOnlyFavorites = $this->get('zikula_dizkus_module.favorites_helper')->getStatus();   //ModUtil::apiFunc($this->name, 'Favorites', 'getStatus');
-        $siteFavoritesAllowed = $this->getVar('favorites_enabled');
-        $uid = ($request->getSession()->get('uid') > 1) ? $request->getSession()->get('uid') : 1;
-        $loggedIn = $uid > 1 ? true : false;
-        $qb = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
-        if ($loggedIn && $siteFavoritesAllowed && $showOnlyFavorites) {
-            // display only favorite forums
-            $qb->join('node.favorites', 'fa');
-            $qb->andWhere('fa.forumUser = :uid');
-            $qb->setParameter('uid', $uid);
-        } else {
-            //display an index of the level 1 forums
-            $qb->andWhere('node.lvl = 1');
-        }
-        $forums = $qb->getQuery()->getResult();
-        // filter the forum array by permissions
-        $forums = $this->get('zikula_dizkus_module.security')->filterForumArrayByPermission($forums);
-        // check to make sure there are forums to display
-        if (count($forums) < 1) {
-            if ($showOnlyFavorites) {
-                $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
-                $managedForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager($uid); //new ForumUserManager($uid);
-                $managedForumUser->displayFavoriteForumsOnly(false);
+        $managedRootForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(1);
 
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
-            } else {
-                $request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
-            }
-        }
+//        // get the forums to display
+//        $siteFavoritesAllowed = $this->getVar('favorites_enabled');
+//        $qb = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenQueryBuilder();
+//        if (!$forumUserManager->isAnonymous() && $siteFavoritesAllowed && $forumUserManager->get()->getDisplayOnlyFavorites()) {
+//            // display only favorite forums
+//            $qb->join('node.favorites', 'fa');
+//            $qb->andWhere('fa.forumUser = :uid');
+//            $qb->setParameter('uid', $forumUserManager->getId());
+//        } else {
+//            //display an index of the level 1 forums
+//            $qb->andWhere('node.lvl = 1');
+//        }
+//        $rawForums = $qb->getQuery()->getResult();
+//        // filter the forum array by permissions
+//        $forums = $this->get('zikula_dizkus_module.security')->filterForumArrayByPermission($rawForums);
+//        // check to make sure there are forums to display
+//        if (count($forums) < 1) {
+//            if ($forumUserManager->get()->getDisplayOnlyFavorites()) {
+//                $request->getSession()->getFlashBag()->add('error', $this->__('You have not selected any favorite forums. Please select some and try again.'));
+//                $forumUserManager->setForumViewSettings(false);
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
+//            } else {
+//                $request->getSession()->getFlashBag()->add('error', $this->__('This site has not set up any forums or they are all private. Contact the administrator.'));
+//            }
+//        }
 
         return $this->render('@ZikulaDizkusModule/Forum/main.html.twig', [
-                    'last_visit_unix' => $lastVisitUnix,
-                    'forums'          => $forums,
+                    'managedRootForum' => $managedRootForum,
+                    'currentForumUser' => $forumUserManager,
                     'totalposts'      => $this->get('zikula_dizkus_module.count_helper')->getAllPostsCount(),
                     'settings'        => $this->getVars(),
         ]);
@@ -116,8 +114,9 @@ class ForumController extends AbstractController
                         'forum_disabled_info' => $this->getVar('forum_disabled_info'),
             ]);
         }
-        $lastVisitUnix = $this->get('zikula_dizkus_module.forum_user_manager')->getLastVisit();
-
+        // currentforumuser
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        // current forum
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum); //new ForumManager($forum);
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', [$forum]));
@@ -129,21 +128,79 @@ class ForumController extends AbstractController
             throw new AccessDeniedException();
         }
 
+        $managedForum->getTopics($start);
+
         return $this->render('@ZikulaDizkusModule/Forum/view.html.twig', [
-                    'topics'          => $managedForum->getTopics($start),
-                    'last_visit_unix' => $lastVisitUnix,
+                    'currentForumUser' => $forumUserManager,
+                    'currentForum' => $managedForum,
                      // filter the forum children by permissions
                     'forum'       => $this->get('zikula_dizkus_module.security')->filterForumChildrenByPermission($managedForum->get()),
-                    'pager'       => $managedForum->getPager(),
                     'permissions' => $managedForum->getPermissions(),
-                    'isModerator' => $managedForum->isModerator(),
-                    'breadcrumbs' => $managedForum->getBreadcrumbs(),
                     'settings'    => $this->getVars(),
         ]);
     }
 
     /**
-     * @Route("/forum/moderate/{forum}", requirements={"forum" = "^[1-9]\d*$"})
+     * @Route("/forum/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action"="lock|unlock"})
+     *
+     * Lock forum
+     *
+     * User interface for forum locking
+     *
+     * @return string
+     */
+    public function lockAction(Request $request, $forum, $action)
+    {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            if ($request->isXmlHttpRequest()) {
+                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
+            } else {
+                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+                    'forum_disabled_info' => $this->getVar('forum_disabled_info'),
+                ]);
+            }
+        }
+
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
+        if (!$managedForum->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Forum not found in \'Dizkus/ForumController/lockAction()\'.'));
+        }
+
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        //nicer redirect form of access denied
+        if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
+            $path = [
+                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login', ];
+
+            $subRequest = $request->duplicate([], null, $path);
+            $httpKernel = $this->get('http_kernel');
+            $response = $httpKernel->handle(
+            $subRequest, HttpKernelInterface::SUB_REQUEST
+            );
+
+            return $response;
+        }
+
+        if (!$forumUserManager->allowedToModerate($managedForum)) {
+            throw new AccessDeniedException();
+        }
+
+        $managedForum->get()->{$action}();
+        $managedForum->store();
+
+        if (!$request->isXmlHttpRequest()) {
+            // everything is good no ajax return to to topic view
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
+        }
+    }
+
+    /**
+     * @Route("/forum/{forum}/moderate", requirements={"forum" = "^[1-9]\d*$"})
      *
      * Moderate forum
      *
@@ -184,20 +241,19 @@ class ForumController extends AbstractController
                     case 'del':
                     case 'delete':
                         foreach ($topic_ids as $topic_id) {
-                            dump('delete topic'.$topic_id);
+                            // dump('delete topic'.$topic_id);
                             $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($topic_id);
-                          // $forum_id = ModUtil::apiFunc($this->name, 'topic', 'delete', ['topic' => $topic_id]);
                         }
                         break;
 
                     case 'move':
                         if (empty($moveto)) {
                             $request->getSession()->getFlashBag()->add('error', $this->__('Error! You did not select a target forum for the move.'));
-                            dump('move to forum'.$moveto); //
+                            // dump('move to forum'.$moveto); //
                             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_moderateforum', ['forum' => $this->_managedForum->getId()], RouterInterface::ABSOLUTE_URL));
                         }
                         foreach ($topic_ids as $topic_id) {
-                            dump('move topic #'.$topic_id.' to forum #'.$moveto); //
+                            // dump('move topic #'.$topic_id.' to forum #'.$moveto);
                             $this->get('zikula_dizkus_module.topic_manager')->move($topic_id, $moveto, $shadow);
 //                          ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
 //                                'forum_id' => $moveto,
@@ -212,7 +268,8 @@ class ForumController extends AbstractController
                     case 'sticky':
                     case 'unsticky':
                         foreach ($topic_ids as $topic_id) {
-                            dump($action.' '.$topic_id); //
+                            // dump($action.' '.$topic_id); // no post no title
+                            //$this->get('zikula_dizkus_module.topic_manager')->changeStatus($topic_id, $action, $post, $title);
 //                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
 //                                'topic' => $topic_id,
 //                                'action' => $action]);
@@ -237,7 +294,7 @@ class ForumController extends AbstractController
                             $topic_ids = array_flip($fliparray);
                         }
                         foreach ($topic_ids as $from_topic_id) {
-                            dump('join from'.$from_topic_id.' to '.$jointo); //
+                            //dump('join from'.$from_topic_id.' to '.$jointo); // @todo
 //                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
 //                                'to_topic_id' => $jointo]);
                         }
@@ -254,70 +311,7 @@ class ForumController extends AbstractController
             'form'            => $form->createView(),
             'forum'           => $this->_managedForum->get(),
             'pager'           => $this->_managedForum->getPager(),
-            'last_visit_unix' => $this->get('zikula_dizkus_module.forum_user_helper')->getLastVisit(),
             'settings'        => $this->getVars(),
         ]);
-    }
-
-    /**
-     * AJAX.
-     */
-
-    /**
-     * @Route("/forum/modify/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action" = "addToFavorites|removeFromFavorites|subscribe|unsubscribe"}, options={"expose"=true})
-     * @ Method("POST")
-     *
-     * @param Request $request
-     *                         forum
-     *                         action
-     *
-     * @throws AccessDeniedException on failed perm check
-     *
-     * @return string PlainResponse|BadDataResponse|UnavailableResponse
-     */
-    public function modifyForumAction(Request $request, $forum, $action)
-    {
-        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
-            if ($request->isXmlHttpRequest()) {
-                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
-                            'forum_disabled_info' => $this->getVar('forum_disabled_info'),
-                ]);
-            }
-        }
-
-        if (!$this->getVar('favorites_enabled')) {
-            return new BadDataResponse([], $this->__('Error! Favourites have been disabled.'));
-        }
-
-        if (empty($forum)) {
-            return new BadDataResponse([], $this->__('Error! No forum ID in \'Dizkus/Ajax/modifyForum()\'.'));
-        }
-        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
-            // only need read perms to make a favorite
-            throw new AccessDeniedException();
-        }
-        $this->get('zikula_dizkus_module.forum_manager')->modify($forum, $action);
-
-        return new PlainResponse('successful');
-
-//        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', array('forum' => $forum), RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
-     * @Route("/forumusers", options={"expose"=true})
-     *
-     * update the "users online" section in the footer
-     *
-     * used in User/footer_with_ajax.tpl
-     *
-     * @return UnavailableResponse
-     */
-    public function forumusersAction()
-    {
-        if (!$this->getVar('forum_enabled')) {
-            return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-        }
     }
 }

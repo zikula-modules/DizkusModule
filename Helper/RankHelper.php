@@ -10,7 +10,6 @@ namespace Zikula\DizkusModule\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
 
@@ -36,54 +35,63 @@ class RankHelper
      */
     private $variableApi;
 
-    /**
-     * @var forumUserManagerService
-     */
-    private $forumUserManagerService;
+    private $_userRanks = [];
+
+    private $imagesPath;
 
     public function __construct(
             EntityManager $entityManager,
             Permission $permission,
-            VariableApi $variableApi,
-            ForumUserManager $forumUserManagerService
+            VariableApi $variableApi
          ) {
         $this->name = 'ZikulaDizkusModule';
         $this->entityManager = $entityManager;
         $this->permission = $permission;
         $this->variableApi = $variableApi;
-        $this->forumUserManagerService = $forumUserManagerService;
-    }
 
-    private $_userRanks = [];
+        $this->imagesPath = $this->variableApi->get($this->name, 'url_ranks_images');
+    }
 
     /**
      * Get all ranks.
      *
-     * @param array $args arguments array
+     * @param array ranktype
      *
      * @return array
      */
-    public function getAll($args)
+    public function getAll($ranktype)
     {
-        // read images
-        $path = $this->variableApi->get($this->name, 'url_ranks_images');
-        $handle = opendir($path);
-        $filelist = [];
-        while ($file = readdir($handle)) {
-            if ($this->dzk_isimagefile($path.'/'.$file)) {
-                $filelist[] = $file;
-            }
-        }
-        asort($filelist);
-        if ($args['ranktype'] == RankEntity::TYPE_POSTCOUNT) {
+        if ($ranktype == RankEntity::TYPE_POSTCOUNT) {
             $orderby = 'minimumCount';
         } else {
             $orderby = 'title';
         }
         $ranks = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\RankEntity')
-            ->findBy(['type' => $args['ranktype']], [$orderby => 'ASC']);
+            ->findBy(['type' => $ranktype], [$orderby => 'ASC']);
 
-        return [$filelist, $ranks];
+        return $ranks;
+    }
+
+    /**
+     * Get all ranks.
+     *
+     * @param array ranktype
+     *
+     * @return array
+     */
+    public function getAllRankImages()
+    {
+        // read images
+        $handle = opendir(\Zikula\DizkusModule\DizkusModuleInstaller::generateRelativePath().'/Resources/public/images/'.$this->imagesPath);
+        $filelist = [];
+        while ($file = readdir($handle)) {
+            if ($this->isImageFile($this->imagesPath.'/'.$file)) {
+                $filelist[] = $file;
+            }
+        }
+        asort($filelist);
+
+        return $filelist;
     }
 
     /**
@@ -124,31 +132,9 @@ class RankHelper
         return true;
     }
 
-    /**
-     * assignranksave.
-     *
-     * setrank array(uid) = rank_id
-     */
-    public function assign($args)
+    public function getImageLink($image)
     {
-        if (!$this->permission->canAdministrate()) {
-            throw new AccessDeniedException();
-        }
-        if (is_array($args['setrank'])) {
-            foreach ($args['setrank'] as $userId => $rankId) {
-                $rankId = $rankId == 0 ? null : $rankId;
-                $managedForumUser = $this->forumUserManagerService($userId); //new ForumUserManager($userId);
-                if (isset($rankId)) {
-                    $rank = $this->entityManager->getReference('Zikula\DizkusModule\Entity\RankEntity', $rankId);
-                    $managedForumUser->get()->setRank($rank);
-                } else {
-                    $managedForumUser->get()->clearRank();
-                }
-            }
-            $this->entityManager->flush();
-        }
-
-        return true;
+        return $this->imagesPath . '/' . $image;
     }
 
     /**
@@ -210,7 +196,7 @@ class RankHelper
      * dzk is an image
      * check if a filename is an image or not.
      */
-    private function dzk_isimagefile($filepath)
+    private function isImageFile($filepath)
     {
         if (function_exists('getimagesize') && @getimagesize($filepath) != false) {
             return true;

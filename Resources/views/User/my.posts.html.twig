@@ -1,0 +1,34 @@
+{{ pageSetVar('title', __("My posts")) }}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
+<div class="panel panel-default">
+    <div class="panel-heading"><h2 class="fa fa-home">&nbsp;{{ __("Forums index page") }}</h2>
+        {% if numposts is defined %}
+            <div style='position:absolute; top:0; right:0; padding: 1.25em;'>
+                <a class="btn btn-default btn-sm tooltips" title="{{ __("RSS Feed") }}" href="{{ path('zikuladizkusmodule_user_feed') }}"><i class="fa fa-rss-square fa-150x fa-orange"></i>
+                    {{ __("Total posts: %s", {'%s':numposts}) }}</a>
+            </div>
+        {% endif %}
+    </div>
+    <table class="table table-condensed">
+        <thead>
+            <tr class="active">
+                <th>{{ __("Post text")|upper }}</th>
+                <th>{{ __("Topic")|upper }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.post_text  }}
+                    </td>
+                    <td>{{ post.topic.title }}
+                    </td>
+                </tr>
+            {% endfor %}
+            {# @todo add pager #}
+
+        </tbody>
+    </table>
+
+</div>
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
