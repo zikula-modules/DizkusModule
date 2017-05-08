@@ -6,29 +6,23 @@ Dizkus is a discussion forum module for the Zikula Application Framework
 ### Branch 4
  Basic forum module.
  This version **requires** Zikula Core 1.4.6+
-    The code is currently under development, but typically is in a functional
-    state. 
+ The code is currently under development, but typically is in a functional
+ state. Feel free to test and report issues. thank you.
 
-    Feel free to test and report issues. thank you.
-
-    Current release 4.0.0
-    This version **requires** Zikula Core 1.4.3+
+ Current release 4.0.0
+ This version **requires** Zikula Core 1.4.3+
 
 ### Branch 5
  Fully featured forum
  This version **requires** Zikula Core 1.5.0+
-    The code is currently under development, but typically is in a functional
-    state. 
-
-    Feel free to test and report issues. thank you.
+ The code is currently under development, but typically is in a functional
+ state. Feel free to test and report issues. thank you.
 
 ### master
  Newest core features
  This version **requires** Zikula Core 2.0.0+
-    The code is currently under development, but typically is in a functional
-    state. 
-
-    Feel free to test and report issues. thank you.
+ The code is currently under development, but typically is in a functional
+ state. Feel free to test and report issues. thank you.
 
 Before you pull:
 
