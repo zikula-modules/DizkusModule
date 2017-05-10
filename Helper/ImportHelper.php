@@ -9,6 +9,7 @@
  *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
+
 namespace Zikula\DizkusModule\Helper;
 
 use Doctrine\ORM\EntityManager;
@@ -188,7 +189,7 @@ class ImportHelper
                 ],
         ];
 
-        if (key_exists(str_replace($prefix, "", $tableDetails->getName()), $tablesWithColumns)) {
+        if (array_key_exists(str_replace($prefix, "", $tableDetails->getName()), $tablesWithColumns)) {
             $importTableColumns = array_keys($tableDetails->getColumns());
             $supportedColumns = $tablesWithColumns[str_replace($prefix, "", $tableDetails->getName())];
 //            dump($importTableColumns);
