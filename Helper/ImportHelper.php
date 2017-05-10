@@ -60,11 +60,11 @@ class ImportHelper
     }
 
     /**
-     *
+     * Check table status
      */
     public function checkTableStatus($tableDetails, $prefix)
     {
-        if (!in_array(str_replace($prefix, "",$tableDetails->getName()), $this->getSupportedTables())) {
+        if (!in_array(str_replace($prefix, "", $tableDetails->getName()), $this->getSupportedTables())) {
             return false;
         }
 
@@ -72,7 +72,7 @@ class ImportHelper
     }
 
     /**
-     *
+     * Get supported tables
      */
     public function getSupportedTables()
     {
@@ -90,7 +90,7 @@ class ImportHelper
     }
 
     /**
-     *
+     * Check table columns
      */
     public function checkTableColumns($tableDetails, $prefix)
     {
@@ -102,7 +102,7 @@ class ImportHelper
     }
 
     /**
-     *
+     * Check 310 compat
      */
     public function check310TableCompatibility($tableDetails, $prefix)
     {
@@ -188,9 +188,9 @@ class ImportHelper
                 ],
         ];
 
-        if (key_exists(str_replace($prefix, "",$tableDetails->getName()), $tablesWithColumns)) {
+        if (key_exists(str_replace($prefix, "", $tableDetails->getName()), $tablesWithColumns)) {
             $importTableColumns = array_keys($tableDetails->getColumns());
-            $supportedColumns = $tablesWithColumns[str_replace($prefix, "",$tableDetails->getName())];
+            $supportedColumns = $tablesWithColumns[str_replace($prefix, "", $tableDetails->getName())];
 //            dump($importTableColumns);
 //            dump($supportedColumns);
             // exact fields order checl
@@ -199,10 +199,7 @@ class ImportHelper
 
         return false;
     }
-
 }
-
-
 
     /**
 //     * upgrade to 4.0.0.

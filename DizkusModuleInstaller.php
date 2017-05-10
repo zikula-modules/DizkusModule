@@ -263,7 +263,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         return true;
     }
 
-
     /**
      * Mark tables for import with import_ prefix
      */
