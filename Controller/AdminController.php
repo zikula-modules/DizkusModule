@@ -568,4 +568,45 @@ class AdminController extends AbstractController
         //return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName], RouterInterface::ABSOLUTE_URL));
     }
+
+    /**
+     * @Route("/import", options={"expose"=true})
+     *
+     * @return Response
+     */
+    public function importAction(Request $request)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $importHelper = $this->get('zikula_dizkus_module.import_helper');
+        // import_ is a default prefix after upgrade
+        $importTables = $importHelper->getTablesForPrefix();
+
+        // @todo move to form handler
+        $form = $this->createFormBuilder(['prefix' => 'import_'])
+        ->add('prefix', 'text')
+
+        ->add('checkPrefix', 'submit')
+
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if ($form->get('checkPrefix')->isClicked()) {
+                dump($form->getData());
+                $importTables = $importHelper->getTablesForPrefix();
+
+            }
+        }
+
+
+
+        return $this->render('@ZikulaDizkusModule/Admin/import.html.twig', [
+            'form' => $form->createView(),
+            'importTables' => $importTables
+        ]);
+    }
 }
