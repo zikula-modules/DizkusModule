@@ -14,9 +14,6 @@ namespace Zikula\DizkusModule;
 
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
-use Zikula\DizkusModule\Entity\ModeratorGroupEntity;
-use Zikula\DizkusModule\Connection\Pop3Connection;
 use Zikula\Core\AbstractExtensionInstaller;
 
 class DizkusModuleInstaller extends AbstractExtensionInstaller
@@ -268,7 +265,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
 
     /**
-     * remove all table prefixes.
+     * Mark tables for import with import_ prefix
      */
     public function markTablesForImport($prefix = 'import_')
     {
@@ -382,7 +379,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         //$currentModVars = $this->getVars();
         $this->setVars($this->getDefaultVars());
 
-
 //        $this->setVar('log_ip', $currentModVars['log_ip'] === 'yes' ? true : false);
 //        $this->setVar('extendedsearch', $currentModVars['extendedsearch'] === 'yes' ? true : false);
 //        $this->setVar('m2f_enabled', $currentModVars['m2f_enabled'] === 'yes' ? true : false);
@@ -395,13 +391,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 //        $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);
 //        $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
 
-
-
 //        $this->setVar('onlineusers_moderatorcheck', false);
 //        $this->setVar('forum_subscriptions_enabled', false);
 //        $this->setVar('topic_subscriptions_enabled', false);
-
-
 
         return true;
     }
@@ -430,14 +422,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 }
 
-
-
-//
-//
-//
 //    public function configPrefix()
 //    {
-//
 //        $configPrefix = $this->container->getParameter("prefix");
 //        $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
 //        $connection = $this->entityManager->getConnection();
@@ -451,8 +437,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 //            return false;
 //        }
 //    }
-
-
 //                ini_set('memory_limit', '194M');
 //                ini_set('max_execution_time', 86400);
 //

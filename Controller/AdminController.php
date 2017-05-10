@@ -598,11 +598,8 @@ class AdminController extends AbstractController
             if ($form->get('checkPrefix')->isClicked()) {
                 dump($form->getData());
                 $importTables = $importHelper->getTablesForPrefix();
-
             }
         }
-
-
 
         return $this->render('@ZikulaDizkusModule/Admin/import.html.twig', [
             'form' => $form->createView(),

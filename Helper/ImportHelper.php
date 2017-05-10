@@ -1,11 +1,14 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Dizkus.
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ *
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
-
 namespace Zikula\DizkusModule\Helper;
 
 use Doctrine\ORM\EntityManager;
@@ -147,7 +150,6 @@ class ImportHelper
                 'dizkus_subscription' => ['msg_id',
                                           'forum_id',
                                           'user_id'
-
                 ],
                 'dizkus_ranks' => ['rank_id',
                                    'rank_title',
@@ -168,16 +170,13 @@ class ImportHelper
                                     'topic_status',
                                     'sticky',
                                     'topic_reference'
-
                 ],
                 'dizkus_topic_subscription' => ['id',
                                                 'topic_id',
                                                 'user_id'
-
                 ],
                 'dizkus_forum_favorites' => ['forum_id',
                                              'user_id'
-
                 ],
                 'dizkus_users' => ['user_id',
                                    'user_posts',
@@ -186,7 +185,6 @@ class ImportHelper
                                    'user_lastvisit',
                                    'user_favorites',
                                    'user_post_order'
-
                 ],
         ];
 
@@ -211,11 +209,6 @@ class ImportHelper
 //     */
 //    private function upgrade_to_4_0_0()
 //    {
-//
-//
-////
-//
-//
 ////        // update dizkus_forums to prevent errors in column indexes
 ////        $sql = 'ALTER TABLE dizkus_forums MODIFY forum_last_post_id INT DEFAULT NULL';
 ////        $stmt = $connection->prepare($sql);
@@ -410,7 +403,6 @@ class ImportHelper
 ////        $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_replies replyCount INT UNSIGNED NOT NULL DEFAULT 0';
 ////        $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_reference reference VARCHAR(60) NOT NULL';
 ////        $sqls[] = 'ALTER TABLE dizkus_topics CHANGE topic_last_post_id last_post_id INT DEFAULT NULL';
-////
 ////
 ////        foreach ($sqls as $sql) {
 ////            $stmt = $connection->prepare($sql);

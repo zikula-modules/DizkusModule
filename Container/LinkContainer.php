@@ -131,7 +131,6 @@ class LinkContainer implements LinkContainerInterface
                 'text'  => $this->translator->__('Import'),
                 'title' => $this->translator->__('Import data from previous versions'),
                 'icon'  => 'cloud-download', ];
-
         }
 
         return $links;
