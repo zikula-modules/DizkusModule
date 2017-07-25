@@ -1,0 +1,46 @@
+{{ adminHeader() }}
+<h3>
+    <span class="fa fa-wrench"></span>&nbsp;{{ __('Import')}}
+</h3>
+<div id="dizkus_admin">
+    {% if importHelper.isUpgrade() %}
+        <div id="upgrade_notice" class="alert alert-warning">
+            <div class="row">
+                <div class="col-md-12">
+                    <i class="close" data-dismiss="alert">×</i>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state. Click on Upgrade handler below and follow the procedure for')  }} {{ importHelper.isUpgrade() }} </strong>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>{{ __('Found Handlers')}}</strong>
+                </div>
+                <div class="list-group-item list-group-item-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ __('Handler name')}}
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    {% for name, importHandler in importHelper.getImportHandlers() %}
+                        <li class="list-group-item clearfix">
+                            {{ importHandler.renderListView(importHelper.isUpgrade())|raw }}
+                        </li>
+                    {% else %}
+                    {% endfor %}
+                </ul>
+
+            </div>                    
+        </div>
+    </div>
+
+</div>
+
+{{ adminFooter() }}
+

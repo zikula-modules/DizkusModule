@@ -1,9 +1,12 @@
 <?php
+
 /**
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @see https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
@@ -385,6 +388,16 @@ class TopicEntity extends EntityAccess
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    public function setViewCount($viewCount)
+    {
+        $this->viewCount = $viewCount;
+    }
+
+    public function setPosts($posts)
+    {
+        $this->posts = $posts;
     }
 
     /**

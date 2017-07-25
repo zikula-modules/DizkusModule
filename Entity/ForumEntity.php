@@ -182,6 +182,14 @@ class ForumEntity extends EntityAccess
         $this->children = new ArrayCollection();
     }
 
+    // need this for import
+    public function setId($id)
+    {
+        $this->forum_id = $id;
+
+        return $this;
+    }
+
     public function getId()
     {
         return $this->forum_id;
@@ -300,6 +308,41 @@ class ForumEntity extends EntityAccess
     public function getRoot()
     {
         return $this->root;
+    }
+
+    public function setRoot($root)
+    {
+        $this->root = $root;
+
+        return $this;
+    }
+
+    public function setLft($lft)
+    {
+        $this->lft = $lft;
+
+        return $this;
+    }
+
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
+
+        return $this;
+    }
+
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+
+        return $this;
+    }
+
+    public function setTopics($topics)
+    {
+        $this->topics = $topics;
+
+        return $this;
     }
 
     public function getParents()
@@ -600,5 +643,35 @@ class ForumEntity extends EntityAccess
         $this->status = self::STATUS_UNLOCKED;
 
         return $this;
+    }
+
+    public function __toArray()
+    {
+        $children = [];
+        foreach ($this->children as $child) {
+            $children[] = $child->__toArray();
+        }
+
+        return ['id' => $this->getId(),
+                'parentid' => $this->getParent() === null ? 0 : $this->getParent()->getId(),
+                'lvl' => $this->getLvl(),
+                'lft' => $this->getLft(),
+                'rgt' => $this->getRgt(),
+                'root' => $this->getRoot(),
+                'name' => $this->getName(),
+                'description' => $this->getDescription(),
+                'children' => $children,
+                'last_post' => $this->getLast_post(),
+                'moduleref' => $this->getModuleref(),
+                'status' => $this->getStatus(),
+                'topicCount' => $this->getTopicCount(),
+                'postCount' => $this->getPostCount(),
+              //  'pop'
+        ];
+    }
+
+    public function __toString()
+    {
+        return $this->getId();
     }
 }
