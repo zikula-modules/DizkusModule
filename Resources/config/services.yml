@@ -20,8 +20,11 @@ parameters:
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
     zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
     zikula_dizkus_module.synchronization_helper.class: Zikula\DizkusModule\Helper\SynchronizationHelper
-    zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper
+    zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper    
+    # Import    
     zikula_dizkus_module.import_helper.class: Zikula\DizkusModule\Helper\ImportHelper
+    zikula_dizkus_module.import.database.class: Zikula\DizkusModule\ImportHandler\Database_ImportHandler
+    zikula_dizkus_module.import.upgrade_3.class: Zikula\DizkusModule\ImportHandler\Upgrade_3_ImportHandler
     # Managers
     zikula_dizkus_module.forum_user_manager.class: Zikula\DizkusModule\Manager\ForumUserManager
     zikula_dizkus_module.forum_manager.class: Zikula\DizkusModule\Manager\ForumManager
@@ -197,6 +200,8 @@ services:
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
          
+# Import 
+
     zikula_dizkus_module.import_helper:
         class: %zikula_dizkus_module.import_helper.class%
         tags:
@@ -204,6 +209,18 @@ services:
         arguments:
             - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
+            - "@zikula_extensions_module.api.variable"
+            
+    zikula_dizkus_module.import.abstract_service:
+        abstract: true
+        arguments: [@translator, @form.factory, "@doctrine.orm.entity_manager", @templating]
+
+    zikula_dizkus_module.import.upgrade_3:
+        parent: zikula_dizkus_module.import.abstract_service
+        class: %zikula_dizkus_module.import.upgrade_3.class%
+        tags:
+            - { name: 'zikula_dizkus_module.import' }       
+        
         
 # Managers
 

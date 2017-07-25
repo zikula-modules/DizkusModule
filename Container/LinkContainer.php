@@ -127,7 +127,7 @@ class LinkContainer implements LinkContainerInterface
                 'title' => $this->translator->__('Edit general forum-wide settings'),
                 'icon'  => 'wrench', ];
             $links[] = [
-                'url'   => $this->router->generate('zikuladizkusmodule_admin_import'),
+                'url'   => $this->router->generate('zikuladizkusmodule_import_import'),
                 'text'  => $this->translator->__('Import'),
                 'title' => $this->translator->__('Import data from previous versions'),
                 'icon'  => 'cloud-download', ];

@@ -133,6 +133,14 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
+     * for import purposes
+     * @param obj
+     */
+    public function setUserId($zuser = null)
+    {
+        $this->user = $zuser;
+    }
+    /**
      * Get user.
      *
      * @return
@@ -272,7 +280,7 @@ class ForumUserEntity extends EntityAccess
      *
      * @param RankEntity $rank
      */
-    public function setRank(RankEntity $rank)
+    public function setRank(RankEntity $rank = null)
     {
         $this->rank = $rank;
     }
@@ -402,5 +410,12 @@ class ForumUserEntity extends EntityAccess
     public function clearForumSubscriptions()
     {
         $this->forumSubscriptions->clear();
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getUserId()
+        ];
     }
 }

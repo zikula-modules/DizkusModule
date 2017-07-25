@@ -1,0 +1,115 @@
+<link href="{{ pageAddAsset('stylesheet', zasset('jstree/jstree-built.css'), 98)  }}" rel="stylesheet" type="text/css" />
+<div id="upgrade310container"  class="row">
+    <input type="hidden" id="upgrade3_enabled" value="{% if importHandler.versionSupported() %}1{% else %}0{% endif %}">
+    <div class="progress hide">
+        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            <span class="count small" style="position:absolute;z-index:2;right: 20px;"></span>
+            <span class="info small" style="position:absolute;z-index:2;left:20px;"></span>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <p>
+            <span class="badge">{{ importHandler.id }}</span>
+            <strong>{{ importHandler.title }}</strong>
+            <small>{{ importHandler.description }}</small>
+        </p>
+    </div>
+    {% if importHandler.versionSupported() %}
+        <div class="col-md-4">
+            <div id="tables_check">
+                <ul>
+                    <li data-jstree='{"icon":"fa fa-thumbs-o-up fa-green"}' class="jstree-open"> {{ __('Detected tables') }}
+                        <ul>
+                            {% for tablename, table in data.tables %}
+                                <li data-jstree='{"icon":"fa fa-check-circle fa-green"}'>{{ tablename }} {{ table.elements|length }}</li>
+                                {% else %}
+                                {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="tables_legend">
+                <small>{{ __('Only tables matching Dizkus versions 3 schema are considered valid. Data integrity is not checked at this point.') }}</small>
+            </p>
+            <p>{{ __('Logs')}}</p>
+            <div id="log" class="well well-sm pre-scrollable">
+
+                <samp id="logBox" style="white-space: pre;"></samp>
+            </div>
+            <div class="settings clearfix">
+                <p>{{  __('Import settings')}}</p>
+                <div class="col-xs-4">
+                    <small>{{  __('Users page')}}</small>
+                    <input id="users_limit" class="form-control input-sm" value="100" type="number">
+                </div>
+                <div class="col-xs-4">
+                    <small>{{  __('Topics page')}}</small>
+                    <input id="topics_limit" class="form-control input-sm" value="25" type="number">
+                </div>
+                <div class="col-xs-4">
+                    <small>{{  __('Posts page')}}</small>
+                    <input id="posts_limit" class="form-control input-sm" value="50" type="number">
+                </div>
+                <div class="col-xs-4">
+                    <small>{{  __('Other page')}}</small>
+                    <input id="other_limit" class="form-control input-sm" value="50" type="number">
+                </div>
+                <div class="col-xs-8">
+                    <small>{{  __('Ajax timeout')}}</small>
+                    <input id="ajax_timeout" class="form-control input-sm" value="8000" type="number">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="users_check">
+                <ul>
+                    <li data-jstree='{"icon":"fa fa-user-circle fa-blue"}' id="users_check_root" class="jstree-closed"> {{ __('Forum users') }}
+                    </li>
+                </ul>
+            </div>
+            <div id="users_legend">
+                <p class="buttons">
+                    <a href="#" id="find_users" class="btn btn-primary btn-xs" role="button">{{ __('Find users') }}</a>
+                    <a href="#" id="import_users" class="btn btn-default btn-xs disabled" role="button">{{ __('Import users') }}</a>
+                    <a href="#" id="remove_users" class="btn btn-danger btn-xs disabled hide" role="button">{{ __('Remove current forum users!') }}</a>
+                </p>
+                <small>{{ __('Users need to be imported first with ranks. Depend on users amount it might take a while. All unique ids are considered as users. User ids that do not exsts in zikula will be marked as deleted.') }}</small>
+            </div>
+            <div id="forum_tree">
+                <ul>
+                    <li data-jstree='{"icon":"fa fa-sitemap"}' aria-disabled="true" id="forum_tree_root" class="jstree-closed"> {{ __('Forum tree')}}
+                    </li>
+                </ul>
+            </div>
+            <div id="forum_legend">
+                <p class="buttons">
+                    <a href="#" id="recover_forum_tree" class="btn btn-default disabled btn-xs" role="button">{{ __('Load forum tree') }}</a>
+                    <a href="#" id="import_forum_tree" class="btn btn-default disabled btn-xs" role="button">{{ __('Import forum tree') }}</a>
+                    <a href="#" id="remove_forum_tree" class="btn btn-danger btn-xs disabled hide" role="button">{{ __('Remove current forum tree!') }}</a>
+                </p>
+                <small>{{ __('Forum tree recovered from previous version. This will be imported in second step. We will preserve forum id only if forum id is not equal to 1 (Index forum)') }}</small>
+            </div>
+
+            <div id="other_check">
+                <ul>
+                    <li data-jstree='{"icon":"fa fa-envelope fa-green"}' aria-disabled="true" id="other_tree_root" class="jstree-closed" > {{ __('Other') }}
+                    </li>
+                </ul>
+            </div>
+
+            <div id="other_legend">
+                <p class="buttons">
+                    <a href="#" id="recover_other" class="btn btn-default disabled btn-xs" role="button">{{ __('Recover additional data') }}</a>
+                    <a href="#" id="import_other" class="btn btn-default disabled btn-xs" role="button">{{ __('Import additional data') }}</a>
+                    <a href="#" id="remove_other" class="btn btn-danger btn-xs disabled hide" role="button">{{ __('Remove current additional data!') }}</a>
+                </p>
+                <small>{{ __('Additional data like subscriptions and moderators.') }}</small>
+            </div>
+        </div>
+
+
+    {% endif %}
+</div>
+{{ pageAddAsset('javascript', zasset('jstree/jstree-built.js'), 98)  }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Upgrade3.js')) }}

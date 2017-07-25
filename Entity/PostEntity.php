@@ -120,6 +120,21 @@ class PostEntity extends EntityAccess
         return $this->id;
     }
 
+    function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    function setPoster_ip($poster_ip)
+    {
+        $this->poster_ip = $poster_ip;
+    }
+
+    function setMsgid($msgid)
+    {
+        $this->msgid = $msgid;
+    }
+
     public function getPost_text()
     {
         return $this->post_text;

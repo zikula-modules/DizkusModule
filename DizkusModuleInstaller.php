@@ -205,8 +205,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         switch ($oldversion) {
             case '3.1':
             case '3.1.0':
-            case '4.0.0':
-
+            case '3.2.0' :
                 if (!$this->upgrade_settings()) {
                     return false;
                 }
@@ -218,7 +217,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'Dizkus'");
-//
+
                 if ($this->container->hasParameter('prefix') && !$this->container->getParameter('prefix') == '') {
                     $prefix = $this->container->getParameter('prefix');
                     // do a check here for tables containing the prefix and fail if existing tables cannot be found.
@@ -233,10 +232,12 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     }
                     $this->removeTablePrefixes($prefix);
                 }
-//
+
                 // mark tables for import
-                $this->markTablesForImport();
-//
+                $upgrade_mark = str_replace('.', '_', $oldversion) . '_';
+                $this->markTablesForImport($upgrade_mark);
+                // add upgrading info for later
+                $this->setVar('upgrading', $upgrade_mark);
                 //install module now
                 try {
                     $this->schemaTool->create($this->entities);
@@ -255,6 +256,11 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $this->entityManager->persist($forumRoot);
 
                 break;
+            case '4.0.0':
+
+
+
+                break;
             case '5.0.0': // no table import needed
 
                 break;
@@ -266,7 +272,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     /**
      * Mark tables for import with import_ prefix
      */
-    public function markTablesForImport($prefix = 'import_')
+    public function markTablesForImport($prefix)
     {
         $connection = $this->entityManager->getConnection();
         // remove table prefixes
