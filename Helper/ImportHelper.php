@@ -55,7 +55,6 @@ class ImportHelper
         $this->entityManager = $entityManager;
         $this->variableApi = $variableApi;
         $this->importHandlers = [];
-
     }
 
     public function getImportHandlers()
@@ -73,6 +72,7 @@ class ImportHelper
         if (!isset($this->importHandlers[$id])) {
             throw new \InvalidArgumentException('Id does not exist!');
         }
+
         return $this->importHandlers[$id];
     }
 

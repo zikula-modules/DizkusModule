@@ -186,6 +186,7 @@ class ForumEntity extends EntityAccess
     public function setId($id)
     {
         $this->forum_id = $id;
+
         return $this;
     }
 
@@ -309,37 +310,38 @@ class ForumEntity extends EntityAccess
         return $this->root;
     }
 
-    function setRoot($root)
+    public function setRoot($root)
     {
         $this->root = $root;
 
         return $this;
     }
 
-        function setLft($lft)
+    public function setLft($lft)
     {
         $this->lft = $lft;
 
         return $this;
     }
 
-    function setLvl($lvl)
+    public function setLvl($lvl)
     {
         $this->lvl = $lvl;
 
         return $this;
     }
 
-    function setRgt($rgt)
+    public function setRgt($rgt)
     {
         $this->rgt = $rgt;
 
         return $this;
     }
 
-    function setTopics($topics)
+    public function setTopics($topics)
     {
         $this->topics = $topics;
+        
         return $this;
     }
 
@@ -646,8 +648,7 @@ class ForumEntity extends EntityAccess
     public function __toArray()
     {
         $children = [];
-        //dump($this->children);
-        foreach ($this->children as $child){
+        foreach ($this->children as $child) {
             $children[] = $child->__toArray();
         }
 

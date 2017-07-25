@@ -60,7 +60,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     public function getSettingsForm()
     {
         $form = 'Zikula\\DizkusModule\\Form\\Import\\' . $this->getType() . 'Type';
-        return $form;//new $form($this->translator);
+
+        return $form;
     }
 
     /**
@@ -70,13 +71,13 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
     {
         $type = get_class($this);
         $type = substr($type, strrpos($type, '\\') + 1, -strlen('_ImportHandler'));
+
         return $type;
     }
 
     public function removeContent($source)
     {
-
-        switch ($source){
+        switch ($source) {
             case 'users':
 
             $data = 'done users';

@@ -12,7 +12,6 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +42,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['ranks']['source'] = 'ranks';
         $ranksIcon = 'fa-orange';
         if (count($data['source']['ranks']['toImport']) > 0) {
-                $ranksText = $this->__('Ranks 3.1.0 to import found: ')
+            $ranksText = $this->__('Ranks to import found: ')
                     . count($data['source']['ranks']['toImport'])
                     . $this->__(' Need to be imported first');
         } else {
@@ -81,7 +80,7 @@ class Upgrade3Controller extends AbstractController
         $oldNode = [
             'id' => 'old',
             'parent' => 'users_check_root',
-            'text' => $this->__('Users 3.1.0 found: ')
+            'text' => $this->__('Users found: ')
                . count($data['source']['users']['old']['found'])
                . $this->__(' Users to import: ') . count($data['source']['users']['old']['toImport'])
                . $this->__(''),
@@ -106,16 +105,14 @@ class Upgrade3Controller extends AbstractController
         $toImportNode = [
             'id' => 'total',
             'parent' => 'users_check_root',
-            'text' =>
-                $this->__('Total to import: ')
+            'text' => $this->__('Total to import: ')
                 . (count($data['source']['users']['total']) - count($data['source']['users']['current'])),
             'icon' => 'fa fa-cogs fa-blue'
             ];
         $dizkusNode = [
             'id' => 'current',
             'parent' => 'users_check_root',
-            'text' =>
-                $this->__('Current dizkus users: ')
+            'text' => $this->__('Current dizkus users: ')
                 . count($data['source']['users']['current']),
             'icon' => 'fa fa-users fa-green'
             ];
@@ -232,11 +229,11 @@ class Upgrade3Controller extends AbstractController
         $tree = $importHelper->getForumTree();
         $data['tree'] = $tree[0]->__toArray();
         if (!array_key_exists('total', $data)) {
-                $data['total']['current'] = $importHelper->getCurrentForumsCount();
-                $data['total']['forums'] = $importHelper->getOldCategoriesCount() + $importHelper->getOldForumsCount();
-                $data['total']['topics'] = (int) $importHelper->getOldTopicsCount();
-                $data['total']['posts'] = (int) $importHelper->getOldPostsCount();
-                $data['total']['done'] = 1;
+            $data['total']['current'] = $importHelper->getCurrentForumsCount();
+            $data['total']['forums'] = $importHelper->getOldCategoriesCount() + $importHelper->getOldForumsCount();
+            $data['total']['topics'] = (int) $importHelper->getOldTopicsCount();
+            $data['total']['posts'] = (int) $importHelper->getOldPostsCount();
+            $data['total']['done'] = 1;
         }
 
         return new Response(json_encode($data));
@@ -289,8 +286,6 @@ class Upgrade3Controller extends AbstractController
         return new Response(json_encode($data));
     }
 
-
-
    /**
      * @Route("/other/status", options={"expose"=true})
      * @Theme("admin")
@@ -310,7 +305,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['favorites']['source'] = 'favorites';
         $favoritesIcon = 'fa-orange';
         if (count($data['source']['favorites']['toImport']) > 0) {
-                $favoritesText = $this->__('Favorites to import found: ')
+            $favoritesText = $this->__('Favorites to import found: ')
                     . count($data['source']['favorites']['toImport']);
         } else {
             $favoritesIcon = 'fa-green';
@@ -331,7 +326,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['moderators_users']['source'] = 'moderators_users';
         $moderatorsUsersIcon = 'fa-orange';
         if (count($data['source']['moderators_users']['toImport']) > 0) {
-                $moderatorsUsersText = $this->__('Moderator users to import found: ')
+            $moderatorsUsersText = $this->__('Moderator users to import found: ')
                     . count($data['source']['moderators_users']['toImport']);
         } else {
             $moderatorsUsersIcon = 'fa-green';
@@ -352,7 +347,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['moderators_groups']['source'] = 'moderators_groups';
         $moderatorsGroupsIcon = 'fa-orange';
         if (count($data['source']['moderators_groups']['toImport']) > 0) {
-                $moderatorsGroupsText = $this->__('Moderator groups to import found: ')
+            $moderatorsGroupsText = $this->__('Moderator groups to import found: ')
                     . count($data['source']['moderators_groups']['toImport']);
         } else {
             $moderatorsGroupsIcon = 'fa-green';
@@ -373,7 +368,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['forum_subscriptions']['source'] = 'forum_subscriptions';
         $FSIcon = 'fa-orange';
         if (count($data['source']['forum_subscriptions']['toImport']) > 0) {
-                $FSText = $this->__('Forum subscriptions to import found: ')
+            $FSText = $this->__('Forum subscriptions to import found: ')
                     . count($data['source']['forum_subscriptions']['toImport']);
         } else {
             $FSIcon = 'fa-green';
@@ -394,7 +389,7 @@ class Upgrade3Controller extends AbstractController
         $data['source']['topic_subscriptions']['source'] = 'topic_subscriptions';
         $TSIcon = 'fa-orange';
         if (count($data['source']['topic_subscriptions']['toImport']) > 0) {
-                $TSText = $this->__('Topic subscriptions to import found: ')
+            $TSText = $this->__('Topic subscriptions to import found: ')
                     . count($data['source']['topic_subscriptions']['toImport']);
         } else {
             $TSIcon = 'fa-green';
@@ -487,5 +482,4 @@ class Upgrade3Controller extends AbstractController
 
         return new Response(json_encode($importHelper->removeContent($data)));
     }
-
 }

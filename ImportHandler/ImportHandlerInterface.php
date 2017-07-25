@@ -25,18 +25,21 @@ interface ImportHandlerInterface
      * @return string
      */
     public function getId();
+
     /**
      * The title
      *
      * @return string
      */
     public function getTitle();
+
     /**
      * The description
      *
      * @return string
      */
     public function getDescription();
+    
     /**
      * The status
      *

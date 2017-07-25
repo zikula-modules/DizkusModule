@@ -26,6 +26,5 @@ class Database_ImportHandler extends AbstractImportHandler
 
     public function getStatus()
     {
-
     }
 }

@@ -390,17 +390,17 @@ class TopicEntity extends EntityAccess
         return $this->posts;
     }
 
-    function setViewCount($viewCount)
+    public function setViewCount($viewCount)
     {
         $this->viewCount = $viewCount;
     }
 
-    function setPosts($posts)
+    public function setPosts($posts)
     {
         $this->posts = $posts;
     }
 
-        /**
+    /**
      * remove all posts
      */
     public function unsetPosts()

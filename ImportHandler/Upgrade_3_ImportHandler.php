@@ -158,10 +158,10 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         foreach ($old['found'] as $ouser) {
             $sameIdTest = function($key, $element) use ($ouser) {
                     return $element->getUserId() == $ouser['user_id'];
-                };
+            };
             if (!$usersCollection->exists($sameIdTest)) {
                 $u = $this->getForumUserFromTableRow($ouser);
-                if($u){
+                if ($u) {
                     $usersCollection->add($u);
                     $old['toImport']->add($u);
                 }
@@ -241,7 +241,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
     private function getForumUserFromTableRow($user)
     {
-        if(!array_key_exists('user_id', $user)){
+        if (!array_key_exists('user_id', $user)) {
             return false;
         }
 
@@ -263,7 +263,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         if (array_key_exists('user_rank', $user) && $user['user_rank'] != null) {
             $rank = $this->em->find('Zikula\DizkusModule\Entity\RankEntity', $user['user_rank']);
-            if ($rank ) {
+            if ($rank) {
                 $newUser->setRank($rank);
             } else {
                 $newUser->setRank(null);
@@ -286,7 +286,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $done = [];
         foreach ($elements as $forumUser) {
             $forumUserObj = is_object($forumUser) ? $forumUser : $this->getForumUserFromTableRow($forumUser);
-            if($forumUserObj) {
+            if ($forumUserObj) {
                 $metadata = $this->em->getClassMetadata(get_class($forumUserObj));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -411,7 +411,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         return $statement->fetchColumn();
     }
 
-    public function getOldCategories() {
+    public function getOldCategories()
+    {
         $connection = $this->em->getConnection();
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_categories ORDER BY cat_order ASC';
         $categories = $connection->fetchAll($sql);
@@ -448,7 +449,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
         if ($id == 1) {
             $id = $this->getForumsMaxId() + 5 . '_' . 1;
-        } else if ($id === null) {
+        } elseif ($id === null) {
 
             return false;
         }
@@ -478,7 +479,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     private function explodeForumId($mixedId)
     {
         $result = ['current' => false, 'old'=> false];
-        $ids = explode('_',$mixedId);
+        $ids = explode('_', $mixedId);
         if (count($ids) > 1) {
             $result['current'] = $ids[0];
             $result['old'] = $ids[1];
@@ -545,7 +546,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setParent($root);
         $forumObj->setRoot(1);
 
-        if($forumObj) {
+        if ($forumObj) {
             $metadata = $this->em->getClassMetadata(get_class($forumObj));
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -575,7 +576,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         //$root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
         $forumObj->setRoot(1);
         //save forum object
-        if($forumObj) {
+        if ($forumObj) {
             $metadata = $this->em->getClassMetadata(get_class($forumObj));
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -599,7 +600,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $data['topics'] = $this->getTopics($data);
         foreach ($data['topics'] as $topic) {
-            if($topic) {
+            if ($topic) {
                 $metadata = $this->em->getClassMetadata(get_class($topic));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -667,7 +668,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
             //new limit
             $overPage = $data['topic_index'] % $limit;
             $limit = $limit - $overPage;
-            if($overPage == 0){
+            if ($overPage == 0){
             }
         }
 
@@ -717,7 +718,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $posts = $this->getPosts($data);
         foreach ($posts as $post) {
-            if($post) {
+            if ($post) {
                 $metadata = $this->em->getClassMetadata(get_class($post));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
@@ -776,7 +777,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         return $postsCollection;
-
     }
 
     public function getPost($post)
@@ -818,7 +818,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-//            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
+            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
 //            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
 //            if (!$forum || !$user) {
 //                $found[] = $itm;
@@ -882,7 +882,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-//            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
+            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
 //            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
 //            if (!$forum || !$user) {
 //                $found[] = $itm;
@@ -944,7 +944,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-//            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
+            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
 //            $gid = $itm['user_id'] - 1000000;
 //            $group = $this->em->find('Zikula\GroupsModule\Entity\GroupEntity', $gid);
 //            if (!$forum || !$group) {
@@ -1012,7 +1012,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-//            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
+            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
 //            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
 //            if (!$forum || !$user) {
 //                $found[] = $itm;
@@ -1076,7 +1076,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-//            $topic = $this->em->find('Zikula\DizkusModule\Entity\TopicEntity', $itm['topic_id']);
+            //            $topic = $this->em->find('Zikula\DizkusModule\Entity\TopicEntity', $itm['topic_id']);
 //            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
 //            if (!$topic || !$user) {
 //                $found[] = $itm;
@@ -1285,7 +1285,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         return false;
     }
-
 }
 
 ////

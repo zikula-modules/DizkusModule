@@ -205,7 +205,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         switch ($oldversion) {
             case '3.1':
             case '3.1.0':
-            case '3.2.0' :
+            case '3.2.0':
                 if (!$this->upgrade_settings()) {
                     return false;
                 }
@@ -257,8 +257,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 break;
             case '4.0.0':
-
-
 
                 break;
             case '5.0.0': // no table import needed
