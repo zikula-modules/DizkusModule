@@ -156,7 +156,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $old['found'] = $this->getOldUsers();
 
         foreach ($old['found'] as $ouser) {
-            $sameIdTest = function($key, $element) use ($ouser) {
+            $sameIdTest = function ($key, $element) use ($ouser) {
                 return $element->getUserId() == $ouser['user_id'];
             };
             if (!$usersCollection->exists($sameIdTest)) {
