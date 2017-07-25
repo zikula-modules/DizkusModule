@@ -2,6 +2,25 @@
 ---------------------------------------------------------------------------------------------
 Dizkus Module changelog
 ---------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
+4.1 (fs,cv)
+---------------------------------------------------------------------------------------------
+
+This version will not work in Zikula before 1.4.1+, preferred version 1.4.6 or later
+Minimum PHP version 5.5
+
++ Add Dizkus version 3 import handler.
++ Add import facility with custom import handlers.
++ Refactor to Doctrine 2, Twig, Symfony Forms includes/
+
+---------------------------------------------------------------------------------------------
+4.0 (fs,cv)
+---------------------------------------------------------------------------------------------
+
+This version will not work in Zikula before 1.4.1+, preferred version 1.4.5 or later
+Minimum PHP version 5.4.0!
+
++ Dizkus was refactored for Zikula Core 1.4.x
 
 ---------------------------------------------------------------------------------------------
 3.1 (fs,cv)
