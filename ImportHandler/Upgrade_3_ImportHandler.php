@@ -157,7 +157,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         foreach ($old['found'] as $ouser) {
             $sameIdTest = function($key, $element) use ($ouser) {
-                    return $element->getUserId() == $ouser['user_id'];
+                return $element->getUserId() == $ouser['user_id'];
             };
             if (!$usersCollection->exists($sameIdTest)) {
                 $u = $this->getForumUserFromTableRow($ouser);
@@ -450,7 +450,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         if ($id == 1) {
             $id = $this->getForumsMaxId() + 5 . '_' . 1;
         } elseif ($id === null) {
-
             return false;
         }
 
@@ -474,7 +473,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         return $newForum;
     }
-
 
     private function explodeForumId($mixedId)
     {
@@ -668,7 +666,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
             //new limit
             $overPage = $data['topic_index'] % $limit;
             $limit = $limit - $overPage;
-            if ($overPage == 0){
+            if ($overPage == 0) {
             }
         }
 
@@ -699,7 +697,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
         $newTopic->setPoster($poster);
         $postsCount = (int) $this->getPostsCount($topic['topic_id']);
-        $newTopic->setReplyCount($postsCount);// -1
+        $newTopic->setReplyCount($postsCount); // -1
         $topicTime = new \DateTime($topic['topic_time']);
         $newTopic->setTopic_time($topicTime);
         $newTopic->setViewCount($topic['topic_views']);

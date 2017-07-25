@@ -140,7 +140,7 @@ class ForumUserEntity extends EntityAccess
     {
         $this->user = $zuser;
     }
-    
+
     /**
      * Get user.
      *

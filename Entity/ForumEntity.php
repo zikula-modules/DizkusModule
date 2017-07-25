@@ -341,7 +341,7 @@ class ForumEntity extends EntityAccess
     public function setTopics($topics)
     {
         $this->topics = $topics;
-        
+
         return $this;
     }
 

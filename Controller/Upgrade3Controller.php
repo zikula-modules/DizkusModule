@@ -286,7 +286,7 @@ class Upgrade3Controller extends AbstractController
         return new Response(json_encode($data));
     }
 
-   /**
+    /**
      * @Route("/other/status", options={"expose"=true})
      * @Theme("admin")
      * @return Response

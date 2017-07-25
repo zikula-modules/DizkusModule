@@ -39,7 +39,7 @@ interface ImportHandlerInterface
      * @return string
      */
     public function getDescription();
-    
+
     /**
      * The status
      *
