@@ -257,7 +257,20 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 break;
             case '4.0.0':
-                
+
+                if (!$this->upgrade_settings()) {
+                    return false;
+                }
+                // reinstall hooks
+                $connection = $this->entityManager->getConnection();
+                $dbName = $this->container->getParameter('database_name');
+                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
+
+                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
         }
@@ -376,25 +389,28 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
      */
     private function upgrade_settings()
     {
-        //@todo solve settings upgrade
-        //$currentModVars = $this->getVars();
-        $this->setVars($this->getDefaultVars());
+        $currentModVars = $this->getVars();
+        $defVars = $this->getDefaultVars();
 
-//        $this->setVar('log_ip', $currentModVars['log_ip'] === 'yes' ? true : false);
-//        $this->setVar('extendedsearch', $currentModVars['extendedsearch'] === 'yes' ? true : false);
-//        $this->setVar('m2f_enabled', $currentModVars['m2f_enabled'] === 'yes' ? true : false);
-//        $this->setVar('favorites_enabled', $currentModVars['favorites_enabled'] === 'yes' ? true : false);
-//        $this->setVar('removesignature', $currentModVars['removesignature'] === 'yes' ? true : false);
-//        $this->setVar('striptags', $currentModVars['striptags'] === 'yes' ? true : false);
-//        $this->setVar('rss2f_enabled', $currentModVars['rss2f_enabled'] === 'yes' ? true : false);
-//        $this->setVar('forum_enabled', $currentModVars['forum_enabled'] === 'yes' ? true : false);
-//        $this->setVar('signaturemanagement', $currentModVars['signaturemanagement'] === 'yes' ? true : false);
-//        $this->setVar('showtextinsearchresults', $currentModVars['showtextinsearchresults'] === 'yes' ? true : false);
-//        $this->setVar('fulltextindex', $currentModVars['fulltextindex'] == 'yes' ? true : false); // disable until technology catches up with InnoDB
+        foreach ($defVars as $key => $defVar) {
+            if (array_key_exists($key, $currentModVars)){
+                $type = gettype($defVar);
+                switch ($type) {
+                    case 'boolean':
+                        if (in_array($currentModVars[$key], ['yes', 'no'])) {
+                            $var = $currentModVars[$key] == 'yes' ? true : false;
+                        } else {
+                            $var = (boolval($currentModVars[$key]));
+                        }
 
-//        $this->setVar('onlineusers_moderatorcheck', false);
-//        $this->setVar('forum_subscriptions_enabled', false);
-//        $this->setVar('topic_subscriptions_enabled', false);
+                        break;
+                    default :
+                        $var = $defVar;
+                        break;
+                }
+            }
+            $this->setVar($key, $var);
+        }
 
         return true;
     }
