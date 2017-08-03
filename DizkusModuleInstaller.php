@@ -273,6 +273,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
+            case '4.1.0':
+                // nothing to do now
+                break;
         }
 
         return true;
