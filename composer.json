@@ -1,6 +1,6 @@
 {
     "name": "zikula/dizkus-module",
-    "version": "4.1.0",
+    "version": "5.0.0",
     "description": "An integrated discussion forum for Zikula",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
@@ -24,7 +24,7 @@
     "extra": {
         "zikula": {
             "class": "Zikula\\DizkusModule\\ZikulaDizkusModule",
-            "core-compatibility": ">=1.4.1",
+            "core-compatibility": ">=1.5.0",
             "displayname": "Dizkus forums",
             "url": "forums",
             "oldnames": [],
