@@ -257,9 +257,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 break;
             case '4.0.0':
-
-                break;
-            case '5.0.0': // no table import needed
+                
 
                 break;
         }
