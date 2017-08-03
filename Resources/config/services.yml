@@ -213,14 +213,17 @@ services:
             
     zikula_dizkus_module.import.abstract_service:
         abstract: true
-        arguments: [@translator, @form.factory, "@doctrine.orm.entity_manager", @templating]
+        arguments:
+            - "@translator"
+            - "@form.factory"
+            - "@doctrine.orm.entity_manager"
+            - "@templating"
 
     zikula_dizkus_module.import.upgrade_3:
         parent: zikula_dizkus_module.import.abstract_service
         class: %zikula_dizkus_module.import.upgrade_3.class%
         tags:
             - { name: 'zikula_dizkus_module.import' }       
-        
         
 # Managers
 
