@@ -30,6 +30,7 @@ parameters:
     zikula_dizkus_module.forum_manager.class: Zikula\DizkusModule\Manager\ForumManager
     zikula_dizkus_module.topic_manager.class: Zikula\DizkusModule\Manager\TopicManager
     zikula_dizkus_module.post_manager.class: Zikula\DizkusModule\Manager\PostManager
+    zikula_dizkus_module.settings_manager.class: Zikula\DizkusModule\Manager\SettingsManager
     # Hooks
     
 
@@ -293,6 +294,25 @@ services:
             - "@zikula_dizkus_module.topic_manager"
             - "@zikula_dizkus_module.synchronization_helper"
 
+    zikula_dizkus_module.settings_manager:
+        class: %zikula_dizkus_module.settings_manager.class%
+        shared: false
+        tags:
+            - { name: zikula.dizkus.settings_manager }
+        arguments: 
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@doctrine.orm.default_entity_manager"
+            - "@zikula_users_module.current_user"
+            - "@zikula_dizkus_module.security"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_dizkus_module.forum_user_manager"
+            - "@zikula_dizkus_module.forum_manager"
+            - "@zikula_dizkus_module.topic_manager"
+            - "@zikula_dizkus_module.synchronization_helper"
+            - "@hook_dispatcher"
+
 # Hooks
 
     zikula_dizkus_module.hook_handler.base:
@@ -302,9 +322,9 @@ services:
             - "@request_stack"
             - "@templating"
             - "@zikula_dizkus_module.security"
+            - "@zikula_extensions_module.api.variable"
             - "@translator"
                        
-            
     zikula_dizkus_module.hook_handler.bbcode:
       class: Zikula\DizkusModule\HookHandler\BbcodeHookHandler
       parent: zikula_dizkus_module.hook_handler.base
@@ -313,3 +333,11 @@ services:
         class: Zikula\DizkusModule\HookHandler\BbcodeFilterHookHandler
         arguments:
             - "@zikula_extensions_module.api.variable"
+            
+    zikula_dizkus_module.hook_handler.topic:
+      class: Zikula\DizkusModule\HookHandler\TopicHookHandler
+      parent: zikula_dizkus_module.hook_handler.base
+      calls:
+        - [setForumUserService, [@zikula_dizkus_module.forum_user_manager]]
+        - [setForumService, [@zikula_dizkus_module.forum_manager]]
+        - [setTopicService, [@zikula_dizkus_module.topic_manager]]

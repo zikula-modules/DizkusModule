@@ -1,6 +1,6 @@
 {{ adminHeader() }}
 <h3>
-    <span class="fa fa-comments"></span>&nbsp;{{ __f('Dizkus settings for %s', {'%s': activeModule.metaData.displayname }) }}
+    <span class="fa fa-comments"></span>&nbsp;{{ __f('Dizkus hook settings for %s', {'%s': activeModule.metaData.displayname }) }}
 </h3>
 <div id="dizkus_admin">
 
@@ -30,10 +30,10 @@
                 </fieldset>
             {% endfor %}
             <div class="col-md-offset-3 col-md-9">
-                <a class="btn btn-default" href="{{ path(activeModule.metaData.capabilities.admin.route) }}" title="{{ __("Cancel") }}">{{ __("Cancel") }}</a>
+                <a class="btn btn-default" href="{{ path(activeModule.metaData.capabilities.admin.route) }}" title="{{ __f('Back to %s', {'%s': activeModule.metaData.displayname }) }} ">{{ __f('Back to %s', {'%s': activeModule.metaData.displayname }) }}</a>
                 <input class="btn btn-success" type="submit" name="save" value="{{ __("Save") }}" />
             </div>
         </div>
     </form>    
-</div>   
+</div>
 {{ adminFooter() }}

@@ -1,0 +1,152 @@
+{% block _zikula_dizkus_module_admin_settings_form_hooks_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            <div class="col-md-6">
+                {{ form_widget(child) }}
+            </div>
+        {% endfor %}
+        {#        {{ dump() }}#}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_widget %}
+    {% spaceless %}
+        <fieldset>
+            <legend>{{ value.title }}</legend>
+            {#            {% for child in form %}
+                            {{ form_widget(child) }}
+                        {% endfor %}#}
+            {{ form_widget(form) }}
+        </fieldset>
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_entry_widget %}
+    {% spaceless %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ __('Areas connected')  }}
+                {{ value|length }}
+                <a class="pull-right" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <i class="fa fa-cog"> </i>
+                </a>
+            </div>
+            <div class="panel-body collapse" id="collapseExample">
+                {% for child in form %}
+                    {{ form_widget(child) }}
+                {% endfor %}
+            </div>
+        </div>
+
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_entry_entry_widget %}
+    {% spaceless %}
+        {{ value.data.sowner }}
+        {#        {{ value.data.powner }}#}
+        {#        {% for child in form %}#}
+        {{ form_widget(form) }}
+        {#        {% endfor %}#}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{#{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_widget %}
+    {% spaceless %}
+        333   {{ form_widget(form) }}
+    {% endspaceless %}
+{% endblock %}
+#}
+{#
+            {% for provider in value.0.providers %}
+                <fieldset>
+                    <legend>{{ provider.area.title }}</legend>
+                    {% for name, hookedModule in provider.hooked %}
+                        <div class="list-group-item list-group-item-info">
+                            <h4 class="panel-title">
+                                {{ name }} <span class="label label-default pull-right">{{ __('hooked areas:') }} {{ hookedModule|length }}</span>
+                            </h4>
+                        </div>
+                        {% for hookedModuleArea in hookedModule %}
+                            <div class="list-group-item">
+                                <span class="pull-right">
+                                    <a class="btn btn-xs" data-placement="left" data-popover-content="#area_{{ hookedModuleArea.sareaid }}" data-toggle="popover" data-trigger="click" href="#" tabindex="0"><i class="fa fa-cog"></i></a>
+                                </span>
+                                <!-- Content for Popover #1 -->
+                                <div class="hidden" id="area_{{ hookedModuleArea.sareaid }}">
+                                    <div class="popover-heading">
+                                        {{ __('Options') }}
+                                    </div>
+
+                                    <div class="popover-body">
+                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
+                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
+                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
+
+                                    </div>
+                                </div>
+
+                                <span class="label label-primary"> {{ __('id') }} {{ hookedModuleArea.sareaid }}
+                                    {{ hookedModuleArea.sarea.areaname }}
+                                </span>
+                                {% if  hookedModuleArea.settings.forum is defined %}
+                                    <span class="label label-success">{{ __(' forum') }}: {{ hookedModuleArea.settings.forum }}</span>
+                                {% else %}
+                                    <span class="label label-warning">{{ __(' No forum selected!') }}</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {{ __("This provider is not used.")}}
+                    {% endfor %}
+                </fieldset>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-6">
+            {% for subscriber in value.0.subscribers %}
+                <fieldset>
+                    <legend>{{ subscriber.area.title }}</legend>
+                    {% for name, hookedModule in subscriber.hooked %}
+                        <div class="list-group-item list-group-item-info">
+                            <h4 class="panel-title">
+                                {{ name }} <span class="label label-default pull-right">{{ __('hooked areas:') }} {{ hookedModule|length }}</span>
+                            </h4>
+                        </div>
+                        {% for hookedModuleArea in hookedModule %}
+                            <div class="list-group-item">
+                                <span class="pull-right">
+                                    <a class="btn btn-xs" href="#" role="button"><i class="fa fa-cog"></i></a>
+                                </span>
+                                <span class="label label-primary"> {{ __('id') }} {{ hookedModuleArea.pareaid }}
+                                    {{ hookedModuleArea.parea.areaname }}
+                                </span>
+                                {% if  hookedModuleArea.settings.forum is defined %}
+                                    <span class="label label-success">{{ __(' forum') }}: {{ hookedModuleArea.settings.forum }}</span>
+                                {% else %}
+                                    <span class="label label-warning">{{ __(' No forum selected!') }}</span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {{ __("This subscriber is not used.")}}
+                    {% endfor %}
+                </fieldset>
+            {% endfor %}
+        </div>#}

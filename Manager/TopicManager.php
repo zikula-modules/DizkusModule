@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\Bundle\HookBundle\Hook\Hook;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\DizkusModule\Entity\PostEntity;
@@ -151,7 +152,7 @@ class TopicManager
      *
      * @return TopicManager
      */
-    public function getManager($id = null, TopicEntity $topic = null)
+    public function getManager($id = null, TopicEntity $topic = null, $create = true)
     {
         if (isset($topic)) {
             // topic has been injected
@@ -162,7 +163,29 @@ class TopicManager
             if ($this->exists()) {
                 $this->managedForum = $this->forumManagerService->getManager(null, $this->_topic->getForum());
             }
-        } else {
+        } elseif ($create) {
+            // create new topic
+            $this->_topic = new TopicEntity();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Start managing by hook
+     *
+     * @param integer $id
+     * @param TopicEntity $topic
+     *
+     * @return TopicManager
+     */
+    public function getHookedTopicManager(Hook $hook, $create = true)
+    {
+        $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+        if ($topic) {
+            // topic has been injected
+            $this->_topic = $topic;
+        } elseif ($create) {
             // create new topic
             $this->_topic = new TopicEntity();
         }

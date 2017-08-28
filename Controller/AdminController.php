@@ -92,13 +92,8 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $adminsGroup = $this->getDoctrine()->getManager()->getRepository('Zikula\GroupsModule\Entity\GroupEntity')->find(2);
-        $admins = ['-1' => $this->__('disabled')];
-        foreach ($adminsGroup['users'] as $admin) {
-            $admins[$admin->getUid()] = $admin->getUname();
-        }
-
-        $form = $this->createForm(new DizkusSettingsType(), $this->getVars(), ['admins' => $admins]);
+        $settingsManager = $this->get('zikula_dizkus_module.settings_manager');
+        $form = $this->createForm(new DizkusSettingsType(), $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
@@ -113,6 +108,7 @@ class AdminController extends AbstractController
 
             return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
         }
+
 
         return $this->render('@ZikulaDizkusModule/Admin/settings.html.twig', [
             'form' => $form->createView(),

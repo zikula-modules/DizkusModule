@@ -1,55 +1,98 @@
-{# 
-
-
-<div id="dizkus">
-
-    <input id="topic_id" name="topic" type="hidden" value="{$topic.topic_id}">
-    {if $modvars.ZikulaDizkusModule.ajax}
-        {* JS files not loaded via header like other templates *}
-        {pageaddvar name='javascript' value='jQuery'}
-        {pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
-        {pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
-    {/if}
-    {*pageaddvar name="jsgettext" value="module_dizkus_js:ZikulaDizkusModule"*}
-
-    {userloggedin assign='userloggedin'}
-
-    <h2>{gt text="%s Comment" plural="%s Comments" tag1=$pager.numitems-1 count=$pager.numitems-1}</h2>
-
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start'}
-
-    <div id="dzk_postinglist">
-        <ul class="post_list">
-            {counter start=0 print=false assign='post_counter'}
-            {foreach key='num' item='post' from=$posts}
-                {if !$post.isFirstPost}
-                    {counter}
-                    <li class="post_{$post.post_id}">
-                        {include file='User/post/single.tpl'}
-                    </li>
-                {/if}
-            {/foreach}
-            <li id="quickreplyposting" class="hidden">&nbsp;</li>
-            <li id="quickreplypreview" class="hidden">&nbsp;</li>
-        </ul>
-    </div>
-
-    {pager rowcount=$pager.numitems limit=$pager.itemsperpage|default:15 posvar='start'}
-
-    {if ($permissions.comment eq true)}
-        {include file='User/topic/quickreply.tpl'}
-    {/if}
-
-    {include file='User/moderatedBy.tpl' forum=$topic.forum}
-
-    {include file='User/topic/translations.tpl'}
-
-</div>
-
-
-
-
-
+{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:css/style.css')) }}
+{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:css/comments.css')) }}
+{#
+{if $modvars.ZikulaDizkusModule.ajax}
+    {* JS files not loaded via header like other templates *}
+    {pageaddvar name='javascript' value='jQuery'}
+    {pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.User.ViewTopic.js'}
+    {pageaddvar name='javascript' value='@ZikulaDizkusModule/Resources/public/js/Zikula.Dizkus.Tools.js'}
+{/if}
+{*pageaddvar name="jsgettext" value="module_dizkus_js:ZikulaDizkusModule"*}
 #}
+<div id="dizkus">
+    {% if not currentForum %}
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>{{ __('Comments') }}</h3>
+            </div>
+        </div>
+        {# Forum is not chosen #}
+        {% if hasPermission('ZikulaDizkusModule', '::', 'ACCESS_ADMIN') %}
+            <div class="alert alert-warning" role="alert">
+                <i class="fa fa-exclamation-triangle"></i> <strong>{{ __('Comments are disabled!') }}</strong>
+                {{ __('Please update settings for this module in Administration - Dizkus - Hook Settings.') }}
+            </div>
+        {% endif %}
+    {% else %}
+        {% if currentTopic.exists() %}
+            {# Topic is created #}
+            <input id="topic_id" name="topic" type="hidden" value="{{ currentTopic.id }}">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>{{ _fn('%s Comment', '%s Comments', currentTopic.postsCount-1,  {'%s': currentTopic.postsCount-1}) }}</h3>
+                </div>
+            </div>
+            {{ pager({rowcount:currentTopic.postsCount,
+                        limit:settings.posts_per_page,
+                        class:'',
+                        posvar:'start',
+                        route:'zikuladizkusmodule_topic_viewtopic',
+                        template:'@ZikulaDizkusModule/Topic/topic.posts.pager.html.twig'}) }}
 
-{{ dump() }}
+            {% for post in currentTopic.posts %}
+                {% if not loop.first %}
+                    {{ include("@ZikulaDizkusModule/Post/single.comment.html.twig") }}
+                {% endif %}
+            {% endfor %}
+
+            {{ pager({rowcount:currentTopic.postsCount,
+                        limit:settings.posts_per_page,
+                        class:'',
+                        posvar:'start',
+                        route:'zikuladizkusmodule_topic_viewtopic',
+                        template:'@ZikulaDizkusModule/Topic/topic.posts.pager.html.twig'}) }}
+
+            {# ******************************************************
+            * QUICK REPLY FORM
+            ******************************************************* #}
+            {% if currentForumUser.allowedToComment(currentTopic) %}
+                <div id="quickreply">
+                    {{ render(controller(
+            'ZikulaDizkusModule:Topic:replyTopic',
+            { 'topic': currentTopic.id, '_format': 'html', 'template' : 'comment'}
+        )) }}
+                </div>
+            {% endif %}
+            {#  {{ include("@ZikulaDizkusModule/User/moderatedBy.html.twig", {'forum':currentTopic.forum, 'well': true}) }}#}
+            {#  {include file='User/topic/translations.tpl'}#}
+
+        {% else %}
+            {# Topic is not created #}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>{{ __('Comments') }}</h3>
+                </div>
+            </div>
+            {% if config.threadCreationMode == 2 %}
+                {# ******************************************************
+                * QUICK REPLY FORM
+                ******************************************************* #}
+                {#                {% if currentForumUser.allowedToComment(currentTopic) %}
+                                {% endif %}#}
+                <div id="quickreply">
+                    {{ render(controller(
+                                        'ZikulaDizkusModule:Topic:newTopic',
+                                        {'forum': currentForum.get.id , '_format': 'html', 'template' : 'comment'}
+                                    )) }}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-info-circle"></i> <strong>{{ __('Comments are disabled for this item.') }}</strong>
+                </div>
+                {% if config.threadCreationMode == 0 %}
+                {% elseif config.threadCreationMode == 1  %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

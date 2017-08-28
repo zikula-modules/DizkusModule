@@ -154,12 +154,14 @@ class TopicRepository extends EntityRepository
         try {
             $result = $query->getOneOrNullResult();
         } catch (\Exception $e) {
-            echo '<pre>';
-            var_dump($e->getMessage());
-            var_dump($query->getDQL());
-            var_dump($query->getParameters());
-            var_dump($query->getSQL());
-            die;
+//            echo '<pre>';
+//            var_dump($e->getMessage());
+//            var_dump($query->getDQL());
+//            var_dump($query->getParameters());
+//            var_dump($query->getSQL());
+//            die;
+            
+            return null;
         }
 
         return $result;

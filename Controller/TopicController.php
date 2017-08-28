@@ -136,7 +136,7 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/topic/new", options={"expose"=true})
+     * @Route("/forum/{forum}/topic/new", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * Create new topic
      *
@@ -144,35 +144,37 @@ class TopicController extends AbstractController
      *
      * @return string
      */
-    public function newtopicAction(Request $request)
+    public function newtopicAction(Request $request, $forum)
     {
         $format = $this->decodeFormat($request);
+        $template = $this->decodeTemplate($request);
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
         }
-
-        // get the forum
-        $forum = (int) $request->query->get('forum');
-        if (!isset($forum)) {
-            $this->addFlash('error', $this->__('Error! Missing forum id.'));
-
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
-        }
-
-        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
-        if (!$managedForum->exists()) {
-            $this->addFlash('error', $this->__('Error! Missing forum id.'));
-
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
-        }
-
+        $error = false;
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        $errorReturnUrl = $this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL);
+        // get the forum
+//        $forum = (int) $request->query->get('forum');
+        if (!isset($forum)) {
+            $error = $this->__('Error! Missing forum id.');
+
+            goto error;
+        }
+
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum, null, false);
+        if (!$managedForum->exists()) {
+            $error = $this->__f('Error! Forum with id %s does not exist.' . $forum, [$forum]);
+
+            goto error;
+        }
 
         if ($managedForum->get()->isLocked()) {
-            $this->addFlash('error', $this->__('Error! This forum is locked. New topics cannot be created.'));
+            $error = $this->__('Error! This forum is locked. New topics cannot be created.');
+            $errorReturnUrl = $this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL);
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum], RouterInterface::ABSOLUTE_URL));
+            goto error;
         }
 
         $newManagedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager();
@@ -195,7 +197,7 @@ class TopicController extends AbstractController
                 ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars()]
             );
 
-        if ($format == 'html') {
+        if ($format == 'html' || $template == 'comment') {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -205,7 +207,8 @@ class TopicController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod('GET')) {
-            goto add_error;
+
+            goto display;
         }
 
         $forumHookvalidators = $this
@@ -218,7 +221,7 @@ class TopicController extends AbstractController
             foreach ($forumHookvalidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto add_error;
+            goto display;
         }
 
         $topicHookValidators = $this->get('hook_dispatcher')
@@ -229,7 +232,7 @@ class TopicController extends AbstractController
             foreach ($topicHookValidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto add_error;
+            goto display;
         }
 
         $postHookValidators = $this->get('hook_dispatcher')
@@ -240,11 +243,11 @@ class TopicController extends AbstractController
             foreach ($postHookValidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto add_error;
+            goto display;
         }
 
         if (!$form->isValid()) {
-            goto add_error;
+            goto display;
         }
 
         $newManagedTopic
@@ -312,22 +315,57 @@ class TopicController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
-        add_error:
+        display:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/new.$format.twig", [
-            'currentForumUser' => $currentForumUser,
-            'currentForum'  => $managedForum,
-            'form'          => $form->createView(),
-            'ranks'         => isset($ranks) ? $ranks : false,
-            'preview'       => isset($preview) ? $preview : false,
-            'settings'      => $this->getVars(),
-        ]);
+        if ($format == 'json') {
 
-        if ($format == 'ajax.html') {
-            return new Response(json_encode(['html' => $contentHtml]));
+            return new Response(json_encode(['data' => 'no json support at the moment']));
+
+        } else {
+                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/new.$template.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'currentForum'  => $managedForum,
+                    'form'          => $form->createView(),
+                    'ranks'         => isset($ranks) ? $ranks : false,
+                    'preview'       => isset($preview) ? $preview : false,
+                    'settings'      => $this->getVars(),
+                ]);
+
+            if ($template == 'ajax') {
+
+                return new Response(json_encode(['html' => $contentHtml]));
+            }
+
+            return new Response($contentHtml);
         }
 
-        return new Response($contentHtml);
+        error:
+
+        if ($format == 'json') {
+
+            return new Response(json_encode(['data' => $error]));
+
+        } else {
+                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.new.$template.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'error'  => $error,
+                    'settings'      => $this->getVars(),
+                ]);
+
+            if ($template == 'ajax') {
+
+                return new Response(json_encode(['html' => $error]));
+            }
+
+            if ($template == 'default') {
+
+                $this->addFlash('error', $error);
+
+                return new RedirectResponse($errorReturnUrl);
+            }
+
+            return new Response($contentHtml);
+        }
     }
 
     /**
@@ -459,6 +497,11 @@ class TopicController extends AbstractController
     public function replytopicAction(Request $request, $topic)
     {
         $format = $this->decodeFormat($request);
+        $template = $this->decodeTemplate($request);
+
+        $error = false;
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        $errorReturnUrl = $this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL);
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
             throw new AccessDeniedException();
@@ -466,12 +509,11 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+            goto error;
         }
 
-        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         $action = $this->get('router')->generate('zikuladizkusmodule_topic_replytopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
         $postManager = $this->get('zikula_dizkus_module.post_manager')->getManager();
 
@@ -488,7 +530,7 @@ class TopicController extends AbstractController
             'settings' => $this->getVars()]
             );
 
-        if ($format == 'html' || $format == 'quick.html') {
+        if ($format == 'html' || $template == 'comment') {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -506,11 +548,12 @@ class TopicController extends AbstractController
                 $form->get('post_text')->addError(new FormError($this->__($error)));
             }
 
-            goto reply_error;
+            goto display;
         }
 
         if (!$form->isValid()) {
-            goto reply_error;
+
+            goto display;
         }
 
         $postManager->update($form->getData());
@@ -548,27 +591,63 @@ class TopicController extends AbstractController
                     new GenericEvent($postManager->get()));
 
             if ($format == 'json') {
+
             } elseif ($format == 'ajax.html') {
+
             } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
-        reply_error:
+        display:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/reply.$format.twig", [
-                'currentForumUser' => $currentForumUser,
-                'currentTopic' => $managedTopic,
-                'form'      => $form->createView(),
-                'preview'   => isset($preview) ? $preview : false,
-                'settings'  => $this->getVars(),
-                ]);
+        if ($format == 'json') {
 
-        if ($format == 'ajax.html') {
-            return new Response(json_encode(['html' => $contentHtml]));
+            return new Response(json_encode(['data' => 'no json support at the moment']));
+
+        } else {
+            $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/reply.$template.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'currentTopic' => $managedTopic,
+                    'form'      => $form->createView(),
+                    'preview'   => isset($preview) ? $preview : false,
+                    'settings'  => $this->getVars(),
+                    ]);
+            if ($template == 'ajax') {
+
+                return new Response(json_encode(['html' => $contentHtml]));
+            }
+
+            return new Response($contentHtml);
         }
 
-        return new Response($contentHtml);
+        error:
+
+        if ($format == 'json') {
+
+            return new Response(json_encode(['data' => $error]));
+
+        } else {
+                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.reply.$template.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'error'  => $error,
+                    'settings'      => $this->getVars(),
+                ]);
+
+            if ($template == 'ajax') {
+
+                return new Response(json_encode(['html' => $error]));
+            }
+
+            if ($template == 'default') {
+
+                $this->addFlash('error', $error);
+
+                return new RedirectResponse($errorReturnUrl);
+            }
+
+            return new Response($contentHtml);
+        }
     }
 
     /**

@@ -17,11 +17,17 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+//use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+//use Zikula\DizkusModule\Form\Type\DizkusHooksType;
+//use Zikula\DizkusModule\Form\Type\Hook\DizkusHooksProvidersType;
+//use Zikula\DizkusModule\Form\Type\Hook\DizkusHooksSubscribersType;
+//use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class DizkusSettingsType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('forum_enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
@@ -123,6 +129,10 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
+        
+                // Hooks
+                ->add('hooks', DizkusHooksType::class)
+
                 // Security
                 ->add('log_ip', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
                     'multiple' => false,
@@ -136,7 +146,7 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
-                ->add('notifyAdminAsMod', ChoiceType::class, ['choices' => $options['admins'],
+                ->add('notifyAdminAsMod', ChoiceType::class, ['choices' => $options['settingsManager']->getAdmins(),
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
@@ -162,7 +172,7 @@ class DizkusSettingsType extends AbstractType
 
     public function getName()
     {
-        return 'zikula_dizkus_module_admin_settings_forum';
+        return 'zikula_dizkus_module_admin_settings_form';
     }
 
     /**
@@ -171,7 +181,7 @@ class DizkusSettingsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'admins' => [],
+            'settingsManager' => false,
         ]);
     }
 }
