@@ -20,7 +20,9 @@ use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 
 /**
- * Description of Permissions.
+ * TopicProviderBindingType
+ *
+ * @author Kaik
  */
 class Permission
 {

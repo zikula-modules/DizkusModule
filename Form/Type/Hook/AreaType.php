@@ -12,24 +12,15 @@
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Symfony\Component\Form\AbstractType;
+use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zikula\DizkusModule\Form\Extension\EventListener\DizkusHooksFormListener;
+use Symfony\Component\OptionsResolver\Options;
+use Zikula\DizkusModule\Form\Extension\EventListener\AddAreaProviderSettingsFormListener;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-/**
- * DizkusHooksProvidersType
- *
- * @author Kaik
- */
-class DizkusHooksProvidersType extends AbstractType
+class AreaType extends AbstractHookType
 {
-    public function __construct()
-    {
-        $this->name = 'ZikulaDizkusModule';
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['allow_add'] && $options['prototype']) {
@@ -39,7 +30,8 @@ class DizkusHooksProvidersType extends AbstractType
             ], $options['options']));
             $builder->setAttribute('prototype', $prototype->getForm());
         }
-        $resizeListener = new DizkusHooksFormListener(
+
+        $listener = new AddAreaProviderSettingsFormListener(
             $options['type'],
             $options['options'],
             $options['allow_add'],
@@ -47,23 +39,19 @@ class DizkusHooksProvidersType extends AbstractType
             $options['delete_empty']
         );
 
-        $builder->addEventSubscriber($resizeListener);
+        $builder->addEventSubscriber($listener);
+
+        $builder
+        ->add('enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                    'multiple' => false,
+                    'expanded' => true,
+                    'required' => true])
+        ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
-        return 'zikula_dizkus_module_hooks_providers';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return 'collection';
+        return 'zikula_dzikus_module_area_type';
     }
 
     /**
@@ -73,18 +61,18 @@ class DizkusHooksProvidersType extends AbstractType
     {
         $optionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'entry';
-
             return $value;
         };
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
             'prototype_name' => '__name__',
             'type' => 'text',
-            'options' => [],
+            'options' => array(),
             'delete_empty' => false,
-        ]);
+            'data_class' => 'Zikula\DizkusModule\Hooks\BindingObject'
+        ));
         $resolver->setNormalizer('options', $optionsNormalizer);
     }
 }

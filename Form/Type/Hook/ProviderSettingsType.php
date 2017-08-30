@@ -12,44 +12,43 @@
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
-use Zikula\DizkusModule\Form\Type\Forum\ForumSelectType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
+use Zikula\DizkusModule\Form\Type\Hook\ModuleType;
 
 /**
- * TopicProviderBindingType
+ * TopicProviderSettingsType
  *
  * @author Kaik
  */
-class TopicProviderBindingType extends AbstractHookType
+class ProviderSettingsType extends AbstractHookType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('topic_mode', ChoiceType::class, [
-            'choices' => [
-                '0' => 'Admin',
-                '1' => 'Owner',
-                '2' => 'First comment',
-            ],
+        ->add('display_title', TextType::class, [
+                    'required' => false
         ])
-        ->add('delete_action', ChoiceType::class, [
-            'choices' => [
-                'none' => 'Do nothing',
-                'lock' => 'Lock topic',
-                'remove' => 'Delete topic',
-                ],
+        ->add('modules', CollectionType::class, [
+                    'entry_type' => new ModuleType(),
+                    'required' => false
         ])
-        ->add('forum', ForumSelectType::class, [])
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
-        return 'topic_provider_binding_type';
+        return 'subscriber_settings_type';
     }
 
     /**
@@ -63,14 +62,13 @@ class TopicProviderBindingType extends AbstractHookType
             return $value;
         };
         $resolver->setDefaults([
-
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
             'prototype_name' => '__name__',
             'type' => 'text',
             'options' => [],
-            'delete_empty' => false,
+            'delete_empty' => false
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }

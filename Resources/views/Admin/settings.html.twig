@@ -243,15 +243,6 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
-                <legend>{{ __("Hooks settings") }}</legend>
-                <div class="form-group">
-                    {{ form_label(form.deletehookaction, __("Action to be performed when 'delete' hook is called") ,{ 'label_attr': {'class': 'col-md-4'} }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(form.deletehookaction, { 'attr': {'class': ''} }) }}
-                    </div>
-                </div>
-            </fieldset>
         </div>
         <!-- Posts -->
         <div role="tabpanel" class="tab-pane" id="posts">
@@ -338,15 +329,11 @@
                     {{ __("This is Dizkus hooks status it shows you current Dizkus hooks settings.")}}
                 </p>
             </div>
-
-
             <div class="form-group">
-                {#                {{ form_label(form.hooks, __("Admin to notify with Moderator notifications"), { 'label_attr': {'class': 'col-md-4'} }) }}#}
                 <div class="col-md-12">
                     {{ form_widget(form.hooks, { 'attr': {'class': ''} }) }}
                 </div>
             </div>
-
         </div>
         <!-- External -->
         <div role="tabpanel" class="tab-pane" id="external">
@@ -386,5 +373,4 @@
     </div>
     {{ form_end(form) }}  
 </div>
-{{ adminFooter() }}               
-{{ dump() }}
+{{ adminFooter() }}  

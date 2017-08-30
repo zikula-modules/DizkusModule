@@ -67,16 +67,17 @@ class ModuleListener implements EventSubscriberInterface
      */
     public function serviceLinks(GenericEvent $event)
     {
-        $dom = $this->container->get('kernel')->getModule(ZikulaDizkusModule::NAME)->getTranslationDomain();
-        $bindingCount = count($this->hookDispatcherStorage->getBindingsBetweenOwners($event->getSubject(), ZikulaDizkusModule::NAME));
-
-        if ($bindingCount > 0 && $event->getSubject() != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
-            'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $event->getSubject()]),
-            'text' => $this->translator->__('Dizkus Hook Settings', $dom), ], $event->data))) {
-            $event->data[] = [
-                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $event->getSubject()]),
-                'text' => $this->translator->__('Dizkus Hook Settings', $dom), ];
-        }
+        //Disabled due to hooks settings changes
+//        $dom = $this->container->get('kernel')->getModule(ZikulaDizkusModule::NAME)->getTranslationDomain();
+//        $bindingCount = count($this->hookDispatcherStorage->getBindingsBetweenOwners($event->getSubject(), ZikulaDizkusModule::NAME));
+//
+//        if ($bindingCount > 0 && $event->getSubject() != ZikulaDizkusModule::NAME && (empty($event->data) || is_array($event->data) && !in_array([
+//            'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $event->getSubject()]),
+//            'text' => $this->translator->__('Dizkus Hook Settings', $dom), ], $event->data))) {
+//            $event->data[] = [
+//                'url' => $this->router->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $event->getSubject()]),
+//                'text' => $this->translator->__('Dizkus Hook Settings', $dom), ];
+//        }
     }
 
     /**

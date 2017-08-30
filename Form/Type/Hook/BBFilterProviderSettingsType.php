@@ -4,36 +4,54 @@
  * Dizkus
  *
  * @copyright (c) 2001-now, Dizkus Development Team
+ *
  * @see https://github.com/zikula-modules/Dizkus
+ *
  * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
-//use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-//use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-//use Symfony\Component\Form\Extension\Core\Type\EmailType;
-//use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-//use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-//use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\Options;
 
-class BBFilterProviderSettingsType extends AbstractHookType
+class BBFilterProviderSettingsType extends ProviderSettingsType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        ->add('something2', TextType::class, [
-            'required' => false
-        ])
-        ;
+        parent::buildForm($builder, $options);
+
     }
 
     public function getName()
     {
         return 'bbfilter_provider_settings_type';
+    }
+
+     /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $optionsNormalizer = function (Options $options, $value) {
+            $value['block_name'] = 'entry';
+
+            return $value;
+        };
+        $resolver->setDefaults([
+            'allow_add' => false,
+            'allow_delete' => false,
+            'prototype' => true,
+            'prototype_name' => '__name__',
+            'type' => 'text',
+            'options' => [],
+            'delete_empty' => false,
+
+        ]);
+        $resolver->setNormalizer('options', $optionsNormalizer);
     }
 }

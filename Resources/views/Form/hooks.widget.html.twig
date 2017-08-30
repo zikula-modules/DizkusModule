@@ -5,7 +5,6 @@
                 {{ form_widget(child) }}
             </div>
         {% endfor %}
-        {#        {{ dump() }}#}
     {% endspaceless %}
 {% endblock %}
 
@@ -21,41 +20,105 @@
     {% spaceless %}
         <fieldset>
             <legend>{{ value.title }}</legend>
-            {#            {% for child in form %}
-                            {{ form_widget(child) }}
-                        {% endfor %}#}
-            {{ form_widget(form) }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ __('Global provider settings') }}
+                    <a class="pull-right" role="button" data-toggle="collapse" href="#global_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="global_{{ value.baseName|lower }}">
+                        <i class="fa fa-cog"> </i>
+                    </a>
+                </div>
+                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                    {% for name, child in form %}
+                        {% if name == 'modules' %}
+                        {% else %}
+                            <div class="list-group-item list-group-item-warning">
+                                {{ form_row(child, {'attr': {'class': 'input-sm' }, 'label_attr': {'class': 'input-sm'}}) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% if form.children.modules is defined %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{ __('Modules')  }}
+                        <a class="pull-right" role="button" data-toggle="collapse" href="#modules_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="modules_{{ value.baseName|lower }}">
+                            <i class="fa fa-cog"> </i>
+                        </a>
+                    </div>
+                    <div class="list-group collapse" id="modules_{{ value.baseName|lower }}">
+                        {{ form_widget(form.children.modules) }}
+                    </div>
+                </div>
+            {% else %}
+            {% endif %}
         </fieldset>
     {% endspaceless %}
 {% endblock %}
 
-{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_entry_widget %}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_widget %}
     {% spaceless %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{ __('Areas connected')  }}
-                {{ value|length }}
-                <a class="pull-right" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    <i class="fa fa-cog"> </i>
-                </a>
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_widget %}
+    {% spaceless %}
+        <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-warning{% endif %} clearfix">
+            <span>{{ value.name }}</span>
+            {% if form.children.enabled is defined %}
+                <div class="pull-right text-right">
+                    {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-success radio-inline btn-xs' }}) }}
+                </div>
+            {% else %}
+            {% endif %}
+        </div>
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_areas_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_areas_entry_widget %}
+    {% spaceless %}
+        {% set binding_id = 'area' ~ random() %}
+        <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-default{% endif %} clearfix">
+            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.subscriber.area }}</strong></span>
+            <div class="pull-right text-right">
+                {% if form.children.enabled is defined %}
+                    {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}
+                {% else %}
+                {% endif %}
             </div>
-            <div class="panel-body collapse" id="collapseExample">
+            <a class="btn btn-xs pull-right" role="button" data-toggle="collapse" href="#{{ binding_id }}" aria-expanded="false" aria-controls="{{ binding_id }}">
+                <i class="fa fa-cog"> </i>
+            </a>
+            <div id="{{ binding_id }}" class="col-md-12 collapse clearfix">
+                <h5>{{ __('Settings for this area') }}</h5>
                 {% for child in form %}
                     {{ form_widget(child) }}
                 {% endfor %}
             </div>
         </div>
-
     {% endspaceless %}
 {% endblock %}
 
-{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_entry_entry_widget %}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_areas_entry_entry_widget %}
     {% spaceless %}
-        {{ value.data.sowner }}
-        {#        {{ value.data.powner }}#}
-        {#        {% for child in form %}#}
-        {{ form_widget(form) }}
-        {#        {% endfor %}#}
+        {% for child in form %}
+            {{ form_row(child, {'attr': {'class': 'input-sm' }, 'label_attr': {'class': 'input-sm'}}) }}
+        {% endfor %}
     {% endspaceless %}
 {% endblock %}
 
@@ -67,86 +130,107 @@
     {% endspaceless %}
 {% endblock %}
 
-{#{% block _zikula_dizkus_module_admin_settings_form_hooks_providers_entry_modules_entry_widget %}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_widget %}
     {% spaceless %}
-        333   {{ form_widget(form) }}
+        <fieldset>
+            <legend>{{ value.title }}</legend>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ __('Global provider settings') }}
+                    <a class="pull-right" role="button" data-toggle="collapse" href="#global_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="global_{{ value.baseName|lower }}">
+                        <i class="fa fa-cog"> </i>
+                    </a>
+                </div>
+                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                    {% for name, child in form %}
+                        {% if name == 'modules' %}
+                        {% else %}
+                            <div class="list-group-item list-group-item-warning">
+                                {{ form_row(child, {'attr': {'class': 'input-sm' }, 'label_attr': {'class': 'input-sm'}}) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% if form.children.modules is defined %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{ __('Modules')  }}
+                        <a class="pull-right" role="button" data-toggle="collapse" href="#modules_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="modules_{{ value.baseName|lower }}">
+                            <i class="fa fa-cog"> </i>
+                        </a>
+                    </div>
+                    <div class="list-group collapse" id="modules_{{ value.baseName|lower }}">
+                        {{ form_widget(form.children.modules) }}
+                    </div>
+                </div>
+            {% else %}
+            {% endif %}
+        </fieldset>
     {% endspaceless %}
 {% endblock %}
-#}
-{#
-            {% for provider in value.0.providers %}
-                <fieldset>
-                    <legend>{{ provider.area.title }}</legend>
-                    {% for name, hookedModule in provider.hooked %}
-                        <div class="list-group-item list-group-item-info">
-                            <h4 class="panel-title">
-                                {{ name }} <span class="label label-default pull-right">{{ __('hooked areas:') }} {{ hookedModule|length }}</span>
-                            </h4>
-                        </div>
-                        {% for hookedModuleArea in hookedModule %}
-                            <div class="list-group-item">
-                                <span class="pull-right">
-                                    <a class="btn btn-xs" data-placement="left" data-popover-content="#area_{{ hookedModuleArea.sareaid }}" data-toggle="popover" data-trigger="click" href="#" tabindex="0"><i class="fa fa-cog"></i></a>
-                                </span>
-                                <!-- Content for Popover #1 -->
-                                <div class="hidden" id="area_{{ hookedModuleArea.sareaid }}">
-                                    <div class="popover-heading">
-                                        {{ __('Options') }}
-                                    </div>
 
-                                    <div class="popover-body">
-                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
-                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
-                                        This is the body for #area_{{ hookedModuleArea.sareaid }}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_modules_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
 
-                                    </div>
-                                </div>
-
-                                <span class="label label-primary"> {{ __('id') }} {{ hookedModuleArea.sareaid }}
-                                    {{ hookedModuleArea.sarea.areaname }}
-                                </span>
-                                {% if  hookedModuleArea.settings.forum is defined %}
-                                    <span class="label label-success">{{ __(' forum') }}: {{ hookedModuleArea.settings.forum }}</span>
-                                {% else %}
-                                    <span class="label label-warning">{{ __(' No forum selected!') }}</span>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        {{ __("This provider is not used.")}}
-                    {% endfor %}
-                </fieldset>
-            {% endfor %}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_modules_entry_widget %}
+    {% spaceless %}
+        <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-warning{% endif %} clearfix">
+            <span>{{ value.name }}</span>
+            {% if form.children.enabled is defined %}
+                <div class="pull-right text-right">
+                    {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-success radio-inline btn-xs' }}) }}
+                </div>
+            {% else %}
+            {% endif %}
         </div>
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
 
-        <div class="col-md-6">
-            {% for subscriber in value.0.subscribers %}
-                <fieldset>
-                    <legend>{{ subscriber.area.title }}</legend>
-                    {% for name, hookedModule in subscriber.hooked %}
-                        <div class="list-group-item list-group-item-info">
-                            <h4 class="panel-title">
-                                {{ name }} <span class="label label-default pull-right">{{ __('hooked areas:') }} {{ hookedModule|length }}</span>
-                            </h4>
-                        </div>
-                        {% for hookedModuleArea in hookedModule %}
-                            <div class="list-group-item">
-                                <span class="pull-right">
-                                    <a class="btn btn-xs" href="#" role="button"><i class="fa fa-cog"></i></a>
-                                </span>
-                                <span class="label label-primary"> {{ __('id') }} {{ hookedModuleArea.pareaid }}
-                                    {{ hookedModuleArea.parea.areaname }}
-                                </span>
-                                {% if  hookedModuleArea.settings.forum is defined %}
-                                    <span class="label label-success">{{ __(' forum') }}: {{ hookedModuleArea.settings.forum }}</span>
-                                {% else %}
-                                    <span class="label label-warning">{{ __(' No forum selected!') }}</span>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        {{ __("This subscriber is not used.")}}
-                    {% endfor %}
-                </fieldset>
-            {% endfor %}
-        </div>#}
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_modules_entry_areas_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_widget(child) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_modules_entry_areas_entry_widget %}
+    {% spaceless %}
+        {% set binding_id = 'area' ~ random() %}
+        <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-default{% endif %} clearfix">
+            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.provider.area }}</strong></span>
+            <div class="pull-right text-right">
+                {% if form.children.enabled is defined %}
+                    {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}
+                {% else %}
+                {% endif %}
+            </div>
+            <a class="btn btn-xs pull-right" role="button" data-toggle="collapse" href="#{{ binding_id }}" aria-expanded="false" aria-controls="{{ binding_id }}">
+                <i class="fa fa-cog"> </i>
+            </a>
+            <div id="{{ binding_id }}" class="col-md-12 collapse clearfix">
+                <h5>{{ __('Settings for this area') }}</h5>
+                {% for child in form %}
+                    {{ form_widget(child) }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block _zikula_dizkus_module_admin_settings_form_hooks_subscribers_entry_modules_entry_areas_entry_entry_widget %}
+    {% spaceless %}
+        {% for child in form %}
+            {{ form_row(child, {'attr': {'class': 'input-sm' }, 'label_attr': {'class': 'input-sm'}}) }}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock %}

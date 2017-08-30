@@ -1,18 +1,22 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ *
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Hooks;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Zikula\Bundle\HookBundle\Bundle\ProviderBundle;
-use Zikula\DizkusModule\Hooks\BindingsCollection;
-use Zikula\DizkusModule\Hooks\BindingObject;
 
 /**
- * Description of ProviderBundle
+ * AbstractProBundle
  *
  * @author Kaik
  */
@@ -22,25 +26,20 @@ abstract class AbstractProBundle extends ProviderBundle implements \ArrayAccess
 
     private $areaData;
 
-    private $bindings;
-
-    private $hooked;
-
     private $modules;
 
-    private $settings;
+    private $settings = [];
 
     public function __construct($owner, $area, $category, $title)
     {
         parent::__construct($owner, $area, $category, $title);
-        $this->getBaseName();
-
-        $this->modules = new BindingsCollection();
+        $this->baseName= str_replace('ProBundle', 'Provider', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
+        $this->modules = new ArrayCollection();
     }
 
     public function getSettingsForm()
     {
-        return false;
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\ProviderSettingsType';
     }
 
     public function getBindingForm()
@@ -50,22 +49,12 @@ abstract class AbstractProBundle extends ProviderBundle implements \ArrayAccess
 
     public function getBaseName()
     {
-        $this->baseName = str_replace('ProBundle', 'Provider', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
+        return $this->baseName;
     }
 
-    public function setAreaData($area)
+    public function setAreaObject($area)
     {
         $this->areaData = $area;
-    }
-
-    public function setHooked($hooked)
-    {
-        $this->hooked[] = $hooked;
-    }
-
-    public function setBindings($hooked)
-    {
-        $this->bindings = $hooked;
     }
 
     public function setSettings($hooked)
@@ -73,69 +62,85 @@ abstract class AbstractProBundle extends ProviderBundle implements \ArrayAccess
         $this->settings = $hooked;
     }
 
-    public function getHookedModules()
+    public function setModules($modules)
     {
-        $this->modules->clear();
-        foreach ($this->bindings as $key => $value) {
-            $bindingObj = new BindingObject($value);
-            $settings = array_key_exists($value['sowner'], $this->settings) && array_key_exists($value['sareaid'], $this->settings[$value['sowner']])
-            ? $this->settings[$value['sowner']][$value['sareaid']]
-            : false ;
-            $bindingObj->setSettings($settings);
+        $this->modules = $modules;
 
-            $this->modules->add($bindingObj);
-        }
-
+        return $this;
     }
 
-    public function getHooked()
-    {
-        $this->getHookedModules();
-        return $this->modules;
-    }
     public function getModules()
     {
-        $this->getHookedModules();
         return $this->modules;
     }
 
-
-    public function offsetExists($offset){
+    public function offsetExists($offset)
+    {
         switch ($offset) {
-            case 'title':
-
-                return true;
             case 'modules':
 
                 return true;
             default:
+                if (strpos($offset, 'Module') === true) {
 
-                return $this->modules->offsetExists($offset);
+                    return $this->modules->offsetExists($offset);
+                } else {
+
+                    return array_key_exists($offset, $this->settings);
+                }
         }
     }
 
-    public function offsetGet($offset){
+    public function offsetGet($offset)
+    {
         switch ($offset) {
-            case 'title':
-
-                return $this->getTitle();
             case 'modules':
 
                 return $this->getModules();
-
             default:
+                if (strpos($offset, 'Module') === true) {
 
-                return $this->modules->offsetGet($offset);
+                    return $this->modules->offsetGet($offset);
+                } else {
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] : false;
+                }
         }
     }
 
-    public function offsetSet($offset, $value){
+    public function offsetSet($offset, $value)
+    {
+        switch ($offset) {
+            case 'modules':
 
-        return true;
+                return $this->setModules($value);
+
+            default:
+                if (strpos($offset, 'Module') === true) {
+
+                return $this->modules->offsetSet($offset, $value);
+                } else {
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] = $value : false;
+                }
+        }
     }
 
-    public function offsetUnset($offset){
+    public function offsetUnset($offset)
+    {
+        switch ($offset) {
+            case 'modules':
 
-        return true;
+                return $this->getModules()->clear();
+
+            default:
+               if (strpos($offset, 'Module') === true) {
+
+                  return $this->modules->offsetUnset($offset);
+                } else {
+
+                    return true;
+                }
+        }
     }
 }

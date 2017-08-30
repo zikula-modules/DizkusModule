@@ -1,24 +1,145 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ *
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Hooks;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Zikula\Bundle\HookBundle\Bundle\SubscriberBundle;
 
 /**
- * Description of SubscirberBundle
+ * AbstractProBundle
  *
  * @author Kaik
  */
-Abstract class AbstractSubBundle extends SubscriberBundle
+abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAccess
 {
-    //put your code here
-    public function getForm()
+    private $baseName;
+
+    private $areaData;
+
+    private $modules;
+
+    private $settings = [];
+
+    public function __construct($owner, $area, $category, $title)
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . implode('', array_map('ucfirst', explode('.', $this->getArea()))) . 'Type';
+        parent::__construct($owner, $area, $category, $title);
+        $this->baseName= str_replace('SubBundle', 'Subscriber', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
+        $this->modules = new ArrayCollection();
+    }
+
+    public function getSettingsForm()
+    {
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\SubscriberSettingsType';
+    }
+
+    public function getBindingForm()
+    {
+        return false;
+    }
+
+    public function getBaseName()
+    {
+        return $this->baseName;
+    }
+
+    public function setAreaObject($area)
+    {
+        $this->areaData = $area;
+    }
+
+    public function setSettings($hooked)
+    {
+        $this->settings = $hooked;
+    }
+
+    public function setModules($modules)
+    {
+        $this->modules = $modules;
+
+        return $this;
+    }
+
+    public function getModules()
+    {
+        return $this->modules;
+    }
+    public function offsetExists($offset)
+    {
+        switch ($offset) {
+            case 'modules':
+
+                return true;
+            default:
+                if (strpos($offset, 'Module') === true) {
+
+                    return $this->modules->offsetExists($offset);
+                } else {
+
+                    return array_key_exists($offset, $this->settings);
+                }
+        }
+    }
+
+    public function offsetGet($offset)
+    {
+        switch ($offset) {
+            case 'modules':
+
+                return $this->getModules();
+            default:
+                if (strpos($offset, 'Module') === true) {
+
+                    return $this->modules->offsetGet($offset);
+                } else {
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] : false;
+                }
+        }
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        switch ($offset) {
+            case 'modules':
+
+                return $this->setModules($value);
+
+            default:
+                if (strpos($offset, 'Module') === true) {
+
+                return $this->modules->offsetSet($offset, $value);
+                } else {
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] = $value : false;
+                }
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        switch ($offset) {
+            case 'modules':
+
+                return $this->getModules()->clear();
+
+            default:
+               if (strpos($offset, 'Module') === true) {
+
+                  return $this->modules->offsetUnset($offset);
+                } else {
+
+                    return true;
+                }
+        }
     }
 }

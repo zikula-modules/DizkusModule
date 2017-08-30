@@ -1,8 +1,13 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ *
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
@@ -10,16 +15,11 @@ namespace Zikula\DizkusModule\Form\Type\Hook;
 use Symfony\Component\Form\AbstractType;
 
 /**
- * Description of AbstractHookType
+ * AbstractHookType
  *
  * @author Kaik
  */
 abstract class AbstractHookType extends AbstractType
 {
-
-
-
-
-
 
 }

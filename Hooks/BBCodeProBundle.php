@@ -1,14 +1,19 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+
+/**
+ * Dizkus
+ *
+ * @copyright (c) 2001-now, Dizkus Development Team
+ *
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Hooks;
 
 /**
- * Description of TopicProBundle
+ * BBCodeProBundle
  *
  * @author Kaik
  */
@@ -29,11 +34,6 @@ class BBCodeProBundle extends AbstractProBundle
 
     public function getSettingsForm()
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . str_replace('ProBundle', 'Provider', str_replace('Zikula\\DizkusModule\\Hooks\\', '', get_class($this))) . 'SettingsType';
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'SettingsType';
     }
-
-//    public function getBindingForm()
-//    {
-//        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . str_replace('ProBundle', 'Provider', str_replace('Zikula\\DizkusModule\\Hooks\\', '', get_class($this))) . 'BindingType';
-//    }
 }

@@ -95,20 +95,29 @@ class AdminController extends AbstractController
         $settingsManager = $this->get('zikula_dizkus_module.settings_manager');
         $form = $this->createForm(new DizkusSettingsType(), $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
-                //dump($form->getData());
-                $this->setVars($form->getData());
-                $this->addFlash('status', $this->__('Done! Updated configuration.'));
+                if (!$settingsManager->setSettings($request->request->get($form->getName()))) {
+                    $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
+                } else {
+                        $this->addFlash('status', $this->__('Settings set.'));
+                    if (!$settingsManager->saveSettings()) {
+                        $this->addFlash('error', $this->__('Error! Settings not saved! Please try again'));
+                    } else {
+                        $this->addFlash('status', $this->__('Settings saved.'));
+                    }
+                }
             }
             if ($form->get('restore')->isClicked()) {
-                $this->setVars(DizkusModuleInstaller::getDefaultVars());
-                $this->addFlash('status', $this->__('Done! Reset configuration to default values.'));
+                if (!$settingsManager->restoreSettings()) {
+                    $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
+                } else {
+                    $this->addFlash('error', $this->__('Error! Settings not restored! Please try again'));
+                }
             }
 
             return $this->redirect($this->generateUrl('zikuladizkusmodule_admin_preferences'));
         }
-
 
         return $this->render('@ZikulaDizkusModule/Admin/settings.html.twig', [
             'form' => $form->createView(),
@@ -495,73 +504,5 @@ class AdminController extends AbstractController
         return $this->render('@ZikulaDizkusModule/Admin/managesubscriptions.html.twig', [
             'managedForumUser' => $managedForumUser
         ]);
-    }
-
-    /**
-     * @Route("/hookconfig/{moduleName}")
-     * @Method("GET")
-     *
-     * configure dizkus hook options for given module
-     *
-     * @param $moduleName
-     * @return Response
-     */
-    public function hookConfigAction($moduleName)
-    {
-        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-
-        $hookconfig = $this->get('zikula_extensions_module.api.variable')->get($moduleName, 'dizkushookconfig');
-        // looks like module should always exist it would not be hooked
-        $module = $this->get('zikula_extensions_module.api.extension')->getModuleInstanceOrNull($moduleName);
-        $moduleHookCapable = $this->get('zikula_extensions_module.api.capability')->isCapable($moduleName, 'hook_subscriber');
-
-        $moduleHookContainerClass = $moduleHookCapable['class'];
-        $moduleHookContainer = new $moduleHookContainerClass($this->get('translator.default'));
-        $bindingsBetweenOwners = $this->get('hook_dispatcher')->getBindingsBetweenOwners($moduleName, $this->name);
-        foreach ($bindingsBetweenOwners as $k => $binding) {
-            $areaname = $this->getDoctrine()->getManager()->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')->find($binding['sareaid'])->getAreaname();
-            $bindingsBetweenOwners[$k]['areaname'] = $areaname;
-            $bindingsBetweenOwners[$k]['areatitle'] = $moduleHookContainer->getHookSubscriberBundle($areaname)->getTitle();
-        }
-
-        return $this->render('@ZikulaDizkusModule/Hook/modifyconfig.html.twig', [
-            'areas' => $bindingsBetweenOwners,
-            'dizkushookconfig' => $hookconfig,
-            'activeModule' => $module,
-            'forums' => $this->get('zikula_dizkus_module.forum_manager')->getParents(null, true),
-        ]);
-    }
-
-    /**
-     * @Route("/hookconfig")
-     * @Method("POST")
-     *
-     * process dizkus hook options for a given module
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function hookConfigProcessAction(Request $request)
-    {
-        $hookdata = $request->request->get('dizkus', []);
-        $moduleName = $request->request->get('activeModule');
-        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-
-        foreach ($hookdata as $area => $data) {
-            if (!isset($data['forum']) || empty($data['forum'])) {
-                $this->addFlash('error', $this->__f('Error: No forum selected for area \'%s\'', $area));
-                $hookdata[$area]['forum'] = null;
-            }
-        }
-        // ModVar: dizkushookconfig => array('areaid' => array('forum' => value))
-        $this->get('zikula_extensions_module.api.variable')->set($moduleName, 'dizkushookconfig', $hookdata);
-        $this->addFlash('status', $this->__('Dizkus: Hook option settings updated.'));
-
-        //return new RedirectResponse(System::normalizeUrl(ModUtil::url($moduleName, 'admin', 'index')));
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_hookconfig', ['moduleName' => $moduleName], RouterInterface::ABSOLUTE_URL));
     }
 }

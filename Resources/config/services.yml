@@ -15,6 +15,7 @@ parameters:
     zikula_dizkus_module.post_moved_notify_poster_listener.class: Zikula\DizkusModule\Listener\PostMovedNotifyPosterListener
     # Forms
     zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
+    zikula_dizkus_module.forum_select.class: Zikula\DizkusModule\Form\Type\Forum\ForumSelectType
     # Helpers
     zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
@@ -173,6 +174,14 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.forum_user_manager"
             
+    zikula_dizkus_module.form.type.forum_select:
+        class: %zikula_dizkus_module.forum_select.class%
+        tags:
+            - { name: form.type, alias: zikula_dizkus_module_forum_select_type }
+        arguments:
+            - "@zikula_dizkus_module.forum_manager"
+            
+            
 # Helpers
 
     zikula_dizkus_module.count_helper:
@@ -301,17 +310,10 @@ services:
             - { name: zikula.dizkus.settings_manager }
         arguments: 
             - "@translator.default"
-            - "@router"
-            - "@request_stack"
             - "@doctrine.orm.default_entity_manager"
-            - "@zikula_users_module.current_user"
-            - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-            - "@zikula_dizkus_module.forum_user_manager"
-            - "@zikula_dizkus_module.forum_manager"
-            - "@zikula_dizkus_module.topic_manager"
-            - "@zikula_dizkus_module.synchronization_helper"
             - "@hook_dispatcher"
+            - "@zikula_extensions_module.api.capability"
 
 # Hooks
 

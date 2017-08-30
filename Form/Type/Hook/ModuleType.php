@@ -12,44 +12,33 @@
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
-use Zikula\DizkusModule\Form\Type\Forum\ForumSelectType;
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
+use Zikula\DizkusModule\Form\Type\Hook\AreaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-/**
- * TopicProviderBindingType
- *
- * @author Kaik
- */
-class TopicProviderBindingType extends AbstractHookType
+class ModuleType extends AbstractHookType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-        ->add('topic_mode', ChoiceType::class, [
-            'choices' => [
-                '0' => 'Admin',
-                '1' => 'Owner',
-                '2' => 'First comment',
-            ],
+       $builder
+        ->add('enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
+                    'multiple' => false,
+                    'expanded' => true,
+                    'required' => true])
+        ->add('areas', CollectionType::class, [
+                    'entry_type' => new AreaType(),
+                    'required' => false
         ])
-        ->add('delete_action', ChoiceType::class, [
-            'choices' => [
-                'none' => 'Do nothing',
-                'lock' => 'Lock topic',
-                'remove' => 'Delete topic',
-                ],
-        ])
-        ->add('forum', ForumSelectType::class, [])
         ;
     }
 
     public function getName()
     {
-        return 'topic_provider_binding_type';
+        return 'zikula_dzikus_module_module_type';
     }
 
     /**
@@ -63,7 +52,6 @@ class TopicProviderBindingType extends AbstractHookType
             return $value;
         };
         $resolver->setDefaults([
-
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
@@ -71,6 +59,7 @@ class TopicProviderBindingType extends AbstractHookType
             'type' => 'text',
             'options' => [],
             'delete_empty' => false,
+            'data_class' => 'Zikula\DizkusModule\Hooks\HookedModuleObject'
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }

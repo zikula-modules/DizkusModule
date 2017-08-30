@@ -17,13 +17,8 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-//use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-//use Zikula\DizkusModule\Form\Type\DizkusHooksType;
-//use Zikula\DizkusModule\Form\Type\Hook\DizkusHooksProvidersType;
-//use Zikula\DizkusModule\Form\Type\Hook\DizkusHooksSubscribersType;
-//use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class DizkusSettingsType extends AbstractType
 {
@@ -129,7 +124,7 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
-        
+
                 // Hooks
                 ->add('hooks', DizkusHooksType::class)
 
@@ -160,10 +155,6 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'disabled' => true,
                     'expanded' => true,
-                    'required' => true])
-                ->add('deletehookaction', ChoiceType::class, ['choices' => ['remove' => 'Delete topic', 'lock' => 'Lock topic'],
-                    'multiple' => false,
-                    'expanded' => false,
                     'required' => true])
 
                 ->add('restore', SubmitType::class, [])
