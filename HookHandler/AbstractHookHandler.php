@@ -1,25 +1,25 @@
 <?php
+
 /**
- * Copyright 2013 Zikula Foundation.
+ * Dizkus
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
+ * @copyright (c) 2001-now, Dizkus Development Team
  *
- * @license MIT
+ * @see https://github.com/zikula-modules/Dizkus
  *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\HookHandler;
 
-use Zikula\DizkusModule\Security\Permission;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
+use Zikula\DizkusModule\Security\Permission;
+use Zikula\ExtensionsModule\Api\VariableApi;
 
 /**
  * Provides convenience methods for hook handling.
@@ -47,6 +47,11 @@ abstract class AbstractHookHandler
     protected $securityManager;
 
     /**
+     * @var VariableApi
+     */
+    protected $variableApi;
+
+    /**
      * @var TranslatorInterface
      */
     protected $translator;
@@ -56,12 +61,16 @@ abstract class AbstractHookHandler
         RequestStack $requestStack,
         EngineInterface $renderEngine,
         Permission $permission,
+        VariableApi $variableApi,
         TranslatorInterface $translator
     ) {
+        $this->name = 'ZikulaDizkusModule';
         $this->entityManager = $entityManager;
         $this->requestStack = $requestStack;
+        $this->request = $requestStack->getMasterRequest();
         $this->renderEngine = $renderEngine;
         $this->permission = $permission;
+        $this->variableApi = $variableApi;
         $this->translator = $translator;
     }
 

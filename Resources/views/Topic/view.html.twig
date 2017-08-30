@@ -203,7 +203,7 @@
     <div id="quickreply">    
         {{ render(controller(
             'ZikulaDizkusModule:Topic:replyTopic',
-            { 'topic': currentTopic.id, '_format': 'quick.html'}
+            { 'topic': currentTopic.id, '_format': 'html', 'template': 'quick'}
         )) }}
     </div>
 {% endif %}
