@@ -40,7 +40,7 @@ class DizkusHooksFormListener extends ResizeFormListener
             if ($hookBundle->getSettingsForm()) {
                 $class = $hookBundle->getSettingsForm();
                 $type = new $class();
-                $form->add($name, $type , array_replace(['property_path' => '[' . $name . ']'], $this->options));
+                $form->add($name, $type, array_replace(['property_path' => '[' . $name . ']'], $this->options));
             }
         }
     }

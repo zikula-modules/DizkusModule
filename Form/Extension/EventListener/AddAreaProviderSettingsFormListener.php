@@ -39,7 +39,7 @@ class AddAreaProviderSettingsFormListener extends ResizeFormListener
         if ($data->getForm()) {
             $class = $data->getForm();
             $type = new $class();
-            $form->add('settings', $type , array_replace(['property_path' => '[settings]'], $this->options));
+            $form->add('settings', $type, array_replace(['property_path' => '[settings]'], $this->options));
         }
     }
 

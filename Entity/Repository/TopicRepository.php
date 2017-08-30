@@ -154,6 +154,7 @@ class TopicRepository extends EntityRepository
             'modulename' => $hook->getCaller(),
             'objectid' => $hook->getId(),
             'area' => $hook->getAreaId()]);
+
         try {
             $result = $query->getOneOrNullResult();
         } catch (\Exception $e) {
@@ -164,7 +165,6 @@ class TopicRepository extends EntityRepository
 //            var_dump($query->getSQL());
 //            die;
             return null;
-
         }
 
         return $result;

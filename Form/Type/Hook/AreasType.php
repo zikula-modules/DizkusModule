@@ -38,7 +38,7 @@ class AreasType extends AbstractHookType
     {
         return 'areas_type';
     }
-    
+
     /**
      * {@inheritdoc}
      */

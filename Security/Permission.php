@@ -235,7 +235,7 @@ class Permission
                 $this->entityManager->detach($forum);
                 // ensure that future operations are not persisted
                 unset($forums[$key]);
-                
+
                 continue;
             }
             $this->filterForumChildrenByPermission($forum);

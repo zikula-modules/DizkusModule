@@ -328,7 +328,6 @@ class TopicController extends AbstractController
                 ]);
 
             if ($template == 'ajax') {
-
                 return new Response(json_encode(['html' => $contentHtml]));
             }
 
