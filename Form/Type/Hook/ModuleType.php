@@ -12,11 +12,9 @@
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
-use Zikula\DizkusModule\Form\Type\Hook\AreaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -24,7 +22,7 @@ class ModuleType extends AbstractHookType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-       $builder
+        $builder
         ->add('enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
                     'multiple' => false,
                     'expanded' => true,

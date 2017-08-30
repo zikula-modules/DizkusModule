@@ -48,10 +48,10 @@ class DizkusHooksType extends AbstractType
     {
         $optionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'entry';
-            
+
             return $value;
         };
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
@@ -59,7 +59,7 @@ class DizkusHooksType extends AbstractType
             'type' => 'text',
             'options' => [],
             'delete_empty' => false,
-        ));
+        ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }
 }

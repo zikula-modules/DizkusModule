@@ -12,7 +12,6 @@
 
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
@@ -61,18 +60,19 @@ class AreaType extends AbstractHookType
     {
         $optionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'entry';
+
             return $value;
         };
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,
             'prototype_name' => '__name__',
             'type' => 'text',
-            'options' => array(),
+            'options' => [],
             'delete_empty' => false,
             'data_class' => 'Zikula\DizkusModule\Hooks\BindingObject'
-        ));
+        ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }
 }

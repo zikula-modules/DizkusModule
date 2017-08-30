@@ -21,5 +21,4 @@ use Symfony\Component\Form\AbstractType;
  */
 abstract class AbstractHookType extends AbstractType
 {
-
 }

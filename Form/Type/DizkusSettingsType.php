@@ -22,7 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DizkusSettingsType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('forum_enabled', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],

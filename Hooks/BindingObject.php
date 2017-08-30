@@ -19,7 +19,6 @@ namespace Zikula\DizkusModule\Hooks;
  */
 class BindingObject implements \ArrayAccess
 {
-
     public $enabled = false;
 
     public $provider = [];
@@ -32,7 +31,6 @@ class BindingObject implements \ArrayAccess
 
     public function __construct()
     {
-
     }
 
     public function getEnabled()

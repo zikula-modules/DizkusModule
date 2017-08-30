@@ -20,7 +20,6 @@ use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Form\Type\DizkusSettingsType;
-use Zikula\DizkusModule\DizkusModuleInstaller;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -100,7 +99,7 @@ class AdminController extends AbstractController
                 if (!$settingsManager->setSettings($request->request->get($form->getName()))) {
                     $this->addFlash('error', $this->__('Error! Settings not set! Please try again'));
                 } else {
-                        $this->addFlash('status', $this->__('Settings set.'));
+                    $this->addFlash('status', $this->__('Settings set.'));
                     if (!$settingsManager->saveSettings()) {
                         $this->addFlash('error', $this->__('Error! Settings not saved! Please try again'));
                     } else {

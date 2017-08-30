@@ -17,8 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
-use Zikula\DizkusModule\Form\Type\Hook\ModuleType;
 
 /**
  * SubscriberSettingsType

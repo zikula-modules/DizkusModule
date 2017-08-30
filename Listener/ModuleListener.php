@@ -114,6 +114,7 @@ class ModuleListener implements EventSubscriberInterface
                         $this->entityManager->flush();
                         $count = 0;
                     }
+
                     break;
             }
             $total++;

@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * HookedModuleObject
- * 
+ *
  * @author Kaik
  */
 class HookedModuleObject implements \ArrayAccess
@@ -53,7 +53,7 @@ class HookedModuleObject implements \ArrayAccess
         return $this->areas;
     }
 
-    function getName()
+    public function getName()
     {
         return $this->name;
     }

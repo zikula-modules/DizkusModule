@@ -77,7 +77,7 @@ class BbcodeFilterHookHandler
             //$message = $this->encode_code($message);
 
             // [QUOTE] and [/QUOTE] for posting replies with quote, or just for quoting stuff.
-           $message = $this->encode_quote($message);
+            $message = $this->encode_quote($message);
         }
 
         // Remove added padding from the string..

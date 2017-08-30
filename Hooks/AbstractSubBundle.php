@@ -73,6 +73,7 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
     {
         return $this->modules;
     }
+
     public function offsetExists($offset)
     {
         switch ($offset) {
@@ -81,10 +82,8 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
                 return true;
             default:
                 if (strpos($offset, 'Module') === true) {
-
                     return $this->modules->offsetExists($offset);
                 } else {
-
                     return array_key_exists($offset, $this->settings);
                 }
         }
@@ -98,10 +97,8 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
                 return $this->getModules();
             default:
                 if (strpos($offset, 'Module') === true) {
-
                     return $this->modules->offsetGet($offset);
                 } else {
-
                     return $this->offsetExists($offset) ? $this->settings[$offset] : false;
                 }
         }
@@ -116,10 +113,8 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
 
             default:
                 if (strpos($offset, 'Module') === true) {
-
-                return $this->modules->offsetSet($offset, $value);
+                    return $this->modules->offsetSet($offset, $value);
                 } else {
-
                     return $this->offsetExists($offset) ? $this->settings[$offset] = $value : false;
                 }
         }
@@ -133,11 +128,9 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
                 return $this->getModules()->clear();
 
             default:
-               if (strpos($offset, 'Module') === true) {
-
-                  return $this->modules->offsetUnset($offset);
+                if (strpos($offset, 'Module') === true) {
+                    return $this->modules->offsetUnset($offset);
                 } else {
-
                     return true;
                 }
         }

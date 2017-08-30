@@ -24,7 +24,6 @@ class BBFilterProviderSettingsType extends ProviderSettingsType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
     }
 
     public function getName()
@@ -32,7 +31,7 @@ class BBFilterProviderSettingsType extends ProviderSettingsType
         return 'bbfilter_provider_settings_type';
     }
 
-     /**
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -50,7 +49,6 @@ class BBFilterProviderSettingsType extends ProviderSettingsType
             'type' => 'text',
             'options' => [],
             'delete_empty' => false,
-
         ]);
         $resolver->setNormalizer('options', $optionsNormalizer);
     }

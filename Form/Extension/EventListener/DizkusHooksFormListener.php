@@ -20,9 +20,10 @@ use Symfony\Component\Form\FormEvent;
  *
  * @author Kaik
  */
-class DizkusHooksFormListener extends ResizeFormListener {
-
-    public function preSetData(FormEvent $event) {
+class DizkusHooksFormListener extends ResizeFormListener
+{
+    public function preSetData(FormEvent $event)
+    {
         $form = $event->getForm();
         $data = $event->getData();
 
@@ -39,7 +40,7 @@ class DizkusHooksFormListener extends ResizeFormListener {
             if ($hookBundle->getSettingsForm()) {
                 $class = $hookBundle->getSettingsForm();
                 $type = new $class();
-                $form->add($name, $type ,array_replace(['property_path' => '[' . $name . ']', ], $this->options));
+                $form->add($name, $type , array_replace(['property_path' => '[' . $name . ']'], $this->options));
             }
         }
     }

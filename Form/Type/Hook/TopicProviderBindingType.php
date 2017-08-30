@@ -17,7 +17,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
 use Zikula\DizkusModule\Form\Type\Forum\ForumSelectType;
-use Zikula\DizkusModule\Form\Type\Hook\AbstractHookType;
 
 /**
  * TopicProviderBindingType
@@ -63,7 +62,6 @@ class TopicProviderBindingType extends AbstractHookType
             return $value;
         };
         $resolver->setDefaults([
-
             'allow_add' => false,
             'allow_delete' => false,
             'prototype' => true,

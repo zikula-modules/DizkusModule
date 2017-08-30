@@ -36,3 +36,4 @@ class PostSubBundle extends AbstractSubBundle
         $this->addEvent('process_delete', 'dizkus.ui_hooks.post.process_delete');
     }
 }
+

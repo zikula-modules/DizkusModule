@@ -36,4 +36,3 @@ class TopicSubBundle extends AbstractSubBundle
         $this->addEvent('process_delete', 'dizkus.ui_hooks.topic.process_delete');
     }
 }
-

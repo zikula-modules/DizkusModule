@@ -12,7 +12,6 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method; //unused at the moment
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
@@ -207,7 +206,6 @@ class TopicController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod('GET')) {
-
             goto display;
         }
 
@@ -318,11 +316,9 @@ class TopicController extends AbstractController
         display:
 
         if ($format == 'json') {
-
             return new Response(json_encode(['data' => 'no json support at the moment']));
-
         } else {
-                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/new.$template.$format.twig", [
+            $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/new.$template.$format.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentForum'  => $managedForum,
                     'form'          => $form->createView(),
@@ -342,23 +338,19 @@ class TopicController extends AbstractController
         error:
 
         if ($format == 'json') {
-
             return new Response(json_encode(['data' => $error]));
-
         } else {
-                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.new.$template.$format.twig", [
+            $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.new.$template.$format.twig", [
                     'currentForumUser' => $currentForumUser,
                     'error'  => $error,
                     'settings'      => $this->getVars(),
                 ]);
 
             if ($template == 'ajax') {
-
                 return new Response(json_encode(['html' => $error]));
             }
 
             if ($template == 'default') {
-
                 $this->addFlash('error', $error);
 
                 return new RedirectResponse($errorReturnUrl);
@@ -552,7 +544,6 @@ class TopicController extends AbstractController
         }
 
         if (!$form->isValid()) {
-
             goto display;
         }
 
@@ -591,9 +582,7 @@ class TopicController extends AbstractController
                     new GenericEvent($postManager->get()));
 
             if ($format == 'json') {
-
             } elseif ($format == 'ajax.html') {
-
             } else {
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
@@ -602,9 +591,7 @@ class TopicController extends AbstractController
         display:
 
         if ($format == 'json') {
-
             return new Response(json_encode(['data' => 'no json support at the moment']));
-
         } else {
             $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/reply.$template.$format.twig", [
                     'currentForumUser' => $currentForumUser,
@@ -614,7 +601,6 @@ class TopicController extends AbstractController
                     'settings'  => $this->getVars(),
                     ]);
             if ($template == 'ajax') {
-
                 return new Response(json_encode(['html' => $contentHtml]));
             }
 
@@ -624,23 +610,19 @@ class TopicController extends AbstractController
         error:
 
         if ($format == 'json') {
-
             return new Response(json_encode(['data' => $error]));
-
         } else {
-                $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.reply.$template.$format.twig", [
+            $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.reply.$template.$format.twig", [
                     'currentForumUser' => $currentForumUser,
                     'error'  => $error,
                     'settings'      => $this->getVars(),
                 ]);
 
             if ($template == 'ajax') {
-
                 return new Response(json_encode(['html' => $error]));
             }
 
             if ($template == 'default') {
-
                 $this->addFlash('error', $error);
 
                 return new RedirectResponse($errorReturnUrl);

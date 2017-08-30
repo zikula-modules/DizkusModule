@@ -13,7 +13,6 @@
 namespace Zikula\DizkusModule\Container;
 
 use Zikula\Bundle\HookBundle\AbstractHookContainer;
-
 use Zikula\DizkusModule\Hooks\TopicProBundle;
 use Zikula\DizkusModule\Hooks\BBCodeProBundle;
 use Zikula\DizkusModule\Hooks\BBFilterProBundle;
@@ -48,6 +47,5 @@ class HookContainer extends AbstractHookContainer
         $this->registerHookSubscriberBundle(new PostFilterSubBundle($this->__('Dizkus PostFilter subscriber')));
         // Post textarea Subscriber Hooks
         $this->registerHookSubscriberBundle(new PostTextSubBundle($this->__('Dizkus PostText subscriber')));
-
     }
 }

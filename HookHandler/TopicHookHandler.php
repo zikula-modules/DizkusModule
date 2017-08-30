@@ -24,6 +24,7 @@ use Zikula\Bundle\HookBundle\Hook\ValidationHook;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\TopicManager;
+
 //use Zikula\DizkusModule\Manager\PostManager;
 
 /**
@@ -83,7 +84,7 @@ class TopicHookHandler extends AbstractHookHandler
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
-                        $currentTopic->loadPosts($start - 1, $order)
+                    $currentTopic->loadPosts($start - 1, $order)
                             ->incrementViewsCount()
                                 ->store();
                 }
@@ -134,7 +135,7 @@ class TopicHookHandler extends AbstractHookHandler
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
-                        $currentTopic->loadPosts($start - 1, $order)
+                    $currentTopic->loadPosts($start - 1, $order)
                             ->incrementViewsCount()
                                 ->store();
                 }
@@ -256,8 +257,8 @@ class TopicHookHandler extends AbstractHookHandler
 //            }
 //            // cannot notify hooks in non-controller
 //            // notify topic & forum subscribers
-////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
-////                'post' => $newManagedTopic->getFirstPost()));
+        ////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
+        ////                'post' => $newManagedTopic->getFirstPost()));
 //            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
 //        }
 //
