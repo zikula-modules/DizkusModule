@@ -360,7 +360,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'favorites_enabled' => true,
             'removesignature' => false,
             'striptags' => true,
-            'deletehookaction' => 'lock',
+            'hooks' => ['providers' => [], 'subscribers' => []],
             'rss2f_enabled' => false,
             'timespanforchanges' => 24,
             'forum_enabled' => true,
