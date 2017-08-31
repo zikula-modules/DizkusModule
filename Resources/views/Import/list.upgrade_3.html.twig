@@ -21,9 +21,17 @@
                     <li data-jstree='{"icon":"fa fa-thumbs-o-up fa-green"}' class="jstree-open"> {{ __('Detected tables') }}
                         <ul>
                             {% for tablename, table in data.tables %}
-                                <li data-jstree='{"icon":"fa fa-check-circle fa-green"}'>{{ tablename }} {{ table.elements|length }}</li>
-                                {% else %}
-                                {% endfor %}
+                                {% set table_exists_icon=(table.exists ? 'fa fa-check-circle fa-green' : 'fa fa-exclamation-triangle fa-orange')%}
+                                <li data-jstree='{"icon":"{{ table_exists_icon }}"}'>
+                                    {{ tablename }}
+                                    {% if table.exists %}
+                                        {{ table.elements|length }}
+                                    {% else %}
+                                        <small>{{ __('(table does not exists will be created)') }}</small>
+                                    {% endif %}
+                                </li>
+                            {% else %}
+                            {% endfor %}
                         </ul>
                     </li>
                 </ul>
@@ -32,13 +40,62 @@
             <p class="tables_legend">
                 <small>{{ __('Only tables matching Dizkus versions 3 schema are considered valid. Data integrity is not checked at this point.') }}</small>
             </p>
-            <p>{{ __('Logs')}}</p>
-            <div id="log" class="well well-sm pre-scrollable">
+
+            <div id="hooks_check">
+                <ul class="list-group">
+                    <li class="list-group-item"><h5>{{ __('Hooked content found') }} <i class='fa fa-paperclip fa-orange'></i> </h5></li>
+                        {% for moduleid, module in data.hooks %}
+                        <li class="list-group-item">
+                            {% if module.data.state == 0 %}
+                                {% set module_state_icon='fa fa-check-circle fa-red' %}
+                            {% elseif module.data.state == 3 %}
+                                {% set module_state_icon='fa fa-check-circle fa-green' %}
+                            {% elseif module.data.state == 4 %}
+                                {% set module_state_icon='fa fa-exclamation-triangle fa-orange' %}
+                            {% elseif module.data.state == 5 %}
+                                {% set module_state_icon='fa fa-download fa-orange' %}
+                            {% else %}
+                                {% set module_state_icon='fa fa-question-circle fa-red' %}
+                            {% endif %}
+                            <i class='{{ module_state_icon }}'></i>
+                            {% if module.data.state == 0 %}
+                                {{ __('Id:') }} {{ moduleid }}
+                            {% elseif module.data.state == 3 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
+                            {% elseif module.data.state == 4 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
+                            {% elseif module.data.state == 5 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
+                            {% else %}
+                                {{ __('Id:') }} {{ moduleid }}  
+                            {% endif %}
+                            <span class="label label-default pull-right small">
+                                {{ module.elements|length }}@{{ __('topics')}}
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item"> <i class='fa fa-check-circle fa-green'></i>{{ __('No hooked content found') }}</li>
+                        {% endfor %}
+                    <li class="list-group-item">
+                        <ul class="list-inline small">
+                            <li class=""><i class="fa fa-check-circle fa-red"></i> {{ __('Module not found') }}</li>
+                            <li class=""><i class="fa fa-check-circle fa-green"></i> {{ __('Module found installed') }}</li>
+                            <li class=""><i class="fa fa-exclamation-triangle fa-orange"></i> {{ __('Module files are missing') }}</li>
+                            <li class=""><i class="fa fa-download fa-orange"></i> {{ __('Module not upgraded') }}</li>
+                            <li class=""><i class="fa fa-question-circle"></i> {{ __('Module state unknow') }}</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item"> <i class="fa fa-info-circle fa-blue"></i>
+                        {{ __('This is only status information. Detected data will be imported but not assigned to areas. You will be able to do that after import.') }}</li>
+                </ul>
+            </div>
+            <h5>{{ __('Logs')}}</h5>
+            <div id="log" class="well fa-ex well-sm pre-scrollable">
 
                 <samp id="logBox" style="white-space: pre;"></samp>
             </div>
             <div class="settings clearfix">
-                <p>{{  __('Import settings')}}</p>
+                <h5>{{  __('Import settings')}}</h5>
                 <div class="col-xs-4">
                     <small>{{  __('Users page')}}</small>
                     <input id="users_limit" class="form-control input-sm" value="100" type="number">

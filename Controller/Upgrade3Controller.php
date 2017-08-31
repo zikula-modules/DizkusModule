@@ -63,15 +63,17 @@ class Upgrade3Controller extends AbstractController
         $data['source']['users'] = $importHelper->getUsersStatus();
         $data['source']['users']['old']['source'] = 'old';
         $data['source']['users']['old']['toImport'] = $data['source']['users']['old']['toImport']->toArray();
-        //$data['source']['users']['posters']['source'] = 'posters';
-        //$data['source']['users']['posters']['toImport'] = 'posters';
-        //$data['source']['users']['topic']['source'] = 'topic';
-//        $data['source']['users'] = [
-//           // 'old' => ['source' => 'old'],
-//            'posters' => ['source' => 'posters','toImport' => $data['source']['users']['posters']->toArray()],
-//            'topic' => ['source' => 'topic','toImport' => $data['source']['users']['topic']->toArray()],
-//            'total' => $data['source']['users']['total']
-//        ];
+
+        /* Alternative users import direct from posts and topics
+         *
+        $data['source']['users'] = [
+           // 'old' => ['source' => 'old'],
+            'posters' => ['source' => 'posters','toImport' => $data['source']['users']['posters']->toArray()],
+            'topic' => ['source' => 'topic','toImport' => $data['source']['users']['topic']->toArray()],
+            'total' => $data['source']['users']['total']
+        ];
+        */
+
         $usersIcon = 'fa-orange';
         if (count($data['source']['users']['old']['toImport']) > 0) {
         } else {
@@ -87,20 +89,23 @@ class Upgrade3Controller extends AbstractController
             'icon' => 'fa fa-user-plus '. $usersIcon
             ];
 
-//          $data['source']['users']['posters']['toImport']
-//         $postsNode = [
-//             'id' => 'posters',
-//             'parent' => 'users_check_root',
-//             'text' => $this->__('3.1.0 posts table: ').count($data['source']['users']['old']['toImport']),
-//             'icon' => 'fa fa-user-plus fa-orange'
-//             ];
-// //        $data['source']['users']['topic']['toImport']
-//         $topicNode = [
-//             'id' => 'topic',
-//             'parent' => 'users_check_root',
-//             'text' => $this->__('3.1.0 topics table: ').count($data['source']['users']['old']['toImport']),
-//             'icon' => 'fa fa-user-plus fa-orange'
-//             ];
+        /* Alternative users import direct from posts and topics
+         *
+         $data['source']['users']['posters']['toImport']
+         $postsNode = [
+             'id' => 'posters',
+             'parent' => 'users_check_root',
+             'text' => $this->__('3.1.0 posts table: ').count($data['source']['users']['old']['toImport']),
+             'icon' => 'fa fa-user-plus fa-orange'
+             ];
+
+         $topicNode = [
+             'id' => 'topic',
+             'parent' => 'users_check_root',
+             'text' => $this->__('3.1.0 topics table: ').count($data['source']['users']['old']['toImport']),
+             'icon' => 'fa fa-user-plus fa-orange'
+             ];
+        */
 
         $toImportNode = [
             'id' => 'total',
@@ -117,20 +122,23 @@ class Upgrade3Controller extends AbstractController
             'icon' => 'fa fa-users fa-green'
             ];
 
-//        $data['toImport'] = $users['toImport'];
-//        $usersIcon = 'fa-orange';
-//        if (count($users['toImport']) > 0) {
-//                $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) . $this->__(' Need to be imported first');
-//        } else {
-//            $ranksIcon = 'fa-green';
-//            $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) .$this->__(' Ranks found: ') . count($ranks['found']) . $this->__('');
-//        }
-//        $oldUsersNode = [
-//            'id' => 'ranks',
-//            'parent' => 'users_check_root',
-//            'text' => $ranksText,
-//            'icon' => 'fa fa-star-half-o '. $ranksIcon
-//        ];
+        /* Alternative users import direct from posts and topics
+         *
+        $data['toImport'] = $users['toImport'];
+        $usersIcon = 'fa-orange';
+        if (count($users['toImport']) > 0) {
+                $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) . $this->__(' Need to be imported first');
+        } else {
+            $ranksIcon = 'fa-green';
+            $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) .$this->__(' Ranks found: ') . count($ranks['found']) . $this->__('');
+        }
+        $oldUsersNode = [
+            'id' => 'ranks',
+            'parent' => 'users_check_root',
+            'text' => $ranksText,
+            'icon' => 'fa fa-star-half-o '. $ranksIcon
+        ];
+        */
 
         $data['tree'] = [
             $ranksNode,
@@ -166,7 +174,7 @@ class Upgrade3Controller extends AbstractController
         switch ($data['source']) {
             case 'ranks':
                 if (!array_key_exists('total', $data)) {
-                    $elements = $importHelper->getOldRanks();
+                    $elements = $importHelper->getRanksStatus();
                     $data['total'] = count($elements);
                     $data['pages'] = ceil($data['total'] / $data['pageSize']);
                 }
@@ -184,30 +192,35 @@ class Upgrade3Controller extends AbstractController
                 $data['imported'] = $importHelper->importUsers($data);
 
                 break;
-//            case 'posters':
-//
-//                //first call
-//                if (!array_key_exists('total', $data)) {
-//                    $users = $importHelper->getUsersStatus();
-//                    $elements = $users['posters'];//$importHelper->getOldUsers();
-//                    $data['total'] = count($elements);
-//                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-//                }
-//                $data['imported'] = $importHelper->importUsers($data);
-//
-//                break;
-//            case 'topic':
-//
-//                //first call
-//                if (!array_key_exists('total', $data)) {
-//                    $users = $importHelper->getUsersStatus();
-//                    $elements = $users['topic'];//$importHelper->getOldUsers();
-//                    $data['total'] = count($elements);
-//                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-//                }
-//                $data['imported'] = $importHelper->importUsers($data);
-//
-//                break;
+
+        /* Alternative users import direct from posts and topics
+         *
+            case 'posters':
+
+                //first call
+                if (!array_key_exists('total', $data)) {
+                    $users = $importHelper->getUsersStatus();
+                    $elements = $users['posters'];//$importHelper->getOldUsers();
+                    $data['total'] = count($elements);
+                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
+                }
+                $data['imported'] = $importHelper->importUsers($data);
+
+                break;
+            case 'topic':
+
+                //first call
+                if (!array_key_exists('total', $data)) {
+                    $users = $importHelper->getUsersStatus();
+                    $elements = $users['topic'];//$importHelper->getOldUsers();
+                    $data['total'] = count($elements);
+                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
+                }
+                $data['imported'] = $importHelper->importUsers($data);
+
+                break;
+            */
+
         }
 
         return new Response(json_encode($data));

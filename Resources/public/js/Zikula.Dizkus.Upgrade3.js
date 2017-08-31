@@ -17,10 +17,10 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         };
         var settings = {
             users_limit: 50,
-            topics_limit: 25,
-            posts_limit: 50,
+            topics_limit: 15,
+            posts_limit: 30,
             other_limit: 50,
-            ajax_timeout: 8000
+            ajax_timeout: 10000
         }
         ;
         function init()
@@ -535,7 +535,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                 removeContent('other');
                 $("#remove_other").addClass('disabled');
             });
-            $("#recover_other").removeClass('btn-default').addClass('btn-primary');
+//            $("#recover_other").removeClass('btn-default').addClass('btn-primary');
         }
         ;
         // simple load fresh data on open
