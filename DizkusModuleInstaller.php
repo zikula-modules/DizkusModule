@@ -456,5 +456,4 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
         return $path;
     }
-
 }
