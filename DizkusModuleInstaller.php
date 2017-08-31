@@ -424,6 +424,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                         break;
                     default:
                         $var = $defVar;
+
                         break;
                 }
             }
@@ -455,4 +456,5 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
         return $path;
     }
+
 }

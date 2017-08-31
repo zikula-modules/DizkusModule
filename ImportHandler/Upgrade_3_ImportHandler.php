@@ -1286,4 +1286,5 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         return false;
     }
+
 }
