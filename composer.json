@@ -27,7 +27,7 @@
             "core-compatibility": ">=1.4.1",
             "displayname": "Dizkus forums",
             "url": "forums",
-            "oldnames": [],
+            "oldnames": ["Dizkus"],
             "capabilities": {
                 "admin": {"route": "zikuladizkusmodule_admin_tree"},
                 "user": {"route": "zikuladizkusmodule_user_index"},
