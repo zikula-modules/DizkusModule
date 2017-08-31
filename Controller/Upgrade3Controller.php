@@ -220,7 +220,6 @@ class Upgrade3Controller extends AbstractController
 
                 break;
             */
-
         }
 
         return new Response(json_encode($data));

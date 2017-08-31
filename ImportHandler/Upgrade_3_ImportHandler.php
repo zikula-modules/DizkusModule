@@ -47,6 +47,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $status['tables'] = $this->getTablesForPrefix();
         $status['hooks'] = $this->getHookedModulesStatus();
+
         return $status;
     }
 
@@ -144,12 +145,10 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $forumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $id);
         if ($forumUser != null) {
-
             return $forumUser;
         }
         $zikulaUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $id);
         if ($zikulaUser == null) {
-
             return $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
         }
         $newForumUser = new ForumUserEntity();
@@ -281,7 +280,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $systemUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $user['user_id']);
         if ($systemUser == null) {
             // user no longer exists in zikula
-           return false;
+            return false;
         } else {
             $newUser->setLevel(1);
             $newUser->setUser($systemUser);
@@ -468,7 +467,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
         $newForum->setRoot($root);
         $newForum->setStatus(1);
-                // @todo connection if someone asks...
+        // @todo connection if someone asks...
 //            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
 //            $connection = new Pop3Connection($connectionData);
 //            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $connectionData['id']);
@@ -1096,7 +1095,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $topics = $statement->fetchAll();
         foreach ($topics as $topic) {
             $topic['moduleid'] = $this->decodeModuleIdFromReference($topic['topic_reference']);
-            if($modulesCollection->offsetExists($topic['moduleid'])) {
+            if ($modulesCollection->offsetExists($topic['moduleid'])) {
                 $module = $modulesCollection->get($topic['moduleid']);
                 $module['id'] = $topic['moduleid'];
                 $module['elements']->add($topic);
@@ -1109,7 +1108,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $modulesCollection = $modulesCollection->map(
-            function($entry) {
+            function ($entry) {
                 $module = $this->em->find('Zikula\ExtensionsModule\Entity\ExtensionEntity', $entry['id']);
                 if ($module) {
                     $entry['data'] = $module;

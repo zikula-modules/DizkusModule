@@ -315,12 +315,12 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // remove table prefixes
         foreach ($this->importTables as $value) {
             if (!$schema->hasTable($prefix.$value)) {
-
                 continue;
             }
 
             $sql = 'RENAME TABLE '.$prefix.$value.' TO '.$value;
             $stmt = $connection->prepare($sql);
+
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
@@ -342,12 +342,12 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // remove table prefixes
         foreach ($this->importTables as $value) {
             if (!$schema->hasTable($prefix.$value)) {
-
                 continue;
             }
 
             $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
             $stmt = $connection->prepare($sql);
+
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
@@ -411,7 +411,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $defVars = $this->getDefaultVars();
 
         foreach ($defVars as $key => $defVar) {
-            if (array_key_exists($key, $currentModVars)){
+            if (array_key_exists($key, $currentModVars)) {
                 $type = gettype($defVar);
                 switch ($type) {
                     case 'boolean':
@@ -422,7 +422,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                         }
 
                         break;
-                    default :
+                    default:
                         $var = $defVar;
                         break;
                 }
