@@ -281,6 +281,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $forumRoot->lock();
                 $this->entityManager->persist($forumRoot);
 
+                $this->addFlash('status', $this->__f('Please go to Dizkus admin import to do full data import.'));
+
                 break;
             case '4.0.0':
 
@@ -344,9 +346,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $schema = $schemaManager->createSchema();
         // remove table prefixes
         foreach ($this->importTables as $value) {
-            if (!$schema->hasTable($prefix.$value)) {
-                continue;
-            }
+//            if (!$schema->hasTable($prefix.$value)) {
+//                continue;
+//            }
 
             $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
             $stmt = $connection->prepare($sql);
@@ -460,32 +462,3 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         return $path;
     }
 }
-
-//    public function configPrefix()
-//    {
-//        $configPrefix = $this->container->getParameter("prefix");
-//        $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
-//        $connection = $this->entityManager->getConnection();
-//        $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
-//        $stmt = $connection->prepare($sql);
-//        try {
-//            $stmt->execute();
-//        } catch (\Exception $e) {
-//            $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
-//
-//            return false;
-//        }
-//    }
-//                ini_set('memory_limit', '194M');
-//                ini_set('max_execution_time', 86400);
-//
-//                //
-//                if (!$this->upgrade_to_4_0_0()) {
-//                    return false;
-//                }
-//
-//                break;
-//            case '4.0.0':
-//                if (!$this->upgrade_to_4_1_0()) {
-//                    return false;
-//                }
