@@ -1,0 +1,8 @@
+Initial dev version.
+
+Hooks
+
+Dizkus uses Zikula Hooks system to provide and use additional functionality.
+AbstractProBundle and AbstractSubBundle are base classes for each of hooks type.
+Apart from fitting into Zikula Hook system these provide additional functionality that is allowing for Dizkus internal hooks management as well as hookbundle-area settings.
+

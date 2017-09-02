@@ -1,28 +1,44 @@
-{# 
-
+{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:css/style.css')) }}
 <fieldset>
-    <legend><i class="fa fa-comment fa-lg"></i> {gt text="Dizkus"}</legend>
-        {if !isset($topic)}
-            <div class="form-group">
-                <div class="col-lg-3 control-label">
-                    <label for="dizkus_checkbox">{gt text="Enable commenting on this item"}</label>
+    <legend><i class="fa fa-comment fa-md"></i> {{ __("Dizkus comments")}}</legend>
+    <div class="form-group">
+        {% if currentForum %}
+            <div class="col-md-3  control-label">
+                <i class="fa fa-check fa-lg fa-green"></i> {{ __("Selected forum:")}} {{ currentForum.get.name }}
+            </div>
+            {% if currentTopic %}
+                <div class="col-md-6  control-label">
+                    <i class="fa fa-check fa-lg fa-green"></i> {{ __("A discussion topic has been created for this item.")}}
+                    [<a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': currentTopic.id}) }}">{{ __("View topic")}}</a>]
                 </div>
-                <div class="col-lg-9">
+                <div class="col-md-12">
+                    {{ __("Updated values here will be reflected in the discussion topic.")}}
+                    {# @todo Add comments section (topic) settings here locking title... etc... #}
+                </div>
+            {% else %}
+
+
+
+                <div class="col-md-3 control-label">
+                    <label for="dizkus_checkbox">{{ __("Enable commenting on this item")}}</label>
+                </div>
+
+
+                {# @todo Add proper new (topic) settings here locking title... etc... #}
+                <div class="col-md-2">
                     <div class="checkbox">
-                        <input id="dizkus_checkbox" name="dizkus[createTopic]" type="checkbox" value="1" {if $newTopic}checked="checked"{/if} />
+                        <input id="dizkus_checkbox" name="dizkus[createTopic]" type="checkbox" value="1" {#{if $newTopic}checked="checked"{/if}#} />
                     </div>
                 </div>
+
+
+
+            {% endif %}
+        {% else %}
+            <div class="col-md-3  control-label">
+                <i class="fa fa-exclamation-triangle fa-lg fa-black"></i>
+                {{ __("Forum for comments was not selected.")}}
             </div>
-        {else}
-            <div class="alert alert-success">
-                <i class="fa fa-check fa-lg"></i> {gt text="A discussion topic has been created for this item." tag1=$forum}
-                [<a href="{route name='zikuladizkusmodule_user_viewtopic' topic=$topic.topic_id}">{gt text='View topic'}</a>]
-                {gt text="Updated values here will be reflected in the discussion topic."}
-            </div>
-            <input type="hidden" name="dizkus[createTopic]" value="1" />
-        {/if}
+        {% endif %}
+    </div>
 </fieldset>
-
-
-#}
-ble ble ble

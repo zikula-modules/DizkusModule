@@ -148,14 +148,14 @@ class ForumManager
      * @param integer $id
      * @param ForumEntity $forum
      */
-    public function getManager($id = null, ForumEntity $forum = null)
+    public function getManager($id = null, ForumEntity $forum = null, $create = true)
     {
         if (isset($forum)) {
             // forum has been injected
             $this->_forum = $forum;
         } elseif ($id > 0) {
             $this->_forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $id);
-        } else {
+        } elseif ($create) {
             $this->_forum = new ForumEntity();
         }
 
