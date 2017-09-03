@@ -102,14 +102,17 @@ class TopicRepository extends EntityRepository
             case '24':
                 // today
                 $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new \DateTime('today'));
+
                 break;
             case '48':
                 // since yesterday
                 $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new \DateTime('yesterday'));
+
                 break;
             case '168':
                 // lastweek
                 $qb->where('l.post_time > :wheretime')->setParameter('wheretime', new \DateTime('-1 week'));
+
                 break;
             default:
                 // since
@@ -151,15 +154,17 @@ class TopicRepository extends EntityRepository
             'modulename' => $hook->getCaller(),
             'objectid' => $hook->getId(),
             'area' => $hook->getAreaId()]);
+
         try {
             $result = $query->getOneOrNullResult();
         } catch (\Exception $e) {
-            echo '<pre>';
-            var_dump($e->getMessage());
-            var_dump($query->getDQL());
-            var_dump($query->getParameters());
-            var_dump($query->getSQL());
-            die;
+//            echo '<pre>';
+//            var_dump($e->getMessage());
+//            var_dump($query->getDQL());
+//            var_dump($query->getParameters());
+//            var_dump($query->getSQL());
+//            die;
+            return null;
         }
 
         return $result;

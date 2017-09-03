@@ -20,7 +20,9 @@ use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 
 /**
- * Description of Permissions.
+ * TopicProviderBindingType
+ *
+ * @author Kaik
  */
 class Permission
 {
@@ -233,6 +235,7 @@ class Permission
                 $this->entityManager->detach($forum);
                 // ensure that future operations are not persisted
                 unset($forums[$key]);
+
                 continue;
             }
             $this->filterForumChildrenByPermission($forum);

@@ -40,12 +40,13 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
     public function getDescription()
     {
-        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0', [], 'zikuladizkusmodule');
+        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0_, 3_2_0', [], 'zikuladizkusmodule');
     }
 
     public function getStatus()
     {
         $status['tables'] = $this->getTablesForPrefix();
+        $status['hooks'] = $this->getHookedModulesStatus();
 
         return $status;
     }
@@ -140,11 +141,39 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         return $currentPageItems;
     }
 
+    public function getForumUserFromId($id)
+    {
+        $forumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $id);
+        if ($forumUser != null) {
+            return $forumUser;
+        }
+        $zikulaUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $id);
+        if ($zikulaUser == null) {
+            return $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
+        }
+        $newForumUser = new ForumUserEntity();
+        $newForumUser->setUser($zikulaUser);
+        $this->em->persist($newForumUser);
+        $this->em->flush();
+
+        return $newForumUser;
+    }
+
     /*
      * Users
      */
     public function getUsersStatus()
     {
+        //lets add guest user id 1 there is only one special account for guests and deleted users
+        $guestForumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
+        if ($guestForumUser == null) {
+            $guestForumUser = new ForumUserEntity();
+            $guestUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', 1);
+            $guestForumUser->setUser($guestUser);
+            $this->em->persist($guestForumUser);
+            $this->em->flush();
+        }
+
         $usersCollection = new ArrayCollection();
         $currentUsers = $this->em->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->findAll();
         foreach ($currentUsers as $cuser) {
@@ -167,42 +196,44 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 }
             }
         }
+        /* Alternative users import direct from posts and topics
+         *
+                //get users from posts
+                $posts = [];
+                $posts['toImport'] = new ArrayCollection();
+                $connection = $this->em->getConnection();
+                $sql = 'SELECT DISTINCT(poster_id) as poster_id FROM import_dizkus_posts';
+                $posts['found'] = $connection->fetchAll($sql);
+                foreach ($posts['found'] as $post) {
+                    $sameIdTest = function($key, $element) use ($post) {
+                            return $element->getUserId() == $post['poster_id'];
+                        };
 
-//        //get users from posts
-//        $posts = [];
-//        $posts['toImport'] = new ArrayCollection();
-//        $connection = $this->em->getConnection();
-//        $sql = 'SELECT DISTINCT(poster_id) as poster_id FROM import_dizkus_posts';
-//        $posts['found'] = $connection->fetchAll($sql);
-//        foreach ($posts['found'] as $post) {
-//            $sameIdTest = function($key, $element) use ($post) {
-//                    return $element->getUserId() == $post['poster_id'];
-//                };
-//
-//            if (!$usersCollection->exists($sameIdTest)) {
-//                //$u = $this->getForumUserFromTableRow(['user_id' => $post['poster_id']]);
-////                if($u){
-////                    $usersCollection->add($u);
-////                    $posts['toImport']->add($u);
-////                }
-//            }
-//        }
-//
-//        //get users from posts
-//        $posts = [];
-//        $posts['toImport'] = new ArrayCollection();
-//        $topicUsersCollection = new ArrayCollection();
-//        $sql = 'SELECT DISTINCT(topic_poster) as topic_poster FROM import_dizkus_topics';
-//        $topics = $connection->fetchAll($sql);
-//        foreach ($topics as $topic) {
-//            if (!$usersCollection->containsKey($topic['topic_poster'])) {
-//                $u = new ForumUserEntity();
-//                $u->setUserId($topic['topic_poster']);
-//                //$u = $this->getForumUserFromTableRow(['user_id' => $topic['topic_poster']]);
-//                $usersCollection->add($u);
-//                $topicUsersCollection->add($u);
-//            }
-//        }
+                    if (!$usersCollection->exists($sameIdTest)) {
+                        //$u = $this->getForumUserFromTableRow(['user_id' => $post['poster_id']]);
+        //                if($u){
+        //                    $usersCollection->add($u);
+        //                    $posts['toImport']->add($u);
+        //                }
+                    }
+                }
+
+                //get users from topics
+                $posts = [];
+                $posts['toImport'] = new ArrayCollection();
+                $topicUsersCollection = new ArrayCollection();
+                $sql = 'SELECT DISTINCT(topic_poster) as topic_poster FROM import_dizkus_topics';
+                $topics = $connection->fetchAll($sql);
+                foreach ($topics as $topic) {
+                    if (!$usersCollection->containsKey($topic['topic_poster'])) {
+                        $u = new ForumUserEntity();
+                        $u->setUserId($topic['topic_poster']);
+                        //$u = $this->getForumUserFromTableRow(['user_id' => $topic['topic_poster']]);
+                        $usersCollection->add($u);
+                        $topicUsersCollection->add($u);
+                    }
+                }
+        */
 
         return ['current' => $currentUsers,
                 'old' => $old,
@@ -249,7 +280,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $systemUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $user['user_id']);
         if ($systemUser == null) {
             // user no longer exists in zikula
-           return false;
+            return false;
         } else {
             $newUser->setLevel(1);
             $newUser->setUser($systemUser);
@@ -282,7 +313,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $index_start = $offset * $data['pageSize'] - $data['pageSize'];
         $usersArr = is_object($users[$data['source']]['toImport']) ? $users[$data['source']]['toImport']->toArray() : $users[$data['source']]['toImport'];
         $elements = array_slice($usersArr, $index_start, $data['pageSize'], true);
-
         $done = [];
         foreach ($elements as $forumUser) {
             $forumUserObj = is_object($forumUser) ? $forumUser : $this->getForumUserFromTableRow($forumUser);
@@ -294,35 +324,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 $done[] = $forumUserObj->getUser();
             }
         }
-
         $this->em->flush();
-
-//        $sql = 'SELECT * FROM import_dizkus_users LIMIT :offset,:limit';
-//        $statement = $conn->prepare($sql);
-//        $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
-//        $statement->bindValue('offset', $offset, \PDO::PARAM_INT);
-//
-//        $statement->execute();
-//        $currentPageItems = $statement->fetchAll();
-//
-//        foreach ($currentPageItems as $userArr) {
-//
-//        //check if rank exists
-//        $rankExists = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $userArr['user_id']);
-//        //skip if exists
-//        if ($rankExists) {
-//            continue;
-//        }
-//
-//        $user = $this->getForumUserFromTableRow($userArr);
-//
-//        $metadata = $this->em->getClassMetadata(get_class($user));
-//        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-//        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-//        $this->em->persist($user);
-//        $this->em->flush();
-//
-//        }
 
         return $done;
     }
@@ -465,11 +467,11 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
         $newForum->setRoot($root);
         $newForum->setStatus(1);
-
-////            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
-////            $connection = new Pop3Connection($connectionData);
-////            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $connectionData['id']);
-////            $forum->setPop3Connection($connection);
+        // @todo connection if someone asks...
+//            $connectionData['coreUser'] = $this->entityManager->getReference('Zikula\\UsersModule\\Entity\\UserEntity', $connectionData['userid']);
+//            $connection = new Pop3Connection($connectionData);
+//            $forum = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $connectionData['id']);
+//            $forum->setPop3Connection($connection);
 
         return $newForum;
     }
@@ -543,12 +545,10 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
         $forumObj->setParent($root);
         $forumObj->setRoot(1);
-
         if ($forumObj) {
             $metadata = $this->em->getClassMetadata(get_class($forumObj));
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            //no bulk insert
             $this->em->persist($forumObj);
             $this->em->flush();
         }
@@ -571,14 +571,11 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setParent($parent);
         $forumObj->setLvl(2);
         $forumObj->setLft($data['node']['lft']);
-        //$root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
         $forumObj->setRoot(1);
-        //save forum object
         if ($forumObj) {
             $metadata = $this->em->getClassMetadata(get_class($forumObj));
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            //no bulk insert
             $this->em->persist($forumObj);
             $this->em->flush();
         }
@@ -602,17 +599,15 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 $metadata = $this->em->getClassMetadata(get_class($topic));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-                //no bulk insert
                 $this->em->persist($topic);
                 $this->em->flush();
                 $data['topics_imported']++;
             }
+
             $data['topic_index']++;
-            //prepare topic posts for import
             $data['topic'] = $topic->getId();
             $data['posts_total'] = $topic->getReplyCount();
             $data['posts_pages'] = ceil($data['posts_total'] / $data['posts_limit']);
-            //import posts will handle posts
             $data = $this->importPosts($data);
             if ($data['posts_pages'] > 1) {
                 $data['node']['lvl'] = 3;
@@ -660,10 +655,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['topics_limit'];
         $offset = $data['topics_page'] === 0 ? $data['topics_page'] : $data['topics_page'] * $limit;
-        // offset on page where we stopped to import posts
         if ($data['topic_index'] !== null) {
             $offset = $data['topic_index'];
-            //new limit
             $overPage = $data['topic_index'] % $limit;
             $limit = $limit - $overPage;
             if ($overPage == 0) {
@@ -691,11 +684,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $newTopic = new TopicEntity();
         $newTopic->setId($topic['topic_id']);
         $newTopic->setTitle($topic['topic_title']);
-        $poster = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $topic['topic_poster']);
-        if ($poster === null) {
-            $poster = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
-        }
-        $newTopic->setPoster($poster);
+        $newTopic->setPoster($this->getForumUserFromId($topic['topic_poster']));
         $postsCount = (int) $this->getPostsCount($topic['topic_id']);
         $newTopic->setReplyCount($postsCount); // -1
         $topicTime = new \DateTime($topic['topic_time']);
@@ -703,7 +692,19 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $newTopic->setViewCount($topic['topic_views']);
         $newTopic->setSolved($topic['topic_status']);
         $newTopic->setSticky($topic['sticky']);
-        //decode reference $this->decodeHooks();
+
+        /**
+         * migrate hooked topics data to maintain hook connection with original object.
+         *
+         * Additionally, if the subscriber module has more than one subscriber area, then migration is
+         * also impossible (which to choose?) so the topic is locked and reference is imported
+         * @todo - additional page to manage orphaned hooks where all items can be assigned to areas
+         * because there is no definitive information about area we will just import data we have
+         */
+        if ($topic['topic_reference'] !== '') {
+            $newTopic->setHookedModule($this->decodeModuleIdFromReference($topic['topic_reference']));
+            $newTopic->setHookedObjectId($this->decodeObjectIdFromReference($topic['topic_reference']));
+        }
 
         return $newTopic;
     }
@@ -720,7 +721,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 $metadata = $this->em->getClassMetadata(get_class($post));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-                //bulk insert
                 $this->em->persist($post);
                 $data['posts_imported']++;
             }
@@ -765,7 +765,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_posts WHERE topic_id = '. $topic .' ORDER BY post_id ASC LIMIT '. $offset .','. $limit .'';
         $statement = $connection->prepare($sql);
         $statement->execute();
-
         $posts = $connection->fetchAll($sql);
         $topicObj = $this->em->find('Zikula\DizkusModule\Entity\TopicEntity', $topic);
         foreach ($posts as $post) {
@@ -785,11 +784,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $newPost->setPostText($post['post_text']);
         $newPost->setPost_time(new \DateTime($post['post_time']));
         $newPost->setPoster_ip($post['poster_ip']);
-        $poster = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['poster_id']);
-        if ($poster === null) {
-            $poster = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
-        }
-        $newPost->setPoster($poster);
+        $newPost->setPoster($this->getForumUserFromId($post['poster_id']));
 
         return $newPost;
     }
@@ -816,13 +811,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
-//            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
-//            if (!$forum || !$user) {
-//                $found[] = $itm;
-//            } else {
-                $toImport[] = $itm;
-//            }
+            $toImport[] = $itm;
         }
 
         return ['found'=> $found, 'toImport' => $toImport];
@@ -841,7 +830,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['pageSize'];
         $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
-
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_favorites LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -858,13 +846,9 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
                 continue;
             }
+
             $itmObj = new ForumUserFavoriteEntity($user, $forum);
-
-            $metadata = $this->em->getClassMetadata(get_class($itmObj));
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $this->em->persist($itmObj);
-
             $data['imported']++;
         }
         $this->em->flush();
@@ -880,13 +864,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
-//            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
-//            if (!$forum || !$user) {
-//                $found[] = $itm;
-//            } else {
-                $toImport[] = $itm;
-//            }
+            $toImport[] = $itm;
         }
 
         return ['found'=> $found, 'toImport' => $toImport];
@@ -905,7 +883,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['pageSize'];
         $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
-
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_mods WHERE user_id < 1000000 LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -922,11 +899,11 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
                 continue;
             }
+
             $itmObj = new ModeratorUserEntity();
             $itmObj->setForum($forum);
             $itmObj->setForumUser($user);
             $this->em->persist($itmObj);
-
             $data['imported']++;
         }
         $this->em->flush();
@@ -942,14 +919,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
-//            $gid = $itm['user_id'] - 1000000;
-//            $group = $this->em->find('Zikula\GroupsModule\Entity\GroupEntity', $gid);
-//            if (!$forum || !$group) {
-//                $found[] = $itm;
-//            } else {
-                $toImport[] = $itm;
-//            }
+            $toImport[] = $itm;
         }
 
         return ['found'=> $found, 'toImport' => $toImport];
@@ -968,7 +938,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['pageSize'];
         $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
-
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_mods WHERE user_id > 1000000 LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -986,15 +955,11 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
                 continue;
             }
+
             $itmObj = new ModeratorGroupEntity();
             $itmObj->setForum($forum);
             $itmObj->setGroup($group);
-
-//            $metadata = $this->em->getClassMetadata(get_class($itmObj));
-//            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-//            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $this->em->persist($itmObj);
-
             $data['imported']++;
         }
         $this->em->flush();
@@ -1010,13 +975,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-            //            $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $itm['forum_id']);
-//            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
-//            if (!$forum || !$user) {
-//                $found[] = $itm;
-//            } else {
-                $toImport[] = $itm;
-//            }
+            $toImport[] = $itm;
         }
 
         return ['found'=> $found, 'toImport' => $toImport];
@@ -1035,7 +994,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['pageSize'];
         $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
-
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_subscription LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -1052,13 +1010,9 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
                 continue;
             }
+
             $itmObj = new ForumSubscriptionEntity($user, $forum);
-
-//            $metadata = $this->em->getClassMetadata(get_class($itmObj));
-//            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-//            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $this->em->persist($itmObj);
-
             $data['imported']++;
         }
         $this->em->flush();
@@ -1074,13 +1028,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $toImport = [];
         $found = [];
         foreach ($old as $itm) {
-            //            $topic = $this->em->find('Zikula\DizkusModule\Entity\TopicEntity', $itm['topic_id']);
-//            $user = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $itm['user_id']);
-//            if (!$topic || !$user) {
-//                $found[] = $itm;
-//            } else {
-                $toImport[] = $itm;
-//            }
+            $toImport[] = $itm;
         }
 
         return ['found'=> $found, 'toImport' => $toImport];
@@ -1099,7 +1047,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $limit = $data['pageSize'];
         $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
-
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_topic_subscription LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -1126,6 +1073,56 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         return $data;
     }
 
+    public function decodeModuleIdFromReference($reference)
+    {
+        return substr($reference, 0, strspn($reference, "0123456789"));
+    }
+
+    public function decodeObjectIdFromReference($reference)
+    {
+        // assuming one spacing character!
+        return substr($reference, strspn($reference, "0123456789") + 1);
+    }
+
+    public function getHookedModulesStatus()
+    {
+        $connection = $this->em->getConnection();
+        $sql = 'SELECT * FROM ' . $this->prefix . "_dizkus_topics WHERE topic_reference <> '' AND topic_reference <> 0";
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        $topicsCollection = new ArrayCollection();
+        $modulesCollection = new ArrayCollection();
+        $topics = $statement->fetchAll();
+        foreach ($topics as $topic) {
+            $topic['moduleid'] = $this->decodeModuleIdFromReference($topic['topic_reference']);
+            if ($modulesCollection->offsetExists($topic['moduleid'])) {
+                $module = $modulesCollection->get($topic['moduleid']);
+                $module['id'] = $topic['moduleid'];
+                $module['elements']->add($topic);
+            } else {
+                $elements =  new ArrayCollection();
+                $elements->add($topic);
+                $modulesCollection->set($topic['moduleid'], ['id' => $topic['moduleid'], 'elements' => $elements]);
+            }
+            $topicsCollection->add($topic);
+        }
+
+        $modulesCollection = $modulesCollection->map(
+            function ($entry) {
+                $module = $this->em->find('Zikula\ExtensionsModule\Entity\ExtensionEntity', $entry['id']);
+                if ($module) {
+                    $entry['data'] = $module;
+                } else {
+                    $entry['data'] = ['state' => 0];
+                }
+
+                return $entry;
+            }
+        );
+
+        return $modulesCollection;
+    }
+
     /*
      * DB check below
      *
@@ -1133,12 +1130,18 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     public function getTablesForPrefix()
     {
         $connection = $this->em->getConnection();
+        $schemaManager = $connection->getSchemaManager();
         $importTables = [];
-        foreach ($connection->getSchemaManager()->listTables() as $tableDetails) {
-            if (strpos($tableDetails->getName(), $this->prefix) !== false) {
-                $tablename = substr($tableDetails->getName(), strlen($this->prefix));
-                $importTables[$tablename]['elements'] = $connection->fetchAll('SELECT * FROM ' . $tableDetails->getName());
-                $importTables[$tablename]['status'] = $this->checkTableStatus($tableDetails, $this->prefix);
+        foreach ($this->getSupportedTables() as $tableName) {
+            $prefixedTableName = $this->prefix.'_'.$tableName;
+            if ($schemaManager->tablesExist([$prefixedTableName]) == true) {
+                $importTables[$tableName]['exists'] = true;
+                $importTables[$tableName]['elements'] = $connection->fetchAll('SELECT * FROM ' . $prefixedTableName);
+                $importTables[$tableName]['status'] = $this->checkTableStatus($schemaManager->listTableDetails($prefixedTableName), $this->prefix);
+            } else {
+                $importTables[$tableName]['exists'] = false;
+                $importTables[$tableName]['elements'] = null;
+                $importTables[$tableName]['status'] = false;
             }
         }
 
@@ -1180,7 +1183,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
      */
     public function checkTableColumns($tableDetails, $prefix)
     {
-        if ($this->check310TableCompatibility($tableDetails, $prefix)) {
+        if ($this->check3TableCompatibility($tableDetails, $prefix)) {
             return '3.1.0';
         }
 
@@ -1190,7 +1193,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     /**
      * Check 3 compat
      */
-    public function check310TableCompatibility($tableDetails, $prefix)
+    public function check3TableCompatibility($tableDetails, $prefix)
     {
         $tablesWithColumns = [
             'dizkus_categories' => ['cat_id',
@@ -1277,68 +1280,10 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         if (array_key_exists(str_replace($prefix, "", $tableDetails->getName()), $tablesWithColumns)) {
             $importTableColumns = array_keys($tableDetails->getColumns());
             $supportedColumns = $tablesWithColumns[str_replace($prefix, "", $tableDetails->getName())];
-            // exact fields order check
+
             return array_diff($importTableColumns, $supportedColumns) === array_diff($supportedColumns, $importTableColumns);
         }
 
         return false;
     }
 }
-
-////
-////    /**
-////     * migrate hooked topics data to maintain hook connection with original object.
-////     *
-////     * This routine will only attempt to migrate references where the topic_reference field
-////     * looks like `moduleID-objectId` -> e.g. '14-57'. If the field contains any underscores
-////     * the topic will be locked and the reference left unmigrated. This is mainly because
-////     * modules that use that style of reference are not compatible with Core 1.4.0+
-////     * anyway and so migrating their references would be pointless.
-////     *
-////     * Additionally, if the subscriber module has more than one subscriber area, then migration is
-////     * also impossible (which to choose?) so the topic is locked and reference left
-////     * unmigrated also.
-////     *
-////     * @param array $rows
-////     */
-////    private function upgrade_to_4_0_0_migrateHookedTopics($rows)
-////    {
-////        $count = 0;
-////        foreach ($rows as $row) {
-////            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $row['topic_id']);
-////            if (isset($topic)) {
-////                if (strpos($row['topic_reference'], '_') !== false) {
-////                    // reference contains an unsupported underscore, lock the topic
-////                    $topic->lock();
-////                } else {
-////                    list($moduleId, $objectId) = explode('-', $row['topic_reference']);
-////                    //$moduleInfo = ModUtil::getInfo($moduleId);
-////                    $module = $this->entityManager->getRepository('Zikula\ExtensionsModule\Entity\ExtensionEntity')->find($moduleId);
-////                    if ($module) {
-////                        $searchCritera = [
-////                            'owner' => $module->getName(),
-////                            'areatype' => 's',
-////                            'category' => 'ui_hooks', ];
-////                        $subscriberArea = $this->entityManager->getRepository('Zikula\\Component\\HookDispatcher\\Storage\\Doctrine\\Entity\\HookAreaEntity')->findBy($searchCritera);
-////                        if (count($subscriberArea) != 1) {
-////                            // found either too many areas or none. cannot migrate
-////                            $topic->lock();
-////                        } else {
-////                            // finally set the information
-////                            $topic->setHookedModule($module->getName());
-////                            $topic->setHookedAreaId($subscriberArea->getId());
-////                            $topic->setHookedObjectId($objectId);
-////                        }
-////                    }
-////                }
-////
-////                ++$count;
-////                if ($count > 20) {
-////                    $this->entityManager->flush();
-////                    $count = 0;
-////                }
-////            }
-////        }
-////        // flush remaining
-////        $this->entityManager->flush();
-////    }

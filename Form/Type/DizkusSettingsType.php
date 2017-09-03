@@ -123,6 +123,10 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
+
+                // Hooks
+                ->add('hooks', DizkusHooksType::class)
+
                 // Security
                 ->add('log_ip', ChoiceType::class, ['choices' => ['0' => 'Off', '1' => 'On'],
                     'multiple' => false,
@@ -136,7 +140,7 @@ class DizkusSettingsType extends AbstractType
                     'multiple' => false,
                     'expanded' => true,
                     'required' => true])
-                ->add('notifyAdminAsMod', ChoiceType::class, ['choices' => $options['admins'],
+                ->add('notifyAdminAsMod', ChoiceType::class, ['choices' => $options['settingsManager']->getAdmins(),
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true])
@@ -151,10 +155,6 @@ class DizkusSettingsType extends AbstractType
                     'disabled' => true,
                     'expanded' => true,
                     'required' => true])
-                ->add('deletehookaction', ChoiceType::class, ['choices' => ['remove' => 'Delete topic', 'lock' => 'Lock topic'],
-                    'multiple' => false,
-                    'expanded' => false,
-                    'required' => true])
 
                 ->add('restore', SubmitType::class, [])
                 ->add('save', SubmitType::class, []);
@@ -162,7 +162,7 @@ class DizkusSettingsType extends AbstractType
 
     public function getName()
     {
-        return 'zikula_dizkus_module_admin_settings_forum';
+        return 'zikula_dizkus_module_admin_settings_form';
     }
 
     /**
@@ -171,7 +171,7 @@ class DizkusSettingsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'admins' => [],
+            'settingsManager' => false,
         ]);
     }
 }
