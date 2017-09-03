@@ -17,10 +17,10 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         };
         var settings = {
             users_limit: 50,
-            topics_limit: 25,
-            posts_limit: 50,
+            topics_limit: 15,
+            posts_limit: 30,
             other_limit: 50,
-            ajax_timeout: 8000
+            ajax_timeout: 10000
         }
         ;
         function init()
@@ -284,7 +284,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             }
             return node;
         }
-
+        console.log(data);
         function startForumImport() {
             readSettings();
             // import started indicator
@@ -384,7 +384,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                         def.notify(data);
                     } else if (data.node.lvl === 1) {
                         //data node is category select forum
-                        if (data.node.children.length > data.forum_index + 1) {
+                        if (data.node.children.length >= data.forum_index + 1) {
                             data.node = data.node.children[data.forum_index];
                             // open forum that we will work on
                             data.open = data.node.id;
@@ -535,7 +535,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                 removeContent('other');
                 $("#remove_other").addClass('disabled');
             });
-            $("#recover_other").removeClass('btn-default').addClass('btn-primary');
+//            $("#recover_other").removeClass('btn-default').addClass('btn-primary');
         }
         ;
         // simple load fresh data on open

@@ -46,7 +46,7 @@ class ForumController extends AbstractController
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => (int) $indexTo], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => (int) $indexTo], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -121,7 +121,7 @@ class ForumController extends AbstractController
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', [$forum]));
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead($managedForum->get())) {
@@ -244,6 +244,7 @@ class ForumController extends AbstractController
                             // dump('delete topic'.$topic_id);
                             $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($topic_id);
                         }
+
                         break;
 
                     case 'move':
@@ -259,6 +260,7 @@ class ForumController extends AbstractController
 //                                'forum_id' => $moveto,
 //                                'createshadowtopic' => $shadow]);
                         }
+
                         break;
 
                     case 'lock':
@@ -274,6 +276,7 @@ class ForumController extends AbstractController
 //                                'topic' => $topic_id,
 //                                'action' => $action]);
                         }
+
                         break;
 
                     case 'join':
@@ -298,6 +301,7 @@ class ForumController extends AbstractController
 //                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
 //                                'to_topic_id' => $jointo]);
                         }
+
                         break;
 
                     default:
