@@ -1,12 +1,13 @@
 <?php
 
-/*
- * This file is part of the Zikula package.
+/**
+ * Dizkus
  *
- * Copyright Zikula Foundation - http://zikula.org/
+ * @copyright (c) 2001-now, Dizkus Development Team
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @see https://github.com/zikula-modules/Dizkus
+ *
+ * @license GNU/GPL - http://www.gnu.org/copyleft/gpl.html
  */
 
 namespace Zikula\DizkusModule\Twig;

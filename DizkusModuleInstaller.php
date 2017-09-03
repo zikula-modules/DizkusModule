@@ -39,6 +39,20 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         'Zikula\DizkusModule\Entity\ModeratorGroupEntity',
     ];
 
+    //import
+    private $importTables = [
+            'dizkus_categories',
+            'dizkus_forum_mods',
+            'dizkus_forums',
+            'dizkus_posts',
+            'dizkus_subscription',
+            'dizkus_ranks',
+            'dizkus_topics',
+            'dizkus_topic_subscription',
+            'dizkus_forum_favorites',
+            'dizkus_users',
+    ];
+
     /**
      *  Initialize a new install of the Dizkus module.
      *
@@ -206,33 +220,43 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 }
 
                 $connection = $this->entityManager->getConnection();
-
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'Dizkus'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'Dizkus'");
 
-                if ($this->container->hasParameter('prefix') && !$this->container->getParameter('prefix') == '') {
-                    $prefix = $this->container->getParameter('prefix');
-                    // do a check here for tables containing the prefix and fail if existing tables cannot be found.
-                    $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
-                    $stmt = $connection->prepare($sql);
-                    try {
-                        $stmt->execute();
-                    } catch (\Exception $e) {
-                        $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
+                $prefix = $this->container->hasParameter('prefix') ? $this->container->getParameter('prefix') : '';
+                $schemaManager = $connection->getSchemaManager();
+                $schema = $schemaManager->createSchema();
+                if (!$schema->hasTable($prefix.'dizkus_categories')) {
+                    $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
-                        return false;
-                    }
-                    $this->removeTablePrefixes($prefix);
+                    return false;
                 }
 
+                $name = $prefix.'dizkus_users';
+                if (!$schema->hasTable($name)) {
+                    // 3.2.0 users dummy table
+                    $table = $schema->createTable($name);
+                    $table->addColumn('user_id', 'integer');
+                    $table->addColumn('user_posts', 'integer');
+                    $table->addColumn('user_rank', 'integer');
+                    $table->addColumn('user_level', 'integer');
+                    $table->addColumn('user_lastvisit', 'datetime');
+                    $table->addColumn('user_favorites', 'integer');
+                    $table->addColumn('user_post_order', 'integer');
+                    $sql = $schemaManager->getDatabasePlatform()->getCreateTableSQL($table);
+                    $statement = $connection->prepare($sql[0]);
+                    $statement->execute();
+                }
+
+                if ($prefix != '') {
+                    $this->removeTablePrefixes($prefix);
+                }
                 // mark tables for import
                 $upgrade_mark = str_replace('.', '_', $oldversion) . '_';
                 $this->markTablesForImport($upgrade_mark);
                 // add upgrading info for later
-                $this->setVar('upgrading', $upgrade_mark);
+                $this->setVar('upgrading', str_replace('.', '_', $oldversion));
                 //install module now
                 try {
                     $this->schemaTool->create($this->entities);
@@ -248,6 +272,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $forumRoot->lock();
                 $this->entityManager->persist($forumRoot);
 
+                $this->addFlash('status', $this->__f('Please go to Dizkus admin import to do full data import.'));
+
                 break;
             case '4.0.0':
 
@@ -257,19 +283,11 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 // reinstall hooks
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
-
-                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
             case '4.1.0':
-                // nothing to do now
-                break;
-            case '5.0.0':
                 // nothing to do now
                 break;
         }
@@ -278,26 +296,22 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Mark tables for import with import_ prefix
+     * remove all table prefixes.
      */
-    public function markTablesForImport($prefix)
+    public function removeTablePrefixes($prefix)
     {
         $connection = $this->entityManager->getConnection();
+        $schemaManager = $connection->getSchemaManager();
+        $schema = $schemaManager->createSchema();
         // remove table prefixes
-        $dizkusTables = [
-            'dizkus_categories',
-            'dizkus_forum_mods',
-            'dizkus_forums',
-            'dizkus_posts',
-            'dizkus_subscription',
-            'dizkus_ranks',
-            'dizkus_topics',
-            'dizkus_topic_subscription',
-            'dizkus_forum_favorites',
-            'dizkus_users', ];
-        foreach ($dizkusTables as $value) {
-            $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
+        foreach ($this->importTables as $value) {
+            if (!$schema->hasTable($prefix.$value)) {
+                continue;
+            }
+
+            $sql = 'RENAME TABLE '.$prefix.$value.' TO '.$value;
             $stmt = $connection->prepare($sql);
+
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
@@ -309,26 +323,22 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * remove all table prefixes.
+     * Mark tables for import with import_ prefix
      */
-    public function removeTablePrefixes($prefix)
+    public function markTablesForImport($prefix)
     {
         $connection = $this->entityManager->getConnection();
+        $schemaManager = $connection->getSchemaManager();
+        $schema = $schemaManager->createSchema();
         // remove table prefixes
-        $dizkusTables = [
-            'dizkus_categories',
-            'dizkus_forum_mods',
-            'dizkus_forums',
-            'dizkus_posts',
-            'dizkus_subscription',
-            'dizkus_ranks',
-            'dizkus_topics',
-            'dizkus_topic_subscription',
-            'dizkus_forum_favorites',
-            'dizkus_users', ];
-        foreach ($dizkusTables as $value) {
-            $sql = 'RENAME TABLE '.$prefix.$value.' TO '.$value;
+        foreach ($this->importTables as $value) {
+//            if (!$schema->hasTable($prefix.$value)) {
+//                continue;
+//            }
+
+            $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
             $stmt = $connection->prepare($sql);
+
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
@@ -359,7 +369,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
             'favorites_enabled' => true,
             'removesignature' => false,
             'striptags' => true,
-            'deletehookaction' => 'lock',
+            'hooks' => ['providers' => [], 'subscribers' => []],
             'rss2f_enabled' => false,
             'timespanforchanges' => 24,
             'forum_enabled' => true,
@@ -392,7 +402,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $defVars = $this->getDefaultVars();
 
         foreach ($defVars as $key => $defVar) {
-            if (array_key_exists($key, $currentModVars)){
+            if (array_key_exists($key, $currentModVars)) {
                 $type = gettype($defVar);
                 switch ($type) {
                     case 'boolean':
@@ -403,9 +413,13 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                         }
 
                         break;
-                    default :
+                    default:
                         $var = $defVar;
+
                         break;
+                }
+                if ($key == 'defaultPoster') {
+                    $var = 2; // not bolean anymore assume admin id but maybe guest?
                 }
             }
             $this->setVar($key, $var);
@@ -437,32 +451,3 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         return $path;
     }
 }
-
-//    public function configPrefix()
-//    {
-//        $configPrefix = $this->container->getParameter("prefix");
-//        $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
-//        $connection = $this->entityManager->getConnection();
-//        $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
-//        $stmt = $connection->prepare($sql);
-//        try {
-//            $stmt->execute();
-//        } catch (\Exception $e) {
-//            $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
-//
-//            return false;
-//        }
-//    }
-//                ini_set('memory_limit', '194M');
-//                ini_set('max_execution_time', 86400);
-//
-//                //
-//                if (!$this->upgrade_to_4_0_0()) {
-//                    return false;
-//                }
-//
-//                break;
-//            case '4.0.0':
-//                if (!$this->upgrade_to_4_1_0()) {
-//                    return false;
-//                }

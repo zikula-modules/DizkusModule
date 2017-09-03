@@ -1,8 +1,10 @@
 {{ adminHeader() }}
 {% form_theme form with ['bootstrap_3_layout.html.twig',
     'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
-    'ZikulaDizkusModule:Form:radio.html.twig'
+    'ZikulaDizkusModule:Form:radio.html.twig',
+    'ZikulaDizkusModule:Form:hooks.widget.html.twig'
 ] %}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.Settings.js')) }}
 <h3>
     <span class="fa fa-wrench"></span>&nbsp;{{ __('Settings')}}
 </h3>
@@ -17,7 +19,7 @@
         <li role="presentation"><a href="#topics" aria-controls="topics" role="tab" data-toggle="tab">{{ __('Topics') }}</a></li>
         <li role="presentation"><a href="#posts" aria-controls="posts" role="tab" data-toggle="tab">{{ __('Posts') }}</a></li>
         <li role="presentation"><a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab">{{ __('Notifications settings') }}</a></li>
-            {#        <li role="presentation"><a href="#hooks" aria-controls="hooks" role="tab" data-toggle="tab">{{ __('Hooks settings') }}</a></li>#}
+        <li role="presentation"><a href="#hooks" aria-controls="hooks" role="tab" data-toggle="tab">{{ __('Hooks settings') }}</a></li>
         <li role="presentation"><a href="#security" aria-controls="security" role="tab" data-toggle="tab">{{ __('Security settings') }}</a></li>
         <li role="presentation"><a href="#external" aria-controls="external" role="tab" data-toggle="tab">{{ __('External sources') }}</a></li>
     </ul>
@@ -241,15 +243,6 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset>
-                <legend>{{ __("Hooks settings") }}</legend>
-                <div class="form-group">
-                    {{ form_label(form.deletehookaction, __("Action to be performed when 'delete' hook is called") ,{ 'label_attr': {'class': 'col-md-4'} }) }}
-                    <div class="col-md-8">
-                        {{ form_widget(form.deletehookaction, { 'attr': {'class': ''} }) }}
-                    </div>
-                </div>
-            </fieldset>
         </div>
         <!-- Posts -->
         <div role="tabpanel" class="tab-pane" id="posts">
@@ -330,14 +323,18 @@
             </fieldset>
         </div>
         <!-- Hook -->
-        {#        <div role="tabpanel" class="tab-pane" id="hooks">
-                    <div class="col-md-12">
-                        <p class="col-md-12 help-block alert ">
-                            {{ __("This features are disabled at the moment")}}
-                        </p>
-                    </div>
-        
-                </div>#}
+        <div role="tabpanel" class="tab-pane" id="hooks">
+            <div class="col-md-12">
+                <p class="col-md-12 help-block alert ">
+                    {{ __("This is Dizkus hooks status it shows you current Dizkus hooks settings.")}}
+                </p>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    {{ form_widget(form.hooks, { 'attr': {'class': ''} }) }}
+                </div>
+            </div>
+        </div>
         <!-- External -->
         <div role="tabpanel" class="tab-pane" id="external">
             <div class="col-md-12">
@@ -376,4 +373,4 @@
     </div>
     {{ form_end(form) }}  
 </div>
-{{ adminFooter() }}               
+{{ adminFooter() }}  
