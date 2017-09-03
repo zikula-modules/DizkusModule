@@ -15,7 +15,7 @@ namespace Zikula\DizkusModule\Manager;
 use Doctrine\ORM\EntityManager;
 use Zikula\ExtensionsModule\Api\CapabilityApi;
 use Doctrine\Common\Collections\ArrayCollection;
-//use Zikula\Bundle\HookBundle\Dispatcher\HookDispatcher;
+use Zikula\Bundle\HookBundle\Dispatcher\HookDispatcher;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\DizkusModule\Container\HookContainer;
@@ -56,8 +56,7 @@ class SettingsManager
         TranslatorInterface $translator,
         EntityManager $entityManager,
         VariableApi $variableApi,
-//    @deprecated
-        \Zikula_HookDispatcher $hookDispatcher,
+        HookDispatcher $hookDispatcher,
         CapabilityApi $capabilityApi
     ) {
         $this->name = 'ZikulaDizkusModule';
@@ -96,7 +95,7 @@ class SettingsManager
          *
          * @todo add hooks category check
          */
-        $settings['hooks'] = $this->getHooks();
+        $settings['hooks'] = ['providers' => [], 'subscribers' => []];//$this->getHooks();
 //        dump($settings);
         return $settings;
     }

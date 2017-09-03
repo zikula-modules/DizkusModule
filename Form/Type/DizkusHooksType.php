@@ -30,9 +30,9 @@ class DizkusHooksType extends AbstractType
     {
         $builder
                 // Hooks P
-                ->add('providers', DizkusHooksProvidersType::class)
+//                ->add('providers', DizkusHooksProvidersType::class)
                 // Hooks S
-                ->add('subscribers', DizkusHooksSubscribersType::class)
+//                ->add('subscribers', DizkusHooksSubscribersType::class)
         ;
     }
 

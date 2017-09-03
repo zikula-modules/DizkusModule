@@ -221,10 +221,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'Dizkus'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'Dizkus'");
 
                 $prefix = $this->container->hasParameter('prefix') ? $this->container->getParameter('prefix') : '';
                 $schemaManager = $connection->getSchemaManager();
@@ -268,8 +266,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     return false;
                 }
 
-                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
                 // set up forum root (required)
                 $forumRoot = new ForumEntity();
                 $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -287,13 +283,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 // reinstall hooks
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
-
-                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
             case '4.1.0':
@@ -460,32 +451,3 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         return $path;
     }
 }
-
-//    public function configPrefix()
-//    {
-//        $configPrefix = $this->container->getParameter("prefix");
-//        $prefix = !empty($configPrefix) ? $configPrefix.'_' : '';
-//        $connection = $this->entityManager->getConnection();
-//        $sql = 'SELECT * FROM '.$prefix.'dizkus_categories';
-//        $stmt = $connection->prepare($sql);
-//        try {
-//            $stmt->execute();
-//        } catch (\Exception $e) {
-//            $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
-//
-//            return false;
-//        }
-//    }
-//                ini_set('memory_limit', '194M');
-//                ini_set('max_execution_time', 86400);
-//
-//                //
-//                if (!$this->upgrade_to_4_0_0()) {
-//                    return false;
-//                }
-//
-//                break;
-//            case '4.0.0':
-//                if (!$this->upgrade_to_4_1_0()) {
-//                    return false;
-//                }

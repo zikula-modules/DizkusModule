@@ -34,7 +34,6 @@ parameters:
     zikula_dizkus_module.settings_manager.class: Zikula\DizkusModule\Manager\SettingsManager
     # Hooks
     
-
 services:
     
 # Common
@@ -340,6 +339,6 @@ services:
       class: Zikula\DizkusModule\HookHandler\TopicHookHandler
       parent: zikula_dizkus_module.hook_handler.base
       calls:
-        - [setForumUserService, [@zikula_dizkus_module.forum_user_manager]]
-        - [setForumService, [@zikula_dizkus_module.forum_manager]]
-        - [setTopicService, [@zikula_dizkus_module.topic_manager]]
+        - [setForumUserService, ["@zikula_dizkus_module.forum_user_manager"]]
+        - [setForumService, ["@zikula_dizkus_module.forum_manager"]]
+        - [setTopicService, ["@zikula_dizkus_module.topic_manager"]]

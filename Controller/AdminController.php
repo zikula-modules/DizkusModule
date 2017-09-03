@@ -92,7 +92,7 @@ class AdminController extends AbstractController
         }
 
         $settingsManager = $this->get('zikula_dizkus_module.settings_manager');
-        $form = $this->createForm(new DizkusSettingsType(), $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
+        $form = $this->createForm(DizkusSettingsType::class, $settingsManager->getSettingsForForm(), ['settingsManager' => $settingsManager]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('save')->isClicked()) {
