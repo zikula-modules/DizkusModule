@@ -284,7 +284,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             }
             return node;
         }
-
+        console.log(data);
         function startForumImport() {
             readSettings();
             // import started indicator
@@ -384,7 +384,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                         def.notify(data);
                     } else if (data.node.lvl === 1) {
                         //data node is category select forum
-                        if (data.node.children.length > data.forum_index + 1) {
+                        if (data.node.children.length >= data.forum_index + 1) {
                             data.node = data.node.children[data.forum_index];
                             // open forum that we will work on
                             data.open = data.node.id;
