@@ -20,11 +20,12 @@
             </div>
         </div>
         <ul class="list-group">
+
             {% for subscription in currentForumUser.TopicSubscriptionsCollection %}
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-md-5">
-                            <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': subscription.topic.topic_id}) }}" title="{{ subscription.topic.name|escape('html') }}">
+                            <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': subscription.topic.id}) }}" title="{{ subscription.topic.name|escape('html') }}">
                                 <h4>{{ subscription.topic.title|escape('html') }}</h4>
                             </a>
                             {#                            {% for parent in subscription.forum.parents %}
@@ -44,7 +45,7 @@
                             <p> {#{{ subscription.forum.description|escape('html') }}#} </p>{#{{ dump(subscription.topic.HotTopic) }}#}
                         </div>
                         <div class="col-md-2">
-                            <a href="{{ path('zikuladizkusmodule_user_managetopicsubscriptions', {'unsubscribe': subscription.topic.topic_id}) }}" class="btn btn-sm btn-default">
+                            <a href="{{ path('zikuladizkusmodule_user_managetopicsubscriptions', {'unsubscribe': subscription.topic.id}) }}" class="btn btn-sm btn-default">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i> {{ __("Unsubscribe") }}
                             </a>
                         </div>
