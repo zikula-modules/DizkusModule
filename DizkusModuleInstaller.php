@@ -432,6 +432,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                         break;
                 }
+                if ($key == 'defaultPoster') {
+                    $var = 2; // not bolean anymore assume admin id but maybe guest?
+                }
             }
             $this->setVar($key, $var);
         }
