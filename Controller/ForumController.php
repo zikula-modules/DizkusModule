@@ -244,6 +244,7 @@ class ForumController extends AbstractController
                             // dump('delete topic'.$topic_id);
                             $forum_id = $this->get('zikula_dizkus_module.topic_manager')->delete($topic_id);
                         }
+
                         break;
 
                     case 'move':
@@ -259,6 +260,7 @@ class ForumController extends AbstractController
 //                                'forum_id' => $moveto,
 //                                'createshadowtopic' => $shadow]);
                         }
+
                         break;
 
                     case 'lock':
@@ -274,6 +276,7 @@ class ForumController extends AbstractController
 //                                'topic' => $topic_id,
 //                                'action' => $action]);
                         }
+
                         break;
 
                     case 'join':
@@ -298,6 +301,7 @@ class ForumController extends AbstractController
 //                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
 //                                'to_topic_id' => $jointo]);
                         }
+
                         break;
 
                     default:
