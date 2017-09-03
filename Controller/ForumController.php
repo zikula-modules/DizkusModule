@@ -46,7 +46,7 @@ class ForumController extends AbstractController
         }
         $indexTo = $this->getVar('indexTo');
         if (!empty($indexTo)) {
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => (int) $indexTo], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => (int) $indexTo], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -121,7 +121,7 @@ class ForumController extends AbstractController
         if (!$managedForum->exists()) {
             $request->getSession()->getFlashBag()->add('error', $this->__f('Error! The forum you selected (ID: %s) was not found. Please try again.', [$forum]));
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
         // Permission check
         if (!$this->get('zikula_dizkus_module.security')->canRead($managedForum->get())) {
