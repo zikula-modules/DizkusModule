@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <i class="close" data-dismiss="alert">×</i>
-                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state. Click on Upgrade handler below and follow the procedure for')  }} {{ importHelper.isUpgrade() }} </strong>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')  }} {{ importHelper.isUpgrade()|replace('_', ' ') }} </strong>
                 </div>
             </div>
         </div>
@@ -39,8 +39,6 @@
             </div>                    
         </div>
     </div>
-
 </div>
-
 {{ adminFooter() }}
 

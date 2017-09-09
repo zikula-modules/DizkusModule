@@ -1,5 +1,19 @@
 {{ adminHeader() }}
 <div id="dizkus_admin">
+    {% if importHelper.isUpgrade() %}
+        <div id="upgrade_notice" class="alert alert-warning">
+            <div class="row">
+                <div class="col-md-12">
+                    <i class="close" data-dismiss="alert">×</i>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')  }}&nbsp;{{ __('Version')  }}&nbsp;{{ importHelper.isUpgrade()|replace('_', ' ') }} </strong>
+                    <a class="btn btn-success" href="{{ path('zikuladizkusmodule_import_import') }}" title="{{ __('Finish data import.')}}">
+                        <span class="fa fa-cloud-download"></span>&nbsp;{{ __('Finish data import.')}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3><span class="fa fa-list"></span>{{ __('Forum tree')}}</h3>
