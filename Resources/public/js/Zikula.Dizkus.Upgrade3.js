@@ -26,11 +26,10 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         function init()
         {
             if (parseInt($('#upgrade3_enabled').val()) === 0) {
-
                 return;
             }
             initTrees();
-            log('Upgrade init done.');
+            log(Translator.__('Upgrade init done.'));
         }
         ;
         function readSettings()
@@ -40,10 +39,21 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             settings.posts_limit = parseInt($("#posts_limit").val());
             settings.other_limit = parseInt($("#other_limit").val());
             settings.ajax_timeout = parseInt($("#ajax_timeout").val());
-            log('Upgrade settings updated.');
+            log(Translator.__('Upgrade settings updated.'));
         }
         ;
         function log(log)
+        {
+            if (log === '') {
+            } else if (log === null) {
+            } else if (log.constructor === Array) {
+                $('#logBox').prepend(log.join('&#xA;') + '&#xA;');
+            } else {
+                $('#logBox').prepend(log + '&#xA;');
+            }
+        }
+        ;
+        function dataLog(log)
         {
             if (log === '') {
             } else if (log === null) {
@@ -85,9 +95,9 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                     res = JSON.parse(response);
                     data.tree = res.tree;
                     data.source = res.source;
-                    log('User status loaded.');
-                    if (data.source.users.old.toImport.length === 0
-                            && data.source.ranks.toImport.length === 0) {
+                    log(Translator.__('User status loaded.'));
+                    if (data.source.users.old.found === 0
+                            && data.source.ranks.found === 0) {
                         $("#import_users").removeClass('btn-default').addClass('btn-success');
                         $("#remove_users").removeClass('hide disabled');
                         $("#recover_forum_tree").removeClass('btn-default disabled').addClass('btn-primary');
@@ -136,26 +146,16 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             /*
              * 1. import tables in order
              *   ranks - needed for users import !
-             *   users,
-             *   posts,
-             *   topics
+             *   users
              */
             usersImport(data.source.ranks).done(function () {
                 usersImport(data.source.users.old).done(function () {
-//                    usersImport(data.source.users.posters).done(function () {
-//                        data.source = 'topics';
-//                        usersImport(data).done(function (data) {
-//                            //Users done thank you!
-                    //$("#users_legend").find('.info').text('Imported ' + data.page + ' users. Total users: ' + data.pages + '').css('color', '#fff');
                     $("#users_legend").find('.progress-bar').addClass('progress-bar-success');
                     $("#users_check_root").removeClass('jstree-loading').find('i').first().css('background-position', '-3px -66px');
                     $("#users_check_root").jstree("close_node", '#users_check_root');
                     $("#import_users").removeClass('btn-primary').addClass('btn-success');
                     // here we should inform about that this step is done
                     $("#recover_forum_tree").removeClass('btn-default disabled').addClass('btn-primary');
-                    //$("#import_forum_tree").removeClass('disabled');
-//                        });
-//                });
                 });
             });
         }
@@ -163,13 +163,23 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         function usersImport(data) {
             //console.log(data);
             var def = $.Deferred();
-            if (data.toImport.length === 0) {
+            if (data.found === 0) {
                 def.resolve(data);
                 return def.promise();
             }
             var $node = $("#" + data.source);
             $node.addClass('jstree-loading');
             def.progress(function (data) {
+//                $("#total_imported").html(data.imported);
+//                $("#total_rejected").html(data.rejected);
+                $.each(data.rejected_items, function (index, item) {
+                    var reason = item.reason === 0 ? Translator.__('exists.') : Translator.__('not exists');
+                    $(' <span title="' + reason + '" class="text-muted small"></span> ')
+                            .append('<i class="fa fa-hashtag text-danger" aria-hidden="true"></i>')
+                            .append('<span class="rejected_id">' + item.id + ' ' + reason + ' </span>')
+                            .appendTo($('#import_rejected'));
+                });
+
                 var percent = 100 * data.page / data.pages;
                 $("#users_legend").find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent);
                 $("#users_legend").find('.info').text('Importing ' + data.page + ' page from ' + data.pages).css('color', '#000');
@@ -179,10 +189,11 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             });
             data.page = 0; // first page 0-49
             data.pageSize = settings.users_limit;
-            data.pages = 0; // we do not know yet
-
+            data.pages = Math.ceil(data.found / data.pageSize);
+            data.imported = 0;
+            data.rejected = 0;
             (function loop(data, def) {
-                if (data.page < data.pages || data.pages === 0) {
+                if (data.page < data.pages && data.pages !== 0) {
                     importAjax(Routing.generate('zikuladizkusmodule_upgrade3_usersimport'), data).done(function (data) {
                         data.page++;
                         def.notify(data);
@@ -302,7 +313,6 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         }
 
         function forumImport(data) {
-
             var def = $.Deferred();
             $("#forum_legend").prepend($(".progress").first().clone());
             $("#forum_legend").find('.progress').removeClass('hide');

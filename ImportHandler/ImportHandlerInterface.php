@@ -13,37 +13,60 @@
 namespace Zikula\DizkusModule\ImportHandler;
 
 /**
- * Description of ImportInterface
+ * ImportInterface.
  *
  * @author Kaik
  */
 interface ImportHandlerInterface
 {
     /**
-     * The id
+     * The id.
      *
      * @return string
      */
     public function getId();
 
     /**
-     * The title
+     * Set prefix.
+     *
+     * @param string $prefix Import prefix
+     *
+     * @return this
+     */
+    public function setPrefix($prefix);
+
+    /**
+     * Get prefix.
+     *
+     * @return string
+     */
+    public function getPrefix();
+
+    /**
+     * The title.
      *
      * @return string
      */
     public function getTitle();
 
     /**
-     * The description
+     * The description.
      *
      * @return string
      */
     public function getDescription();
 
     /**
-     * The status
+     * Get supported versions/prefixes.
      *
      * @return array
      */
-    public function getStatus();
+    public function versionSupported();
+
+    /**
+     * Get list view rendered.
+     *
+     * @return object
+     */
+    public function getRenderListView($prefix);
 }

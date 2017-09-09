@@ -280,6 +280,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $forumRoot->setName(ForumEntity::ROOTNAME);
                 $forumRoot->lock();
                 $this->entityManager->persist($forumRoot);
+                $this->entityManager->flush();
 
                 $this->addFlash('status', $this->__('Please go to Dizkus admin import to perform full data import.'));
 

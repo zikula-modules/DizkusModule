@@ -36,64 +36,9 @@
                     </li>
                 </ul>
             </div>
-
             <p class="tables_legend">
                 <small>{{ __('Only tables matching Dizkus versions 3 schema are considered valid. Data integrity is not checked at this point.') }}</small>
             </p>
-
-            <div id="hooks_check">
-                <ul class="list-group">
-                    <li class="list-group-item"><h5>{{ __('Hooked content found') }} <i class='fa fa-paperclip fa-orange'></i> </h5></li>
-                        {% for moduleid, module in data.hooks %}
-                        <li class="list-group-item">
-                            {% if module.data.state == 0 %}
-                                {% set module_state_icon='fa fa-check-circle fa-red' %}
-                            {% elseif module.data.state == 3 %}
-                                {% set module_state_icon='fa fa-check-circle fa-green' %}
-                            {% elseif module.data.state == 4 %}
-                                {% set module_state_icon='fa fa-exclamation-triangle fa-orange' %}
-                            {% elseif module.data.state == 5 %}
-                                {% set module_state_icon='fa fa-download fa-orange' %}
-                            {% else %}
-                                {% set module_state_icon='fa fa-question-circle fa-red' %}
-                            {% endif %}
-                            <i class='{{ module_state_icon }}'></i>
-                            {% if module.data.state == 0 %}
-                                {{ __('Id:') }} {{ moduleid }}
-                            {% elseif module.data.state == 3 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
-                            {% elseif module.data.state == 4 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
-                            {% elseif module.data.state == 5 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }} 
-                            {% else %}
-                                {{ __('Id:') }} {{ moduleid }}  
-                            {% endif %}
-                            <span class="label label-default pull-right small">
-                                {{ module.elements|length }}@{{ __('topics')}}
-                            </span>
-                        </li>
-                    {% else %}
-                        <li class="list-group-item"> <i class='fa fa-check-circle fa-green'></i>{{ __('No hooked content found') }}</li>
-                        {% endfor %}
-                    <li class="list-group-item">
-                        <ul class="list-inline small">
-                            <li class=""><i class="fa fa-check-circle fa-red"></i> {{ __('Module not found') }}</li>
-                            <li class=""><i class="fa fa-check-circle fa-green"></i> {{ __('Module found installed') }}</li>
-                            <li class=""><i class="fa fa-exclamation-triangle fa-orange"></i> {{ __('Module files are missing') }}</li>
-                            <li class=""><i class="fa fa-download fa-orange"></i> {{ __('Module not upgraded') }}</li>
-                            <li class=""><i class="fa fa-question-circle"></i> {{ __('Module state unknow') }}</li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item"> <i class="fa fa-info-circle fa-blue"></i>
-                        {{ __('This is only status information. Detected data will be imported even for non existing modules but not assigned to areas. You will be able to do that after import.') }}</li>
-                </ul>
-            </div>
-            <h5>{{ __('Logs')}}</h5>
-            <div id="log" class="well fa-ex well-sm pre-scrollable">
-
-                <samp id="logBox" style="white-space: pre;"></samp>
-            </div>
             <div class="settings clearfix">
                 <h5>{{  __('Import settings')}}</h5>
                 <div class="col-xs-4">
@@ -117,8 +62,34 @@
                     <input id="ajax_timeout" class="form-control input-sm" value="15000" type="number">
                 </div>
             </div>
+            <h5>{{ __('Logs')}}</h5>
+            <div id="log" class="well fa-ex well-sm pre-scrollable" style="height:300px;">
+                <samp id="logBox" style="white-space: pre;"></samp>
+            </div>
         </div>
         <div class="col-md-6">
+            {% if importHandler.getCurrentDataCount().total > 1 %}
+                <div id="upgrade_notice" class="alert alert-danger">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <i class="close" data-dismiss="alert">×</i>
+                            <strong><i class="fa fa-info-circle"></i> {{ __('Current Forum installation is not clean!') }}</strong>
+                            {{ __('Please remove content from current tables. Only ROOT forum is needed.')  }}
+                        </div>
+                    </div>
+                </div>
+            {% elseif importHandler.getCurrentDataCount().total == 0 %}
+                <div id="upgrade_notice" class="alert alert-danger">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <i class="close" data-dismiss="alert">×</i>
+                            <strong><i class="fa fa-info-circle"></i> {{ __('No ROOT forum detected!') }}</strong>
+                            {{ __('ROOT forum is needed.')  }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+            {% endif %}
             <div id="users_check">
                 <ul>
                     <li data-jstree='{"icon":"fa fa-user-circle fa-blue"}' id="users_check_root" class="jstree-closed"> {{ __('Forum users') }}
@@ -147,14 +118,12 @@
                 </p>
                 <small>{{ __('Forum tree recovered from previous version. This will be imported in second step. We will preserve forum id only if forum id is not equal to 1 (Index forum)') }}</small>
             </div>
-
             <div id="other_check">
                 <ul>
                     <li data-jstree='{"icon":"fa fa-envelope fa-green"}' aria-disabled="true" id="other_tree_root" class="jstree-closed" > {{ __('Other') }}
                     </li>
                 </ul>
             </div>
-
             <div id="other_legend">
                 <p class="buttons">
                     <a href="#" id="recover_other" class="btn btn-default disabled btn-xs" role="button">{{ __('Recover additional data') }}</a>
@@ -163,9 +132,61 @@
                 </p>
                 <small>{{ __('Additional data like subscriptions and moderators.') }}</small>
             </div>
+            <div id="hooks_check">
+                <ul class="list-group">
+                    <li class="list-group-item"><h5>{{ __('Hooked content found') }} <i class='fa fa-paperclip fa-orange'></i> </h5></li>
+                        {% for moduleid, module in data.hooks %}
+                        <li class="list-group-item">
+                            {% if module.data.state == 0 %}
+                                {% set module_state_icon='fa fa-check-circle fa-red' %}
+                            {% elseif module.data.state == 3 %}
+                                {% set module_state_icon='fa fa-check-circle fa-green' %}
+                            {% elseif module.data.state == 4 %}
+                                {% set module_state_icon='fa fa-exclamation-triangle fa-orange' %}
+                            {% elseif module.data.state == 5 %}
+                                {% set module_state_icon='fa fa-download fa-orange' %}
+                            {% else %}
+                                {% set module_state_icon='fa fa-question-circle fa-red' %}
+                            {% endif %}
+                            <i class='{{ module_state_icon }}'></i>
+                            {% if module.data.state == 0 %}
+                                {{ __('Id:') }} {{ moduleid }}
+                            {% elseif module.data.state == 3 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                            {% elseif module.data.state == 4 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                            {% elseif module.data.state == 5 %}
+                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                            {% else %}
+                                {{ __('Id:') }} {{ moduleid }}
+                            {% endif %}
+                            <span class="label label-default pull-right small">
+                                {{ module.elements|length }}@{{ __('topics')}}
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item"> <i class='fa fa-check-circle fa-green'></i>{{ __('No hooked content found') }}</li>
+                        {% endfor %}
+                    <li class="list-group-item">
+                        <ul class="list-inline small">
+                            <li class=""><i class="fa fa-check-circle fa-red"></i> {{ __('Module not found') }}</li>
+                            <li class=""><i class="fa fa-check-circle fa-green"></i> {{ __('Module found installed') }}</li>
+                            <li class=""><i class="fa fa-exclamation-triangle fa-orange"></i> {{ __('Module files are missing') }}</li>
+                            <li class=""><i class="fa fa-download fa-orange"></i> {{ __('Module not upgraded') }}</li>
+                            <li class=""><i class="fa fa-question-circle"></i> {{ __('Module state unknow') }}</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item"> <i class="fa fa-info-circle fa-blue"></i>
+                        {{ __('This is only status information. Detected data will be imported even for non existing modules but not assigned to areas. You will be able to do that after import.') }}</li>
+                </ul>
+            </div>
+            <div id="import_statuses">
+                <h5>{{ __('Rejected data')}}</h5>
+                <div id="import_rejected" class="well fa-ex well-sm pre-scrollable" style="height:150px;">
+                    <samp id="import_rejected" style="white-space: pre;"></samp>
+                </div>
+            </div>
         </div>
-
-
     {% endif %}
 </div>
 {{ pageAddAsset('javascript', zasset('jstree/jstree-built.js'), 98)  }}
