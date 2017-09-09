@@ -31,7 +31,7 @@ interface ImportHandlerInterface
      *
      * @param string $prefix Import prefix
      *
-     * @return this
+     * @return $this
      */
     public function setPrefix($prefix);
 

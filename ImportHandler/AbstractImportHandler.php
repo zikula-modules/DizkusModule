@@ -93,7 +93,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         $content_count = [];
         $content_count['forums'] = (int) $statement->fetchColumn();
         $content_count['total'] = $content_count['forums'];
- 
+
         return $content_count;
     }
 

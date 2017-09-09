@@ -73,7 +73,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         ]);
     }
 
-//  handlerInterface ends here
+    //  handlerInterface ends here
 
     public function getStatus()
     {
@@ -82,7 +82,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         return $status;
     }
-//  ajax calls
+
+    //  ajax calls
 
     /*
      * Ranks below
@@ -115,6 +116,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 $data['rejected_items'][(int) $rankArr['rank_id']]['id'] = $rankArr['rank_id'];
                 $data['rejected_items'][(int) $rankArr['rank_id']]['reason'] = 0;
                 $data['rejected']++;
+
                 continue;
             }
             $rank = new RankEntity();
@@ -172,7 +174,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         return $statement->fetchColumn();
     }
-
 
     public function getOldUsers()
     {
