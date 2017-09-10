@@ -15,7 +15,7 @@
         </p>
     </div>
     {% if importHandler.versionSupported() %}
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div id="tables_check">
                 <ul>
                     <li data-jstree='{"icon":"fa fa-thumbs-o-up fa-green"}' class="jstree-open"> {{ __('Detected tables') }}
@@ -64,7 +64,7 @@
             </div>
             <h5>{{ __('Logs')}}</h5>
             <div id="log" class="well fa-ex well-sm pre-scrollable" style="height:300px;">
-                <samp id="logBox" style="white-space: pre;"></samp>
+                <div id="logBox" class="text-muted" style="white-space: pre;"></div>
             </div>
         </div>
         <div class="col-md-6">
@@ -114,7 +114,7 @@
                 <p class="buttons">
                     <a href="#" id="recover_forum_tree" class="btn btn-default disabled btn-xs" role="button">{{ __('Load forum tree') }}</a>
                     <a href="#" id="import_forum_tree" class="btn btn-default disabled btn-xs" role="button">{{ __('Import forum tree') }}</a>
-                    <a href="#" id="remove_forum_tree" class="btn btn-danger btn-xs disabled hide" role="button">{{ __('Remove current forum tree!') }}</a>
+                    <a href="#" id="remove_forum_tree" class="btn btn-danger btn-xs disabled hide" role="button">{{ __('Import stopped! Remove current content!') }}</a>
                 </p>
                 <small>{{ __('Forum tree recovered from previous version. This will be imported in second step. We will preserve forum id only if forum id is not equal to 1 (Index forum)') }}</small>
             </div>
@@ -132,58 +132,82 @@
                 </p>
                 <small>{{ __('Additional data like subscriptions and moderators.') }}</small>
             </div>
+            <div id="finish_import" class="{% if importHandler.getCurrentDataCount().total > 1 %} {% else %} hide{% endif %}">
+                <div class="alert alert-success" role="alert">
+                    <h4>{{ __('Import is finished!') }}</h4>
+                    <p>{{ __('Looks like you have data in you current installation if that is because you just finished import click on button below.') }}
+                        {{ __('Before check imported data walking thru forum.') }}</p>
+                    <p><a href="#" id="finish_import_button" class="btn btn-success" role="button">{{ __('Data ok. Finish import. Remove prefix.') }}</a></p>
+                    <p><a href="#" id="download_log" class="btn btn-sm btn-default" role="button">{{ __('Save log to file.') }}</a>
+                        <a href="#" id="download_rejected_data_log" class="btn btn-sm btn-default" role="button">{{ __('Save rejected data log to file.') }}</a></p>
+                </div>
+            </div>
             <div id="hooks_check">
-                <ul class="list-group">
-                    <li class="list-group-item"><h5>{{ __('Hooked content found') }} <i class='fa fa-paperclip fa-orange'></i> </h5></li>
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if data.hooks|length > 0 %}
+                            <h5>{{ __('Found hooked content') }}
+                                <a class="" role="button" data-toggle="collapse" href="#hooked_content_list" aria-expanded="false" aria-controls="hooked_content_list">
+                                    <i class='fa fa-paperclip fa-orange'></i> {{ __('View hooked content info') }}
+                                </a>
+                            </h5>
+                        {% else %}
+                            <h5>{{ __('No hooked content found') }}</h5>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="collapse" id="hooked_content_list">
+                    <ul class="list-group">
                         {% for moduleid, module in data.hooks %}
+                            <li class="list-group-item">
+                                {% if module.data.state == 0 %}
+                                    {% set module_state_icon='fa fa-check-circle fa-red' %}
+                                {% elseif module.data.state == 3 %}
+                                    {% set module_state_icon='fa fa-check-circle fa-green' %}
+                                {% elseif module.data.state == 4 %}
+                                    {% set module_state_icon='fa fa-exclamation-triangle fa-orange' %}
+                                {% elseif module.data.state == 5 %}
+                                    {% set module_state_icon='fa fa-download fa-orange' %}
+                                {% else %}
+                                    {% set module_state_icon='fa fa-question-circle fa-red' %}
+                                {% endif %}
+                                <i class='{{ module_state_icon }}'></i>
+                                {% if module.data.state == 0 %}
+                                    {{ __('Id:') }} {{ moduleid }}
+                                {% elseif module.data.state == 3 %}
+                                    {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                                {% elseif module.data.state == 4 %}
+                                    {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                                {% elseif module.data.state == 5 %}
+                                    {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
+                                {% else %}
+                                    {{ __('Id:') }} {{ moduleid }}
+                                {% endif %}
+                                <span class="label label-default pull-right small">
+                                    {{ module.elements|length }}@{{ __('topics')}}
+                                </span>
+                            </li>
+                        {% else %}
+                            <li class="list-group-item"> <i class='fa fa-check-circle fa-green'></i>{{ __('No hooked content found') }}</li>
+                            {% endfor %}
                         <li class="list-group-item">
-                            {% if module.data.state == 0 %}
-                                {% set module_state_icon='fa fa-check-circle fa-red' %}
-                            {% elseif module.data.state == 3 %}
-                                {% set module_state_icon='fa fa-check-circle fa-green' %}
-                            {% elseif module.data.state == 4 %}
-                                {% set module_state_icon='fa fa-exclamation-triangle fa-orange' %}
-                            {% elseif module.data.state == 5 %}
-                                {% set module_state_icon='fa fa-download fa-orange' %}
-                            {% else %}
-                                {% set module_state_icon='fa fa-question-circle fa-red' %}
-                            {% endif %}
-                            <i class='{{ module_state_icon }}'></i>
-                            {% if module.data.state == 0 %}
-                                {{ __('Id:') }} {{ moduleid }}
-                            {% elseif module.data.state == 3 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
-                            {% elseif module.data.state == 4 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
-                            {% elseif module.data.state == 5 %}
-                                {{ __('Id:') }} {{ moduleid }} {{ module.data.name }}
-                            {% else %}
-                                {{ __('Id:') }} {{ moduleid }}
-                            {% endif %}
-                            <span class="label label-default pull-right small">
-                                {{ module.elements|length }}@{{ __('topics')}}
-                            </span>
+                            <ul class="list-inline small">
+                                <li class=""><i class="fa fa-check-circle fa-red"></i> {{ __('Module not found') }}</li>
+                                <li class=""><i class="fa fa-check-circle fa-green"></i> {{ __('Module found installed') }}</li>
+                                <li class=""><i class="fa fa-exclamation-triangle fa-orange"></i> {{ __('Module files are missing') }}</li>
+                                <li class=""><i class="fa fa-download fa-orange"></i> {{ __('Module not upgraded') }}</li>
+                                <li class=""><i class="fa fa-question-circle"></i> {{ __('Module state unknow') }}</li>
+                            </ul>
                         </li>
-                    {% else %}
-                        <li class="list-group-item"> <i class='fa fa-check-circle fa-green'></i>{{ __('No hooked content found') }}</li>
-                        {% endfor %}
-                    <li class="list-group-item">
-                        <ul class="list-inline small">
-                            <li class=""><i class="fa fa-check-circle fa-red"></i> {{ __('Module not found') }}</li>
-                            <li class=""><i class="fa fa-check-circle fa-green"></i> {{ __('Module found installed') }}</li>
-                            <li class=""><i class="fa fa-exclamation-triangle fa-orange"></i> {{ __('Module files are missing') }}</li>
-                            <li class=""><i class="fa fa-download fa-orange"></i> {{ __('Module not upgraded') }}</li>
-                            <li class=""><i class="fa fa-question-circle"></i> {{ __('Module state unknow') }}</li>
-                        </ul>
-                    </li>
-                    <li class="list-group-item"> <i class="fa fa-info-circle fa-blue"></i>
-                        {{ __('This is only status information. Detected data will be imported even for non existing modules but not assigned to areas. You will be able to do that after import.') }}</li>
-                </ul>
+                        <li class="list-group-item"> <i class="fa fa-info-circle fa-blue"></i>
+                            {{ __('This is only status information. Detected data will be imported even for non existing modules but not assigned to areas. You will be able to do that after import.') }}</li>
+                    </ul>
+                </div>
             </div>
             <div id="import_statuses">
                 <h5>{{ __('Rejected data')}}</h5>
                 <div id="import_rejected" class="well fa-ex well-sm pre-scrollable" style="height:150px;">
-                    <samp id="import_rejected" style="white-space: pre;"></samp>
+                    <div id="import_rejected" style="white-space: pre;"></div>
                 </div>
             </div>
         </div>

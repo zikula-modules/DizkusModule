@@ -29,7 +29,7 @@ class Upgrade3Controller extends AbstractController
      * @Theme("admin")
      * @return Response
      */
-    public function usersstatusAction(Request $request)
+    public function usersstatusAction()
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
@@ -112,7 +112,7 @@ class Upgrade3Controller extends AbstractController
      * @Theme("admin")
      * @return Response
      */
-    public function forumtreestatusAction(Request $request)
+    public function forumtreestatusAction()
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
@@ -130,7 +130,10 @@ class Upgrade3Controller extends AbstractController
             $data['total']['posts'] = $importHelper->getTableCount($prefix . '_dizkus_posts');
             $data['total']['done'] = 1;
         }
-
+        if (!array_key_exists('excluded', $data)) {
+            $data['excluded'] = $importHelper->getExcluded();
+        }
+        
         return new Response(json_encode($data));
     }
 
@@ -156,7 +159,7 @@ class Upgrade3Controller extends AbstractController
         switch ($data['node']['lvl']) {
             case 0:
                 if ($data['node']['id'] === 1) {
-                    $data['log'][] = 'Checking index forum';
+                    $data['log'][] = $this->__('Checking index forum');
                 } else {
                 }
 
@@ -166,9 +169,6 @@ class Upgrade3Controller extends AbstractController
 
                 break;
             case 2:
-                if ($data['topics_total'] === null) {
-                    $data = $importHelper->importForum($data);
-                }
                 $data = $importHelper->importTopics($data);
 
                 break;
@@ -358,11 +358,27 @@ class Upgrade3Controller extends AbstractController
     }
 
     /**
+     * @Route("/removeprefix", options={"expose"=true})
+     * @Theme("admin")
+     * @return Response
+     */
+    public function removePrefixAction()
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->delVar('upgrading');
+
+        return new Response(json_encode(true));
+    }
+
+    /**
      * @Route("/removecontent", options={"expose"=true})
      * @Theme("admin")
      * @return Response
      */
-    public function removecontentAction(Request $request)
+    public function removeContentAction(Request $request)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
