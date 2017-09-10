@@ -133,7 +133,7 @@ class Upgrade3Controller extends AbstractController
         if (!array_key_exists('excluded', $data)) {
             $data['excluded'] = $importHelper->getExcluded();
         }
-        
+
         return new Response(json_encode($data));
     }
 

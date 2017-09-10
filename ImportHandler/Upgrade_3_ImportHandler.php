@@ -61,7 +61,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
             '3_1_0',
             '3_2_0'
         ];
-        dump($this->prefix);
+
         return in_array($this->prefix, $supported);
     }
 

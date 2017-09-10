@@ -697,7 +697,6 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         }
 
         function decodeRejectedReason(reason) {
-
             var reasonText = '';
             switch (reason) {
                 case 0:
