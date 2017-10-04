@@ -3,12 +3,12 @@
     <span class="fa fa-wrench"></span>&nbsp;{{ __('Import')}}
 </h3>
 <div id="dizkus_admin">
-    {% if importHelper.isUpgrade() %}
+    {% if importHelper.isUpgrading() %}
         <div id="upgrade_notice" class="alert alert-warning">
             <div class="row">
                 <div class="col-md-12">
                     <i class="close" data-dismiss="alert">×</i>
-                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state. Click on Upgrade handler below and follow the procedure for')  }} {{ importHelper.isUpgrade() }} </strong>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')  }} {{ importHelper.isUpgrading()|replace('_', ' ') }} </strong>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 <ul class="list-group">
                     {% for name, importHandler in importHelper.getImportHandlers() %}
                         <li class="list-group-item clearfix">
-                            {{ importHandler.renderListView(importHelper.isUpgrade())|raw }}
+                            {{ importHandler.renderListView(importHelper.isUpgrading())|raw }}
                         </li>
                     {% else %}
                     {% endfor %}
@@ -39,8 +39,6 @@
             </div>                    
         </div>
     </div>
-
 </div>
-
 {{ adminFooter() }}
 

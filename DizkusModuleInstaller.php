@@ -235,7 +235,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $schemaManager = $connection->getSchemaManager();
                 $schema = $schemaManager->createSchema();
                 if (!$schema->hasTable($prefix.'dizkus_categories')) {
-                    $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
+                    $this->addFlash('error', $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
                     return false;
                 }
@@ -280,8 +280,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $forumRoot->setName(ForumEntity::ROOTNAME);
                 $forumRoot->lock();
                 $this->entityManager->persist($forumRoot);
+                $this->entityManager->flush();
 
-                $this->addFlash('status', $this->__f('Please go to Dizkus admin import to do full data import.'));
+                $this->addFlash('status', $this->__('Please go to Dizkus admin import to perform full data import.'));
 
                 break;
             case '4.0.0':

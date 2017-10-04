@@ -289,7 +289,8 @@ class AdminController extends AbstractController
         }
 
         return $this->render('@ZikulaDizkusModule/Admin/tree.html.twig', [
-            'tree' => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false)
+            'tree'         => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false),
+            'importHelper' => $this->get('zikula_dizkus_module.import_helper')
         ]);
     }
 
