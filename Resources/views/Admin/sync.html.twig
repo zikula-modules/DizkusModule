@@ -1,0 +1,56 @@
+{{ adminHeader() }}
+<link href="{{ pageAddAsset('stylesheet', zasset('jstree/jstree-built.css'), 98)  }}" rel="stylesheet" type="text/css" />
+<div id="dizkus_admin">
+    {#    {% if importHelper.isUpgrading() %}
+            <div id="upgrade_notice" class="alert alert-warning">
+                <div class="row">
+                    <div class="col-md-12">
+                        <i class="close" data-dismiss="alert">×</i>
+                        <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')  }}&nbsp;{{ __('Version')  }}&nbsp;{{ importHelper.isUpgrading()|replace('_', ' ') }} </strong>
+                        <a class="btn btn-success" href="{{ path('zikuladizkusmodule_import_import') }}" title="{{ __('Finish data import.')}}">
+                            <span class="fa fa-cloud-download"></span>&nbsp;{{ __('Finish data import.')}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+        {% endif %}#}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><span class="fa fa-refresh"></span> {{ __('Forum synchronisation.')}}</h3>
+        </div>
+        <div class="list-group-item list-group-item-warning clearfix">
+
+            <a class="btn btn-default pull-right btn-sm" href="{{ path('zikuladizkusmodule_sync_sync') }}" title="{{ __('Recalculate post and topics totals')}}">
+                <span class="fa fa-cogs"></span>&nbsp;{{ __('Recalculate post and topics totals')}}
+            </a>
+        </div>
+        <div class="list-group-item">
+            <div class="row">
+                <div class="progress hide">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        <span class="count small" style="position:absolute;z-index:2;right: 20px;"></span>
+                        <span class="info small" style="position:absolute;z-index:2;left:20px;"></span>
+                    </div>
+                </div>
+                <div id="sync_tree">
+                    <ul>
+                        <li data-jstree='{"icon":"fa fa-sitemap"}' aria-disabled="true" id="forum_tree_root" class="jstree-closed"> {{ __('Forum tree')}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>  
+        <div class="list-group-item list-group-item-info">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    <span class="count small" style="position:absolute;z-index:2;right: 20px;"></span>
+                    <span class="info small" style="position:absolute;z-index:2;left:20px;"></span>
+                </div>
+            </div>
+        </div>            
+    </div>
+</div>
+{{ pageAddAsset('javascript', zasset('jstree/jstree-built.js'), 98)  }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Sync.js')) }}
+{{ adminFooter() }}

@@ -124,43 +124,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/sync")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     *
-     * @throws AccessDeniedException
-     */
-    public function syncforumsAction(Request $request)
-    {
-        $showstatus = !$request->request->get('silent', 0);
-        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-            throw new AccessDeniedException();
-        }
-
-        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->forums()) {
-            $this->addFlash('status', $this->__('Done! Synchronized forums index.'));
-        } else {
-            $this->addFlash('error', $this->__('Error synchronizing forums index.'));
-        }
-
-        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->topics()) {
-            $this->addFlash('status', $this->__('Done! Synchronized topics.'));
-        } else {
-            $this->addFlash('error', $this->__('Error synchronizing topics.'));
-        }
-
-        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->posters()) {
-            $this->addFlash('status', $this->__('Done! Synchronized posts counter.'));
-        } else {
-            $this->addFlash('error', $this->__('Error synchronizing posts counter.'));
-        }
-
-        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
-    }
-
-    /**
      * @Route("/ranks")
      *
      * ranks
@@ -288,8 +251,11 @@ class AdminController extends AbstractController
             throw new AccessDeniedException();
         }
 
+        $tree = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        $status = $tree->verify();
         return $this->render('@ZikulaDizkusModule/Admin/tree.html.twig', [
-            'tree'         => $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->childrenHierarchy(null, false),
+            'status' => $status,
+            'tree'         => $tree->childrenHierarchy(),
             'importHelper' => $this->get('zikula_dizkus_module.import_helper')
         ]);
     }

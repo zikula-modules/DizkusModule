@@ -90,7 +90,8 @@ class ForumEntity extends EntityAccess
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="cat_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ForumEntity")
+     * @ORM\JoinColumn(name="cat_id", referencedColumnName="forum_id")
      */
     private $root;
 
@@ -672,6 +673,6 @@ class ForumEntity extends EntityAccess
 
     public function __toString()
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 }

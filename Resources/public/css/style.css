@@ -302,3 +302,7 @@ div.dz-codeheader {
     top: 0;
     left: 3px;
 }
+
+.vakata-context {
+    z-index: 1000;
+}
