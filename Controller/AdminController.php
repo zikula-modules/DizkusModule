@@ -253,7 +253,7 @@ class AdminController extends AbstractController
 
         $tree = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
         $status = $tree->verify();
-        
+
         return $this->render('@ZikulaDizkusModule/Admin/tree.html.twig', [
             'status' => $status,
             'tree'         => $tree->childrenHierarchy(),
