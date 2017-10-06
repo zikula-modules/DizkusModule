@@ -162,15 +162,14 @@ class ForumController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
-
+        $this->getDoctrine()->getManager()->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
         $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
-        $status = $repo->verify();
         $tree = $repo->createQueryBuilder('node')->getQuery()
             ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
             ->getResult('tree');
 
         return $this->render('@ZikulaDizkusModule/Forum/tree.html.twig', [
-            'status' => $status,
+            'status'       => $repo->verify(),
             'tree'         => $tree,
             'importHelper' => $this->get('zikula_dizkus_module.import_helper')
         ]);

@@ -50,9 +50,9 @@
                 <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': item.forum_id})}}" title='{{ __("view forum #{item.name}")}}'><i class="fa fa-eye fa-blue"></i></a>
                 <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_deleteforum', {'forum': item.forum_id})}}" title='{{ __("delete forum #{item.name}")}}'><i class="fa fa-trash-o fa-red"></i></a>
             </div>
-            {% if item.__children > 0 %}
+            {% if item.children|length > 0 %}
                 <ul class="" style="list-style:none;">
-                    {{ _self.drawTree(item.__children)}}
+                    {{ _self.drawTree(item.children)}}
                 </ul>
             {% endif %}
         </li>
