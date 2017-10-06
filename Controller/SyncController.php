@@ -101,7 +101,7 @@ class SyncController extends AbstractController
      * @Route("/forum/{forum}/posts", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * @Method("GET")
-     * 
+     *
      * @param ForumEntity $forum
      *
      * @return RedirectResponse

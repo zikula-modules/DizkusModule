@@ -165,13 +165,9 @@ class ForumController extends AbstractController
 
         $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
         $status = $repo->verify();
-
-//        $tree = $repo->childrenHierarchy();
-
         $tree = $repo->createQueryBuilder('node')->getQuery()
             ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
             ->getResult('tree');
-
 
         return $this->render('@ZikulaDizkusModule/Forum/tree.html.twig', [
             'status' => $status,
@@ -413,8 +409,8 @@ class ForumController extends AbstractController
             throw new \InvalidArgumentException();
         }
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-//
-//        // Get the Forum and Permission-Check
+
+        // Get the Forum and Permission-Check
 //        $this->_managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum);
 //
 //
@@ -458,9 +454,9 @@ class ForumController extends AbstractController
 //                        foreach ($topic_ids as $topic_id) {
 //                            // dump('move topic #'.$topic_id.' to forum #'.$moveto);
 //                            $this->get('zikula_dizkus_module.topic_manager')->move($topic_id, $moveto, $shadow);
-////                          ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
-////                                'forum_id' => $moveto,
-////                                'createshadowtopic' => $shadow]);
+//                          ModUtil::apiFunc($this->name, 'topic', 'move', ['topic_id' => $topic_id,
+//                                'forum_id' => $moveto,
+//                                'createshadowtopic' => $shadow]);
 //                        }
 //
 //                        break;
@@ -474,9 +470,9 @@ class ForumController extends AbstractController
 //                        foreach ($topic_ids as $topic_id) {
 //                            // dump($action.' '.$topic_id); // no post no title
 //                            //$this->get('zikula_dizkus_module.topic_manager')->changeStatus($topic_id, $action, $post, $title);
-////                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
-////                                'topic' => $topic_id,
-////                                'action' => $action]);
+//                            ModUtil::apiFunc($this->name, 'topic', 'changeStatus', [
+//                                'topic' => $topic_id,
+//                                'action' => $action]);
 //                        }
 //
 //                        break;
@@ -500,8 +496,8 @@ class ForumController extends AbstractController
 //                        }
 //                        foreach ($topic_ids as $from_topic_id) {
 //                            //dump('join from'.$from_topic_id.' to '.$jointo); // @todo
-////                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
-////                                'to_topic_id' => $jointo]);
+//                            ModUtil::apiFunc($this->name, 'topic', 'join', ['from_topic_id' => $from_topic_id,
+//                                'to_topic_id' => $jointo]);
 //                        }
 //
 //                        break;
