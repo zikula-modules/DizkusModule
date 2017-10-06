@@ -1,0 +1,144 @@
+{{ adminHeader() }}
+<link href="{{ pageAddAsset('stylesheet', zasset('jstree/jstree-built.css'), 98)  }}" rel="stylesheet" type="text/css" />
+{# @todo move to separate file #}
+{% macro drawTree(items) %}
+    {% for item in items %}
+        <li id="forum_{{ item.forum_id }}" data-jstree='{"icon":"fa fa-folder-open"}' data-id="{{ item.forum_id }}">
+            <span class="forum-title col-md-9">
+                <span class="noajax-actions">
+                    {% if loop.first or loop.last %}
+                        <a class="btn btn-xs"><i class="fa fa-arrow-up" style="color:#fff;text-shadow:none;"></i></a>
+                        {% endif %}
+                        {% if not loop.first %}
+                        <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_changeforumorder', {'forum': item.forum_id, 'action': 'moveUp'})}}" title='{{ __("move up")}}'>
+                            <i class="fa fa-arrow-up text-muted"></i>
+                        </a>
+                    {% endif %}
+                    {% if not loop.last %}
+                        <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_changeforumorder', {'forum': item.forum_id, 'action': 'moveDown'})}}"  title='{{ __("move down")}}'>
+                            <i class="fa fa-arrow-down text-muted"></i>
+                        </a>
+                    {% endif %}
+                </span>
+                <i class="noajax-actions fa fa-folder-open"></i>
+                <span class="tooltips" title='{{ __("Forum #{item.name}")}}'>
+                    {% if item.name is constant('Zikula\\DizkusModule\\Entity\\ForumEntity::ROOTNAME') %}
+                        <strong>{{ __('Forum index') }}</strong>
+                    {% else %}
+                        {{ item.name }}
+                    {% endif %}
+                </span>
+                <small class="tooltips text-muted" title="{{ __('topics') }}" >
+                    <i class="fa fa-comments-o fa-flip-horizontal"></i>
+                    {{ item.topicCount }}
+                </small>
+                <small class="tooltips text-muted" title="{{ __('posts') }}">
+                    <i class="fa fa-comment-o fa-flip-horizontal"></i>
+                    {{ item.postCount }}
+                </small>
+                <small class="text-muted">
+                    {% if item.status is same as (true) %}
+                        <i class="fa fa-lock fa-flip-horizontal tooltips fa-red" title="{{ __('Locked') }}"></i>
+                    {% else %}
+                        <i class="fa fa-unlock fa-flip-horizontal tooltips" title="{{ __('Unlocked') }}"></i>
+                    {% endif %}
+                </small>
+            </span>
+            <div class="noajax-actions col-md-3 text-right">
+                <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_modifyforum', {'forum': item.forum_id})}}" title='{{ __("sync forum #{item.name}")}}'><i class="fa fa-refresh fa-green"></i></a>
+                <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_modifyforum', {'forum': item.forum_id})}}" title='{{ __("edit forum #{item.name}")}}'><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum': item.forum_id})}}" title='{{ __("view forum #{item.name}")}}'><i class="fa fa-eye fa-blue"></i></a>
+                <a class="btn btn-xs tooltips" href="{{ path('zikuladizkusmodule_forum_deleteforum', {'forum': item.forum_id})}}" title='{{ __("delete forum #{item.name}")}}'><i class="fa fa-trash-o fa-red"></i></a>
+            </div>
+            {% if item.__children > 0 %}
+                <ul class="" style="list-style:none;">
+                    {{ _self.drawTree(item.__children)}}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+<div id="dizkus_admin">
+    {% if importHelper.isUpgrading() %}
+        <div id="upgrade_notice" class="alert alert-warning">
+            <div class="row">
+                <div class="col-md-12">
+                    <i class="close" data-dismiss="alert">×</i>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')}}&nbsp;{{ __('Version')}}&nbsp;{{ importHelper.isUpgrading() | replace('_', ' ')}} </strong>
+                    <a class="btn btn-success" href="{{ path('zikuladizkusmodule_import_import')}}" title="{{ __('Finish data import.')}}">
+                        <span class="fa fa-cloud-download"></span>&nbsp;{{ __('Finish data import.')}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><span class="fa fa-sitemap"></span> {{ __('Forum tree manager') }}</h3>
+        </div>
+        <div class="list-group-item list-group-item-warning">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="muted">
+                        {{ __('Here you can mmanage forum tree as well as check forum data.') }}
+                    </span>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a class="js-switch btn btn-default btn-sm" href="#" title="{{ __('JsTree mode') }}">
+                            <span class="fa fa-birthday-cake"></span>&nbsp;{{ __('JsTree mode') }}
+                        </a>
+                        <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_sync_sync') }}" title="{{ __('Sync all topics, posts and users counts') }}">
+                            <span class="fa fa-refresh"></span>&nbsp;{{ __('Sync all topics and posts') }}
+                        </a>
+                        <a class="btn btn-primary btn-sm" href="{{ path('zikuladizkusmodule_forum_createforum') }}" title="{{ __('Create a new forum') }}">
+                            <span class="fa fa-plus"></span>&nbsp;{{ __('Create a new forum') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if status is not same as(true) %}
+            <div class="list-group-item list-group-item-danger">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4> {{ __('Tree errors found:') }}</h4>
+                        {% for err in status %}
+                            <span class="muted text-danger small"><i class="fa fa-exclamation-triangle" ></i> &nbsp;{{ err }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-11">    
+                    {{ __('Tree')}}
+                </div>
+                <div class="col-md-1">
+                    {{ __('Actions')}}   
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="row">
+                <div id="forum_tree" class="col-md-12">
+                    <ul class="list-unstyled">
+                        {{ _self.drawTree(tree)}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    {{ dump() }}#}
+    {{ pageAddAsset('javascript', zasset('jstree/jstree-built.js'), 98)}}
+    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.ForumTree.js'))}}
+    {{ adminFooter()}}

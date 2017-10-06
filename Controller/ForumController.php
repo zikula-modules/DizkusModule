@@ -22,7 +22,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\DizkusModule\Form\Type\ModerateType;
+use Zikula\Core\Hook\ValidationHook;
+use Zikula\Core\Hook\ValidationProviders;
+use Zikula\Core\Hook\ProcessHook;
+use Zikula\Core\RouteUrl;
+use Zikula\DizkusModule\Entity\ForumEntity;
+//use Zikula\DizkusModule\Form\Type\ModerateType;
+use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 class ForumController extends AbstractController
 {
@@ -141,6 +147,72 @@ class ForumController extends AbstractController
     }
 
     /**
+     * @Route("/forum/tree")
+     *
+     * @Theme("admin")
+     *
+     * Show the forum tree
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     */
+    public function treeAction()
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        $status = $repo->verify();
+
+//        $tree = $repo->childrenHierarchy();
+
+        $tree = $repo->createQueryBuilder('node')->getQuery()
+            ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->getResult('tree');
+
+
+        return $this->render('@ZikulaDizkusModule/Forum/tree.html.twig', [
+            'status' => $status,
+            'tree'         => $tree,
+            'importHelper' => $this->get('zikula_dizkus_module.import_helper')
+        ]);
+    }
+
+    /**
+     * @Route("/forum/order/{action}/{forum}", requirements={"action" = "moveUp|moveDown", "forum" = "^[1-9]\d*$"})
+     * @Method("GET")
+     *
+     * Change forum order
+     * Move up or down a forum in the tree
+     *
+     * @param string $action
+     * @param ForumEntity $forum
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on Perm check failure
+     */
+    public function changeForumOrderAction($action, ForumEntity $forum)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+        $em = $this->getDoctrine()->getManager();
+        /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
+        $repo = $em->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        if ($action == 'moveUp') {
+            $repo->moveUp($forum, true);
+        } else {
+            $repo->moveDown($forum, true);
+        }
+        $em->flush();
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
      * @Route("/forum/{forum}/{action}", requirements={"forum" = "^[1-9]\d*$", "action"="lock|unlock"})
      *
      * Lock forum
@@ -197,6 +269,132 @@ class ForumController extends AbstractController
             // everything is good no ajax return to to topic view
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
+    }
+
+    /**
+     * @Route("/forum/{forum}/modify", requirements={"forum" = "^[1-9]\d*$"})
+     *
+     * @Theme("admin")
+     *
+     * @return Response
+     */
+    public function modifyForumAction(Request $request, $forum = null)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        // disallow editing of root forum
+        if ($id == 1) {
+            $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
+
+        // count only in this forum or subforums as well?
+        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
+        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
+
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
+
+        $form->handleRequest($request);
+
+        $hookvalidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.forum.validate_edit',
+                new ValidationHook(
+                    new ValidationProviders()
+                )
+            )->getValidators();
+
+        if ($form->isValid() && !$hookvalidators->hasErrors()) {
+            $managedForum->update($form->getData());
+            $managedForum->store();
+            // notify hooks
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.forum.process_edit',
+                    new ProcessHook($managedForum->getId(),
+                        RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $managedForum->getId()])
+                    )
+                );
+
+            if ($id) {
+                $this->addFlash('status', $this->__('Forum successfully updated.'));
+            } else {
+                $this->addFlash('status', $this->__('Forum successfully created.'));
+            }
+        }
+
+        return $this->render('@ZikulaDizkusModule/Forum/modifyforum.html.twig', [
+            'topiccount' => $topiccount,
+            'postcount' => $postcount,
+            'forum' => $managedForum->get(),
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/forum/create")
+     *
+     * @Theme("admin")
+     *
+     * @return Response
+     */
+    public function createForumAction(Request $request)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        // disallow editing of root forum
+        if ($id == 1) {
+            $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
+
+        // count only in this forum or subforums as well?
+        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
+        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
+
+        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
+
+        $form->handleRequest($request);
+
+        $hookvalidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.forum.validate_edit',
+                new ValidationHook(
+                    new ValidationProviders()
+                )
+            )->getValidators();
+
+        if ($form->isValid() && !$hookvalidators->hasErrors()) {
+            $managedForum->update($form->getData());
+            $managedForum->store();
+            // notify hooks
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.forum.process_edit',
+                    new ProcessHook($managedForum->getId(),
+                        RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $managedForum->getId()])
+                    )
+                );
+
+            if ($id) {
+                $this->addFlash('status', $this->__('Forum successfully updated.'));
+            } else {
+                $this->addFlash('status', $this->__('Forum successfully created.'));
+            }
+        }
+
+        return $this->render('@ZikulaDizkusModule/Forum/modifyforum.html.twig', [
+            'topiccount' => $topiccount,
+            'postcount' => $postcount,
+            'forum' => $managedForum->get(),
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -321,6 +519,119 @@ class ForumController extends AbstractController
 //            'forum'           => $this->_managedForum->get(),
 //            'pager'           => $this->_managedForum->getPager(),
             'settings'        => $this->getVars(),
+        ]);
+    }
+
+    /**
+     * @Route("/forum/{forum}/delete", requirements={"forum" = "^[1-9]\d*$"})
+     *
+     * @Theme("admin")
+     *
+     * @return Response
+     */
+    public function deleteForumAction(Request $request, $forum = null)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        if ($forum) {
+            $forum = $this->getDoctrine()->getManager()->find('Zikula\DizkusModule\Entity\ForumEntity', $forum);
+            if ($forum) {
+                //nothing to do here? @todo rearange this if
+            } else {
+                $this->addFlash('error', $this->__f('Forum with id %s not found', ['%s' => $id]), 403);
+
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
+            }
+        } else {
+            $this->addFlash('error', $this->__('No forum id'), 403);
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $forumRoot = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy(['name' => ForumEntity::ROOTNAME]);
+        $destinations = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->getChildren($forumRoot);
+
+        // @todo move to form handler
+        $form = $this->createFormBuilder([])
+        ->add('action', 'choice', [
+            'choices' => ['0' => $this->__('Remove them'),
+                '1' => $this->__('Move them to a new parent forum')],
+            'multiple' => false,
+            'expanded' => false,
+            'required' => true])
+        ->add('destination', 'choice', [
+            'choices' => $destinations,
+            'choice_value' => function ($destination) {
+                //for some reason last element is null @FIXME
+                return $destination === null ? null : $destination->getForum_id();
+            },
+            'choice_label' => function ($destination) use ($forum) {
+                $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? ' (' . $this->__("is child forum") . ')' : '';
+                $current = $destination->getForum_id() === $forum->getForum_id() ? ' (' . $this->__("current") . ')' : '';
+                $locked = $destination->isLocked() ? ' (' . $this->__("is locked") . ')' : '';
+
+                return str_repeat("--", $destination->getLvl()) . $destination->getName() . $current . $locked . $isChild;
+            },
+            'choice_attr' => function ($destination) use ($forum) {
+                $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? true : false;
+
+                return $destination->getForum_id() === $forum->getForum_id() || $destination->isLocked() || $isChild ? ['disabled' => 'disabled'] : [];
+            },
+            'choices_as_values' => true,
+            'multiple' => false,
+            'expanded' => false,
+            'required' => true])
+        ->add('remove', 'submit')
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        // check hooked modules for validation
+        $hook = new ValidationHook(new ValidationProviders());
+        $hookvalidators = $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.validate_delete', $hook)->getValidators();
+
+        if ($form->isValid() && !$hookvalidators->hasErrors()) {
+            $data = $form->getData();
+            if ($data['action'] == 1) {
+                // get the child forums and move them
+                $children = $forum->getChildren();
+                foreach ($children as $child) {
+                    $child->setParent($data['destination']);
+                }
+                $forum->removeChildren();
+
+                // get child topics and move them
+                $topics = $forum->getTopics();
+                foreach ($topics as $topic) {
+                    $topic->setForum($data['destination']);
+                    $forum->getTopics()->removeElement($topic);
+                }
+                $this->getDoctrine()->getManager()->flush();
+            }
+            // remove the forum
+            $this->getDoctrine()->getManager()->remove($forum);
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->get('hook_dispatcher')->dispatch('dizkus.ui_hooks.forum.process_delete', new ProcessHook($forum->getForum_id()));
+
+            if (isset($data['destination'])) {
+                // sync last post in destination
+                $this->get('zikula_dizkus_module.synchronization_helper')->forumLastPost($data['destination']);
+            }
+
+            // repair the tree
+            $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->recover();
+            $this->getDoctrine()->getManager()->clear();
+
+            // resync all forums, topics & posters
+            $this->get('zikula_dizkus_module.synchronization_helper')->all();
+        }
+
+        return $this->render('@ZikulaDizkusModule/Forum/deleteforum.html.twig', [
+            'forum' => $forum,
+            'form' => $form->createView(),
         ]);
     }
 }

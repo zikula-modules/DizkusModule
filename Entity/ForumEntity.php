@@ -662,7 +662,7 @@ class ForumEntity extends EntityAccess
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
                 'children' => $children,
-                'last_post' => $this->getLast_post(),
+                'last_post' => $this->getLast_post()->toArray(),
                 'moduleref' => $this->getModuleref(),
                 'status' => $this->getStatus(),
                 'topicCount' => $this->getTopicCount(),

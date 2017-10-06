@@ -1,17 +1,14 @@
 /**
- * Zikula.Dizkus.Sync.js
+ * Zikula.Dizkus.ForumTree.js
  *
  * $ based JS
  */
-
-// in case not exists
 var Zikula = Zikula || {};
 // Dizkus namespace
 Zikula.Dizkus = Zikula.Dizkus || {};
 (function ($, Routing, Translator) {
-//Upgrade module
     Zikula.Dizkus.ForumTree = (function () {
-// Init
+        // Init
         var data = {
             log: null
         };
@@ -25,15 +22,17 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         ;
         function init()
         {
-            log(Translator.__('Forum init start.'));
-//            prepareTree().done(initTree());
-            log(Translator.__('Forum init done.'));
+            log(Translator.__('Forum tree init start.'));
+
+            startListeners();
+
+            log(Translator.__('Forum tree init done.'));
         }
         ;
         function readSettings()
         {
 //            settings.ajax_timeout = parseInt($("#ajax_timeout").val());
-            log(Translator.__('Sync settings updated.'));
+            log(Translator.__('Forum tree settings updated.'));
         }
         ;
         function log(log)
@@ -52,22 +51,37 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             }
         }
         ;
+        function startListeners()
+        {
+            $(".js-switch").bind('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                log('dziala');
+                prepareTree().done(initTree());
+                $(this).addClass('disabled');
+            });
+
+            log(Translator.__('Forum tree listeners started.'));
+        }
+        ;
         function prepareTree()
         {
             log(Translator.__('Tree preparation start.'));
             var def = $.Deferred();
             $('.noajax-actions').remove();
-            // define the promise that is called once all element animations are done
+            // define the promise that is called once all elements are removed
             $('.noajax-actions').promise().done(function () {
                 def.resolve();
             });
+            $('.forum-title').attr('class', 'forum-title');
             log(Translator.__('Tree preparation done.'));
             return def.promise();
         }
         ;
-        // initialise jstree's
         /*
-         * forum Tree
+         * Forum Tree
+         *
+         * initialise jstree's
          */
         function initTree() {
             $('#forum_tree')
@@ -109,23 +123,35 @@ Zikula.Dizkus = Zikula.Dizkus || {};
 
         function itemMenu(node)
         {
+            log(node);
             var items = {
-                "Create": {
-                    "label": Translator.__('Edit forum'),
+                "Modify": {
+                    "label": Translator.__('Modify'),
+                    "icon": 'fa fa-pencil',
                     "action": function (obj) {
-                        this.create(obj);
+                        log(obj);
                     }
                 },
                 "Lock": {
-                    "label": Translator.__('Lock forum'),
+                    "label": Translator.__('Lock'),
+                    "icon": 'fa fa-lock',
                     "action": function (obj) {
-                        this.rename(obj);
+                        log(obj);
+                    }
+                },
+                "Sync": {
+                    "label": Translator.__('Sync'),
+                    "icon": 'fa fa-refresh',
+                    "action": function (obj) {
+                        log(obj);
                     }
                 },
                 "Delete": {
-                    "label": Translator.__('Delete forum'),
+                    "label": Translator.__('Delete'),
+                    "icon": 'fa fa-trash',
+                    "separator_before": true,
                     "action": function (obj) {
-                        this.remove(obj);
+                        log(obj);
                     }
                 }
             };
@@ -135,7 +161,6 @@ Zikula.Dizkus = Zikula.Dizkus || {};
 
         //ajax util
         function importAjax(url, data) {
-//            console.log(data);
             return $.ajax({
                 type: 'POST',
                 url: url,
@@ -146,11 +171,12 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             });
         }
 
-        //return this and init when ready
+        //expose actions
         return {
             init: init
         };
     })();
+    //autoinit
     $(function () {
         Zikula.Dizkus.ForumTree.init();
     });

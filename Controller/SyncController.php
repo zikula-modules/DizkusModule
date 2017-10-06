@@ -12,11 +12,15 @@
 
 namespace Zikula\DizkusModule\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
@@ -25,7 +29,7 @@ use Zikula\ThemeModule\Engine\Annotation\Theme;
 class SyncController extends AbstractController
 {
     /**
-     * @Route("/index", options={"expose"=true})
+     * @Route("", options={"expose"=true})
      *
      * @Theme("admin")
      *
@@ -40,50 +44,98 @@ class SyncController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
+        $this->getDoctrine()->getManager()->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
+        $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        $tree = $repo->createQueryBuilder('node')->getQuery()
+            ->setHint(\Doctrine\ORM\Query::HINT_INCLUDE_META_COLUMNS, true)
+            ->getResult('tree');
 
         return $this->render('@ZikulaDizkusModule/Admin/sync.html.twig', [
-//              'importHelper' =>  $this->get('zikula_dizkus_module.import_helper')
+            'status'       => $repo->verify(),
+            'tree'         => $tree,
+            'importHelper' => $this->get('zikula_dizkus_module.import_helper')
         ]);
-
-//        $showstatus = !$request->request->get('silent', 0);
-//        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
-//            throw new AccessDeniedException();
-//        }
-//
-//        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->forums()) {
-//            $this->addFlash('status', $this->__('Done! Synchronized forums index.'));
-//        } else {
-//            $this->addFlash('error', $this->__('Error synchronizing forums index.'));
-//        }
-//
-//        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->topics()) {
-//            $this->addFlash('status', $this->__('Done! Synchronized topics.'));
-//        } else {
-//            $this->addFlash('error', $this->__('Error synchronizing topics.'));
-//        }
-//
-//        if ($showstatus && $this->get('zikula_dizkus_module.synchronization_helper')->posters()) {
-//            $this->addFlash('status', $this->__('Done! Synchronized posts counter.'));
-//        } else {
-//            $this->addFlash('error', $this->__('Error synchronizing posts counter.'));
-//        }
-//
-//        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_tree', [], RouterInterface::ABSOLUTE_URL));
     }
 
     /**
-     * @Route("/forumtree", options={"expose"=true})
-     * @Theme("admin")
-     * @return Response
+     * @Route("/forum/{forum}", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * @Method("GET")
+     *
+     * @param ForumEntity $forum
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on Perm check failure
      */
-    public function forumtreeAction()
+    public function forumAction(Request $request, ForumEntity $forum)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
-        $data['tree'] = [];
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
+    }
 
-        return new Response(json_encode($data));
+    /**
+     * @Route("/forum/{forum}/topics", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * @Method("GET")
+     *
+     * @param ForumEntity $forum
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on Perm check failure
+     */
+    public function forumTopicsAction(Request $request, ForumEntity $forum)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
+     * @Route("/forum/{forum}/posts", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * @Method("GET")
+     * 
+     * @param ForumEntity $forum
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on Perm check failure
+     */
+    public function forumPostsAction(Request $request, ForumEntity $forum)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
+     * @Route("/forum/{forum}/lastpost", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * @Method("GET")
+     *
+     * @param ForumEntity $forum
+     *
+     * @return RedirectResponse
+     *
+     * @throws AccessDeniedException on Perm check failure
+     */
+    public function forumLastPostAction(Request $request, ForumEntity $forum)
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $request->getSession()->getFlashBag()->add('status', $this->__('The forum last post synchronised.'));
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
     }
 }
