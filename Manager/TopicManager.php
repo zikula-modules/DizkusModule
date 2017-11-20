@@ -16,7 +16,6 @@
 
 namespace Zikula\DizkusModule\Manager;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -93,8 +92,12 @@ class TopicManager
      */
     private $_topic;
 
+    /**
+     * Managed topic posts
+     *
+     * @var ArrayCollection
+     */
     private $posts;
-    private $_defaultPostSortOrder;
 
     /**
      * @var string
@@ -140,8 +143,6 @@ class TopicManager
         $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->synchronizationHelper = $synchronizationHelper;
-
-        $this->_defaultPostSortOrder = $this->variableApi->get($this->name, 'post_sort_order');
     }
 
     /**
@@ -174,8 +175,8 @@ class TopicManager
     /**
      * Start managing by hook
      *
-     * @param integer $id
-     * @param TopicEntity $topic
+     * @param Hook $hook
+     * @param boolean $create
      *
      * @return TopicManager
      */
@@ -224,86 +225,29 @@ class TopicManager
     }
 
     /**
-     * Prepare new topic from recived data
+     * Update topic
      *
-     * @param int    $data['forum_id']
-     * @param string $data['message']
-     * @param bool   $data['attachSignature']
-     * @param string $data['title']
-     * @param bool   $data['subscribe_topic']
-     */
-    public function create($data)
-    {
-        // @todo this should be done in post event
-        //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
-        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
-
-        //$this->_firstPost->setTitle($data['title']);
-        //$this->_firstPost->setTopic($this->_topic);
-
-        //$this->_subscribe = $data['subscribeTopic'];
-        //unset($data['subscribeTopic']);
-
-        //$this->_forumId = $data['forum_id'];
-        //$this->managedForum = $this->forumManagerService->getManager($this->_forumId);
-        //$this->_topic->setForum($this->managedForum->get());
-
-        //unset($data['forum_id']);
-        //$solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
-        //$this->_topic->setSolved($solveStatus);
-        //unset($data['isSupportQuestion']);
-
-        //$this->_topic->setLast_post($this->_firstPost);
-        //$this->_topic->merge($data);
-
-//        $managedForumUser = $this->forumUserManagerService->getManager();
-//        if($managedForumUser->isAnonymous()){
-//            $managedForumUser = $this->forumUserManagerService->getManager($this->variableApi->get($this->name, 'defaultPoster', 2));
-//        }
-//
-//        $this->_firstPost->setPoster($managedForumUser->get());
-//        $this->_topic->setPoster($managedForumUser->get());
-    }
-
-    /**
      * @param $topic
-     * @param $action
-     * @param $post
-     * @param $title
-     *
-     * @throws \InvalidArgumentException
      */
-    public function update($data = null)
+    public function update($topic = null)
     {
-        if ($data instanceof TopicEntity) {
-            $this->_topic = $data;
+        if ($topic instanceof TopicEntity) {
+            $this->_topic = $topic;
         }
 
         return $this;
     }
 
     /**
-     * Create topic and post
+     * Store topic
      *
-     * @return int topic id
+     * @return TopicManager $this
      */
     public function store()
     {
         // write topic
         $this->entityManager->persist($this->_topic);
-        //$this->entityManager->persist($this->_firstPost);
-
-        // increment post count
-        //$managedForumUser = $this->forumUserManagerService->getManager();
-        //$managedForumUser->incrementPostCount();
-        //$this->getManagedForum()->incrementPostCount();
-        //$this->getManagedForum()->incrementTopicCount();
-        //$this->getManagedForum()->setLastPost($this->_firstPost);
         $this->entityManager->flush();
-        // subscribe
-//        if ($this->_subscribe) {
-//            $managedForumUser->subscribeTopic($this->_topic);
-//        }
 
         return $this;
     }
@@ -381,6 +325,10 @@ class TopicManager
 
     /**
      * Set topic title
+     *
+     * @param string $title Topic title
+     *
+     * @return TopicManager
      */
     public function setTitle($title)
     {
@@ -400,7 +348,7 @@ class TopicManager
     }
 
     /**
-     * Return topic forum
+     * Return topic forum as doctrine 2 object
      *
      * @return ForumEntity
      */
@@ -441,6 +389,10 @@ class TopicManager
 
     /**
      * Set topic last post
+     *
+     * @param PostEntity $lastPost Last post entity
+     *
+     * @return TopicManager
      */
     public function setLastPost(PostEntity $lastPost)
     {
@@ -450,42 +402,18 @@ class TopicManager
     }
 
     /**
-     * Find last post by post_time and set
-     */
-    public function resetLastPost($flush = false)
-    {
-        $posts = $this->_topic
-                        ->getPosts()
-                            ->matching(
-                                Criteria::create()
-                                ->orderBy(['post_time' => Criteria::DESC])
-                                ->setMaxResults(1)
-                            );
-
-        $this->setLastPost($posts->first());
-        // update topic time...
-        // topic time is set on create, then updated here (and reply etc) to last post date
-        // information about when topic was created is kind of lost (same as first post)
-        // we use this property for ordering but this should be another field @todo
-        // recent topics can mean recently replayed or recently added
-        $this->_topic->setTopic_time($posts->first()->getPost_time());
-
-        if ($flush) {
-            $this->entityManager->flush();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Sets current page of paginated topic posts collection
+     * Load paged posts
+     *
+     * @param integer $start Start position
+     *
+     * @param string|bool $postsOrder
      *
      * @return Collection
      */
     public function loadPosts($start = 0, $postsOrder = null)
     {
         if (empty($postsOrder)) {
-            $postsOrder = $this->_defaultPostSortOrder;
+            $postsOrder = $this->variableApi->get($this->name, 'post_sort_order');
         }
 
         // Do a new query in order to limit maxresults, firstresult, order, etc.
@@ -500,9 +428,7 @@ class TopicManager
             ->orderBy('p.post_time', $postsOrder)
             ->getQuery();
         $query->setFirstResult($start)
-              ->setMaxResults(
-                $this->variableApi->get($this->name, 'posts_per_page')
-              );
+              ->setMaxResults($this->variableApi->get($this->name, 'posts_per_page'));
 
         $this->posts = new Paginator($query, false);
 
@@ -512,7 +438,7 @@ class TopicManager
     /**
      * Return posts of a topic as doctrine2 collection
      *
-     * @return Collection
+     * @return ArrayCollection
      */
     public function getPosts()
     {
@@ -520,9 +446,9 @@ class TopicManager
     }
 
     /**
-     * Posts collection management
+     * Posts count
      *
-     * @return array
+     * @return integer
      */
     public function getPostsCount()
     {
@@ -530,9 +456,9 @@ class TopicManager
     }
 
     /**
-     * Get the number of posts in this topic
+     * Get the reply count
      *
-     * @return int
+     * @return integer
      */
     public function getReplyCount()
     {
@@ -541,6 +467,8 @@ class TopicManager
 
     /**
      * Increment topic views count
+     *
+     * @return TopicManager
      */
     public function incrementViewsCount()
     {
@@ -551,6 +479,8 @@ class TopicManager
 
     /**
      * Increment topic replies count
+     *
+     * @return TopicManager
      */
     public function incrementRepliesCount()
     {
@@ -930,3 +860,86 @@ class TopicManager
         return $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference])->toArray();
     }
 }
+
+//
+//    /**
+//     * Prepare new topic from recived data
+//     *
+//     * @param int    $data['forum_id']
+//     * @param string $data['message']
+//     * @param bool   $data['attachSignature']
+//     * @param string $data['title']
+//     * @param bool   $data['subscribe_topic']
+//     */
+//    public function create($data)
+//    {
+        // @todo this should be done in post event
+        //$data['message'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['message']);
+        //$data['title'] = ModUtil::apiFunc($this->name, 'user', 'dzkstriptags', $data['title']);
+
+        //$this->_firstPost->setTitle($data['title']);
+        //$this->_firstPost->setTopic($this->_topic);
+
+        //$this->_subscribe = $data['subscribeTopic'];
+        //unset($data['subscribeTopic']);
+
+        //$this->_forumId = $data['forum_id'];
+        //$this->managedForum = $this->forumManagerService->getManager($this->_forumId);
+        //$this->_topic->setForum($this->managedForum->get());
+
+        //unset($data['forum_id']);
+        //$solveStatus = isset($data['isSupportQuestion']) && ($data['isSupportQuestion'] == 1) ? -1 : 0; // -1 = support request
+        //$this->_topic->setSolved($solveStatus);
+        //unset($data['isSupportQuestion']);
+
+        //$this->_topic->setLast_post($this->_firstPost);
+        //$this->_topic->merge($data);
+
+//        $managedForumUser = $this->forumUserManagerService->getManager();
+//        if($managedForumUser->isAnonymous()){
+//            $managedForumUser = $this->forumUserManagerService->getManager($this->variableApi->get($this->name, 'defaultPoster', 2));
+//        }
+//
+//        $this->_firstPost->setPoster($managedForumUser->get());
+//        $this->_topic->setPoster($managedForumUser->get());
+//    }
+//
+       //$this->entityManager->persist($this->_firstPost);
+        // increment post count
+        //$managedForumUser = $this->forumUserManagerService->getManager();
+        //$managedForumUser->incrementPostCount();
+        //$this->getManagedForum()->incrementPostCount();
+        //$this->getManagedForum()->incrementTopicCount();
+        //$this->getManagedForum()->setLastPost($this->_firstPost);
+        // subscribe
+//        if ($this->_subscribe) {
+//            $managedForumUser->subscribeTopic($this->_topic);
+//        }
+
+//    /**
+//     * Find last post by post_time and set
+//     */
+//    public function resetLastPost($flush = false)
+//    {
+////        $posts = $this->_topic
+////                        ->getPosts()
+////                            ->matching(
+////                                Criteria::create()
+////                                ->orderBy(['post_time' => Criteria::DESC])
+////                                ->setMaxResults(1)
+////                            );
+////
+////        $this->setLastPost($posts->first());
+//        // update topic time...
+//        // topic time is set on create, then updated here (and reply etc) to last post date
+//        // information about when topic was created is kind of lost (same as first post)
+//        // we use this property for ordering but this should be another field @todo
+//        // recent topics can mean recently replayed or recently added
+////        $this->_topic->setTopic_time($posts->first()->getPost_time());
+//
+////        if ($flush) {
+////            $this->entityManager->flush();
+////        }
+//
+//        return $this;
+//    }
