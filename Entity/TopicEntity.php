@@ -12,10 +12,11 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use Zikula\Core\Doctrine\EntityAccess;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\Core\UrlInterface;
 
 /**
@@ -23,6 +24,8 @@ use Zikula\Core\UrlInterface;
  *
  * @ORM\Table(name="dizkus_topics")
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\TopicRepository")
+ * @ORM\HasLifecycleCallbacks
+ *
  */
 class TopicEntity extends EntityAccess
 {
@@ -159,6 +162,11 @@ class TopicEntity extends EntityAccess
      * @ORM\Column(type="object", nullable=true)
      */
     private $hookedUrlObject = null;
+
+    /**
+     * sync on save marker
+     */
+    private $syncOnSave = true;
 
     /**
      * Constructor
@@ -482,5 +490,35 @@ class TopicEntity extends EntityAccess
         $this->hookedUrlObject = $hookedUrlObject;
 
         return $this;
+    }
+
+    public function noSync()
+    {
+        $this->syncOnSave = false;
+
+        return $this;
+    }
+
+    /**
+     * Sync topic last post and replyCount
+     *
+     * @ORM\PreUpdate
+     */
+    public function sync()
+    {
+        if ($this->syncOnSave) {
+            $postsCount = $this->posts->count();
+            if ($postsCount > 1) {
+                $this->replyCount = $postsCount - 1;
+
+                $posts = $this->getPosts()
+                            ->matching(
+                                Criteria::create()
+                                ->orderBy(['post_time' => Criteria::DESC])
+                                ->setMaxResults(1)
+                            );
+                $this->setLast_Post($posts->first());
+            }
+        }
     }
 }

@@ -560,17 +560,14 @@ class TopicController extends AbstractController
                     ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $managedTopic->get() : null)
                     ->store();
 
-            $managedTopic
-                    ->incrementRepliesCount()
-                    ->setLastPost($postManager->get())
-                    ->store();
+            $managedTopic->store();
 
-            $managedTopic
-                    ->getManagedForum()
-                        ->setLastPost($postManager->get())
-                        ->setParentsLastPost($postManager->get())
-                        ->incrementPostCount()
-                        ->store();
+//            $managedTopic
+//                    ->getManagedForum()
+//                        ->setLastPost($postManager->get())
+//                        ->setParentsLastPost($postManager->get())
+//                        ->incrementPostCount()
+//                        ->store();
 
             $this->get('event_dispatcher')
                 ->dispatch(DizkusEvents::TOPIC_REPLY,
