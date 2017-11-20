@@ -125,12 +125,18 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
-
                 $managedForumUser
-                            ->setPostOrder($data['postOrder'])
-                            ->setForumViewSettings((bool) $data['displayOnlyFavorites'])
-                            ->setAutosubscribe($data['autosubscribe'])
-                            ->store();
+                    ->setPostOrder($data['postOrder']);
+
+                if ($this->getVar('favorites_enabled')) {
+                    $managedForumUser->setForumViewSettings((bool) $data['displayOnlyFavorites']);
+                }
+
+                if ($this->getVar('topic_subscriptions_enabled')) {
+                    $managedForumUser->setAutosubscribe($data['autosubscribe']);
+                }
+
+                $managedForumUser->store();
 
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }

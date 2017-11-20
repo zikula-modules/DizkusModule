@@ -456,11 +456,15 @@ class ForumUserManager
     /**
      * Get user post order setting
      *
-     * @return string
+     * @return string|null
      */
     public function getPostOrder()
     {
-        return (!$this->isAnonymous() && $this->_forumUser->getPostOrder() == 1) ? 'ASC' : 'DESC';
+        if ($this->isAnonymous()) {
+            return null;
+        }
+
+        return $this->_forumUser->getPostOrder() == 1 ? 'ASC' : 'DESC';
     }
 
     /**
