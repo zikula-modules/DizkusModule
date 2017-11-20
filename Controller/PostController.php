@@ -408,13 +408,13 @@ class PostController extends AbstractController
                 ->getManagedTopic() // destination topic management
                     ->incrementRepliesCount()
                     ->store()
-                    ->resetLastPost(true)
+//                    ->resetLastPost(true)
                     ->getManagedForum()
                         ->resetLastPost(true);
 
             $managedOriginTopic->incrementRepliesCount()
                                 ->store()
-                                ->resetLastPost(true)
+//                                ->resetLastPost(true)
                                 ->getManagedForum()
                                     ->resetLastPost(true);
 

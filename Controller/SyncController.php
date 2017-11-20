@@ -14,6 +14,7 @@ namespace Zikula\DizkusModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Events\DizkusEvents;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
@@ -73,6 +75,11 @@ class SyncController extends AbstractController
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
+
+        $this->get('event_dispatcher')
+            ->dispatch(DizkusEvents::USER_SYNC,
+                new GenericEvent($forum)
+            );
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
     }
