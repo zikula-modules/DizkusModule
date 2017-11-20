@@ -103,10 +103,10 @@ class AdminController extends AbstractController
         }
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
-        if ($submit == 2) {
+        if (2 == $submit) {
             $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
-            if ($ranktype == 0) {
+            if (0 == $ranktype ) {
                 $template = 'ranks';
             }
 
@@ -142,7 +142,7 @@ class AdminController extends AbstractController
         $page = (int) $request->query->get('page', 1);
         $letter = $request->query->get('letter');
 
-        if ($request->getMethod() == 'POST') {
+        if ('POST' == $request->getMethod()) {
             $letter = $request->request->get('letter');
             $page = (int) $request->request->get('page', 1);
 
@@ -153,14 +153,14 @@ class AdminController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_assignranks', ['page' => $page, 'letter' => $letter], RouterInterface::ABSOLUTE_URL));
         }
 
-        $letter = (empty($letter) || strlen($letter) != 1) ? '*' : $letter;
+        $letter = (empty($letter) || 1 != strlen($letter)) ? '*' : $letter;
         $perpage = 20;
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('u')
         ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
         ->orderBy('u.uname', 'ASC');
-        if ($letter != '*') {
+        if ('*' != $letter) {
             $qb->andWhere('u.uname LIKE :letter')
             ->setParameter('letter', strtolower($letter) . '%');
         }
