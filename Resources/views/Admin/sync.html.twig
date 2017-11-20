@@ -50,28 +50,7 @@
             </span>
             <div class="noajax-actions col-md-4 text-right">
                 <a class="btn btn-sm tooltips" href="{{ path('zikuladizkusmodule_sync_forum', {'forum': item.forum_id})}}" title='{{ __("Sync forum #{item.name}")}}'>
-                    <span class="fa-stack">
-                        <i class="fa fa-folder fa-stack-2x text-muted"></i>
-                        <i class="fa fa-refresh fa-stack-1x fa-inverse"></i>
-                    </span>
-                </a>
-                <a class="btn btn-sm tooltips" href="{{ path('zikuladizkusmodule_sync_forumtopics', {'forum': item.forum_id})}}" title='{{ __("Sync topics #{item.name}")}}'>
-                    <span class="fa-stack">
-                        <i class="fa fa-comments fa-stack-2x text-muted"></i>
-                        <i class="fa fa-refresh fa-stack-1x fa-inverse"></i>
-                    </span>
-                </a>
-                <a class="btn btn-sm tooltips" href="{{ path('zikuladizkusmodule_sync_forumposts', {'forum': item.forum_id})}}" title='{{ __("Sync posts #{item.name}")}}'>
-                    <span class="fa-stack">
-                        <i class="fa fa-comment fa-stack-2x text-muted"></i>
-                        <i class="fa fa-refresh fa-rotate-90 fa-stack-1x fa-inverse"></i>
-                    </span>
-                </a>
-                <a class="btn btn-sm tooltips" href="{{ path('zikuladizkusmodule_sync_forumlastpost', {'forum': item.forum_id})}}" title='{{ __("Sync last post #{item.name}")}}'>
-                    <span class="fa-stack">
-                        <i class="fa fa-commenting fa-stack-2x text-muted"></i>
-                        <i class="fa fa-refresh fa-rotate-90  fa-stack-1x fa-inverse"></i>
-                    </span>
+                    <i class="fa fa-refresh fa-rotate-90"></i>
                 </a>
             </div>
             {% if item.children|length > 0 %}
