@@ -13,7 +13,6 @@
 namespace Zikula\DizkusModule\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zikula\Core\Doctrine\EntityAccess;
@@ -103,7 +102,7 @@ class TopicEntity extends EntityAccess
     private $forum;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true, onDelete="SET NULL")
      */
     private $last_post;
@@ -121,7 +120,7 @@ class TopicEntity extends EntityAccess
     /**
      * posts
      *
-     * @ORM\OneToMany(targetEntity="PostEntity", mappedBy="topic", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="PostEntity", mappedBy="topic", cascade={"persist"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
@@ -167,6 +166,11 @@ class TopicEntity extends EntityAccess
      * sync on save marker
      */
     private $syncOnSave = true;
+
+    /**
+     * sync on save marker
+     */
+    private $subscribe = false;
 
     /**
      * Constructor
@@ -492,6 +496,11 @@ class TopicEntity extends EntityAccess
         return $this;
     }
 
+    function getSyncOnSave()
+    {
+        return $this->syncOnSave;
+    }
+
     public function noSync()
     {
         $this->syncOnSave = false;
@@ -499,26 +508,15 @@ class TopicEntity extends EntityAccess
         return $this;
     }
 
-    /**
-     * Sync topic last post and replyCount
-     *
-     * @ORM\PreUpdate
-     */
-    public function sync()
+    function getSubscribe()
     {
-        if ($this->syncOnSave) {
-            $postsCount = $this->posts->count();
-            if ($postsCount > 1) {
-                $this->replyCount = $postsCount - 1;
+        return $this->subscribe;
+    }
 
-                $posts = $this->getPosts()
-                            ->matching(
-                                Criteria::create()
-                                ->orderBy(['post_time' => Criteria::DESC])
-                                ->setMaxResults(1)
-                            );
-                $this->setLast_Post($posts->first());
-            }
-        }
+    function setSubscribe($subscribe)
+    {
+        $this->subscribe = $subscribe;
+
+        return $this;
     }
 }

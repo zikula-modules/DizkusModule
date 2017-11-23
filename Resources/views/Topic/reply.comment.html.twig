@@ -61,7 +61,7 @@
                     {% if settings.topic_subscriptions_enabled %}
                         <div class="col-md-4">
                             <div><strong>{{ __("Subscriptions")}}</strong></div>
-                            {{ form_row(form.subscribeTopic, {   'label': __("Email me when a reply is posted")
+                            {{ form_row(form.subscribe, {   'label': __("Email me when a reply is posted")
                                         , 'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                                 , 'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} })}}
                         </div>

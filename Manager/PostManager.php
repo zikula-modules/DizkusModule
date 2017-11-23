@@ -268,33 +268,33 @@ class PostManager
     public function delete()
     {
         // preserve post_id
-        $id = $this->_post->getId();
+//        $id = $this->_post->getId();
         $postArray = $this->toArray();
-        $managedTopic = $this->getManagedTopic();
-        $topicLastPost = $managedTopic->get()
-                ->decrementReplyCount()
-                ->getLast_post();
+//        $managedTopic = $this->getManagedTopic();
+//        $topicLastPost = $managedTopic->get()
+//                ->decrementReplyCount()
+//                ->getLast_post();
 
-        $managedForum = $managedTopic->getManagedForum();
-        $forumLastPost = $managedForum->get()
-                ->decrementPostCount()
-                ->getLast_post();
+//        $managedForum = $managedTopic->getManagedForum();
+//        $forumLastPost = $managedForum->get()
+//                ->decrementPostCount()
+//                ->getLast_post();
 
-        $this->_post
-            ->getPoster()
-                ->decrementPostCount();
+//        $this->_post
+//            ->getPoster()
+//                ->decrementPostCount();
 
         // remove the post
         $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
 
-        if (!$topicLastPost instanceof PostEntity || $topicLastPost->getId() == $id) {
-            $managedTopic->resetLastPost(true);
-        }
-
-        if (!$forumLastPost instanceof PostEntity || $forumLastPost->getId() == $id) {
-            $managedForum->resetLastPost(true);
-        }
+//        if (!$topicLastPost instanceof PostEntity || $topicLastPost->getId() == $id) {
+//            $managedTopic->resetLastPost(true);
+//        }
+//
+//        if (!$forumLastPost instanceof PostEntity || $forumLastPost->getId() == $id) {
+//            $managedForum->resetLastPost(true);
+//        }
 
         return $postArray;
     }

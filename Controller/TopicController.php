@@ -77,6 +77,7 @@ class TopicController extends AbstractController
 
         $currentTopic->loadPosts($start - 1, $postOrder)
             ->incrementViewsCount()
+            ->noSync()
             ->store();
 
         return $this->render('@ZikulaDizkusModule/Topic/view.html.twig', [
@@ -248,11 +249,9 @@ class TopicController extends AbstractController
             goto display;
         }
 
-        $newManagedTopic
-            ->update($form->getData())
-            ->get()
-            ->setLast_post($newManagedTopic->getFirstPost());
+        $newManagedTopic->update($form->getData());
 
+        // move internal events to topic manager
         $this->get('event_dispatcher')
             ->dispatch(DizkusEvents::TOPIC_PREPARE,
                 new GenericEvent($newManagedTopic->get()));
@@ -269,15 +268,6 @@ class TopicController extends AbstractController
 
         if ($form->get('save')->isClicked()) {
             $newManagedTopic->store();
-
-            $managedForum
-                    ->setLastPost($newManagedTopic->getFirstPost())
-                    ->setParentsLastPost($newManagedTopic->getFirstPost())
-                    ->store();
-
-            $currentForumUser
-                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $newManagedTopic->get() : null)
-                    ->store();
 
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.topic.process_edit',
@@ -310,7 +300,7 @@ class TopicController extends AbstractController
                 );
 
             // redirect to the new topic
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         display:
@@ -553,21 +543,11 @@ class TopicController extends AbstractController
         }
 
         if ($form->get('save')->isClicked()) {
-            $postManager->store();
 
-            $currentForumUser
-                    ->incrementPostCount()
-                    ->subscribeTopic($form->has('subscribeTopic') && $form->get('subscribeTopic')->getData() ? $managedTopic->get() : null)
-                    ->store();
+            $managedTopic->get()
+                ->addPost($postManager->get());
 
             $managedTopic->store();
-
-//            $managedTopic
-//                    ->getManagedForum()
-//                        ->setLastPost($postManager->get())
-//                        ->setParentsLastPost($postManager->get())
-//                        ->incrementPostCount()
-//                        ->store();
 
             $this->get('event_dispatcher')
                 ->dispatch(DizkusEvents::TOPIC_REPLY,
@@ -580,7 +560,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -703,8 +683,8 @@ class TopicController extends AbstractController
             ->dispatch(DizkusEvents::TOPIC_PREPARE,
                 new GenericEvent($managedTopic->get()));
 
-        if ($form->get('save')->isClicked()) {
-            $managedTopic->store();
+        if ($form->get('delete')->isClicked()) {
+            $managedTopic->delete();
 
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.topic.process_edit',
@@ -724,7 +704,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedTopic->getForumId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -832,7 +812,10 @@ class TopicController extends AbstractController
 //            }
 //
 //
-//            $managedTopic->move($data['forum_id'], $data['createshadowtopic']);
+            $oldId = $managedTopic->move($form->get('forum')->getData(), $form->get('createshadowtopic')->getData());
+
+
+            $managedTopic->store();
 
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.topic.process_edit',
@@ -852,7 +835,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 

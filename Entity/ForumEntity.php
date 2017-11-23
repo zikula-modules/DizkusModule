@@ -473,6 +473,17 @@ class ForumEntity extends EntityAccess
     }
 
     /**
+     * get forum Topics.
+     *
+     * @return ArrayCollection TopicEntity
+     */
+    public function getTopicsCollection()
+    {
+        return $this->topics;
+    }
+
+
+    /**
      * get Moderators.
      *
      * @return ArrayCollection ModeratorUserEntity
@@ -645,6 +656,61 @@ class ForumEntity extends EntityAccess
 
         return $this;
     }
+
+
+    /**
+     * recalculate post count.
+     * only direct children
+     */
+    public function recalculatePostCount()
+    {
+        $postCount = 0;
+        foreach ($this->getChildren() as $subForum) {
+            $postCount = $postCount + $subForum->getPostCount();
+        }
+        foreach ($this->getTopics() as $topic) {
+            // plus 1 if we count first post
+            $postCount = $postCount + $topic->getReplyCount();
+        }
+
+        return $postCount;
+    }
+
+    /**
+     * recalculate topics count.
+     * only direct children
+     */
+    public function recalculateTopicCount()
+    {
+        $topicCount = $this->topics->count();
+        foreach ($this->getChildren() as $subForum) {
+            $topicCount = $topicCount + $subForum->getTopicsCollection()->count();
+        }
+
+        dump($topicCount);
+
+        return $topicCount;
+    }
+
+    /**
+     * recalculate last post.
+     * only direct children
+     */
+    public function recalculateLastPost()
+    {
+       $postCount = 0;
+        foreach ($this->getChildren() as $subForum) {
+            $postCount = $postCount + $subForum->get('postCount');
+        }
+        foreach ($this->getTopics() as $topic) {
+            // plus 1 if we count first post
+            $postCount = $postCount + $topic->get('replyCount');
+        }
+
+        return null;
+    }
+
+
 
     public function __toArray()
     {

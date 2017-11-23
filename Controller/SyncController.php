@@ -76,10 +76,14 @@ class SyncController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $this->get('event_dispatcher')
-            ->dispatch(DizkusEvents::USER_SYNC,
-                new GenericEvent($forum)
-            );
+        $directTopicsPostCount = 0;
+        foreach($forum->getTopics() as $topic) {
+            $directTopicsPostCount = $directTopicsPostCount + $topic->getReplyCount();
+        }
+
+        dump($directTopicsPostCount);
+
+
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
     }

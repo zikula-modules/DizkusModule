@@ -373,7 +373,7 @@ class ForumController extends AbstractController
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.forum.process_edit',
                     new ProcessHook($managedForum->getId(),
-                        RouteUrl::createFromRoute('zikuladizkusmodule_user_viewforum', ['forum' => $managedForum->getId()])
+                        RouteUrl::createFromRoute('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()])
                     )
                 );
 

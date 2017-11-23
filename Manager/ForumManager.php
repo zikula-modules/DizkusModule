@@ -402,21 +402,6 @@ class ForumManager
         return $this;
     }
 
-    /**
-     * recursive method to modify parent forum's post or topic count.
-     */
-    private function modifyParentCount(ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
-    {
-        $direction = in_array($direction, ['increment', 'decrement']) ? $direction : 'increment';
-        $entity = in_array($entity, ['Post', 'Topic']) ? $entity : 'Post';
-        $method = "{$direction}{$entity}Count";
-        $parentForum->{$method}();
-        $grandParent = $parentForum->getParent();
-        if (isset($grandParent)) {
-            $this->modifyParentCount($grandParent, $direction, $entity);
-        }
-    }
-
     public function setLastPost($post)
     {
         $this->_forum->setLast_post($post);

@@ -243,7 +243,7 @@ class TopicManager
      *
      * @return TopicManager $this
      */
-    public function store()
+    public function store($noSync = false)
     {
         // write topic
         $this->entityManager->persist($this->_topic);
@@ -263,40 +263,12 @@ class TopicManager
      *
      * @return int the forum's id for redirecting
      */
-    public function delete($topic)
+    public function delete()
     {
-        if (is_numeric($topic)) {
-            // @todo what if topic not found?
-            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
-        }
-
-        if (!$topic instanceof TopicEntity) {
-            throw new \InvalidArgumentException();
-        }
-
-        $forum = $topic->getForum();
-
-        // Permission check
-        if (!$this->permission->canModerate(['forum_id' => $forum->getId()])) {
-            throw new AccessDeniedException();
-        }
-
-        $posts = $topic->getPosts();
-        foreach ($posts as $post) {
-            $post->getPoster()->decrementPostCount();
-            $forum->decrementPostCount();
-        }
-        // decrement topicCount
-        $forum->decrementTopicCount();
-        // update the db
+        $this->entityManager->remove($this->_topic);
         $this->entityManager->flush();
-        // delete the topic
-        $this->entityManager->remove($topic);
 
-        $this->synchronizationHelper->forum($forum, false);
-        $this->synchronizationHelper->forumLastPost($forum, true);
-
-        return $forum->getId();
+        return $this;
     }
 
     /**
@@ -311,6 +283,18 @@ class TopicManager
         }
 
         return $this->_topic->toArray();
+    }
+
+    /**
+     * Return topic id
+     *
+     * @return int
+     */
+    public function noSync()
+    {
+        $this->_topic->noSync();
+
+        return $this;
     }
 
     /**
@@ -671,55 +655,32 @@ class TopicManager
      *
      * This function moves a given topic to another forum
      *
-     * @param $topic_id int the topics id
-     * @param $forum_id int the destination forums id
+     * @param $forum int the destination forums id
      * @param $createshadowtopic   boolean true = create shadow topic
-     * @param $topic TopicEntity
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return void
      */
-    public function move($topic_id, $forum_id, $createshadowtopic, $topic = false)
+    public function move($forum, $createshadowtopic)
     {
-        if (!isset($topic) || !$topic instanceof TopicEntity) {
-            if (!isset($topic_id)) {
-                throw new \InvalidArgumentException();
-            }
-            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $topic_id);
-        }
-        $managedTopic = $this->getManager(null, $topic);
-        if ($managedTopic->getForumId() != $forum_id) {
-            // set new forum
-            $oldForumId = $managedTopic->getForumId();
-            $forum = $this->entityManager->getReference('Zikula\DizkusModule\Entity\ForumEntity', $forum_id);
-            $managedTopic->get()->setForum($forum);
+        if ($this->getForumId() != $forum->getId()) {
+            $this->_topic->setForum($forum);
             if ($createshadowtopic == true) {
                 // create shadow topic
-                $managedShadowTopic = $this->getManager();
-                $newUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()]);
-                $topicData = [
-                    'title'           => $this->translator->__f('*** The original posting \'%s\' has been moved', $managedTopic->getTitle()),
-                    'message'         => $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.',
-                    'forum_id'        => $oldForumId,
-                    'topic_time'      => $managedTopic->get()->getTopic_time(),
-                    'attachSignature' => false,
-                    'subscribe_topic' => false, ];
-                $managedShadowTopic->prepare($topicData);
-                $managedShadowTopic->lock();
-                $this->entityManager->persist($managedShadowTopic->get());
+//                $managedShadowTopic = $this->getManager();
+//                $newUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
+//                $topicData = [
+//                    'title'           => $this->translator->__f('*** The original posting \'%s\' has been moved', $this->getTitle()),
+//                    'message'         => $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.',
+//                    'forum_id'        => $oldForumId,
+//                    'topic_time'      => $this->get()->getTopic_time(),
+//                    'attachSignature' => false,
+//                    'subscribe_topic' => false, ];
+//                $managedShadowTopic->prepare($topicData);
+//                $managedShadowTopic->lock();
+//                $this->entityManager->persist($managedShadowTopic->get());
             }
-
-            // re-sync all forum counts and last posts
-            $previousForumLocation = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $oldForumId);
-            // we need to set it to null here so it can be easly synchronized later forumLastPost id is unique
-            $previousForumLocation->setLast_post();
-
-            $this->entityManager->flush();
-            $this->synchronizationHelper->forumLastPost($previousForumLocation, false);
-            $this->synchronizationHelper->forumLastPost($forum, false);
-            $this->synchronizationHelper->forum($oldForumId, false);
-            $this->synchronizationHelper->forum($forum, true);
         }
 
         return $this;
@@ -766,16 +727,16 @@ class TopicManager
         $this->entityManager->flush();
         // last iteration of `$post` used below
         // update old topic
-        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
+//        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
         //ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', ['topic' => $managedTopic->get(), 'flush' => true]);
-        $oldReplyCount = $managedTopic->get()->getReplyCount();
-        $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
+//        $oldReplyCount = $managedTopic->get()->getReplyCount();
+//        $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
         // update new topic with post data
-        $newTopic->setLast_post($post);
-        $newTopic->setReplyCount(count($posts) - 1);
-        $newTopic->setTopic_time($post->getPost_time());
+//        $newTopic->setLast_post($post);
+//        $newTopic->setReplyCount(count($posts) - 1);
+//        $newTopic->setTopic_time($post->getPost_time());
         // resync topic totals, etc
-        $this->synchronizationHelper->forum($newTopic->getForum(), false);
+//        $this->synchronizationHelper->forum($newTopic->getForum(), false);
         //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
         $this->entityManager->flush();
 
@@ -812,15 +773,15 @@ class TopicManager
         }
 
         $this->entityManager->flush();
-        $originTopicForum = $managedOriginTopic->get()->getForum();
+//        $originTopicForum = $managedOriginTopic->get()->getForum();
         $this->entityManager->remove($managedOriginTopic->get());
 
         // resync destination topic and all forums
-        $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
-        $this->synchronizationHelper->forum($originTopicForum, false);
-        $this->synchronizationHelper->forumLastPost($originTopicForum, true);
-        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
-        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
+//        $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
+//        $this->synchronizationHelper->forum($originTopicForum, false);
+//        $this->synchronizationHelper->forumLastPost($originTopicForum, true);
+//        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
+//        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
 
         return $managedDestinationTopic->getId();
     }
@@ -860,6 +821,68 @@ class TopicManager
         return $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findOneBy(['reference' => $reference])->toArray();
     }
 }
+
+
+
+            // set new forum
+//            $this->_topic->getForum()->setLast_post(null);
+//            $oldForum; // needed for sync and consistency
+//            $this->entityManager->persist($oldForum);
+//            $this->entityManager->flush();
+//        if (!isset($topic) || !$topic instanceof TopicEntity) {
+//            if (!isset($topic_id)) {
+//                throw new \InvalidArgumentException();
+//            }
+//            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $topic_id);
+//        }
+//        $managedTopic = $this->getManager(null, $topic);
+            // re-sync all forum counts and last posts
+//            $previousForumLocation = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumEntity', $oldForumId);
+            // we need to set it to null here so it can be easly synchronized later forumLastPost id is unique
+//            $previousForumLocation->setLast_post();
+//            $this->synchronizationHelper->forumLastPost($previousForumLocation, false);
+//            $this->synchronizationHelper->forumLastPost($forum, false);
+//            $this->synchronizationHelper->forum($oldForumId, false);
+//            $this->synchronizationHelper->forum($forum, true);
+        // because posts are owning side it is not that simple
+        // need to check what events are fired and
+        //lets remove posts first
+        ////        $posts = $topic->getPosts();
+//        foreach ($posts as $post) {
+//            $post->getPoster()->decrementPostCount();
+//            $forum->decrementPostCount();
+//        }
+        // decrement topicCount
+//        $forum->decrementTopicCount();
+        // update the db
+        // this should fire lots of events
+//        $this->_topic->getPosts()->clear();
+//        $this->entityManager->flush();
+
+//        if (is_numeric($topic)) {
+//            // @todo what if topic not found?
+//            $topic = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->find($topic);
+//        }
+//
+//        if (!$topic instanceof TopicEntity) {
+//            throw new \InvalidArgumentException();
+//        }
+
+
+//        $posts = $topic->getPosts();
+//        foreach ($posts as $post) {
+//            $post->getPoster()->decrementPostCount();
+//            $forum->decrementPostCount();
+//        }
+        // decrement topicCount
+//        $forum->decrementTopicCount();
+        // update the db
+//        $this->entityManager->flush();
+        // delete the topic
+//        // call sync event
+//        $this->synchronizationHelper->forum($forum, false);
+//        $this->synchronizationHelper->forumLastPost($forum, true);
+
 
 //
 //    /**

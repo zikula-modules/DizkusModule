@@ -16,6 +16,7 @@ parameters:
     zikula_dizkus_module.forum_sync_listener.class: Zikula\DizkusModule\Listener\ForumSyncListener
     zikula_dizkus_module.topic_sync_listener.class: Zikula\DizkusModule\Listener\TopicSyncListener
     zikula_dizkus_module.user_sync_listener.class: Zikula\DizkusModule\Listener\UserSyncListener
+    zikula_dizkus_module.sync_listener.class: Zikula\DizkusModule\Listener\SyncListener
     # Forms
     zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
     zikula_dizkus_module.forum_select.class: Zikula\DizkusModule\Form\Type\Forum\ForumSelectType
@@ -188,6 +189,20 @@ services:
             - { name: kernel.event_subscriber }
         arguments:
           - "@doctrine.orm.default_entity_manager"
+          
+    zikula_dizkus_module.sync_listener:
+        class: %zikula_dizkus_module.sync_listener.class%
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: postRemove } 
+#            - { name: doctrine.event_listener, event: preFlush }            
+#            - { name: doctrine.event_listener, event: onFlush }
+#        arguments:
+#          - "@doctrine.orm.default_entity_manager" 
+
 # Forms
 
     zikula_dizkus_module.form.type.admin_modify_forum:

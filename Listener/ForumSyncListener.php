@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Zikula\DizkusModule\Events\DizkusEvents;
+use Zikula\DizkusModule\Entity\ForumEntity;
 
 /**
  * Forum Sync Listener
@@ -55,6 +56,13 @@ class ForumSyncListener implements EventSubscriberInterface
     public function forumSync(GenericEvent $event)
     {
         $recursive = $event->hasArgument('recursive') ? $event->getArgument('recursive') : false;
-//        dump($recursive);
+        $caller = $event->getSubject();
+
+
+        if ($caller instanceof ForumEntity) {
+
+            dump($caller);
+        }
+
     }
 }
