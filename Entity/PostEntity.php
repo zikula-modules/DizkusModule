@@ -108,9 +108,8 @@ class PostEntity extends EntityAccess
      * */
     private $topic;
 
-
     private $subscribe = false;
-    
+
     /**
      * Constructor
      */

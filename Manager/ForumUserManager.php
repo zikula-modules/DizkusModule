@@ -129,7 +129,7 @@ class ForumUserManager
             $this->loggedIn = true;
         } elseif ($create) {
             //$this->variableApi->get($this->name, 'defaultPoster', 2); ???
-             // zikula guest account
+            // zikula guest account
             $zuser = $this->entityManager->find('Zikula\UsersModule\Entity\UserEntity', $uid);
             if ($zuser) {
                 $this->_forumUser = new ForumUserEntity();
@@ -315,7 +315,7 @@ class ForumUserManager
      */
     public function isAnonymous()
     {
-        return ($this->loggedIn && $this->getId() == 1) ? true : false;
+        return ($this->loggedIn && 1 == $this->getId()) ? true : false;
     }
 
     /**
@@ -423,7 +423,7 @@ class ForumUserManager
                 //dump($nodeModeratorGroups);
                 $userGroups = $this->_forumUser->getUser()->getGroups();
                 foreach ($nodeModeratorGroups as $group) {
-                    return $userGroups->indexOf($group) === false ? false : true;
+                    return false === $userGroups->indexOf($group) ? false : true;
                 }
             }
             // check zikula perms
@@ -464,7 +464,7 @@ class ForumUserManager
             return null;
         }
 
-        return $this->_forumUser->getPostOrder() == 1 ? 'ASC' : 'DESC';
+        return 1 == $this->_forumUser->getPostOrder() ? 'ASC' : 'DESC';
     }
 
     /**
@@ -1014,7 +1014,7 @@ class ForumUserManager
     {
         $viewip = [
             'poster_ip' => $ip,
-            'poster_host' => ($ip != 'unrecorded') ? gethostbyaddr($ip) : $this->__('Host unknown'),
+            'poster_host' => ('unrecorded' != $ip) ? gethostbyaddr($ip) : $this->__('Host unknown'),
         ];
         $dql = 'SELECT p
             FROM Zikula\DizkusModule\Entity\PostEntity p

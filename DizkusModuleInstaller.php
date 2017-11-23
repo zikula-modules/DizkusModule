@@ -256,7 +256,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     $statement->execute();
                 }
 
-                if ($prefix != '') {
+                if ('' != $prefix) {
                     $this->removeTablePrefixes($prefix);
                 }
                 // mark tables for import
@@ -422,7 +422,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 switch ($type) {
                     case 'boolean':
                         if (in_array($currentModVars[$key], ['yes', 'no'])) {
-                            $var = $currentModVars[$key] == 'yes' ? true : false;
+                            $var = 'yes' == $currentModVars[$key] ? true : false;
                         } else {
                             $var = (boolval($currentModVars[$key]));
                         }
@@ -433,7 +433,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                         break;
                 }
-                if ($key == 'defaultPoster') {
+                if ('defaultPoster' == $key) {
                     $var = 2; // not bolean anymore assume admin id but maybe guest?
                 }
             }

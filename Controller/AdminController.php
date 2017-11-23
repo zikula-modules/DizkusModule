@@ -106,7 +106,7 @@ class AdminController extends AbstractController
         if (2 == $submit) {
             $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
-            if (0 == $ranktype ) {
+            if (0 == $ranktype) {
                 $template = 'ranks';
             }
 

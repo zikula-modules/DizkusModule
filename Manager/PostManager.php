@@ -319,7 +319,6 @@ class PostManager
     }
 }
 
-
 //        $id = $this->_post->getId();
 //        $managedTopic = $this->getManagedTopic();
 //        $topicLastPost = $managedTopic->get()
@@ -358,8 +357,6 @@ class PostManager
 //                                         ->
 //                                        ->store()
 //                                        ->getManagedForum()->;
-
-
 
         //$managedPost->get()->updatePost_time();
         // this will be done by update

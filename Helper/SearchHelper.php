@@ -65,7 +65,7 @@ class SearchHelper extends AbstractSearchable
                 return [];
             }
         }
-        if (!is_array($forums) || count($forums) == 0) {
+        if (!is_array($forums) || 0 == count($forums)) {
             // set default
             $forums[0] = -1;
         }
@@ -73,7 +73,7 @@ class SearchHelper extends AbstractSearchable
 
         // get all forums the user is allowed to read
         $allowedForums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');
-        if (!is_array($allowedForums) || count($allowedForums) == 0) {
+        if (!is_array($allowedForums) || 0 == count($allowedForums)) {
             $this->addError($this->__('You do not have permission to search any of the forums.'));
 
             return [];
@@ -99,6 +99,7 @@ class SearchHelper extends AbstractSearchable
                 } else {
                     return [];
                 }
+
                 break;
             case 'post':
             default:
@@ -112,7 +113,7 @@ class SearchHelper extends AbstractSearchable
         } else {
             // filter out forums we are not allowed to read
             $forums = array_intersect($allowedForums, (array)$forums);
-            if (count($forums) == 0) {
+            if (0 == count($forums)) {
                 // error or user is not allowed to read any forum at all
                 // return empty result set without even doing a db access
                 $this->addError($this->__('You do not have permission to search the requested forums.'));

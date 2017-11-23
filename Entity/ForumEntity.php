@@ -210,17 +210,17 @@ class ForumEntity extends EntityAccess
 
     public function getName()
     {
-        return $this->name == self::ROOTNAME ? 'Forum Index' : $this->name;
+        return self::ROOTNAME == $this->name ? 'Forum Index' : $this->name;
     }
 
     public function setName($name)
     {
         // dont' allow user to set another forum to rootname
-        if ($name == self::ROOTNAME && $this->lvl != 0) {
+        if (self::ROOTNAME == $name && 0 != $this->lvl) {
             return $this;
         }
         // once root forum is set do not allow to change name
-        if ($this->name != self::ROOTNAME) {
+        if (self::ROOTNAME != $this->name) {
             $this->name = $name;
         }
 
@@ -350,7 +350,7 @@ class ForumEntity extends EntityAccess
     {
         $parents = [];
         $parent = $this->getParent();
-        while ($parent != null) {
+        while (null != $parent) {
             $parents[$parent->getForum_id()] = $parent;
             $parent = $parent->getParent();
         }
@@ -369,7 +369,7 @@ class ForumEntity extends EntityAccess
         return $this->parent;
     }
 
-    public function setParent(ForumEntity $parent = null)
+    public function setParent(self $parent = null)
     {
         $this->parent = $parent;
 
@@ -481,7 +481,6 @@ class ForumEntity extends EntityAccess
     {
         return $this->topics;
     }
-
 
     /**
      * get Moderators.
@@ -657,7 +656,6 @@ class ForumEntity extends EntityAccess
         return $this;
     }
 
-
     /**
      * recalculate post count.
      * only direct children
@@ -698,7 +696,7 @@ class ForumEntity extends EntityAccess
      */
     public function recalculateLastPost()
     {
-       $postCount = 0;
+        $postCount = 0;
         foreach ($this->getChildren() as $subForum) {
             $postCount = $postCount + $subForum->get('postCount');
         }
@@ -710,8 +708,6 @@ class ForumEntity extends EntityAccess
         return null;
     }
 
-
-
     public function __toArray()
     {
         $children = [];
@@ -720,7 +716,7 @@ class ForumEntity extends EntityAccess
         }
 
         return ['id' => $this->getId(),
-                'parentid' => $this->getParent() === null ? 0 : $this->getParent()->getId(),
+                'parentid' => null === $this->getParent() ? 0 : $this->getParent()->getId(),
                 'lvl' => $this->getLvl(),
                 'lft' => $this->getLft(),
                 'rgt' => $this->getRgt(),

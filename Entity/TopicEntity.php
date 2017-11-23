@@ -24,7 +24,6 @@ use Zikula\Core\UrlInterface;
  * @ORM\Table(name="dizkus_topics")
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\TopicRepository")
  * @ORM\HasLifecycleCallbacks
- *
  */
 class TopicEntity extends EntityAccess
 {
@@ -496,7 +495,7 @@ class TopicEntity extends EntityAccess
         return $this;
     }
 
-    function getSyncOnSave()
+    public function getSyncOnSave()
     {
         return $this->syncOnSave;
     }
@@ -508,12 +507,12 @@ class TopicEntity extends EntityAccess
         return $this;
     }
 
-    function getSubscribe()
+    public function getSubscribe()
     {
         return $this->subscribe;
     }
 
-    function setSubscribe($subscribe)
+    public function setSubscribe($subscribe)
     {
         $this->subscribe = $subscribe;
 

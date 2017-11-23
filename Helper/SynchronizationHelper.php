@@ -211,7 +211,7 @@ class SynchronizationHelper
         }
     }
 }
-// removed 
+// removed
 //    /**
 //     * Recalculate user posts for all users
 //     *

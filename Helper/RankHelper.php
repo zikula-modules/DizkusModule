@@ -61,7 +61,7 @@ class RankHelper
      */
     public function getAll($ranktype)
     {
-        if ($ranktype == RankEntity::TYPE_POSTCOUNT) {
+        if (RankEntity::TYPE_POSTCOUNT == $ranktype) {
             $orderby = 'minimumCount';
         } else {
             $orderby = 'title';
@@ -108,13 +108,13 @@ class RankHelper
         }
         //title, description, minimumCount, maximumCount, type, image
         foreach ($args['ranks'] as $rankid => $rank) {
-            if ($rankid == '-1') {
+            if ('-1' == $rankid) {
                 $r = new RankEntity();
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {
                 $r = $this->entityManager->find('Zikula\DizkusModule\Entity\RankEntity', $rankid);
-                if ((isset($rank['rank_delete'])) && ($rank['rank_delete'] == '1')) {
+                if ((isset($rank['rank_delete'])) && ('1' == $rank['rank_delete'])) {
                     $this->entityManager->remove($r);
                     // update users that are assigned the rank to null
                     $users = $this->entityManager->getRepository('ZikulaDizkusModule:RankEntity')->findBy(['rank' => $rankid]);
@@ -183,7 +183,7 @@ class RankHelper
 
     private function addImageAndLink($data)
     {
-        $data['rank_link'] = substr($data['description'], 0, 7) == 'http://' ? $data['description'] : '';
+        $data['rank_link'] = 'http://' == substr($data['description'], 0, 7) ? $data['description'] : '';
         if (!empty($data['image'])) {
             $data['image'] = $this->getVar('url_ranks_images').'/'.$data['image'];
             $data['image_attr'] = function_exists('getimagesize') ? @getimagesize($data['image']) : null;
@@ -198,7 +198,7 @@ class RankHelper
      */
     private function isImageFile($filepath)
     {
-        if (function_exists('getimagesize') && @getimagesize($filepath) != false) {
+        if (function_exists('getimagesize') && false != @getimagesize($filepath)) {
             return true;
         }
         if (preg_match('/^(.*)\\.(gif|jpg|jpeg|png)/si', $filepath)) {

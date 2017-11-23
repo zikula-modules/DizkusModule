@@ -113,6 +113,7 @@ class NotificationsHelper
                         'X-UserID: '.md5(UserUtil::getVar('uid')),
                         'X-Mailer: Dizkus v'.$dizkusModuleInfo['version'],
                         'X-DizkusTopicID: '.$post->getTopic_id(), ], ];
+
                 try {
                     $isNotified = ModUtil::apiFunc('ZikulaMailerModule', 'user', 'sendmessage', $args);
                 } catch (\Exception $e) {
@@ -141,7 +142,7 @@ class NotificationsHelper
         $mods = ModUtil::apiFunc($this->name, 'moderators', 'get', ['forum_id' => $args['post']->getTopic()->getForum()->getForum_id()]);
         // generate the mailheader
         $email_from = ModUtil::getVar($this->name, 'email_from');
-        if ($email_from == '') {
+        if ('' == $email_from) {
             // nothing in forumwide-settings, use adminmail
             $email_from = System::getVar('adminmail');
         }
@@ -156,7 +157,7 @@ class NotificationsHelper
         if (count($mods['groups']) > 0) {
             foreach (array_keys($mods['groups']) as $gid) {
                 $group = ModUtil::apiFunc('Groups', 'user', 'get', ['gid' => $gid]);
-                if ($group != false) {
+                if (false != $group) {
                     foreach ($group['members'] as $gm_uid) {
                         $mod_email = UserUtil::getVar('email', $gm_uid);
                         $mod_uname = UserUtil::getVar('uname', $gm_uid);
@@ -188,7 +189,7 @@ class NotificationsHelper
             }
         }
         // determine if we also notify an admin as a moderator
-        if ($admin_is_mod == false && $notifyAdminAsMod > 1) {
+        if (false == $admin_is_mod && $notifyAdminAsMod > 1) {
             $recipients[$notifyAdminAsMod] = [
                 'uname' => UserUtil::getVar('uname', $notifyAdminAsMod),
                 'email' => UserUtil::getVar('email', $notifyAdminAsMod), ];

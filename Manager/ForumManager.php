@@ -270,7 +270,7 @@ class ForumManager
      */
     public function getBreadcrumbs($withoutCurrent = false)
     {
-        if ($this->_forum->getLvl() == 0) {
+        if (0 == $this->_forum->getLvl()) {
             // already root
             return [];
         }
@@ -279,7 +279,7 @@ class ForumManager
             ->getPath($this->_forum);
         $output = [];
         foreach ($forums as $key => $forum) {
-            if ($key == 0) {
+            if (0 == $key) {
                 continue;
             }
             $url = $this->router->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum->getForum_id()]);
@@ -507,8 +507,8 @@ class ForumManager
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
                 // only include results if
-                if ($i['status'] == ForumEntity::STATUS_LOCKED && $includeLocked || $i['status'] == ForumEntity::STATUS_UNLOCKED) {
-                    if ($i['name'] == ForumEntity::ROOTNAME) {
+                if (ForumEntity::STATUS_LOCKED == $i['status'] && $includeLocked || ForumEntity::STATUS_UNLOCKED == $i['status']) {
+                    if (ForumEntity::ROOTNAME == $i['name']) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
                     $output[$i['forum_id']] = $pre.$i['name'].'('.$i['forum_id'].')';

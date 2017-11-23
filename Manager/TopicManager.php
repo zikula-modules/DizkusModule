@@ -568,7 +568,7 @@ class TopicManager
         }
 
         $last_page = 1;
-        if ($postSortOrder == 'ASC') {
+        if ('ASC' == $postSortOrder) {
             // +1 for the initial posting
             $last_page = floor($replyCount / $posts_per_page) * $posts_per_page + 1;
         }
@@ -666,7 +666,7 @@ class TopicManager
     {
         if ($this->getForumId() != $forum->getId()) {
             $this->_topic->setForum($forum);
-            if ($createshadowtopic == true) {
+            if (true == $createshadowtopic) {
                 // create shadow topic
 //                $managedShadowTopic = $this->getManager();
 //                $newUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
@@ -698,7 +698,6 @@ class TopicManager
      */
     public function split($managedPost, $newsubject)
     {
-
         ///
         // Use array collection partition
         //
@@ -780,7 +779,7 @@ class TopicManager
 //        }
 //
 //        $this->entityManager->flush();
-////        $originTopicForum = $managedOriginTopic->get()->getForum();
+        ////        $originTopicForum = $managedOriginTopic->get()->getForum();
 //        $this->entityManager->remove($managedOriginTopic->get());
 
         // resync destination topic and all forums
@@ -830,8 +829,6 @@ class TopicManager
     }
 }
 
-
-
             // set new forum
 //            $this->_topic->getForum()->setLast_post(null);
 //            $oldForum; // needed for sync and consistency
@@ -876,7 +873,6 @@ class TopicManager
 //            throw new \InvalidArgumentException();
 //        }
 
-
 //        $posts = $topic->getPosts();
 //        foreach ($posts as $post) {
 //            $post->getPoster()->decrementPostCount();
@@ -890,7 +886,6 @@ class TopicManager
 //        // call sync event
 //        $this->synchronizationHelper->forum($forum, false);
 //        $this->synchronizationHelper->forumLastPost($forum, true);
-
 
 //
 //    /**

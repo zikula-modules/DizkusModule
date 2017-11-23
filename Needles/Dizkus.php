@@ -54,7 +54,7 @@ class Dizkus extends \Zikula_AbstractHelper
                     // nid is like F-## or T-##
                     $temp = explode('-', $nid);
                     $type = '';
-                    if (is_array($temp) && count($temp) == 2) {
+                    if (is_array($temp) && 2 == count($temp)) {
                         $type = $temp[0];
                         $id = $temp[1];
                     }
@@ -73,6 +73,7 @@ class Dizkus extends \Zikula_AbstractHelper
                                 } else {
                                     $cache[$nid] = '<em>' . __f('Error! The forum ID %s is unknown.', $id, $dom) . '</em>';
                                 }
+
                                 break;
                             case 'T':
                                 $managedTopic = new TopicManager($id);
@@ -87,6 +88,7 @@ class Dizkus extends \Zikula_AbstractHelper
                                 } else {
                                     $cache[$nid] = '<em>' . __f('Error! The topic ID %s is unknown.', $id, $dom) . '</em>';
                                 }
+
                                 break;
                             default:
                                 $cache[$nid] = '<em>' . __('Error! Unknown parameter at position #1 (\'F\' or \'T\').', $dom) . '</em>';

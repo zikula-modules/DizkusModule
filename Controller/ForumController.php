@@ -197,7 +197,7 @@ class ForumController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
         $repo = $em->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
-        if ($action == 'moveUp') {
+        if ('moveUp' == $action) {
             $repo->moveUp($forum, true);
         } else {
             $repo->moveDown($forum, true);
@@ -280,7 +280,7 @@ class ForumController extends AbstractController
         }
 
         // disallow editing of root forum
-        if ($id == 1) {
+        if (1 == $id) {
             $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
@@ -343,7 +343,7 @@ class ForumController extends AbstractController
         }
 
         // disallow editing of root forum
-        if ($id == 1) {
+        if (1 == $id) {
             $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
@@ -560,7 +560,7 @@ class ForumController extends AbstractController
             'choices' => $destinations,
             'choice_value' => function ($destination) {
                 //for some reason last element is null @FIXME
-                return $destination === null ? null : $destination->getForum_id();
+                return null === $destination ? null : $destination->getForum_id();
             },
             'choice_label' => function ($destination) use ($forum) {
                 $isChild = $destination->getLft() > $forum->getLft() && $destination->getRgt() < $forum->getRgt() ? ' (' . $this->__("is child forum") . ')' : '';
@@ -589,7 +589,7 @@ class ForumController extends AbstractController
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
             $data = $form->getData();
-            if ($data['action'] == 1) {
+            if (1 == $data['action']) {
                 // get the child forums and move them
                 $children = $forum->getChildren();
                 foreach ($children as $child) {
