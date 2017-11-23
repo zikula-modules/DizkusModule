@@ -603,10 +603,9 @@ class PostController extends AbstractController
 //                    ->getManagedForum()
 //                        ->resetLastPost(true)
 //            ;
-
+//            $managedOriginTopic = $managedPost->getManagedTopic();
 //            $managedOriginTopic->incrementRepliesCount()
 //                                ->store()
 ////                                ->resetLastPost(true)
 //                                ->getManagedForum()
 //                                    ->resetLastPost(true);
-//            $managedOriginTopic = $managedPost->getManagedTopic();
