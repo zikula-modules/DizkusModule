@@ -300,7 +300,7 @@ class TopicController extends AbstractController
                 );
 
             // redirect to the new topic
-//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         display:
@@ -560,7 +560,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -704,7 +704,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedTopic->getForumId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedTopic->getForumId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -727,6 +727,8 @@ class TopicController extends AbstractController
      * @Route("/topic/{topic}/joinmove", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * Move topic
+     *
+     * @todo Split into separate actions
      *
      * User interface to move a topic to another forum.
      *
@@ -810,11 +812,11 @@ class TopicController extends AbstractController
 //                    || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $data['forum_id']])) {
 //                throw new AccessDeniedException();
 //            }
-//
-//
-            $oldId = $managedTopic->move($form->get('forum')->getData(), $form->get('createshadowtopic')->getData());
 
-
+            $managedTopic->move(
+                $form->get('forum')->getData(),
+                $form->get('createshadowtopic')->getData()
+            );
             $managedTopic->store();
 
             $this->get('hook_dispatcher')
@@ -835,7 +837,7 @@ class TopicController extends AbstractController
             if ($format == 'json') {
             } elseif ($format == 'ajax.html') {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 

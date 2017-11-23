@@ -12,12 +12,12 @@
 
 namespace Zikula\DizkusModule\Listener;
 
+//use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
-//use Doctrine\Common\Collections\Criteria;
 
 /**
  * Sync Listener
@@ -44,18 +44,15 @@ class SyncListener
             $topic = $entity->getTopic();
             $user = $entity->getPoster();
             $forum = $topic->getForum();
-
             // TOPIC
             //update topic info
             $topic->setLast_Post($entity);
-            // this is new topic indicator
+            // this is a new topic indicator
             $entity->isFirst() ?: $topic->incrementReplyCount();
-
             // USER
             !$entity->getTopic()->getSubscribe() ?: $user->addTopicSubscription($topic);
             // user subscription @todo add subscription module settings check
             $entity->isFirst() ?: $user->incrementPostCount();
-
             // FORUMS
             //update forums info
             $parents = $forum->getParents();
@@ -84,13 +81,11 @@ class SyncListener
         }
     }
 
-
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $em = $event->getEntityManager();
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
-
         /*
          * Forum changed
          */
@@ -98,7 +93,6 @@ class SyncListener
             if ($event->hasChangedField('last_post')) {
             }
         }
-
         /*
          * Any manipulation on topic
          */
@@ -120,7 +114,6 @@ class SyncListener
                 $meta = $em->getClassMetadata(get_class($toForum));
                 $uow->recomputeSingleEntityChangeSet($meta, $toForum);
             }
-
 //            dump($entity->getPosts()->isDirty());
 //            if ($entity->getSyncOnSave()) {
 //                $postsCount = $entity->getPosts()->count();
@@ -173,8 +166,8 @@ class SyncListener
          * Delete post
          */
         if (($entity instanceof PostEntity)) {
-                if ($entity->isFirst()) {
-                }
+            if ($entity->isFirst()) {
+            }
         }
     }
 }

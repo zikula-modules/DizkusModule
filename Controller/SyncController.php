@@ -76,14 +76,10 @@ class SyncController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $directTopicsPostCount = 0;
-        foreach($forum->getTopics() as $topic) {
-            $directTopicsPostCount = $directTopicsPostCount + $topic->getReplyCount();
-        }
-
-        dump($directTopicsPostCount);
-
-
+//        $directTopicsPostCount = 0;
+//        foreach($forum->getTopics() as $topic) {
+//            $directTopicsPostCount = $directTopicsPostCount + $topic->getReplyCount();
+//        }
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_sync_sync', [], RouterInterface::ABSOLUTE_URL));
     }

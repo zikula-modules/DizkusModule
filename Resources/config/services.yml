@@ -169,26 +169,26 @@ services:
           - "@zikula_mailer_module.api.mailer"
           - "@router"
           
-    zikula_dizkus_module.forum_sync_listener:
-        class: %zikula_dizkus_module.forum_sync_listener.class%
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments:
-          - "@doctrine.orm.default_entity_manager"
-          
-    zikula_dizkus_module.topic_sync_listener:
-        class: %zikula_dizkus_module.topic_sync_listener.class%
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments:
-          - "@doctrine.orm.default_entity_manager"
-          
-    zikula_dizkus_module.user_sync_listener:
-        class: %zikula_dizkus_module.user_sync_listener.class%
-        tags:
-            - { name: kernel.event_subscriber }
-        arguments:
-          - "@doctrine.orm.default_entity_manager"
+#    zikula_dizkus_module.forum_sync_listener:
+#        class: %zikula_dizkus_module.forum_sync_listener.class%
+#        tags:
+#            - { name: kernel.event_subscriber }
+#        arguments:
+#          - "@doctrine.orm.default_entity_manager"
+#          
+#    zikula_dizkus_module.topic_sync_listener:
+#        class: %zikula_dizkus_module.topic_sync_listener.class%
+#        tags:
+#            - { name: kernel.event_subscriber }
+#        arguments:
+#          - "@doctrine.orm.default_entity_manager"
+#          
+#    zikula_dizkus_module.user_sync_listener:
+#        class: %zikula_dizkus_module.user_sync_listener.class%
+#        tags:
+#            - { name: kernel.event_subscriber }
+#        arguments:
+#          - "@doctrine.orm.default_entity_manager"
           
     zikula_dizkus_module.sync_listener:
         class: %zikula_dizkus_module.sync_listener.class%
@@ -200,7 +200,8 @@ services:
             - { name: doctrine.event_listener, event: postRemove } 
 #            - { name: doctrine.event_listener, event: preFlush }            
 #            - { name: doctrine.event_listener, event: onFlush }
-#        arguments:
+#        arguments: looks like we do not need much args here
+#          - "@zikula_extensions_module.api.variable"
 #          - "@doctrine.orm.default_entity_manager" 
 
 # Forms

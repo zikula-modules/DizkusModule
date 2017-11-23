@@ -401,22 +401,11 @@ class PostController extends AbstractController
         // we need to simulate delete button in ajax forms both json and html
         if ($form->get('move')->isClicked()) {
             $managedOriginTopic = $managedPost->getManagedTopic();
-
             $managedPost
-                ->update($form->getData()) // set destination topic
-                ->store() // save
-                ->getManagedTopic() // destination topic management
-                    ->incrementRepliesCount()
-                    ->store()
-//                    ->resetLastPost(true)
-                    ->getManagedForum()
-                        ->resetLastPost(true);
-
-            $managedOriginTopic->incrementRepliesCount()
-                                ->store()
-//                                ->resetLastPost(true)
-                                ->getManagedForum()
-                                    ->resetLastPost(true);
+                ->update($form->getData())
+            // we can use update 
+//                ->move($form->get('forum')->getData())
+                ->store();
 
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.post.process_edit',
@@ -605,3 +594,19 @@ class PostController extends AbstractController
 ////                System::shutDown();
 ////            }
 ////        }
+                // set destination topic
+                //// save
+//                ->getManagedTopic() // destination topic management
+//                    ->incrementRepliesCount()
+//                    ->store()
+////                    ->resetLastPost(true)
+//                    ->getManagedForum()
+//                        ->resetLastPost(true)
+//            ;
+
+//            $managedOriginTopic->incrementRepliesCount()
+//                                ->store()
+////                                ->resetLastPost(true)
+//                                ->getManagedForum()
+//                                    ->resetLastPost(true);
+//            $managedOriginTopic = $managedPost->getManagedTopic();

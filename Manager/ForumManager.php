@@ -358,40 +358,6 @@ class ForumManager
     }
 
     /**
-     * increase read count.
-     *
-     * @return bool true
-     */
-    public function incrementReadCount()
-    {
-        $this->_forum->incrementCounter();
-
-        return $this;
-    }
-
-    /**
-     * Increase post count.
-     */
-    public function incrementPostCount()
-    {
-        $this->_forum->incrementPostCount();
-        $this->modifyParentCount($this->_forum->getParent());
-
-        return $this;
-    }
-
-    /**
-     * decrease post count.
-     */
-    public function decrementPostCount()
-    {
-        $this->_forum->decrementPostCount();
-        $this->modifyParentCount($this->_forum->getParent(), 'decrement');
-
-        return $this;
-    }
-
-    /**
      * increase topic count.
      */
     public function incrementTopicCount()
@@ -430,6 +396,40 @@ class ForumManager
         $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
                 ->resetLastPost($this->_forum, $flush);
+
+        return $this;
+    }
+
+    /**
+     * Increase post count.
+     */
+    public function incrementPostCount()
+    {
+        $this->_forum->incrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent());
+
+        return $this;
+    }
+
+    /**
+     * decrease post count.
+     */
+    public function decrementPostCount()
+    {
+        $this->_forum->decrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent(), 'decrement');
+
+        return $this;
+    }
+
+    /**
+     * increase read count.
+     *
+     * @return bool true
+     */
+    public function incrementReadCount()
+    {
+        $this->_forum->incrementCounter();
 
         return $this;
     }

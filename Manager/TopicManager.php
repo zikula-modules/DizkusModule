@@ -450,18 +450,6 @@ class TopicManager
     }
 
     /**
-     * Increment topic views count
-     *
-     * @return TopicManager
-     */
-    public function incrementViewsCount()
-    {
-        $this->_topic->incrementViewCount();
-
-        return $this;
-    }
-
-    /**
      * Increment topic replies count
      *
      * @return TopicManager
@@ -479,6 +467,18 @@ class TopicManager
     public function decrementRepliesCount()
     {
         $this->_topic->decrementReplyCount();
+
+        return $this;
+    }
+
+    /**
+     * Increment topic views count
+     *
+     * @return TopicManager
+     */
+    public function incrementViewsCount()
+    {
+        $this->_topic->incrementViewCount();
 
         return $this;
     }
@@ -682,7 +682,7 @@ class TopicManager
 //                $this->entityManager->persist($managedShadowTopic->get());
             }
         }
-
+        // this probably need to call store here
         return $this;
     }
 
@@ -698,33 +698,38 @@ class TopicManager
      */
     public function split($managedPost, $newsubject)
     {
-        if (!isset($managedPost) || !$managedPost instanceof PostManager || !isset($newsubject)) {
-            throw new \InvalidArgumentException();
-        }
-        $managedTopic = $this->getManager(null, $managedPost->get()->getTopic()); //new TopicManager(null, $managedPost->get()->getTopic());
-        // create new topic
-        $newTopic = new TopicEntity();
-        $newTopic->setPoster($managedPost->get()->getPoster());
-        $newTopic->setTitle($newsubject);
-        $newTopic->setForum($managedTopic->get()->getForum());
-        $managedPost->get()->setIsFirstPost(true);
-        $managedPost->get()->setTitle($newsubject);
-        $this->entityManager->persist($newTopic);
-        $this->entityManager->flush();
-        // update posts
-        $dql = 'SELECT p from Zikula\DizkusModule\Entity\PostEntity p
-            WHERE p.topic = :topic
-            AND p.post_id >= :post
-            ORDER BY p.post_id';
-        $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $managedPost->get()->getId());
-        /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
-        $posts = $query->getResult();
-        // update the topic_id in the postings
-        foreach ($posts as $post) {
-            $post->setTopic($newTopic);
-        }
+
+        ///
+        // Use array collection partition
+        //
+        //
+//        if (!isset($managedPost) || !$managedPost instanceof PostManager || !isset($newsubject)) {
+//            throw new \InvalidArgumentException();
+//        }
+//        $managedTopic = $this->getManager(null, $managedPost->get()->getTopic()); //new TopicManager(null, $managedPost->get()->getTopic());
+//        // create new topic
+//        $newTopic = new TopicEntity();
+//        $newTopic->setPoster($managedPost->get()->getPoster());
+//        $newTopic->setTitle($newsubject);
+//        $newTopic->setForum($managedTopic->get()->getForum());
+//        $managedPost->get()->setIsFirstPost(true);
+//        $managedPost->get()->setTitle($newsubject);
+//        $this->entityManager->persist($newTopic);
+//        $this->entityManager->flush();
+//        // update posts
+//        $dql = 'SELECT p from Zikula\DizkusModule\Entity\PostEntity p
+//            WHERE p.topic = :topic
+//            AND p.post_id >= :post
+//            ORDER BY p.post_id';
+//        $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $managedPost->get()->getId());
+//        /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
+//        $posts = $query->getResult();
+//        // update the topic_id in the postings
+//        foreach ($posts as $post) {
+//            $post->setTopic($newTopic);
+//        }
         // must flush here so sync gets correct information
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         // last iteration of `$post` used below
         // update old topic
 //        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
@@ -738,13 +743,15 @@ class TopicManager
         // resync topic totals, etc
 //        $this->synchronizationHelper->forum($newTopic->getForum(), false);
         //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
-        $this->entityManager->flush();
 
-        return $newTopic->getId();
+        // return $newTopic->getId();
+        return $this;
     }
 
     /**
      * Joins two topics together
+     *
+     * @todo use current topic as origin or use it as destination
      *
      * @param $managedOriginTopic object this topic get integrated into $managedDestinationTopic (origin)
      * @param $managedDestinationTopic object the target topic that will contain the post from $managedOriginTopic (destination)
@@ -755,26 +762,26 @@ class TopicManager
      */
     public function join($managedOriginTopic, $managedDestinationTopic)
     {
-        if (!$managedOriginTopic instanceof self || !$managedDestinationTopic instanceof self) {
-            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
-
-            throw new \InvalidArgumentException();
-        }
-
-        // move posts from Origin to Destination topic
-        $posts = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->findBy(['topic' => $managedOriginTopic->get()]);
-        $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
-        foreach ($posts as $post) {
-            $post->setTopic($managedDestinationTopic->get());
-            if ($post->getPost_time() <= $previousPostTime) {
-                $post->setPost_time($previousPostTime->modify('+1 minute'));
-            }
-            $previousPostTime = $post->getPost_time();
-        }
-
-        $this->entityManager->flush();
-//        $originTopicForum = $managedOriginTopic->get()->getForum();
-        $this->entityManager->remove($managedOriginTopic->get());
+//        if (!$managedOriginTopic instanceof self || !$managedDestinationTopic instanceof self) {
+//            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
+//
+//            throw new \InvalidArgumentException();
+//        }
+//
+//        // move posts from Origin to Destination topic
+//        $posts = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->findBy(['topic' => $managedOriginTopic->get()]);
+//        $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
+//        foreach ($posts as $post) {
+//            $post->setTopic($managedDestinationTopic->get());
+//            if ($post->getPost_time() <= $previousPostTime) {
+//                $post->setPost_time($previousPostTime->modify('+1 minute'));
+//            }
+//            $previousPostTime = $post->getPost_time();
+//        }
+//
+//        $this->entityManager->flush();
+////        $originTopicForum = $managedOriginTopic->get()->getForum();
+//        $this->entityManager->remove($managedOriginTopic->get());
 
         // resync destination topic and all forums
 //        $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
@@ -783,7 +790,8 @@ class TopicManager
 //        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
 //        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
 
-        return $managedDestinationTopic->getId();
+//        return $managedDestinationTopic->getId();
+        return $this;
     }
 
     /**
