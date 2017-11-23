@@ -19,6 +19,8 @@ use Zikula\DizkusModule\Events\DizkusEvents;
 /**
  * Sync Topic Listener
  *
+ * not in use
+ *
  * @author Kaik
  */
 class TopicSyncListener implements EventSubscriberInterface
@@ -56,7 +58,5 @@ class TopicSyncListener implements EventSubscriberInterface
      */
     public function syncTopic(GenericEvent $event)
     {
-        $recursive = $event->hasArgument('recursive') ? $event->getArgument('recursive') : false;
-//        dump($recursive);
     }
 }

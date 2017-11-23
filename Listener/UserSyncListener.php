@@ -20,6 +20,8 @@ use Zikula\DizkusModule\Events\DizkusEvents;
 /**
  * User Sync Listener
  *
+ * not in use
+ *
  * @author Kaik
  */
 class UserSyncListener implements EventSubscriberInterface
@@ -57,7 +59,5 @@ class UserSyncListener implements EventSubscriberInterface
      */
     public function syncUser(GenericEvent $event)
     {
-        $recursive = $event->hasArgument('recursive') ? $event->getArgument('recursive') : false;
-//        dump($recursive);
     }
 }

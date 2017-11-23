@@ -20,6 +20,8 @@ use Zikula\DizkusModule\Entity\ForumEntity;
 /**
  * Forum Sync Listener
  *
+ * not in use
+ *
  * @author Kaik
  */
 class ForumSyncListener implements EventSubscriberInterface
@@ -43,6 +45,7 @@ class ForumSyncListener implements EventSubscriberInterface
     {
         $this->entityManager = $entityManager;
     }
+
     /**
      * Sync forum
      * Respond to event DizkusEvents::FORUM_SYNC
@@ -58,11 +61,7 @@ class ForumSyncListener implements EventSubscriberInterface
         $recursive = $event->hasArgument('recursive') ? $event->getArgument('recursive') : false;
         $caller = $event->getSubject();
 
-
         if ($caller instanceof ForumEntity) {
-
-            dump($caller);
         }
-
     }
 }
