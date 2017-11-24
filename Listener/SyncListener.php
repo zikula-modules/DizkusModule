@@ -33,7 +33,7 @@ class SyncListener
             ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
             ->findBy(['modname' => 'ZikulaDizkusModule', 'name' => 'upgrading']);
 //        dump($upgrading);
-        if($upgrading) {
+        if ($upgrading) {
             return;
         }
 
@@ -96,7 +96,7 @@ class SyncListener
             ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
             ->findBy(['modname' => 'ZikulaDizkusModule', 'name' => 'upgrading']);
 //        dump($upgrading);
-        if($upgrading) {
+        if ($upgrading) {
             return;
         }
         $entity = $event->getEntity();
