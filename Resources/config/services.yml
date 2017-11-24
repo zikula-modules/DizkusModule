@@ -18,7 +18,8 @@ parameters:
     zikula_dizkus_module.user_sync_listener.class: Zikula\DizkusModule\Listener\UserSyncListener
     zikula_dizkus_module.sync_listener.class: Zikula\DizkusModule\Listener\SyncListener
     # Forms
-    zikula_dizkus_module.admin_modify_forum.class: Zikula\DizkusModule\Form\Type\Forum\AdminModifyForumType
+    zikula_dizkus_module.forum_create.class: Zikula\DizkusModule\Form\Type\Forum\CreateForumType
+    zikula_dizkus_module.forum_modify.class: Zikula\DizkusModule\Form\Type\Forum\ModifyForumType
     zikula_dizkus_module.forum_select.class: Zikula\DizkusModule\Form\Type\Forum\ForumSelectType
     # Helpers
     zikula_dizkus_module.moderators_helper.class: Zikula\DizkusModule\Helper\ModeratorsHelper
@@ -205,11 +206,18 @@ services:
 #          - "@doctrine.orm.default_entity_manager" 
 
 # Forms
-
-    zikula_dizkus_module.form.type.admin_modify_forum:
-        class: %zikula_dizkus_module.admin_modify_forum.class%
+    zikula_dizkus_module.form.type.forum_create:
+        class: %zikula_dizkus_module.forum_create.class%
         tags:
-            - { name: form.type, alias: zikuladizkusmodule_admin_modify_forum }
+            - { name: form.type, alias: zikula_dizkus_module_forum_create }
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@zikula_dizkus_module.forum_user_manager"
+            
+    zikula_dizkus_module.form.type.forum_modify:
+        class: %zikula_dizkus_module.forum_modify.class%
+        tags:
+            - { name: form.type, alias: zikula_dizkus_module_forum_modify }
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.forum_user_manager"
