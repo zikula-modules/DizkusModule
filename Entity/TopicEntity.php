@@ -12,10 +12,10 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use Zikula\Core\Doctrine\EntityAccess;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\ArrayCollection;
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\Core\UrlInterface;
 
 /**
@@ -23,6 +23,7 @@ use Zikula\Core\UrlInterface;
  *
  * @ORM\Table(name="dizkus_topics")
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\TopicRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class TopicEntity extends EntityAccess
 {
@@ -100,7 +101,7 @@ class TopicEntity extends EntityAccess
     private $forum;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="PostEntity", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="last_post_id", referencedColumnName="post_id", nullable=true, onDelete="SET NULL")
      */
     private $last_post;
@@ -118,7 +119,7 @@ class TopicEntity extends EntityAccess
     /**
      * posts
      *
-     * @ORM\OneToMany(targetEntity="PostEntity", mappedBy="topic", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="PostEntity", mappedBy="topic", cascade={"persist"})
      * @ORM\OrderBy({"post_time" = "ASC"})
      */
     private $posts;
@@ -159,6 +160,16 @@ class TopicEntity extends EntityAccess
      * @ORM\Column(type="object", nullable=true)
      */
     private $hookedUrlObject = null;
+
+    /**
+     * sync on save marker
+     */
+    private $syncOnSave = true;
+
+    /**
+     * sync on save marker
+     */
+    private $subscribe = false;
 
     /**
      * Constructor
@@ -480,6 +491,30 @@ class TopicEntity extends EntityAccess
     public function setHookedUrlObject(UrlInterface $hookedUrlObject)
     {
         $this->hookedUrlObject = $hookedUrlObject;
+
+        return $this;
+    }
+
+    public function getSyncOnSave()
+    {
+        return $this->syncOnSave;
+    }
+
+    public function noSync()
+    {
+        $this->syncOnSave = false;
+
+        return $this;
+    }
+
+    public function getSubscribe()
+    {
+        return $this->subscribe;
+    }
+
+    public function setSubscribe($subscribe)
+    {
+        $this->subscribe = $subscribe;
 
         return $this;
     }

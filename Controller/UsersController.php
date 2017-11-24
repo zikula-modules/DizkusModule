@@ -46,7 +46,7 @@ class UsersController extends AbstractController
         $online = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->getOnlineUsers($secinactivemins, $settings['onlineusers_moderatorcheck']);
         if (count($online['users']) > 0 && $settings['onlineusers_moderatorcheck']) {
             foreach ($online['users'] as $uid => $user) {
-                if ($user['isModerator'] == false) {
+                if (false == $user['isModerator']) {
                     $online['users'][$uid]['isModerator'] = $this->hasPermission('ZikulaDizkusModule::', '::', ACCESS_MODERATE);
                 }
             }

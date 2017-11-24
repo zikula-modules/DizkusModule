@@ -28,7 +28,7 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
         // default to empty
         $route = $urlObject->getRoute();
         $args = $urlObject->getArgs();
-        if (strpos($route, 'viewtopic') !== false) {
+        if (false !== strpos($route, 'viewtopic')) {
             // item is post or topic
             if (isset($args['topic'])) {
                 $managedTopic = new TopicManager($args['topic']);
@@ -86,7 +86,7 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
             $topiclabel = __('topic', $dom);
             $forumlabel = __('forum', $dom);
             $urlObject = $this->getUrlObject();
-            $label = $urlObject->getAction() == 'viewtopic' ? $topiclabel : $forumlabel;
+            $label = 'viewtopic' == $urlObject->getAction() ? $topiclabel : $forumlabel;
             $modinfo = ModUtil::getInfoFromName('ZikulaDizkusModule');
             $link = "{$modinfo['displayname']} {$label}: <a href='{$urlObject->getUrl()}'>{$title}</a> ({$date})";
         }

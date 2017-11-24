@@ -27,7 +27,7 @@ class News extends AbstractHookedTopicMeta
         // the api takes care of the permissions check. we must check for pending/expiration & status
         $expired = isset($newsItem['to']) && strtotime($newsItem['to']) < strtotime('now');
         $pending = strtotime($newsItem['from']) > strtotime('now');
-        $statuspublished = $newsItem['published_status'] == News_Api_User::STATUS_PUBLISHED;
+        $statuspublished = News_Api_User::STATUS_PUBLISHED == $newsItem['published_status'];
         if ($newsItem && $statuspublished && !$pending && !$expired) {
             $this->newsItem = $newsItem;
         }

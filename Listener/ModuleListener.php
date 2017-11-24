@@ -121,7 +121,7 @@ class ModuleListener implements EventSubscriberInterface
         }
         // clear last remaining batch
         $this->entityManager->flush();
-        $actionWord = $deleteHookAction == 'lock' ? $this->translator->__('locked', $dom) : $this->translator->__('deleted', $dom);
+        $actionWord = 'lock' == $deleteHookAction ? $this->translator->__('locked', $dom) : $this->translator->__('deleted', $dom);
         if ($total > 0) {
             $request = $this->requestStack->getCurrentRequest();
             $request->getSession()->getFlashBag()->add('status', $this->translator->__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));

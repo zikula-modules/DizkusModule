@@ -21,6 +21,7 @@ use Zikula\Core\Doctrine\EntityAccess;
  * @ORM\Entity
  * @ORM\Table(name="dizkus_posts")
  * @ORM\Entity(repositoryClass="Zikula\DizkusModule\Entity\Repository\PostRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class PostEntity extends EntityAccess
 {
@@ -96,16 +97,18 @@ class PostEntity extends EntityAccess
     private $title = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="ForumUserEntity", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="ForumUserEntity")
      * @ORM\JoinColumn(name="poster_id", referencedColumnName="user_id")
      */
     private $poster;
 
     /**
      * @ORM\ManyToOne(targetEntity="TopicEntity", inversedBy="posts")
-     * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id")
+     * @ORM\JoinColumn(name="topic_id", referencedColumnName="topic_id", onDelete="CASCADE")
      * */
     private $topic;
+
+    private $subscribe = false;
 
     /**
      * Constructor
@@ -319,5 +322,27 @@ class PostEntity extends EntityAccess
         $array = parent::toArray();
 
         return $array;
+    }
+
+    /**
+     * convenience method to retreive topic ID
+     *
+     * @return integer
+     */
+    public function getSubscribe()
+    {
+        return $this->topic->getSubscribe();
+    }
+
+    /**
+     * convenience method to retreive topic ID
+     *
+     * @return integer
+     */
+    public function setSubscribe($subscribe)
+    {
+        $this->subscribe = $subscribe;
+
+        return $this;
     }
 }

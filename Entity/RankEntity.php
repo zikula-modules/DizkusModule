@@ -121,7 +121,7 @@ class RankEntity extends EntityAccess
      */
     public function getRank_link()
     {
-        $link = substr($this->description, 0, 7) == 'http://' ? $this->description : '';
+        $link = 'http://' == substr($this->description, 0, 7) ? $this->description : '';
 
         return $link;
     }

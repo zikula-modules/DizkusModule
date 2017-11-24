@@ -72,8 +72,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // ToDo: create FULLTEXT index
         // set the module vars
         $this->setVars(self::getDefaultVars());
-        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
+//        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -199,8 +199,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // remove module vars
         $this->delVars();
         // unregister hooks
-        $this->hookApi->uninstallSubscriberHooks($this->bundle->getMetaData());
-        $this->hookApi->uninstallProviderHooks($this->bundle->getMetaData());
+//        $this->hookApi->uninstallSubscriberHooks($this->bundle->getMetaData());
+//        $this->hookApi->uninstallProviderHooks($this->bundle->getMetaData());
         // Deletion successful
         return true;
     }
@@ -256,7 +256,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     $statement->execute();
                 }
 
-                if ($prefix != '') {
+                if ('' != $prefix) {
                     $this->removeTablePrefixes($prefix);
                 }
                 // mark tables for import
@@ -273,8 +273,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     return false;
                 }
 
-                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
+//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
                 // set up forum root (required)
                 $forumRoot = new ForumEntity();
                 $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -298,8 +298,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
 
-                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
+//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
             case '4.1.0':
@@ -422,7 +422,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 switch ($type) {
                     case 'boolean':
                         if (in_array($currentModVars[$key], ['yes', 'no'])) {
-                            $var = $currentModVars[$key] == 'yes' ? true : false;
+                            $var = 'yes' == $currentModVars[$key] ? true : false;
                         } else {
                             $var = (boolval($currentModVars[$key]));
                         }
@@ -433,7 +433,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                         break;
                 }
-                if ($key == 'defaultPoster') {
+                if ('defaultPoster' == $key) {
                     $var = 2; // not bolean anymore assume admin id but maybe guest?
                 }
             }

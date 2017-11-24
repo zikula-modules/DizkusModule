@@ -112,13 +112,13 @@ class BbcodeFilterHookHandler
                 $possible_start = substr($message, $curr_pos, 3);
                 $possible_end_pos = strpos($message, ']', $curr_pos);
                 $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (strcasecmp('[b]', $possible_start) == 0) {
+                if (0 == strcasecmp('[b]', $possible_start)) {
                     // We have a starting bold tag.
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
                     //dump($curr_pos);
-                } elseif (strcasecmp('[/b]', $possible_end) == 0) {
+                } elseif (0 == strcasecmp('[/b]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -193,12 +193,12 @@ class BbcodeFilterHookHandler
                 $possible_start = substr($message, $curr_pos, 2);
                 $possible_end_pos = strpos($message, ']', $curr_pos);
                 $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (strcasecmp('[i', $possible_start) == 0) {
+                if (0 == strcasecmp('[i', $possible_start)) {
                     // We have a starting italic tag.
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
-                } elseif (strcasecmp('[/i]', $possible_end) == 0) {
+                } elseif (0 == strcasecmp('[/i]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -277,12 +277,12 @@ class BbcodeFilterHookHandler
                 $possible_start = substr($message, $curr_pos, 4);
                 $possible_end_pos = strpos($message, ']', $curr_pos);
                 $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (strcasecmp('[url', $possible_start) == 0) {
+                if (0 == strcasecmp('[url', $possible_start)) {
                     // We have a starting italic tag.
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
-                } elseif (strcasecmp('[/url]', $possible_end) == 0) {
+                } elseif (0 == strcasecmp('[/url]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -380,12 +380,12 @@ class BbcodeFilterHookHandler
                 $possible_start = substr($message, $curr_pos, 6);
                 $possible_end_pos = strpos($message, ']', $curr_pos);
                 $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (strcasecmp('[quote', $possible_start) == 0) {
+                if (0 == strcasecmp('[quote', $possible_start)) {
                     // We have a starting quote tag.
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
-                } elseif (strcasecmp('[/quote]', $possible_end) == 0) {
+                } elseif (0 == strcasecmp('[/quote]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {

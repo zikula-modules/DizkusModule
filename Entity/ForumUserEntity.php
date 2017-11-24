@@ -416,7 +416,10 @@ class ForumUserEntity extends EntityAccess
     public function toArray()
     {
         return [
-            'id' => $this->getUserId()
+            'id' => $this->getUserId(),
+            'postOrder' => $this->getPostOrder(),
+            'displayOnlyFavorites' => $this->getDisplayOnlyFavorites(),
+            'autosubscribe' => $this->getAutosubscribe()
         ];
     }
 }
