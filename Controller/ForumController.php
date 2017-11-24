@@ -176,6 +176,30 @@ class ForumController extends AbstractController
     }
 
     /**
+     * @Route("/forum/tree/recover")
+     *
+     * @Theme("admin")
+     *
+     * Show the forum tree
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     */
+    public function treerecoverAction()
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+//        $this->getDoctrine()->getManager()->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
+//        $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+//        $repo->recover();
+//        $this->getDoctrine()->getManager()->flush(); // important: flush recovered nodes
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
      * @Route("/forum/order/{action}/{forum}", requirements={"action" = "moveUp|moveDown", "forum" = "^[1-9]\d*$"})
      * @Method("GET")
      *
