@@ -29,6 +29,14 @@ class SyncListener
     public function prePersist(LifecycleEventArgs $args)
     {
         $em = $args->getEntityManager();
+        $upgrading = $em
+            ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
+            ->findBy(['modname' => 'ZikulaDizkusModule', 'name' => 'upgrading']);
+//        dump($upgrading);
+        if($upgrading) {
+            return;
+        }
+
         $entity = $args->getEntity();
         /*
          * New topic we can assume post event will handle everything
@@ -84,6 +92,13 @@ class SyncListener
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $em = $event->getEntityManager();
+        $upgrading = $em
+            ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
+            ->findBy(['modname' => 'ZikulaDizkusModule', 'name' => 'upgrading']);
+//        dump($upgrading);
+        if($upgrading) {
+            return;
+        }
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
         /*

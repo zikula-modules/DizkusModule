@@ -52,7 +52,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
     public function getDescription()
     {
-        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0_, 3_2_0', [], 'zikuladizkusmodule');
+        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0, 3_2_0', [], 'zikuladizkusmodule');
     }
 
     public function versionSupported()
@@ -448,7 +448,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setLft($data['node']['lft']);
         $root = $this->em->find(ForumEntity::class, 1);
         $forumObj->setParent($root);
-        $forumObj->setRoot(1);
+        $forumObj->setRoot($root);
 
         $metadata = $this->em->getClassMetadata(get_class($forumObj));
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
@@ -475,7 +475,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setParent($parent);
         $forumObj->setLvl(2);
         $forumObj->setLft($data['node']['lft']);
-        $forumObj->setRoot(1);
+        $root = $this->em->find(ForumEntity::class, 1);
+        $forumObj->setRoot($root);
 
         $metadata = $this->em->getClassMetadata(get_class($forumObj));
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());

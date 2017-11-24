@@ -724,7 +724,7 @@ class ForumEntity extends EntityAccess
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
                 'children' => $children,
-                'last_post' => $this->getLast_post()->toArray(),
+                'last_post' => null === $this->getLast_post() ? null : $this->getLast_post()->toArray(),
                 'moduleref' => $this->getModuleref(),
                 'status' => $this->getStatus(),
                 'topicCount' => $this->getTopicCount(),
