@@ -15,7 +15,6 @@ namespace Zikula\DizkusModule\Hooks;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
@@ -88,6 +87,7 @@ class TopicProBundle extends AbstractProBundle
         TopicManager $topicManagerService
     ) {
         $this->name = 'ZikulaDizkusModule';
+        $this->area = 'provider.dizkus.ui_hooks.topic';
         $this->translator = $translator;
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -208,12 +208,12 @@ class TopicProBundle extends AbstractProBundle
         $start = $this->request->get('start', 1);
         $order = $this->request->get('order', $currentForumUser->getPostOrder());
 
-        $config = $this->getHookConfig($hook->getCaller());
-        if (!$config || !array_key_exists($hook->getAreaId(), $config)) {
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        if (!$config['forum']) {
             goto display;
         }
 
-        $currentForum = $this->forumManagerService->getManager($config[$hook->getAreaId()]['forum'], null, false);
+        $currentForum = $this->forumManagerService->getManager($config['forum'], null, false);
 
         if ($currentForum->exists()) {
             if (!empty($hook->getId())) {
@@ -390,14 +390,32 @@ class TopicProBundle extends AbstractProBundle
      */
     public function getHookConfig($module, $areaid = null)
     {
-        $config = $this->variableApi->get($module, 'dizkushookconfig', false);
         $default = [
-            'forum' => ($config && array_key_exists($areaid, $config) && array_key_exists('forum', $config[$areaid])) ? $config[$areaid]['forum'] : null,
+            'forum' => null,
             // 0 - only admin is allowed to enable comments (create topic)
             // 1 - object owner is allowed to enable comments (create topic)
             // 2 - topic is created automatically with first comment
-            'threadCreationMode' => ($config && array_key_exists($areaid, $config) && array_key_exists('threadCreationMode', $config[$areaid])) ? $config[$areaid]['threadCreationMode'] : 2,
-            ];
+            'threadCreationMode' => 2,
+        ];
+        // module settings
+        $settings = $this->variableApi->get($this->name, 'hooks', false);
+        // this provider config
+        $config = array_key_exists(str_replace('.', '-', $this->area), $settings['providers']) ? $settings['providers'][str_replace('.', '-', $this->area)] : null;
+        // no configuration for this module return default
+        if (null == $config) {
+            return $default;
+        } else {
+            $default['forum'] = array_key_exists('forum', $config) ? $config['forum'] : $default['forum'];
+            $default['threadCreationMode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['threadCreationMode'];
+        }
+        // module provider area module area settings
+        if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
+            $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];
+            if (array_key_exists('settings', $subscribedModuleAreaSettings)) {
+                $default['forum'] = array_key_exists('forum', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['forum'] : $default['forum'];
+                $default['threadCreationMode'] = array_key_exists('topic_mode', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['topic_mode'] : $default['threadCreationMode'];
+            }
+        }
 
         return $default;
     }

@@ -58,7 +58,6 @@ class BBCodeProBundle extends AbstractProBundle
      */
     private $variableApi;
 
-
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
@@ -120,7 +119,6 @@ class BBCodeProBundle extends AbstractProBundle
     public function view(DisplayHook $hook)
     {
         $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.view.html.twig', []);
-        dump('test');
         $hook->setResponse(new DisplayHookResponse('provider.dizkus.ui_hooks.bbcode', $content));
     }
 
@@ -135,7 +133,6 @@ class BBCodeProBundle extends AbstractProBundle
     public function edit(DisplayHook $hook)
     {
         $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:bbcode.edit.html.twig', []);
-        dump('test');
         $hook->setResponse(new DisplayHookResponse('provider.dizkus.ui_hooks.bbcode', $content));
     }
 

@@ -163,8 +163,8 @@ class SettingsManager
         }
 
         foreach ($providersCollection as $key => $provider) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $provider->getArea()), $settings)) {
-                $providerSettings = $settings[str_replace('.', '-', $provider->getArea())];
+            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+                $providerSettings = $settings[str_replace('.', '-', $key)];
                 $provider->setSettings($providerSettings);
                 if (array_key_exists('modules', $providerSettings)) {
                     foreach ($provider->getModules() as $moduleKey => $module) {
@@ -185,7 +185,7 @@ class SettingsManager
                 }
             }
         }
-
+        dump($providersCollection);
         return $providersCollection;
     }
 
@@ -234,8 +234,8 @@ class SettingsManager
         }
 
         foreach ($subscribersCollection as $key => $subscriber) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $subscriber->getArea()), $settings)) {
-                $subscriberSettings = $settings[str_replace('.', '-', $subscriber->getArea())];
+            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+                $subscriberSettings = $settings[str_replace('.', '-', $key)];
                 $subscriber->setSettings($subscriberSettings);
                 if (array_key_exists('modules', $subscriberSettings)) {
                     foreach ($subscriber->getModules() as $moduleKey => $module) {
