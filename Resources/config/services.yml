@@ -360,34 +360,62 @@ services:
             - "@translator.default"
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_extensions_module.api.variable"
-            - "@hook_dispatcher"
+            - "@zikula_hook_bundle.collector.hook_collector"
             - "@zikula_extensions_module.api.capability"
 
-# Hooks
-
-    zikula_dizkus_module.hook_handler.base:
-      abstract: true
-      arguments: 
-            - "@doctrine.orm.default_entity_manager"
-            - "@request_stack"
-            - "@templating"
-            - "@zikula_dizkus_module.security"
-            - "@zikula_extensions_module.api.variable"
-            - "@translator"
-                       
-    zikula_dizkus_module.hook_handler.bbcode:
-      class: Zikula\DizkusModule\HookHandler\BbcodeHookHandler
-      parent: zikula_dizkus_module.hook_handler.base
-      
-    zikula_dizkus_module.hook_handler.bbcode.filter:
-        class: Zikula\DizkusModule\HookHandler\BbcodeFilterHookHandler
+    zikula_dizkus_module.hook_subscriber.post_text_ui_hooks_subscriber:
+        class: Zikula\DizkusModule\Hooks\PostTextSubBundle
         arguments:
-            - "@zikula_extensions_module.api.variable"
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: "subscriber.dizkus.ui_hooks.post_text" }
             
-    zikula_dizkus_module.hook_handler.topic:
-      class: Zikula\DizkusModule\HookHandler\TopicHookHandler
-      parent: zikula_dizkus_module.hook_handler.base
-      calls:
-        - [setForumUserService, [@zikula_dizkus_module.forum_user_manager]]
-        - [setForumService, [@zikula_dizkus_module.forum_manager]]
-        - [setTopicService, [@zikula_dizkus_module.topic_manager]]
+    zikula_dizkus_module.hook_subscriber.post_ui_hooks_subscriber:
+        class: Zikula\DizkusModule\Hooks\PostSubBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: "subscriber.dizkus.ui_hooks.post" }
+            
+    zikula_dizkus_module.hook_subscriber.topic_ui_hooks_subscriber:
+        class: Zikula\DizkusModule\Hooks\TopicSubBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: "subscriber.dizkus.ui_hooks.topic" }
+            
+    zikula_dizkus_module.hook_subscriber.forum_ui_hooks_subscriber:
+        class: Zikula\DizkusModule\Hooks\ForumSubBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: "subscriber.dizkus.ui_hooks.forum" }            
+            
+    zikula_dizkus_module.hook_subscriber.post_filter_hooks_subscriber:
+        class: Zikula\DizkusModule\Hooks\PostFilterSubBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_subscriber, areaName: "subscriber.dizkus.filter_hooks.post" }   
+            
+    zikula_dizkus_module.hook_provider.topic_ui_hooks_provider:
+        class: Zikula\DizkusModule\Hooks\TopicProBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.dizkus.ui_hooks.topic" }
+
+    zikula_dizkus_module.hook_provider.bbcode_ui_hooks_provider:
+        class: Zikula\DizkusModule\Hooks\BBCodeProBundle
+        arguments:
+          - "@translator.default"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.dizkus.ui_hooks.bbcode" }
+
+    zikula_dizkus_module.hook_provider.bbcode_filter_hooks_provider:
+        class: Zikula\DizkusModule\Hooks\BBFilterProBundle
+        arguments:
+          - "@translator.default"
+          - "@zikula_extensions_module.api.variable"
+        tags:
+            - { name: zikula.hook_provider, areaName: "provider.dizkus.filter_hooks.bbcode" }

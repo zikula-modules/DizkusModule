@@ -31,8 +31,6 @@
             "capabilities": {
                 "admin": {"route": "zikuladizkusmodule_admin_index"},
                 "user": {"route": "zikuladizkusmodule_user_index"},
-                "hook_subscriber": {"class": "Zikula\\DizkusModule\\Container\\HookContainer", "subscribe_own": true},
-                "hook_provider": {"class": "Zikula\\DizkusModule\\Container\\HookContainer"},
                 "searchable": {"class": "Zikula\\DizkusModule\\Helper\\SearchHelper"}
             },
             "securityschema": {

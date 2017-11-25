@@ -12,6 +12,9 @@
 
 namespace Zikula\DizkusModule\Hooks;
 
+use Zikula\Bundle\HookBundle\Category\FilterHooksCategory;
+use Zikula\Common\Translator\TranslatorInterface;
+
 /**
  * PostFilterSubBundle
  *
@@ -19,14 +22,42 @@ namespace Zikula\DizkusModule\Hooks;
  */
 class PostFilterSubBundle extends AbstractSubBundle
 {
-    public function __construct($title = '')
+    const FILTER = 'dizkus.filter_hooks.post.filter';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
-        $owner = 'ZikulaDizkusModule';
-        $area = 'subscriber.dizkus.filter_hooks.post';
-        $category = 'filter_hooks';
+        $this->translator = $translator;
+        parent::__construct();
+    }
 
-        parent::__construct($owner, $area, $category, $title);
+    public function getOwner()
+    {
+        return 'ZikulaDizkusModule';
+    }
 
-        $this->addEvent('filter', 'dizkus.filter_hooks.post.filter');
+    public function getCategory()
+    {
+        return FilterHooksCategory::NAME;
+    }
+
+    public function getTitle()
+    {
+        return $this->translator->__('Dizkus post filter subscriber');
+    }
+
+    public function getEvents()
+    {
+        return [
+            FilterHooksCategory::TYPE_FILTER => self::FILTER,
+        ];
     }
 }
+

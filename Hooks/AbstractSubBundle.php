@@ -13,14 +13,15 @@
 namespace Zikula\DizkusModule\Hooks;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Zikula\Bundle\HookBundle\Bundle\SubscriberBundle;
+use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
+use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 
 /**
  * AbstractProBundle
  *
  * @author Kaik
  */
-abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAccess
+abstract class AbstractSubBundle implements HookSubscriberInterface, \ArrayAccess
 {
     private $baseName;
 
@@ -30,11 +31,25 @@ abstract class AbstractSubBundle extends SubscriberBundle implements \ArrayAcces
 
     private $settings = [];
 
-    public function __construct($owner, $area, $category, $title)
+    public function __construct()
     {
-        parent::__construct($owner, $area, $category, $title);
         $this->baseName= str_replace('SubBundle', 'Subscriber', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
         $this->modules = new ArrayCollection();
+    }
+
+    public function getOwner()
+    {
+        return 'ZikulaDizkusModule';
+    }
+
+    public function getCategory()
+    {
+        return UiHooksCategory::NAME;
+    }
+
+    public function getEvents()
+    {
+        return [];
     }
 
     public function getSettingsForm()

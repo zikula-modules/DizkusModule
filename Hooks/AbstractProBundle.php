@@ -13,14 +13,14 @@
 namespace Zikula\DizkusModule\Hooks;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Zikula\Bundle\HookBundle\Bundle\ProviderBundle;
+use Zikula\Bundle\HookBundle\HookSelfAllowedProviderInterface;
 
 /**
  * AbstractProBundle
  *
  * @author Kaik
  */
-abstract class AbstractProBundle extends ProviderBundle implements \ArrayAccess
+abstract class AbstractProBundle implements HookSelfAllowedProviderInterface, \ArrayAccess
 {
     private $baseName;
 
@@ -30,9 +30,8 @@ abstract class AbstractProBundle extends ProviderBundle implements \ArrayAccess
 
     private $settings = [];
 
-    public function __construct($owner, $area, $category, $title)
+    public function __construct()
     {
-        parent::__construct($owner, $area, $category, $title);
         $this->baseName= str_replace('ProBundle', 'Provider', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
         $this->modules = new ArrayCollection();
     }
