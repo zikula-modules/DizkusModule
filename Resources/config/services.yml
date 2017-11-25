@@ -401,14 +401,25 @@ services:
     zikula_dizkus_module.hook_provider.topic_ui_hooks_provider:
         class: Zikula\DizkusModule\Hooks\TopicProBundle
         arguments:
-          - "@translator.default"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
+            - "@zikula_dizkus_module.forum_user_manager"
+            - "@zikula_dizkus_module.forum_manager"
+            - "@zikula_dizkus_module.topic_manager"
         tags:
             - { name: zikula.hook_provider, areaName: "provider.dizkus.ui_hooks.topic" }
 
     zikula_dizkus_module.hook_provider.bbcode_ui_hooks_provider:
         class: Zikula\DizkusModule\Hooks\BBCodeProBundle
         arguments:
-          - "@translator.default"
+            - "@translator.default"
+            - "@router"
+            - "@request_stack"
+            - "@templating"
+            - "@zikula_extensions_module.api.variable"
         tags:
             - { name: zikula.hook_provider, areaName: "provider.dizkus.ui_hooks.bbcode" }
 

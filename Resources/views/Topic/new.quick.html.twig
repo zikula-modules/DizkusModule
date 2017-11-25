@@ -38,7 +38,7 @@
                 <div class="form-group">
                     {{ form_label(form.posts.0.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12'} }) }}
                     {{ form_widget(form.posts.0.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
-                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.ui_edit', id=null) }}
+                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.form_edit', id=null) }}
                 </div>
                 <div class="form-group">
                     {% if settings.striptags == 'yes' %}
@@ -85,8 +85,8 @@
                             ,'attr': {'class': '','icon': 'fa fa-thumb-tack fa-orange'} }) }}
                         </div>
 
-                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
-                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.ui_edit', id=null) }}
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.form_edit', id=null) }}
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.topic.form_edit', id=null) }}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">
