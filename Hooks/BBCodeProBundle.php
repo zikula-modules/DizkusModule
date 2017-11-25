@@ -69,7 +69,6 @@ class BBCodeProBundle extends AbstractProBundle
 
     public function view(DisplayHook $hook)
     {
-
     }
 }
 //    /**

@@ -42,7 +42,7 @@ class ModifyForumType extends AbstractType
 //        foreach ($users as $user) {
 //            $usersArr[$user->getUid()] = $user->getUname();
 //        }
-        $this->users = [];//$usersArr;
+        $this->users = []; //$usersArr;
 
         // groups
         $groups = $em->getRepository('ZikulaGroupsModule:GroupEntity')->findAll();

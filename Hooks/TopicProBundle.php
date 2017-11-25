@@ -69,7 +69,6 @@ class TopicProBundle extends AbstractProBundle
 
     public function view(DisplayHook $hook)
     {
-
     }
 }
 //
@@ -406,7 +405,6 @@ class TopicProBundle extends AbstractProBundle
 //        return $default;
 //    }
 //}
-
 
 //    public function processEdit(FormAwareResponse $hook)
 //    {
