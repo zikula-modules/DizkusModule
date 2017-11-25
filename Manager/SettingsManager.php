@@ -185,7 +185,7 @@ class SettingsManager
                 }
             }
         }
-        dump($providersCollection);
+
         return $providersCollection;
     }
 
