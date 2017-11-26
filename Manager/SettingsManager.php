@@ -90,6 +90,7 @@ class SettingsManager
          * @todo add hooks category check
          */
         $settings['hooks'] = $this->getHooks();
+
         return $settings;
     }
 

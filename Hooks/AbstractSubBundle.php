@@ -22,7 +22,6 @@ abstract class AbstractSubBundle extends AbstractHookBundle
     public function __construct()
     {
         $this->baseName= str_replace('SubBundle', 'Subscriber', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
-        
         parent::__construct();
     }
 

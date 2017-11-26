@@ -317,35 +317,6 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         return true;
     }
 
-//
-//    /**
-//     * Factory class to find Meta Class and instantiate.
-//     *
-//     * @param ProcessHook $hook
-//     *
-//     * @return object of found class
-//     */
-//    private function getClassInstance(ProcessHook $hook)
-//    {
-//        //        if (empty($hook)) {
-////            return false;
-////        }
-////        $moduleName = $hook->getCaller();
-////        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
-////        foreach ($locations as $location) {
-////            $moduleObj = ModUtil::getModule($location);
-////            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
-////            if (class_exists($classname)) {
-////                $instance = new $classname($hook);
-////                if ($instance instanceof AbstractHookedTopicMeta) {
-////                    return $instance;
-////                }
-////            }
-////        }
-////
-////        return new Generic($hook);
-//    }
-
     /**
      * Display hook for delete.
      *
@@ -447,3 +418,31 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         return $default;
     }
 }
+
+//    /**
+//     * Factory class to find Meta Class and instantiate.
+//     *
+//     * @param ProcessHook $hook
+//     *
+//     * @return object of found class
+//     */
+//    private function getClassInstance(ProcessHook $hook)
+//    {
+//        //        if (empty($hook)) {
+////            return false;
+////        }
+////        $moduleName = $hook->getCaller();
+////        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
+////        foreach ($locations as $location) {
+////            $moduleObj = ModUtil::getModule($location);
+////            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
+////            if (class_exists($classname)) {
+////                $instance = new $classname($hook);
+////                if ($instance instanceof AbstractHookedTopicMeta) {
+////                    return $instance;
+////                }
+////            }
+////        }
+////
+////        return new Generic($hook);
+//    }

@@ -92,7 +92,7 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
         if (null == $config) {
             return $default;
         } else {
-          // here we can add provider global settings see Zikula\DizkusModule\Hooks\TopicProBundle
+            // here we can add provider global settings see Zikula\DizkusModule\Hooks\TopicProBundle
         }
         // module provider area module area settings
         if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
