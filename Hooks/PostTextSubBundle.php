@@ -14,13 +14,14 @@ namespace Zikula\DizkusModule\Hooks;
 
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
+use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 
 /**
  * PostTextSubBundle
  *
  * @author Kaik
  */
-class PostTextSubBundle extends AbstractSubBundle
+class PostTextSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
     const EDIT_DISPLAY = 'dizkus.ui_hooks.post_text.display_view';
     const EDIT_FORM = 'dizkus.ui_hooks.post_text.form_edit';
@@ -42,11 +43,6 @@ class PostTextSubBundle extends AbstractSubBundle
     {
         $this->translator = $translator;
         parent::__construct();
-    }
-
-    public function getOwner()
-    {
-        return 'ZikulaDizkusModule';
     }
 
     public function getCategory()

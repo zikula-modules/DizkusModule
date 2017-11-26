@@ -14,13 +14,14 @@ namespace Zikula\DizkusModule\Hooks;
 
 use Zikula\Bundle\HookBundle\Category\FilterHooksCategory;
 use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 
 /**
  * PostFilterSubBundle
  *
  * @author Kaik
  */
-class PostFilterSubBundle extends AbstractSubBundle
+class PostFilterSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
     const FILTER = 'dizkus.filter_hooks.post.filter';
 
@@ -36,11 +37,6 @@ class PostFilterSubBundle extends AbstractSubBundle
     {
         $this->translator = $translator;
         parent::__construct();
-    }
-
-    public function getOwner()
-    {
-        return 'ZikulaDizkusModule';
     }
 
     public function getCategory()

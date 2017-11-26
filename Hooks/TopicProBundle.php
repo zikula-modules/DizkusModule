@@ -15,6 +15,7 @@ namespace Zikula\DizkusModule\Hooks;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\Bundle\HookBundle\HookProviderInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
@@ -32,7 +33,7 @@ use Zikula\ExtensionsModule\Api\VariableApi;
  *
  * @author Kaik
  */
-class TopicProBundle extends AbstractProBundle
+class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 {
     use ServiceIdTrait;
 
@@ -76,6 +77,8 @@ class TopicProBundle extends AbstractProBundle
      */
     private $topicManagerService;
 
+    private $area = 'provider.dizkus.ui_hooks.topic';
+
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
@@ -86,25 +89,16 @@ class TopicProBundle extends AbstractProBundle
         ForumManager $forumManagerService,
         TopicManager $topicManagerService
     ) {
-        $this->name = 'ZikulaDizkusModule';
-        $this->area = 'provider.dizkus.ui_hooks.topic';
         $this->translator = $translator;
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->request = $requestStack->getMasterRequest();
         $this->renderEngine = $renderEngine;
         $this->variableApi = $variableApi;
-
         $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->topicManagerService = $topicManagerService;
-
         parent::__construct();
-    }
-
-    public function getOwner()
-    {
-        return 'ZikulaDizkusModule';
     }
 
     public function getCategory()
@@ -122,18 +116,22 @@ class TopicProBundle extends AbstractProBundle
         return [
             UiHooksCategory::TYPE_DISPLAY_VIEW => 'view',
             UiHooksCategory::TYPE_FORM_EDIT => 'edit',
-//            UiHooksCategory::TYPE_PROCESS_EDIT => 'edit',
+            UiHooksCategory::TYPE_VALIDATE_EDIT => 'validateEdit',
+            UiHooksCategory::TYPE_PROCESS_EDIT => 'processEdit',
+            UiHooksCategory::TYPE_FORM_DELETE => 'delete',
+            UiHooksCategory::TYPE_VALIDATE_DELETE => 'validateDelete',
+            UiHooksCategory::TYPE_PROCESS_DELETE => 'processDelete',
         ];
     }
 
     public function getSettingsForm()
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'SettingsType';
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\TopicProviderSettingsType';
     }
 
     public function getBindingForm()
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'BindingType';
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\TopicProviderBindingType';
     }
 
     /**
@@ -151,13 +149,13 @@ class TopicProBundle extends AbstractProBundle
 //        }
 
         $currentForumUser = $this->forumUserManagerService->getManager();
-        $currentForum = null;
-        $currentTopic = null;
         $start = $this->request->get('start', 1);
         $order = $this->request->get('order', $currentForumUser->getPostOrder());
 
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (!$config['forum']) {
+            $currentForum = null;
+            $currentTopic = null;
             goto display;
         }
 
@@ -203,13 +201,13 @@ class TopicProBundle extends AbstractProBundle
     public function edit(DisplayHook $hook)
     {
         $currentForumUser = $this->forumUserManagerService->getManager();
-        $currentForum = null;
-        $currentTopic = null;
         $start = $this->request->get('start', 1);
         $order = $this->request->get('order', $currentForumUser->getPostOrder());
 
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (!$config['forum']) {
+            $currentForum = null;
+            $currentTopic = null;
             goto display;
         }
 
@@ -228,39 +226,19 @@ class TopicProBundle extends AbstractProBundle
         }
 
         display:
-//
+
         $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.edit.html.twig', [
-            'hook' => $hook,
-            'currentForum' => $currentForum,
+            'hook'             => $hook,
+            'currentForum'     => $currentForum,
             'currentForumUser' => $currentForumUser,
-            'currentTopic'    => $currentTopic,
-            'start'           => $start,
-            'order'           => $order,
-            'preview'         => false,
-            'settings'        => $this->variableApi->getAll($this->name)
+            'currentTopic'     => $currentTopic,
+            'start'            => $start,
+            'order'            => $order,
+            'preview'          => false,
+            'settings'         => $this->variableApi->getAll($this->getOwner())
         ]);
 
         $hook->setResponse(new DisplayHookResponse('provider.dizkus.ui_hooks.topic', $content));
-    }
-
-    /**
-     * Display hook for delete.
-     *
-     * @param DisplayHook $hook the hook
-     *
-     * @return string
-     */
-    public function delete(DisplayHook $hook)
-    {
-        //        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-//        if (isset($topic)) {
-//            $this->view->assign('forum', $topic->getForum()->getName());
-//            $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
-//            // lock or remove
-//            $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
-//            $this->view->assign('actionWord', $actionWord);
-//            //   $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
-//        }
     }
 
     /**
@@ -271,17 +249,6 @@ class TopicProBundle extends AbstractProBundle
      * @return void (unused)
      */
     public function validateEdit(ValidationHook $hook)
-    {
-    }
-
-    /**
-     * Validate hook for delete.
-     *
-     * @param ValidationHook $hook the hook
-     *
-     * @return void (unused)
-     */
-    public function validateDelete(ValidationHook $hook)
     {
     }
 
@@ -350,6 +317,66 @@ class TopicProBundle extends AbstractProBundle
         return true;
     }
 
+//
+//    /**
+//     * Factory class to find Meta Class and instantiate.
+//     *
+//     * @param ProcessHook $hook
+//     *
+//     * @return object of found class
+//     */
+//    private function getClassInstance(ProcessHook $hook)
+//    {
+//        //        if (empty($hook)) {
+////            return false;
+////        }
+////        $moduleName = $hook->getCaller();
+////        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
+////        foreach ($locations as $location) {
+////            $moduleObj = ModUtil::getModule($location);
+////            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
+////            if (class_exists($classname)) {
+////                $instance = new $classname($hook);
+////                if ($instance instanceof AbstractHookedTopicMeta) {
+////                    return $instance;
+////                }
+////            }
+////        }
+////
+////        return new Generic($hook);
+//    }
+
+    /**
+     * Display hook for delete.
+     *
+     * @param DisplayHook $hook the hook
+     *
+     * @return string
+     */
+    public function delete(DisplayHook $hook)
+    {
+//        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
+//        if (isset($topic)) {
+//            $this->view->assign('forum', $topic->getForum()->getName());
+//            $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
+//            // lock or remove
+//            $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
+//            $this->view->assign('actionWord', $actionWord);
+//            //   $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
+//        }
+    }
+
+    /**
+     * Validate hook for delete.
+     *
+     * @param ValidationHook $hook the hook
+     *
+     * @return void (unused)
+     */
+    public function validateDelete(ValidationHook $hook)
+    {
+    }
+
     /**
      * Process hook for delete.
      *
@@ -398,7 +425,7 @@ class TopicProBundle extends AbstractProBundle
             'threadCreationMode' => 2,
         ];
         // module settings
-        $settings = $this->variableApi->get($this->name, 'hooks', false);
+        $settings = $this->variableApi->get($this->getOwner(), 'hooks', false);
         // this provider config
         $config = array_key_exists(str_replace('.', '-', $this->area), $settings['providers']) ? $settings['providers'][str_replace('.', '-', $this->area)] : null;
         // no configuration for this module return default
@@ -420,32 +447,3 @@ class TopicProBundle extends AbstractProBundle
         return $default;
     }
 }
-
-//
-//    /**
-//     * Factory class to find Meta Class and instantiate.
-//     *
-//     * @param ProcessHook $hook
-//     *
-//     * @return object of found class
-//     */
-//    private function getClassInstance(ProcessHook $hook)
-//    {
-//        //        if (empty($hook)) {
-////            return false;
-////        }
-////        $moduleName = $hook->getCaller();
-////        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
-////        foreach ($locations as $location) {
-////            $moduleObj = ModUtil::getModule($location);
-////            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
-////            if (class_exists($classname)) {
-////                $instance = new $classname($hook);
-////                if ($instance instanceof AbstractHookedTopicMeta) {
-////                    return $instance;
-////                }
-////            }
-////        }
-////
-////        return new Generic($hook);
-//    }

@@ -27,7 +27,7 @@
                         <i class="fa fa-cog"> </i>
                     </a>
                 </div>
-                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                <div class="list-group collapse" id="global_{{ value.baseName|lower }}">
                     {% for name, child in form %}
                         {% if name == 'modules' %}
                         {% else %}
@@ -136,12 +136,12 @@
             <legend>{{ value.title }}</legend>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    {{ __('Global provider settings') }}
+                    {{ __('Global subscriber settings') }}
                     <a class="pull-right" role="button" data-toggle="collapse" href="#global_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="global_{{ value.baseName|lower }}">
                         <i class="fa fa-cog"> </i>
                     </a>
                 </div>
-                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                <div class="list-group collapse" id="global_{{ value.baseName|lower }}">
                     {% for name, child in form %}
                         {% if name == 'modules' %}
                         {% else %}

@@ -15,6 +15,7 @@ namespace Zikula\DizkusModule\Hooks;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\Bundle\HookBundle\HookSelfAllowedProviderInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
@@ -28,7 +29,7 @@ use Zikula\ExtensionsModule\Api\VariableApi;
  *
  * @author Kaik
  */
-class BBCodeProBundle extends AbstractProBundle
+class BBCodeProBundle extends AbstractProBundle implements HookSelfAllowedProviderInterface
 {
     use ServiceIdTrait;
 
@@ -57,6 +58,8 @@ class BBCodeProBundle extends AbstractProBundle
      */
     private $variableApi;
 
+    private $area = 'provider.dizkus.ui_hooks.bbcode';
+
     public function __construct(
         TranslatorInterface $translator,
         RouterInterface $router,
@@ -64,7 +67,6 @@ class BBCodeProBundle extends AbstractProBundle
         EngineInterface $renderEngine,
         VariableApi $variableApi
     ) {
-        $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -73,11 +75,6 @@ class BBCodeProBundle extends AbstractProBundle
         $this->variableApi = $variableApi;
 
         parent::__construct();
-    }
-
-    public function getOwner()
-    {
-        return 'ZikulaDizkusModule';
     }
 
     public function getCategory()
@@ -100,13 +97,8 @@ class BBCodeProBundle extends AbstractProBundle
 
     public function getSettingsForm()
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'SettingsType';
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\BBCodeProviderSettingsType';
     }
-
-//    public function getBindingForm()
-//    {
-//        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'BindingType';
-//    }
 
     /**
      * Display hook for view.

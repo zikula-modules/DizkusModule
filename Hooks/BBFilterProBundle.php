@@ -13,46 +13,41 @@
 namespace Zikula\DizkusModule\Hooks;
 
 use Zikula\Bundle\HookBundle\Category\FilterHooksCategory;
-use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\Bundle\HookBundle\ServiceIdTrait;
-use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\Bundle\HookBundle\Hook\FilterHook;
+use Zikula\Bundle\HookBundle\HookSelfAllowedProviderInterface;
+use Zikula\Bundle\HookBundle\ServiceIdTrait;
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\ExtensionsModule\Api\VariableApi;
 
 /**
  * BBFilterProBundle
  *
  * @author Kaik
  */
-class BBFilterProBundle extends AbstractProBundle
+class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProviderInterface
 {
     use ServiceIdTrait;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var VariableApi
      */
     private $variableApi;
 
-    private $translator;
-
-    /**
-     * @var Filter settings
-     */
-    private $settings;
+    private $area = 'provider.dizkus.filter_hooks.bbcode';
 
     public function __construct(
         TranslatorInterface $translator,
         VariableApi $variableApi
     ) {
         $this->translator = $translator;
-        $this->settings = null;
         $this->variableApi = $variableApi;
 
         parent::__construct();
-    }
-
-    public function getOwner()
-    {
-        return 'ZikulaDizkusModule';
     }
 
     public function getCategory()
@@ -74,12 +69,40 @@ class BBFilterProBundle extends AbstractProBundle
 
     public function getSettingsForm()
     {
-        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\' . $this->getBaseName() . 'SettingsType';
+        return 'Zikula\\DizkusModule\\Form\\Type\\Hook\\BBFilterProviderSettingsType';
     }
 
-    private function getSettings($caller)
+    /**
+     * get settings for hook
+     * generates value if not yet set.
+     *
+     * @param $hook
+     *
+     * @return array
+     */
+    public function getHookConfig($module, $areaid = null)
     {
-        $this->settings = $this->variableApi->get($caller, 'dizkus_bbcode_filter_settings');
+        //@todo add filter settings here
+        $default = [];
+        // module settings
+        $settings = $this->variableApi->get($this->getOwner(), 'hooks', false);
+        // this provider config
+        $config = array_key_exists(str_replace('.', '-', $this->area), $settings['providers']) ? $settings['providers'][str_replace('.', '-', $this->area)] : null;
+        // no configuration for this module return default
+        if (null == $config) {
+            return $default;
+        } else {
+          // here we can add provider global settings see Zikula\DizkusModule\Hooks\TopicProBundle
+        }
+        // module provider area module area settings
+        if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
+            $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];
+            if (array_key_exists('settings', $subscribedModuleAreaSettings)) {
+                // here we do specyfic provider - subscriber settings settings see Zikula\DizkusModule\Hooks\TopicProBundle
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -89,7 +112,7 @@ class BBFilterProBundle extends AbstractProBundle
      */
     public function filter(FilterHook $hook)
     {
-        $this->getSettings($hook->getCaller());
+        $this->setSettings($this->getHookConfig($hook->getCaller(), $hook->getAreaId()));
         $message = $hook->getData();
         $hook->setData($this->transform($message));
     }

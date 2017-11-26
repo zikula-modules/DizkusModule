@@ -90,7 +90,6 @@ class SettingsManager
          * @todo add hooks category check
          */
         $settings['hooks'] = $this->getHooks();
-//        dump($settings);
         return $settings;
     }
 
@@ -123,14 +122,13 @@ class SettingsManager
         $providersCollection = new ArrayCollection();
         foreach ($providers as $key => $area_name) {
             $provider = $this->hookCollector->getProvider($area_name);
-//            //each provider fresh modules/areas/bindings collection
+            //each provider fresh modules/areas/bindings collection
             $modules = new ArrayCollection();
             foreach ($subscriberModules as $key => $subscriberModule) {
                 $moduleObj = new HookedModuleObject($subscriberModule, []);
                 $areas = $this->hookCollector->getSubscriberAreasByOwner($subscriberModule);
                 foreach ($areas as $key => $area) {
                     $bindingObj = new BindingObject();
-//                    $bindingObj->setSubscriber($this->hookCollector->getProvider($area));
                     $bindingObj->setSubscriber($area);
                     $bindingObj->setProvider($provider);
                     $bindingObj->setForm($provider->getBindingForm());
@@ -177,6 +175,7 @@ class SettingsManager
                                 $areaSettings = array_key_exists($areaKey, $moduleSettings['areas'])
                                     ? $moduleSettings['areas'][$areaKey]
                                     : [];
+                                // @todo solve enabled status ( enabled setting only for actually enabled hook)
                                 $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaSettings->getEnabled());
                                 $area->setSettings($areaSettings);
                             }
@@ -206,7 +205,6 @@ class SettingsManager
                     $bindingObj->setSubscriber($subscriber);
                     $bindingObj->setForm($subscriber->getBindingForm());
                     $bindingObj->setProvider($area);
-//                    $bindingObj->setProvider($this->hookCollector->getProvider($area));
                     $moduleObj->getAreas()->set(str_replace('.', '-', $area), $bindingObj);
                 }
                 $modules->set($providerModule, $moduleObj);
@@ -248,6 +246,7 @@ class SettingsManager
                                 $areaSettings = array_key_exists($areaKey, $moduleSettings['areas'])
                                     ? $moduleSettings['areas'][$areaKey]
                                     : [];
+                                // @todo solve enabled status ( enabled setting only for actually enabled hook)
                                 $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaSettings->getEnabled());
                                 $area->setSettings($areaSettings);
                             }
