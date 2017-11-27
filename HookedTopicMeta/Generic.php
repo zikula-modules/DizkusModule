@@ -14,25 +14,23 @@
 
 namespace Zikula\DizkusModule\HookedTopicMeta;
 
-use ZLanguage;
-
 class Generic extends AbstractHookedTopicMeta
 {
-    private $dom;
+//    private $dom;
 
     public function setup()
     {
-        $this->dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
+//        $this->dom = ZLanguage::getModuleDomain('ZikulaDizkusModule');
     }
 
     public function setTitle()
     {
-        $item = __('item', $this->dom);
-        $this->title = "{$this->getModule()} {$item} (id# {$this->getObjectId()})";
+//        $item = __('item', $this->dom);
+//        $this->title = "{$this->getModule()} {$item} (id# {$this->getObjectId()})";
     }
 
     public function setContent()
     {
-        $this->content = __f('Discussion of item at: %s', $this->getLink(), $this->dom);
+//        $this->content = __f('Discussion of item at: %s', $this->getLink(), $this->dom);
     }
 }

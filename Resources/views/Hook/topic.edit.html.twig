@@ -6,7 +6,8 @@
             <div class="col-md-3  control-label">
                 <i class="fa fa-check fa-lg fa-green"></i> {{ __("Selected forum:")}} {{ currentForum.get.name }}
             </div>
-            {% if currentTopic %}
+
+            {% if currentTopic.exists() %}
                 <div class="col-md-6  control-label">
                     <i class="fa fa-check fa-lg fa-green"></i> {{ __("A discussion topic has been created for this item.")}}
                     [<a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': currentTopic.id}) }}">{{ __("View topic")}}</a>]
@@ -16,29 +17,29 @@
                     {# @todo Add comments section (topic) settings here locking title... etc... #}
                 </div>
             {% else %}
-
-
-
-                <div class="col-md-3 control-label">
-                    <label for="dizkus_checkbox">{{ __("Enable commenting on this item")}}</label>
-                </div>
-
-
-                {# @todo Add proper new (topic) settings here locking title... etc... #}
-                <div class="col-md-2">
-                    <div class="checkbox">
-                        <input id="dizkus_checkbox" name="dizkus[createTopic]" type="checkbox" value="1" {#{if $newTopic}checked="checked"{/if}#} />
+                {% if config.topic_mode is defined and ((config.topic_mode == 0 and hasPermission('ZikulaDizkusModule::', '::', 'ACCESS_ADMIN')) or config.topic_mode == 1) %}
+                    <div class="col-md-3 control-label">
+                        <label for="dizkus_checkbox">{{ __("Enable commenting on this item")}}</label>
                     </div>
-                </div>
-
-
-
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <input id="dizkus_checkbox" name="dizkus[createTopic]" type="checkbox" value="1" {#{if $newTopic}checked="checked"{/if}#} />
+                        </div>
+                    </div>
+                    {# @todo Add proper new (topic) settings here locking title... etc... #}
+                    {{ dump(config) }}
+                {% else %}
+                    <div class="col-md-6 control-label">
+                        <i class="fa fa-check fa-lg fa-green"></i> {{ __("Comments enabled. Topic will be created with first comment.")}}
+                    </div>
+                {% endif %}
             {% endif %}
         {% else %}
-            <div class="col-md-3  control-label">
+            <div class="col-md-12 control-label">
                 <i class="fa fa-exclamation-triangle fa-lg fa-black"></i>
-                {{ __("Forum for comments was not selected.")}}
+                {{ __("Forum for comments was not selected in Dizkus settings hooks.")}}
             </div>
         {% endif %}
     </div>
 </fieldset>
+{{ dump(config) }}

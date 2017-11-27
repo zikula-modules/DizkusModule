@@ -26,6 +26,7 @@ use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\HookedTopicMeta\Generic;
 use Zikula\ExtensionsModule\Api\VariableApi;
 
 /**
@@ -176,15 +177,15 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         display:
 
         $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.view.html.twig', [
-            'hook' => $hook,
-            'config' => $config,
-            'currentForum' => $currentForum,
+            'hook'             => $hook,
+            'config'           => $config,
+            'currentForum'     => $currentForum,
             'currentForumUser' => $currentForumUser,
-            'currentTopic'    => $currentTopic,
-            'start'           => $start,
-            'order'           => $order,
-            'preview'         => false,
-            'settings'        => $this->variableApi->getAll($this->name)
+            'currentTopic'     => $currentTopic,
+            'start'            => $start,
+            'order'            => $order,
+            'preview'          => false,
+            'settings'         => $this->variableApi->getAll($this->getOwner())
         ]);
 
         $hook->setResponse(new DisplayHookResponse('provider.dizkus.ui_hooks.topic', $content));
@@ -229,6 +230,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 
         $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.edit.html.twig', [
             'hook'             => $hook,
+            'config'           => $config,
             'currentForum'     => $currentForum,
             'currentForumUser' => $currentForumUser,
             'currentTopic'     => $currentTopic,
@@ -261,8 +263,9 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function processEdit(ProcessHook $hook)
     {
-        //        $data = $this->view->getRequest()->request->get('dizkus', null);
-//        if (!isset($config[$hook->getAreaId()]['forum'])) {
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        if (!$config['forum']) {
+            return true; // @todo decide if automatic forum creation is a good idea
 //            // admin didn't choose a forum, so create one and set as choice
 //            $managedForum = new ForumManager();
 //            $data = [
@@ -273,9 +276,14 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 //            $managedForum->store($data);
 //            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
 //            ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
-//        }
-//        $createTopic = isset($data['createTopic']) ? true : false;
-//        if ($createTopic) {
+        }
+
+        $data = $this->request->get('dizkus', null);
+        // in case of mode 2 topic will be created with the first comment
+        $createTopic = (0 == $config['topic_mode'] || 1 == $config['topic_mode'] && is_array($data) && array_key_exists('createTopic', $data) && $data['createTopic'])
+                        ? true : false;
+
+        if ($createTopic) {
 //            $hookconfig = $this->getHookConfig($hook);
 //            $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
 //            // use Meta class to create topic data
@@ -312,8 +320,8 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         ////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
         ////                'post' => $newManagedTopic->getFirstPost()));
 //            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
-//        }
-//
+        }
+
         return true;
     }
 
@@ -379,6 +387,34 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     }
 
     /**
+     * Factory class to find Meta Class and instantiate.
+     *
+     * @param ProcessHook $hook
+     *
+     * @return object of found class
+     */
+    private function getClassInstance(ProcessHook $hook)
+    {
+        if (empty($hook)) {
+            return false;
+        }
+
+        $locations = [$hook->getCaller(), $this->getOwner()]; // locations to search for the class
+        foreach ($locations as $location) {
+//            $moduleObj = ModUtil::getModule($location);
+//            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
+//            if (class_exists($classname)) {
+//                $instance = new $classname($hook);
+//                if ($instance instanceof AbstractHookedTopicMeta) {
+//                    return $instance;
+//                }
+//            }
+        }
+
+        return new Generic($hook);
+    }
+
+    /**
      * get settings for hook
      * generates value if not yet set.
      *
@@ -393,7 +429,11 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
             // 0 - only admin is allowed to enable comments (create topic)
             // 1 - object owner is allowed to enable comments (create topic)
             // 2 - topic is created automatically with first comment
-            'threadCreationMode' => 2,
+            'topic_mode' => 2,
+            // none - nothing happens to topic when object is deleted
+            // lock - topic is locked
+            // delete - topic is removed
+            'delete_action' => 'none',
         ];
         // module settings
         $settings = $this->variableApi->get($this->getOwner(), 'hooks', false);
@@ -404,14 +444,16 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
             return $default;
         } else {
             $default['forum'] = array_key_exists('forum', $config) ? $config['forum'] : $default['forum'];
-            $default['threadCreationMode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['threadCreationMode'];
+            $default['topic_mode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['topic_mode'];
+            $default['delete_action'] = array_key_exists('delete_action', $config) ? $config['delete_action'] : $default['delete_action'];
         }
         // module provider area module area settings
         if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
             $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];
             if (array_key_exists('settings', $subscribedModuleAreaSettings)) {
                 $default['forum'] = array_key_exists('forum', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['forum'] : $default['forum'];
-                $default['threadCreationMode'] = array_key_exists('topic_mode', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['topic_mode'] : $default['threadCreationMode'];
+                $default['topic_mode'] = array_key_exists('topic_mode', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['topic_mode'] : $default['topic_mode'];
+                $default['delete_action'] = array_key_exists('delete_action', $subscribedModuleAreaSettings['settings']) ? $subscribedModuleAreaSettings['settings']['delete_action'] : $default['delete_action'];
             }
         }
 
@@ -419,30 +461,3 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     }
 }
 
-//    /**
-//     * Factory class to find Meta Class and instantiate.
-//     *
-//     * @param ProcessHook $hook
-//     *
-//     * @return object of found class
-//     */
-//    private function getClassInstance(ProcessHook $hook)
-//    {
-//        //        if (empty($hook)) {
-////            return false;
-////        }
-////        $moduleName = $hook->getCaller();
-////        $locations = [$moduleName, self::MODULENAME]; // locations to search for the class
-////        foreach ($locations as $location) {
-////            $moduleObj = ModUtil::getModule($location);
-////            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
-////            if (class_exists($classname)) {
-////                $instance = new $classname($hook);
-////                if ($instance instanceof AbstractHookedTopicMeta) {
-////                    return $instance;
-////                }
-////            }
-////        }
-////
-////        return new Generic($hook);
-//    }
