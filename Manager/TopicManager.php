@@ -194,7 +194,6 @@ class TopicManager
         return $this;
     }
 
-
     /**
      * Check if topic exists
      *
