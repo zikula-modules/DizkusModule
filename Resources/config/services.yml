@@ -401,6 +401,7 @@ services:
     zikula_dizkus_module.hook_provider.topic_ui_hooks_provider:
         class: Zikula\DizkusModule\Hooks\TopicProBundle
         arguments:
+            - "@kernel"
             - "@translator.default"
             - "@router"
             - "@request_stack"
@@ -409,6 +410,7 @@ services:
             - "@zikula_dizkus_module.forum_user_manager"
             - "@zikula_dizkus_module.forum_manager"
             - "@zikula_dizkus_module.topic_manager"
+            - "@zikula_dizkus_module.post_manager"
         tags:
             - { name: zikula.hook_provider, areaName: "provider.dizkus.ui_hooks.topic" }
 

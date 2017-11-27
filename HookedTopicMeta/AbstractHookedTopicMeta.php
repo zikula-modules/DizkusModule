@@ -16,9 +16,12 @@ namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use Zikula\Core\UrlInterface;
 use Zikula\Core\Hook\ProcessHook;
+use Zikula\Common\Translator\TranslatorTrait;
 
 abstract class AbstractHookedTopicMeta
 {
+    use TranslatorTrait;
+
     /**
      * Hooked module object id
      *
@@ -75,6 +78,11 @@ abstract class AbstractHookedTopicMeta
         $this->setup();
         $this->setTitle();
         $this->setContent();
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
     }
 
     private function setObjectId($id)

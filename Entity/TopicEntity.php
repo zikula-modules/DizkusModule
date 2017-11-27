@@ -167,7 +167,7 @@ class TopicEntity extends EntityAccess
     private $syncOnSave = true;
 
     /**
-     * sync on save marker
+     * subscribe marker
      */
     private $subscribe = false;
 

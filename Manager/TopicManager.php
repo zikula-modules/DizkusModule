@@ -166,7 +166,7 @@ class TopicManager
             }
         } elseif ($create) {
             // create new topic
-            $this->_topic = new TopicEntity();
+            $this->create();
         }
 
         return $this;
@@ -188,8 +188,21 @@ class TopicManager
             $this->_topic = $topic;
         } elseif ($create) {
             // create new topic
-            $this->_topic = new TopicEntity();
+            $this->create();
         }
+
+        return $this;
+    }
+
+
+    /**
+     * Check if topic exists
+     *
+     * @return bool
+     */
+    public function create()
+    {
+        $this->_topic = new TopicEntity();
 
         return $this;
     }

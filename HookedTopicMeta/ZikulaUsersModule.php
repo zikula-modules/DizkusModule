@@ -14,7 +14,7 @@
 
 namespace Zikula\DizkusModule\HookedTopicMeta;
 
-class Generic extends AbstractHookedTopicMeta
+class ZikulaUsersModule extends AbstractHookedTopicMeta
 {
     public function setup()
     {

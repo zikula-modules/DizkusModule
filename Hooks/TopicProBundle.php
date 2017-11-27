@@ -15,6 +15,7 @@ namespace Zikula\DizkusModule\Hooks;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\Bundle\HookBundle\HookProviderInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
@@ -25,7 +26,9 @@ use Zikula\Bundle\HookBundle\ServiceIdTrait;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\PostManager;
 use Zikula\DizkusModule\Manager\TopicManager;
+use Zikula\DizkusModule\HookedTopicMeta\AbstractHookedTopicMeta;
 use Zikula\DizkusModule\HookedTopicMeta\Generic;
 use Zikula\ExtensionsModule\Api\VariableApi;
 
@@ -37,6 +40,11 @@ use Zikula\ExtensionsModule\Api\VariableApi;
 class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 {
     use ServiceIdTrait;
+
+    /**
+     * @var ZikulaHttpKernelInterface
+     */
+    private $kernel;
 
     /**
      * @var TranslatorInterface
@@ -64,23 +72,29 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     private $variableApi;
 
     /**
-     * @var forumUserManagerService
+     * @var ForumUserManager
      */
     private $forumUserManagerService;
 
     /**
-     * @var VariableApi
+     * @var ForumManager
      */
     private $forumManagerService;
 
     /**
-     * @var VariableApi
+     * @var TopicManager
      */
     private $topicManagerService;
+
+    /**
+     * @var PostManager
+     */
+    private $postManagerService;
 
     private $area = 'provider.dizkus.ui_hooks.topic';
 
     public function __construct(
+        ZikulaHttpKernelInterface $kernel,
         TranslatorInterface $translator,
         RouterInterface $router,
         RequestStack $requestStack,
@@ -88,8 +102,10 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         VariableApi $variableApi,
         ForumUserManager $forumUserManagerService,
         ForumManager $forumManagerService,
-        TopicManager $topicManagerService
+        TopicManager $topicManagerService,
+        PostManager $postManagerService
     ) {
+        $this->kernel = $kernel;
         $this->translator = $translator;
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -99,6 +115,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->topicManagerService = $topicManagerService;
+        $this->postManagerService = $postManagerService;
         parent::__construct();
     }
 
@@ -256,6 +273,15 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 
     /**
      * Process hook for edit.
+     * This function creates topic only under specific circumstances
+     * - forum is set and exists
+     * - topic mode is either 0 or 1 (2 is automatic on first post)
+     * - createTopic is set to true
+     *
+     * When topic does not exists and comments are enabled nothing will be shown unless
+     * mode is set to 2 first comment form will be shown
+     *
+     * When mode is set to 0 or 1 either admin or item owner is able to create topic and enable comments on this item
      *
      * @param ProcessHook $hook the hook
      *
@@ -263,63 +289,45 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function processEdit(ProcessHook $hook)
     {
+        $currentForumUser = $this->forumUserManagerService->getManager(null, true);
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (!$config['forum']) {
-            return true; // @todo decide if automatic forum creation is a good idea
-//            // admin didn't choose a forum, so create one and set as choice
-//            $managedForum = new ForumManager();
-//            $data = [
-//                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
-//                'status' => ForumEntity::STATUS_LOCKED,
-//                'parent' => $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy([
-//                    'name' => ForumEntity::ROOTNAME,]),];
-//            $managedForum->store($data);
-//            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
-//            ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
+            return true;
+            // @todo decide if automatic forum creation is a good idea
         }
 
         $data = $this->request->get('dizkus', null);
         // in case of mode 2 topic will be created with the first comment
         $createTopic = (0 == $config['topic_mode'] || 1 == $config['topic_mode'] && is_array($data) && array_key_exists('createTopic', $data) && $data['createTopic'])
                         ? true : false;
-
         if ($createTopic) {
-//            $hookconfig = $this->getHookConfig($hook);
-//            $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-//            // use Meta class to create topic data
-//            $topicMetaInstance = $this->getClassInstance($hook);
-//            if (!isset($topic)) {
-//                // create the new topic
-//                $newManagedTopic = new TopicManager();
-//                // format data for topic creation
-//                $data = [
-//                    'forum_id' => $hookconfig[$hook->getAreaId()]['forum'],
-//                    'title' => $topicMetaInstance->getTitle(),
-//                    'message' => $topicMetaInstance->getContent(),
-//                    'subscribe_topic' => false,
-//                    'attachSignature' => false,];
-//                $newManagedTopic->prepare($data);
-//                // add hook data to topic
-//                $newManagedTopic->setHookData($hook);
-//                // store new topic
-//                $newManagedTopic->create();
-//            } else {
-//                // create new post
-//                $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager(); //new PostManager();
-//                $data = [
-//                    'topic_id' => $topic->getTopic_id(),
-//                    'post_text' => $topicMetaInstance->getContent(),
-//                    'attachSignature' => false,];
-//                // create the post in the existing topic
-//                $managedPost->create($data);
-//                // store the post
-//                $managedPost->persist();
-//            }
-//            // cannot notify hooks in non-controller
-//            // notify topic & forum subscribers
-        ////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
-        ////                'post' => $newManagedTopic->getFirstPost()));
-//            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
+            $managedTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
+            // use Meta class to create topic data
+            $topicMetaInstance = $this->getClassInstance($hook);
+            if (!$managedTopic->exists()) {
+                $managedForum = $this->forumManagerService->getManager($config['forum'], null, false);
+                if (!$managedForum->exists()) {
+                    return true; //sorry no forum no topic
+                }
+                // create the new topic
+                $managedTopic->create();
+                $topic = $managedTopic->get();
+                $topic->setForum($managedForum->get());
+                $topic->setTitle($topicMetaInstance->getTitle());
+                $topic->setPoster($currentForumUser->get());
+                $managedPost = $this->postManagerService->getManager();
+                $post = $managedPost->get();
+                $post->setIsFirstPost(true);
+                $post->setPostText($topicMetaInstance->getContent());
+                $post->setPoster($currentForumUser->get());
+                $post->setTopic($topic);
+                $topic->addPost($post);
+                $managedTopic->update($topic);
+                // add hook data to topic
+                $managedTopic->setHookData($hook);
+                // store new topic
+                $managedTopic->store();
+            }
         }
 
         return true;
@@ -401,14 +409,20 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 
         $locations = [$hook->getCaller(), $this->getOwner()]; // locations to search for the class
         foreach ($locations as $location) {
-//            $moduleObj = ModUtil::getModule($location);
-//            $classname = null === $moduleObj ? "{$location}_HookedTopicMeta_{$moduleName}" : "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\$moduleName";
-//            if (class_exists($classname)) {
-//                $instance = new $classname($hook);
-//                if ($instance instanceof AbstractHookedTopicMeta) {
-//                    return $instance;
-//                }
-//            }
+            try {
+                $moduleObj = $this->kernel->getModule($location);
+            } catch (\InvalidArgumentException $e) {
+                continue;
+            }
+            $classname = "\\{$moduleObj->getNamespace()}\\HookedTopicMeta\\{$hook->getCaller()}";
+            if (class_exists($classname)) {
+                $instance = new $classname($hook);
+                if ($instance instanceof AbstractHookedTopicMeta) {
+                    $instance->setTranslator($this->translator);
+
+                    return $instance;
+                }
+            }
         }
 
         return new Generic($hook);
@@ -460,4 +474,41 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         return $default;
     }
 }
-
+//else {
+//                // create new post
+//                $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager(); //new PostManager();
+//                $data = [
+//                    'topic_id' => $topic->getTopic_id(),
+//                    'post_text' => $topicMetaInstance->getContent(),
+//                    'attachSignature' => false,];
+//                // create the post in the existing topic
+//                $managedPost->create($data);
+//                // store the post
+//                $managedPost->persist();
+//            }
+//        }
+         //            $hookconfig = $this->getHookConfig($hook);
+            // admin didn't choose a forum, so create one and set as choice
+//            $managedForum = new ForumManager();
+//            $data = [
+//                'name' => __f('Discussion for %s', $hook->getCaller(), $this->domain),
+//                'status' => ForumEntity::STATUS_LOCKED,
+//                'parent' => $this->_em->getRepository('Zikula\DizkusModule\Entity\ForumEntity')->findOneBy([
+//                    'name' => ForumEntity::ROOTNAME,]),];
+//            $managedForum->store($data);
+//            $hookconfig[$hook->getAreaId()]['forum'] = $managedForum->getId();
+//            ModUtil::setVar($hook->getCaller(), 'dizkushookconfig', $hookconfig);
+            //                $hookconfig[$hook->getAreaId()]['forum'];
+                // format data for topic creation
+//                $topicMetaInstance->getContent()
+//                $data = [
+//                    'forum_id' => ,
+//                    'title' => ,
+//                    'message' => ,
+//                    'subscribe_topic' => false,
+//                    'attachSignature' => false,];
+//            // cannot notify hooks in non-controller
+//            // notify topic & forum subscribers
+        ////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
+        ////                'post' => $newManagedTopic->getFirstPost()));
+//            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
