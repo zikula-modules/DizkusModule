@@ -422,12 +422,14 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
                 case 'remove':
                     $managedTopic->delete();
                     $this->request->getSession()->getFlashBag()->add('status', $this->translator->__('Dizkus: Hooked discussion topic removed.'));
+
                     break;
                 case 'lock':
                     $managedTopic->lock()
                         ->noSync() // no need to sync on lock
                         ->store();
                     $this->request->getSession()->getFlashBag()->add('status', $this->translator->__('Dizkus: Hooked discussion topic locked.'));
+                    
                     break;
                 default: // do nothig
                     break;
