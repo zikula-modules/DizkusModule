@@ -46,6 +46,15 @@ class SettingsManager
      */
     private $capabilityApi;
 
+    /**
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param EntityManager $entityManager
+     * @param VariableApi $variableApi
+     * @param HookCollector $hookCollector
+     * @param CapabilityApi $capabilityApi
+     */
     public function __construct(
         TranslatorInterface $translator,
         EntityManager $entityManager,

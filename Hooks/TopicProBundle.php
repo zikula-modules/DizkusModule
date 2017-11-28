@@ -31,6 +31,7 @@ use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\DizkusModule\HookedTopicMeta\AbstractHookedTopicMeta;
 use Zikula\DizkusModule\HookedTopicMeta\Generic;
 use Zikula\ExtensionsModule\Api\VariableApi;
+use Zikula\PermissionsModule\Api\PermissionApi;
 
 /**
  * TopicProBundle
@@ -72,6 +73,11 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     private $variableApi;
 
     /**
+     * @var PermissionApi
+     */
+    private $permissionApi;
+
+    /**
      * @var ForumUserManager
      */
     private $forumUserManagerService;
@@ -91,8 +97,26 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      */
     private $postManagerService;
 
+    /**
+     * @var area
+     */
     private $area = 'provider.dizkus.ui_hooks.topic';
 
+    /**
+     * Construct the manager
+     *
+     * @param ZikulaHttpKernelInterface $kernel
+     * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
+     * @param EngineInterface $renderEngine
+     * @param VariableApi $variableApi
+     * @param PermissionApi $permissionApi
+     * @param ForumUserManager $forumUserManagerService
+     * @param ForumManager $forumManagerService
+     * @param TopicManager $topicManagerService
+     * @param PostManager $postManagerService
+     */
     public function __construct(
         ZikulaHttpKernelInterface $kernel,
         TranslatorInterface $translator,
@@ -100,6 +124,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         RequestStack $requestStack,
         EngineInterface $renderEngine,
         VariableApi $variableApi,
+        PermissionApi $permissionApi,
         ForumUserManager $forumUserManagerService,
         ForumManager $forumManagerService,
         TopicManager $topicManagerService,
@@ -112,6 +137,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         $this->request = $requestStack->getMasterRequest();
         $this->renderEngine = $renderEngine;
         $this->variableApi = $variableApi;
+        $this->permissionApi = $permissionApi;
         $this->forumUserManagerService = $forumUserManagerService;
         $this->forumManagerService = $forumManagerService;
         $this->topicManagerService = $topicManagerService;
@@ -162,9 +188,9 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     public function view(DisplayHook $hook)
     {
         // first check if the user is allowed to do any comments for this module/objectid
-//        if (!SecurityUtil::checkPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
-//            return;
-//        }
+        if (!$this->permissionApi->hasPermission("{$hook->getCaller()}", '::', ACCESS_READ)) {
+            return;
+        }
 
         $currentForumUser = $this->forumUserManagerService->getManager();
         $start = $this->request->get('start', 1);
@@ -178,15 +204,28 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         }
 
         $currentForum = $this->forumManagerService->getManager($config['forum'], null, false);
-
         if ($currentForum->exists()) {
+            // forum exists
+            // @todo 3 cases
+            // just watching - works
+            // create topic
+            // just reply
+//            $form = $this->request->request->all();
+//            dump($form);
+
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
+                    // add reply in case of
+                    // $form
                     $currentTopic->loadPosts($start - 1, $order)
                             ->incrementViewsCount()
                                 ->noSync()
                                 ->store();
+                } else {
+                    // create topic in case of
+                    // $config['topic_mode'] == 2
+                    // $form
                 }
             }
         }
@@ -342,15 +381,18 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function delete(DisplayHook $hook)
     {
-//        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-//        if (isset($topic)) {
-//            $this->view->assign('forum', $topic->getForum()->getName());
-//            $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
-//            // lock or remove
-//            $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
-//            $this->view->assign('actionWord', $actionWord);
-//            //   $hook->setResponse(new DisplayHookResponse(HookContainer::PROVIDER_UIAREANAME, $this->view, 'Hook/delete.tpl'));
-//        }
+        $managedTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
+        if ($managedTopic->exists()) {
+            $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+            $content = $this->renderEngine->render('ZikulaDizkusModule:Hook:topic.delete.html.twig', [
+                'hook'             => $hook,
+                'config'           => $config,
+                'managedForum'     => $managedTopic->getManagedForum(),
+                'managedTopic'     => $managedTopic
+            ]);
+
+            $hook->setResponse(new DisplayHookResponse('provider.dizkus.ui_hooks.topic', $content));
+        }
     }
 
     /**
@@ -373,24 +415,25 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      */
     public function processDelete(ProcessHook $hook)
     {
-        //        $deleteHookAction = ModUtil::getVar(self::MODULENAME, 'deletehookaction');
-//        // lock or remove
-//        $topic = $this->_em->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->getHookedTopic($hook);
-//        if (isset($topic)) {
-//            switch ($deleteHookAction) {
-//                case 'remove':
-//                    ModUtil::apiFunc(self::MODULENAME, 'Topic', 'delete', ['topic' => $topic]);
-//                    break;
-//                case 'lock':
-//                default:
-//                    $topic->lock();
-//                    $this->_em->flush();
-//                    break;
-//            }
-//        }
-//        $actionWord = $deleteHookAction == 'lock' ? $this->__('locked', $this->domain) : $this->__('deleted', $this->domain);
-//        $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__f('Dizkus: Hooked discussion topic %s.', $actionWord, $this->domain));
-//
+        $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
+        $managedTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
+        if ($managedTopic->exists() && array_key_exists('delete_action', $config)) {
+            switch ($config['delete_action']) {
+                case 'remove':
+                    $managedTopic->delete();
+                    $this->request->getSession()->getFlashBag()->add('status', $this->translator->__('Dizkus: Hooked discussion topic removed.'));
+                    break;
+                case 'lock':
+                    $managedTopic->lock()
+                        ->noSync() // no need to sync on lock
+                        ->store();
+                    $this->request->getSession()->getFlashBag()->add('status', $this->translator->__('Dizkus: Hooked discussion topic locked.'));
+                    break;
+                default: // do nothig
+                    break;
+            }
+        }
+
         return true;
     }
 

@@ -11,13 +11,13 @@
 #}
 <div id="dizkus">
     {% if not currentForum %}
-        <div class="row">
-            <div class="col-sm-12">
-                <h3>{{ __('Comments') }}</h3>
-            </div>
-        </div>
         {# Forum is not chosen #}
         {% if hasPermission('ZikulaDizkusModule', '::', 'ACCESS_ADMIN') %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>{{ __('Comments') }}</h3>
+                </div>
+            </div>
             <div class="alert alert-warning" role="alert">
                 <i class="fa fa-exclamation-triangle"></i> <strong>{{ __('Comments are disabled!') }}</strong>
                 {{ __('Please update settings for this module in Administration - Dizkus - Hook Settings.') }}
@@ -73,7 +73,7 @@
                     <h3>{{ __('Comments') }}</h3>
                 </div>
             </div>
-            {% if config.threadCreationMode == 2 %}
+            {% if config.topic_mode == 2 %}
                 {# ******************************************************
                 * QUICK REPLY FORM
                 ******************************************************* #}
@@ -89,8 +89,8 @@
                 <div class="alert alert-info" role="alert">
                     <i class="fa fa-info-circle"></i> <strong>{{ __('Comments are disabled for this item.') }}</strong>
                 </div>
-                {% if config.threadCreationMode == 0 %}
-                {% elseif config.threadCreationMode == 1  %}
+                {% if config.topic_mode == 0 %}
+                {% elseif config.topic_mode == 1  %}
                 {% endif %}
             {% endif %}
         {% endif %}
