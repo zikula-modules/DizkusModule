@@ -429,7 +429,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
                         ->noSync() // no need to sync on lock
                         ->store();
                     $this->request->getSession()->getFlashBag()->add('status', $this->translator->__('Dizkus: Hooked discussion topic locked.'));
-                    
+
                     break;
                 default: // do nothig
                     break;
