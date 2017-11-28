@@ -209,10 +209,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
             // @todo 3 cases
             // just watching - works
             // create topic
-            // just reply
-//            $form = $this->request->request->all();
-//            dump($form);
-
+            // create reply
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
@@ -223,9 +220,44 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
                                 ->noSync()
                                 ->store();
                 } else {
-                    // create topic in case of
-                    // $config['topic_mode'] == 2
-                    // $form
+                    // create topic
+                    // because creating topic is done in here we have DisplayHook but
+                    // getClassInstance requires ProcessHook
+                    // @todo so getClassInstance and related meta classes need to accept Hook
+                    // and then trigger error if it is not DisplayHook or ProcessHook
+                    if (2 == $config['topic_mode']) {
+//                    $form = $this->request->get('zikula_dizkus_form_topic_new');
+//                    dump($form);
+                        if (array_key_exists('save', $form) && array_key_exists('posts', $form)) {
+                            // create the new topic
+//                            $currentTopic->create();
+//                            $topic = $currentTopic->get();
+//                            $topic->setForum($currentForum->get());
+//                            $topic->setTitle($topicMetaInstance->getTitle());
+//                            $topic->setPoster($currentForumUser->get());
+//                            // this is first post
+//                            $managedPost = $this->postManagerService->getManager();
+//                            $post = $managedPost->get();
+//                            $post->setIsFirstPost(true);
+//                            $post->setPostText($topicMetaInstance->getContent());
+//                            $post->setPoster($currentForumUser->get());
+//                            $post->setTopic($topic);
+//                            $topic->addPost($post);
+//                            // this is comment
+//                            $managedComment = $this->postManagerService->getManager();
+//                            $comment = $managedComment->get();
+//                            $comment->setPostText($topicMetaInstance->getContent());
+//                            $comment->setPoster($currentForumUser->get());
+//                            $comment->setTopic($topic);
+//                            $topic->addPost($comment);
+//                            //
+//                            $currentTopic->update($topic);
+//                            // add hook data to topic
+//                            $currentTopic->setHookData($hook);
+//                            // store new topic
+//                            $currentTopic->store();
+                        }
+                    }
                 }
             }
         }
