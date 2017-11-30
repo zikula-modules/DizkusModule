@@ -82,10 +82,10 @@
                 <div id="quickreply">
                     {{ render(controller(
                                         'ZikulaDizkusModule:Topic:newTopic',
-                                        {'forum': currentForum.get.id , '_format': 'html', 'template' : 'comment'}
+                                        {'request': app.request, 'forum': currentForum.id}
                                     )) }}
                 </div>
-            {% else %}
+            {% else %} {# , '_format': 'ajax.html', 'template' : 'comment' #}
                 <div class="alert alert-info" role="alert">
                     <i class="fa fa-info-circle"></i> <strong>{{ __('Comments are disabled for this item.') }}</strong>
                 </div>
@@ -96,3 +96,4 @@
         {% endif %}
     {% endif %}
 </div>
+{{ dump(app.request) }}

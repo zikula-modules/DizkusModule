@@ -488,7 +488,7 @@ class TopicEntity extends EntityAccess
         return $this->hookedUrlObject;
     }
 
-    public function setHookedUrlObject(UrlInterface $hookedUrlObject)
+    public function setHookedUrlObject(UrlInterface $hookedUrlObject = null)
     {
         $this->hookedUrlObject = $hookedUrlObject;
 

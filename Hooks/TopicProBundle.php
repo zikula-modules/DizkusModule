@@ -20,6 +20,7 @@ use Zikula\Bundle\HookBundle\HookProviderInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
+use Zikula\Bundle\HookBundle\Hook\Hook;
 use Zikula\Bundle\HookBundle\Hook\ProcessHook;
 use Zikula\Bundle\HookBundle\Hook\ValidationHook;
 use Zikula\Bundle\HookBundle\ServiceIdTrait;
@@ -195,17 +196,22 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         $currentForumUser = $this->forumUserManagerService->getManager();
         $start = $this->request->get('start', 1);
         $order = $this->request->get('order', $currentForumUser->getPostOrder());
-
+        $preview = false;
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (!$config['forum']) {
             $currentForum = null;
             $currentTopic = null;
             goto display;
         }
+//        $request->request->set('tactill_customerbundle_customertype', $newValue)
+//        , 'forum': currentForum.get.id , '_format': 'ajax.html', 'template' : 'comment'
 
         $currentForum = $this->forumManagerService->getManager($config['forum'], null, false);
         if ($currentForum->exists()) {
             // forum exists
+            // prepare request for topic create/reply
+             $this->request->attributes->set('template', 'comment');
+             $this->request->attributes->set('format', 'ajax.html');
             // @todo 3 cases
             // just watching - works
             // create topic
@@ -214,22 +220,19 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
                 $currentTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
                     // add reply in case of
-                    // $form
                     $currentTopic->loadPosts($start - 1, $order)
                             ->incrementViewsCount()
                                 ->noSync()
                                 ->store();
                 } else {
                     // create topic
-                    // because creating topic is done in here we have DisplayHook but
-                    // getClassInstance requires ProcessHook
-                    // @todo so getClassInstance and related meta classes need to accept Hook
-                    // and then trigger error if it is not DisplayHook or ProcessHook
-                    if (2 == $config['topic_mode']) {
-//                    $form = $this->request->get('zikula_dizkus_form_topic_new');
-//                    dump($form);
-                        if (array_key_exists('save', $form) && array_key_exists('posts', $form)) {
-                            // create the new topic
+                    $topicMetaInstance = $this->getClassInstance($hook);
+//                    dump($topicMetaInstance);
+                    if (2 == $config['topic_mode'] && $topicMetaInstance instanceof AbstractHookedTopicMeta) {
+                    $form = $this->request->get('zikula_dizkus_form_topic_new');
+                    dump($form);
+//                        if (array_key_exists('posts', $form) && array_key_exists(0, $form['posts']) && array_key_exists('post_text', $form['posts'][0])) {
+//                            // create the new topic
 //                            $currentTopic->create();
 //                            $topic = $currentTopic->get();
 //                            $topic->setForum($currentForum->get());
@@ -246,17 +249,20 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 //                            // this is comment
 //                            $managedComment = $this->postManagerService->getManager();
 //                            $comment = $managedComment->get();
-//                            $comment->setPostText($topicMetaInstance->getContent());
+//                            $comment->setPostText($form['posts'][0]['post_text']);
 //                            $comment->setPoster($currentForumUser->get());
 //                            $comment->setTopic($topic);
 //                            $topic->addPost($comment);
-//                            //
 //                            $currentTopic->update($topic);
 //                            // add hook data to topic
 //                            $currentTopic->setHookData($hook);
 //                            // store new topic
-//                            $currentTopic->store();
-                        }
+//                            if (array_key_exists('preview', $form)) {
+//                                $preview = true;
+//                            } elseif (array_key_exists('save', $form)) {
+//                                $currentTopic->store();
+//                            }
+//                        }
                     }
                 }
             }
@@ -272,7 +278,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
             'currentTopic'     => $currentTopic,
             'start'            => $start,
             'order'            => $order,
-            'preview'          => false,
+            'preview'          => $preview,
             'settings'         => $this->variableApi->getAll($this->getOwner())
         ]);
 
@@ -375,6 +381,10 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
             $managedTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
             // use Meta class to create topic data
             $topicMetaInstance = $this->getClassInstance($hook);
+            if (!$topicMetaInstance) {
+                return true; // return silently
+            }
+
             if (!$managedTopic->exists()) {
                 $managedForum = $this->forumManagerService->getManager($config['forum'], null, false);
                 if (!$managedForum->exists()) {
@@ -474,11 +484,11 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     /**
      * Factory class to find Meta Class and instantiate.
      *
-     * @param ProcessHook $hook
+     * @param Hook $hook
      *
      * @return object of found class
      */
-    private function getClassInstance(ProcessHook $hook)
+    private function getClassInstance(Hook $hook)
     {
         if (empty($hook)) {
             return false;
