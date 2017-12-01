@@ -194,43 +194,43 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         }
 
         $currentForumUser = $this->forumUserManagerService->getManager();
+        // comments pager
         $start = $this->request->get('start', 1);
         $order = $this->request->get('order', $currentForumUser->getPostOrder());
+        // preview marker
         $preview = false;
+        // configuration of this hook behaviour
         $config = $this->getHookConfig($hook->getCaller(), $hook->getAreaId());
         if (!$config['forum']) {
             $currentForum = null;
             $currentTopic = null;
             goto display;
         }
-//        $request->request->set('tactill_customerbundle_customertype', $newValue)
-//        , 'forum': currentForum.get.id , '_format': 'ajax.html', 'template' : 'comment'
 
         $currentForum = $this->forumManagerService->getManager($config['forum'], null, false);
         if ($currentForum->exists()) {
             // forum exists
-            // prepare request for topic create/reply
+            // prepare request for topic create/reply controller
              $this->request->attributes->set('template', 'comment');
              $this->request->attributes->set('format', 'ajax.html');
-            // @todo 3 cases
-            // just watching - works
-            // create topic
-            // create reply
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
-                    // add reply in case of
+                    // Topic exists user either wants to see comments or add reply
+                    // Reply marker is in request post
+                    // $form = $this->request->get('zikula_dizkus_form_topic_reply');
+                    // @todo reply creation
+                    // load posts with or without reply and display
                     $currentTopic->loadPosts($start - 1, $order)
                             ->incrementViewsCount()
                                 ->noSync()
                                 ->store();
                 } else {
-                    // create topic
+                    // create topic if there is comment data in request POST
                     $topicMetaInstance = $this->getClassInstance($hook);
-//                    dump($topicMetaInstance);
                     if (2 == $config['topic_mode'] && $topicMetaInstance instanceof AbstractHookedTopicMeta) {
-                    $form = $this->request->get('zikula_dizkus_form_topic_new');
-                    dump($form);
+//                    $form = $this->request->get('zikula_dizkus_form_topic_new');
+//                    dump($form);
 //                        if (array_key_exists('posts', $form) && array_key_exists(0, $form['posts']) && array_key_exists('post_text', $form['posts'][0])) {
 //                            // create the new topic
 //                            $currentTopic->create();
@@ -599,3 +599,4 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         ////            ModUtil::apiFunc(self::MODULENAME, 'notify', 'emailSubscribers', array(
         ////                'post' => $newManagedTopic->getFirstPost()));
 //            $this->view->getRequest()->getSession()->getFlashBag()->add('status', $this->__('Dizkus: Hooked discussion topic created.', $this->domain));
+//        , 'forum': currentForum.get.id , '_format': 'ajax.html', 'template' : 'comment'
