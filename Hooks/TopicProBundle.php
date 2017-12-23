@@ -211,8 +211,8 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         if ($currentForum->exists()) {
             // forum exists
             // prepare request for topic create/reply controller
-             $this->request->attributes->set('template', 'comment');
-             $this->request->attributes->set('format', 'ajax.html');
+            $this->request->attributes->set('template', 'comment');
+            $this->request->attributes->set('format', 'ajax.html');
             if (!empty($hook->getId())) {
                 $currentTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
                 if ($currentTopic->exists()) {
@@ -356,9 +356,9 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
      * - createTopic is set to true
      *
      * When topic does not exists and comments are enabled nothing will be shown unless
-     * mode is set to 2 first comment form will be shown
+     * mode is set to 2 in this case first comment form will be shown
      *
-     * When mode is set to 0 or 1 either admin or item owner is able to create topic and enable comments on this item
+     * When mode is set to 0 or 1 either admin or item creator/owner/editor is able to create topic and enable comments on this item
      *
      * @param ProcessHook $hook the hook
      *
