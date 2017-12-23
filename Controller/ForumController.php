@@ -176,6 +176,30 @@ class ForumController extends AbstractController
     }
 
     /**
+     * @Route("/forum/tree/recover")
+     *
+     * @Theme("admin")
+     *
+     * Show the forum tree
+     *
+     * @return Response
+     *
+     * @throws AccessDeniedException
+     */
+    public function treeRecoverAction()
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+//        $this->getDoctrine()->getManager()->getConfiguration()->addCustomHydrationMode('tree', 'Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator');
+//        $repo = $this->getDoctrine()->getManager()->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+//        $repo->recover();
+//        $this->getDoctrine()->getManager()->flush(); // important: flush recovered nodes
+
+        return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
+    }
+
+    /**
      * @Route("/forum/order/{action}/{forum}", requirements={"action" = "moveUp|moveDown", "forum" = "^[1-9]\d*$"})
      * @Method("GET")
      *
@@ -273,26 +297,26 @@ class ForumController extends AbstractController
      *
      * @return Response
      */
-    public function modifyForumAction(Request $request, $forum = null)
+    public function modifyForumAction(Request $request, ForumEntity $forum)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
         // disallow editing of root forum
-        if (1 == $id) {
+        if (1 == $forum->getId()) {
             $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(null, $forum);
 
-        // count only in this forum or subforums as well?
+        // @todo here should be a reall full status
         $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
         $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
 
-        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
+        $form = $this->createForm('zikula_dizkus_module_forum_modify', $managedForum->get(), []);
 
         $form->handleRequest($request);
 
@@ -314,11 +338,7 @@ class ForumController extends AbstractController
                     )
                 );
 
-            if ($id) {
-                $this->addFlash('status', $this->__('Forum successfully updated.'));
-            } else {
-                $this->addFlash('status', $this->__('Forum successfully created.'));
-            }
+            $this->addFlash('status', $this->__('Forum successfully updated.'));
         }
 
         return $this->render('@ZikulaDizkusModule/Forum/modifyforum.html.twig', [
@@ -342,20 +362,8 @@ class ForumController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        // disallow editing of root forum
-        if (1 == $id) {
-            $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
-
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
-        }
-
-        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($id);
-
-        // count only in this forum or subforums as well?
-        $topiccount = $this->get('zikula_dizkus_module.count_helper')->getForumTopicsCount($managedForum->getId());
-        $postcount = $this->get('zikula_dizkus_module.count_helper')->getForumPostsCount($managedForum->getId());
-
-        $form = $this->createForm('zikuladizkusmodule_admin_modify_forum', $managedForum->get(), []);
+        $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(null, null, true);
+        $form = $this->createForm('zikula_dizkus_module_forum_create', $managedForum->get(), []);
 
         $form->handleRequest($request);
 
@@ -377,16 +385,14 @@ class ForumController extends AbstractController
                     )
                 );
 
-            if ($id) {
-                $this->addFlash('status', $this->__('Forum successfully updated.'));
-            } else {
+            if ($managedForum->getId()) {
                 $this->addFlash('status', $this->__('Forum successfully created.'));
             }
         }
 
         return $this->render('@ZikulaDizkusModule/Forum/modifyforum.html.twig', [
-            'topiccount' => $topiccount,
-            'postcount' => $postcount,
+            'topiccount' => 0,
+            'postcount' => 0,
             'forum' => $managedForum->get(),
             'form' => $form->createView(),
         ]);

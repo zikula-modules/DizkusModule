@@ -167,7 +167,7 @@ class TopicEntity extends EntityAccess
     private $syncOnSave = true;
 
     /**
-     * sync on save marker
+     * subscribe marker
      */
     private $subscribe = false;
 
@@ -488,7 +488,7 @@ class TopicEntity extends EntityAccess
         return $this->hookedUrlObject;
     }
 
-    public function setHookedUrlObject(UrlInterface $hookedUrlObject)
+    public function setHookedUrlObject(UrlInterface $hookedUrlObject = null)
     {
         $this->hookedUrlObject = $hookedUrlObject;
 

@@ -25,11 +25,17 @@ use Zikula\DizkusModule\ZikulaDizkusModule;
 class ModuleListener implements EventSubscriberInterface
 {
     private $entityManager;
+
     private $requestStack;
+
     private $router;
+
     private $hookDispatcherStorage;
+
     private $translator;
+
     private $variableApi;
+
     protected $container;
 
     public function __construct(

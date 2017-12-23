@@ -13,12 +13,11 @@
 namespace Zikula\DizkusModule\Manager;
 
 use Doctrine\ORM\EntityManager;
+use Zikula\Bundle\HookBundle\Collector\HookCollector;
 use Zikula\ExtensionsModule\Api\CapabilityApi;
 use Doctrine\Common\Collections\ArrayCollection;
-//use Zikula\Bundle\HookBundle\Dispatcher\HookDispatcher;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\ExtensionsModule\Api\VariableApi;
-use Zikula\DizkusModule\Container\HookContainer;
 use Zikula\DizkusModule\Hooks\HookedModuleObject;
 use Zikula\DizkusModule\Hooks\BindingObject;
 
@@ -43,30 +42,33 @@ class SettingsManager
     private $variableApi;
 
     /**
-     * @var \Zikula_HookDispatcher
-     */
-    private $hookDispatcher;
-
-    /**
      * @var CapabilityApi
      */
     private $capabilityApi;
 
+    /**
+     * Construct the manager
+     *
+     * @param TranslatorInterface $translator
+     * @param EntityManager $entityManager
+     * @param VariableApi $variableApi
+     * @param HookCollector $hookCollector
+     * @param CapabilityApi $capabilityApi
+     */
     public function __construct(
         TranslatorInterface $translator,
         EntityManager $entityManager,
         VariableApi $variableApi,
-//    @deprecated
-        \Zikula_HookDispatcher $hookDispatcher,
+        HookCollector $hookCollector,
         CapabilityApi $capabilityApi
     ) {
         $this->name = 'ZikulaDizkusModule';
         $this->translator = $translator;
         $this->entityManager = $entityManager;
         $this->variableApi = $variableApi;
-        $this->hookDispatcher = $hookDispatcher;
-        $this->settings = $this->variableApi->getAll($this->name);
+        $this->hookCollector = $hookCollector;
         $this->capabilityApi = $capabilityApi;
+        $this->settings = $this->variableApi->getAll($this->name);
     }
 
     public function setSettings($settings)
@@ -97,7 +99,7 @@ class SettingsManager
          * @todo add hooks category check
          */
         $settings['hooks'] = $this->getHooks();
-//        dump($settings);
+
         return $settings;
     }
 
@@ -125,34 +127,24 @@ class SettingsManager
     public function getProviders()
     {
         $settings = $this->settings['hooks']['providers'];
-        $HookContainer = new HookContainer($this->translator);
-        $providers = $HookContainer->getHookProviderBundles();
+        $providers = $this->hookCollector->getProviderAreasByOwner('ZikulaDizkusModule');
+        $subscriberModules = $this->hookCollector->getOwnersCapableOf(HookCollector::HOOK_SUBSCRIBER);
         $providersCollection = new ArrayCollection();
-        $subscriberModules = $this->capabilityApi->getExtensionsCapableOf(CapabilityApi::HOOK_SUBSCRIBER);
-        foreach ($providers as $provider) {
-            $area = $this->entityManager->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')
-                ->findOneBy(['areaname' => $provider->getArea()]);
-            if (!$area) {
-                $area = null;
-
-                continue;
-            }
+        foreach ($providers as $key => $area_name) {
+            $provider = $this->hookCollector->getProvider($area_name);
             //each provider fresh modules/areas/bindings collection
             $modules = new ArrayCollection();
-            foreach ($subscriberModules as $subscriberModule) {
-                $moduleObj = new HookedModuleObject($subscriberModule->getName(), $subscriberModule->toArray());
-                $class = $subscriberModule->getCapabilities();
-                $subscriberModuleHookContainer = new $class['hook_subscriber']['class']($this->translator);
-                $areas = array_values($subscriberModuleHookContainer->getHookSubscriberBundles());
-                foreach ($areas as $areaa) {
+            foreach ($subscriberModules as $key => $subscriberModule) {
+                $moduleObj = new HookedModuleObject($subscriberModule, []);
+                $areas = $this->hookCollector->getSubscriberAreasByOwner($subscriberModule);
+                foreach ($areas as $key => $area) {
                     $bindingObj = new BindingObject();
-                    $bindingObj->setSubscriber($areaa);
+                    $bindingObj->setSubscriber($area);
                     $bindingObj->setProvider($provider);
                     $bindingObj->setForm($provider->getBindingForm());
-                    $moduleObj->getAreas()->set(str_replace('.', '-', $areaa->getArea()), $bindingObj);
+                    $moduleObj->getAreas()->set(str_replace('.', '-', $area), $bindingObj);
                 }
-
-                $modules->set($subscriberModule->getName(), $moduleObj);
+                $modules->set($subscriberModule, $moduleObj);
             }
 
             $order = new \Doctrine\ORM\Query\Expr\OrderBy();
@@ -163,32 +155,24 @@ class SettingsManager
                              ->from('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookBindingEntity', 't')
                              ->where("t.pareaid = ?1")
                              ->orderBy($order)
-                             ->getQuery()->setParameter(1, $area->getId())
+                             ->getQuery()->setParameter(1, $area_name)
                              ->getArrayResult();
 
             foreach ($bindings as $key => $value) {
-                $area = $this->entityManager->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')
-                     ->findOneBy(['id' => $value['sareaid']]);
-                if (!$area) {
-                    $area = null;
-
-                    continue;
-                }
-
                 $moduleObj = $modules->get($value['sowner']);
-                $bindingObj = $moduleObj->getAreas()->get(str_replace('.', '-', $area->getAreaname()));
+                $bindingObj = $moduleObj->getAreas()->get(str_replace('.', '-', $value['sareaid']));
                 $bindingObj->setEnabled(true);
-                $moduleObj->getAreas()->set(str_replace('.', '-', $area->getAreaname()), $bindingObj);
+                $moduleObj->getAreas()->set(str_replace('.', '-', $value['sareaid']), $bindingObj);
                 $modules->set($moduleObj->getName(), $moduleObj);
             }
 
             $provider->setModules($modules);
-            $providersCollection->set(str_replace('.', '-', $provider->getArea()), $provider);
+            $providersCollection->set(str_replace('.', '-', $area_name), $provider);
         }
 
         foreach ($providersCollection as $key => $provider) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $provider->getArea()), $settings)) {
-                $providerSettings = $settings[str_replace('.', '-', $provider->getArea())];
+            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+                $providerSettings = $settings[str_replace('.', '-', $key)];
                 $provider->setSettings($providerSettings);
                 if (array_key_exists('modules', $providerSettings)) {
                     foreach ($provider->getModules() as $moduleKey => $module) {
@@ -201,6 +185,7 @@ class SettingsManager
                                 $areaSettings = array_key_exists($areaKey, $moduleSettings['areas'])
                                     ? $moduleSettings['areas'][$areaKey]
                                     : [];
+                                // @todo solve enabled status ( enabled setting only for actually enabled hook)
                                 $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaSettings->getEnabled());
                                 $area->setSettings($areaSettings);
                             }
@@ -215,34 +200,24 @@ class SettingsManager
 
     public function getSubscribers()
     {
-        // this is zikula 1.4.x specyfic
         $settings = $this->settings['hooks']['subscribers'];
-        $HookContainer = new HookContainer($this->translator);
-        $subscribers = $HookContainer->getHookSubscriberBundles();
+        $subscribers = $this->hookCollector->getSubscriberAreasByOwner('ZikulaDizkusModule');
+        $providerModules = $this->hookCollector->getOwnersCapableOf(HookCollector::HOOK_PROVIDER);
         $subscribersCollection = new ArrayCollection();
-        $providerModules = $this->capabilityApi->getExtensionsCapableOf(CapabilityApi::HOOK_PROVIDER);
-        foreach ($subscribers as $subscriber) {
-            $area = $this->entityManager->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')
-                      ->findOneBy(['areaname' => $subscriber->getArea()]);
-            if (!$area) {
-                $area = null;
-
-                continue;
-            }
+        foreach ($subscribers as $key => $area_name) {
+            $subscriber = $this->hookCollector->getSubscriber($area_name);
             $modules = new ArrayCollection();
-            foreach ($providerModules as $providerModule) {
-                $moduleObj = new HookedModuleObject($providerModule->getName(), $providerModule->toArray());
-                $class = $providerModule->getCapabilities();
-                $providerModuleHookContainer = new $class['hook_provider']['class']($this->translator);
-                $areas = array_values($providerModuleHookContainer->getHookProviderBundles());
-                foreach ($areas as $areaa) {
+            foreach ($providerModules as $key => $providerModule) {
+                $moduleObj = new HookedModuleObject($providerModule, []);
+                $areas = $this->hookCollector->getProviderAreasByOwner($providerModule);
+                foreach ($areas as $key => $area) {
                     $bindingObj = new BindingObject();
                     $bindingObj->setSubscriber($subscriber);
                     $bindingObj->setForm($subscriber->getBindingForm());
-                    $bindingObj->setProvider($areaa);
-                    $moduleObj->getAreas()->set(str_replace('.', '-', $areaa->getArea()), $bindingObj);
+                    $bindingObj->setProvider($area);
+                    $moduleObj->getAreas()->set(str_replace('.', '-', $area), $bindingObj);
                 }
-                $modules->set($providerModule->getName(), $moduleObj);
+                $modules->set($providerModule, $moduleObj);
             }
             $order = new \Doctrine\ORM\Query\Expr\OrderBy();
             $order->add('t.sortorder', 'ASC');
@@ -252,30 +227,23 @@ class SettingsManager
                              ->from('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookBindingEntity', 't')
                              ->where("t.sareaid = ?1")
                              ->orderBy($order)
-                             ->getQuery()->setParameter(1, $area->getId())
+                             ->getQuery()->setParameter(1, $area_name)
                              ->getArrayResult();
 
             foreach ($bindings as $key => $value) {
-                $area = $this->entityManager->getRepository('Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\Entity\HookAreaEntity')
-                     ->findOneBy(['id' => $value['pareaid']]);
-                if (!$area) {
-                    $area = null;
-
-                    continue;
-                }
                 $moduleObj = $modules->get($value['powner']);
-                $bindingObj = $moduleObj->getAreas()->get(str_replace('.', '-', $area->getAreaname()));
+                $bindingObj = $moduleObj->getAreas()->get(str_replace('.', '-', $value['pareaid']));
                 $bindingObj->setEnabled(true);
-                $moduleObj->getAreas()->set(str_replace('.', '-', $area->getAreaname()), $bindingObj);
+                $moduleObj->getAreas()->set(str_replace('.', '-', $value['pareaid']), $bindingObj);
                 $modules->set($moduleObj->getName(), $moduleObj);
             }
             $subscriber->setModules($modules);
-            $subscribersCollection->set(str_replace('.', '-', $subscriber->getArea()), $subscriber);
+            $subscribersCollection->set(str_replace('.', '-', $area_name), $subscriber);
         }
 
         foreach ($subscribersCollection as $key => $subscriber) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $subscriber->getArea()), $settings)) {
-                $subscriberSettings = $settings[str_replace('.', '-', $subscriber->getArea())];
+            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+                $subscriberSettings = $settings[str_replace('.', '-', $key)];
                 $subscriber->setSettings($subscriberSettings);
                 if (array_key_exists('modules', $subscriberSettings)) {
                     foreach ($subscriber->getModules() as $moduleKey => $module) {
@@ -288,6 +256,7 @@ class SettingsManager
                                 $areaSettings = array_key_exists($areaKey, $moduleSettings['areas'])
                                     ? $moduleSettings['areas'][$areaKey]
                                     : [];
+                                // @todo solve enabled status ( enabled setting only for actually enabled hook)
                                 $area->setEnabled(array_key_exists('enabled', $areaSettings) ? $areaSettings['enabled'] : $areaSettings->getEnabled());
                                 $area->setSettings($areaSettings);
                             }

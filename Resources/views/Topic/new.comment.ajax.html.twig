@@ -43,28 +43,30 @@
             </div>
             <div id="dizkus_comments_options" class="collapse clearfix">
                 <div class="form-group">
-                    {% if settings.signaturemanagement %}
-                        <div class="col-md-4">
-                            <div><strong>{{ __("Signature options")}}</strong></div>
-                            {{ form_row(form.posts.0.attachSignature, {   'label': __("Attach my signature")
+                    <div class="col-md-12">
+                        {% if settings.signaturemanagement %}
+                            <div class="col-md-6">
+                                <div><strong>{{ __("Signature options")}}</strong></div>
+                                {{ form_row(form.posts.0.attachSignature, {   'label': __("Attach my signature")
                                         , 'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                                 , 'attr': {'class': '', 'icon': 'fa fa-user'} })}}
-                        </div>
-                    {% endif %}
+                            </div>
+                        {% endif %}
 
-                    {% if settings.topic_subscriptions_enabled %}
-                        <div class="col-md-4">
-                            <div><strong>{{ __("Subscriptions")}}</strong></div>
-                            {{ form_row(form.subscribeTopic, {   'label': __("Email me when a reply is posted")
+                        {% if settings.topic_subscriptions_enabled %}
+                            <div class="col-md-6">
+                                <div><strong>{{ __("Subscriptions")}}</strong></div>
+                                {{ form_row(form.subscribe, {   'label': __("Email me when a reply is posted")
                                         , 'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                                 , 'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} })}}
-                        </div>
-                    {% endif %}
-                    <div class="col-md-10">
-                        {#                        <strong>{{ __("Options")}}</strong>#}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12 hide">
+                        <div><strong>{{ __("Options")}}</strong></div>
                         {% if settings.solved_enabled %}
                             <div class="col-md-4">
-                                {{ form_row(form.solved, {   'label': __("Mark topic as support question")
+                                {{ form_row(form.solved, {   'label': __("Mark as support question")
                                         , 'label_attr': {'class': ''}
                                 , 'attr': {'class': '', 'icon': 'fa fa-question fa-red'} })}}
                             </div>
@@ -80,8 +82,9 @@
                                 , 'attr': {'class': '', 'icon': 'fa fa-thumb-tack fa-orange'} })}}
                         </div>
                     </div>
-                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post.ui_edit', id = null)}}
-                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.topic.ui_edit', id = null)}}
+
+                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post.form_edit', id = null)}}
+                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.topic.form_edit', id = null)}}
                 </div>
             </div>
             <div class="panel-body">
@@ -92,7 +95,7 @@
                 <div class="form-group">
                     {{ form_label(form.posts.0.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12 hide'} })}}
                     {{ form_widget(form.posts.0.post_text, { 'attr': {'rows' : '3', 'cols' : '10', 'maxlegth' : 65572}} ) }}
-                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post_text.ui_edit', id = null)}}
+                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post_text.form_edit', id = null)}}
                 </div>
                 <div class="form-group">
                 </div>
@@ -119,7 +122,7 @@
 
     {% do form.posts.setRendered %}
     {{ form_end(form)}}
-
+    {{ dump(app.request) }}
     {#
     <div class="panel panel-default">
         <div class="panel-heading" style="border-bottom:0px;padding-bottom: 0px;">
@@ -127,99 +130,99 @@
                 <li role="presentation" class="{% if preview %}{% else %} active{% endif %}"><a href="#quickreply_message" aria-controls="quickreply_message" role="tab" data-toggle="tab">
                         {% if templatetitle is defined %}
                         {{ templatetitle}}
-                        {% else %}
-                        {{ __("Add your comment")}}
-                        {% endif %}
-                    </a>
-                </li>
-                <li role="presentation" class="{% if preview %} active{% else %}{% endif %}">
-                    {{ form_widget(form.preview, {'attr': {'class': 'btn btn-tab' }, 'label': __('Preview')})}}
-                    <span id="previewAjaxStatus" class="hide">
-                        <i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i>
-                        <span class="sr-only">Loading...</span>
-                    </span>
-                </li>
-                <li role="presentation" class="pull-right"><a href="#quickreply_options" aria-controls="quickreply_options" role="tab" data-toggle="tab">{{ __("Options")}} <i class="fa fa-cog" aria-hidden="true"></i></a></li>
-            </ul>
-        </div>
-        <div class="panel-body" style="border-top:0px;min-height:300px;">
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane {% if preview %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
-                    <div class="form-group hide">
-                        {{ form_label(form.title, __("Subject line"), { 'label_attr': {'class': 'col-md-12'} })}}
-                        {{ form_widget(form.title, { 'value' : 'Default title', 'attr': {'class': ''} })}}
-                    </div>
-                    <div class="form-group">
-                        {{ form_label(form.posts.0.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12 hide'} })}}
-                        {{ form_widget(form.posts.0.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572}} ) }}
-                        {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post_text.ui_edit', id = null)}}
-                    </div>
-                    <div class="form-group">
-                        {% if settings.striptags == 'yes' %}
-                        <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)")}}</span>
-                        {% endif %}
-                    </div>
+    {% else %}
+        {{ __("Add your comment")}}
+        {% endif %}
+        </a>
+    </li>
+    <li role="presentation" class="{% if preview %} active{% else %}{% endif %}">
+        {{ form_widget(form.preview, {'attr': {'class': 'btn btn-tab' }, 'label': __('Preview')})}}
+        <span id="previewAjaxStatus" class="hide">
+            <i class="fa fa-circle-o-notch fa-spin fa-1x fa-fw"></i>
+            <span class="sr-only">Loading...</span>
+        </span>
+    </li>
+    <li role="presentation" class="pull-right"><a href="#quickreply_options" aria-controls="quickreply_options" role="tab" data-toggle="tab">{{ __("Options")}} <i class="fa fa-cog" aria-hidden="true"></i></a></li>
+</ul>
+</div>
+<div class="panel-body" style="border-top:0px;min-height:300px;">
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane {% if preview %}{% else %} active{% endif %} noborder" id="quickreply_message" style="border:0px;">
+            <div class="form-group hide">
+                {{ form_label(form.title, __("Subject line"), { 'label_attr': {'class': 'col-md-12'} })}}
+                {{ form_widget(form.title, { 'value' : 'Default title', 'attr': {'class': ''} })}}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.posts.0.post_text, __("Message"), { 'label_attr': {'class': 'col-md-12 hide'} })}}
+                {{ form_widget(form.posts.0.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572}} ) }}
+                {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post_text.ui_edit', id = null)}}
+            </div>
+            <div class="form-group">
+                {% if settings.striptags == 'yes' %}
+                <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)")}}</span>
+                {% endif %}
                 </div>
-                <div role="tabpanel" class="tab-pane" id="quickreply_options" style="border:0px;">
-                    <div class="form-group">
-                        {% if settings.signaturemanagement %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="quickreply_options" style="border:0px;">
+                <div class="form-group">
+                    {% if settings.signaturemanagement %}
                         <div class="col-md-4">
                             <div><strong>{{ __("Signature options")}}</strong></div>
                             {{ form_row(form.posts.0.attachSignature, {   'label': __("Attach my signature")
                                         , 'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                                 , 'attr': {'class': '', 'icon': 'fa fa-user'} })}}
-    
+
                         </div>
-                        {% endif %}
-    
-                        {% if settings.topic_subscriptions_enabled %}
+                    {% endif %}
+
+                    {% if settings.topic_subscriptions_enabled %}
                         <div class="col-md-4">
                             <div><strong>{{ __("Subscriptions")}}</strong></div>
                             {{ form_row(form.subscribeTopic, {   'label': __("Email me when a reply is posted")
                                         , 'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                                 , 'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} })}}
                         </div>
-                        {% endif %}
-    
-                        <div class="col-md-4">
-                            <div><strong>{{ __("Topic options")}}</strong></div>
-    
-                            {% if settings.solved_enabled %}
+                    {% endif %}
+
+                    <div class="col-md-4">
+                        <div><strong>{{ __("Topic options")}}</strong></div>
+
+                        {% if settings.solved_enabled %}
                             {{ form_row(form.solved, {   'label': __("Mark topic as support question")
                                         , 'label_attr': {'class': ''}
                                 , 'attr': {'class': '', 'icon': 'fa fa-question fa-red'} })}}
-                            {% endif %}
-    
-                            {{ form_row(form.locked, {   'label': __("Is topic locked")
+                        {% endif %}
+
+                        {{ form_row(form.locked, {   'label': __("Is topic locked")
                                         , 'label_attr': {'class': ''}
                                 , 'attr': {'class': '', 'icon': 'fa fa-lock'} })}}
-    
-                            {{ form_row(form.sticky, {   'label': __("Is topic sticky")
+
+                        {{ form_row(form.sticky, {   'label': __("Is topic sticky")
                                         , 'label_attr': {'class': ''}
                                 , 'attr': {'class': '', 'icon': 'fa fa-thumb-tack fa-orange'} })}}
-                        </div>
-    
-                        {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post.ui_edit', id = null)}}
-                        {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.topic.ui_edit', id = null)}}
                     </div>
+
+                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.post.ui_edit', id = null)}}
+                    {{ notifyDisplayHooks(eventName = 'dizkus.ui_hooks.topic.ui_edit', id = null)}}
                 </div>
-                <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">
-                    <div id="replypreview" style="margin:0 0;">
-                        {% if preview %}
+            </div>
+            <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">
+                <div id="replypreview" style="margin:0 0;">
+                    {% if preview %}
                         {{ include('@ZikulaDizkusModule/Post/preview.html.twig')}}
-                        {% else %}
-    
-                        {% endif %}
-                    </div>
+                    {% else %}
+
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% if app.request.xmlHttpRequest %}
-        {% else %}
+    </div>
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
         <div class="panel-footer text-right">
             <a class="btn btn-warning btn-sm" href="{{ path('zikuladizkusmodule_forum_viewforum', {'forum':currentForum.id})}}" role="button">{{ __('Cancel')}}</a>
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary btn-sm'}, 'label': __('Submit')})}}
         </div>
-        {% endif %}
-    </div>
-    #}
+    {% endif %}
+</div>
+#}

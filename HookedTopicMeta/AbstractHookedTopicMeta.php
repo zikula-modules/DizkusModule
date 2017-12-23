@@ -15,10 +15,15 @@
 namespace Zikula\DizkusModule\HookedTopicMeta;
 
 use Zikula\Core\UrlInterface;
-use Zikula\Core\Hook\ProcessHook;
+use Zikula\Bundle\HookBundle\Hook\Hook;
+use Zikula\Bundle\HookBundle\Hook\ProcessHook;
+use Zikula\Bundle\HookBundle\Hook\DisplayHook;
+use Zikula\Common\Translator\TranslatorTrait;
 
 abstract class AbstractHookedTopicMeta
 {
+    use TranslatorTrait;
+
     /**
      * Hooked module object id
      *
@@ -64,10 +69,14 @@ abstract class AbstractHookedTopicMeta
     /**
      * Constructor
      *
-     * @param ProcessHook $hook
+     * @param Hook $hook
      */
-    public function __construct(ProcessHook $hook)
+    public function __construct(Hook $hook)
     {
+        if (!$hook instanceof DisplayHook && !$hook instanceof ProcessHook) {
+            throw new \InvalidArgumentException();
+        }
+
         $this->setObjectId($hook->getId());
         $this->setAreaId($hook->getAreaId());
         $this->setModule($hook->getCaller());
@@ -75,6 +84,11 @@ abstract class AbstractHookedTopicMeta
         $this->setup();
         $this->setTitle();
         $this->setContent();
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
     }
 
     private function setObjectId($id)
@@ -107,7 +121,7 @@ abstract class AbstractHookedTopicMeta
         return $this->module;
     }
 
-    private function setUrlObject(UrlInterface $objectUrlObject)
+    private function setUrlObject(UrlInterface $objectUrlObject = null)
     {
         $this->urlObject = $objectUrlObject;
     }
@@ -148,7 +162,7 @@ abstract class AbstractHookedTopicMeta
     {
         $title = $this->getTitle();
         $link = null;
-        if (!empty($title)) {
+        if (!empty($title) && $this->getUrlObject() instanceof UrlInterface) {
             $url = $this->getUrlObject()->getUrl();
             $link = "<a href='{$url}'>{$title}</a>";
         }
