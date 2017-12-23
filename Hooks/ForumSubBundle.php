@@ -24,11 +24,17 @@ use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 class ForumSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
     const EDIT_DISPLAY = 'dizkus.ui_hooks.forum.display_view';
+
     const EDIT_FORM = 'dizkus.ui_hooks.forum.form_edit';
+
     const EDIT_VALIDATE = 'dizkus.ui_hooks.forum.validate_edit';
+
     const EDIT_PROCESS = 'dizkus.ui_hooks.forum.process_edit';
+
     const DELETE_FORM = 'dizkus.ui_hooks.forum.form_delete';
+
     const DELETE_VALIDATE = 'dizkus.ui_hooks.forum.validate_delete';
+
     const DELETE_PROCESS = 'dizkus.ui_hooks.forum.process_delete';
 
     /**

@@ -22,7 +22,9 @@ use Zikula\Core\Doctrine\EntityAccess;
 class RankEntity extends EntityAccess
 {
     const TYPE_HONORARY = 1;
+
     const TYPE_POSTCOUNT = 0;
+
     /**
      * Module name
      * @var string

@@ -28,6 +28,7 @@ use Zikula\UsersModule\Entity\UserEntity;
 class ForumUserEntity extends EntityAccess
 {
     const USER_LEVEL_NORMAL = 1;
+
     const USER_LEVEL_DELETED = -1;
 
     /**

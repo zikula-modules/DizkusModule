@@ -86,14 +86,18 @@ class ForumManager
      * @var ForumEntity
      */
     private $current_subforums;
+
     private $current_subforums_count;
+
     /**
      * Doctrine Paginated
      *
      * @var ForumEntity
      */
     private $current_topics;
+
     private $current_topics_count;
+
     private $_numberOfItems;
 
     /**

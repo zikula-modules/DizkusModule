@@ -24,11 +24,17 @@ use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 class TopicSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
     const EDIT_DISPLAY = 'dizkus.ui_hooks.topic.display_view';
+
     const EDIT_FORM = 'dizkus.ui_hooks.topic.form_edit';
+
     const EDIT_VALIDATE = 'dizkus.ui_hooks.topic.validate_edit';
+
     const EDIT_PROCESS = 'dizkus.ui_hooks.topic.process_edit';
+
     const DELETE_FORM = 'dizkus.ui_hooks.topic.form_delete';
+
     const DELETE_VALIDATE = 'dizkus.ui_hooks.topic.validate_delete';
+
     const DELETE_PROCESS = 'dizkus.ui_hooks.topic.process_delete';
 
     /**

@@ -24,11 +24,17 @@ use Zikula\Bundle\HookBundle\HookSubscriberInterface;
 class PostTextSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
     const EDIT_DISPLAY = 'dizkus.ui_hooks.post_text.display_view';
+
     const EDIT_FORM = 'dizkus.ui_hooks.post_text.form_edit';
+
     const EDIT_VALIDATE = 'dizkus.ui_hooks.post_text.validate_edit';
+
     const EDIT_PROCESS = 'dizkus.ui_hooks.post_text.process_edit';
+
     const DELETE_FORM = 'dizkus.ui_hooks.post_text.form_delete';
+
     const DELETE_VALIDATE = 'dizkus.ui_hooks.post_text.validate_delete';
+
     const DELETE_PROCESS = 'dizkus.ui_hooks.post_text.process_delete';
 
     /**
