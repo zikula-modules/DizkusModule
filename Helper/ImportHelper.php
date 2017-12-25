@@ -81,7 +81,7 @@ class ImportHelper
         return isset($this->importHandlers[$id]);
     }
 
-    public function isUpgrade()
+    public function isUpgrading()
     {
         return $this->variableApi->get('ZikulaDizkusModule', 'upgrading', false);
     }

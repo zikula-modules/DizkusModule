@@ -22,6 +22,7 @@ use Zikula\DizkusModule\Manager\ForumUserManager;
 class ModeratorUsersTransformer implements DataTransformerInterface
 {
     private $om;
+
     private $forumUserManagerService;
 
     public function __construct(ObjectManager $om, ForumUserManager $forumUserManagerService)

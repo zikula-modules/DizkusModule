@@ -97,14 +97,17 @@ class PostRepository extends EntityRepository
             case '24':
                 // today
                 $qb->where('p.post_time > :wheretime')->setParameter('wheretime', new \DateTime('today'));
+
                 break;
             case '48':
                 // since yesterday
                 $qb->where('p.post_time > :wheretime')->setParameter('wheretime', new \DateTime('yesterday'));
+
                 break;
             case '168':
                 // lastweek
                 $qb->where('p.post_time > :wheretime')->setParameter('wheretime', new \DateTime('-1 week'));
+
                 break;
             default:
                 // since

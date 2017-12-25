@@ -8,7 +8,7 @@
 var Zikula = Zikula || {};
 // Dizkus namespace
 Zikula.Dizkus = Zikula.Dizkus || {};
-(function ($) {
+(function ($, Routing, Translator) {
 //Upgrade module
     Zikula.Dizkus.Upgrade3 = (function () {
 // Init
@@ -25,12 +25,27 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         ;
         function init()
         {
+            log(Translator.__('Import init start.'));
             if (parseInt($('#upgrade3_enabled').val()) === 0) {
-
                 return;
             }
             initTrees();
-            log('Upgrade init done.');
+            $("#finish_import_button").click(function (e) {
+                e.preventDefault();
+                importAjax(Routing.generate('zikuladizkusmodule_upgrade3_removeprefix'), data)
+                        .done(function (data) {
+
+                        });
+            });
+            $("#download_log").click(function (e) {
+                e.preventDefault();
+                downloadInnerHtml('dizkus_import.log', 'logBox');
+            });
+            $("#download_rejected_data_log").click(function (e) {
+                e.preventDefault();
+                downloadInnerHtml('dizkus_import_rejected.log', 'import_rejected');
+            });
+            log(Translator.__('Import init done.'));
         }
         ;
         function readSettings()
@@ -40,10 +55,22 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             settings.posts_limit = parseInt($("#posts_limit").val());
             settings.other_limit = parseInt($("#other_limit").val());
             settings.ajax_timeout = parseInt($("#ajax_timeout").val());
-            log('Upgrade settings updated.');
+            log(Translator.__('Upgrade settings updated.'));
         }
         ;
         function log(log)
+        {
+            if (log === '') {
+            } else if (log === null) {
+            } else if (log.constructor === Array) {
+                $('#logBox').append(log.join('&#xA;') + '&#xA;');
+            } else {
+                $('#logBox').append(log + '&#xA;');
+            }
+            $("#logBox").scrollTop($("#logBox")[0].scrollHeight);
+        }
+        ;
+        function dataLog(log)
         {
             if (log === '') {
             } else if (log === null) {
@@ -85,9 +112,9 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                     res = JSON.parse(response);
                     data.tree = res.tree;
                     data.source = res.source;
-                    log('User status loaded.');
-                    if (data.source.users.old.toImport.length === 0
-                            && data.source.ranks.toImport.length === 0) {
+                    log(Translator.__('User status loaded.'));
+                    if (data.source.users.old.found === 0
+                            && data.source.ranks.found === 0) {
                         $("#import_users").removeClass('btn-default').addClass('btn-success');
                         $("#remove_users").removeClass('hide disabled');
                         $("#recover_forum_tree").removeClass('btn-default disabled').addClass('btn-primary');
@@ -136,26 +163,16 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             /*
              * 1. import tables in order
              *   ranks - needed for users import !
-             *   users,
-             *   posts,
-             *   topics
+             *   users
              */
             usersImport(data.source.ranks).done(function () {
                 usersImport(data.source.users.old).done(function () {
-//                    usersImport(data.source.users.posters).done(function () {
-//                        data.source = 'topics';
-//                        usersImport(data).done(function (data) {
-//                            //Users done thank you!
-                    //$("#users_legend").find('.info').text('Imported ' + data.page + ' users. Total users: ' + data.pages + '').css('color', '#fff');
                     $("#users_legend").find('.progress-bar').addClass('progress-bar-success');
                     $("#users_check_root").removeClass('jstree-loading').find('i').first().css('background-position', '-3px -66px');
                     $("#users_check_root").jstree("close_node", '#users_check_root');
                     $("#import_users").removeClass('btn-primary').addClass('btn-success');
                     // here we should inform about that this step is done
                     $("#recover_forum_tree").removeClass('btn-default disabled').addClass('btn-primary');
-                    //$("#import_forum_tree").removeClass('disabled');
-//                        });
-//                });
                 });
             });
         }
@@ -163,13 +180,24 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         function usersImport(data) {
             //console.log(data);
             var def = $.Deferred();
-            if (data.toImport.length === 0) {
+            if (data.found === 0) {
                 def.resolve(data);
                 return def.promise();
             }
             var $node = $("#" + data.source);
             $node.addClass('jstree-loading');
+            // should be users not old but it was different idea back then
+            var userSourceName = data.source === 'old' ? 'users' : data.source;
+            $('<p id="rejected_' + data.source + '_items" title="' + Translator.__('Rejected ' + userSourceName) + '" class="text-muted small"></p>')
+                    .prepend('<i class="fa fa-hashtag " aria-hidden="true"></i> ' + Translator.__('Rejected ' + userSourceName) + ' <br />')
+                    .appendTo($('#import_rejected'));
             def.progress(function (data) {
+                $.each(data.rejected_items, function (index, item) {
+                    var reason = decodeRejectedReason(item.reason);
+                    $('#rejected_' + data.source + '_items')
+                            .append('<span title="' + reason + '" class="text-muted small">\n\
+                            <i class="fa fa-hashtag text-danger" aria-hidden="true"></i><span class="rejected_id">' + item.id + ' ' + reason + ' </span></span>');
+                });
                 var percent = 100 * data.page / data.pages;
                 $("#users_legend").find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent);
                 $("#users_legend").find('.info').text('Importing ' + data.page + ' page from ' + data.pages).css('color', '#000');
@@ -179,10 +207,11 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             });
             data.page = 0; // first page 0-49
             data.pageSize = settings.users_limit;
-            data.pages = 0; // we do not know yet
-
+            data.pages = Math.ceil(data.found / data.pageSize);
+            data.imported = 0;
+            data.rejected = 0;
             (function loop(data, def) {
-                if (data.page < data.pages || data.pages === 0) {
+                if (data.page < data.pages && data.pages !== 0) {
                     importAjax(Routing.generate('zikuladizkusmodule_upgrade3_usersimport'), data).done(function (data) {
                         data.page++;
                         def.notify(data);
@@ -225,13 +254,48 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                             res = JSON.parse(response);
                             data.tree = res.tree;
                             data.total = res.total;
-                            log('Forum tree loaded.');
+                            console.log(data);
+                            data.excluded = res.excluded;
+                            data.total.topics = data.total.topics - data.excluded.topics.length;
+                            data.total.posts = data.total.posts - data.excluded.posts.length;
+                            $("#forum_legend").prepend($(".progress").first().clone());
+                            $("#forum_legend").find('.progress').removeClass('hide');
+                            $("#forum_legend")
+                                    .find('.info')
+                                    .text(Translator.__('Forums (+categories):') + ' '
+                                            + data.total.forums + ' '
+                                            + Translator.__('Topics:') + ' '
+                                            + data.total.topics + ' '
+                                            + Translator.__('Posts:') + ' '
+                                            + data.total.posts)
+                                    .css('color', '#000');
+                            log(Translator.__('To import:') + $("#forum_legend").find('.info').text());
+                            log(Translator.__('Forum tree loaded.'));
                             if (data.total.current > 1) {
+                                log(Translator.__('Error! Content detected in target tables.'));
                                 $("#remove_forum_tree").removeClass('hide disabled');
                             } else {
                                 $("#recover_forum_tree").removeClass('btn-primary').addClass('btn-success');
                                 $("#import_forum_tree").removeClass('disabled').addClass('btn-primary');
                             }
+                            $('<p id="rejected_topics_items" title="' + Translator.__('Rejected topics') + '" class="text-muted small"></p>')
+                                    .prepend('<i class="fa fa-hashtag " aria-hidden="true"></i> ' + Translator.__('Rejected topics') + ' <br />')
+                                    .appendTo($('#import_rejected'));
+                            $.each(data.excluded.topics, function (index, item) {
+                                var reason = decodeRejectedReason(item.reason);
+                                $('#rejected_topics_items')
+                                        .append('<span title="' + reason + '" class="text-muted small">\n\
+                            <i class="fa fa-hashtag text-danger" aria-hidden="true"></i><span class="rejected_id">' + item.id + ' ' + reason + ' </span></span>');
+                            });
+                            $('<p id="rejected_posts_items" title="' + Translator.__('Rejected posts') + '" class="text-muted small"></p>')
+                                    .prepend('<i class="fa fa-hashtag " aria-hidden="true"></i> ' + Translator.__('Rejected posts') + ' <br />')
+                                    .appendTo($('#import_rejected'));
+                            $.each(data.excluded.posts, function (index, item) {
+                                var reason = decodeRejectedReason(item.reason);
+                                $('#rejected_posts_items')
+                                        .append('<span title="' + reason + '" class="text-muted small">\n\
+                            <i class="fa fa-hashtag text-danger" aria-hidden="true"></i><span class="rejected_id">' + item.id + ' ' + reason + ' </span></span>');
+                            });
 
                             return JSON.stringify(prepateTreeData(data.tree));
                             ;
@@ -284,7 +348,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             }
             return node;
         }
-        console.log(data);
+
         function startForumImport() {
             readSettings();
             // import started indicator
@@ -302,14 +366,11 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         }
 
         function forumImport(data) {
-
             var def = $.Deferred();
-            $("#forum_legend").prepend($(".progress").first().clone());
-            $("#forum_legend").find('.progress').removeClass('hide');
             def.progress(function (data) {
                 log(data.log);
                 data.log = '';
-//                console.log(data);
+                console.log(data);
                 if (data.open) {
                     $("#" + data.open).addClass('jstree-loading');
                     $("#forum_tree_root").jstree("open_node", '#' + data.open);
@@ -323,29 +384,45 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                     $("#" + data.ok).removeClass('jstree-loading').find('i').first().css('background-position', '-3px -66px');
                     data.ok = false;
                 }
-
+                if (data.hasOwnProperty('rejected_items') && data.rejected_items.hasOwnProperty('topics')) {
+                    $.each(data.rejected_items.topics, function (index, item) {
+                        var reason = decodeRejectedReason(item.reason);
+                        $('#rejected_topics_items')
+                                .append('<span title="' + reason + '" class="text-muted small">\n\
+                            <i class="fa fa-hashtag text-danger" aria-hidden="true"></i><span class="rejected_id">' + item.id + ' ' + reason + ' </span></span>');
+                    });
+                }
+                if (data.hasOwnProperty('rejected_items') && data.rejected_items.hasOwnProperty('posts')) {
+                    $.each(data.rejected_items.posts, function (index, item) {
+                        var reason = decodeRejectedReason(item.reason);
+                        $('#rejected_posts_items')
+                                .append('<span title="' + reason + '" class="text-muted small">\n\
+                            <i class="fa fa-hashtag text-danger" aria-hidden="true"></i><span class="rejected_id">' + item.id + ' ' + reason + ' </span></span>');
+                    });
+                }
                 //status
                 var category = data.category_index;
                 category = category + 1;
-                var categories_txt = 'Categories: ' + category + '/' + data.tree.children.length;
+                var categories_txt = 'category: ' + category + '/' + data.tree.children.length;
                 var forum = data.forum_index;
                 forum = forum + 1;
-                var forums_txt = 'Forums: ' + forum + '/' + data.tree.children[data.category_index].children.length;
+                var forums_txt = 'forum: ' + forum + '/' + data.tree.children[data.category_index].children.length;
                 var topics_page = data.topics_page;
                 topics_page = topics_page + 1;
                 var topics_text = 'Topics: ' + data.topics_imported + '/' + data.total.topics + ' '; //' page:' + topics_page + ' pages: ' + data.topics_pages + ' (page size: ' + data.topics_limit + ')';
                 var posts_text = 'Posts: ' + data.posts_imported + '/' + data.total.posts + ' '; //' page:' + topics_page + ' pages: ' + data.topics_pages + ' (page size: ' + data.topics_limit + ')';
-                $("#forum_legend").find('.info').text(categories_txt + ' ' + forums_txt + ' ' + topics_text + ' ' + posts_text).css('color', '#000');
+                $("#forum_legend").find('.info').text('Current ( ' + categories_txt + ' ' + forums_txt + ') Data: (' + topics_text + ' ' + posts_text + ')').css('color', '#000');
                 //progress
                 var done = category + forum + data.topics_imported + data.posts_imported;
-                var total = data.total.forums + data.total.topics + data.total.posts;
+                var total = parseInt(data.total.forums) + parseInt(data.total.topics) + parseInt(data.total.posts);
                 var percent = 100 * done / total;
                 $("#forum_legend").find('.progress-bar').css('width', percent + '%').attr('aria-valuenow', percent).attr('aria-valuemax', total);
-                $("#forum_legend").find('.count').text(' [' + done + ' / ' + total + '] ').css('color', '#000');
+                $("#forum_legend").find('.count').text('Total [' + done + ' / ' + total + '] ').css('color', '#000');
             }
             );
             def.done(function (data) {
                 $("#forum_tree_root").removeClass('jstree-loading').find('i').first().css('background-position', '-3px -66px');
+                $("#forum_legend").find('.progress-bar').addClass('progress-bar-success');
                 console.log('full done!');
             });
             data.node = data.tree;
@@ -371,7 +448,8 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                     def.notify(data);
                     if (data.node.lvl === 0) {
                         //data node is root pick category do import
-                        if (data.tree.children.length > data.category_index + 1) {
+                        //length shows count while index is from 0 so
+                        if (data.tree.children.length >= data.category_index + 1) {
                             data.node = data.tree.children[data.category_index];
                         } else {
                             // no categories
@@ -570,6 +648,7 @@ Zikula.Dizkus = Zikula.Dizkus || {};
                                 $("#import_other").removeClass('btn-primary').addClass('btn-success');
                                 $("#recover_other").removeClass('btn-default').addClass('btn-success');
                                 $("#remove_other").removeClass('hide disabled');
+                                $("#finish_import").removeClass('hide');
                             });
                         });
                     });
@@ -617,18 +696,46 @@ Zikula.Dizkus = Zikula.Dizkus || {};
             return def.promise();
         }
 
-        // simple load fresh data on open
+        function decodeRejectedReason(reason) {
+            var reasonText = '';
+            switch (reason) {
+                case 0:
+                    reasonText = Translator.__('exists');
+                    break;
+                case 1:
+                    reasonText = Translator.__('missing');
+                    break;
+                case 2:
+                    reasonText = Translator.__('invalid');
+                    break;
+                default:
+                    reasonText = Translator.__('unknow');
+            }
+
+            return reasonText;
+        }
+
+        function downloadInnerHtml(filename, elId, mimeType) {
+            var elHtml = document.getElementById(elId).innerHTML;
+            var link = document.createElement('a');
+            mimeType = mimeType || 'text/plain';
+
+            link.setAttribute('download', filename);
+            link.setAttribute('href', 'data:' + mimeType + ';charset=utf-8,' + encodeURIComponent(elHtml));
+            link.click();
+        }
+
         function removeContent(source) {
             //confirmation dialog
             alert('Only manual content removal available at the moment :)');
-            importAjax(Routing.generate('zikuladizkusmodule_upgrade3_removecontent'), source).done(function (data) {
-                console.log(data);
-            });
+//            importAjax(Routing.generate('zikuladizkusmodule_upgrade3_removecontent'), source).done(function (data) {
+////                console.log(data);
+//            });
         }
 
         //ajax util
         function importAjax(url, data) {
-            console.log(data);
+//            console.log(data);
             return $.ajax({
                 type: 'POST',
                 url: url,
@@ -648,4 +755,4 @@ Zikula.Dizkus = Zikula.Dizkus || {};
         Zikula.Dizkus.Upgrade3.init();
     });
 }
-)(jQuery);
+)(jQuery, Routing, Translator);

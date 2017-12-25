@@ -90,7 +90,8 @@ class ForumEntity extends EntityAccess
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\Column(name="cat_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="ForumEntity")
+     * @ORM\JoinColumn(name="cat_id", referencedColumnName="forum_id")
      */
     private $root;
 
@@ -209,17 +210,17 @@ class ForumEntity extends EntityAccess
 
     public function getName()
     {
-        return $this->name == self::ROOTNAME ? 'Forum Index' : $this->name;
+        return self::ROOTNAME == $this->name ? 'Forum Index' : $this->name;
     }
 
     public function setName($name)
     {
         // dont' allow user to set another forum to rootname
-        if ($name == self::ROOTNAME && $this->lvl != 0) {
+        if (self::ROOTNAME == $name && 0 != $this->lvl) {
             return $this;
         }
         // once root forum is set do not allow to change name
-        if ($this->name != self::ROOTNAME) {
+        if (self::ROOTNAME != $this->name) {
             $this->name = $name;
         }
 
@@ -345,11 +346,46 @@ class ForumEntity extends EntityAccess
         return $this;
     }
 
+    public function setRoot($root)
+    {
+        $this->root = $root;
+
+        return $this;
+    }
+
+    public function setLft($lft)
+    {
+        $this->lft = $lft;
+
+        return $this;
+    }
+
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
+
+        return $this;
+    }
+
+    public function setRgt($rgt)
+    {
+        $this->rgt = $rgt;
+
+        return $this;
+    }
+
+    public function setTopics($topics)
+    {
+        $this->topics = $topics;
+
+        return $this;
+    }
+
     public function getParents()
     {
         $parents = [];
         $parent = $this->getParent();
-        while ($parent != null) {
+        while (null != $parent) {
             $parents[$parent->getForum_id()] = $parent;
             $parent = $parent->getParent();
         }
@@ -368,7 +404,7 @@ class ForumEntity extends EntityAccess
         return $this->parent;
     }
 
-    public function setParent(ForumEntity $parent = null)
+    public function setParent(self $parent = null)
     {
         $this->parent = $parent;
 
@@ -469,6 +505,16 @@ class ForumEntity extends EntityAccess
         $topics = $this->topics->matching($criteria);
 
         return $topics;
+    }
+
+    /**
+     * get forum Topics.
+     *
+     * @return ArrayCollection TopicEntity
+     */
+    public function getTopicsCollection()
+    {
+        return $this->topics;
     }
 
     /**
@@ -645,6 +691,58 @@ class ForumEntity extends EntityAccess
         return $this;
     }
 
+    /**
+     * recalculate post count.
+     * only direct children
+     */
+    public function recalculatePostCount()
+    {
+        $postCount = 0;
+        foreach ($this->getChildren() as $subForum) {
+            $postCount = $postCount + $subForum->getPostCount();
+        }
+        foreach ($this->getTopics() as $topic) {
+            // plus 1 if we count first post
+            $postCount = $postCount + $topic->getReplyCount();
+        }
+
+        return $postCount;
+    }
+
+    /**
+     * recalculate topics count.
+     * only direct children
+     */
+    public function recalculateTopicCount()
+    {
+        $topicCount = $this->topics->count();
+        foreach ($this->getChildren() as $subForum) {
+            $topicCount = $topicCount + $subForum->getTopicsCollection()->count();
+        }
+
+        dump($topicCount);
+
+        return $topicCount;
+    }
+
+    /**
+     * recalculate last post.
+     * only direct children
+     */
+    public function recalculateLastPost()
+    {
+        $postCount = 0;
+        foreach ($this->getChildren() as $subForum) {
+            $postCount = $postCount + $subForum->get('postCount');
+        }
+        foreach ($this->getTopics() as $topic) {
+            // plus 1 if we count first post
+            $postCount = $postCount + $topic->get('replyCount');
+        }
+
+        return null;
+    }
+
     public function __toArray()
     {
         $children = [];
@@ -653,7 +751,7 @@ class ForumEntity extends EntityAccess
         }
 
         return ['id' => $this->getId(),
-                'parentid' => $this->getParent() === null ? 0 : $this->getParent()->getId(),
+                'parentid' => null === $this->getParent() ? 0 : $this->getParent()->getId(),
                 'lvl' => $this->getLvl(),
                 'lft' => $this->getLft(),
                 'rgt' => $this->getRgt(),
@@ -661,7 +759,7 @@ class ForumEntity extends EntityAccess
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
                 'children' => $children,
-                'last_post' => $this->getLast_post(),
+                'last_post' => null === $this->getLast_post() ? null : $this->getLast_post()->toArray(),
                 'moduleref' => $this->getModuleref(),
                 'status' => $this->getStatus(),
                 'topicCount' => $this->getTopicCount(),
@@ -672,6 +770,6 @@ class ForumEntity extends EntityAccess
 
     public function __toString()
     {
-        return $this->getId();
+        return (string) $this->getId();
     }
 }

@@ -207,7 +207,7 @@ class Permission
         }
         // loop through current forum and all parents and check for perms,
         // if ever false (at any parent) return false
-        while ($forum->getLvl() != 0) {
+        while (0 != $forum->getLvl()) {
             $perm = $this->permissionApi->hasPermission($this->name.'::', $forum->getForum_id().'::', $level, $userId);
             if (!$perm) {
                 return false;

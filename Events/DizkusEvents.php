@@ -30,6 +30,12 @@ class DizkusEvents
     const FORUM_CREATE = 'dizkus.forum.create';
 
     /**
+     * Occurs after when forum sync is needed. All handlers are notified. Calling object is available
+     * as the subject.
+     */
+    const FORUM_SYNC = 'dizkus.forum.sync';
+
+    /**
      * TOPIC EVENTS
      */
 
@@ -82,6 +88,12 @@ class DizkusEvents
     const TOPIC_DELETE = 'dizkus.topic.delete';
 
     /**
+     * Occurs after when forum sync is needed. All handlers are notified. Calling object is available
+     * as the subject.
+     */
+    const TOPIC_SYNC = 'dizkus.topic.sync';
+
+    /**
      * POST EVENTS
      */
 
@@ -120,4 +132,14 @@ class DizkusEvents
      * as the subject.
      */
     const POST_NOTIFY_MODERATOR = 'dizkus.post.notify.moderator';
+
+    /**
+     * FORUM USERS EVENTS
+     */
+
+    /**
+     * Occurs before a post is created. All handlers are notified. The post data is available
+     * as the subject.
+     */
+    const USER_SYNC = 'dizkus.user.sync';
 }

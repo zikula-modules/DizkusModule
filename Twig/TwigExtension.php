@@ -14,6 +14,7 @@ namespace Zikula\DizkusModule\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Entity\PostEntity;
 
 /**
  * Twig extension base class.
@@ -93,6 +94,11 @@ class TwigExtension extends \Twig_Extension
             'topic' => $topic->getId(),
             'start' => $this->container->get('zikula_dizkus_module.topic_manager')->getTopicPage($topic->getReplyCount()),
         ];
+
+        if (!$topic->getLast_post() instanceof PostEntity) {
+            return $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams);
+        }
+
         $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams).'#post/'.$topic->getLast_post()->getId();
 
         return $url;

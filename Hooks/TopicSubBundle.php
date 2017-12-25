@@ -12,27 +12,65 @@
 
 namespace Zikula\DizkusModule\Hooks;
 
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
+use Zikula\Bundle\HookBundle\HookSubscriberInterface;
+
 /**
  * TopicSubBundle
  *
  * @author Kaik
  */
-class TopicSubBundle extends AbstractSubBundle
+class TopicSubBundle extends AbstractSubBundle implements HookSubscriberInterface
 {
-    public function __construct($title = '')
+    const EDIT_DISPLAY = 'dizkus.ui_hooks.topic.display_view';
+
+    const EDIT_FORM = 'dizkus.ui_hooks.topic.form_edit';
+
+    const EDIT_VALIDATE = 'dizkus.ui_hooks.topic.validate_edit';
+
+    const EDIT_PROCESS = 'dizkus.ui_hooks.topic.process_edit';
+
+    const DELETE_FORM = 'dizkus.ui_hooks.topic.form_delete';
+
+    const DELETE_VALIDATE = 'dizkus.ui_hooks.topic.validate_delete';
+
+    const DELETE_PROCESS = 'dizkus.ui_hooks.topic.process_delete';
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
-        $owner = 'ZikulaDizkusModule';
-        $area = 'subscriber.dizkus.ui_hooks.topic';
-        $category = 'ui_hooks';
+        $this->translator = $translator;
+        parent::__construct();
+    }
 
-        parent::__construct($owner, $area, $category, $title);
+    public function getCategory()
+    {
+        return UiHooksCategory::NAME;
+    }
 
-        $this->addEvent('display_view', 'dizkus.ui_hooks.topic.ui_view');
-        $this->addEvent('form_edit', 'dizkus.ui_hooks.topic.ui_edit');
-        $this->addEvent('form_delete', 'dizkus.ui_hooks.topic.ui_delete');
-        $this->addEvent('validate_edit', 'dizkus.ui_hooks.topic.validate_edit');
-        $this->addEvent('validate_delete', 'dizkus.ui_hooks.topic.validate_delete');
-        $this->addEvent('process_edit', 'dizkus.ui_hooks.topic.process_edit');
-        $this->addEvent('process_delete', 'dizkus.ui_hooks.topic.process_delete');
+    public function getTitle()
+    {
+        return $this->translator->__('Dizkus topic subscriber');
+    }
+
+    public function getEvents()
+    {
+        return [
+            UiHooksCategory::TYPE_DISPLAY_VIEW => self::EDIT_DISPLAY,
+            UiHooksCategory::TYPE_FORM_EDIT => self::EDIT_FORM,
+            UiHooksCategory::TYPE_VALIDATE_EDIT => self::EDIT_VALIDATE,
+            UiHooksCategory::TYPE_PROCESS_EDIT => self::EDIT_PROCESS,
+            UiHooksCategory::TYPE_FORM_DELETE => self::DELETE_FORM,
+            UiHooksCategory::TYPE_VALIDATE_DELETE => self::DELETE_VALIDATE,
+            UiHooksCategory::TYPE_PROCESS_DELETE => self::DELETE_PROCESS,
+        ];
     }
 }

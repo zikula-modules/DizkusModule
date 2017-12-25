@@ -14,15 +14,19 @@ namespace Zikula\DizkusModule\Form\Type\Forum;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Zikula\DizkusModule\Manager\ForumUserManager;
 use Zikula\DizkusModule\Form\DataTransformer\ModeratorUsersTransformer;
 use Zikula\DizkusModule\Form\DataTransformer\ModeratorGroupsTransformer;
 
-class AdminModifyForumType extends AbstractType
+class ModifyForumType extends AbstractType
 {
     private $em;
 
@@ -33,12 +37,12 @@ class AdminModifyForumType extends AbstractType
         $this->em = $em;
         $this->forumUserManagerService = $forumUserManagerService;
 
-        // users
-        $users = $em->getRepository('ZikulaUsersModule:UserEntity')->findAll();
-        foreach ($users as $user) {
-            $usersArr[$user->getUid()] = $user->getUname();
-        }
-        $this->users = $usersArr;
+//        // users
+//        $users = $em->getRepository('ZikulaUsersModule:UserEntity')->findAll();
+//        foreach ($users as $user) {
+//            $usersArr[$user->getUid()] = $user->getUname();
+//        }
+        $this->users = []; //$usersArr;
 
         // groups
         $groups = $em->getRepository('ZikulaGroupsModule:GroupEntity')->findAll();
@@ -54,15 +58,16 @@ class AdminModifyForumType extends AbstractType
         $moderatorUsersTransformer = new ModeratorUsersTransformer($this->em, $this->forumUserManagerService);
         $moderatorGroupsTransformer = new ModeratorGroupsTransformer($this->em);
 
-        $builder->add('name', 'text', [])
-        ->add('description', 'textarea', [
+        $builder->add('name', TextType::class, [])
+        ->add('description', TextareaType::class, [
             'required' => false
         ])
-        ->add('status', ChoiceType::class, ['choices' => ['0' => 'Unlock', '1' => 'Lock'],
+        ->add('status', ChoiceType::class, ['choices' => ['0' => 'Unlocked', '1' => 'Locked'],
             'multiple' => false,
             'expanded' => true,
             'required' => true])
-        ->add('parent', 'entity', [
+
+        ->add('parent', EntityType::class, [
             'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('f')
@@ -75,29 +80,30 @@ class AdminModifyForumType extends AbstractType
             'multiple' => false,
             'expanded' => false,
             'required' => true])
+
         ->add($builder->create('moderatorUsers', ChoiceType::class, [
             'choices' => $this->users,
             'multiple' => true,
             'expanded' => false,
             'required' => false]
         )->addModelTransformer($moderatorUsersTransformer))
+
         ->add($builder->create('moderatorGroups', ChoiceType::class, [
             'choices' => $this->groups,
             'multiple' => true,
             'expanded' => false,
             'required' => false]
         )->addModelTransformer($moderatorGroupsTransformer))
-        ->add('restore', 'submit', [
-            'label' => 'Restore defaults'
+
+        ->add('restore', SubmitType::class, [
         ])
-        ->add('save', 'submit', [
-            'label' => 'Save'
+        ->add('save', SubmitType::class, [
         ]);
     }
 
     public function getName()
     {
-        return 'zikuladizkusmodule_admin_modify_forum';
+        return 'zikula_dizkus_module_forum_modify';
     }
 
     /**

@@ -86,14 +86,18 @@ class ForumManager
      * @var ForumEntity
      */
     private $current_subforums;
+
     private $current_subforums_count;
+
     /**
      * Doctrine Paginated
      *
      * @var ForumEntity
      */
     private $current_topics;
+
     private $current_topics_count;
+
     private $_numberOfItems;
 
     /**
@@ -270,7 +274,7 @@ class ForumManager
      */
     public function getBreadcrumbs($withoutCurrent = false)
     {
-        if ($this->_forum->getLvl() == 0) {
+        if (0 == $this->_forum->getLvl()) {
             // already root
             return [];
         }
@@ -279,7 +283,7 @@ class ForumManager
             ->getPath($this->_forum);
         $output = [];
         foreach ($forums as $key => $forum) {
-            if ($key == 0) {
+            if (0 == $key) {
                 continue;
             }
             $url = $this->router->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum->getForum_id()]);
@@ -358,40 +362,6 @@ class ForumManager
     }
 
     /**
-     * increase read count.
-     *
-     * @return bool true
-     */
-    public function incrementReadCount()
-    {
-        $this->_forum->incrementCounter();
-
-        return $this;
-    }
-
-    /**
-     * Increase post count.
-     */
-    public function incrementPostCount()
-    {
-        $this->_forum->incrementPostCount();
-        $this->modifyParentCount($this->_forum->getParent());
-
-        return $this;
-    }
-
-    /**
-     * decrease post count.
-     */
-    public function decrementPostCount()
-    {
-        $this->_forum->decrementPostCount();
-        $this->modifyParentCount($this->_forum->getParent(), 'decrement');
-
-        return $this;
-    }
-
-    /**
      * increase topic count.
      */
     public function incrementTopicCount()
@@ -400,21 +370,6 @@ class ForumManager
         $this->modifyParentCount($this->_forum->getParent(), 'increment', 'Topic');
 
         return $this;
-    }
-
-    /**
-     * recursive method to modify parent forum's post or topic count.
-     */
-    private function modifyParentCount(ForumEntity $parentForum, $direction = 'increment', $entity = 'Post')
-    {
-        $direction = in_array($direction, ['increment', 'decrement']) ? $direction : 'increment';
-        $entity = in_array($entity, ['Post', 'Topic']) ? $entity : 'Post';
-        $method = "{$direction}{$entity}Count";
-        $parentForum->{$method}();
-        $grandParent = $parentForum->getParent();
-        if (isset($grandParent)) {
-            $this->modifyParentCount($grandParent, $direction, $entity);
-        }
     }
 
     public function setLastPost($post)
@@ -445,6 +400,40 @@ class ForumManager
         $this->entityManager
             ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
                 ->resetLastPost($this->_forum, $flush);
+
+        return $this;
+    }
+
+    /**
+     * Increase post count.
+     */
+    public function incrementPostCount()
+    {
+        $this->_forum->incrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent());
+
+        return $this;
+    }
+
+    /**
+     * decrease post count.
+     */
+    public function decrementPostCount()
+    {
+        $this->_forum->decrementPostCount();
+        $this->modifyParentCount($this->_forum->getParent(), 'decrement');
+
+        return $this;
+    }
+
+    /**
+     * increase read count.
+     *
+     * @return bool true
+     */
+    public function incrementReadCount()
+    {
+        $this->_forum->incrementCounter();
 
         return $this;
     }
@@ -522,8 +511,8 @@ class ForumManager
         foreach ($input as $i) {
             if ($id != $i['forum_id']) {
                 // only include results if
-                if ($i['status'] == ForumEntity::STATUS_LOCKED && $includeLocked || $i['status'] == ForumEntity::STATUS_UNLOCKED) {
-                    if ($i['name'] == ForumEntity::ROOTNAME) {
+                if (ForumEntity::STATUS_LOCKED == $i['status'] && $includeLocked || ForumEntity::STATUS_UNLOCKED == $i['status']) {
+                    if (ForumEntity::ROOTNAME == $i['name']) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
                     $output[$i['forum_id']] = $pre.$i['name'].'('.$i['forum_id'].')';

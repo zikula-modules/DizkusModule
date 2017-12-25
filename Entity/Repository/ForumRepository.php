@@ -22,6 +22,7 @@ class ForumRepository extends NestedTreeRepository
         $dql = 'SELECT f FROM Zikula\DizkusModule\Entity\ForumEntity f
                 WHERE f.pop3Connection IS NOT NULL';
         $query = $this->_em->createQuery($dql);
+
         try {
             $result = $query->getResult();
         } catch (\Exception $e) {

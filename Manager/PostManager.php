@@ -244,16 +244,6 @@ class PostManager
      */
     public function store()
     {
-        //$this->_post->getPoster()->incrementPostCount();
-        // increment topic posts
-        //$this->_topic->setLastPost($this->_post);
-        //$this->_topic->incrementRepliesCount();
-        // update topic time to last post time
-        //$this->_topic->get()->setTopic_time($this->_post->getPost_time());
-        // increment forum posts
-        //$managedForum = $this->forumManagerService->getManager(null, $this->_topic->get()->getForum());
-        //$managedForum->incrementPostCount();
-       // $managedForum->setLastPost($this->_post);
         $this->entityManager->persist($this->_post);
         $this->entityManager->flush();
 
@@ -268,33 +258,10 @@ class PostManager
     public function delete()
     {
         // preserve post_id
-        $id = $this->_post->getId();
         $postArray = $this->toArray();
-        $managedTopic = $this->getManagedTopic();
-        $topicLastPost = $managedTopic->get()
-                ->decrementReplyCount()
-                ->getLast_post();
-
-        $managedForum = $managedTopic->getManagedForum();
-        $forumLastPost = $managedForum->get()
-                ->decrementPostCount()
-                ->getLast_post();
-
-        $this->_post
-            ->getPoster()
-                ->decrementPostCount();
-
         // remove the post
         $this->entityManager->remove($this->_post);
         $this->entityManager->flush();
-
-        if (!$topicLastPost instanceof PostEntity || $topicLastPost->getId() == $id) {
-            $managedTopic->resetLastPost(true);
-        }
-
-        if (!$forumLastPost instanceof PostEntity || $forumLastPost->getId() == $id) {
-            $managedForum->resetLastPost(true);
-        }
 
         return $postArray;
     }
@@ -314,24 +281,7 @@ class PostManager
             return $this;
         }
 
-        $managedOriginTopic = $this->getManagedTopic();
-//                                        ->decrementRepliesCount()
-//                                         ->
-//                                        ->store()
-//                                        ->getManagedForum()->;
-
-        $managedDestinationTopic = $this->topicManagerService->getManager(null, $topic)
-                                        ->incrementRepliesCount()
-                                        ->store();
-
-        $this->_post->setTopic($managedDestinationTopic->get());
-
-        //$managedPost->get()->updatePost_time();
-        // this will be done by update
-        //  $managedPost->get()->setTopic($managedDestinationTopic->get());
-
-        //$this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);
-        //$managedOriginTopic->
+        $this->_post->setTopic($topic);
 
         //$this->entityManager->flush();
 
@@ -368,3 +318,50 @@ class PostManager
         return $this->forumUserManagerService->getManager($this->_post->getPosterId());
     }
 }
+
+//        $id = $this->_post->getId();
+//        $managedTopic = $this->getManagedTopic();
+//        $topicLastPost = $managedTopic->get()
+//                ->decrementReplyCount()
+//                ->getLast_post();
+
+//        $managedForum = $managedTopic->getManagedForum();
+//        $forumLastPost = $managedForum->get()
+//                ->decrementPostCount()
+//                ->getLast_post();
+
+//        $this->_post
+//            ->getPoster()
+//                ->decrementPostCount();
+
+//        if (!$topicLastPost instanceof PostEntity || $topicLastPost->getId() == $id) {
+//            $managedTopic->resetLastPost(true);
+//        }
+//
+//        if (!$forumLastPost instanceof PostEntity || $forumLastPost->getId() == $id) {
+//            $managedForum->resetLastPost(true);
+//        }
+
+        //$this->_post->getPoster()->incrementPostCount();
+        // increment topic posts
+        //$this->_topic->setLastPost($this->_post);
+        //$this->_topic->incrementRepliesCount();
+        // update topic time to last post time
+        //$this->_topic->get()->setTopic_time($this->_post->getPost_time());
+        // increment forum posts
+        //$managedForum = $this->forumManagerService->getManager(null, $this->_topic->get()->getForum());
+        //$managedForum->incrementPostCount();
+       // $managedForum->setLastPost($this->_post);
+
+//                                        ->decrementRepliesCount()
+//                                         ->
+//                                        ->store()
+//                                        ->getManagedForum()->;
+
+        //$managedPost->get()->updatePost_time();
+        // this will be done by update
+        //  $managedPost->get()->setTopic($managedDestinationTopic->get());
+
+        //$this->synchronizationHelper->topicLastPost($managedDestinationTopic->get(), true);
+        //$managedOriginTopic->
+//        $managedOriginTopic = $this->getManagedTopic();

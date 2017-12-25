@@ -12,34 +12,33 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\DizkusModule\HookedTopicMeta;
+// @todo when News module will be ready
 
-use ModUtil;
-use News_Api_User;
+//namespace Zikula\DizkusModule\HookedTopicMeta;
 
-class News extends AbstractHookedTopicMeta
-{
-    private $newsItem = null;
+//class News extends AbstractHookedTopicMeta
+//{
+//    private $newsItem = null;
 
-    public function setup()
-    {
-        $newsItem = ModUtil::apiFunc('News', 'user', 'get', ['sid' => $this->getObjectId()]);
-        // the api takes care of the permissions check. we must check for pending/expiration & status
-        $expired = isset($newsItem['to']) && strtotime($newsItem['to']) < strtotime('now');
-        $pending = strtotime($newsItem['from']) > strtotime('now');
-        $statuspublished = $newsItem['published_status'] == News_Api_User::STATUS_PUBLISHED;
-        if ($newsItem && $statuspublished && !$pending && !$expired) {
-            $this->newsItem = $newsItem;
-        }
-    }
+//    public function setup()
+//    {
+//        $newsItem = ModUtil::apiFunc('News', 'user', 'get', ['sid' => $this->getObjectId()]);
+//        // the api takes care of the permissions check. we must check for pending/expiration & status
+//        $expired = isset($newsItem['to']) && strtotime($newsItem['to']) < strtotime('now');
+//        $pending = strtotime($newsItem['from']) > strtotime('now');
+//        $statuspublished = News_Api_User::STATUS_PUBLISHED == $newsItem['published_status'];
+//        if ($newsItem && $statuspublished && !$pending && !$expired) {
+//            $this->newsItem = $newsItem;
+//        }
+//    }
 
-    public function setTitle()
-    {
-        $this->title = $this->newsItem['title'];
-    }
+//    public function setTitle()
+//    {
+//        $this->title = $this->newsItem['title'];
+//    }
 
-    public function setContent()
-    {
-        $this->content = $this->newsItem['hometext'];
-    }
-}
+//    public function setContent()
+//    {
+//        $this->content = $this->newsItem['hometext'];
+//    }
+//}

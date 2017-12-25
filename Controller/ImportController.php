@@ -34,11 +34,8 @@ class ImportController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $importHelper = $this->get('zikula_dizkus_module.import_helper');
-        // version data
-
         return $this->render('@ZikulaDizkusModule/Import/index.html.twig', [
-              'importHelper' =>  $importHelper
+              'importHelper' =>  $this->get('zikula_dizkus_module.import_helper')
         ]);
     }
 }

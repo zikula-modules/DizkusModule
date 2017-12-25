@@ -29,124 +29,46 @@ class Upgrade3Controller extends AbstractController
      * @Theme("admin")
      * @return Response
      */
-    public function usersstatusAction(Request $request)
+    public function usersstatusAction()
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
         $data = [];
-        $importHelper = $this->get('zikula_dizkus_module.import.upgrade_3');
-        $importHelper->setPrefix($this->getVar('upgrading'));
-
-        $data['source']['ranks'] = $importHelper->getRanksStatus();
-        $data['source']['ranks']['source'] = 'ranks';
-        $ranksIcon = 'fa-orange';
-        if (count($data['source']['ranks']['toImport']) > 0) {
-            $ranksText = $this->__('Ranks to import found: ')
-                    . count($data['source']['ranks']['toImport'])
-                    . $this->__(' Need to be imported first');
-        } else {
-            $ranksIcon = 'fa-green';
-            $ranksText = $this->__('Ranks found: ')
-                . count($data['source']['ranks']['found'])
-                . $this->__(' Ranks to import: ')
-                . count($data['source']['ranks']['toImport'])
-                . $this->__('');
-        }
+        $importHandler = $this->get('zikula_dizkus_module.import.upgrade_3');
+        $importHandler->setPrefix($this->getVar('upgrading'));
+        /* Ranks
+         */
+        $data['source']['ranks'] = $importHandler->getRanksStatus();
+        $ranksIcon = ($data['source']['ranks']['found'] > 0) ? 'fa-orange' : 'fa-green';
+        $ranksText = $this->__('Ranks to import found: ').$data['source']['ranks']['found'].$this->__(' Need to be imported first');
         $ranksNode = [
-            'id' => 'ranks',
+            'id'     => 'ranks',
             'parent' => 'users_check_root',
-            'text' => $ranksText,
-            'icon' => 'fa fa-star-half-o '. $ranksIcon
+            'text'   => $ranksText,
+            'icon'   => 'fa fa-star-half-o '. $ranksIcon
         ];
-
-        $data['source']['users'] = $importHelper->getUsersStatus();
-        $data['source']['users']['old']['source'] = 'old';
-        $data['source']['users']['old']['toImport'] = $data['source']['users']['old']['toImport']->toArray();
-
-        /* Alternative users import direct from posts and topics
-         *
-        $data['source']['users'] = [
-           // 'old' => ['source' => 'old'],
-            'posters' => ['source' => 'posters','toImport' => $data['source']['users']['posters']->toArray()],
-            'topic' => ['source' => 'topic','toImport' => $data['source']['users']['topic']->toArray()],
-            'total' => $data['source']['users']['total']
-        ];
-        */
-
-        $usersIcon = 'fa-orange';
-        if (count($data['source']['users']['old']['toImport']) > 0) {
-        } else {
-            $usersIcon = 'fa-green';
-        }
-        $oldNode = [
-            'id' => 'old',
-            'parent' => 'users_check_root',
-            'text' => $this->__('Users found: ')
-               . count($data['source']['users']['old']['found'])
-               . $this->__(' Users to import: ') . count($data['source']['users']['old']['toImport'])
-               . $this->__(''),
-            'icon' => 'fa fa-user-plus '. $usersIcon
-            ];
-
-        /* Alternative users import direct from posts and topics
-         *
-         $data['source']['users']['posters']['toImport']
-         $postsNode = [
-             'id' => 'posters',
-             'parent' => 'users_check_root',
-             'text' => $this->__('3.1.0 posts table: ').count($data['source']['users']['old']['toImport']),
-             'icon' => 'fa fa-user-plus fa-orange'
-             ];
-
-         $topicNode = [
-             'id' => 'topic',
-             'parent' => 'users_check_root',
-             'text' => $this->__('3.1.0 topics table: ').count($data['source']['users']['old']['toImport']),
-             'icon' => 'fa fa-user-plus fa-orange'
-             ];
-        */
-
-        $toImportNode = [
-            'id' => 'total',
-            'parent' => 'users_check_root',
-            'text' => $this->__('Total to import: ')
-                . (count($data['source']['users']['total']) - count($data['source']['users']['current'])),
-            'icon' => 'fa fa-cogs fa-blue'
-            ];
+        /* Users
+         */
+        $data['source']['users'] = $importHandler->getUsersStatus();
         $dizkusNode = [
             'id' => 'current',
             'parent' => 'users_check_root',
-            'text' => $this->__('Current dizkus users: ')
-                . count($data['source']['users']['current']),
+            'text' => $this->__('Current dizkus users: ').count($data['source']['users']['current']),
             'icon' => 'fa fa-users fa-green'
             ];
-
-        /* Alternative users import direct from posts and topics
-         *
-        $data['toImport'] = $users['toImport'];
-        $usersIcon = 'fa-orange';
-        if (count($users['toImport']) > 0) {
-                $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) . $this->__(' Need to be imported first');
-        } else {
-            $ranksIcon = 'fa-green';
-            $ranksText = $this->__('Ranks to import: ') . count($ranks['toImport']) .$this->__(' Ranks found: ') . count($ranks['found']) . $this->__('');
-        }
-        $oldUsersNode = [
-            'id' => 'ranks',
+        $oldIcon = ($data['source']['users']['old']['found'] == 0) ? 'fa-green' : 'fa-orange';
+        $oldNode = [
+            'id'     => 'old',
             'parent' => 'users_check_root',
-            'text' => $ranksText,
-            'icon' => 'fa fa-star-half-o '. $ranksIcon
-        ];
-        */
+            'text'   => $this->__('Users to import found: ').$data['source']['users']['old']['found'],
+            'icon'   => 'fa fa-user-plus '.$oldIcon,
+            ];
 
         $data['tree'] = [
             $ranksNode,
             $oldNode,
-//            $postsNode,
-//            $topicNode,
-            $toImportNode,
-            $dizkusNode
+            $dizkusNode,
         ];
 
         return new Response(json_encode($data));
@@ -168,58 +90,18 @@ class Upgrade3Controller extends AbstractController
             $data = json_decode($content, true); // 2nd param to get as array
         }
 
-        $importHelper = $this->get('zikula_dizkus_module.import.upgrade_3');
-        $importHelper->setPrefix($this->getVar('upgrading'));
+        $importHandler = $this->get('zikula_dizkus_module.import.upgrade_3');
+        $importHandler->setPrefix($this->getVar('upgrading'));
 
         switch ($data['source']) {
             case 'ranks':
-                if (!array_key_exists('total', $data)) {
-                    $elements = $importHelper->getRanksStatus();
-                    $data['total'] = count($elements);
-                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-                }
-               $data['imported'] = $importHelper->importRanks($data);
+                $data = $importHandler->importRanks($data);
 
                 break;
             case 'old':
-                if (!array_key_exists('total', $data)) {
-                    $users = $importHelper->getUsersStatus();
-                    $elements = $users['old'];
-                    $data['total'] = count($elements);
-                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-                }
-
-                $data['imported'] = $importHelper->importUsers($data);
+                $data = $importHandler->importUsers($data);
 
                 break;
-
-        /* Alternative users import direct from posts and topics
-         *
-            case 'posters':
-
-                //first call
-                if (!array_key_exists('total', $data)) {
-                    $users = $importHelper->getUsersStatus();
-                    $elements = $users['posters'];//$importHelper->getOldUsers();
-                    $data['total'] = count($elements);
-                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-                }
-                $data['imported'] = $importHelper->importUsers($data);
-
-                break;
-            case 'topic':
-
-                //first call
-                if (!array_key_exists('total', $data)) {
-                    $users = $importHelper->getUsersStatus();
-                    $elements = $users['topic'];//$importHelper->getOldUsers();
-                    $data['total'] = count($elements);
-                    $data['pages'] = ceil($data['total'] / $data['pageSize']);
-                }
-                $data['imported'] = $importHelper->importUsers($data);
-
-                break;
-            */
         }
 
         return new Response(json_encode($data));
@@ -230,22 +112,26 @@ class Upgrade3Controller extends AbstractController
      * @Theme("admin")
      * @return Response
      */
-    public function forumtreestatusAction(Request $request)
+    public function forumtreestatusAction()
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
         }
 
         $importHelper = $this->get('zikula_dizkus_module.import.upgrade_3');
-        $importHelper->setPrefix($this->getVar('upgrading'));
+        $prefix = $this->getVar('upgrading');
+        $importHelper->setPrefix($prefix);
         $tree = $importHelper->getForumTree();
         $data['tree'] = $tree[0]->__toArray();
         if (!array_key_exists('total', $data)) {
-            $data['total']['current'] = $importHelper->getCurrentForumsCount();
-            $data['total']['forums'] = $importHelper->getOldCategoriesCount() + $importHelper->getOldForumsCount();
-            $data['total']['topics'] = (int) $importHelper->getOldTopicsCount();
-            $data['total']['posts'] = (int) $importHelper->getOldPostsCount();
+            $data['total']['current'] = $importHelper->getTableCount('dizkus_forums');
+            $data['total']['forums'] = $importHelper->getTableCount($prefix . '_dizkus_categories') + $importHelper->getTableCount($prefix . '_dizkus_forums');
+            $data['total']['topics'] = $importHelper->getTableCount($prefix . '_dizkus_topics');
+            $data['total']['posts'] = $importHelper->getTableCount($prefix . '_dizkus_posts');
             $data['total']['done'] = 1;
+        }
+        if (!array_key_exists('excluded', $data)) {
+            $data['excluded'] = $importHelper->getExcluded();
         }
 
         return new Response(json_encode($data));
@@ -273,7 +159,7 @@ class Upgrade3Controller extends AbstractController
         switch ($data['node']['lvl']) {
             case 0:
                 if ($data['node']['id'] === 1) {
-                    $data['log'][] = 'Checking index forum';
+                    $data['log'][] = $this->__('Checking index forum');
                 } else {
                 }
 
@@ -283,9 +169,6 @@ class Upgrade3Controller extends AbstractController
 
                 break;
             case 2:
-                if ($data['topics_total'] === null) {
-                    $data = $importHelper->importForum($data);
-                }
                 $data = $importHelper->importTopics($data);
 
                 break;
@@ -475,11 +358,27 @@ class Upgrade3Controller extends AbstractController
     }
 
     /**
+     * @Route("/removeprefix", options={"expose"=true})
+     * @Theme("admin")
+     * @return Response
+     */
+    public function removePrefixAction()
+    {
+        if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->delVar('upgrading');
+
+        return new Response(json_encode(true));
+    }
+
+    /**
      * @Route("/removecontent", options={"expose"=true})
      * @Theme("admin")
      * @return Response
      */
-    public function removecontentAction(Request $request)
+    public function removeContentAction(Request $request)
     {
         if (!$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
