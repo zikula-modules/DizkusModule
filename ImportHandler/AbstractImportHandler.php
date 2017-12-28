@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * AbstractImport
+ * AbstractImportHanlder.
  *
  * @author Kaik
  */
@@ -57,6 +57,9 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         return strtolower($this->getType());
     }
 
+    /**
+     * @return string
+     */
     public function getSettingsForm()
     {
         $form = 'Zikula\\DizkusModule\\Form\\Import\\' . $this->getType() . 'Type';
@@ -75,11 +78,35 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
         return $type;
     }
 
+    /*
+     * Check current tables.
+     *
+     * @return array
+     */
+    public function getCurrentDataCount()
+    {
+        $connection = $this->em->getConnection();
+        $sql = 'SELECT count(*) AS total FROM dizkus_forums';
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+        //we could add all content count but lets react only for forums
+        $content_count = [];
+        $content_count['forums'] = (int) $statement->fetchColumn();
+        $content_count['total'] = $content_count['forums'];
+
+        return $content_count;
+    }
+
+    /*
+     * Remove current data.
+     *
+     * @return array
+     */
     public function removeContent($source)
     {
         switch ($source) {
             case 'users':
-
+            // @todo finish data removall
             $data = 'done users';
 
             break;

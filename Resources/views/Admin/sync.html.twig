@@ -1,0 +1,147 @@
+{{ adminHeader() }}
+<link href="{{ pageAddAsset('stylesheet', zasset('jstree/jstree-built.css'), 98)  }}" rel="stylesheet" type="text/css" />
+{# @todo move to separate file #}
+{% macro drawTree(items) %}
+    {% for item in items %}
+        <li id="forum_{{ item.forum_id }}" data-jstree='{"icon":"fa fa-folder-open"}'>
+            <span class="forum-title col-md-8">
+                <i class="noajax-actions fa fa-folder-open"></i>
+                <span class="tooltips" title='{{ item.description }}'>
+                    {% if item.name is constant('Zikula\\DizkusModule\\Entity\\ForumEntity::ROOTNAME') %}
+                        <strong>{{ __('Forum index') }}</strong>
+                    {% else %}
+                        {{ item.name }}
+                    {% endif %}
+                </span>
+                <br class="noajax-actions" />
+                <small class="tooltips text-muted"
+                       title="
+                       {{ __('Stored topic count') }} {{ item.topicCount }} {{ __('vs') }} {{ __('real topic count') }} {{ item.topics|length }}
+                       {% if item.topicCount == item.topics|length  %}
+                           {{ __('Good! Stored topic count is equal to real count.') }}
+                       {% elseif item.topicCount > item.topics|length  %}
+                           {{ __('Bad! Stored topic count is higher to real count. Click sync forum topics to fix this issue.') }}
+                       {% elseif item.topicCount < item.topics|length  %}
+                           {{ __('Bad! stored topic count is lover to real count. Click sync forum topics to fix this issue.') }}
+                       {% endif %}
+                       ">
+                    {% if item.topicCount == item.topics|length  %}
+                        <i class="fa fa-comments-o fa-flip-horizontal fa-green"></i>
+                    {% elseif item.topicCount > item.topics|length  %}
+                        <i class="fa fa-comments-o fa-flip-horizontal fa-red"></i>
+                    {% elseif item.topicCount < item.topics|length  %}
+                        <i class="fa fa-comments-o fa-flip-horizontal fa-red"></i>
+                    {% endif %}
+                    {{ item.topics|length }} 
+                    {{ __('topics') }}
+                </small>
+                <small class="tooltips text-muted" title="{{ __('posts') }}">
+                    <i class="fa fa-comment-o fa-flip-horizontal"></i> {{ item.postCount }} {{ __('posts') }}
+                </small>
+                <small class="text-muted">
+                    {% if item.last_post is same as (null) %}
+                        <i class="fa fa-commenting-o tooltips fa-orange" title="{{ __('no last post') }}"></i>
+                        {{ __('no last post') }}
+                    {% else %}
+                        <i class="fa fa-commenting-o tooltips fa-green" title="{{ __('last exists post') }}"></i>
+                        {{ __('last post id') }} {{ item.last_post.id }}
+                    {% endif %}
+                </small>
+            </span>
+            <div class="noajax-actions col-md-4 text-right">
+                <a class="btn btn-sm tooltips" href="{{ path('zikuladizkusmodule_sync_forum', {'forum': item.forum_id})}}" title='{{ __("Sync forum #{item.name}")}}'>
+                    <i class="fa fa-refresh fa-rotate-90"></i>
+                </a>
+            </div>
+            {% if item.children|length > 0 %}
+                <ul class="" style="list-style:none;">
+                    {{ _self.drawTree(item.children)}}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+<div id="dizkus_admin">
+    {% if importHelper.isUpgrading() %}
+        <div id="upgrade_notice" class="alert alert-warning">
+            <div class="row">
+                <div class="col-md-12">
+                    <i class="close" data-dismiss="alert">×</i>
+                    <strong><i class="fa fa-info-circle"></i> {{ __('Module is in upgrade state.')}}&nbsp;{{ __('Version')}}&nbsp;{{ importHelper.isUpgrading() | replace('_', ' ')}} </strong>
+                    <a class="btn btn-success" href="{{ path('zikuladizkusmodule_import_import')}}" title="{{ __('Finish data import.')}}">
+                        <span class="fa fa-cloud-download"></span>&nbsp;{{ __('Finish data import.')}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><span class="fa fa-refresh"></span> {{ __('Forum synchronisation manager') }}</h3>
+        </div>
+        <div class="list-group-item list-group-item-warning">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="muted">
+                        {{ __('Here you can manage forum tree as well as check forum data.') }}
+                    </span>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <a class="js-switch btn btn-default btn-sm" href="#" title="{{ __('JsTree mode') }}">
+                            <span class="fa fa-birthday-cake"></span>&nbsp;{{ __('JsTree mode') }}
+                        </a>
+                        <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_sync_sync') }}" title="{{ __('Sync selected') }}">
+                            <span class="fa fa-refresh"></span>&nbsp;{{ __('Sync all topics and posts') }}
+                        </a>
+                        <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_sync_sync') }}" title="{{ __('Sync all') }}">
+                            <span class="fa fa-refresh"></span>&nbsp;{{ __('Sync all topics and posts') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if status is not same as(true) %}
+            <div class="list-group-item list-group-item-danger">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4> {{ __('Tree errors found:') }}</h4>
+                        {% for err in status %}
+                            <span class="muted text-danger small"><i class="fa fa-exclamation-triangle" ></i> &nbsp;{{ err }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-11">
+                    {{ __('Tree')}}
+                </div>
+                <div class="col-md-1">
+                    {{ __('Actions')}}
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item">
+            <div class="row">
+                <div id="forum_tree" class="col-md-12">
+                    <ul class="list-unstyled">
+                        {{ _self.drawTree(tree)}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item list-group-item-info">
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {#    {{ dump(tree) }}#}
+    {{ pageAddAsset('javascript', zasset('jstree/jstree-built.js'), 98)}}
+    {{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Sync.js'))}}
+    {{ adminFooter()}}

@@ -22,7 +22,9 @@ use Zikula\Core\Doctrine\EntityAccess;
 class RankEntity extends EntityAccess
 {
     const TYPE_HONORARY = 1;
+
     const TYPE_POSTCOUNT = 0;
+
     /**
      * Module name
      * @var string
@@ -121,7 +123,7 @@ class RankEntity extends EntityAccess
      */
     public function getRank_link()
     {
-        $link = substr($this->description, 0, 7) == 'http://' ? $this->description : '';
+        $link = 'http://' == substr($this->description, 0, 7) ? $this->description : '';
 
         return $link;
     }

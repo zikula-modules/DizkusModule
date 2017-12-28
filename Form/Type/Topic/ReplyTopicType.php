@@ -33,9 +33,8 @@ class ReplyTopicType extends AbstractType
                         ]);
         }
         if ($options['settings']['topic_subscriptions_enabled']) {
-            $builder->add('subscribeTopic', CheckboxType::class, [
+            $builder->add('subscribe', CheckboxType::class, [
                         'required' => false,
-                        'mapped' => false,
                         'data'     => $options['loggedIn'],
                         'disabled' => !$options['loggedIn'],
                         ]);

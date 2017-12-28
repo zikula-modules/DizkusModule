@@ -43,39 +43,6 @@ class SynchronizationHelper
     }
 
     /**
-     * Perform sync on all forums, topics and posters.
-     *
-     * @param bool $silentMode (unused)
-     */
-    public function all($silentMode = false)
-    {
-        $this->forums();
-        $this->topics();
-        $this->posters();
-    }
-
-    /**
-     * Perform sync on all forums
-     *
-     * @return bool
-     */
-    public function forums()
-    {
-        // reset count to zero
-        $dql = 'UPDATE Zikula\DizkusModule\Entity\ForumEntity f SET f.topicCount = 0, f.postCount = 0';
-        $this->entityManager->createQuery($dql)->execute();
-        // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
-        $forums = $this->entityManager
-            ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
-            ->findBy([], ['lvl' => 'ASC']);
-        foreach ($forums as $forum) {
-            $this->forum($forum);
-        }
-
-        return true;
-    }
-
-    /**
      * Recalculate topicCount and postCount counts
      *
      * @param ForumEntity $forum
@@ -139,86 +106,6 @@ class SynchronizationHelper
     }
 
     /**
-     * Perform sync on all topics
-     *
-     * @return bool
-     */
-    public function topics()
-    {
-        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findAll();
-        foreach ($topics as $topic) {
-            $this->topic($topic, 'forum');
-        }
-        // flush?
-        return true;
-    }
-
-    /**
-     * Recalcluate Topic replies for one topic
-     *
-     * @param TopicEntity $topic
-     * @param bool        $flush
-     *
-     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
-     *
-     * @return bool
-     */
-    public function topic($topic, $flush = true)
-    {
-        if (!isset($topic)) {
-            throw new \InvalidArgumentException();
-        }
-        if ($topic instanceof TopicEntity) {
-            $id = $topic->getId();
-        } else {
-            $id = $topic;
-            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
-        }
-        // count posts of a topic
-        $qb = $this->entityManager->createQueryBuilder();
-        $replies = $qb->select('COUNT(p)')
-            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-            ->where('p.topic = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getSingleScalarResult();
-        $replies = (int) $replies - 1;
-        $topic->setReplyCount($replies);
-        if ($flush) {
-            $this->entityManager->flush();
-        }
-
-        return true;
-    }
-
-    /**
-     * Recalculate user posts for all users
-     *
-     * @return bool
-     */
-    public function posters()
-    {
-        $qb = $this->entityManager->createQueryBuilder();
-        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user')
-            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-            ->leftJoin('p.poster', 'd')
-            ->groupBy('d.user')
-            ->getQuery()
-            ->getArrayResult();
-
-        foreach ($posts as $post) {
-            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user']);
-            if (!$forumUser) {
-                $forumUser = new ForumUserEntity($post['user']);
-            }
-            $forumUser->setPostCount($post[1]);
-        }
-        $this->entityManager->flush();
-
-        return true;
-    }
-
-    /**
      * Reset the last post in a forum due to movement
      *
      * @param ForumEntity $forum
@@ -256,6 +143,44 @@ class SynchronizationHelper
     }
 
     /**
+     * Recalculate Topic replies for one topic
+     *
+     * @param TopicEntity $topic
+     * @param bool        $flush
+     *
+     * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
+     *
+     * @return bool
+     */
+    public function topic($topic, $flush = true)
+    {
+        if (!isset($topic)) {
+            throw new \InvalidArgumentException();
+        }
+        if ($topic instanceof TopicEntity) {
+            $id = $topic->getId();
+        } else {
+            $id = $topic;
+            $topic = $this->entityManager->find('Zikula\DizkusModule\Entity\TopicEntity', $id);
+        }
+        // count posts of a topic
+        $qb = $this->entityManager->createQueryBuilder();
+        $posts = $qb->select('COUNT(p)')
+            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+            ->where('p.topic = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleScalarResult();
+        $replies = (int) $posts - 1;
+        $topic->setReplyCount($replies);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+
+        return true;
+    }
+
+    /**
      * Reset the last post in a topic due to movement
      *
      * @param TopicEntity $topic
@@ -286,3 +211,76 @@ class SynchronizationHelper
         }
     }
 }
+// removed
+//    /**
+//     * Recalculate user posts for all users
+//     *
+//     * @return bool
+//     */
+//    public function posters()
+//    {
+//        $qb = $this->entityManager->createQueryBuilder();
+//        $posts = $qb->select('count(p)', 'IDENTITY(d.user) as user')
+//            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
+//            ->leftJoin('p.poster', 'd')
+//            ->groupBy('d.user')
+//            ->getQuery()
+//            ->getArrayResult();
+//
+//        foreach ($posts as $post) {
+//            $forumUser = $this->entityManager->find('Zikula\DizkusModule\Entity\ForumUserEntity', $post['user']);
+//            if (!$forumUser) {
+//                $forumUser = new ForumUserEntity($post['user']);
+//            }
+//            $forumUser->setPostCount($post[1]);
+//        }
+//        $this->entityManager->flush();
+//
+//        return true;
+//    }
+//    /**
+//     * Perform sync on all forums, topics and posters.
+//     *
+//     * @param bool $silentMode (unused)
+//     */
+//    public function all($silentMode = false)
+//    {
+//        $this->forums();
+//        $this->topics();
+//        $this->posters();
+//    }
+
+//    /**
+//     * Perform sync on all forums
+//     *
+//     * @return bool
+//     */
+//    public function forums()
+//    {
+//        // reset count to zero
+//        $dql = 'UPDATE Zikula\DizkusModule\Entity\ForumEntity f SET f.topicCount = 0, f.postCount = 0';
+//        $this->entityManager->createQuery($dql)->execute();
+//        // order by level asc in order to do the parents first, down to children. This SHOULD keep the count accurate.
+//        $forums = $this->entityManager
+//            ->getRepository('Zikula\DizkusModule\Entity\ForumEntity')
+//            ->findBy([], ['lvl' => 'ASC']);
+//        foreach ($forums as $forum) {
+//            $this->forum($forum);
+//        }
+//
+//        return true;
+//    }
+//    /**
+//     * Perform sync on all topics
+//     *
+//     * @return bool
+//     */
+//    public function topics()
+//    {
+//        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findAll();
+//        foreach ($topics as $topic) {
+//            $this->topic($topic, 'forum');
+//        }
+//        // flush?
+//        return true;
+//    }

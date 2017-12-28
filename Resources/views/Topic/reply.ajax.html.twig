@@ -37,7 +37,7 @@
                     {{ form_widget(form.post_text, { 'attr': {'rows' : '10', 'cols' : '60', 'maxlegth' : 65572 }} ) }}
                 </div>
                 <div class="form-group">
-                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.ui_edit', id=form.post_text.vars.id) }}
+                    {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post_text.form_edit', id=form.post_text.vars.id) }}
                     {% if settings.striptags == 'yes' %}
                     <span class="help-block">{{ __("No HTML tags allowed (except inside [code][/code] tags)") }}</span>
                     {% endif %}
@@ -58,13 +58,13 @@
                         {% if settings.topic_subscriptions_enabled %}
                             <div class="col-md-4">
                                 <div><strong>{{ __("Subscriptions") }}</strong></div>
-                                {{ form_row(form.subscribeTopic,  {   'label': __("Email me when a reply is posted")
+                                {{ form_row(form.subscribe,  {   'label': __("Email me when a reply is posted")
                             ,'label_attr': {'class': currentUser.loggedIn ? '' : 'text-muted'}
                             ,'attr': {'class': '', 'icon': currentUser.loggedIn ? 'fa fa-envelope-o fa-green' : 'fa fa-envelope-o'} }) }}
                             </div>
                         {% endif %}
 
-                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_edit', id=null) }}
+                        {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.form_edit', id=null) }}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane {% if preview %} active{% endif %}" id="quickreply_preview" style="border:0px;">

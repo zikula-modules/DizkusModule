@@ -87,7 +87,7 @@ class FeedController extends AbstractController
             $where = ['t.forum', (int) $forum_id];
             $link = $this->get('router')->generate('zikuladizkusmodule_user_viewforum', ['forum' => $forum_id], RouterInterface::ABSOLUTE_URL);
             $forumname = $managedForum->get()->getName();
-        } elseif (isset($uid) && $uid != false) {
+        } elseif (isset($uid) && false != $uid) {
             $where = ['p.poster', $uid];
         } else {
             $allowedforums = ModUtil::apiFunc($this->name, 'forum', 'getForumIdsByPermission');

@@ -72,6 +72,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         // ToDo: create FULLTEXT index
         // set the module vars
         $this->setVars(self::getDefaultVars());
+//        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -196,6 +198,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         // remove module vars
         $this->delVars();
+        // unregister hooks
+//        $this->hookApi->uninstallSubscriberHooks($this->bundle->getMetaData());
+//        $this->hookApi->uninstallProviderHooks($this->bundle->getMetaData());
         // Deletion successful
         return true;
     }
@@ -221,14 +226,16 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
+                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'Dizkus'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'Dizkus'");
+                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'Dizkus'");
 
                 $prefix = $this->container->hasParameter('prefix') ? $this->container->getParameter('prefix') : '';
                 $schemaManager = $connection->getSchemaManager();
                 $schema = $schemaManager->createSchema();
                 if (!$schema->hasTable($prefix.'dizkus_categories')) {
-                    $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
+                    $this->addFlash('error', $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
                     return false;
                 }
@@ -249,7 +256,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     $statement->execute();
                 }
 
-                if ($prefix != '') {
+                if ('' != $prefix) {
                     $this->removeTablePrefixes($prefix);
                 }
                 // mark tables for import
@@ -266,13 +273,16 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     return false;
                 }
 
+//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
                 // set up forum root (required)
                 $forumRoot = new ForumEntity();
                 $forumRoot->setName(ForumEntity::ROOTNAME);
                 $forumRoot->lock();
                 $this->entityManager->persist($forumRoot);
+                $this->entityManager->flush();
 
-                $this->addFlash('status', $this->__f('Please go to Dizkus admin import to do full data import.'));
+                $this->addFlash('status', $this->__('Please go to Dizkus admin import to perform full data import.'));
 
                 break;
             case '4.0.0':
@@ -283,8 +293,13 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 // reinstall hooks
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
+                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
+
+//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
+//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
             case '4.1.0':
@@ -407,7 +422,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 switch ($type) {
                     case 'boolean':
                         if (in_array($currentModVars[$key], ['yes', 'no'])) {
-                            $var = $currentModVars[$key] == 'yes' ? true : false;
+                            $var = 'yes' == $currentModVars[$key] ? true : false;
                         } else {
                             $var = (boolval($currentModVars[$key]));
                         }
@@ -418,7 +433,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                         break;
                 }
-                if ($key == 'defaultPoster') {
+                if ('defaultPoster' == $key) {
                     $var = 2; // not bolean anymore assume admin id but maybe guest?
                 }
             }

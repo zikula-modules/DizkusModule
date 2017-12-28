@@ -33,6 +33,18 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 {
     private $prefix = '';
 
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
     public function getTitle()
     {
         return $this->translator->trans('Upgrade 3 tables handler', [], 'zikuladizkusmodule');
@@ -40,15 +52,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
     public function getDescription()
     {
-        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0_, 3_2_0', [], 'zikuladizkusmodule');
-    }
-
-    public function getStatus()
-    {
-        $status['tables'] = $this->getTablesForPrefix();
-        $status['hooks'] = $this->getHookedModulesStatus();
-
-        return $status;
+        return $this->translator->trans('Tables need to be prefixed with version ie. 3_1_0, 3_2_0', [], 'zikuladizkusmodule');
     }
 
     public function versionSupported()
@@ -65,21 +69,21 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         return $this->renderEngine->render('ZikulaDizkusModule:Import:list.upgrade_3.html.twig', [
             'importHandler' => $this->setPrefix($prefix),
-            'data' => $this->getStatus()
+            'data' => false === $prefix ? [] : $this->getStatus(),
         ]);
     }
 
-    public function getPrefix()
+    //  handlerInterface ends here
+
+    public function getStatus()
     {
-        return $this->prefix;
+        $status['tables'] = $this->getTablesForPrefix();
+        $status['hooks'] = $this->getHookedModulesStatus();
+
+        return $status;
     }
 
-    public function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-
-        return $this;
-    }
+    //  ajax calls
 
     /*
      * Ranks below
@@ -87,39 +91,32 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
      */
     public function getRanksStatus()
     {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_ranks';
-        $oldRanks = $connection->fetchAll($sql);
-        $toImport = [];
-        $found = [];
+        $ranksStatus = ['source' => 'ranks',
+            'found'     => $this->getTableCount($this->prefix . '_dizkus_ranks')
+        ];
 
-        foreach ($oldRanks as $oldRank) {
-            $rank = $this->em->find('Zikula\DizkusModule\Entity\RankEntity', $oldRank['rank_id']);
-            if ($rank) {
-                $found[] = $rank;
-            } else {
-                $toImport[] = $oldRank;
-            }
-        }
-
-        return ['found'=> $found, 'toImport' => $toImport];
+        return $ranksStatus;
     }
 
     public function importRanks($data)
     {
         $connection = $this->em->getConnection();
         $limit = $data['pageSize'];
-        $offset = $data['page'];
-        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_ranks LIMIT :offset,:limit';
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
+        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_ranks ORDER BY rank_id ASC LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
         $statement->bindValue('offset', $offset, \PDO::PARAM_INT);
         $statement->execute();
         $currentPageItems = $statement->fetchAll();
-
+        $data['rejected_items'] = []; // each time new
         foreach ($currentPageItems as $rankArr) {
-            $rankExists = $this->em->find('Zikula\DizkusModule\Entity\RankEntity', $rankArr['rank_id']);
+            $rankExists = $this->em->find(RankEntity::class, $rankArr['rank_id']);
             if ($rankExists) {
+                $data['rejected_items'][(int) $rankArr['rank_id']]['id'] = $rankArr['rank_id'];
+                $data['rejected_items'][(int) $rankArr['rank_id']]['reason'] = 0;
+                $data['rejected']++;
+
                 continue;
             }
             $rank = new RankEntity();
@@ -135,28 +132,12 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
             $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
             $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
             $this->em->persist($rank);
-            $this->em->flush();
+            $data['imported']++;
         }
-
-        return $currentPageItems;
-    }
-
-    public function getForumUserFromId($id)
-    {
-        $forumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $id);
-        if ($forumUser != null) {
-            return $forumUser;
-        }
-        $zikulaUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $id);
-        if ($zikulaUser == null) {
-            return $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
-        }
-        $newForumUser = new ForumUserEntity();
-        $newForumUser->setUser($zikulaUser);
-        $this->em->persist($newForumUser);
         $this->em->flush();
+        $this->em->clear();
 
-        return $newForumUser;
+        return $data;
     }
 
     /*
@@ -165,8 +146,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     public function getUsersStatus()
     {
         //lets add guest user id 1 there is only one special account for guests and deleted users
-        $guestForumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', 1);
-        if ($guestForumUser == null) {
+        $guestForumUser = $this->em->find(ForumUserEntity::class, 1);
+        if (null == $guestForumUser) {
             $guestForumUser = new ForumUserEntity();
             $guestUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', 1);
             $guestForumUser->setUser($guestUser);
@@ -174,73 +155,24 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
             $this->em->flush();
         }
 
-        $usersCollection = new ArrayCollection();
-        $currentUsers = $this->em->getRepository('Zikula\DizkusModule\Entity\ForumUserEntity')->findAll();
-        foreach ($currentUsers as $cuser) {
-            $usersCollection->add($cuser);
-        }
-
-        $old = [];
-        $old['toImport'] = new ArrayCollection();
-        $old['found'] = $this->getOldUsers();
-
-        foreach ($old['found'] as $ouser) {
-            $sameIdTest = function ($key, $element) use ($ouser) {
-                return $element->getUserId() == $ouser['user_id'];
-            };
-            if (!$usersCollection->exists($sameIdTest)) {
-                $u = $this->getForumUserFromTableRow($ouser);
-                if ($u) {
-                    $usersCollection->add($u);
-                    $old['toImport']->add($u);
-                }
-            }
-        }
-        /* Alternative users import direct from posts and topics
-         *
-                //get users from posts
-                $posts = [];
-                $posts['toImport'] = new ArrayCollection();
-                $connection = $this->em->getConnection();
-                $sql = 'SELECT DISTINCT(poster_id) as poster_id FROM import_dizkus_posts';
-                $posts['found'] = $connection->fetchAll($sql);
-                foreach ($posts['found'] as $post) {
-                    $sameIdTest = function($key, $element) use ($post) {
-                            return $element->getUserId() == $post['poster_id'];
-                        };
-
-                    if (!$usersCollection->exists($sameIdTest)) {
-                        //$u = $this->getForumUserFromTableRow(['user_id' => $post['poster_id']]);
-        //                if($u){
-        //                    $usersCollection->add($u);
-        //                    $posts['toImport']->add($u);
-        //                }
-                    }
-                }
-
-                //get users from topics
-                $posts = [];
-                $posts['toImport'] = new ArrayCollection();
-                $topicUsersCollection = new ArrayCollection();
-                $sql = 'SELECT DISTINCT(topic_poster) as topic_poster FROM import_dizkus_topics';
-                $topics = $connection->fetchAll($sql);
-                foreach ($topics as $topic) {
-                    if (!$usersCollection->containsKey($topic['topic_poster'])) {
-                        $u = new ForumUserEntity();
-                        $u->setUserId($topic['topic_poster']);
-                        //$u = $this->getForumUserFromTableRow(['user_id' => $topic['topic_poster']]);
-                        $usersCollection->add($u);
-                        $topicUsersCollection->add($u);
-                    }
-                }
-        */
+        $currentUsers = $this->em->getRepository(ForumUserEntity::class)->findAll();
+        $oldStatus = ['source' => 'old',
+                      'found'  => $this->getTableCount($this->prefix . '_dizkus_users'),
+        ];
 
         return ['current' => $currentUsers,
-                'old' => $old,
-//                'posters' => $posts,
-//                'topic' => $topicUsersCollection,
-                'total' => $usersCollection
-                ];
+            'old'         => $oldStatus
+        ];
+    }
+
+    public function getTableCount($table)
+    {
+        $connection = $this->em->getConnection();
+        $sql = 'SELECT count(*) AS total FROM ' . $table;
+        $statement = $connection->prepare($sql);
+        $statement->execute();
+
+        return $statement->fetchColumn();
     }
 
     public function getOldUsers()
@@ -252,24 +184,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         return $users;
     }
 
-    public function getUsersFromPosts()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT DISTINCT(poster_id) as poster_id FROM ' . $this->prefix . '_dizkus_posts';
-        $postsUsers = $connection->fetchAll($sql);
-
-        return $postsUsers;
-    }
-
-    public function getUsersFromTopics()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT DISTINCT(topic_poster) as topic_poster FROM ' . $this->prefix . '_dizkus_topics';
-        $topicsUsers = $connection->fetchAll($sql);
-
-        return $topicsUsers;
-    }
-
     private function getForumUserFromTableRow($user)
     {
         if (!array_key_exists('user_id', $user)) {
@@ -278,7 +192,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
         $newUser = new ForumUserEntity();
         $systemUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $user['user_id']);
-        if ($systemUser == null) {
+        if (null == $systemUser) {
             // user no longer exists in zikula
             return false;
         } else {
@@ -292,8 +206,8 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $newUser->setPostCount(array_key_exists('user_posts', $user) ? $user['user_posts'] : null);
         $newUser->setPostOrder(array_key_exists('user_post_order', $user) ? $user['user_post_order'] : 0);
 
-        if (array_key_exists('user_rank', $user) && $user['user_rank'] != null) {
-            $rank = $this->em->find('Zikula\DizkusModule\Entity\RankEntity', $user['user_rank']);
+        if (array_key_exists('user_rank', $user) && null != $user['user_rank']) {
+            $rank = $this->em->find(RankEntity::class, $user['user_rank']);
             if ($rank) {
                 $newUser->setRank($rank);
             } else {
@@ -308,25 +222,52 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
 
     public function importUsers($data)
     {
-        $users = $this->getUsersStatus();
-        $offset = $data['page'] + 1;
-        $index_start = $offset * $data['pageSize'] - $data['pageSize'];
-        $usersArr = is_object($users[$data['source']]['toImport']) ? $users[$data['source']]['toImport']->toArray() : $users[$data['source']]['toImport'];
-        $elements = array_slice($usersArr, $index_start, $data['pageSize'], true);
-        $done = [];
-        foreach ($elements as $forumUser) {
-            $forumUserObj = is_object($forumUser) ? $forumUser : $this->getForumUserFromTableRow($forumUser);
+        $connection = $this->em->getConnection();
+        $limit = $data['pageSize'];
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
+        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_users ORDER BY user_id ASC LIMIT :offset,:limit';
+        $statement = $connection->prepare($sql);
+        $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
+        $statement->bindValue('offset', $offset, \PDO::PARAM_INT);
+        $statement->execute();
+        $currentPageItems = $statement->fetchAll();
+        $data['rejected_items'] = []; // each time new
+        foreach ($currentPageItems as $key => $forumUser) {
+            $forumUserObj = $this->getForumUserFromTableRow($forumUser);
             if ($forumUserObj) {
                 $metadata = $this->em->getClassMetadata(get_class($forumUserObj));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $this->em->persist($forumUserObj);
-                $done[] = $forumUserObj->getUser();
+                $data['imported']++;
+            } else {
+                $data['rejected_items'][$key]['id'] = $forumUser['user_id'];
+                $data['rejected_items'][$key]['reason'] = 1;
+                $data['rejected']++;
             }
         }
         $this->em->flush();
+        $this->em->clear();
 
-        return $done;
+        return $data;
+    }
+
+    public function getForumUserFromId($id)
+    {
+        $forumUser = $this->em->find(ForumUserEntity::class, $id);
+        if (null != $forumUser) {
+            return $forumUser;
+        }
+        $zikulaUser = $this->em->find('Zikula\UsersModule\Entity\UserEntity', $id);
+        if (null == $zikulaUser) {
+            return $this->em->find(ForumUserEntity::class, 1);
+        }
+        $newForumUser = new ForumUserEntity();
+        $newForumUser->setUser($zikulaUser);
+        $this->em->persist($newForumUser);
+        $this->em->flush();
+
+        return $newForumUser;
     }
 
     /*
@@ -341,15 +282,17 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         // apart from that categories can have same id's as forums
         // we want to merge that all into one forum tree
         // with root = 1 and possibly preserving forum id topic post and so on...
-        $repo = $this->em->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
+        $repo = $this->em->getRepository(ForumEntity::class);
         //$arrayTree = $repo->childrenHierarchy();
         $forumTree = $repo->getRootNodes();
         // forum tree should contain only root
         $forumRoot = $forumTree[0]; //$this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
-        $categories = $this->getOldCategories();
+        $connection = $this->em->getConnection();
+        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_categories ORDER BY cat_order ASC';
+        $categories = $connection->fetchAll($sql);
         // because categories does not contain topics we will move them at the top
         // categories are lvl = 1 forums
-        // in Dizkus 3.1.0 these does not contain topics forums only
+        // in Dizkus 3.x these does not contain topics forums only
         $catID = $this->getForumsMaxId() + 10;
         foreach ($categories as $category) {
             $category['newId'] = $catID . '_' . $category['cat_id'];
@@ -361,65 +304,6 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         return $forumTree;
-    }
-
-    public function getCurrentForumsCount()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT count(*) AS total FROM dizkus_forums';
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-
-        return $statement->fetchColumn();
-    }
-
-    public function getOldCategoriesCount()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT count(*) AS total FROM ' . $this->prefix . '_dizkus_categories';
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-
-        return $statement->fetchColumn();
-    }
-
-    public function getOldForumsCount()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT count(*) AS total FROM ' . $this->prefix . '_dizkus_forums';
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-
-        return $statement->fetchColumn();
-    }
-
-    public function getOldTopicsCount()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT count(*) AS total FROM ' . $this->prefix . '_dizkus_topics';
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-
-        return $statement->fetchColumn();
-    }
-
-    public function getOldPostsCount()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT count(*) AS total FROM ' . $this->prefix . '_dizkus_posts';
-        $statement = $connection->prepare($sql);
-        $statement->execute();
-
-        return $statement->fetchColumn();
-    }
-
-    public function getOldCategories()
-    {
-        $connection = $this->em->getConnection();
-        $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_categories ORDER BY cat_order ASC';
-        $categories = $connection->fetchAll($sql);
-
-        return $categories;
     }
 
     private function getForumFromCategoryTableRow($category)
@@ -446,12 +330,12 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $newForum = new ForumEntity();
         $id = array_key_exists('forum_id', $forum) ? $forum['forum_id'] : null;
-        if ($id === null && array_key_exists('id', $forum)) {
+        if (null === $id && array_key_exists('id', $forum)) {
             $id = $forum['id'];
         }
-        if ($id == 1) {
+        if (1 == $id) {
             $id = $this->getForumsMaxId() + 5 . '_' . 1;
-        } elseif ($id === null) {
+        } elseif (null === $id) {
             return false;
         }
 
@@ -464,7 +348,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         //old tables do not have lvl
         $newForum->setLvl(2);
         $newForum->setLft($forum['forum_order']);
-        $root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
+        $root = $this->em->find(ForumEntity::class, 1);
         $newForum->setRoot($root);
         $newForum->setStatus(1);
         // @todo connection if someone asks...
@@ -535,6 +419,26 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         return $forumsCollection;
     }
 
+    public function getExcluded()
+    {
+        $excludedTopicsCollection = new ArrayCollection();
+        $connection = $this->em->getConnection();
+        $sql = 'SELECT * FROM '.$this->prefix.'_dizkus_topics WHERE forum_id = 0 OR forum_id IS NULL';
+        $topics = $connection->fetchAll($sql);
+        foreach ($topics as $topic) {
+            $excludedTopicsCollection->add(['id' => $topic['topic_id'], 'reason' => 2]);
+        }
+
+        $excludedPostsCollection = new ArrayCollection();
+        $sql = 'SELECT p.post_id FROM '.$this->prefix.'_dizkus_posts p LEFT JOIN '.$this->prefix.'_dizkus_topics t ON p.topic_id = t.topic_id WHERE t.topic_id IS NULL OR t.forum_id = 0 OR t.forum_id IS NULL';
+        $posts = $connection->fetchAll($sql);
+        foreach ($posts as $post) {
+            $excludedPostsCollection->add(['id' => $post['post_id'], 'reason' => 2]);
+        }
+
+        return ['topics' => $excludedTopicsCollection->toArray(), 'posts' => $excludedPostsCollection->toArray()];
+    }
+
     public function importCategory($data)
     {
         $forumObj = new ForumEntity();
@@ -542,17 +446,17 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setName($data['node']['name']);
         $forumObj->setLvl(1);
         $forumObj->setLft($data['node']['lft']);
-        $root = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', 1);
+        $root = $this->em->find(ForumEntity::class, 1);
         $forumObj->setParent($root);
-        $forumObj->setRoot(1);
-        if ($forumObj) {
-            $metadata = $this->em->getClassMetadata(get_class($forumObj));
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $this->em->persist($forumObj);
-            $this->em->flush();
-        }
-        $data['log'][]  = 'Import cat ' . $data['node']['id'] . ' done';
+        $forumObj->setRoot($root);
+
+        $metadata = $this->em->getClassMetadata(get_class($forumObj));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        $this->em->persist($forumObj);
+        $this->em->flush();
+
+        $data['log'][]  = $this->translator->trans('Import cat').' '.$data['node']['id'].' '.$this->translator->trans('done');
 
         return $data;
     }
@@ -567,23 +471,23 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $forumObj->setPostCount($data['node']['postCount']);
         $forumObj->setPostCount($data['node']['topicCount']);
         $forumObj->setModuleref($data['node']['moduleref']);
-        $parent = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $this->getCurrentForumId($data['node']['parentid']));
+        $parent = $this->em->find(ForumEntity::class, $this->getCurrentForumId($data['node']['parentid']));
         $forumObj->setParent($parent);
         $forumObj->setLvl(2);
         $forumObj->setLft($data['node']['lft']);
-        $forumObj->setRoot(1);
-        if ($forumObj) {
-            $metadata = $this->em->getClassMetadata(get_class($forumObj));
-            $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-            $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
-            $this->em->persist($forumObj);
-            $this->em->flush();
-        }
+        $root = $this->em->find(ForumEntity::class, 1);
+        $forumObj->setRoot($root);
 
-        $data['topics_total'] = $this->getOldForumId($forumIdMix) === false ? $this->getTopicsCount($forumObj->getId()) : $this->getTopicsCount($this->getOldForumId($forumIdMix));
+        $metadata = $this->em->getClassMetadata(get_class($forumObj));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        $this->em->persist($forumObj);
+        $this->em->flush();
+
+        $data['topics_total'] = false === $this->getOldForumId($forumIdMix) ? $this->getTopicsCount($forumObj->getId()) : $this->getTopicsCount($this->getOldForumId($forumIdMix));
         $data['topics_pages'] = ceil($data['topics_total'] / $data['topics_limit']);
-        $data['log'][]  = 'Forum ' . $forumIdMix . ' topics to import ' . $data['topics_total'];
-        $data['log'][]  = 'Import forum '. $forumIdMix .' done';
+        $data['log'][]  = $this->translator->trans('Forum').' '.$forumIdMix.' '.$this->translator->trans('topics to import').' '.$data['topics_total'];
+        $data['log'][]  = $this->translator->trans('Import forum').' '.$forumIdMix.' '.$this->translator->trans('done');
 
         return $data;
     }
@@ -593,8 +497,13 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
      */
     public function importTopics($data)
     {
+        if (null === $data['topics_total']) {
+            // import forum first
+            $data = $this->importForum($data);
+        }
         $data['topics'] = $this->getTopics($data);
-        foreach ($data['topics'] as $topic) {
+        $data['rejected_items']['topics'] = [];
+        foreach ($data['topics'] as $key => $topic) {
             if ($topic) {
                 $metadata = $this->em->getClassMetadata(get_class($topic));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
@@ -602,6 +511,10 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
                 $this->em->persist($topic);
                 $this->em->flush();
                 $data['topics_imported']++;
+            } else {
+                $data['rejected_items']['topics'][$key]['id'] = $topic->getId();
+                $data['rejected_items']['topics'][$key]['reason'] = 1;
+                $data['topics_rejected']++;
             }
 
             $data['topic_index']++;
@@ -654,12 +567,12 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['topics_limit'];
-        $offset = $data['topics_page'] === 0 ? $data['topics_page'] : $data['topics_page'] * $limit;
-        if ($data['topic_index'] !== null) {
+        $offset = 0 === $data['topics_page'] ? $data['topics_page'] : $data['topics_page'] * $limit;
+        if (null !== $data['topic_index']) {
             $offset = $data['topic_index'];
             $overPage = $data['topic_index'] % $limit;
             $limit = $limit - $overPage;
-            if ($overPage == 0) {
+            if (0 == $overPage) {
             }
         }
 
@@ -669,7 +582,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $statement->execute();
         $topicsCollection = new ArrayCollection();
         $topics = $statement->fetchAll();
-        $forum = $this->em->find('Zikula\DizkusModule\Entity\ForumEntity', $this->getCurrentForumId($data['node']['id']));
+        $forum = $this->em->find(ForumEntity::class, $this->getCurrentForumId($data['node']['id']));
         foreach ($topics as $topic) {
             $topicObj = $this->getTopic($topic);
             $topicObj->setForum($forum);
@@ -701,7 +614,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
          * @todo - additional page to manage orphaned hooks where all items can be assigned to areas
          * because there is no definitive information about area we will just import data we have
          */
-        if ($topic['topic_reference'] !== '') {
+        if ('' !== $topic['topic_reference']) {
             $newTopic->setHookedModule($this->decodeModuleIdFromReference($topic['topic_reference']));
             $newTopic->setHookedObjectId($this->decodeObjectIdFromReference($topic['topic_reference']));
         }
@@ -716,17 +629,25 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     public function importPosts($data)
     {
         $posts = $this->getPosts($data);
-        foreach ($posts as $post) {
+        $data['rejected_items']['posts'] = [];
+        foreach ($posts as $key => $post) {
             if ($post) {
                 $metadata = $this->em->getClassMetadata(get_class($post));
                 $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
                 $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 $this->em->persist($post);
                 $data['posts_imported']++;
+            } else {
+                $data['rejected_items']['posts'][$key]['id'] = $post->getId();
+                $data['rejected_items']['posts'][$key]['reason'] = 1;
+                $data['topics_rejected']++;
             }
         }
         $this->em->flush();
-        $data['log'][]  = 'Topic #'. $data['topic'] .' page '. $data['posts_page'] .' imported posts ' . count($posts) . ' ';
+//        $this->em->clear();
+        $data['log'][]  = $this->translator->trans('Topic #').' '.$data['topic'].' '
+                    .$this->translator->trans('page').' '.$data['posts_page'].' '
+                    .$this->translator->trans('imported posts').' '.count($posts).' ';
 
         return $data;
     }
@@ -759,14 +680,14 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     {
         $topic = (int) $data['topic'];
         $limit = $data['posts_limit'];
-        $offset = $data['posts_page'] == 0 ? $data['posts_page'] : $data['posts_page'] * $limit;
+        $offset = 0 == $data['posts_page'] ? $data['posts_page'] : $data['posts_page'] * $limit;
         $postsCollection = new ArrayCollection();
         $connection = $this->em->getConnection();
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_posts WHERE topic_id = '. $topic .' ORDER BY post_id ASC LIMIT '. $offset .','. $limit .'';
         $statement = $connection->prepare($sql);
         $statement->execute();
         $posts = $connection->fetchAll($sql);
-        $topicObj = $this->em->find('Zikula\DizkusModule\Entity\TopicEntity', $topic);
+        $topicObj = $this->em->find(TopicEntity::class, $topic);
         foreach ($posts as $post) {
             $postObj = $this->getPost($post);
             $postObj->setTopic($topicObj);
@@ -792,7 +713,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
     public function getPoster($poster_id)
     {
         $forumUser = $this->em->find('Zikula\DizkusModule\Entity\ForumUserEntity', $poster_id);
-        if ($forumUser == null) {
+        if (null == $forumUser) {
             $forumUser = new ForumUserEntity();
         }
 
@@ -829,7 +750,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['pageSize'];
-        $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_favorites LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -882,7 +803,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['pageSize'];
-        $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_mods WHERE user_id < 1000000 LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -937,7 +858,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['pageSize'];
-        $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_forum_mods WHERE user_id > 1000000 LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -993,7 +914,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['pageSize'];
-        $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_subscription LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -1046,7 +967,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         }
 
         $limit = $data['pageSize'];
-        $offset = $data['page'] == 0 ? $data['page'] : $data['page'] * $limit;
+        $offset = 0 == $data['page'] ? $data['page'] : $data['page'] * $limit;
         $sql = 'SELECT * FROM ' . $this->prefix . '_dizkus_topic_subscription LIMIT :offset,:limit';
         $statement = $connection->prepare($sql);
         $statement->bindValue('limit', $limit, \PDO::PARAM_INT);
@@ -1134,7 +1055,7 @@ class Upgrade_3_ImportHandler extends AbstractImportHandler
         $importTables = [];
         foreach ($this->getSupportedTables() as $tableName) {
             $prefixedTableName = $this->prefix.'_'.$tableName;
-            if ($schemaManager->tablesExist([$prefixedTableName]) == true) {
+            if (true == $schemaManager->tablesExist([$prefixedTableName])) {
                 $importTables[$tableName]['exists'] = true;
                 $importTables[$tableName]['elements'] = $connection->fetchAll('SELECT * FROM ' . $prefixedTableName);
                 $importTables[$tableName]['status'] = $this->checkTableStatus($schemaManager->listTableDetails($prefixedTableName), $this->prefix);

@@ -125,12 +125,18 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             if ($form->get('save')->isClicked()) {
                 $data = $form->getData();
-
                 $managedForumUser
-                            ->setPostOrder($data['postOrder'])
-                            ->setForumViewSettings((bool) $data['displayOnlyFavorites'])
-                            ->setAutosubscribe($data['autosubscribe'])
-                            ->store();
+                    ->setPostOrder($data['postOrder']);
+
+                if ($this->getVar('favorites_enabled')) {
+                    $managedForumUser->setForumViewSettings((bool) $data['displayOnlyFavorites']);
+                }
+
+                if ($this->getVar('topic_subscriptions_enabled')) {
+                    $managedForumUser->setAutosubscribe($data['autosubscribe']);
+                }
+
+                $managedForumUser->store();
 
                 $this->addFlash('status', $this->__('Done! Updated configuration.'));
             }
@@ -177,7 +183,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ($unsubscribe == 'all') {
+            if ('all' == $unsubscribe) {
                 $forumUserManager->get()->clearForumSubscriptions();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromForum($unsubscribe);
@@ -249,8 +255,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ($format == 'json') {
-        } elseif ($format == 'ajax.html') {
+        if ('json' == $format) {
+        } elseif ('ajax.html' == $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -313,8 +319,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ($format == 'json') {
-        } elseif ($format == 'ajax.html') {
+        if ('json' == $format) {
+        } elseif ('ajax.html' == $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -351,7 +357,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ($unsubscribe == 'all') {
+            if ('all' == $unsubscribe) {
                 $forumUserManager->get()->clearTopicSubscriptions();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromTopic($unsubscribe);
@@ -423,8 +429,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ($format == 'json') {
-        } elseif ($format == 'ajax.html') {
+        if ('json' == $format) {
+        } elseif ('ajax.html' == $format) {
         } else {
             $this->addFlash('status', $status);
 
@@ -487,8 +493,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ($format == 'json') {
-        } elseif ($format == 'ajax.html') {
+        if ('json' == $format) {
+        } elseif ('ajax.html' == $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -525,7 +531,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ($unsubscribe == 'all') {
+            if ('all' == $unsubscribe) {
                 $forumUserManager->get()->clearForumFavorites();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->removeFavoriteForum($unsubscribe);
@@ -675,7 +681,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $forumUserManager->setForumViewSettings($setting == 'favorities' ? true : false)->store();
+        $forumUserManager->setForumViewSettings('favorities' == $setting ? true : false)->store();
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
     }

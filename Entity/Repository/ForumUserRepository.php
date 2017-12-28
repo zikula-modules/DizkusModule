@@ -142,7 +142,7 @@ class ForumUserRepository extends EntityRepository
         if (is_array($onlineusers)) {
             $total = count($onlineusers);
             foreach ($onlineusers as $onlineuser) {
-                if ($onlineuser['uid'] != 0) {
+                if (0 != $onlineuser['uid']) {
                     $unames[$onlineuser['uid']]['user'] = $onlineuser[0];
                     $unames[$onlineuser['uid']]['isModerator'] = false;
                     if ($moderatorCheck) {

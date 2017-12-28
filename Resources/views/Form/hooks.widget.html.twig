@@ -27,7 +27,7 @@
                         <i class="fa fa-cog"> </i>
                     </a>
                 </div>
-                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                <div class="list-group collapse" id="global_{{ value.baseName|lower }}">
                     {% for name, child in form %}
                         {% if name == 'modules' %}
                         {% else %}
@@ -94,7 +94,7 @@
     {% spaceless %}
         {% set binding_id = 'area' ~ random() %}
         <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-default{% endif %} clearfix">
-            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.subscriber.area }}</strong></span>
+            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.subscriber }}</strong></span>
             <div class="pull-right text-right">
                 {% if form.children.enabled is defined %}
                     {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}
@@ -136,12 +136,12 @@
             <legend>{{ value.title }}</legend>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    {{ __('Global provider settings') }}
+                    {{ __('Global subscriber settings') }}
                     <a class="pull-right" role="button" data-toggle="collapse" href="#global_{{ value.baseName|lower }}" aria-expanded="false" aria-controls="global_{{ value.baseName|lower }}">
                         <i class="fa fa-cog"> </i>
                     </a>
                 </div>
-                <div class="list-group collapse" id="global_{{ value.getBaseName()|lower }}">
+                <div class="list-group collapse" id="global_{{ value.baseName|lower }}">
                     {% for name, child in form %}
                         {% if name == 'modules' %}
                         {% else %}
@@ -207,7 +207,7 @@
     {% spaceless %}
         {% set binding_id = 'area' ~ random() %}
         <div class="list-group-item {% if value.enabled %}list-group-item-success{% else %}list-group-item-default{% endif %} clearfix">
-            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.provider.area }}</strong></span>
+            <span class="text-info small">{{ __('Area:') }} <strong>{{ value.provider }}</strong></span>
             <div class="pull-right text-right">
                 {% if form.children.enabled is defined %}
                     {{ form_widget(form.children.enabled, {'attr': {'class': 'btn btn-primary radio-inline btn-xs' }}) }}

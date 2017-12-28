@@ -94,10 +94,15 @@ class LinkContainer implements LinkContainerInterface
         $links = [];
         if ($this->permissionApi->hasPermission('ZikulaDizkusModule::', '::', ACCESS_ADMIN)) {
             $links[] = [
-                'url'   => $this->router->generate('zikuladizkusmodule_admin_tree'),
-                'text'  => $this->translator->__('Edit forum tree'),
+                'url'   => $this->router->generate('zikuladizkusmodule_forum_tree'),
+                'text'  => $this->translator->__('Forum tree manager'),
                 'title' => $this->translator->__('Create, delete, edit and re-order forums'),
-                'icon'  => 'list', ];
+                'icon'  => 'sitemap', ];
+            $links[] = [
+                'url'   => $this->router->generate('zikuladizkusmodule_sync_sync'),
+                'text'  => $this->translator->__('Forum sync manager'),
+                'title' => $this->translator->__('Sync all forums topics posts and users counts.'),
+                'icon'  => 'refresh', ];
             $links[] = [
                 'url'   => $this->router->generate('zikuladizkusmodule_admin_ranks', ['ranktype' => RankEntity::TYPE_POSTCOUNT]),
                 'text'  => $this->translator->__('Edit user ranks'),

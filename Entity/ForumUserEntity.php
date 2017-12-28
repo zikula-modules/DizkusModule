@@ -28,6 +28,7 @@ use Zikula\UsersModule\Entity\UserEntity;
 class ForumUserEntity extends EntityAccess
 {
     const USER_LEVEL_NORMAL = 1;
+
     const USER_LEVEL_DELETED = -1;
 
     /**
@@ -128,6 +129,15 @@ class ForumUserEntity extends EntityAccess
      * @param obj $zuser
      */
     public function setUser(UserEntity $zuser = null)
+    {
+        $this->user = $zuser;
+    }
+
+    /**
+     * for import purposes
+     * @param obj
+     */
+    public function setUserId($zuser = null)
     {
         $this->user = $zuser;
     }
@@ -416,7 +426,10 @@ class ForumUserEntity extends EntityAccess
     public function toArray()
     {
         return [
-            'id' => $this->getUserId()
+            'id' => $this->getUserId(),
+            'postOrder' => $this->getPostOrder(),
+            'displayOnlyFavorites' => $this->getDisplayOnlyFavorites(),
+            'autosubscribe' => $this->getAutosubscribe()
         ];
     }
 }

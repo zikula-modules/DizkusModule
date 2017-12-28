@@ -33,6 +33,8 @@ abstract class AbstractBaseController extends AbstractController
             $format = 'json';
         } elseif ($request->isXmlHttpRequest()) {
             $format = 'html';
+        } elseif (null !== $request->attributes->get('format', null)) {
+            $format = $request->attributes->get('format');
         } else {
             $format = $request->getRequestFormat(); // default 'html'
         }
