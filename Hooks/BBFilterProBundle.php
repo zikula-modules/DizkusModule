@@ -183,7 +183,7 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
                     // Push its position on to the stack, and then keep going to the right.
                     array_push($stack, $curr_pos);
                     ++$curr_pos;
-                    //dump($curr_pos);
+                //dump($curr_pos);
                 } elseif (0 == strcasecmp('[/b]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
