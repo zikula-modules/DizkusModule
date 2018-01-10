@@ -143,15 +143,6 @@ class ForumUserEntity extends EntityAccess
     }
 
     /**
-     * for import purposes
-     * @param obj
-     */
-    public function setUserId($zuser = null)
-    {
-        $this->user = $zuser;
-    }
-
-    /**
      * Get user.
      *
      * @return

@@ -346,41 +346,6 @@ class ForumEntity extends EntityAccess
         return $this;
     }
 
-    public function setRoot($root)
-    {
-        $this->root = $root;
-
-        return $this;
-    }
-
-    public function setLft($lft)
-    {
-        $this->lft = $lft;
-
-        return $this;
-    }
-
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
-
-        return $this;
-    }
-
-    public function setRgt($rgt)
-    {
-        $this->rgt = $rgt;
-
-        return $this;
-    }
-
-    public function setTopics($topics)
-    {
-        $this->topics = $topics;
-
-        return $this;
-    }
-
     public function getParents()
     {
         $parents = [];
