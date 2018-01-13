@@ -39,7 +39,6 @@ parameters:
     zikula_dizkus_module.settings_manager.class: Zikula\DizkusModule\Manager\SettingsManager
     # Hooks
     
-
 services:
     
 # Common
@@ -221,6 +220,14 @@ services:
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.forum_user_manager"
+            
+    zikula_dizkus_module.form.type.forum_select:
+        class: %zikula_dizkus_module.forum_select.class%
+        tags:
+            - { name: form.type, alias: zikula_dizkus_module_forum_select_type }
+        arguments:
+            - "@zikula_dizkus_module.forum_manager"
+            
             
     zikula_dizkus_module.form.type.forum_select:
         class: %zikula_dizkus_module.forum_select.class%
