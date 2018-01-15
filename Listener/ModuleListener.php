@@ -98,39 +98,39 @@ class ModuleListener implements EventSubscriberInterface
      */
     public function moduleDelete(GenericEvent $event)
     {
-        $args = $event->getArguments(); // $modinfo
-        $module = $args['name'];
-        $dom = $this->container->get('kernel')->getModule(ZikulaDizkusModule::NAME)->getTranslationDomain();
-        $deleteHookAction = $this->variableApi->get(ZikulaDizkusModule::NAME, 'deletehookaction');
-        // lock or remove
-        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(['hookedModule' => $module]);
-        $count = 0;
-        $total = 0;
-        foreach ($topics as $topic) {
-            switch ($deleteHookAction) {
-                case 'remove':
-                    // @TODO add
-                    //ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', ['topic' => $topic]);
-                    break;
-                case 'lock':
-                default:
-                    $topic->lock();
-                    $count++;
-                    if ($count > 20) {
-                        $this->entityManager->flush();
-                        $count = 0;
-                    }
-
-                    break;
-            }
-            $total++;
-        }
-        // clear last remaining batch
-        $this->entityManager->flush();
-        $actionWord = 'lock' == $deleteHookAction ? $this->translator->__('locked', $dom) : $this->translator->__('deleted', $dom);
-        if ($total > 0) {
-            $request = $this->requestStack->getCurrentRequest();
-            $request->getSession()->getFlashBag()->add('status', $this->translator->__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
-        }
+//        $args = $event->getArguments(); // $modinfo
+//        $module = $args['name'];
+//        $dom = $this->container->get('kernel')->getModule(ZikulaDizkusModule::NAME)->getTranslationDomain();
+//        $deleteHookAction = $this->variableApi->get(ZikulaDizkusModule::NAME, 'deletehookaction');
+//        // lock or remove
+//        $topics = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\TopicEntity')->findBy(['hookedModule' => $module]);
+//        $count = 0;
+//        $total = 0;
+//        foreach ($topics as $topic) {
+//            switch ($deleteHookAction) {
+//                case 'remove':
+//                    // @TODO add
+//                    //ModUtil::apiFunc(ZikulaDizkusModule::NAME, 'Topic', 'delete', ['topic' => $topic]);
+//                    break;
+//                case 'lock':
+//                default:
+//                    $topic->lock();
+//                    $count++;
+//                    if ($count > 20) {
+//                        $this->entityManager->flush();
+//                        $count = 0;
+//                    }
+//
+//                    break;
+//            }
+//            $total++;
+//        }
+//        // clear last remaining batch
+//        $this->entityManager->flush();
+//        $actionWord = 'lock' == $deleteHookAction ? $this->translator->__('locked', $dom) : $this->translator->__('deleted', $dom);
+//        if ($total > 0) {
+//            $request = $this->requestStack->getCurrentRequest();
+//            $request->getSession()->getFlashBag()->add('status', $this->translator->__f('Dizkus: All hooked discussion topics %s.', $actionWord, $dom));
+//        }
     }
 }
