@@ -68,23 +68,24 @@
 
         {% else %}
             {# Topic is not created #}
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3>{{ __('Comments') }}</h3>
-                </div>
-            </div>
             {% if config.topic_mode == 2 %}
                 {# ******************************************************
                 * QUICK REPLY FORM
                 ******************************************************* #}
-                {#                {% if currentForumUser.allowedToComment(currentTopic) %}
-                                {% endif %}#}
-                <div id="quickreply">
-                    {{ render(controller(
-                                        'ZikulaDizkusModule:Topic:newTopic',
-                                        {'request': app.request, 'forum': currentForum.id}
-                                    )) }}
-                </div>
+                {#  @todo remove topic exists when comments will be in working state #}
+                {% if currentTopic.exists() and currentForumUser.allowedToComment(currentTopic) %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3>{{ __('Comments') }}</h3>
+                        </div>
+                    </div>
+                    <div id="quickreply">
+                        {{ render(controller(
+                                            'ZikulaDizkusModule:Topic:newTopic',
+                                            {'request': app.request, 'forum': currentForum.id}
+                                        )) }}
+                    </div>
+                {% endif %}
             {% else %} {# , '_format': 'ajax.html', 'template' : 'comment' #}
                 <div class="alert alert-info" role="alert">
                     <i class="fa fa-info-circle"></i> <strong>{{ __('Comments are disabled for this item.') }}</strong>
@@ -96,4 +97,3 @@
         {% endif %}
     {% endif %}
 </div>
-{{ dump(app.request) }}
