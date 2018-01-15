@@ -90,8 +90,7 @@ class ForumEntity extends EntityAccess
 
     /**
      * @Gedmo\TreeRoot
-     * @ORM\ManyToOne(targetEntity="ForumEntity")
-     * @ORM\JoinColumn(name="cat_id", referencedColumnName="forum_id")
+     * @ORM\Column(name="root", type="integer", nullable=true)
      */
     private $root;
 
