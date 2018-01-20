@@ -45,7 +45,11 @@ class ModeratorUsersTransformer implements DataTransformerInterface
 
         $selectedUsersArr = [];
         foreach ($moderatorUsersCollection as $element) {
-            $selectedUsersArr[$element->getForumUser()->getUserId()] = $element->getForumUser()->getUserId();
+            $uid = $element->getForumUser()->getUser() === null ? null : $element->getForumUser()->getUser()->getUid();
+            if (!$uid) {
+                continue;
+            }
+            $selectedUsersArr[$element->getForumUser()->getUser()->getUname()] = $uid;
         }
 
         return $selectedUsersArr;
