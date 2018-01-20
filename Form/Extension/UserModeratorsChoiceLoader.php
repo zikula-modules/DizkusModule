@@ -34,13 +34,11 @@ class UserModeratorsChoiceLoader implements ChoiceLoaderInterface
      */
     public function __construct($builder)
     {
-        if (is_object($builder) && ($builder instanceof FormBuilderInterface))
-        {
+        if (is_object($builder) && ($builder instanceof FormBuilderInterface)) {
             // Let the form builder notify us about initial/submitted choices
-            $builder->addEventListener
-            (
+            $builder->addEventListener(
                 FormEvents::POST_SET_DATA,
-                [ $this, 'onFormPostSetData' ]
+                [$this, 'onFormPostSetData']
             );
         }
     }
@@ -60,7 +58,7 @@ class UserModeratorsChoiceLoader implements ChoiceLoaderInterface
 
         foreach ($formdata->getModeratorUsers() as $moderatorForumUser) {
             // in case of situation when zikula user is removed
-            $uid = $moderatorForumUser->getForumUser()->getUser() === null ? null : $moderatorForumUser->getForumUser()->getUser()->getUid();
+            $uid = null === $moderatorForumUser->getForumUser()->getUser() ? null : $moderatorForumUser->getForumUser()->getUser()->getUid();
             if (!$uid) {
                 continue;
             }
