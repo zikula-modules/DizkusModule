@@ -69,11 +69,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
             return false;
         }
-        // ToDo: create FULLTEXT index
+
         // set the module vars
         $this->setVars(self::getDefaultVars());
-//        $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-//        $this->hookApi->installProviderHooks($this->bundle->getMetaData());
         // set up forum root (required)
         $forumRoot = new ForumEntity();
         $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -83,7 +81,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $this->setUpExampleForums($forumRoot);
         // set up sample ranks
         $this->setUpSampleRanks();
-        // Initialisation successful
+
         return true;
     }
 
@@ -198,10 +196,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         }
         // remove module vars
         $this->delVars();
-        // unregister hooks
-//        $this->hookApi->uninstallSubscriberHooks($this->bundle->getMetaData());
-//        $this->hookApi->uninstallProviderHooks($this->bundle->getMetaData());
-        // Deletion successful
+
         return true;
     }
 
@@ -273,8 +268,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     return false;
                 }
 
-//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
                 // set up forum root (required)
                 $forumRoot = new ForumEntity();
                 $forumRoot->setName(ForumEntity::ROOTNAME);
@@ -297,9 +290,6 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
                 $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
-
-//                $this->hookApi->installSubscriberHooks($this->bundle->getMetaData());
-//                $this->hookApi->installProviderHooks($this->bundle->getMetaData());
 
                 break;
             case '4.1.0':
@@ -343,14 +333,8 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     public function markTablesForImport($prefix)
     {
         $connection = $this->entityManager->getConnection();
-        $schemaManager = $connection->getSchemaManager();
-        $schema = $schemaManager->createSchema();
         // remove table prefixes
         foreach ($this->importTables as $value) {
-//            if (!$schema->hasTable($prefix.$value)) {
-//                continue;
-//            }
-
             $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
             $stmt = $connection->prepare($sql);
 
@@ -409,7 +393,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
     }
 
     /**
-     * Upgrade settings to current version (to_4_1_0)
+     * Upgrade settings to current version (to_5_0_0)
      */
     private function upgrade_settings()
     {
