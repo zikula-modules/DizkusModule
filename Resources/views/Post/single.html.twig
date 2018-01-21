@@ -12,7 +12,7 @@
                 <a class="tooltips" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':managedPost.getManagedTopic.id, 'start': managedPost.getManagedTopic().getTopicPage(managedPost.get().getTopic().getReplyCount()) }) }}#/post/{{ managedPost.id }}" title="{{ __("Link to this post") }}"><i class="fa fa-file-o"></i></a>
                 {% endif %}
             #{{ managedPost.id }}
-            <strong>{{ __("Posted") }}: </strong>{{ post.post_time|date('Y-m-d H:i:s') }} 
+            <strong>{{ __("Posted") }}: </strong>{{ post.post_time|date('Y-m-d H:i:s') }}
         </div>
     </div>
     <div class="panel-body">
@@ -106,7 +106,7 @@
 
 
 
-                    {% if currentForumUser.allowedToEdit(managedPost) or currentForumUser.allowedToModerate(managedPost) %}
+                    {% if (currentForumUser.allowedToEdit(managedPost) or currentForumUser.allowedToModerate(managedPost)) and not managedPost.get.isFirstPost %}
                         <li><a class="deletepostlink fa fa-trash fa-150x tooltips" href="{{ path('zikuladizkusmodule_post_delete', {'post': managedPost.id}) }}" title="{{ __("Delete this post") }}"></a></li>
                         {% endif %}
                 </ul>

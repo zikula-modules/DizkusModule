@@ -110,7 +110,7 @@ class PostController extends AbstractController
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
-            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -237,7 +237,7 @@ class PostController extends AbstractController
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
-            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
@@ -245,6 +245,17 @@ class PostController extends AbstractController
             $this->addFlash('error', $error);
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        if ($managedPost->get()->isFirst()) {
+            $error = $this->__f('Error! The post you selected for delete (ID: %s) is first post. You need to delete topic instead.', ['%s' => $post]);
+            if ('json' == $format || 'ajax.html' == $format) {
+                return new Response(json_encode(['error' => $error])); // add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -350,7 +361,7 @@ class PostController extends AbstractController
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
-            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
@@ -358,6 +369,17 @@ class PostController extends AbstractController
             $this->addFlash('error', $error);
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        if ($managedPost->get()->isFirst()) {
+            $error = $this->__f('Error! The post you selected for move (ID: %s) is first post. You cannot move first post.', ['%s' => $post]);
+            if ('json' == $format || 'ajax.html' == $format) {
+                return new Response(json_encode(['error' => $error])); // add not found error code etc
+            }
+
+            $this->addFlash('error', $error);
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -474,7 +496,7 @@ class PostController extends AbstractController
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
-            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error])); //add not found error code etc
             }
