@@ -63,10 +63,8 @@ class UserModeratorsChoiceLoader implements ChoiceLoaderInterface
                 continue;
             }
 
-            $selectedModeratorUsers[$moderatorForumUser->getForumUser()->getUser()->getUname()] = (string) $uid;
+            $this->selected[$moderatorForumUser->getForumUser()->getUser()->getUname()] = (string) $uid;
         }
-
-        $this->selected = $selectedModeratorUsers;
     }
 
     /**
