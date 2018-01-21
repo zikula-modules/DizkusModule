@@ -27,18 +27,20 @@ class NewTopicType extends AbstractType
         $builder->add('title', TextType::class, [
                     'required' => true,
                 ])
-                ->add('locked', CheckboxType::class, [
-                    'required' => false,
-                    ])
-                ->add('sticky', CheckboxType::class, [
-                    'required' => false,
-                    ])
                 ->add('posts', CollectionType::class, [
                      'allow_add' => true,
                      'entry_type' => new FirstPostType(),
                      'entry_options'  => [],
                  ]);
+        if ($options['isModerator']) {
+            $builder->add('locked', CheckboxType::class, [
+                'required' => false,
+                ]);
 
+            $builder->add('sticky', CheckboxType::class, [
+                'required' => false,
+                ]);
+        }
         if ($options['settings']['solved_enabled']) {
             $builder->add('solved', CheckboxType::class, [
                 'required' => false,
@@ -71,7 +73,8 @@ class NewTopicType extends AbstractType
         $resolver->setDefaults([
             'translator' => null,
             'loggedIn' => false,
-            'settings' => false
+            'settings' => false,
+            'isModerator' => false
         ]);
     }
 }

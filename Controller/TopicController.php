@@ -194,7 +194,7 @@ class TopicController extends AbstractController
                                     ->setTopic($newManagedTopic->get())
                                     ->setPoster($currentForumUser->get())
                                     ->setIsFirstPost()),
-                ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars()]
+                ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars(), 'isModerator' => $currentForumUser->allowedToModerate($managedForum)]
             );
 
         if ('html' == $format || 'comment' == $template) {
