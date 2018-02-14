@@ -16,46 +16,42 @@
             </div>
 
             <div class="collapse navbar-collapse" id="navbar-latest-collapse">
-                <form id="nohours-form" class="navbar-form navbar-right" action="{{ path('zikuladizkusmodule_topic_viewlatest') }}" method="GET">
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary {% if unanswered == 1 %}active{% endif %}">
+                <form id="latest-form" class="navbar-form navbar-right" action="{{ path('zikuladizkusmodule_topic_viewlatest') }}" method="GET">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary {% if unanswered == 1 %}active{% endif %}">
                             <input type="checkbox" name="unanswered"  autocomplete="off" {% if unanswered == 1 %}checked{% endif %}> {{ __("Unanswered") }}
-                        </label>
-                        <label class="btn btn-primary {% if unsolved == 1 %} active{% endif %}">
+                            </label>
+                            <label class="btn btn-primary {% if unsolved == 1 %} active{% endif %}">
                             <input type="checkbox" name="unsolved" autocomplete="off" {% if unsolved == 1 %} checked{% endif %}> {{ __("Unsolved") }}
-                        </label>
-                    </div>
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary active">
-                            <input type="radio" name="since" value="24" autocomplete="off" {% if since == 24 or since == null %} checked {% endif %}> {{ __("Since Today") }}
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="since" value="48" autocomplete="off" {% if since == 48 %} checked {% endif %}> {{ __("Since Yesterday") }}
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="since" value="365" autocomplete="off" {% if since == 365  %} checked {% endif %}> {{ __("Since Last week") }}
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        {# <div class="input-group">#}
-                        <input type="text" class="form-control input-sm" name="since" id="Dizkus_hours" size="3" value="" maxlength="3" tabindex="0" placeholder="hours">
-                        <button type="submit" class="btn btn-success">
-                            {{ __("Search") }}
-                        </button>
-                        {#  </div><!-- /input-group -->#}
-                    </div>
+                            </label>
+                        </div>
+                        <a href="#" class="btn btn-link disabled" aria-disabled="true">{{ __('Since') }}</a>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary {% if hours == '' and (since == null or since == 'today') %} active {% endif %}">
+                            <input type="radio" name="since" value="today" autocomplete="off" {% if hours == '' and (since == null or since == 'today') %} checked {% endif %}> {{ __("Today") }}
+                            </label>
+                            <label class="btn btn-primary {% if since == 'yesterday'%} active {% endif %}">
+                            <input type="radio" name="since" value="yesterday" autocomplete="off" {% if since == 'yesterday' %} checked {% endif %}> {{ __("Yesterday") }}
+                            </label>
+                            <label class="btn btn-primary {% if since == 'lastweek'%} active {% endif %}">
+                            <input type="radio" name="since" value="lastweek" autocomplete="off" {% if since == 'lastweek' %} checked {% endif %}> {{ __("Last week") }}
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control input-sm" name="hours" size="3" value="{{ hours }}" min="0" max="9999" tabindex="0" placeholder="hours">
+                            <button type="submit" class="btn btn-success">
+                                {{ __("Search") }}
+                            </button>
+                        </div>
                 </form>
             </div><!-- /.navbar-collapse -->
-
         </div>
     </nav>
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="">{{ __("Latest topics") }}</h2>
+            <h2 class="">{{ __("Latest topics") }}</h2>
         </div>
-        {#        <div class="panel-body">
-                    <#}
         <div class="list-group-item list-group-item-info noborder">
             <div class="row">
                 <div class="col-md-2">
@@ -93,10 +89,9 @@
                                     <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>
                                 {% else %}
                                     {# icons debug #}
-                                    {#<i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>#}
+{#                                    <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>#}
                                 {% endif %}
                             </span>
-
                             {% if topic.sticky == 1 %}
                                 <i title='{{ __("Topic is pinned to top of list.")}}' class="{#{{ sticky_icon_class }}#} fa-blue tooltips"></i>
                             {% else %}
@@ -114,48 +109,50 @@
                             <a class="topictitle tooltips"
                                href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ '#/post/' ~ topic.last_post.id }}"
                                title="{{ __('Go to topic') }} {{ topic.title }}">
-                                {{ topic.title }}
+                               {{ topic.title }}
                             </a>
                             <div class="text-muted">
                                 <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
-                                {% set total_posts=topic.replyCount %}
-                                {% for i in range(0, total_posts, settings.posts_per_page) %}
-                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="data col-md-1 text-center">
-                            {% if topic.replyCount >= settings.hot_threshold %}
-                            <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
-                        {% else %}
-                            {{ topic.replyCount | escape('html')}}
-                            {% endif %}
-                            </div>
-                            <div class="data col-md-1 text-center">
-                                {{ topic.viewCount | escape('html')}}
-                            </div>
-                            <div class="lastpost col-md-4 pull-right">
-                                {% if topic.last_post is defined %}
-                                    {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
+                                {% if topic.replyCount > settings.posts_per_page %}
+                                    {% for i in range(0, topic.replyCount, settings.posts_per_page) %}
+                                        <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
+                                    {% endfor %}
                                 {% endif %}
                             </div>
                         </div>
-                    </li>
-                    {% else %}
-                        <li class="list-group-item">
-                            <div class="text-center warning">
-                                {{ __('No topics found.')}}
-                            </div>
-                        </li>
-                        {% endfor %}
-                        </ul>
-                        {{ pager({rowcount:pager.numitems,
-                        limit:settings.posts_per_page,
-                        class:'pull-right',
-                        posvar:'page',
-                        route:'zikuladizkusmodule_topic_viewlatest',
-                        template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
-                        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+                        <div class="data col-md-1 text-center">
+                        {% if topic.replyCount >= settings.hot_threshold %}
+                            <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
+                        {% else %}
+                            {{ topic.replyCount | escape('html')}}
+                        {% endif %}
+                        </div>
+                        <div class="data col-md-1 text-center">
+                            {{ topic.viewCount | escape('html')}}
+                        </div>
+                        <div class="lastpost col-md-4 pull-right">
+                            {% if topic.last_post is defined %}
+                                {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
+                            {% endif %}
+                        </div>
                     </div>
+                </li>
+            {% else %}
+            <li class="list-group-item">
+                <div class="text-center warning">
+                    {{ __('No topics found.')}}
                 </div>
-                {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pager({rowcount:pager.numitems,
+        limit:settings.posts_per_page,
+        class:'pull-right',
+        posvar:'page',
+        route:'zikuladizkusmodule_topic_viewlatest',
+        template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
+        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
+    </div>
+</div>
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Topic.latest.js')) }}
+{{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

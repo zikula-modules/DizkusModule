@@ -59,20 +59,34 @@ class PostController extends AbstractController
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        $since = null == $request->query->get('since', null) ? null : (int)$request->query->get('since');
+        $since = $request->query->get('since', 'today');
+        $hours = $request->query->get('hours', false);
+
+        // since to hours
+        if ($hours) {
+            $sinceHours = $hours;
+        } elseif ('today' == $since) {
+            $sinceHours = 24; // or we can calculate exact todays topics
+        } elseif ('yesterday' == $since) {
+            $sinceHours = 48;
+        } elseif ('lastweek' == $since) {
+            $sinceHours = 168;
+        } else {
+            $sinceHours = null;
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 25);
-
         list($posts, $pager) = $this->getDoctrine()->getManager()
             ->getRepository('Zikula\DizkusModule\Entity\PostEntity')
             //->setManager($this->get('zikula_dizkus_module.post_manager'))
-            ->getPosts($since, $page, $limit);
+            ->getPosts($sinceHours, $page, $limit);
 
         $managedPosts = [];
         foreach ($posts as $post) {
             $managedPosts[] = $this->get('zikula_dizkus_module.post_manager')->getManager(null, $post);
         }
-
+//        @todo - disable for bots
 //        if (ModUtil::apiFunc($this->name, 'user', 'useragentIsBot') === true) {
 //            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_index', [], RouterInterface::ABSOLUTE_URL));
 //        }
@@ -80,11 +94,12 @@ class PostController extends AbstractController
         return $this->render('@ZikulaDizkusModule/Post/latest.html.twig', [
             'currentForumUser' => $forumUserManager,
             'since' => $since,
+            'hours' => $hours,
             'latestPosts' => $managedPosts,
             'pager'=> $pager,
             'page' => $page,
             'settings' => $this->getVars(),
-            ]);
+        ]);
     }
 
     /**

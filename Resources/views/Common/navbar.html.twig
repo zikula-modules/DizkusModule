@@ -4,6 +4,8 @@
                               'zikuladizkusmodule_user_managefavoriteforums',
                               'zikuladizkusmodule_user_managesignature']
 %}
+{% set returnUrl = path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params'))|url_encode %}
 <nav class="navbar navbar-inverse dizkus-main" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -30,30 +32,28 @@
                         <li><a class="fa fa-heart" href="{{ path('zikuladizkusmodule_user_changeview', {'setting':'favorites'}) }}" title="{{ __("Show favourite forums only") }}">&nbsp;{{ __("Showing all forums") }}</a></li>
                         {% endif %}
                     {% endif %}
-                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_minetopics' %} class="active" {% endif %} >
+                <li class="{% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_minetopics' %}active {% endif %}">
                     <a class="" title="{{ __('View my topics') }}" href="{{ path('zikuladizkusmodule_user_minetopics') }}">
                         <i class="fa fa-comments-o fa-flip-horizontal"></i>&nbsp;{{ __('View my topics') }}
                     </a>
                 </li>
-                <li {% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_mineposts' %} class="active" {% endif %} >
+                <li class="{% if currentForumUser.currentPosition == 'zikuladizkusmodule_user_mineposts' %}active {% endif %}">
                     <a class="" title="{{ __('View my posts') }}" href="{{ path('zikuladizkusmodule_user_mineposts') }}">
                         <i class="fa fa-comment fa-flip-horizontal"></i>&nbsp;{{ __('View my posts') }}
                     </a>
                 </li>
-                <li {% if currentForumUser.currentPosition in userPreferencesRoutes %}
-                    class="active" {% endif %} >
+                <li class="{% if currentForumUser.currentPosition in userPreferencesRoutes %}active {% endif %}">
                     <a class="tooltips" title="{{ __('Personal settings') }}" href="{{ path("zikuladizkusmodule_user_prefs") }}">
                         <i class="fa fa-user"></i><i class="fa fa-sliders"></i>
                     </a>
                 </li>
             {% else %}
-                {#{assign value="index.php?"|cat:$smarty.server.QUERY_STRING|urlencode var='redirect'} @TODO  #}
-                <li><a title="{{ __("Log-in") }}" href="{{ path("zikulausersmodule_user_login") }}">{{ __("Log-in") }}</a></li>
+                <li><a title="{{ __("Log-in") }}" href="{{ path("zikulausersmodule_user_login", {'returnUrl':returnUrl }) }}">{{ __("Log-in") }}</a></li>
                 <li><a title="{{ __("Register") }}" href="{{ path("zikulausersmodule_user_register") }}">{{ __("Register") }}</a></li>
             {% endif %}
             {% if hasPermission('Dizkus::', '.*', 'ACCESS_ADMIN') %}
                 <li><a class="tooltips" title="{{ __("Administrate Dizkus") }}" href="{{ path('zikuladizkusmodule_admin_index') }}"><i class="fa fa-cogs"></i></a></li>
-                    {% endif %}
+            {% endif %}
             <li><a class="tooltips" title="{{ __('Search forums') }}" href="{{ path("zikulasearchmodule_user_form") }}"><i class="fa fa-search"></i></a></li>
         </ul>
     </div><!-- /.navbar-collapse -->

@@ -96,10 +96,6 @@ class TopicController extends AbstractController
      * View latest topics
      *
      * @param Request $request
-     *                         string 'selorder'
-     *                         integer 'nohours'
-     *                         integer 'unanswered'
-     *                         integer 'last_visit_unix'
      *
      * @throws AccessDeniedException on failed perm check
      *
@@ -113,22 +109,38 @@ class TopicController extends AbstractController
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
 
-        $since = null == $request->query->get('since', null) ? null : (int)$request->query->get('since');
-        $unanswered = 'on' == $request->query->get('unanswered') ? 1 : true;
+        $unanswered = 'on' == $request->query->get('unanswered') ? 1 : false;
         $unsolved = 'on' == $request->query->get('unsolved') ? 1 : false;
+        $since = $request->query->get('since', 'today');
+        $hours = $request->query->get('hours', false);
+
+        // since to hours
+        if ($hours) {
+            $sinceHours = $hours;
+        } elseif ('today' == $since) {
+            $sinceHours = 24; // or we can calculate exact todays topics
+        } elseif ('yesterday' == $since) {
+            $sinceHours = 48;
+        } elseif ('lastweek' == $since) {
+            $sinceHours = 168;
+        } else {
+            $sinceHours = null;
+        }
+
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 25);
         list($topics, $pager) = $this->getDoctrine()->getManager()
             ->getRepository('Zikula\DizkusModule\Entity\TopicEntity')
-            ->getTopics($since, $unanswered, $unsolved, $page, $limit
+            ->getTopics($sinceHours, $unanswered, $unsolved, $page, $limit
             );
 
         return $this->render('@ZikulaDizkusModule/Topic/latest.html.twig', [
             'currentForumUser' => $forumUserManager,
             'topics' => $topics,
-            'since' => $since,
             'unanswered' => $unanswered,
             'unsolved' => $unsolved,
+            'since' => $since,
+            'hours' => $hours,
             'page' => $page,
             'pager' => $pager,
             'settings' => $this->getVars(),
