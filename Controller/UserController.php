@@ -67,9 +67,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile/{user}", defaults={"user"=null})
      *
-     * prefs
-     *
-     * Interface for a user to manage general user preferences.
+     * Interface for a user to display forum user profile.
      *
      * @return string
      */
@@ -94,9 +92,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/preferences/{user}", defaults={"user"=null})
-     *
-     * prefs
+     * @Route("/user/preferences/{user}")
      *
      * Interface for a user to manage general user preferences.
      *

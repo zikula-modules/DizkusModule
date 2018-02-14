@@ -48,13 +48,7 @@
 
         </div>
     </nav>
-
-{#    <div class="panel panel-default">#}
-{#        <div class="panel-heading">#}
-            <h3 class="">{{ __("Latest posts") }}</h2>
-{#        </div>#}
-{#    </div>#}
-
+    <h1 class="">{{ __("Latest posts") }}</h1>
     {% for post in latestPosts %}
         {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': post, 'hide_badge': '', 'show_topic': 1}) }}
     {% else %}

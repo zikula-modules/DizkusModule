@@ -30,8 +30,7 @@
             "oldnames": ["Dizkus"],
             "capabilities": {
                 "admin": {"route": "zikuladizkusmodule_admin_index"},
-                "user": {"route": "zikuladizkusmodule_user_index"},
-                "searchable": {"class": "Zikula\\DizkusModule\\Helper\\SearchHelper"}
+                "user": {"route": "zikuladizkusmodule_user_index"}
             },
             "securityschema": {
                 "ZikulaDizkusModule::": "ForumID::",

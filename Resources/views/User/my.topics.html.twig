@@ -1,9 +1,104 @@
 {{ pageSetVar('title', __("My Topics")) }}
 {{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h2 class="fa fa-home">&nbsp;{{ __("My Topics") }}</h2>
+<div id="my-topics">
+    {{ showflashes() }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="">{{ __("My Topics") }}</h2>
+        </div>
+        <div class="list-group-item list-group-item-info noborder">
+            <div class="row">
+                <div class="col-md-2">
+                    {{ __('Status')}}
+                </div>
+                <div class="col-md-4">
+                    {{ __('Topic')}}
+                </div>
+                <div class="col-md-1">
+                    {{ __("Replies") | upper}}
+                </div>
+                <div class="col-md-1">
+                    {{ __("Views") | upper}}
+                </div>
+                <div class="col-md-4 pull-right">
+                    {{ __('Last post') | upper}}
+                </div>
+            </div>
+        </div>
+        <ul class="list-group">
+            {% for topic in topics.iterator %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="data col-md-2">
+                            <span class="fa-stack">
+                                <i title='{{ __("No reply since your last visit.")}}' class="fa fa-stack-2x fa-comments-o fa-flip-horizontal"></i>
+                                {% if topic.last_post is not null and topic.last_post.post_time is defined and (date(topic.last_post.post_time) > date(currentForumUser.getLastVisit())) %}
+                                    <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>
+                                {% else %}
+                                    {# icons debug #}
+{#                                    <i title='{{ __("New reply since your last visit.")}}' class="fa fa-commenting fa-flip-horizontal fa-orange" style="font-size:1.4em; margin-left: 7px;"></i>#}
+                                {% endif %}
+                            </span>
+                            {% if topic.sticky == 1 %}
+                                <i title='{{ __("Topic is pinned to top of list.")}}' class="{#{{ sticky_icon_class }}#} fa-blue tooltips"></i>
+                            {% else %}
+                            {% endif %}
+                            {% if topic.locked == 1 %}
+                                <i title='{{ __("This topic is locked.")}}' class="fa fa-lock tooltips"></i>
+                            {% endif %}
+                            {% if topic.solved > 0 %}
+                                <i title='{{ __("This topic is solved.")}}' class="fa fa-check fa-green tooltips"></i>
+                            {% elseif topic.solved == -1 %}
+                                <i title='{{ __("This topic is a support request.")}}' class="fa fa-question fa-red tooltips"></i>
+                            {% endif %}
+                        </div>
+                        <div class="description col-md-4">
+                            <a class="topictitle tooltips"
+                               href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ '#/post/' ~ topic.last_post.id }}"
+                               title="{{ __('Go to topic') }} {{ topic.title }}">
+                               {{ topic.title }}
+                            </a>
+                            <div class="text-muted">
+                                <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
+                                {% if topic.replyCount > settings.posts_per_page %}
+                                    {% for i in range(0, topic.replyCount, settings.posts_per_page) %}
+                                        <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="data col-md-1 text-center">
+                        {% if topic.replyCount >= settings.hot_threshold %}
+                            <span title='{{ __("Hot topic")}}' class="fa-red tooltips"><i class="fa fa-fire"></i>&nbsp;{{ topic.replyCount | escape('html')}}</span>
+                        {% else %}
+                            {{ topic.replyCount | escape('html')}}
+                        {% endif %}
+                        </div>
+                        <div class="data col-md-1 text-center">
+                            {{ topic.viewCount | escape('html')}}
+                        </div>
+                        <div class="lastpost col-md-4 pull-right">
+                            {% if topic.last_post is defined %}
+                                {{ include("@ZikulaDizkusModule/User/lastPostBy.html.twig", {'last_post': topic.last_post})}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+            <li class="list-group-item">
+                <div class="text-center warning">
+                    {{ __('No topics found.')}}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pager({rowcount:pager.numitems,
+        limit:settings.topics_per_page,
+        class:'pull-right',
+        posvar:'start',
+        route:'zikuladizkusmodule_user_minetopics',
+        template:'@ZikulaDizkusModule/Forum/forum.topics.pager.html.twig'}) }}
+        {{ include("@ZikulaDizkusModule/Forum/panelfooter.html.twig") }}
     </div>
-    {{ include("@ZikulaDizkusModule/Topic/collection.html.twig") }}
 </div>
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}
