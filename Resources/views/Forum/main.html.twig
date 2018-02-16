@@ -7,7 +7,7 @@
         </h2>
         {% if totalposts is defined %}
             <div style='position:absolute; top:0; right:0; padding: 1.25em;'>
-                <a class="btn btn-default btn-sm tooltips" title="{{ __('RSS Feed') }}" href="{{ path('zikuladizkusmodule_feed_feed') }}"><i class="fa fa-rss-square fa-150x fa-orange"></i>
+                <a class="btn btn-default btn-sm tooltips disabled" title="{{ __('RSS Feed') }}" href="{{ path('zikuladizkusmodule_feed_feed') }}"> {#<i class="fa fa-rss-square fa-150x fa-orange"></i>#}
                     {{ __f('Total posts: %s',{'%s':totalposts }) }}</a>
             </div>
         {% endif %}
