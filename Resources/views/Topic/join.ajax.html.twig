@@ -1,0 +1,49 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3> 
+            {{ templatetitle }}      
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            {{ form_label(form.to_topic_id, __('ID of target topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.to_topic_id, {'attr': {'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.createshadowtopic, __('Create shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            </div>
+        </div>
+    </div>
+    {% if form.reason is defined %}
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                <div class="col-md-9">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                    <small class="form-text text-muted">{{ __('You can send an email to topic creator with a reason why this topic was joined.') }}</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.join, {'attr': {'class': 'btn btn-warning btn-sm pull-right'}}) }}
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

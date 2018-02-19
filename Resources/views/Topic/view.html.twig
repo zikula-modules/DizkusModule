@@ -14,7 +14,8 @@
 {% set print_icon %}<i class="fa fa-print"></i>{% endset %}
 {% set delete_icon %}<i class="fa fa-times"></i>{% endset %}
 {% set split_icon %}<i class='fa fa-chevron-circle-down'></i>{% endset %}
-{% set joinmove_icon %}<i class="fa fa-arrow-right"></i>{% endset %}
+{% set move_icon %}<i class="fa fa-arrow-right"></i>{% endset %}
+{% set join_icon %}<i class="fa fa-compress"></i>{% endset %}
 
 {% set sort_up_icon %}<i class="fa fa-long-arrow-up" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i>{% endset %}
 {% set sort_down_icon %}<i class="fa fa-long-arrow-up fa-rotate-180" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i>{% endset %}
@@ -121,7 +122,8 @@
                         {% if currentTopic.get.sticky == 0 %}{{ sticky_icon }}{% else %}{{ unsticky_icon }}{% endif %}
                     </a>
                 </li>
-                <li><a class="tooltips" title="{{ __("Move or join topic") }}" href="{{ path('zikuladizkusmodule_topic_joinmovetopic', {'topic':currentTopic.id}) }}">{{ joinmove_icon }}</a></li>
+                <li><a class="tooltips" title="{{ __("Move topic") }}" href="{{ path('zikuladizkusmodule_topic_movetopic', {'topic':currentTopic.id}) }}">{{ move_icon }}</a></li>
+                <li><a class="tooltips" title="{{ __("Join topic") }}" href="{{ path('zikuladizkusmodule_topic_jointopic', {'topic':currentTopic.id}) }}">{{ join_icon }}</a></li>
                 <li><a class="tooltips" title="{{ __("Delete topic") }}" href="{{ path('zikuladizkusmodule_topic_deletetopic', {'topic':currentTopic.id}) }}">{{ delete_icon }}</a></li>
                 {% endif %}
             <li><a class="tooltips" title="{{ __("To bottom of page") }}" href="#bottom">{{ bottom_icon }}</a></li>

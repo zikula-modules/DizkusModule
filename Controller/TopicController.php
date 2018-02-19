@@ -31,7 +31,8 @@ use Zikula\DizkusModule\Events\DizkusEvents;
 use Zikula\DizkusModule\Form\Type\Topic\EditTopicType;
 use Zikula\DizkusModule\Form\Type\Topic\EmailTopicType;
 use Zikula\DizkusModule\Form\Type\Topic\DeleteTopicType;
-use Zikula\DizkusModule\Form\Type\Topic\JoinMoveTopicType;
+use Zikula\DizkusModule\Form\Type\Topic\JoinTopicType;
+use Zikula\DizkusModule\Form\Type\Topic\MoveTopicType;
 use Zikula\DizkusModule\Form\Type\Topic\NewTopicType;
 use Zikula\DizkusModule\Form\Type\Topic\ReplyTopicType;
 use Zikula\DizkusModule\Form\Type\Topic\SplitTopicType;
@@ -64,7 +65,7 @@ class TopicController extends AbstractController
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         $currentTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$currentTopic->exists()) {
-            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]));
+            $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
@@ -167,8 +168,6 @@ class TopicController extends AbstractController
         $error = false;
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         $errorReturnUrl = $this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL);
-        // get the forum
-//        $forum = (int) $request->query->get('forum');
         if (!isset($forum)) {
             $error = $this->__('Error! Missing forum id.');
 
@@ -177,7 +176,7 @@ class TopicController extends AbstractController
 
         $managedForum = $this->get('zikula_dizkus_module.forum_manager')->getManager($forum, null, false);
         if (!$managedForum->exists()) {
-            $error = $this->__f('Error! Forum with id %s does not exist.' . $forum, [$forum]);
+            $error = $this->__f('Error! Forum with id %s does not exist.', ['%s' => $forum]);
 
             goto error;
         }
@@ -383,7 +382,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -414,7 +413,7 @@ class TopicController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod('GET')) {
-            goto edit_error;
+            goto display;
         }
 
         $topicHookValidators = $this->get('hook_dispatcher')
@@ -425,11 +424,11 @@ class TopicController extends AbstractController
             foreach ($topicHookValidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto edit_error;
+            goto display;
         }
 
         if (!$form->isValid()) {
-            goto edit_error;
+            goto display;
         }
 
         $managedTopic->update($form->getData());
@@ -463,7 +462,7 @@ class TopicController extends AbstractController
             }
         }
 
-        edit_error:
+        display:
 
         $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/edit.$format.twig", [
                     'currentForumUser' => $currentForumUser,
@@ -502,7 +501,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
 
             goto error;
         }
@@ -599,6 +598,7 @@ class TopicController extends AbstractController
         if ('json' == $format) {
             return new Response(json_encode(['data' => $error]));
         } else {
+            // @todo below template does not exist
             $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/error.reply.$template.$format.twig", [
                     'currentForumUser' => $currentForumUser,
                     'error'  => $error,
@@ -638,7 +638,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -670,7 +670,7 @@ class TopicController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod('GET')) {
-            goto delete_error;
+            goto display;
         }
 
         $topicHookValidators = $this->get('hook_dispatcher')
@@ -681,11 +681,11 @@ class TopicController extends AbstractController
             foreach ($topicHookValidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto delete_error;
+            goto display;
         }
 
         if (!$form->isValid()) {
-            goto delete_error;
+            goto display;
         }
 
         $managedTopic->update($form->getData());
@@ -719,7 +719,7 @@ class TopicController extends AbstractController
             }
         }
 
-        delete_error:
+        display:
 
         $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/delete.$format.twig", [
                     'currentForumUser' => $currentForumUser,
@@ -735,17 +735,15 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/topic/{topic}/joinmove", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
+     * @Route("/topic/{topic}/move", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * Move topic
-     *
-     * @todo Split into separate actions
      *
      * User interface to move a topic to another forum.
      *
      * @return string
      */
-    public function joinmovetopicAction(Request $request, $topic)
+    public function movetopicAction(Request $request, $topic)
     {
         $format = $this->decodeFormat($request);
         // Permission check
@@ -755,7 +753,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -772,7 +770,7 @@ class TopicController extends AbstractController
 
         $formBuilder = $this->get('form.factory')
             ->createBuilder(
-                new JoinMoveTopicType(),
+                new MoveTopicType(),
                 $managedTopic->get(),
                 [
                 'forum' => $managedTopic->getForumId(),
@@ -785,7 +783,6 @@ class TopicController extends AbstractController
 
         if ('html' == $format) {
             $formBuilder->add('move', SubmitType::class);
-            $formBuilder->add('join', SubmitType::class);
         }
 
         $form = $formBuilder->getForm();
@@ -793,7 +790,7 @@ class TopicController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod('GET')) {
-            goto delete_error;
+            goto display;
         }
 
         $topicHookValidators = $this->get('hook_dispatcher')
@@ -804,30 +801,26 @@ class TopicController extends AbstractController
             foreach ($topicHookValidators->getErrors() as $error) {
                 $form->addError(new FormError($this->__($error)));
             }
-            goto delete_error;
+            goto display;
         }
 
         if (!$form->isValid()) {
-            goto delete_error;
+            goto display;
         }
 
-        $managedTopic->update($form->getData());
-
-        $this->get('event_dispatcher')
-            ->dispatch(DizkusEvents::TOPIC_PREPARE,
-                new GenericEvent($managedTopic->get()));
+        $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_PREPARE, new GenericEvent($managedTopic->get()));
 
         if ($form->get('move')->isClicked()) {
-            //            require perms for both subject topic and destination forum
-//            if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
-//                    || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $data['forum_id']])) {
-//                throw new AccessDeniedException();
-//            }
+            $managedDestionationForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(false, $form->get('forum')->getData());
+            if (!$currentForumUser->allowedToModerate($managedDestionationForum)) {
+                throw new AccessDeniedException();
+            }
 
             $managedTopic->move(
                 $form->get('forum')->getData(),
                 $form->get('createshadowtopic')->getData()
             );
+
             $managedTopic->store();
 
             $this->get('hook_dispatcher')
@@ -848,11 +841,105 @@ class TopicController extends AbstractController
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
+                $this->addFlash('status', $this->__f('Done! The topic you selected (ID: %s) was moved to selected forum.', ['%s' => $topic]));
+
                 return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
+        display:
+
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/move.$format.twig", [
+                    'currentForumUser' => $currentForumUser,
+                    'currentTopic' => $managedTopic,
+                    'form' => $form->createView(),
+                    'settings' => $this->getVars()
+                ]);
+        if ('ajax.html' == $format) {
+            return new Response(json_encode(['html' => $contentHtml]));
+        }
+        // full html page
+        return new Response($contentHtml);
+    }
+
+    /**
+     * @Route("/topic/{topic}/join", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * Join topic
+     *
+     * User interface to join a topic to another forum.
+     *
+     * @return string
+     */
+    public function jointopicAction(Request $request, $topic)
+    {
+        $format = $this->decodeFormat($request);
+        // Permission check
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
+        if (!$managedTopic->exists()) {
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
+            if ('json' == $format || 'ajax.html' == $format) {
+                return new Response(json_encode(['error' => $error]));
+            }
+
+            $this->addFlash('error', $error);
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+        }
+
+        $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        if (!$currentForumUser->allowedToModerate($managedTopic)) {
+            throw new AccessDeniedException();
+        }
+
+        $formBuilder = $this->get('form.factory')
+            ->createBuilder(
+                new JoinTopicType(),
+                $managedTopic->get(),
+                [
+                'addReason' =>  $currentForumUser->getId() == $managedTopic->getManagedPoster()->getId() ? false : true,
+                'translator' => $this->get('translator'),
+                'settings' => $this->getVars()
+                ]
+            );
+
+        if ('html' == $format) {
+            $formBuilder->add('join', SubmitType::class);
+        }
+
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+
+        if ($request->isMethod('GET')) {
+            goto display;
+        }
+
+        $topicHookValidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.topic.validate_edit',
+                new ValidationHook()
+            )->getValidators();
+        if ($topicHookValidators->hasErrors()) {
+            foreach ($topicHookValidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto display;
+        }
+
+        if (!$form->isValid()) {
+            goto display;
+        }
+
+        $this->get('event_dispatcher')
+            ->dispatch(DizkusEvents::TOPIC_PREPARE,
+                new GenericEvent($managedTopic->get()));
+
         if ($form->get('join')->isClicked()) {
+            // @todo refactor join
             //            if (empty($data['to_topic_id'])) {
 //                $this->addFlash('error', $this->__('Error! The topic ID cannot be empty.'));
 //
@@ -878,20 +965,20 @@ class TopicController extends AbstractController
 
             //return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
 
-            $this->get('hook_dispatcher')
-                ->dispatch('dizkus.ui_hooks.topic.process_edit',
-                    new ProcessHook($managedTopic->getId(),
-                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
-                            ['topic' => $managedTopic->getId()]
-                            )
-                        )
-                    );
-
-            $this->get('event_dispatcher')
-                ->dispatch(DizkusEvents::TOPIC_JOIN,
-                    new GenericEvent($managedTopic->get()
-                    )
-                );
+//            $this->get('hook_dispatcher')
+//                ->dispatch('dizkus.ui_hooks.topic.process_edit',
+//                    new ProcessHook($managedTopic->getId(),
+//                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
+//                            ['topic' => $managedTopic->getId()]
+//                            )
+//                        )
+//                    );
+//
+//            $this->get('event_dispatcher')
+//                ->dispatch(DizkusEvents::TOPIC_JOIN,
+//                    new GenericEvent($managedTopic->get()
+//                    )
+//                );
 
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
@@ -900,9 +987,9 @@ class TopicController extends AbstractController
             }
         }
 
-        delete_error:
+        display:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/joinmove.$format.twig", [
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/join.$format.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentTopic' => $managedTopic,
                     'form' => $form->createView(),
@@ -932,7 +1019,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -944,7 +1031,7 @@ class TopicController extends AbstractController
 
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
-            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
+            $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -955,7 +1042,7 @@ class TopicController extends AbstractController
         }
 
         if (!$managedTopic->get()->getPosts()->indexOf($managedPost->get())) {
-            $error = $this->__f('Error! The post you selected (ID: %s) do not belong to selected topic (ID %t).', [$post, $topic]);
+            $error = $this->__f('Error! The post you selected (ID: %s) do not belong to selected topic (ID %t).', ['%s' => $post, '%t' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -987,14 +1074,14 @@ class TopicController extends AbstractController
         $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
-
+        // @todo finish split
 //        $postId = (int) $this->request->query->get('post');
 //        $this->post = new PostManager($postId);
 //
 //        $this->view->assign($this->post->toArray());
 //        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());
 
-        split_error:
+        display:
 
         $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/split.$format.twig", [
                     'currentForumUser' => $currentForumUser,
@@ -1027,7 +1114,7 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$topic]);
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
                 return new Response(json_encode(['error' => $error]));
             }
@@ -1038,6 +1125,7 @@ class TopicController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        // @todo is this needed
 //        if(!$currentForumUser->allowedToModerate($managedTopic)) {
 //            throw new AccessDeniedException();
 //        }
@@ -1059,7 +1147,7 @@ class TopicController extends AbstractController
         $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
-
+        // @todo finish topic email
 //        $view->assign($managedTopic->get()->toArray());
 //        $view->assign('emailsubject', $managedTopic->get()->getTitle());
 //        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
@@ -1071,7 +1159,7 @@ class TopicController extends AbstractController
 //            'subject' => $data['emailsubject']
 //        ));
 
-        email_error:
+        display:
 
         $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/email.$format.twig", [
                     'currentForumUser' => $currentForumUser,

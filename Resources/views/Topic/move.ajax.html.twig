@@ -1,0 +1,50 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3> 
+            {{ templatetitle }}      
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p class="alert alert-info">{{ __("When you press the 'Move' button at the bottom of this form, the topic you have selected (and all its related posts) will be <strong>moved</strong> to the forum you have selected. Note: You will only be able to move the topic to a forum for which you are moderator. An administrator is allowed to move any topic to any forum.")|raw }}</p>
+        <div class="form-group">
+            {{ form_label(form.forum, __('Target forum') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.forum, { 'attr': {'class': ''} }) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.createshadowtopic, __('Create shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+            </div>
+        </div>
+    </div>
+    {% if form.reason is defined %}
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                <div class="col-md-9">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                    <small class="form-text text-muted">{{ __('You can send an email to topic creator with a reason why this topic was moved.') }}</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.move, {'attr': {'class': 'btn btn-sm btn-warning pull-right'}}) }}
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

@@ -667,34 +667,47 @@ class TopicManager
      *
      * This function moves a given topic to another forum
      *
-     * @param $forum int the destination forums id
+     * @param $forum ForumEntity the destination forum
      * @param $createshadowtopic   boolean true = create shadow topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return void
      */
-    public function move($forum, $createshadowtopic)
+    public function move($forum, $createshadowtopic = false)
     {
         if ($this->getForumId() != $forum->getId()) {
-            $this->_topic->setForum($forum);
-            if (true == $createshadowtopic) {
+            if (true === $createshadowtopic) {
+                // prepare shadow data
+                $newUrl = $this->router->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
+                $title = $this->translator->__f('*** The original posting \'%s\' has been moved', ['%s' => $this->getTitle()]);
+                $message = $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
+                // moderator that performs move action
+                $poster = $this->forumUserManagerService->getManager();
                 // create shadow topic
-//                $managedShadowTopic = $this->getManager();
-//                $newUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
-//                $topicData = [
-//                    'title'           => $this->translator->__f('*** The original posting \'%s\' has been moved', $this->getTitle()),
-//                    'message'         => $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.',
-//                    'forum_id'        => $oldForumId,
-//                    'topic_time'      => $this->get()->getTopic_time(),
-//                    'attachSignature' => false,
-//                    'subscribe_topic' => false, ];
-//                $managedShadowTopic->prepare($topicData);
-//                $managedShadowTopic->lock();
-//                $this->entityManager->persist($managedShadowTopic->get());
+                $shadowTopic = new TopicEntity();
+                //update shadow topic with new data
+                $shadowTopic->setTitle($title);
+                $shadowTopic->setForum($this->getForum());
+                $shadowTopic->setTopic_time($this->get()->getTopic_time());
+                $shadowTopic->setPoster($poster->get());
+                $shadowTopic->lock();
+                // create shadow first post
+                $shadowFirstPost = new PostEntity();
+                $shadowFirstPost->setIsFirstPost(true);
+                $shadowFirstPost->setAttachSignature(false);
+                $shadowFirstPost->setTitle($title);
+                $shadowFirstPost->setPostText($message);
+                $shadowFirstPost->setPoster($poster->get());
+                $shadowFirstPost->setTopic($shadowTopic);
+                //shadow topic set shadow post
+                $shadowTopic->addPost($shadowFirstPost);
+                $this->entityManager->persist($shadowTopic);
+                $this->entityManager->flush();
             }
+            $this->_topic->setForum($forum);
         }
-        // this probably need to call store here
+
         return $this;
     }
 
