@@ -424,7 +424,8 @@ class TopicEntity extends EntityAccess
     public function addPost(PostEntity $post)
     {
         $this->posts[] = $post;
-
+        $post->setTopic($this);
+        
         return $this;
     }
 

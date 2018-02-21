@@ -127,17 +127,16 @@ class PostManager
      *
      * @return PostManager
      */
-    public function getManager($id = null, PostEntity $post = null)
+    public function getManager($id = null, PostEntity $post = null, $create = true)
     {
-        if ($post instanceof PostEntity) {
+        if (isset($post)) {
+            // post has been injected
             $this->_post = $post;
-
-            return $this;
-        }
-
-        if ($id > 0) {
+        } elseif ($id > 0) {
+            // find existing post
             $this->_post = $this->entityManager->find('Zikula\DizkusModule\Entity\PostEntity', $id);
-        } else {
+        } elseif ($create) {
+            // create new post
             $this->_post = new PostEntity();
         }
 

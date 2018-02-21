@@ -29,22 +29,31 @@ class JoinTopicType extends AbstractType
         $this->options = $options;
         $builder
             ->add('to_topic_id', IntegerType::class, [
-                'required' => false,
-                'mapped' => false
+                'required'  => true,
+                'mapped'    => false
             ])
             ->add('createshadowtopic', ChoiceType::class, [
-                'choices'   => ['Off' => '0', 'On' => '1'],
+                'choices'   => ['Off' => false, 'On' => true],
                 'choices_as_values' => true,
                 'multiple'  => false,
                 'expanded'  => true,
                 'required'  => true,
                 'mapped'    => false,
                 'data'      => 0,
+            ])
+            ->add('append', ChoiceType::class, [
+                'choices'   => ['Mix' => false, 'Append' => true],
+                'choices_as_values' => true,
+                'multiple'  => false,
+                'expanded'  => true,
+                'required'  => true,
+                'mapped'    => false,
+                'data'      => true,
             ]);
         if ($options['addReason']) {
             $builder->add('reason', TextareaType::class, [
-                'mapped' => false,
-                'required' =>false,
+                'mapped'    => false,
+                'required'  => false,
             ]);
         }
     }

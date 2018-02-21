@@ -12,6 +12,8 @@
 
 namespace Zikula\DizkusModule\Form\Type\Topic;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,14 +27,39 @@ class SplitTopicType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('subject', TextType::class, [
-                    'required' => true,
-                    'mapped' => false
-                ])
-                ->add('reason', TextareaType::class, [
-                'mapped' => false,
-                'required' =>false,
+        $this->options = $options;
+        $builder
+            ->add('forum', EntityType::class, [
+                'class'         => 'Zikula\DizkusModule\Entity\ForumEntity',
+                'query_builder' => function (EntityRepository $er) {
+                    $forums = $er->createQueryBuilder('f')
+                        ->where('f.lvl != 0')
+                        ->orderBy('f.root', 'ASC')
+                        ->addOrderBy('f.lft', 'ASC');
+
+                    return $forums;
+                },
+                'choice_label'  => function ($forum) {
+                    return ($forum->getId() == $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' .  $this->options['translator']->__(' * origin topic forum') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
+                },
+                'multiple'      => false,
+                'expanded'      => false,
+                'mapped'        => false,
+                'choice_attr'   => function ($forum) {
+                    return $forum->getId() == $this->options['forum'] ? ['selected' => 'selected'] : [];
+                }
+            ])
+            ->add('subject', TextType::class, [
+                  'mapped'      => false,
+                  'data'        => $this->options['subject'],
+                  'required'    => true,
             ]);
+        if ($options['addReason']) {
+            $builder->add('reason', TextareaType::class, [
+                'mapped'        => false,
+                'required'      => false,
+            ]);
+        }
     }
 
     /**
@@ -49,8 +76,12 @@ class SplitTopicType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translator' => null,
-            'settings' => false,
+            'subject'       => '',
+            'forum'         => null,
+            'forums'        => null,
+            'translator'    => null,
+            'addReason'     => false,
+            'settings'      => null
         ]);
     }
 }

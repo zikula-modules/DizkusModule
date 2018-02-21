@@ -32,7 +32,7 @@ class MoveTopicType extends AbstractType
             ->add('forum', EntityType::class, [
                 'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
                 'query_builder' => function (EntityRepository $er) {
-                    $forums =$er->createQueryBuilder('f')
+                    $forums = $er->createQueryBuilder('f')
                         ->where('f.lvl != 0')
                         ->orderBy('f.root', 'ASC')
                         ->addOrderBy('f.lft', 'ASC');
@@ -60,8 +60,8 @@ class MoveTopicType extends AbstractType
             ]);
         if ($options['addReason']) {
             $builder->add('reason', TextareaType::class, [
-                'mapped' => false,
-                'required' =>false,
+                'mapped'    => false,
+                'required'  =>false,
             ]);
         }
     }
@@ -80,11 +80,11 @@ class MoveTopicType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'forum'      => null,
-            'forums'     => null,
-            'translator' => null,
-            'addReason' => false,
-            'settings' => null
+            'forum'         => null,
+            'forums'        => null,
+            'translator'    => null,
+            'addReason'     => false,
+            'settings'      => null
         ]);
     }
 }

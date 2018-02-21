@@ -21,6 +21,13 @@ use Zikula\DizkusModule\Entity\TopicEntity;
 /**
  * Sync Listener
  *
+ * @todo use doctrine tracking policy and handle the behaviour explicitly https://stackoverflow.com/a/48372531
+ *
+ * At the moment this is a little bit in a mess because of doctrine default listener
+ * behaviour and this is a default doctrine listener.
+ *
+ * Using doctrine tracking policy could help to DRY this code
+ *
  * @author Kaik
  */
 class SyncListener
@@ -30,6 +37,8 @@ class SyncListener
      */
     public function prePersist(LifecycleEventArgs $args)
     {
+//        dump('pre persist');
+//        dump($args);
         $em = $args->getEntityManager();
         $upgrading = $em
             ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
@@ -44,7 +53,9 @@ class SyncListener
          * New topic
          */
         if (($entity instanceof TopicEntity)) {
-            $entity->setLast_Post($entity->getPosts()->first());
+            dump('New topic');
+//            $entity->setLast_Post($entity->getPosts()->first());
+            dump($entity->getSyncOnSave());
         }
 
         /*
@@ -54,15 +65,31 @@ class SyncListener
             $topic = $entity->getTopic();
             $user = $entity->getPoster();
             $forum = $topic->getForum();
-            // TOPIC
-            //update topic info
+            if ($entity->isFirst()) {
+                dump('New post in new topic');
+                /*
+                 * New topic first post not a reply
+                 */
+                // TOPIC
+                //update topic info
+//                $topic->setLast_Post($entity); // duplicate
+                // this is a new topic indicator
+//                $entity->isFirst() ?: $topic->incrementReplyCount();
+                // USER
+                !$entity->getTopic()->getSubscribe() ?: $user->addTopicSubscription($topic);
+                // user subscription @todo add subscription module settings check
+//                $entity->isFirst() ?: $user->incrementPostCount();
+                $user->incrementPostCount();
+
+            } else {
+                /*
+                 * Looks like a reply
+                 */
+                dump('New post (Reply) in topic');
+                $topic->incrementReplyCount();
+            }
+
             $topic->setLast_Post($entity);
-            // this is a new topic indicator
-            $entity->isFirst() ?: $topic->incrementReplyCount();
-            // USER
-            !$entity->getTopic()->getSubscribe() ?: $user->addTopicSubscription($topic);
-            // user subscription @todo add subscription module settings check
-            $entity->isFirst() ?: $user->incrementPostCount();
             // FORUMS
             //update forums info
             $parents = $forum->getParents();
@@ -80,6 +107,8 @@ class SyncListener
      */
     public function postPersist(LifecycleEventArgs $args)
     {
+//        dump('postPersist');
+//        dump($args);
         $em = $args->getEntityManager();
         $entity = $args->getEntity();
 
@@ -101,6 +130,8 @@ class SyncListener
      */
     public function preUpdate(PreUpdateEventArgs $event)
     {
+//        dump('preUpdate');
+//        dump($event);
         $em = $event->getEntityManager();
         $upgrading = $em
             ->getRepository('ZikulaExtensionsModule:ExtensionVarEntity')
@@ -111,11 +142,16 @@ class SyncListener
 
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
+        dump($uow->getEntityChangeSet($entity)); // see what changed
 
         /*
          * Forum changed
          */
         if (($entity instanceof ForumEntity)) {
+            dump('preUpdate forum');
+            // if last post changed update direct parent
+            // if topic count changed update direct parent
+            // if post count changed update direct parent
 
         }
 
@@ -123,11 +159,13 @@ class SyncListener
          * Topic changed
          */
         if (($entity instanceof TopicEntity)) {
-
+            dump('preUpdate topic');
+            dump($entity->getSyncOnSave());
             /*
              * Move topic action
              */
             if ($event->hasChangedField('forum')) {
+                dump('topic move');
                 /*
                  *  Topic old forum sync
                  *  All informations here are "old"
@@ -189,6 +227,27 @@ class SyncListener
                 $meta = $em->getClassMetadata(get_class($toForum));
                 $uow->recomputeSingleEntityChangeSet($meta, $toForum);
             }
+
+            if ($entity->getPosts()->isDirty()) {
+                dump($entity);
+                dump($entity->getPosts()->getInsertDiff());
+            }
+
+//              Pre update topic sync force on update
+//            if ($entity->getSyncOnSave()) {
+//                $postsCount = $entity->getPosts()->count();
+//                if ($postsCount > 1) {
+//                    $this->replyCount = $postsCount - 1;
+//
+//                    $posts = $entity->getPosts()
+//                                ->matching(
+//                                    Criteria::create()
+//                                    ->orderBy(['post_time' => Criteria::DESC])
+//                                    ->setMaxResults(1)
+//                                );
+//                    $entity->setLast_Post($posts->first());
+//                }
+//            }
         }
 
         /*
@@ -196,11 +255,14 @@ class SyncListener
          */
         if (($entity instanceof PostEntity)) {
             // topic changed? split? move post?
+            dump('preUpdate post');
         }
     }
 
     public function postUpdate(LifecycleEventArgs $args)
     {
+//        dump('postUpdate');
+//        dump($args);
         $em = $args->getEntityManager();
         $entity = $args->getEntity();
         /*
@@ -216,6 +278,8 @@ class SyncListener
 
     public function postRemove(LifecycleEventArgs $args)
     {
+//        dump('postRemove');
+//        dump($args);
         $em = $args->getEntityManager();
         $entity = $args->getEntity();
 
@@ -233,121 +297,3 @@ class SyncListener
         }
     }
 }
-
-
-
-
-//              Pre update topic sync?... to check
-//            if ($entity->getSyncOnSave()) {
-//                $postsCount = $entity->getPosts()->count();
-//                if ($postsCount > 1) {
-//                    $this->replyCount = $postsCount - 1;
-//
-//                    $posts = $entity->getPosts()
-//                                ->matching(
-//                                    Criteria::create()
-//                                    ->orderBy(['post_time' => Criteria::DESC])
-//                                    ->setMaxResults(1)
-//                                );
-//                    $entity->setLast_Post($posts->first());
-//                }
-//            }
-//                $queryTopics = $em->createQueryBuilder()
-//                    ->select('p')
-//                    ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-//                    ->leftJoin('p.topic', 't')
-//                    ->where('t.forum = :forumId')
-//                    ->andWhere('t.id != :movedTopic')
-//                    ->setParameter('forumId', $fromForum)
-//                    ->setParameter('movedTopic', $entity)
-//                    ->orderBy('p.post_time', 'DESC')
-//                    ->setMaxResults(1)
-//                    ->getQuery();
-//
-//                $fromForumTopicsLastPost = $queryTopics->getOneOrNullResult();
-//    private function getForumTopicsLastPost($em, $forum, $topic)
-//    {
-//        // get the most recent topic posts in the forum
-//        $queryTopics = $em
-//            ->createQueryBuilder()
-//            ->select('p')
-//            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-//            ->leftJoin('p.topic', 't')
-//            ->where('t.forum = :forumId')
-//            ->setParameter('forumId', $forum)
-//            ->addOrderBy('p.post_time', 'DESC')
-//            ->getQuery();
-//
-//        $queryTopics->setMaxResults(1);
-//        $forumTopicsLastPost = $queryTopics->getOneOrNullResult();
-//
-//        dump($forumTopicsLastPost);
-//
-////        $queryForums = $em
-////            ->createQueryBuilder()
-////            ->select('p')
-////            ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-////            ->leftJoin('p.topic', 't')
-////            ->where('t.forum = :forumId')
-////            ->setParameter('forumId', $forum)
-////            ->addOrderBy('p.post_time', 'DESC')
-////            ->getQuery();
-////
-////        $queryForums->setMaxResults(1);
-////        $forumChildrenLastPost = $queryForums->getOneOrNullResult();
-////
-////        if (!is_null($forumChildrenLastPost) && !is_null($forumTopicsLastPost)) {
-////            $forumLastPost =
-////        }
-//
-//
-//
-////        $forumLastPost =
-////            ?
-////            :
-////            ;
-//
-//        return $forumTopicsLastPost;
-//    }
-//              dump($fromForumChildrenLastPost);
-//                if (is_null($fromForumChildrenLastPost)) {
-//
-//
-//                }
-//                $query->setParameters([
-//                    'modulename' => $hook->getCaller(),
-//                    'objectid' => $hook->getId(),
-//                    'area' => $hook->getAreaId()]);
-//                $dql = 'SELECT p FROM Zikula\DizkusModule\Entity\PostEntity p
-//                    JOIN Zikula\DizkusModule\Entity\ForumEntity f
-//                    WITH 1 = 1
-//                    JOIN f.
-//                    WHERE a.hookedModule = :modulename
-//                    AND a.hookedObjectId = :objectid
-//                    AND a.hookedAreaId = :area ';
-//                $query = $this->_em->createQuery($dql);
-//                $query->setParameters([
-//                    'modulename' => $hook->getCaller(),
-//                    'objectid' => $hook->getId(),
-//                    'area' => $hook->getAreaId()]);
-//
-//                $result = $query->getOneOrNullResult();
-
-                // last post from direct children
-//                $em->createQueryBuilder()
-//                    ->select('p')
-//                    ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-//                    ->innerJoin('c.registrations', 'r')
-//                    ->where('r.player = :player')
-//                    ->setParameter('player', $playerId)
-//                $queryTopics = $em->createQueryBuilder()
-//                    ->select('p')
-//                    ->from('Zikula\DizkusModule\Entity\PostEntity', 'p')
-//                    ->from('Zikula\DizkusModule\Entity\ForumEntity', 'f')
-////                    ->leftJoin('p.topic', 't')
-//                    ->where('f.forum = :forumId')
-//                    ->setParameter('forumId', $fromForum)
-//                    ->setParameter('movedTopic', $entity)
-//                    ->addOrderBy('p.post_time', 'DESC')
-//                    ->setMaxResults(1)
-//                    ->getQuery();

@@ -202,7 +202,7 @@ class TopicController extends AbstractController
                     ->addPost($managedFirstPost
                                     ->get()
                                     ->setPost_time(new \DateTime())
-                                    ->setTopic($newManagedTopic->get())
+//                                    ->setTopic($newManagedTopic->get()) // this is not needed - set in topic internally
                                     ->setPoster($currentForumUser->get())
                                     ->setIsFirstPost()),
                 ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars(), 'isModerator' => $currentForumUser->allowedToModerate($managedForum)]
@@ -311,7 +311,7 @@ class TopicController extends AbstractController
                 );
 
             // redirect to the new topic
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         display:
@@ -515,7 +515,7 @@ class TopicController extends AbstractController
             $postManager
                 ->get()
                     ->setPost_time(new \DateTime())
-                    ->setTopic($managedTopic->get())
+                    ->setTopic($managedTopic->get()) // this is needed
                     ->setPoster($currentForumUser->get()),
             ['loggedIn' => $currentForumUser->isLoggedIn(),
             'action' => $action,
@@ -570,7 +570,7 @@ class TopicController extends AbstractController
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -811,11 +811,12 @@ class TopicController extends AbstractController
         $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_PREPARE, new GenericEvent($managedTopic->get()));
 
         if ($form->get('move')->isClicked()) {
-            $managedDestionationForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(false, $form->get('forum')->getData());
-            if (!$currentForumUser->allowedToModerate($managedDestionationForum)) {
+            $managedDestinationForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(false, $form->get('forum')->getData());
+            if (!$currentForumUser->allowedToModerate($managedDestinationForum)) {
                 throw new AccessDeniedException();
             }
 
+            //@todo add the same forum check
             $managedTopic->move(
                 $form->get('forum')->getData(),
                 $form->get('createshadowtopic')->getData()
@@ -843,7 +844,7 @@ class TopicController extends AbstractController
             } else {
                 $this->addFlash('status', $this->__f('Done! The topic you selected (ID: %s) was moved to selected forum.', ['%s' => $topic]));
 
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -881,14 +882,8 @@ class TopicController extends AbstractController
 
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
-            $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
-            if ('json' == $format || 'ajax.html' == $format) {
-                return new Response(json_encode(['error' => $error]));
-            }
-
-            $this->addFlash('error', $error);
-
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+            $error = $this->__f('Error! The topic you selected (ID: %s) was not found.', ['%s' => $topic]);
+            return $this->errorResponse($error, null, $format);
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -934,72 +929,86 @@ class TopicController extends AbstractController
             goto display;
         }
 
-        $this->get('event_dispatcher')
-            ->dispatch(DizkusEvents::TOPIC_PREPARE,
-                new GenericEvent($managedTopic->get()));
+        $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_PREPARE, new GenericEvent($managedTopic->get()));
 
         if ($form->get('join')->isClicked()) {
-            // @todo refactor join
-            //            if (empty($data['to_topic_id'])) {
-//                $this->addFlash('error', $this->__('Error! The topic ID cannot be empty.'));
-//
-//                return new RedirectResponse($topicUrl);
-//            }
-//            $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($data['to_topic_id']);
-//            if (!$managedDestinationTopic->exists()) {
-//                $this->addFlash('error', $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [$data['to_topic_id']]));
-//
-//                return new RedirectResponse($topicUrl);
-//            }
-//            if (!$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedTopic->getForumId()])
-//                    || !$this->get('zikula_dizkus_module.security')->canModerate(['forum_id' => $managedDestinationTopic->getForumId()])) {
-//                throw new AccessDeniedException();
-//            }
-//            if ($managedDestinationTopic->getId() == $managedTopic->getId()) {
-//                $this->addFlash('error', $this->__('Error! You cannot copy topic to itself.'));
-//
-//                return new RedirectResponse($topicUrl);
-//            }
-            //@todo we asume everything will be ok
-            //$this->get('zikula_dizkus_module.topic_manager')->join($managedTopic, $managedDestinationTopic);
+            $redirectUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
+            $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($form->get('to_topic_id')->getData(), null, false);
+            if (!$managedDestinationTopic->exists()) {
+                $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [ '%s' => $form->get('to_topic_id')->getData()]);
+                return $this->errorResponse($error, $redirectUrl, $format);
+            }
 
-            //return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            if (!$currentForumUser->allowedToModerate($managedDestinationTopic)) {
+                throw new AccessDeniedException();
+            }
 
+            if ($managedDestinationTopic->getId() == $managedTopic->getId()) {
+                $error = $this->__('Error! You cannot copy topic to itself.');
+                return $this->errorResponse($error, $redirectUrl, $format);
+            }
+
+            $managedTopic->join($managedDestinationTopic->get(),
+                $form->get('createshadowtopic')->getData(),
+                $form->get('append')->getData()
+                );
+
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.topic.process_edit',
+                    new ProcessHook($managedTopic->getId(),
+                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
+                            ['topic' => $managedTopic->getId()]
+                            )
+                        )
+                    );
+
+            // should there be another hook event for destination topic?
 //            $this->get('hook_dispatcher')
 //                ->dispatch('dizkus.ui_hooks.topic.process_edit',
-//                    new ProcessHook($managedTopic->getId(),
+//                    new ProcessHook($managedDestinationTopic->getId(),
 //                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
-//                            ['topic' => $managedTopic->getId()]
+//                            ['topic' => $managedDestinationTopic->getId()]
 //                            )
 //                        )
 //                    );
-//
-//            $this->get('event_dispatcher')
-//                ->dispatch(DizkusEvents::TOPIC_JOIN,
-//                    new GenericEvent($managedTopic->get()
-//                    )
-//                );
+
+            // @todo dediacted event objects Join event should have 2 subjects
+            $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_JOIN, new GenericEvent($managedTopic->get()));
+
+            if (!$form->get('createshadowtopic')->getData()) {
+                $managedTopic->delete();
+                $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_DELETE, new GenericEvent($managedTopic->get()));
+            }
 
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
-                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
-        display:
+        error:
+        // experimental
+//        if ($redirectUrl) {
+//            $this->errorResponse($error, $redirectUrl, $format);
+//        } else {
+//            return $this->errorResponse($error, $redirectUrl, $format);
+//        }
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Topic/join.$format.twig", [
-                    'currentForumUser' => $currentForumUser,
-                    'currentTopic' => $managedTopic,
-                    'form' => $form->createView(),
-                    'settings' => $this->getVars()
-                ]);
-        if ('ajax.html' == $format) {
-            return new Response(json_encode(['html' => $contentHtml]));
+        display:
+        // experimental
+        if ('json' == $format) {
+            $content = 'Json not supported yet';
+        } else {
+            $content = $this->renderView("@ZikulaDizkusModule/Topic/join.$format.twig", [
+                'currentForumUser' => $currentForumUser,
+                'currentTopic' => $managedTopic,
+                'form' => $form->createView(),
+                'settings' => $this->getVars()
+            ]);
         }
-        // full html page
-        return new Response($contentHtml);
+
+        return $this->formatResponse($content, $format);
     }
 
     /**
@@ -1017,7 +1026,7 @@ class TopicController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic, null, false);
         if (!$managedTopic->exists()) {
             $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $topic]);
             if ('json' == $format || 'ajax.html' == $format) {
@@ -1029,7 +1038,7 @@ class TopicController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
         }
 
-        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post, null, false);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
@@ -1038,7 +1047,7 @@ class TopicController extends AbstractController
 
             $this->addFlash('error', $error);
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         if (!$managedTopic->get()->getPosts()->indexOf($managedPost->get())) {
@@ -1049,7 +1058,7 @@ class TopicController extends AbstractController
 
             $this->addFlash('error', $error);
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -1062,8 +1071,12 @@ class TopicController extends AbstractController
                 new SplitTopicType(),
                 $managedTopic->get(),
                 [
-                'translator' => $this->get('translator'),
-                'settings' => $this->getVars()
+                'subject'       => $this->__('Split') . ': ' . $managedTopic->getTitle(),
+                'forum'         => $managedTopic->getForumId(),
+                'forums'        => $this->get('zikula_dizkus_module.forum_manager')->getAllChildren(),
+                'addReason'     => $currentForumUser->getId() == $managedTopic->getManagedPoster()->getId() ? false : true,
+                'translator'    => $this->get('translator'),
+                'settings'      => $this->getVars()
                 ]
             );
 
@@ -1074,12 +1087,67 @@ class TopicController extends AbstractController
         $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
-        // @todo finish split
-//        $postId = (int) $this->request->query->get('post');
-//        $this->post = new PostManager($postId);
-//
-//        $this->view->assign($this->post->toArray());
-//        $this->view->assign('newsubject', $this->__('Split') . ': ' . $this->post->get()->getTopic()->getTitle());
+
+        if ($request->isMethod('GET')) {
+            goto display;
+        }
+
+        $topicHookValidators = $this->get('hook_dispatcher')
+            ->dispatch('dizkus.ui_hooks.topic.validate_edit',
+                new ValidationHook()
+            )->getValidators();
+        if ($topicHookValidators->hasErrors()) {
+            foreach ($topicHookValidators->getErrors() as $error) {
+                $form->addError(new FormError($this->__($error)));
+            }
+            goto display;
+        }
+
+        if (!$form->isValid()) {
+            goto display;
+        }
+
+        $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_PREPARE, new GenericEvent($managedTopic->get()));
+
+        if ($form->get('split')->isClicked()) {
+            $managedDestinationForum = $this->get('zikula_dizkus_module.forum_manager')->getManager(false, $form->get('forum')->getData());
+            if (!$currentForumUser->allowedToModerate($managedDestinationForum)) {
+                throw new AccessDeniedException();
+            }
+
+            $managedTopic->split($managedPost->get(),
+                $form->get('subject')->getData(),
+                $form->get('forum')->getData()
+            );
+
+            $this->get('hook_dispatcher')
+                ->dispatch('dizkus.ui_hooks.topic.process_edit',
+                    new ProcessHook($managedTopic->getId(),
+                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
+                            ['topic' => $managedTopic->getId()]
+                            )
+                        )
+                    );
+
+            // should there be another hook event for destination topic?
+//            $this->get('hook_dispatcher')
+//                ->dispatch('dizkus.ui_hooks.topic.process_edit',
+//                    new ProcessHook($managedDestinationTopic->getId(),
+//                        new RouteUrl('zikuladizkusmodule_topic_viewtopic',
+//                            ['topic' => $managedDestinationTopic->getId()]
+//                            )
+//                        )
+//                    );
+
+            // @todo dediacted event objects Split event should have 2 subjects
+            $this->get('event_dispatcher')->dispatch(DizkusEvents::TOPIC_SPLIT, new GenericEvent($managedTopic->get()));
+
+            if ('json' == $format) {
+            } elseif ('ajax.html' == $format) {
+            } else {
+//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            }
+        }
 
         display:
 
@@ -1125,11 +1193,12 @@ class TopicController extends AbstractController
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
-        // @todo is this needed
-//        if(!$currentForumUser->allowedToModerate($managedTopic)) {
-//            throw new AccessDeniedException();
-//        }
 
+        // @todo prepare default email content maybe template?
+//        $view->assign($managedTopic->get()->toArray());
+//        $view->assign('emailsubject', $managedTopic->get()->getTitle());
+//        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
+//        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . $url);
         $formBuilder = $this->get('form.factory')
             ->createBuilder(
                 new EmailTopicType(),
@@ -1148,11 +1217,7 @@ class TopicController extends AbstractController
 
         $form->handleRequest($request);
         // @todo finish topic email
-//        $view->assign($managedTopic->get()->toArray());
-//        $view->assign('emailsubject', $managedTopic->get()->getTitle());
-//        $url = $view->getContainer()->get('router')->generate('zikuladizkusmodule_user_viewtopic', array('topic' => $this->topic_id), RouterInterface::ABSOLUTE_URL);
-//        $view->assign('message', DataUtil::formatForDisplay($this->__('Hello! Please visit this link. I think it will be of interest to you.')) . "\n\n" . $url);
-//
+
 //        ModUtil::apiFunc($this->name, 'notify', 'email', array(
 //            'sendto_email' => $data['sendto_email'],
 //            'message' => $data['message'],

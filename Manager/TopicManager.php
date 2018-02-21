@@ -25,6 +25,7 @@ use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Hook\ProcessHook;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -674,19 +675,19 @@ class TopicManager
      *
      * @return void
      */
-    public function move($forum, $createshadowtopic = false)
+    public function move(ForumEntity $forum, $createshadowtopic = false)
     {
         if ($this->getForumId() != $forum->getId()) {
             if (true === $createshadowtopic) {
                 // prepare shadow data
                 $newUrl = $this->router->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
-                $title = $this->translator->__f('*** The original posting \'%s\' has been moved', ['%s' => $this->getTitle()]);
-                $message = $this->translator->__('The original posting has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
+                $title = $this->translator->__f('*** Moved:* \'%title\' * to * \'%forum\' ***', ['%title' => $this->getTitle(), '%forum' => $forum->getName()]);
+                $message = $this->translator->__('The original topic has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
                 // moderator that performs move action
                 $poster = $this->forumUserManagerService->getManager();
                 // create shadow topic
                 $shadowTopic = new TopicEntity();
-                //update shadow topic with new data
+                // update shadow topic with new data
                 $shadowTopic->setTitle($title);
                 $shadowTopic->setForum($this->getForum());
                 $shadowTopic->setTopic_time($this->get()->getTopic_time());
@@ -700,7 +701,7 @@ class TopicManager
                 $shadowFirstPost->setPostText($message);
                 $shadowFirstPost->setPoster($poster->get());
                 $shadowFirstPost->setTopic($shadowTopic);
-                //shadow topic set shadow post
+                // shadow topic set shadow post
                 $shadowTopic->addPost($shadowFirstPost);
                 $this->entityManager->persist($shadowTopic);
                 $this->entityManager->flush();
@@ -714,107 +715,124 @@ class TopicManager
     /**
      * Split the topic at the provided post
      *
-     * @param PostManager $managedPost
-     * @param string      $newsubject
-     *
+     * @param PostEntity        $post post before which split will occur
+     * @param string|null       $subject new topic subject optional default null
+     * @param ForumEntity|null  $destinationForum Destination forum optional default null
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
-     * @return int id of the new topic
+     * @return $this
      */
-    public function split($managedPost, $newsubject)
+    public function split(PostEntity $post, $subject = null, ForumEntity $destinationForum = null)
     {
-        ///
-        // Use array collection partition
-        //
-        //
-//        if (!isset($managedPost) || !$managedPost instanceof PostManager || !isset($newsubject)) {
-//            throw new \InvalidArgumentException();
-//        }
-//        $managedTopic = $this->getManager(null, $managedPost->get()->getTopic()); //new TopicManager(null, $managedPost->get()->getTopic());
-//        // create new topic
-//        $newTopic = new TopicEntity();
-//        $newTopic->setPoster($managedPost->get()->getPoster());
-//        $newTopic->setTitle($newsubject);
-//        $newTopic->setForum($managedTopic->get()->getForum());
-//        $managedPost->get()->setIsFirstPost(true);
-//        $managedPost->get()->setTitle($newsubject);
-//        $this->entityManager->persist($newTopic);
-//        $this->entityManager->flush();
-//        // update posts
-//        $dql = 'SELECT p from Zikula\DizkusModule\Entity\PostEntity p
-//            WHERE p.topic = :topic
-//            AND p.post_id >= :post
-//            ORDER BY p.post_id';
-//        $query = $this->entityManager->createQuery($dql)->setParameter('topic', $managedTopic->get())->setParameter('post', $managedPost->get()->getId());
-//        /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
-//        $posts = $query->getResult();
-//        // update the topic_id in the postings
-//        foreach ($posts as $post) {
-//            $post->setTopic($newTopic);
-//        }
-        // must flush here so sync gets correct information
-//        $this->entityManager->flush();
-        // last iteration of `$post` used below
-        // update old topic
-//        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
-        //ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', ['topic' => $managedTopic->get(), 'flush' => true]);
-//        $oldReplyCount = $managedTopic->get()->getReplyCount();
-//        $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
-        // update new topic with post data
-//        $newTopic->setLast_post($post);
-//        $newTopic->setReplyCount(count($posts) - 1);
-//        $newTopic->setTopic_time($post->getPost_time());
-        // resync topic totals, etc
-//        $this->synchronizationHelper->forum($newTopic->getForum(), false);
-        //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
+        // prepare data
+        $title = !is_null($subject)
+            ? $subject
+            : $this->translator->__('Split') . ': ' . $this->getTitle();
 
-        // return $newTopic->getId();
+        $forum = !is_null($destinationForum)
+            ? $destinationForum
+            : $this->getForum();
+
+        // prepare first post
+        $post->setIsFirstPost(true);
+        $post->setTitle($title);
+
+        // create new topic
+        $newTopic = new TopicEntity();
+        $newTopic->setPoster($post->getPoster());
+        $newTopic->setTitle($title);
+        $newTopic->setForum($forum);
+
+        // add first post
+        $newTopic->addPost($post);
+
+        // update posts
+        $dql = 'SELECT p from Zikula\DizkusModule\Entity\PostEntity p
+            WHERE p.topic = :topic
+            AND p.post_time > :post_time
+            ORDER BY p.post_time ASC';
+
+        $query = $this->entityManager
+                    ->createQuery($dql)
+                    ->setParameter('topic', $this->get())
+                    ->setParameter('post_time', $post->getPost_time());
+
+
+        /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
+        $posts = $query->getResult();
+//        dump($posts);
+//        // update the topic_id in the postings
+        foreach ($posts as $post) {
+            $newTopic->addPost($post);
+        }
+
+        $this->entityManager->persist($newTopic);
+        // must flush here so sync gets correct information
+        $this->entityManager->flush();
+
+        // $post will have new topic id
         return $this;
     }
 
     /**
      * Joins two topics together
      *
-     * @todo use current topic as origin or use it as destination
+     * @param $destinationTopic object the target topic that will contain the posts (destination)
      *
-     * @param $managedOriginTopic object this topic get integrated into $managedDestinationTopic (origin)
-     * @param $managedDestinationTopic object the target topic that will contain the post from $managedOriginTopic (destination)
+     * @param boolean $createshadowtopic true = leave shadow topic (locked)
+     *
+     * @param boolean $append true add posts add the end of destination by changing post dates false = mix
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *
      * @return int Destination topic ID
      */
-    public function join($managedOriginTopic, $managedDestinationTopic)
+    public function join(TopicEntity $destinationTopic, $createshadowtopic = false, $append = true)
     {
-//        if (!$managedOriginTopic instanceof self || !$managedDestinationTopic instanceof self) {
-//            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
-//
-//            throw new \InvalidArgumentException();
-//        }
-//
-//        // move posts from Origin to Destination topic
-//        $posts = $this->entityManager->getRepository('Zikula\DizkusModule\Entity\PostEntity')->findBy(['topic' => $managedOriginTopic->get()]);
-//        $previousPostTime = $managedDestinationTopic->get()->getLast_post()->getPost_time();
-//        foreach ($posts as $post) {
-//            $post->setTopic($managedDestinationTopic->get());
-//            if ($post->getPost_time() <= $previousPostTime) {
-//                $post->setPost_time($previousPostTime->modify('+1 minute'));
-//            }
-//            $previousPostTime = $post->getPost_time();
-//        }
-//
-//        $this->entityManager->flush();
-        ////        $originTopicForum = $managedOriginTopic->get()->getForum();
-//        $this->entityManager->remove($managedOriginTopic->get());
+        // save last post time of destination topic as reference where start
+        $previousLastPostTime = $destinationTopic->getLast_post()->getPost_time();
+        // move posts from Origin to Destination topic
+        $originPosts = $this->get()->getPosts();
+        foreach ($originPosts as $post) {
+            //this way is important!
+            $destinationTopic->addPost($post);
+//            $post->setTopic($destinationTopic);
+            if ($append && $post->getPost_time() <= $previousLastPostTime) {
+                $post->setPost_time($previousLastPostTime->modify('+1 minute'));
+            }
+            $previousLastPostTime = $post->getPost_time();
+        }
 
-        // resync destination topic and all forums
-//        $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
-//        $this->synchronizationHelper->forum($originTopicForum, false);
-//        $this->synchronizationHelper->forumLastPost($originTopicForum, true);
-//        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
-//        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
+        // @todo this line should be in SyncListener as it belongs to sync domain
+        // it is here to trigger preUpdate on TopicEntity when posts are added
+        $destinationTopic->setReplyCount($destinationTopic->getPosts()->count() - 1);
 
-//        return $managedDestinationTopic->getId();
+        $this->entityManager->persist($destinationTopic);
+        $this->entityManager->flush();
+
+        if (true === $createshadowtopic) {
+            // prepare shadow data
+            $newUrl = $this->router->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $destinationTopic->getId()]);
+            $title = $this->translator->__f('*** Joined with * \'%topic\' ', ['%topic' => $destinationTopic->getTitle()]);
+            $message = $this->translator->__('The original postings from this topic has been ').' <a title="'.$this->translator->__('joined with').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
+            // moderator that performs move action
+            $poster = $this->forumUserManagerService->getManager();
+            //update shadow topic with new data
+            $this->lock();
+            // create shadow first post
+            $shadowFirstPost = new PostEntity();
+            $shadowFirstPost->setIsFirstPost(true);
+            $shadowFirstPost->setAttachSignature(false);
+            $shadowFirstPost->setTitle($title);
+            $shadowFirstPost->setPostText($message);
+            $shadowFirstPost->setPoster($poster->get());
+//            $shadowFirstPost->setTopic($this->get());
+            //shadow topic set shadow post
+            $this->setTitle($title);
+            $this->get()->addPost($shadowFirstPost);
+            $this->store();
+        }
+
         return $this;
     }
 
@@ -854,6 +872,35 @@ class TopicManager
     }
 }
 
+
+// split sync
+//        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
+        //ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', ['topic' => $managedTopic->get(), 'flush' => true]);
+//        $oldReplyCount = $managedTopic->get()->getReplyCount();
+//        $managedTopic->get()->setReplyCount($oldReplyCount - count($posts));
+        // update new topic with post data
+        //
+//        $newTopic->setLast_post($post);
+//        $newTopic->setReplyCount(count($posts) - 1);
+//        $newTopic->setTopic_time($post->getPost_time());
+//
+        // resync topic totals, etc
+        //
+//        $this->synchronizationHelper->forum($newTopic->getForum(), false);
+        //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
+
+
+//        if (!$managedDestinationTopic instanceof self) {
+//            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));
+//
+//            throw new \InvalidArgumentException();
+//        }
+        // resync destination topic and all forums
+//        $this->synchronizationHelper->topic($managedDestinationTopic->get(), true);
+//        $this->synchronizationHelper->forum($originTopicForum, false);
+//        $this->synchronizationHelper->forumLastPost($originTopicForum, true);
+//        $this->synchronizationHelper->forum($managedDestinationTopic->get()->getForum(), false);
+//        $this->synchronizationHelper->forumLastPost($managedDestinationTopic->get()->getForum(), true);
             // set new forum
 //            $this->_topic->getForum()->setLast_post(null);
 //            $oldForum; // needed for sync and consistency

@@ -30,20 +30,30 @@
                 {{ form_widget(form.subject, { 'attr': {'class': ''} }) }}
             </div>
         </div>
-    </div>
-    <div class="panel-body">
         <div class="form-group">
-            {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            {{ form_label(form.forum, __('New target forum'), { 'label_attr': {'class': 'col-md-3'} }) }}
             <div class="col-md-9">
-                {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                {{ form_widget(form.forum, { 'attr': {'class': ''} }) }}
             </div>
         </div>
     </div>
+    {% if form.reason is defined %}
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                <div class="col-md-9">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                    {#   @todo add option to chose who will recive an email topic creator, poster or both ? #}
+                    <small class="form-text text-muted">{{ __('You can send an email to topic creator with a reason why this topic was splited.') }}</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
     {% if app.request.xmlHttpRequest %}
     {% else %}
-        <div class="panel-footer text-right">
+        <div class="panel-footer">
             <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
-            {{ form_widget(form.split, {'attr': {'class': 'btn btn-warning btn-sm'},  'label': __('Split')}) }}
+            {{ form_widget(form.split, {'attr': {'class': 'btn btn-warning btn-sm pull-right'},  'label': __('Split')}) }}
         </div>
     {% endif %}
 </div>

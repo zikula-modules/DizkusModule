@@ -14,6 +14,8 @@
         </h3>
     </div>
     <div class="panel-body">
+        <p class="alert alert-info">{{ __("When you press the 'Join' button at the bottom of this form, the topic you have selected will be <strong>joined (all its posts will be moved)</strong> to the topic you can select below. Note: You will only be able to join the topic to a topic in forum for which you are moderator. An administrator is allowed to join any topic to any other topic.")|raw }}</p>
+        {# @todo ajax topic search/autocompleate by od with title #}
         <div class="form-group">
             {{ form_label(form.to_topic_id, __('ID of target topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
             <div class="col-md-9">
@@ -21,9 +23,18 @@
             </div>
         </div>
         <div class="form-group">
-            {{ form_label(form.createshadowtopic, __('Create shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            {{ form_label(form.append, __('Join strategy') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.append, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="small form-text text-muted">{{ __('Posts are ordered by creation time, you can either append new posts by changing its creation time or mix them with destionation topic posts preservig time.') }}</p>
+                <p class="small form-text text-danger">{{ __('This cannot be reversed!') }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.createshadowtopic, __('Leave shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
             <div class="col-lg-9">
                 {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="small form-text text-muted">{{ __('You can leave selected topic as locked shadow information that all posts were joined to selected topic id. If you do not select to create shadow topic original topic will be removed.') }}</p>
             </div>
         </div>
     </div>

@@ -68,7 +68,7 @@
                             <small>{{ __f("by %s", {'%s': topic.poster.user.uname})}} {{ __('on')}} {{ topic.firstPostTime | date('Y-m-d H:i:s')}}</small>
                             {% if topic.replyCount > settings.posts_per_page %}
                                 {% for i in range(0, topic.replyCount, settings.posts_per_page) %}
-                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'page': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
+                                    <a href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start': loop.index})}}">{{ loop.index}}</a>{% if loop.last %}{% else %}, {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </div>

@@ -12,7 +12,10 @@
 
 namespace Zikula\DizkusModule\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Zikula\Core\Controller\AbstractController;
 
 /**
@@ -64,5 +67,82 @@ abstract class AbstractBaseController extends AbstractController
 
         // json or ajax.html or html
         return $template;
+    }
+
+    /**
+     * Error experimental
+     *
+     * The idea is to DRY display/error handling
+     * but at the moment it
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function errorResponse($error = null, $redirectUrl = null, $format = 'html')
+    {
+        if (empty($error)) {
+            $error = $this->__('Sorry, unknown error occured. Please try again');
+        }
+
+        if (empty($redirectUrl)) {
+            $redirectUrl = $this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL);
+        }
+
+        if ('json' == $format || 'ajax.html' == $format) {
+            return new Response(json_encode(['error' => $error]));
+        }
+
+        $this->addFlash('error', $error);
+
+        return new RedirectResponse($redirectUrl);
+    }
+
+    /**
+     * Error experimental
+     *
+     * The idea is to DRY display/error handling
+     * but at the moment it
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function errorDisplay($error = null, $format = 'html')
+    {
+        if (empty($error)) {
+            $error = $this->__('Sorry, unknown error occured. Please try again');
+        }
+
+        if ('json' == $format || 'ajax.html' == $format) {
+            return ['error' => $error];
+        }
+
+        $this->addFlash('error', $error);
+
+        return;
+    }
+
+    /**
+     * experimental
+     *
+     * The idea is to DRY display/error handling
+     * but at the moment it is experimental
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
+    public function formatResponse($content, $format = 'html')
+    {
+        if ('json' == $format) {
+            $response = json_encode(['data' => $content]);
+        } else if ('ajax.html' == $format) {
+            $response = json_encode(['html' => $content]);
+        } else {
+            $response = $content;
+        }
+
+        return new Response($response);
     }
 }
