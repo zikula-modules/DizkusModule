@@ -52,19 +52,29 @@ class SyncListener
         /*
          * New topic
          */
-        if (($entity instanceof TopicEntity)) {
+        if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
             dump('New topic');
-//            $entity->setLast_Post($entity->getPosts()->first());
-            dump($entity->getSyncOnSave());
+            $entity->setLast_Post($entity->getPosts()->first());
+
+            // update forum -
+            $forum = $entity->getForum();
+            // FORUMS
+            //update forums info
+            $parents = $forum->getParents();
+            $parents[] = $forum;
+            foreach ($parents as $forum) {
+                $forum->setLast_post($entity->getPosts()->first());
+                $forum->incrementTopicCount();
+            }
         }
 
         /*
          * New post
          */
-        if (($entity instanceof PostEntity)) {
+        if ($entity instanceof PostEntity) {
             $topic = $entity->getTopic();
             $user = $entity->getPoster();
-            $forum = $topic->getForum();
+
             if ($entity->isFirst()) {
                 dump('New post in new topic');
                 /*
@@ -76,10 +86,10 @@ class SyncListener
                 // this is a new topic indicator
 //                $entity->isFirst() ?: $topic->incrementReplyCount();
                 // USER
-                !$entity->getTopic()->getSubscribe() ?: $user->addTopicSubscription($topic);
+//                !$entity->getTopic()->getSubscribe() ?: $user->addTopicSubscription($topic);
                 // user subscription @todo add subscription module settings check
 //                $entity->isFirst() ?: $user->incrementPostCount();
-                $user->incrementPostCount();
+//                $user->incrementPostCount();
 
             } else {
                 /*
@@ -87,18 +97,11 @@ class SyncListener
                  */
                 dump('New post (Reply) in topic');
                 $topic->incrementReplyCount();
+
+
             }
 
-            $topic->setLast_Post($entity);
-            // FORUMS
-            //update forums info
-            $parents = $forum->getParents();
-            $parents[] = $forum;
-            foreach ($parents as $forum) {
-                !$entity->isFirst() ?: $forum->incrementTopicCount();
-                $forum->incrementPostCount();
-                $forum->setLast_post($entity);
-            }
+
         }
     }
 
@@ -115,13 +118,13 @@ class SyncListener
         /*
          * New topic
          */
-        if (($entity instanceof TopicEntity)) {
+        if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
         }
 
         /*
          * New post
          */
-        if (($entity instanceof PostEntity)) {
+        if ($entity instanceof PostEntity) {
         }
     }
 
@@ -142,23 +145,50 @@ class SyncListener
 
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
-        dump($uow->getEntityChangeSet($entity)); // see what changed
-
+         // see what changed
+        $changes = $uow->getEntityChangeSet($entity);
+        dump($changes);
         /*
          * Forum changed
          */
-        if (($entity instanceof ForumEntity)) {
+        if ($entity instanceof ForumEntity) {
             dump('preUpdate forum');
-            // if last post changed update direct parent
-            // if topic count changed update direct parent
-            // if post count changed update direct parent
+            // its a forum or root
+            $parent = $entity->getParent();
+            // lets work on parent here see what it is first
+            // if its objetc then we can play with it
+            if ($parent instanceof ForumEntity) {
+//                // for example update last post
+//                if ($event->hasChangedField('last_post')) {
+//                    $new_last_post_date = $event->getNewValue('last_post') instanceof PostEntity
+//                        ? $event->getNewValue('last_post')->getPost_time()
+//                        : null ;
+//                    $parent_last_post_date = $parent->getLast_post() instanceof PostEntity
+//                        ? $parent->getLast_post()->getPost_time()
+//                        : null;
+//                    // now when we know all the dates we can do it
+//                    if ($new_last_post_date > $parent_last_post_date) {
+//                        $parent->setLast_post($event->getNewValue('last_post'));
+//                    }
+//
+//                 // end of parent sync
+//                    $em->persist($parent);
+//                    $md = $em->getClassMetadata(get_class($parent));
+//                    $uow->recomputeSingleEntityChangeSet($md, $parent);
+////                    $em->flush($parent); // <-this is bad but it works only wonder how long :)
+//                }
+//                // now we update topic count
+//                if ($event->hasChangedField('topicCount')) {
+//
+//                }
 
+            }
         }
 
         /*
          * Topic changed
          */
-        if (($entity instanceof TopicEntity)) {
+        if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
             dump('preUpdate topic');
             dump($entity->getSyncOnSave());
             /*
@@ -231,7 +261,63 @@ class SyncListener
             if ($entity->getPosts()->isDirty()) {
                 dump($entity);
                 dump($entity->getPosts()->getInsertDiff());
+                dump($entity->getPosts()->getDeleteDiff());
+                
             }
+
+        }
+
+        /*
+         * Any post manipulation
+         */
+        if ($entity instanceof PostEntity) {
+            // topic changed? split? move post?
+            dump('preUpdate post');
+        }
+    }
+
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+//        dump('postUpdate');
+//        dump($args);
+        $em = $args->getEntityManager();
+        $entity = $args->getEntity();
+        /*
+         * Any manipulation on topic
+         */
+        if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
+        }
+        if ($entity instanceof PostEntity) {
+            if ($entity->isFirst()) {
+            }
+        }
+    }
+
+    public function postRemove(LifecycleEventArgs $args)
+    {
+//        dump('postRemove');
+//        dump($args);
+        $em = $args->getEntityManager();
+        $entity = $args->getEntity();
+
+        /*
+         * Delete topic
+         */
+        if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
+        }
+
+        /*
+         * Delete post
+         */
+        if ($entity instanceof PostEntity) {
+            if ($entity->isFirst()) {
+            }
+        }
+    }
+}
+
+//            $topic->setLast_Post($entity);
+
 
 //              Pre update topic sync force on update
 //            if ($entity->getSyncOnSave()) {
@@ -248,52 +334,25 @@ class SyncListener
 //                    $entity->setLast_Post($posts->first());
 //                }
 //            }
-        }
+//            // if last post changed update direct parent
+////                $new_last_post = ;
+//                // lets see
+//                dump('testing fucking with doctrine 1');
+//                dump($entity->getParent()->getLast_post());
+//                dump($event->getNewValue('last_post'));
+//
+//                    $parent_last_post =
+//                        ? $event->getNewValue('last_post')
+//                        : $parent_last_post_date ;
+////
+////                    && ($entity->getParent()->getLast_post() < )
+////                    $parent_old_last_post = $parent->getLast_post();
+////                    // should we accept any last post or only latest one?
+////                       if ($new_last_post > $parent_old_last_post) {
+////                       }
+//
 
-        /*
-         * Any post manipulation
-         */
-        if (($entity instanceof PostEntity)) {
-            // topic changed? split? move post?
-            dump('preUpdate post');
-        }
-    }
-
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-//        dump('postUpdate');
-//        dump($args);
-        $em = $args->getEntityManager();
-        $entity = $args->getEntity();
-        /*
-         * Any manipulation on topic
-         */
-        if (($entity instanceof TopicEntity)) {
-        }
-        if (($entity instanceof PostEntity)) {
-            if ($entity->isFirst()) {
-            }
-        }
-    }
-
-    public function postRemove(LifecycleEventArgs $args)
-    {
-//        dump('postRemove');
-//        dump($args);
-        $em = $args->getEntityManager();
-        $entity = $args->getEntity();
-
-        /*
-         * Delete topic
-         */
-        if (($entity instanceof TopicEntity)) {
-        }
-        /*
-         * Delete post
-         */
-        if (($entity instanceof PostEntity)) {
-            if ($entity->isFirst()) {
-            }
-        }
-    }
-}
+//                }
+//            }
+            // if topic count changed update direct parent
+            // if post count changed update direct parent

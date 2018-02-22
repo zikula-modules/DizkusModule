@@ -374,7 +374,7 @@ class PostController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
+        $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post, null, false);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
             if ('json' == $format || 'ajax.html' == $format) {
@@ -394,7 +394,7 @@ class PostController extends AbstractController
 
             $this->addFlash('error', $error);
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getTopicId()], RouterInterface::ABSOLUTE_URL));
         }
 
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -437,12 +437,26 @@ class PostController extends AbstractController
         }
         // we need to simulate delete button in ajax forms both json and html
         if ($form->get('move')->isClicked()) {
-            $managedOriginTopic = $managedPost->getManagedTopic();
-            $managedPost
-                ->update($form->getData())
-            // we can use update
-//                ->move($form->get('forum')->getData())
-                ->store();
+            $redirectUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getTopicId()], RouterInterface::ABSOLUTE_URL);
+            $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($form->get('to_topic_id')->getData(), null, false);
+            if (!$managedDestinationTopic->exists()) {
+                $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [ '%s' => $form->get('to_topic_id')->getData()]);
+                return $this->errorResponse($error, $redirectUrl, $format);
+            }
+
+            if (!$currentForumUser->allowedToModerate($managedDestinationTopic)) {
+                throw new AccessDeniedException();
+            }
+
+            if ($managedDestinationTopic->getId() == $managedPost->getTopicId()) {
+                $error = $this->__('Error! You cannot copy topic to itself.');
+                return $this->errorResponse($error, $redirectUrl, $format);
+            }
+
+            $managedPost->move($managedDestinationTopic->get(),
+                               $form->get('append')->getData());
+
+            $managedPost->store();
 
             $this->get('hook_dispatcher')
                 ->dispatch('dizkus.ui_hooks.post.process_edit',
@@ -457,7 +471,7 @@ class PostController extends AbstractController
                 ->dispatch(DizkusEvents::POST_MOVE,
                     new GenericEvent($managedPost->get(),
                     ['reason' => $form->has('reason') ? $form->get('reason')->getData() : null,
-                     'original_topic' => $managedOriginTopic->get(),
+                     'original_topic' => $managedPost->getManagedTopic(),
                      'notifier' => $currentForumUser]
                     )
                 );
@@ -470,7 +484,7 @@ class PostController extends AbstractController
             //return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedOriginTopic->getId()], RouterInterface::ABSOLUTE_URL));
 
             //redirect to destination topic default
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
+//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getManagedTopic()->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         delete_error:

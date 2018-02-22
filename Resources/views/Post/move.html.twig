@@ -1,3 +1,4 @@
-{{ include("@ZikulaDizkusModule/Common/header.html.twig", {'templatetitle':__f('Move post: # %s', {'%s': managedPost.id })}) }}
+{% set templatetitle=__f('Move post: # %s', {'%s': managedPost.id }) %}
+{{ include("@ZikulaDizkusModule/Common/header.html.twig") }}
 {{ include("@ZikulaDizkusModule/Post/move.ajax.html.twig") }}
 {{ include("@ZikulaDizkusModule/Common/footer.html.twig") }}

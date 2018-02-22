@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -274,15 +275,11 @@ class PostManager
      *
      * @return int count of posts in destination topic
      */
-    public function move($topic)
+    public function move(TopicEntity $topic, $append = false)
     {
-        if (!$topic instanceof TopicEntity) {
-            return $this;
-        }
-
+        dump($topic);
+        dump($append);
         $this->_post->setTopic($topic);
-
-        //$this->entityManager->flush();
 
         return $this;
     }

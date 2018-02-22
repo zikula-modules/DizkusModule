@@ -204,8 +204,10 @@ class TopicController extends AbstractController
                                     ->setPost_time(new \DateTime())
 //                                    ->setTopic($newManagedTopic->get()) // this is not needed - set in topic internally
                                     ->setPoster($currentForumUser->get())
-                                    ->setIsFirstPost()),
-                ['loggedIn' => $currentForumUser->isLoggedIn(), 'settings' => $this->getVars(), 'isModerator' => $currentForumUser->allowedToModerate($managedForum)]
+                                    ->setIsFirstPost()), // this could be handled by sync
+                ['loggedIn'     => $currentForumUser->isLoggedIn(),
+                 'settings'     => $this->getVars(),
+                 'isModerator'  => $currentForumUser->allowedToModerate($managedForum)]
             );
 
         if ('html' == $format || 'comment' == $template) {
