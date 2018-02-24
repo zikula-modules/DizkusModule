@@ -20,7 +20,7 @@
 {% set subforums_icon %}<i class="fa fa-chevron-circle-down"></i>{% endset %}
 {% set topics_icon %}<i class="fa fa-chevron-circle-down"></i>{% endset %}
 
-{% set lock_icon %}<i class="fa fa-lock fa-red"></i>{% endset %}
+{% set lock_icon %}<i class="fa fa-lock fa-black"></i>{% endset %}
 {% set unlock_icon %}<i class="fa fa-unlock fa-green"></i>{% endset %}
 
 
@@ -137,6 +137,7 @@
                     {% endif %}
                 {% endif %}
                 {% if currentForumUser.allowedToModerate(currentForum) %}
+{#       @todo for non ajax version manual single topic moderation available ony
                     <li>
                         <a class="tooltips"
                            title="{{ __("Enter moderator mode") }}"
@@ -144,7 +145,7 @@
                            >
                             {{ moderate_icon }}&nbsp;{{ __("Moderate") }}
                         </a>
-                    </li>
+                    </li>#}
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->

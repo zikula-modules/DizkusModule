@@ -204,7 +204,8 @@ class TopicController extends AbstractController
                                     ->setPost_time(new \DateTime())
 //                                    ->setTopic($newManagedTopic->get()) // this is not needed - set in topic internally
                                     ->setPoster($currentForumUser->get())
-                                    ->setIsFirstPost()), // this could be handled by sync
+//                                    ->setIsFirstPost() // this is handled by sync
+                            ),
                 ['loggedIn'     => $currentForumUser->isLoggedIn(),
                  'settings'     => $this->getVars(),
                  'isModerator'  => $currentForumUser->allowedToModerate($managedForum)]
@@ -517,7 +518,7 @@ class TopicController extends AbstractController
             $postManager
                 ->get()
                     ->setPost_time(new \DateTime())
-                    ->setTopic($managedTopic->get()) // this is needed
+//                    ->setTopic($managedTopic->get()) // this not needed if topic->addPost is used later on
                     ->setPoster($currentForumUser->get()),
             ['loggedIn' => $currentForumUser->isLoggedIn(),
             'action' => $action,
@@ -1416,7 +1417,67 @@ class TopicController extends AbstractController
 
         if (!$request->isXmlHttpRequest()) {
             // everything is good no ajax return to to topic view
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmoduletopic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+        }
+    }
+
+    /**
+     * @Route("/topic/{topic}/sync", requirements={"topic" = "^[1-9]\d*$"}, options={"expose"=true})
+     *
+     * Sync topic manual action
+     *
+     * User interface for forum locking
+     *
+     * @return string
+     */
+    public function syncAction(Request $request, $topic)
+    {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
+            if ($request->isXmlHttpRequest()) {
+                return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
+            } else {
+                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+                    'forum_disabled_info' => $this->getVar('forum_disabled_info'),
+                ]);
+            }
+        }
+
+        if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
+            throw new AccessDeniedException();
+        }
+
+        $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic, null, false);
+        if (!$managedTopic->exists()) {
+            throw new NotFoundHttpException($this->__('Error! Topic not found in \'Dizkus/TopicController/syncAction()\'.'));
+        }
+
+        $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
+        //nicer redirect form of access denied
+        if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
+            $path = [
+                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL),
+                '_controller' => 'ZikulaUsersModule:User:login', ];
+
+            $subRequest = $request->duplicate([], null, $path);
+            $httpKernel = $this->get('http_kernel');
+            $response = $httpKernel->handle(
+            $subRequest, HttpKernelInterface::SUB_REQUEST
+            );
+
+            return $response;
+        }
+
+        if (!$forumUserManager->allowedToModerate($managedTopic)) {
+            throw new AccessDeniedException();
+        }
+
+        $managedTopic->sync();
+        // do not sync again
+        $managedTopic->store(true);
+
+        if (!$request->isXmlHttpRequest()) {
+            // everything is good no ajax return to to topic view
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
     }
 }

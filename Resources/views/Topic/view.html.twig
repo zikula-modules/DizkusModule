@@ -5,18 +5,18 @@
 {% set next_icon %}<i class="fa fa-chevron-right"></i>{% endset %}
 {% set unsubscribe_icon %}<i class='fa fa-envelope-o'></i>{% endset %}
 {% set subscribe_icon %}<i class='fa fa-envelope-open-o'></i>{% endset %}
-{% set lock_icon %}<i class='fa fa-lock fa-red'></i>{% endset %}
+{% set lock_icon %}<i class='fa fa-lock fa-orange'></i>{% endset %}
 {% set unlock_icon %}<i class='fa fa-unlock fa-green'></i>{% endset %}
 {% set unsticky_icon %}<i class="fa fa-thumb-tack fa-orange"></i>{% endset %}
 {% set sticky_icon %}<i class="fa fa-thumb-tack fa-rotate-180"></i>{% endset %}
 {% set create_icon %}<i class="fa fa-comments-o fa-flip-horizontal"></i>{% endset %}
 {% set send_icon %}<i class="fa fa-paper-plane"></i>{% endset %}
 {% set print_icon %}<i class="fa fa-print"></i>{% endset %}
-{% set delete_icon %}<i class="fa fa-times"></i>{% endset %}
+{% set delete_icon %}<i class="fa fa-times fa-red"></i>{% endset %}
 {% set split_icon %}<i class='fa fa-chevron-circle-down'></i>{% endset %}
 {% set move_icon %}<i class="fa fa-arrow-right"></i>{% endset %}
 {% set join_icon %}<i class="fa fa-compress"></i>{% endset %}
-
+{% set sync_icon %}<i class="fa fa-refresh"></i>{% endset %}
 {% set sort_up_icon %}<i class="fa fa-long-arrow-up" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i>{% endset %}
 {% set sort_down_icon %}<i class="fa fa-long-arrow-up fa-rotate-180" aria-hidden="true"></i> <i class="fa fa-clock-o" aria-hidden="true"></i>{% endset %}
 {# ------- #}
@@ -124,6 +124,7 @@
                 </li>
                 <li><a class="tooltips" title="{{ __("Move topic") }}" href="{{ path('zikuladizkusmodule_topic_movetopic', {'topic':currentTopic.id}) }}">{{ move_icon }}</a></li>
                 <li><a class="tooltips" title="{{ __("Join topic") }}" href="{{ path('zikuladizkusmodule_topic_jointopic', {'topic':currentTopic.id}) }}">{{ join_icon }}</a></li>
+                <li><a class="tooltips" title="{{ __("Sync topic and parents branch") }}" href="{{ path('zikuladizkusmodule_topic_sync', {'topic':currentTopic.id}) }}">{{ sync_icon }}</a></li>
                 <li><a class="tooltips" title="{{ __("Delete topic") }}" href="{{ path('zikuladizkusmodule_topic_deletetopic', {'topic':currentTopic.id}) }}">{{ delete_icon }}</a></li>
                 {% endif %}
             <li><a class="tooltips" title="{{ __("To bottom of page") }}" href="#bottom">{{ bottom_icon }}</a></li>

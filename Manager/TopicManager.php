@@ -259,6 +259,10 @@ class TopicManager
     public function store($noSync = false)
     {
         // write topic
+        if ($noSync) {
+            $this->noSync();
+        }
+
         $this->entityManager->persist($this->_topic);
         $this->entityManager->flush();
 
@@ -767,8 +771,11 @@ class TopicManager
         }
 
         $this->entityManager->persist($newTopic);
-        // must flush here so sync gets correct information
+        // must flush here so sync listener gets correct information
         $this->entityManager->flush();
+
+        $this->sync();
+        $this->store(true);
 
         // $post will have new topic id
         return $this;
@@ -832,6 +839,30 @@ class TopicManager
             $this->get()->addPost($shadowFirstPost);
             $this->store();
         }
+
+        return $this;
+    }
+
+    /**
+     * manually sync topic
+     *
+     * @todo it might be moved
+     *
+     * @return $this
+     */
+    public function sync()
+    {
+        $firstPost = $this->get()->getPosts()->first();
+        $lastPost = $this->get()->getPosts()->last();
+        $totalPosts = $this->get()->getPosts()->count();
+        foreach ($this->get()->getPosts() as $post) {
+            $post->setIsFirstPost(false);
+        }
+        // post sync
+        $firstPost->setIsFirstPost(true);
+        //topic sync
+        $this->get()->setLast_Post($lastPost);
+        $this->get()->setReplyCount($totalPosts - 1);
 
         return $this;
     }
