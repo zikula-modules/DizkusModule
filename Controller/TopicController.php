@@ -314,7 +314,7 @@ class TopicController extends AbstractController
                 );
 
             // redirect to the new topic
-//            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $newManagedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         display:
@@ -573,7 +573,7 @@ class TopicController extends AbstractController
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -847,7 +847,7 @@ class TopicController extends AbstractController
             } else {
                 $this->addFlash('status', $this->__f('Done! The topic you selected (ID: %s) was moved to selected forum.', ['%s' => $topic]));
 
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -986,7 +986,7 @@ class TopicController extends AbstractController
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
@@ -1148,7 +1148,7 @@ class TopicController extends AbstractController
             if ('json' == $format) {
             } elseif ('ajax.html' == $format) {
             } else {
-//                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
+                return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedDestinationTopic->getId()], RouterInterface::ABSOLUTE_URL));
             }
         }
 
