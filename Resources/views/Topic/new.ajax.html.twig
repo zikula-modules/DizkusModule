@@ -68,21 +68,27 @@
                         {% endif %}
 
                         <div class="col-md-4">
-                            <div><strong>{{ __("Topic options") }}</strong></div>
-
+                            {% if settings.solved_enabled or currentForumUser.allowedToModerate(currentForum)%}
+                                <div><strong>{{ __("Topic options") }}</strong></div>
+                            {% else %}
+                            {# @todo Info about no options might look bad in case other things are enabled and visible
+                            This need to be addressed in the future
+                            #}
+                            {% endif %}
                             {% if settings.solved_enabled %}
                                 {{ form_row(form.solved,  {   'label': __("Mark topic as support question")
                             ,'label_attr': {'class': ''}
                             ,'attr': {'class': '','icon': 'fa fa-question fa-red'} }) }}
                             {% endif %}
+                            {% if currentForumUser.allowedToModerate(currentForum) %}
+                                {{ form_row(form.locked,  {   'label': __("Is topic locked")
+                                ,'label_attr': {'class': ''}
+                                ,'attr': {'class': '','icon': 'fa fa-lock'} }) }}
 
-                            {{ form_row(form.locked,  {   'label': __("Is topic locked")
-                            ,'label_attr': {'class': ''}
-                            ,'attr': {'class': '','icon': 'fa fa-lock'} }) }}
-
-                            {{ form_row(form.sticky,  {   'label': __("Is topic sticky")
-                            ,'label_attr': {'class': ''}
-                            ,'attr': {'class': '','icon': 'fa fa-thumb-tack fa-orange'} }) }}
+                                {{ form_row(form.sticky,  {   'label': __("Is topic sticky")
+                                ,'label_attr': {'class': ''}
+                                ,'attr': {'class': '','icon': 'fa fa-thumb-tack fa-orange'} }) }}
+                            {% endif %}
                         </div>
 
                         {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.form_edit', id=null) }}

@@ -16,11 +16,11 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class JoinMoveTopicType extends AbstractType
+class MoveTopicType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -32,7 +32,7 @@ class JoinMoveTopicType extends AbstractType
             ->add('forum', EntityType::class, [
                 'class' => 'Zikula\DizkusModule\Entity\ForumEntity',
                 'query_builder' => function (EntityRepository $er) {
-                    $forums =$er->createQueryBuilder('f')
+                    $forums = $er->createQueryBuilder('f')
                         ->where('f.lvl != 0')
                         ->orderBy('f.root', 'ASC')
                         ->addOrderBy('f.lft', 'ASC');
@@ -44,26 +44,24 @@ class JoinMoveTopicType extends AbstractType
                 },
                 'multiple'      => false,
                 'expanded'      => false,
+                'mapped'        => false,
                 'choice_attr'   => function ($forum) {
                     return $forum->getId() == $this->options['forum'] ? ['disabled' => 'disabled'] : [];
                 }
             ])
-            ->add('to_topic_id', IntegerType::class, [
-                'required' => false,
-                'mapped' => false
-            ])
             ->add('createshadowtopic', ChoiceType::class, [
-                'choices'   => ['0' => 'Off', '1' => 'On'],
+                'choices'   => ['Off' => false, 'On' => true],
+                'choices_as_values' => true,
                 'multiple'  => false,
                 'expanded'  => true,
                 'required'  => true,
                 'mapped'    => false,
-                'data'      => 0,
+                'data'      => false,
             ]);
         if ($options['addReason']) {
             $builder->add('reason', TextareaType::class, [
-                'mapped' => false,
-                'required' =>false,
+                'mapped'    => false,
+                'required'  =>false,
             ]);
         }
     }
@@ -73,7 +71,7 @@ class JoinMoveTopicType extends AbstractType
      */
     public function getName()
     {
-        return 'zikula_dizkus_form_topic_joinmove';
+        return 'zikula_dizkus_form_topic_move';
     }
 
     /**
@@ -82,11 +80,11 @@ class JoinMoveTopicType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'forum'      => null,
-            'forums'     => null,
-            'translator' => null,
-            'addReason' => false,
-            'settings' => null
+            'forum'         => null,
+            'forums'        => null,
+            'translator'    => null,
+            'addReason'     => false,
+            'settings'      => null
         ]);
     }
 }

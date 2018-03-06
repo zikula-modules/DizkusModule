@@ -1,7 +1,13 @@
-{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/chosen_v1.0.0/chosen.jquery.min.js')) }}
-{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:js/chosen_v1.0.0/chosen.css')) }}
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/chosen_v1.8.2/chosen.jquery.min.js')) }}
+{{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:js/chosen_v1.8.2/chosen.css')) }}
 {{ pageAddAsset('stylesheet', zasset('@ZikulaDizkusModule:css/chosen-bootstrap.css')) }}
-{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Admin.ModifyForum.js')) }}
+
+{{ pageAddAsset('stylesheet', asset('jquery-ui/themes/base/jquery-ui.min.css')) }}
+{{ pageAddAsset('stylesheet', asset('bootstrap-jqueryui/bootstrap-jqueryui.min.css')) }}
+{{ pageAddAsset('javascript', asset('jquery-ui/jquery-ui.min.js')) }}
+{{ pageAddAsset('javascript', asset('bootstrap-jqueryui/bootstrap-jqueryui.min.js')) }}
+
+{{ pageAddAsset('javascript', zasset('@ZikulaDizkusModule:js/Zikula.Dizkus.Forum.modify.js')) }}
 
 {{ adminHeader() }}
 {% form_theme form with ['bootstrap_3_layout.html.twig',
@@ -74,15 +80,15 @@
 
         <div class="form-group">
             {{ form_label(form.moderatorUsers, __('Moderation (Users)'), { 'label_attr': {'class': 'col-md-3'} }) }}
-            <div class="col-lg-9">
-                {{ form_widget(form.moderatorUsers, { 'attr': {'class': 'chzn-select', 'data-placeholder': __('Select Some Options') } }) }}                
+            <div class="user-moderators col-lg-9 ">
+                {{ form_widget(form.moderatorUsers, { 'attr': {'class': 'chosen-select user-moderator-select', 'data-placeholder': __('Select Some Options') } }) }}
             </div>
         </div>
 
         <div class="form-group">
             {{ form_label(form.moderatorGroups, __('Moderation (Groups)'), { 'label_attr': {'class': 'col-md-3'} }) }}
-            <div class="col-lg-9">
-                {{ form_widget(form.moderatorGroups, { 'attr': {'class': 'chzn-select', 'data-placeholder': __('Select Some Options') } }) }} 
+            <div class="group-moderators col-lg-9">
+                {{ form_widget(form.moderatorGroups, { 'attr': {'class': 'chosen-select group-moderator-select', 'data-placeholder': __('Select Some Options') } }) }}
             </div>
         </div>      
 

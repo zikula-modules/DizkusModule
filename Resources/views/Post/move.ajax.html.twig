@@ -1,5 +1,5 @@
 {% form_theme form with ['bootstrap_3_layout.html.twig',
-    'ZikulaDizkusModule:Form:checkbox.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
     'ZikulaDizkusModule:Form:radio.html.twig'
 ] %}
 
@@ -9,57 +9,50 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h4 class="text-info">{{ __('You are about to move below post') }}</h4>
-    </div>
-</div>
-{% if hide_preview is not defined %}
-    {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': managedPost, 'hide_badge': 1}) }}
-{% endif %}
-
-{{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_view', id=managedPost.id) }}
-
-
-<div class="panel panel-default">
-    <div class="panel-heading">
-        {{ form_label(form.topic, __('Select destination topic') ,{ 'label_attr': {'class': ''} }) }}
+        <h3>
+            {{ templatetitle }}
+        </h3>
     </div>
     <div class="panel-body">
+        <p class="alert alert-info">{{ __("When you press the 'Move' button at the bottom of this form, the post you have selected will be <strong>moved</strong> to the topic you can select below. Note: You will only be able to move the post to a topic in forum for which you are moderator. An administrator is allowed to move any post to any other topic.")|raw }}</p>
+        {% if hide_preview is not defined %}
+            {{ include("@ZikulaDizkusModule/Post/preview.html.twig", {'preview': managedPost, 'hide_badge': 1}) }}
+        {% endif %}
+        {# {{ notifyDisplayHooks(eventName='dizkus.ui_hooks.post.ui_view', id=managedPost.id) }}   @todo is this needed? #}
+        {# @todo ajax topic search/autocompleate by id with title #}
         <div class="form-group">
-            <div class="col-md-12">
-                {{ form_widget(form.topic, { 'attr': {'class': ''} }) }}
+            {{ form_label(form.to_topic_id, __('ID of target topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.to_topic_id, {'attr': {'class': ''}}) }}
+                <small class="form-text text-muted">{{ __('Please enter destination topic id.') }}</small>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.append, __('Move strategy') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.append, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="small form-text text-muted">{{ __('Posts are ordered by creation time, you can either append this post at the end of the selected topic by changing its creation time or mix them with destionation topic posts preservig time.') }}</p>
             </div>
         </div>
     </div>
-</div>
-
-<div class="panel panel-default">
-
-    <div class="panel-heading">
-        {% if managedPost.managedPoster.id == currentForumUser.id %}
-            <h4 class="">{{ __('Please confirm') }}</h4>
-        {% else %}
-            {{ form_label(form.reason, __('Send reason') ,{ 'label_attr': {'class': ''} }) }}
-        {% endif %}
-    </div>
-
-
-
-    {% if managedPost.managedPoster.id == currentForumUser.id %}
-    {% else %}
+    {% if form.reason is defined %}
         <div class="panel-body">
             <div class="form-group">
-                <div class="col-md-12">
-                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5} }) }}
+                {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                <div class="col-md-9">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                    <small class="form-text text-muted">{{ __('You can send an email to poster with a reason why this post was moved.') }}</small>
                 </div>
             </div>
         </div>
     {% endif %}
     {% if app.request.xmlHttpRequest %}
     {% else %}
-        <div class="panel-footer text-right">
-            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':managedPost.getManagedTopic().id}) }}" role="button">{{ __('Cancel') }}</a>
-            {{ form_widget(form.move, {'attr': {'class': 'btn btn-danger btn-sm'},  'label': __('Move post')}) }}
+        <div class="panel-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.move, {'attr': {'class': 'btn btn-danger btn-sm pull-right'},  'label': __('Move post')}) }}
         </div>
     {% endif %}
 </div>
+
 {{ form_end(form) }}

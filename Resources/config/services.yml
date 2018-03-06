@@ -26,7 +26,8 @@ parameters:
     zikula_dizkus_module.favorites_helper.class: Zikula\DizkusModule\Helper\FavoritesHelper
     zikula_dizkus_module.count_helper.class: Zikula\DizkusModule\Helper\CountHelper
     zikula_dizkus_module.synchronization_helper.class: Zikula\DizkusModule\Helper\SynchronizationHelper
-    zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper    
+    zikula_dizkus_module.rank_helper.class: Zikula\DizkusModule\Helper\RankHelper
+    zikula_dizkus_module.search_helper.class: Zikula\DizkusModule\Helper\SearchHelper
     # Import    
     zikula_dizkus_module.import_helper.class: Zikula\DizkusModule\Helper\ImportHelper
     zikula_dizkus_module.import.database.class: Zikula\DizkusModule\ImportHandler\Database_ImportHandler
@@ -264,7 +265,17 @@ services:
             - "@doctrine.orm.default_entity_manager"
             - "@zikula_dizkus_module.security"
             - "@zikula_extensions_module.api.variable"
-         
+            
+    zikula_dizkus_module.helper.search_helper:
+        class: %zikula_dizkus_module.search_helper.class%
+        arguments:
+          - '@zikula_permissions_module.api.permission'
+          - '@session'
+          - "@translator"
+          - "@zikula_extensions_module.api.variable"
+          - "@zikula_dizkus_module.forum_manager"
+        tags:
+            - { name: zikula.searchable_module, bundleName: ZikulaDizkusModule }
 # Import 
 
     zikula_dizkus_module.import_helper:
