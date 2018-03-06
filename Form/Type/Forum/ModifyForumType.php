@@ -23,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Form\Extension\UserModeratorsChoiceLoader;
 use Zikula\DizkusModule\Form\DataTransformer\ModeratorUsersTransformer;
 use Zikula\DizkusModule\Form\DataTransformer\ModeratorGroupsTransformer;
 
@@ -36,13 +37,6 @@ class ModifyForumType extends AbstractType
     {
         $this->em = $em;
         $this->forumUserManagerService = $forumUserManagerService;
-
-//        // users
-//        $users = $em->getRepository('ZikulaUsersModule:UserEntity')->findAll();
-//        foreach ($users as $user) {
-//            $usersArr[$user->getUid()] = $user->getUname();
-//        }
-        $this->users = []; //$usersArr;
 
         // groups
         $groups = $em->getRepository('ZikulaGroupsModule:GroupEntity')->findAll();
@@ -82,9 +76,10 @@ class ModifyForumType extends AbstractType
             'required' => true])
 
         ->add($builder->create('moderatorUsers', ChoiceType::class, [
-            'choices' => $this->users,
+            'choice_loader' => new UserModeratorsChoiceLoader($builder),
             'multiple' => true,
             'expanded' => false,
+            'choices_as_values' => true,
             'required' => false]
         )->addModelTransformer($moderatorUsersTransformer))
 

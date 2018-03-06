@@ -339,6 +339,8 @@ class ForumController extends AbstractController
                 );
 
             $this->addFlash('status', $this->__('Forum successfully updated.'));
+
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_modifyforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
 
         return $this->render('@ZikulaDizkusModule/Forum/modifyforum.html.twig', [

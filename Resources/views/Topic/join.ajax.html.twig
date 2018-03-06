@@ -1,0 +1,60 @@
+{% form_theme form with ['bootstrap_3_layout.html.twig',
+    'ZikulaFormExtensionBundle:Form:bootstrap_3_zikula_admin_layout.html.twig',
+    'ZikulaDizkusModule:Form:radio.html.twig'
+] %}
+
+{{ showflashes() }}
+{{ form_start(form) }}
+{{ form_errors(form) }}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3> 
+            {{ templatetitle }}      
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p class="alert alert-info">{{ __("When you press the 'Join' button at the bottom of this form, the topic you have selected will be <strong>joined (all its posts will be moved)</strong> to the topic you can select below. Note: You will only be able to join the topic to a topic in forum for which you are moderator. An administrator is allowed to join any topic to any other topic.")|raw }}</p>
+        {# @todo ajax topic search/autocompleate by od with title #}
+        <div class="form-group">
+            {{ form_label(form.to_topic_id, __('ID of target topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-md-9">
+                {{ form_widget(form.to_topic_id, {'attr': {'class': ''}}) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.append, __('Join strategy') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.append, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="small form-text text-muted">{{ __('Posts are ordered by creation time, you can either append new posts by changing its creation time or mix them with destionation topic posts preservig time.') }}</p>
+                <p class="small form-text text-danger">{{ __('This cannot be reversed!') }}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form_label(form.createshadowtopic, __('Leave shadow topic') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+            <div class="col-lg-9">
+                {{ form_widget(form.createshadowtopic, {'attr': {'class': 'btn btn-primary radio-inline' }}) }}
+                <p class="small form-text text-muted">{{ __('You can leave selected topic as locked shadow information that all posts were joined to selected topic id. If you do not select to create shadow topic original topic will be removed.') }}</p>
+            </div>
+        </div>
+    </div>
+    {% if form.reason is defined %}
+        <div class="panel-body">
+            <div class="form-group">
+                {{ form_label(form.reason, __('Send a reason') ,{ 'label_attr': {'class': 'col-md-3'} }) }}
+                <div class="col-md-9">
+                    {{ form_widget(form.reason, { 'attr': {'class': '', 'rows': 5, 'placeholder': __('No email will be send when this filed is empty.')} }) }}
+                    <small class="form-text text-muted">{{ __('You can send an email to topic creator with a reason why this topic was joined.') }}</small>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if app.request.xmlHttpRequest %}
+    {% else %}
+        <div class="panel-footer">
+            <a class="btn btn-default btn-sm" href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic':currentTopic.id}) }}" role="button">{{ __('Cancel') }}</a>
+            {{ form_widget(form.join, {'attr': {'class': 'btn btn-warning btn-sm pull-right'}}) }}
+        </div>
+    {% endif %}
+</div>
+{{ form_end(form) }}

@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface; // used in annotations - do not remove
 use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
 use Zikula\DizkusModule\Entity\ForumEntity;
@@ -68,9 +67,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/profile/{user}", defaults={"user"=null})
      *
-     * prefs
-     *
-     * Interface for a user to manage general user preferences.
+     * Interface for a user to display forum user profile.
      *
      * @return string
      */
@@ -95,9 +92,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/preferences/{user}", defaults={"user"=null})
-     *
-     * prefs
+     * @Route("/user/preferences/{user}")
      *
      * Interface for a user to manage general user preferences.
      *
@@ -164,17 +159,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -222,17 +209,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_addforumsubscription'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -285,17 +264,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_removeforumsubscription'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -338,17 +309,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -396,17 +359,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_addtopicsubscription'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -461,17 +416,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_removetopicsubscription'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -512,17 +459,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_managefavoriteforums'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -538,7 +477,7 @@ class UserController extends AbstractController
             }
             $forumUserManager->store();
 
-            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_managefavotites', [], RouterInterface::ABSOLUTE_URL));
+            return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_user_managefavoriteforums', [], RouterInterface::ABSOLUTE_URL));
         }
 
         return $this->render('@ZikulaDizkusModule/User/manageFavorites.html.twig', [
@@ -570,17 +509,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_addfavoriteforum'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -628,17 +559,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_manageforumsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_removefavoriteforum'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -698,17 +621,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         //nicer redirect form of access denied
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_signaturemanagement'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         //is feature enabled check
@@ -765,17 +680,9 @@ class UserController extends AbstractController
     {
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_mineposts'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -809,17 +716,9 @@ class UserController extends AbstractController
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
 
         if (!$forumUserManager->isLoggedIn() || $forumUserManager->isAnonymous()) {
-            $path = [
-                'returnpage' => $this->get('router')->generate('zikuladizkusmodule_user_managetopicsubscriptions', [], RouterInterface::ABSOLUTE_URL),
-                '_controller' => 'ZikulaUsersModule:User:login', ];
+            $returnUrl = urlencode($this->get('router')->generate('zikuladizkusmodule_user_minetopics'));
 
-            $subRequest = $request->duplicate([], null, $path);
-            $httpKernel = $this->get('http_kernel');
-            $response = $httpKernel->handle(
-            $subRequest, HttpKernelInterface::SUB_REQUEST
-            );
-
-            return $response;
+            return $this->redirectToRoute('zikulausersmodule_access_login', ['returnUrl' => $returnUrl]);
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {

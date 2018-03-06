@@ -684,27 +684,7 @@ class ForumEntity extends EntityAccess
             $topicCount = $topicCount + $subForum->getTopicsCollection()->count();
         }
 
-        dump($topicCount);
-
         return $topicCount;
-    }
-
-    /**
-     * recalculate last post.
-     * only direct children
-     */
-    public function recalculateLastPost()
-    {
-        $postCount = 0;
-        foreach ($this->getChildren() as $subForum) {
-            $postCount = $postCount + $subForum->get('postCount');
-        }
-        foreach ($this->getTopics() as $topic) {
-            // plus 1 if we count first post
-            $postCount = $postCount + $topic->get('replyCount');
-        }
-
-        return null;
     }
 
     public function __toArray()

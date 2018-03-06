@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -127,17 +128,16 @@ class PostManager
      *
      * @return PostManager
      */
-    public function getManager($id = null, PostEntity $post = null)
+    public function getManager($id = null, PostEntity $post = null, $create = true)
     {
-        if ($post instanceof PostEntity) {
+        if (isset($post)) {
+            // post has been injected
             $this->_post = $post;
-
-            return $this;
-        }
-
-        if ($id > 0) {
+        } elseif ($id > 0) {
+            // find existing post
             $this->_post = $this->entityManager->find('Zikula\DizkusModule\Entity\PostEntity', $id);
-        } else {
+        } elseif ($create) {
+            // create new post
             $this->_post = new PostEntity();
         }
 
@@ -275,15 +275,11 @@ class PostManager
      *
      * @return int count of posts in destination topic
      */
-    public function move($topic)
+    public function move(TopicEntity $topic, $append = false)
     {
-        if (!$topic instanceof TopicEntity) {
-            return $this;
-        }
-
+        dump($topic);
+        dump($append);
         $this->_post->setTopic($topic);
-
-        //$this->entityManager->flush();
 
         return $this;
     }
