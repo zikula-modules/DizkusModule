@@ -137,7 +137,7 @@ abstract class AbstractBaseController extends AbstractController
     {
         if ('json' == $format) {
             $response = json_encode(['data' => $content]);
-        } else if ('ajax.html' == $format) {
+        } elseif ('ajax.html' == $format) {
             $response = json_encode(['html' => $content]);
         } else {
             $response = $content;

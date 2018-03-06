@@ -761,7 +761,6 @@ class TopicManager
                     ->setParameter('topic', $this->get())
                     ->setParameter('post_time', $post->getPost_time());
 
-
         /* @var $posts Array of Zikula\Module\DizkusModule\Entity\PostEntity */
         $posts = $query->getResult();
 //        dump($posts);
@@ -903,7 +902,6 @@ class TopicManager
     }
 }
 
-
 // split sync
 //        $this->synchronizationHelper->topicLastPost($managedTopic->get(), true);
         //ModUtil::apiFunc($this->name, 'sync', 'topicLastPost', ['topic' => $managedTopic->get(), 'flush' => true]);
@@ -919,7 +917,6 @@ class TopicManager
         //
 //        $this->synchronizationHelper->forum($newTopic->getForum(), false);
         //ModUtil::apiFunc($this->name, 'sync', 'forum', ['forum' => $newTopic->getForum(), 'flush' => false]);
-
 
 //        if (!$managedDestinationTopic instanceof self) {
 //            $this->request->getSession()->getFlashBag()->add('error', $this->translator->__f(' Join function requires "%1$s" and "%2$s" to be instance of TopicManager.', ['managedOriginTopic', 'managedDestinationTopic']));

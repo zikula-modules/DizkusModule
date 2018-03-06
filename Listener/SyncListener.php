@@ -106,7 +106,6 @@ class SyncListener
             $topic = $entity->getTopic();
             if ($entity->isFirst()) {
 //                dump('New post in new topic see new topic');
-
             } else {
                 /*
                  * Looks like a reply
@@ -178,7 +177,7 @@ class SyncListener
 
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
-         // see what changed
+        // see what changed
 //        $changes = $uow->getEntityChangeSet($entity);
 //        dump($changes);
         /*
@@ -214,7 +213,6 @@ class SyncListener
 //                if ($event->hasChangedField('topicCount')) {
 //
 //                }
-
             }
         }
 
@@ -299,7 +297,6 @@ class SyncListener
 //                dump($entity->getPosts()->getInsertDiff());
 //                dump($entity->getPosts()->getDeleteDiff());
             }
-
         }
 
         /*
@@ -368,7 +365,6 @@ class SyncListener
 //                // user subscription @todo add subscription module settings check
 ////                $entity->isFirst() ?: $user->incrementPostCount();
 //            $topic->setLast_Post($entity);
-
 
 //              Pre update topic sync force on update
 //            if ($entity->getSyncOnSave()) {

@@ -886,6 +886,7 @@ class TopicController extends AbstractController
         $managedTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($topic);
         if (!$managedTopic->exists()) {
             $error = $this->__f('Error! The topic you selected (ID: %s) was not found.', ['%s' => $topic]);
+
             return $this->errorResponse($error, null, $format);
         }
 
@@ -938,7 +939,8 @@ class TopicController extends AbstractController
             $redirectUrl = $this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL);
             $managedDestinationTopic = $this->get('zikula_dizkus_module.topic_manager')->getManager($form->get('to_topic_id')->getData(), null, false);
             if (!$managedDestinationTopic->exists()) {
-                $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', [ '%s' => $form->get('to_topic_id')->getData()]);
+                $error = $this->__f('Error! The topic you selected (ID: %s) was not found. Please try again.', ['%s' => $form->get('to_topic_id')->getData()]);
+
                 return $this->errorResponse($error, $redirectUrl, $format);
             }
 
@@ -948,6 +950,7 @@ class TopicController extends AbstractController
 
             if ($managedDestinationTopic->getId() == $managedTopic->getId()) {
                 $error = $this->__('Error! You cannot copy topic to itself.');
+
                 return $this->errorResponse($error, $redirectUrl, $format);
             }
 
