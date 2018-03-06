@@ -61,7 +61,7 @@ class SyncListener
          *
          */
         if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
-            dump('New topic or split');
+//            dump('New topic or split');
             // get data
             $topic = $entity;
             $forum = $topic->getForum();
@@ -111,7 +111,7 @@ class SyncListener
                 /*
                  * Looks like a reply
                  */
-                dump('New post (Reply) in topic');
+//                dump('New post (Reply) in topic');
 
                 $forum = $topic->getForum();
                 $firstPost = $topic->getPosts()->first();
@@ -179,13 +179,13 @@ class SyncListener
         $entity = $event->getEntity();
         $uow = $em->getUnitOfWork();
          // see what changed
-        $changes = $uow->getEntityChangeSet($entity);
-        dump($changes);
+//        $changes = $uow->getEntityChangeSet($entity);
+//        dump($changes);
         /*
          * Forum changed
          */
         if ($entity instanceof ForumEntity) {
-            dump('preUpdate forum');
+//            dump('preUpdate forum');
             // its a forum or root
             $parent = $entity->getParent();
             // lets work on parent here see what it is first
@@ -222,7 +222,7 @@ class SyncListener
          * Topic changed
          */
         if ($entity instanceof TopicEntity && $entity->getSyncOnSave()) {
-            dump('preUpdate topic');
+//            dump('preUpdate topic');
 //            dump($entity->getSyncOnSave());
             /*
              * Move topic action
@@ -231,7 +231,7 @@ class SyncListener
              *
              */
             if ($event->hasChangedField('forum')) {
-                dump('topic move');
+//                dump('topic move');
                 /*
                  *  Topic old forum sync
                  *  All informations here are "old"
@@ -295,16 +295,9 @@ class SyncListener
             }
 
             if ($entity->getPosts()->isDirty()) {
-
-
-
-                dump($entity);
-                dump($entity->getPosts()->getInsertDiff());
-                dump($entity->getPosts()->getDeleteDiff());
-
-
-
-
+//                dump($entity);
+//                dump($entity->getPosts()->getInsertDiff());
+//                dump($entity->getPosts()->getDeleteDiff());
             }
 
         }
@@ -318,7 +311,7 @@ class SyncListener
             // +
             // topic changed split move post
             // this probably will not be helfull...
-            dump('preUpdate post');
+//            dump('preUpdate post');
         }
     }
 
