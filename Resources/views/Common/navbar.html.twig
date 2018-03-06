@@ -54,7 +54,7 @@
             {% if hasPermission('Dizkus::', '.*', 'ACCESS_ADMIN') %}
                 <li><a class="tooltips" title="{{ __("Administrate Dizkus") }}" href="{{ path('zikuladizkusmodule_admin_index') }}"><i class="fa fa-cogs"></i></a></li>
             {% endif %}
-            <li><a class="tooltips" title="{{ __('Search forums') }}" href="{{ path("zikulasearchmodule_user_form") }}"><i class="fa fa-search"></i></a></li>
+            <li><a class="tooltips" title="{{ __('Search forums') }}" href="{{ path("zikulasearchmodule_search_execute") }}"><i class="fa fa-search"></i></a></li>
         </ul>
     </div><!-- /.navbar-collapse -->
 </nav>
