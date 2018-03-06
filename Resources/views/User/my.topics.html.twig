@@ -54,7 +54,7 @@
                         </div>
                         <div class="description col-md-4">
                             <a class="topictitle tooltips"
-                               href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ '#/post/' ~ topic.last_post.id }}"
+                               href="{{ path('zikuladizkusmodule_topic_viewtopic', {'topic': topic.id, 'start' : 1}) ~ topic.last_post is not defined ? '' : '#/post/' ~ topic.last_post.id }}"
                                title="{{ __('Go to topic') }} {{ topic.title }}">
                                {{ topic.title }}
                             </a>
