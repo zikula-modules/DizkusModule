@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -41,12 +43,12 @@ class Upgrade3Controller extends AbstractController
          */
         $data['source']['ranks'] = $importHandler->getRanksStatus();
         $ranksIcon = ($data['source']['ranks']['found'] > 0) ? 'fa-orange' : 'fa-green';
-        $ranksText = $this->__('Ranks to import found: ').$data['source']['ranks']['found'].$this->__(' Need to be imported first');
+        $ranksText = $this->__('Ranks to import found: ') . $data['source']['ranks']['found'] . $this->__(' Need to be imported first');
         $ranksNode = [
             'id'     => 'ranks',
             'parent' => 'users_check_root',
             'text'   => $ranksText,
-            'icon'   => 'fa fa-star-half-o '. $ranksIcon
+            'icon'   => 'fa fa-star-half-o ' . $ranksIcon
         ];
         /* Users
          */
@@ -54,15 +56,15 @@ class Upgrade3Controller extends AbstractController
         $dizkusNode = [
             'id' => 'current',
             'parent' => 'users_check_root',
-            'text' => $this->__('Current dizkus users: ').count($data['source']['users']['current']),
+            'text' => $this->__('Current dizkus users: ') . count($data['source']['users']['current']),
             'icon' => 'fa fa-users fa-green'
             ];
-        $oldIcon = ($data['source']['users']['old']['found'] == 0) ? 'fa-green' : 'fa-orange';
+        $oldIcon = (0 === $data['source']['users']['old']['found']) ? 'fa-green' : 'fa-orange';
         $oldNode = [
             'id'     => 'old',
             'parent' => 'users_check_root',
-            'text'   => $this->__('Users to import found: ').$data['source']['users']['old']['found'],
-            'icon'   => 'fa fa-user-plus '.$oldIcon,
+            'text'   => $this->__('Users to import found: ') . $data['source']['users']['old']['found'],
+            'icon'   => 'fa fa-user-plus ' . $oldIcon,
             ];
 
         $data['tree'] = [
@@ -158,9 +160,8 @@ class Upgrade3Controller extends AbstractController
         // there should be 3 lvl's only
         switch ($data['node']['lvl']) {
             case 0:
-                if ($data['node']['id'] === 1) {
+                if (1 === $data['node']['id']) {
                     $data['log'][] = $this->__('Checking index forum');
-                } else {
                 }
 
                 break;
@@ -214,7 +215,7 @@ class Upgrade3Controller extends AbstractController
             'id' => 'favorites',
             'parent' => 'other_tree_root',
             'text' => $favoritesText,
-            'icon' => 'fa fa-heart '. $favoritesIcon
+            'icon' => 'fa fa-heart ' . $favoritesIcon
         ];
 
         $data['source']['moderators_users'] = $importHelper->getModeratorsUsersStatus();
@@ -235,7 +236,7 @@ class Upgrade3Controller extends AbstractController
             'id' => 'moderators_users',
             'parent' => 'other_tree_root',
             'text' => $moderatorsUsersText,
-            'icon' => 'fa fa-user-secret '. $moderatorsUsersIcon
+            'icon' => 'fa fa-user-secret ' . $moderatorsUsersIcon
         ];
 
         $data['source']['moderators_groups'] = $importHelper->getModeratorsGroupsStatus();
@@ -256,7 +257,7 @@ class Upgrade3Controller extends AbstractController
             'id' => 'moderators_groups',
             'parent' => 'other_tree_root',
             'text' => $moderatorsGroupsText,
-            'icon' => 'fa fa-users '. $moderatorsGroupsIcon
+            'icon' => 'fa fa-users ' . $moderatorsGroupsIcon
         ];
 
         $data['source']['forum_subscriptions'] = $importHelper->getFSStatus();
@@ -277,7 +278,7 @@ class Upgrade3Controller extends AbstractController
             'id' => 'forum_subscriptions',
             'parent' => 'other_tree_root',
             'text' => $FSText,
-            'icon' => 'fa fa-envelope-open '. $FSIcon
+            'icon' => 'fa fa-envelope-open ' . $FSIcon
         ];
 
         $data['source']['topic_subscriptions'] = $importHelper->getTSStatus();
@@ -298,7 +299,7 @@ class Upgrade3Controller extends AbstractController
             'id' => 'topic_subscriptions',
             'parent' => 'other_tree_root',
             'text' => $TSText,
-            'icon' => 'fa fa-envelope-open-o '. $TSIcon
+            'icon' => 'fa fa-envelope-open-o ' . $TSIcon
         ];
 
         $data['tree'] = [

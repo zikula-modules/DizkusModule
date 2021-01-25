@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -16,21 +18,21 @@ use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
-use Zikula\Bundle\HookBundle\HookProviderInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\DisplayHookResponse;
 use Zikula\Bundle\HookBundle\Hook\Hook;
 use Zikula\Bundle\HookBundle\Hook\ProcessHook;
 use Zikula\Bundle\HookBundle\Hook\ValidationHook;
+use Zikula\Bundle\HookBundle\HookProviderInterface;
 use Zikula\Bundle\HookBundle\ServiceIdTrait;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Manager\ForumManager;
-use Zikula\DizkusModule\Manager\PostManager;
-use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\DizkusModule\HookedTopicMeta\AbstractHookedTopicMeta;
 use Zikula\DizkusModule\HookedTopicMeta\Generic;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\ForumUserManager;
+use Zikula\DizkusModule\Manager\PostManager;
+use Zikula\DizkusModule\Manager\TopicManager;
 use Zikula\ExtensionsModule\Api\VariableApi;
 use Zikula\PermissionsModule\Api\PermissionApi;
 
@@ -105,18 +107,6 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 
     /**
      * Construct the manager
-     *
-     * @param ZikulaHttpKernelInterface $kernel
-     * @param TranslatorInterface $translator
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
-     * @param EngineInterface $renderEngine
-     * @param VariableApi $variableApi
-     * @param PermissionApi $permissionApi
-     * @param ForumUserManager $forumUserManagerService
-     * @param ForumManager $forumManagerService
-     * @param TopicManager $topicManagerService
-     * @param PostManager $postManagerService
      */
     public function __construct(
         ZikulaHttpKernelInterface $kernel,
@@ -228,7 +218,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
                 } else {
                     // create topic if there is comment data in request POST
                     $topicMetaInstance = $this->getClassInstance($hook);
-                    if (2 == $config['topic_mode'] && $topicMetaInstance instanceof AbstractHookedTopicMeta) {
+                    if (2 === $config['topic_mode'] && $topicMetaInstance instanceof AbstractHookedTopicMeta) {
 //                    $form = $this->request->get('zikula_dizkus_form_topic_new');
 //                    dump($form);
 //                        if (array_key_exists('posts', $form) && array_key_exists(0, $form['posts']) && array_key_exists('post_text', $form['posts'][0])) {
@@ -375,7 +365,7 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
 
         $data = $this->request->get('dizkus', null);
         // in case of mode 2 topic will be created with the first comment
-        $createTopic = (0 == $config['topic_mode'] || 1 == $config['topic_mode'] && is_array($data) && array_key_exists('createTopic', $data) && $data['createTopic'])
+        $createTopic = (0 === $config['topic_mode'] || 1 === $config['topic_mode'] && is_array($data) && array_key_exists('createTopic', $data) && $data['createTopic'])
                         ? true : false;
         if ($createTopic) {
             $managedTopic = $this->topicManagerService->getHookedTopicManager($hook, false);
@@ -484,8 +474,6 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
     /**
      * Factory class to find Meta Class and instantiate.
      *
-     * @param Hook $hook
-     *
      * @return object of found class
      */
     private function getClassInstance(Hook $hook)
@@ -541,13 +529,13 @@ class TopicProBundle extends AbstractProBundle implements HookProviderInterface
         // this provider config
         $config = array_key_exists(str_replace('.', '-', $this->area), $settings['providers']) ? $settings['providers'][str_replace('.', '-', $this->area)] : null;
         // no configuration for this module return default
-        if (null == $config) {
+        if (null === $config) {
             return $default;
-        } else {
-            $default['forum'] = array_key_exists('forum', $config) ? $config['forum'] : $default['forum'];
-            $default['topic_mode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['topic_mode'];
-            $default['delete_action'] = array_key_exists('delete_action', $config) ? $config['delete_action'] : $default['delete_action'];
         }
+        $default['forum'] = array_key_exists('forum', $config) ? $config['forum'] : $default['forum'];
+        $default['topic_mode'] = array_key_exists('topic_mode', $config) ? $config['topic_mode'] : $default['topic_mode'];
+        $default['delete_action'] = array_key_exists('delete_action', $config) ? $config['delete_action'] : $default['delete_action'];
+
         // module provider area module area settings
         if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
             $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -13,8 +15,8 @@
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BBFilterProviderSettingsType extends ProviderSettingsType
 {

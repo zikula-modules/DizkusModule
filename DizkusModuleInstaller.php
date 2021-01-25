@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -12,9 +14,9 @@
 
 namespace Zikula\DizkusModule;
 
+use Zikula\Core\AbstractExtensionInstaller;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\Core\AbstractExtensionInstaller;
 
 class DizkusModuleInstaller extends AbstractExtensionInstaller
 {
@@ -221,21 +223,21 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'Dizkus'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'Dizkus'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'Dizkus'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'Dizkus'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_area` WHERE `owner` = 'Dizkus'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_binding` WHERE `sowner` = 'Dizkus'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_runtime` WHERE `sowner` = 'Dizkus'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_subscriber` WHERE `owner` = 'Dizkus'");
 
                 $prefix = $this->container->hasParameter('prefix') ? $this->container->getParameter('prefix') : '';
                 $schemaManager = $connection->getSchemaManager();
                 $schema = $schemaManager->createSchema();
-                if (!$schema->hasTable($prefix.'dizkus_categories')) {
+                if (!$schema->hasTable($prefix . 'dizkus_categories')) {
                     $this->addFlash('error', $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your settings for prefix in $ZConfig[\'System\'][\'prefix\'] match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
                     return false;
                 }
 
-                $name = $prefix.'dizkus_users';
+                $name = $prefix . 'dizkus_users';
                 if (!$schema->hasTable($name)) {
                     // 3.2.0 users dummy table
                     $table = $schema->createTable($name);
@@ -251,7 +253,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                     $statement->execute();
                 }
 
-                if ('' != $prefix) {
+                if ('' !== $prefix) {
                     $this->removeTablePrefixes($prefix);
                 }
                 // mark tables for import
@@ -279,17 +281,16 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                 break;
             case '4.0.0':
-
                 if (!$this->upgrade_settings()) {
                     return false;
                 }
                 // reinstall hooks
                 $connection = $this->entityManager->getConnection();
                 $dbName = $this->container->getParameter('database_name');
-                $connection->executeQuery("DELETE FROM $dbName.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
-                $connection->executeQuery("DELETE FROM $dbName.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_area` WHERE `owner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_binding` WHERE `sowner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_runtime` WHERE `sowner` = 'ZikulaDizkusModule'");
+                $connection->executeQuery("DELETE FROM ${dbName}.`hook_subscriber` WHERE `owner` = 'ZikulaDizkusModule'");
 
                 break;
             case '4.1.0':
@@ -310,17 +311,17 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $schema = $schemaManager->createSchema();
         // remove table prefixes
         foreach ($this->importTables as $value) {
-            if (!$schema->hasTable($prefix.$value)) {
+            if (!$schema->hasTable($prefix . $value)) {
                 continue;
             }
 
-            $sql = 'RENAME TABLE '.$prefix.$value.' TO '.$value;
+            $sql = 'RENAME TABLE ' . $prefix . $value . ' TO ' . $value;
             $stmt = $connection->prepare($sql);
 
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your prefix match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
+                $this->addFlash('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your prefix match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
                 return false;
             }
@@ -335,13 +336,13 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $connection = $this->entityManager->getConnection();
         // remove table prefixes
         foreach ($this->importTables as $value) {
-            $sql = 'RENAME TABLE '.$value.' TO '.$prefix.$value;
+            $sql = 'RENAME TABLE ' . $value . ' TO ' . $prefix . $value;
             $stmt = $connection->prepare($sql);
 
             try {
                 $stmt->execute();
             } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage().$this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your prefix match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
+                $this->addFlash('error', $e->getMessage() . $this->__f('There was a problem recognizing the existing Dizkus tables. Please confirm that your prefix match the actual Dizkus tables in the database. (Current prefix loaded as `%s`)', ['%s' => $prefix]));
 
                 return false;
             }
@@ -406,9 +407,9 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
                 switch ($type) {
                     case 'boolean':
                         if (in_array($currentModVars[$key], ['yes', 'no'])) {
-                            $var = 'yes' == $currentModVars[$key] ? true : false;
+                            $var = 'yes' === $currentModVars[$key] ? true : false;
                         } else {
-                            $var = (boolval($currentModVars[$key]));
+                            $var = ((bool) ($currentModVars[$key]));
                         }
 
                         break;
@@ -417,7 +418,7 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
 
                         break;
                 }
-                if ('defaultPoster' == $key) {
+                if ('defaultPoster' === $key) {
                     $var = 2; // not bolean anymore assume admin id but maybe guest?
                 }
             }
@@ -440,11 +441,10 @@ class DizkusModuleInstaller extends AbstractExtensionInstaller
         $path = realpath($path);
         $parts = explode(DIRECTORY_SEPARATOR, $path);
         foreach ($parts as $part) {
-            if ($part == $from) {
+            if ($part === $from) {
                 return $path;
-            } else {
-                $path = substr($path, strlen($part.DIRECTORY_SEPARATOR));
             }
+            $path = mb_substr($path, mb_strlen($part . DIRECTORY_SEPARATOR));
         }
 
         return $path;

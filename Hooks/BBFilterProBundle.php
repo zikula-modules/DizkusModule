@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -89,11 +91,11 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
         // this provider config
         $config = array_key_exists(str_replace('.', '-', $this->area), $settings['providers']) ? $settings['providers'][str_replace('.', '-', $this->area)] : null;
         // no configuration for this module return default
-        if (null == $config) {
+        if (null === $config) {
             return $default;
-        } else {
-            // here we can add provider global settings see Zikula\DizkusModule\Hooks\TopicProBundle
         }
+        // here we can add provider global settings see Zikula\DizkusModule\Hooks\TopicProBundle
+
         // module provider area module area settings
         if (array_key_exists($module, $config['modules']) && array_key_exists('areas', $config['modules'][$module]) && array_key_exists(str_replace('.', '-', $areaid), $config['modules'][$module]['areas'])) {
             $subscribedModuleAreaSettings = $config['modules'][$module]['areas'][str_replace('.', '-', $areaid)];
@@ -128,10 +130,10 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
 
         // pad it with a space so we can distinguish between FALSE and matching the 1st char (index 0).
         // This is important; encode_quote() and encode_code() depend on it.
-        $message = ' '.$message.' ';
+        $message = ' ' . $message . ' ';
 
         // If there is a "[" and a "]" in the message, process it.
-        if ((strpos($message, '[') && strpos($message, ']'))) {
+        if ((mb_strpos($message, '[') && mb_strpos($message, ']'))) {
             // [b] and [/b] for posting bold text in your posts.
             $message = $this->encode_bold($message);
             // [i] and [/i] for posting italic text in your posts. (you can post fa fonts with [i="fa fa-cogs"] [/i])
@@ -147,8 +149,8 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
         }
 
         // Remove added padding from the string..
-        $message = substr($message, 1);
-        $message = substr($message, 0, -1);
+        $message = mb_substr($message, 1);
+        $message = mb_substr($message, 0, -1);
 
         return $message;
     }
@@ -161,30 +163,30 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
     {
         // First things first: If there aren't any "[quote=" or "[quote] strings in the message, we don't
         // need to process it at all.
-        if (!strpos(strtolower($message), '[b]')) {
+        if (!mb_strpos(mb_strtolower($message), '[b]')) {
             return $message;
         }
         $boldbody = '<b class="dz-boldtext">%t</b>';
 
         $stack = [];
         $curr_pos = 1;
-        while ($curr_pos && ($curr_pos < strlen($message))) {
-            $curr_pos = strpos($message, '[', $curr_pos);
+        while ($curr_pos && ($curr_pos < mb_strlen($message))) {
+            $curr_pos = mb_strpos($message, '[', $curr_pos);
 
             // If not found, $curr_pos will be 0, and the loop will end.
             if ($curr_pos) {
                 // We found a [. It starts at $curr_pos.
                 // check if it's a starting or ending bold tag.
-                $possible_start = substr($message, $curr_pos, 3);
-                $possible_end_pos = strpos($message, ']', $curr_pos);
-                $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (0 == strcasecmp('[b]', $possible_start)) {
+                $possible_start = mb_substr($message, $curr_pos, 3);
+                $possible_end_pos = mb_strpos($message, ']', $curr_pos);
+                $possible_end = mb_substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
+                if (0 === strcasecmp('[b]', $possible_start)) {
                     // We have a starting bold tag.
                     // Push its position on to the stack, and then keep going to the right.
-                    array_push($stack, $curr_pos);
+                    $stack[] = $curr_pos;
                     ++$curr_pos;
                 //dump($curr_pos);
-                } elseif (0 == strcasecmp('[/b]', $possible_end)) {
+                } elseif (0 === strcasecmp('[/b]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -193,30 +195,30 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
                         $start_index = array_pop($stack);
                         //dump($start_index);
                         // everything before the [quote=xxx] tag.
-                        $before_start_tag = substr($message, 0, $start_index);
+                        $before_start_tag = mb_substr($message, 0, $start_index);
                         //dump($before_start_tag);
                         // find the end of the start tag
-                        $start_tag_end = strpos($message, ']', $start_index);
+                        $start_tag_end = mb_strpos($message, ']', $start_index);
                         $start_tag_len = $start_tag_end - $start_index + 1;
                         //dump($start_tag_end);
                         //dump($start_tag_len);
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.
-                        $between_tags = substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
+                        $between_tags = mb_substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
                         //dump($between_tags);
                         // everything after the [/quote] tag.
-                        $after_end_tag = substr($message, $curr_pos + 4);
+                        $after_end_tag = mb_substr($message, $curr_pos + 4);
                         //dump($after_end_tag);
 
                         $boldtext = str_replace('%t', $between_tags, $boldbody);
 
-                        $message = $before_start_tag.$boldtext.$after_end_tag;
+                        $message = $before_start_tag . $boldtext . $after_end_tag;
 
                         // Now.. we've screwed up the indices by changing the length of the string.
                         // So, if there's anything in the stack, we want to resume searching just after it.
                         // otherwise, we go back to the start.
                         if (count($stack) > 0) {
                             $curr_pos = array_pop($stack);
-                            array_push($stack, $curr_pos);
+                            $stack[] = $curr_pos;
                             ++$curr_pos;
                         } else {
                             $curr_pos = 1;
@@ -243,28 +245,28 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
     {
         // First things first: If there aren't any "[i=" or "[i] strings in the message, we don't
         // need to process it at all.
-        if (!strpos(strtolower($message), '[i]') && !strpos(strtolower($message), '[i=')) {
+        if (!mb_strpos(mb_strtolower($message), '[i]') && !mb_strpos(mb_strtolower($message), '[i=')) {
             return $message;
         }
         $itextbody = '<i class="%c">%t</i>';
         $stack = [];
         $curr_pos = 1;
-        while ($curr_pos && ($curr_pos < strlen($message))) {
-            $curr_pos = strpos($message, '[', $curr_pos);
+        while ($curr_pos && ($curr_pos < mb_strlen($message))) {
+            $curr_pos = mb_strpos($message, '[', $curr_pos);
 
             // If not found, $curr_pos will be 0, and the loop will end.
             if ($curr_pos) {
                 // We found a [. It starts at $curr_pos.
                 // check if it's a starting or ending quote tag.
-                $possible_start = substr($message, $curr_pos, 2);
-                $possible_end_pos = strpos($message, ']', $curr_pos);
-                $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (0 == strcasecmp('[i', $possible_start)) {
+                $possible_start = mb_substr($message, $curr_pos, 2);
+                $possible_end_pos = mb_strpos($message, ']', $curr_pos);
+                $possible_end = mb_substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
+                if (0 === strcasecmp('[i', $possible_start)) {
                     // We have a starting italic tag.
                     // Push its position on to the stack, and then keep going to the right.
-                    array_push($stack, $curr_pos);
+                    $stack[] = $curr_pos;
                     ++$curr_pos;
-                } elseif (0 == strcasecmp('[/i]', $possible_end)) {
+                } elseif (0 === strcasecmp('[/i]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -273,34 +275,34 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
                         $start_index = array_pop($stack);
 
                         // everything before the [quote=xxx] tag.
-                        $before_start_tag = substr($message, 0, $start_index);
+                        $before_start_tag = mb_substr($message, 0, $start_index);
 
                         // find the end of the start tag
-                        $start_tag_end = strpos($message, ']', $start_index);
+                        $start_tag_end = mb_strpos($message, ']', $start_index);
                         $start_tag_len = $start_tag_end - $start_index + 1;
 
                         if ($start_tag_len > 5) {
-                            $class = substr($message, $start_index + 4, $start_tag_len - 5);
+                            $class = mb_substr($message, $start_index + 4, $start_tag_len - 5);
                         } else {
                             $class = 'dz-italictext';
                         }
 
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.
-                        $between_tags = substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
+                        $between_tags = mb_substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
                         // everything after the [/quote] tag.
-                        $after_end_tag = substr($message, $curr_pos + 4);
+                        $after_end_tag = mb_substr($message, $curr_pos + 4);
 
                         $itext = str_replace('%c', $class, $itextbody);
                         $itext = str_replace('%t', $between_tags, $itext);
 
-                        $message = $before_start_tag.$itext.$after_end_tag;
+                        $message = $before_start_tag . $itext . $after_end_tag;
 
                         // Now.. we've screwed up the indices by changing the length of the string.
                         // So, if there's anything in the stack, we want to resume searching just after it.
                         // otherwise, we go back to the start.
                         if (count($stack) > 0) {
                             $curr_pos = array_pop($stack);
-                            array_push($stack, $curr_pos);
+                            $stack[] = $curr_pos;
                             ++$curr_pos;
                         } else {
                             $curr_pos = 1;
@@ -327,28 +329,28 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
     {
         // First things first: If there aren't any "[i=" or "[i] strings in the message, we don't
         // need to process it at all.
-        if (!strpos(strtolower($message), '[url]') && !strpos(strtolower($message), '[url=')) {
+        if (!mb_strpos(mb_strtolower($message), '[url]') && !mb_strpos(mb_strtolower($message), '[url=')) {
             return $message;
         }
         $urlbody = '<a href="%u" class="dz_urltext">%t</a>';
         $stack = [];
         $curr_pos = 1;
-        while ($curr_pos && ($curr_pos < strlen($message))) {
-            $curr_pos = strpos($message, '[', $curr_pos);
+        while ($curr_pos && ($curr_pos < mb_strlen($message))) {
+            $curr_pos = mb_strpos($message, '[', $curr_pos);
 
             // If not found, $curr_pos will be 0, and the loop will end.
             if ($curr_pos) {
                 // We found a [. It starts at $curr_pos.
                 // check if it's a starting or ending quote tag.
-                $possible_start = substr($message, $curr_pos, 4);
-                $possible_end_pos = strpos($message, ']', $curr_pos);
-                $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (0 == strcasecmp('[url', $possible_start)) {
+                $possible_start = mb_substr($message, $curr_pos, 4);
+                $possible_end_pos = mb_strpos($message, ']', $curr_pos);
+                $possible_end = mb_substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
+                if (0 === strcasecmp('[url', $possible_start)) {
                     // We have a starting italic tag.
                     // Push its position on to the stack, and then keep going to the right.
-                    array_push($stack, $curr_pos);
+                    $stack[] = $curr_pos;
                     ++$curr_pos;
-                } elseif (0 == strcasecmp('[/url]', $possible_end)) {
+                } elseif (0 === strcasecmp('[/url]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -357,34 +359,34 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
                         $start_index = array_pop($stack);
 
                         // everything before the [quote=xxx] tag.
-                        $before_start_tag = substr($message, 0, $start_index);
+                        $before_start_tag = mb_substr($message, 0, $start_index);
 
                         // find the end of the start tag
-                        $start_tag_end = strpos($message, ']', $start_index);
+                        $start_tag_end = mb_strpos($message, ']', $start_index);
                         $start_tag_len = $start_tag_end - $start_index + 1;
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.
-                        $between_tags = substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
+                        $between_tags = mb_substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
 
                         if ($start_tag_len > 5) {
-                            $url = substr($message, $start_index + 4, $start_tag_len - 6);
+                            $url = mb_substr($message, $start_index + 4, $start_tag_len - 6);
                         } else {
                             $url = $between_tags;
                         }
 
                         // everything after the [/quote] tag.
-                        $after_end_tag = substr($message, $curr_pos + 6);
+                        $after_end_tag = mb_substr($message, $curr_pos + 6);
 
                         $itext = str_replace('%u', $url, $urlbody);
                         $itext = str_replace('%t', $between_tags, $itext);
 
-                        $message = $before_start_tag.$itext.$after_end_tag;
+                        $message = $before_start_tag . $itext . $after_end_tag;
 
                         // Now.. we've screwed up the indices by changing the length of the string.
                         // So, if there's anything in the stack, we want to resume searching just after it.
                         // otherwise, we go back to the start.
                         if (count($stack) > 0) {
                             $curr_pos = array_pop($stack);
-                            array_push($stack, $curr_pos);
+                            $stack[] = $curr_pos;
                             ++$curr_pos;
                         } else {
                             $curr_pos = 1;
@@ -418,7 +420,7 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
     {
         // First things first: If there aren't any "[quote=" or "[quote] strings in the message, we don't
         // need to process it at all.
-        if (!strpos(strtolower($message), '[quote=') && !strpos(strtolower($message), '[quote]')) {
+        if (!mb_strpos(mb_strtolower($message), '[quote=') && !mb_strpos(mb_strtolower($message), '[quote]')) {
             return $message;
         }
 
@@ -436,22 +438,22 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
 
         $stack = [];
         $curr_pos = 1;
-        while ($curr_pos && ($curr_pos < strlen($message))) {
-            $curr_pos = strpos($message, '[', $curr_pos);
+        while ($curr_pos && ($curr_pos < mb_strlen($message))) {
+            $curr_pos = mb_strpos($message, '[', $curr_pos);
 
             // If not found, $curr_pos will be 0, and the loop will end.
             if ($curr_pos) {
                 // We found a [. It starts at $curr_pos.
                 // check if it's a starting or ending quote tag.
-                $possible_start = substr($message, $curr_pos, 6);
-                $possible_end_pos = strpos($message, ']', $curr_pos);
-                $possible_end = substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
-                if (0 == strcasecmp('[quote', $possible_start)) {
+                $possible_start = mb_substr($message, $curr_pos, 6);
+                $possible_end_pos = mb_strpos($message, ']', $curr_pos);
+                $possible_end = mb_substr($message, $curr_pos, $possible_end_pos - $curr_pos + 1);
+                if (0 === strcasecmp('[quote', $possible_start)) {
                     // We have a starting quote tag.
                     // Push its position on to the stack, and then keep going to the right.
-                    array_push($stack, $curr_pos);
+                    $stack[] = $curr_pos;
                     ++$curr_pos;
-                } elseif (0 == strcasecmp('[/quote]', $possible_end)) {
+                } elseif (0 === strcasecmp('[/quote]', $possible_end)) {
                     // We have an ending quote tag.
                     // Check if we've already found a matching starting tag.
                     if (count($stack) > 0) {
@@ -460,33 +462,33 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
                         $start_index = array_pop($stack);
 
                         // everything before the [quote=xxx] tag.
-                        $before_start_tag = substr($message, 0, $start_index);
+                        $before_start_tag = mb_substr($message, 0, $start_index);
 
                         // find the end of the start tag
-                        $start_tag_end = strpos($message, ']', $start_index);
+                        $start_tag_end = mb_strpos($message, ']', $start_index);
                         $start_tag_len = $start_tag_end - $start_index + 1;
                         if ($start_tag_len > 7) {
-                            $username = substr($message, $start_index + 7, $start_tag_len - 8);
+                            $username = mb_substr($message, $start_index + 7, $start_tag_len - 8);
                         } else {
                             $username = 'Quote'; //$this->__('Quote');
                         }
 
                         // everything after the [quote=xxx] tag, but before the [/quote] tag.
-                        $between_tags = substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
+                        $between_tags = mb_substr($message, $start_index + $start_tag_len, $curr_pos - ($start_index + $start_tag_len));
                         // everything after the [/quote] tag.
-                        $after_end_tag = substr($message, $curr_pos + 8);
+                        $after_end_tag = mb_substr($message, $curr_pos + 8);
 
                         $quotetext = str_replace('%u', $username, $quotebody);
                         $quotetext = str_replace('%t', $between_tags, $quotetext);
 
-                        $message = $before_start_tag.$quotetext.$after_end_tag;
+                        $message = $before_start_tag . $quotetext . $after_end_tag;
 
                         // Now.. we've screwed up the indices by changing the length of the string.
                         // So, if there's anything in the stack, we want to resume searching just after it.
                         // otherwise, we go back to the start.
                         if (count($stack) > 0) {
                             $curr_pos = array_pop($stack);
-                            array_push($stack, $curr_pos);
+                            $stack[] = $curr_pos;
                             ++$curr_pos;
                         } else {
                             $curr_pos = 1;
@@ -519,7 +521,7 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
      */
     private function encode_code($message)
     {
-        $count = preg_match_all("#(\[code=*(.*?)\])(.*?)(\[\/code\])#si", $message, $code);
+        $count = preg_match_all("#(\\[code=*(.*?)\\])(.*?)(\\[\\/code\\])#si", $message, $code);
         // with $message="[code=php,start=25]php code();[/code]" the array $code now contains
         // [0] [code=php,start=25]php code();[/code]
         // [1] [code=php,start=25]
@@ -533,13 +535,13 @@ class BBFilterProBundle extends AbstractProBundle implements HookSelfAllowedProv
 
             for ($i = 0; $i < $count; $i++) {
                 // the code in between incl. code tags
-                $str_to_match = '/'.preg_quote($code[0][$i], '/').'/';
+                $str_to_match = '/' . preg_quote($code[0][$i], '/') . '/';
 
                 $after_replace = trim($code[3][$i]);
-                $containsLineEndings = !strstr($after_replace, PHP_EOL) ? false : true;
+                $containsLineEndings = !mb_strstr($after_replace, PHP_EOL) ? false : true;
 
                 if ($containsLineEndings) {
-                    $after_replace = '<pre class="pre-scrollable">'. $after_replace .'</pre>';
+                    $after_replace = '<pre class="pre-scrollable">' . $after_replace . '</pre>';
                     // replace %h with 'Code'
                     $codetext = str_replace('%h', $this->__('Code'), $codebodyblock);
                     // replace %c with code

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -16,9 +18,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Bundle\HookBundle\Hook\ProcessHook;
@@ -26,11 +28,11 @@ use Zikula\Bundle\HookBundle\Hook\ValidationHook;
 use Zikula\Bundle\HookBundle\Hook\ValidationProviders;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
-use Zikula\DizkusModule\Events\DizkusEvents;
-use Zikula\DizkusModule\Form\Type\Post\EditPostType;
-use Zikula\DizkusModule\Form\Type\Post\DeletePostType;
-use Zikula\DizkusModule\Form\Type\Post\MovePostType;
 use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Events\DizkusEvents;
+use Zikula\DizkusModule\Form\Type\Post\DeletePostType;
+use Zikula\DizkusModule\Form\Type\Post\EditPostType;
+use Zikula\DizkusModule\Form\Type\Post\MovePostType;
 
 /**
  * PostController class
@@ -65,11 +67,11 @@ class PostController extends AbstractController
         // since to hours
         if ($hours) {
             $sinceHours = $hours;
-        } elseif ('today' == $since) {
+        } elseif ('today' === $since) {
             $sinceHours = 24; // or we can calculate exact todays topics
-        } elseif ('yesterday' == $since) {
+        } elseif ('yesterday' === $since) {
             $sinceHours = 48;
-        } elseif ('lastweek' == $since) {
+        } elseif ('lastweek' === $since) {
             $sinceHours = 168;
         } else {
             $sinceHours = null;
@@ -107,7 +109,6 @@ class PostController extends AbstractController
      *
      * Edit a post
      *
-     * @param Request $request
      * @param integer $post The post id to edit
      *
      * @throws \InvalidArgumentException
@@ -126,7 +127,7 @@ class PostController extends AbstractController
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error]));
             }
 
@@ -144,13 +145,13 @@ class PostController extends AbstractController
             ->createBuilder(
                 new EditPostType(),
                 $managedPost->get(),
-                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true,
+                ['addReason'=>  $currentForumUser->getId() === $managedPost->getManagedPoster()->getId() ? false : true,
                  'loggedIn' => $currentForumUser->isLoggedIn(),
                  'settings' => $this->getVars()
                 ]
             );
 
-        if ('html' == $format) {
+        if ('html' === $format) {
             $formBuilder->add('save', SubmitType::class)
                         ->add('preview', SubmitType::class);
         }
@@ -213,16 +214,16 @@ class PostController extends AbstractController
 
         edit_error:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/edit.$format.twig", [
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/edit.${format}.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentTopic' => $managedPost->getManagedTopic(),
                     'form' => $form->createView(),
                     'managedPost' => $managedPost,
-                    'ranks'       => isset($ranks) ? $ranks : false,
-                    'preview'     => isset($preview) ? $preview : false,
+                    'ranks'       => $ranks ?? false,
+                    'preview'     => $preview ?? false,
                     'settings' => $this->getVars()
                 ]);
-        if ('ajax.html' == $format) {
+        if ('ajax.html' === $format) {
             return new Response(json_encode(['html' => $contentHtml]));
         }
         // full html page
@@ -234,7 +235,6 @@ class PostController extends AbstractController
      *
      * Delete a post
      *
-     * @param Request $request
      * @param integer $post The post id to edit
      *
      * @throws \InvalidArgumentException
@@ -253,7 +253,7 @@ class PostController extends AbstractController
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
 
@@ -264,7 +264,7 @@ class PostController extends AbstractController
 
         if ($managedPost->get()->isFirst()) {
             $error = $this->__f('Error! The post you selected for delete (ID: %s) is first post. You need to delete topic instead.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
 
@@ -284,10 +284,10 @@ class PostController extends AbstractController
             ->createBuilder(
                 new DeletePostType(),
                 $managedPost->get(),
-                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true]
+                ['addReason'=>  $currentForumUser->getId() === $managedPost->getManagedPoster()->getId() ? false : true]
             );
 
-        if ('html' == $format) {
+        if ('html' === $format) {
             $formBuilder->add('delete', SubmitType::class);
         }
 
@@ -344,7 +344,7 @@ class PostController extends AbstractController
 
         delete_error:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/delete.$format.twig", [
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/delete.${format}.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentTopic' => $managedPost->getManagedTopic(),
                     'form' => $form->createView(),
@@ -352,7 +352,7 @@ class PostController extends AbstractController
                     'settings' => $this->getVars()
                 ]);
         // light html
-        if ('ajax.html' == $format) {
+        if ('ajax.html' === $format) {
             return new Response(json_encode(['html' => $contentHtml]));
         }
         // full html page
@@ -377,7 +377,7 @@ class PostController extends AbstractController
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post, null, false);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
 
@@ -388,7 +388,7 @@ class PostController extends AbstractController
 
         if ($managedPost->get()->isFirst()) {
             $error = $this->__f('Error! The post you selected for move (ID: %s) is first post. You cannot move first post.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); // add not found error code etc
             }
 
@@ -408,10 +408,10 @@ class PostController extends AbstractController
             ->createBuilder(
                 new MovePostType(),
                 $managedPost->get(),
-                ['addReason'=>  $currentForumUser->getId() == $managedPost->getManagedPoster()->getId() ? false : true]
+                ['addReason'=>  $currentForumUser->getId() === $managedPost->getManagedPoster()->getId() ? false : true]
             );
 
-        if ('html' == $format) {
+        if ('html' === $format) {
             $formBuilder->add('move', SubmitType::class);
         }
 
@@ -449,7 +449,7 @@ class PostController extends AbstractController
                 throw new AccessDeniedException();
             }
 
-            if ($managedDestinationTopic->getId() == $managedPost->getTopicId()) {
+            if ($managedDestinationTopic->getId() === $managedPost->getTopicId()) {
                 $error = $this->__('Error! You cannot copy topic to itself.');
 
                 return $this->errorResponse($error, $redirectUrl, $format);
@@ -478,7 +478,7 @@ class PostController extends AbstractController
                     )
                 );
 
-            if ('json' == $format) {
+            if ('json' === $format) {
                 // other formats
             }
 
@@ -491,7 +491,7 @@ class PostController extends AbstractController
 
         delete_error:
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/move.$format.twig", [
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/move.${format}.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentTopic' => $managedPost->getManagedTopic(),
                     'form' => $form->createView(),
@@ -499,7 +499,7 @@ class PostController extends AbstractController
                     'settings' => $this->getVars()
                 ]);
         // light html
-        if ('ajax.html' == $format) {
+        if ('ajax.html' === $format) {
             return new Response(json_encode(['html' => $contentHtml]));
         }
         // full html page
@@ -528,7 +528,7 @@ class PostController extends AbstractController
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', ['%s' => $post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); //add not found error code etc
             }
 
@@ -555,8 +555,8 @@ class PostController extends AbstractController
                 );
 
                 $status = $this->__('Done! Moderators will be notified.');
-                if ('json' == $format) {
-                } elseif ('ajax.html' == $format) {
+                if ('json' === $format) {
+                } elseif ('ajax.html' === $format) {
                     return new Response(json_encode(['html' => $status]));
                 }
 
@@ -568,14 +568,14 @@ class PostController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedPost->getTopicId(), 'start' => $start], RouterInterface::ABSOLUTE_URL));
         }
 
-        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/report.$format.twig", [
+        $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/report.${format}.twig", [
                     'currentForumUser' => $currentForumUser,
                     'currentTopic' => $managedPost->getManagedTopic(),
                     'form' => $form->createView(),
                     'managedPost' => $managedPost,
                     'settings' => $this->getVars()
                 ]);
-        if ('ajax.html' == $format) {
+        if ('ajax.html' === $format) {
             return new Response(json_encode(['html' => $contentHtml]));
         }
         // full html page
@@ -602,7 +602,7 @@ class PostController extends AbstractController
         $managedPost = $this->get('zikula_dizkus_module.post_manager')->getManager($post);
         if (!$managedPost->exists()) {
             $error = $this->__f('Error! The post you selected (ID: %s) was not found. Please try again.', [$post]);
-            if ('json' == $format || 'ajax.html' == $format) {
+            if ('json' === $format || 'ajax.html' === $format) {
                 return new Response(json_encode(['error' => $error])); //add not found error code etc
             }
 
@@ -614,12 +614,12 @@ class PostController extends AbstractController
         $currentForumUser = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
         $managedPoster = $managedPost->getManagedPoster();
         // return json response
-        if ('json' == $format) {
+        if ('json' === $format) {
             if ($request->isMethod('POST')) {
             }
         }
 
-        if ('ajax.html' == $format) {
+        if ('ajax.html' === $format) {
             $contentHtml = $this->renderView("@ZikulaDizkusModule/Post/preview.html.twig", [
                     'currentForumUser' => $currentForumUser,
                     'postManager' => $managedPost,

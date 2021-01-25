@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -65,14 +67,13 @@ abstract class AbstractHookBundle implements \ArrayAccess
     {
         switch ($offset) {
             case 'modules':
-
                 return true;
             default:
-                if (true === strpos($offset, 'Module')) {
+                if (true === mb_strpos($offset, 'Module')) {
                     return $this->modules->offsetExists($offset);
-                } else {
-                    return array_key_exists($offset, $this->settings);
                 }
+
+                    return array_key_exists($offset, $this->settings);
         }
     }
 
@@ -80,14 +81,13 @@ abstract class AbstractHookBundle implements \ArrayAccess
     {
         switch ($offset) {
             case 'modules':
-
                 return $this->getModules();
             default:
-                if (true === strpos($offset, 'Module')) {
+                if (true === mb_strpos($offset, 'Module')) {
                     return $this->modules->offsetGet($offset);
-                } else {
-                    return $this->offsetExists($offset) ? $this->settings[$offset] : false;
                 }
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] : false;
         }
     }
 
@@ -95,15 +95,14 @@ abstract class AbstractHookBundle implements \ArrayAccess
     {
         switch ($offset) {
             case 'modules':
-
                 return $this->setModules($value);
 
             default:
-                if (true === strpos($offset, 'Module')) {
+                if (true === mb_strpos($offset, 'Module')) {
                     return $this->modules->offsetSet($offset, $value);
-                } else {
-                    return $this->offsetExists($offset) ? $this->settings[$offset] = $value : false;
                 }
+
+                    return $this->offsetExists($offset) ? $this->settings[$offset] = $value : false;
         }
     }
 
@@ -111,15 +110,14 @@ abstract class AbstractHookBundle implements \ArrayAccess
     {
         switch ($offset) {
             case 'modules':
-
                 return $this->getModules()->clear();
 
             default:
-                if (true === strpos($offset, 'Module')) {
+                if (true === mb_strpos($offset, 'Module')) {
                     return $this->modules->offsetUnset($offset);
-                } else {
-                    return true;
                 }
+
+                    return true;
         }
     }
 }

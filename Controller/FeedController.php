@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -29,8 +31,6 @@ class FeedController extends AbstractController
      * @Method("GET")
      *
      * generate and display an RSS feed of recent topics
-     *
-     * @param Request $request
      *
      * @throws AccessDeniedException on failed perm check
      *

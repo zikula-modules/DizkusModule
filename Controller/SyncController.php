@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -33,8 +35,6 @@ class SyncController extends AbstractController
      *
      * @Theme("admin")
      *
-     * @param Request $request
-     *
      * @return Response
      *
      * @throws AccessDeniedException
@@ -62,8 +62,6 @@ class SyncController extends AbstractController
      *
      * @Method("GET")
      *
-     * @param ForumEntity $forum
-     *
      * @return RedirectResponse
      *
      * @throws AccessDeniedException on Perm check failure
@@ -87,8 +85,6 @@ class SyncController extends AbstractController
      *
      * @Method("GET")
      *
-     * @param ForumEntity $forum
-     *
      * @return RedirectResponse
      *
      * @throws AccessDeniedException on Perm check failure
@@ -107,8 +103,6 @@ class SyncController extends AbstractController
      *
      * @Method("GET")
      *
-     * @param ForumEntity $forum
-     *
      * @return RedirectResponse
      *
      * @throws AccessDeniedException on Perm check failure
@@ -126,8 +120,6 @@ class SyncController extends AbstractController
      * @Route("/forum/{forum}/lastpost", requirements={"forum" = "^[1-9]\d*$"}, options={"expose"=true})
      *
      * @Method("GET")
-     *
-     * @param ForumEntity $forum
      *
      * @return RedirectResponse
      *

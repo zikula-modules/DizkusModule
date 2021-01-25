@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -40,13 +42,13 @@ class MoveTopicType extends AbstractType
                     return $forums;
                 },
                 'choice_label' => function ($forum) {
-                    return ($forum->getId() == $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' .  $this->options['translator']->__('current') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
+                    return ($forum->getId() === $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' . $this->options['translator']->__('current') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
                 },
                 'multiple'      => false,
                 'expanded'      => false,
                 'mapped'        => false,
                 'choice_attr'   => function ($forum) {
-                    return $forum->getId() == $this->options['forum'] ? ['disabled' => 'disabled'] : [];
+                    return $forum->getId() === $this->options['forum'] ? ['disabled' => 'disabled'] : [];
                 }
             ])
             ->add('createshadowtopic', ChoiceType::class, [

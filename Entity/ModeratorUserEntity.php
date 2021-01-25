@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -56,8 +58,6 @@ class ModeratorUserEntity extends EntityAccess
 
     /**
      * set ForumUser
-     *
-     * @param ForumUserEntity $user
      */
     public function setForumUser(ForumUserEntity $user)
     {
@@ -76,7 +76,6 @@ class ModeratorUserEntity extends EntityAccess
 
     /**
      * set Forum
-     * @param ForumEntity $forum
      */
     public function setForum(ForumEntity $forum)
     {

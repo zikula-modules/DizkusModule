@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -159,7 +161,7 @@ class TopicEntity extends EntityAccess
      *
      * @ORM\Column(type="object", nullable=true)
      */
-    private $hookedUrlObject = null;
+    private $hookedUrlObject;
 
     /**
      * sync on save marker
@@ -220,8 +222,6 @@ class TopicEntity extends EntityAccess
 
     /**
      * set the Topic poster
-     *
-     * @param ForumUserEntity $poster
      */
     public function setPoster(ForumUserEntity $poster)
     {

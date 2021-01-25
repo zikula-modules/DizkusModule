@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -26,13 +28,11 @@ abstract class AbstractBaseController extends AbstractController
     /**
      * Decode request format
      *
-     * @param Request $request
-     *
      * @return string
      */
     public function decodeFormat(Request $request)
     {
-        if (0 === strpos($request->headers->get('Accept'), 'application/json')) {
+        if (0 === mb_strpos($request->headers->get('Accept'), 'application/json')) {
             $format = 'json';
         } elseif ($request->isXmlHttpRequest()) {
             $format = 'html';
@@ -49,13 +49,11 @@ abstract class AbstractBaseController extends AbstractController
     /**
      * Decode request format
      *
-     * @param Request $request
-     *
      * @return string
      */
     public function decodeTemplate(Request $request)
     {
-        if (0 === strpos($request->headers->get('Accept'), 'application/json')) {
+        if (0 === mb_strpos($request->headers->get('Accept'), 'application/json')) {
             $template = 'json';
         } elseif ($request->get('template', false)) {
             $template = $request->get('template');
@@ -89,7 +87,7 @@ abstract class AbstractBaseController extends AbstractController
             $redirectUrl = $this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL);
         }
 
-        if ('json' == $format || 'ajax.html' == $format) {
+        if ('json' === $format || 'ajax.html' === $format) {
             return new Response(json_encode(['error' => $error]));
         }
 
@@ -114,7 +112,7 @@ abstract class AbstractBaseController extends AbstractController
             $error = $this->__('Sorry, unknown error occured. Please try again');
         }
 
-        if ('json' == $format || 'ajax.html' == $format) {
+        if ('json' === $format || 'ajax.html' === $format) {
             return ['error' => $error];
         }
 
@@ -135,9 +133,9 @@ abstract class AbstractBaseController extends AbstractController
      */
     public function formatResponse($content, $format = 'html')
     {
-        if ('json' == $format) {
+        if ('json' === $format) {
             $response = json_encode(['data' => $content]);
-        } elseif ('ajax.html' == $format) {
+        } elseif ('ajax.html' === $format) {
             $response = json_encode(['html' => $content]);
         } else {
             $response = $content;

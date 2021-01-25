@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright Dizkus Team 2012.
  *
@@ -23,8 +25,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\RankEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Helper\RankHelper;
@@ -77,15 +79,6 @@ class ForumUserManager
 
     /**
      * Construct the manager
-     *
-     * @param TranslatorInterface $translator
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
-     * @param EntityManager $entityManager
-     * @param CurrentUserApi $userApi
-     * @param Permission $permission
-     * @param VariableApi $variableApi
-     * @param RankHelper $ranksHelper
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -198,7 +191,7 @@ class ForumUserManager
      */
     public function create($data = null)
     {
-        if (!is_null($data)) {
+        if (null !== $data) {
             $this->_forumUser = new ForumUserEntity();
         } else {
             // throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
@@ -305,7 +298,7 @@ class ForumUserManager
      */
     public function isMe($user)
     {
-        return $this->_forumUser->getUserId() == $user->getUserId() ? true : false;
+        return $this->_forumUser->getUserId() === $user->getUserId() ? true : false;
     }
 
     /**
@@ -315,7 +308,7 @@ class ForumUserManager
      */
     public function isAnonymous()
     {
-        return ($this->loggedIn && 1 == $this->getId()) ? true : false;
+        return ($this->loggedIn && 1 === $this->getId()) ? true : false;
     }
 
     /**
@@ -368,7 +361,7 @@ class ForumUserManager
     public function allowedToEdit($object)
     {
         if ($object instanceof PostManager) {
-            if ($object->getManagedPoster()->getId() == $this->getId()) {
+            if ($object->getManagedPoster()->getId() === $this->getId()) {
                 return true;
             }
 
@@ -376,7 +369,7 @@ class ForumUserManager
         }
 
         if ($object instanceof TopicManager) {
-            return $object->getManagedPoster()->getId() == $this->getId() ? true : false;
+            return $object->getManagedPoster()->getId() === $this->getId() ? true : false;
         }
 
         if ($object instanceof ForumManager) {
@@ -384,7 +377,7 @@ class ForumUserManager
         }
 
         if ($object instanceof self) {
-            if ($object->getId() == $this->getId()) {
+            if ($object->getId() === $this->getId()) {
                 return true;
             }
 
@@ -435,7 +428,7 @@ class ForumUserManager
         }
 
         if ($object instanceof self) {
-            return $object->getId() == $this->getId();
+            return $object->getId() === $this->getId();
         }
 
         return false;
@@ -464,7 +457,7 @@ class ForumUserManager
             return null;
         }
 
-        return 1 == $this->_forumUser->getPostOrder() ? 'ASC' : 'DESC';
+        return 1 === $this->_forumUser->getPostOrder() ? 'ASC' : 'DESC';
     }
 
     /**
@@ -492,9 +485,9 @@ class ForumUserManager
         if ($userAttr->offsetExists('avatar')) {
             //@todo add anonymous avatar setting
             return $this->_forumUser->getUser()->getAttributeValue('avatar');
-        } else {
-            return 'web/modules/zikuladizkus/images/anonymous.png';
         }
+
+        return 'web/modules/zikuladizkus/images/anonymous.png';
     }
 
     /**
@@ -1014,7 +1007,7 @@ class ForumUserManager
     {
         $viewip = [
             'poster_ip' => $ip,
-            'poster_host' => ('unrecorded' != $ip) ? gethostbyaddr($ip) : $this->__('Host unknown'),
+            'poster_host' => ('unrecorded' !== $ip) ? gethostbyaddr($ip) : $this->__('Host unknown'),
         ];
         $dql = 'SELECT p
             FROM Zikula\DizkusModule\Entity\PostEntity p

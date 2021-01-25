@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -16,7 +18,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class PostRepository extends EntityRepository
 {
-    protected $postManagementService = null;
+    protected $postManagementService;
 
     /**
      * Delete a post via dql
@@ -111,7 +113,7 @@ class PostRepository extends EntityRepository
                 break;
             default:
                 // since
-                $qb->where('p.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-'. $since .' hours'));
+                $qb->where('p.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-' . $since . ' hours'));
         }
 
         if (!empty($forums)) {

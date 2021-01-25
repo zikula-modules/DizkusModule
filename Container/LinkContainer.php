@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -49,12 +51,6 @@ class LinkContainer implements LinkContainerInterface
 
     /**
      * constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param RouterInterface     $router
-     * @param PermissionApi       $permissionApi
-     * @param VariableApi         $variableApi
-     * @param CurrentUserApi      $currentUserApi
      */
     public function __construct(
     TranslatorInterface $translator, RouterInterface $router, PermissionApi $permissionApi, VariableApi $variableApi, CurrentUserApi $currentUserApi
@@ -76,9 +72,9 @@ class LinkContainer implements LinkContainerInterface
      */
     public function getLinks($type = LinkContainerInterface::TYPE_ADMIN)
     {
-        $method = 'get'.ucfirst(strtolower($type));
+        $method = 'get' . ucfirst(mb_strtolower($type));
         if (method_exists($this, $method)) {
-            return $this->$method();
+            return $this->{$method}();
         }
 
         return [];

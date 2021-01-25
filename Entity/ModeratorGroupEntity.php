@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -10,8 +12,8 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
+use Zikula\Core\Doctrine\EntityAccess;
 use Zikula\GroupsModule\Entity\GroupEntity as ZikulaGroup;
 
 /**
@@ -55,7 +57,6 @@ class ModeratorGroupEntity extends EntityAccess
 
     /**
      * set group
-     * @param \Zikula\GroupsModule\Entity\GroupEntity $group
      */
     public function setGroup(ZikulaGroup $group)
     {
@@ -73,7 +74,6 @@ class ModeratorGroupEntity extends EntityAccess
 
     /**
      * set Forum
-     * @param ForumEntity $forum
      */
     public function setForum(ForumEntity $forum)
     {

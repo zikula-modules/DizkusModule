@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Copyright Dizkus Team 2012.
  *
@@ -200,7 +202,7 @@ class PostManager
      */
     public function create($data = null)
     {
-        if (!is_null($data)) {
+        if (null !== $data) {
             $this->_topic = $this->topicManagerService->getManager($data['topic_id']);
             $this->_post->setTopic($this->_topic->get());
             unset($data['topic_id']);
@@ -223,7 +225,7 @@ class PostManager
      */
     public function update($data = null)
     {
-        if (is_null($data)) {
+        if (null === $data) {
             throw new \InvalidArgumentException($this->translator->__('Cannot create Post, no data provided.'));
         } elseif ($data instanceof PostEntity) {
             $this->_post = $data;
@@ -268,8 +270,6 @@ class PostManager
 
     /**
      * Move post
-     *
-     * @param TopicEntity $topic
      *
      * @throws \InvalidArgumentException Thrown if the parameters do not meet requirements
      *

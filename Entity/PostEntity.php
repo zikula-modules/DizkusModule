@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -251,8 +253,6 @@ class PostEntity extends EntityAccess
 
     /**
      * set user who made the post
-     *
-     * @param ForumUserEntity $poster
      */
     public function setPoster(ForumUserEntity $poster)
     {
@@ -297,8 +297,6 @@ class PostEntity extends EntityAccess
 
     /**
      * Set post Topic
-     *
-     * @param TopicEntity $topic
      */
     public function setTopic(TopicEntity $topic)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -21,7 +23,7 @@ abstract class AbstractSubBundle extends AbstractHookBundle
 {
     public function __construct()
     {
-        $this->baseName= str_replace('SubBundle', 'Subscriber', str_replace('Zikula\DizkusModule\Hooks\\', '', get_class($this)));
+        $this->baseName= str_replace('SubBundle', 'Subscriber', str_replace('Zikula\DizkusModule\Hooks\\', '', static::class));
         parent::__construct();
     }
 

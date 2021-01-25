@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Dizkus
  *
@@ -13,8 +15,8 @@
 namespace Zikula\DizkusModule\Form\Type\Hook;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * AreasType not used?
@@ -28,7 +30,7 @@ class AreasType extends AbstractHookType
         if ($options['allow_add'] && $options['prototype']) {
             $prototype = $builder->create($options['prototype_name'], $options['type'], array_replace([
                 'required' => $options['required'],
-                'label' => $options['prototype_name'].'label__',
+                'label' => $options['prototype_name'] . 'label__',
             ], $options['options']));
             $builder->setAttribute('prototype', $prototype->getForm());
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -62,9 +64,6 @@ class TopicSubscriptionListener implements EventSubscriberInterface
 
     /**
      * @param VariableApi $variableApi VariableApi service instance
-     * @param TranslatorInterface $translator
-     * @param MailerApi $mailerApi
-     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -84,8 +83,6 @@ class TopicSubscriptionListener implements EventSubscriberInterface
     /**
      * Check new topic against spamers
      * Respond to event DizkusEvents::POST_CREATE
-     *
-     * @param GenericEvent $event
      *
      * @return void
      */

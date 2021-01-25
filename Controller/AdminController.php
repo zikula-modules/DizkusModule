@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Dizkus
  *
@@ -12,16 +14,16 @@
 
 namespace Zikula\DizkusModule\Controller;
 
-use Zikula\Core\Controller\AbstractController;
-use Zikula\DizkusModule\Entity\RankEntity;
-use Zikula\DizkusModule\Form\Type\DizkusSettingsType;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Zikula\Core\Controller\AbstractController;
+use Zikula\DizkusModule\Entity\RankEntity;
+use Zikula\DizkusModule\Form\Type\DizkusSettingsType;
 
 /**
  * @Route("/admin")
@@ -90,8 +92,6 @@ class AdminController extends AbstractController
      *
      * ranks
      *
-     * @param Request $request
-     *
      * @return Response|RedirectResponse
      *
      * @throws AccessDeniedException
@@ -103,23 +103,22 @@ class AdminController extends AbstractController
         }
         $submit = $request->request->get('submit', 2);
         $ranktype = (int) $request->query->get('ranktype', RankEntity::TYPE_POSTCOUNT);
-        if (2 == $submit) {
+        if (2 === $submit) {
             $ranks = $this->get('zikula_dizkus_module.rank_helper')->getAll(['ranktype' => RankEntity::TYPE_POSTCOUNT]);
             $template = 'honoraryranks';
-            if (0 == $ranktype) {
+            if (0 === $ranktype) {
                 $template = 'ranks';
             }
 
-            return $this->render("@ZikulaDizkusModule/Admin/$template.html.twig", [
+            return $this->render("@ZikulaDizkusModule/Admin/${template}.html.twig", [
                 'ranks' => $ranks,
                 'ranktype' => $ranktype,
                 'rankimages' => $this->get('zikula_dizkus_module.rank_helper')->getAllRankImages(),
                 'settings' => $this->getVars()
             ]);
-        } else {
-            $ranks = $request->request->filter('ranks', '', FILTER_SANITIZE_STRING);
-            $this->get('zikula_dizkus_module.rank_helper')->save(['ranks' => $ranks]);
         }
+        $ranks = $request->request->filter('ranks', '', FILTER_SANITIZE_STRING);
+        $this->get('zikula_dizkus_module.rank_helper')->save(['ranks' => $ranks]);
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_ranks', ['ranktype' => $ranktype], RouterInterface::ABSOLUTE_URL));
     }
@@ -142,7 +141,7 @@ class AdminController extends AbstractController
         $page = (int) $request->query->get('page', 1);
         $letter = $request->query->get('letter');
 
-        if ('POST' == $request->getMethod()) {
+        if ('POST' === $request->getMethod()) {
             $letter = $request->request->get('letter');
             $page = (int) $request->request->get('page', 1);
 
@@ -153,16 +152,16 @@ class AdminController extends AbstractController
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_admin_assignranks', ['page' => $page, 'letter' => $letter], RouterInterface::ABSOLUTE_URL));
         }
 
-        $letter = (empty($letter) || 1 != strlen($letter)) ? '*' : $letter;
+        $letter = (empty($letter) || 1 !== mb_strlen($letter)) ? '*' : $letter;
         $perpage = 20;
         $em = $this->getDoctrine()->getManager();
         $qb = $em->createQueryBuilder();
         $qb->select('u')
         ->from('Zikula\UsersModule\Entity\UserEntity', 'u')
         ->orderBy('u.uname', 'ASC');
-        if ('*' != $letter) {
+        if ('*' !== $letter) {
             $qb->andWhere('u.uname LIKE :letter')
-            ->setParameter('letter', strtolower($letter) . '%');
+            ->setParameter('letter', mb_strtolower($letter) . '%');
         }
         $query = $qb->getQuery();
         $query->setFirstResult(($page - 1) * $perpage)

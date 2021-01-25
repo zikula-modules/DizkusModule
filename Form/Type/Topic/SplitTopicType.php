@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -15,8 +17,8 @@ namespace Zikula\DizkusModule\Form\Type\Topic;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,13 +42,13 @@ class SplitTopicType extends AbstractType
                     return $forums;
                 },
                 'choice_label'  => function ($forum) {
-                    return ($forum->getId() == $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' .  $this->options['translator']->__(' * origin topic forum') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
+                    return ($forum->getId() === $this->options['forum']) ? str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName() . ' ' . $this->options['translator']->__(' * origin topic forum') : str_repeat("--", $forum->getLvl()) . ' ' . $forum->getName();
                 },
                 'multiple'      => false,
                 'expanded'      => false,
                 'mapped'        => false,
                 'choice_attr'   => function ($forum) {
-                    return $forum->getId() == $this->options['forum'] ? ['selected' => 'selected'] : [];
+                    return $forum->getId() === $this->options['forum'] ? ['selected' => 'selected'] : [];
                 }
             ])
             ->add('subject', TextType::class, [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -14,8 +16,8 @@ namespace Zikula\DizkusModule\Listener;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Zikula\DizkusModule\Events\DizkusEvents;
 use Zikula\DizkusModule\Entity\ForumEntity;
+use Zikula\DizkusModule\Events\DizkusEvents;
 
 /**
  * Forum Sync Listener
@@ -49,8 +51,6 @@ class ForumSyncListener implements EventSubscriberInterface
     /**
      * Sync forum
      * Respond to event DizkusEvents::FORUM_SYNC
-     *
-     * @param GenericEvent $event
      *
      * @param bollean $recursive
      *

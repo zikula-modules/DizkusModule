@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Dizkus.
  *
@@ -11,8 +13,8 @@
 
 namespace Zikula\DizkusModule\Entity;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zikula\Core\Doctrine\EntityAccess;
@@ -118,7 +120,7 @@ class ForumEntity extends EntityAccess
      *
      * @ORM\Column(type="object", nullable=true)
      */
-    private $pop3Connection = null;
+    private $pop3Connection;
 
     /**
      * moduleref.
@@ -209,17 +211,17 @@ class ForumEntity extends EntityAccess
 
     public function getName()
     {
-        return self::ROOTNAME == $this->name ? 'Forum Index' : $this->name;
+        return self::ROOTNAME === $this->name ? 'Forum Index' : $this->name;
     }
 
     public function setName($name)
     {
         // dont' allow user to set another forum to rootname
-        if (self::ROOTNAME == $name && 0 != $this->lvl) {
+        if (self::ROOTNAME === $name && 0 !== $this->lvl) {
             return $this;
         }
         // once root forum is set do not allow to change name
-        if (self::ROOTNAME != $this->name) {
+        if (self::ROOTNAME !== $this->name) {
             $this->name = $name;
         }
 
@@ -349,7 +351,7 @@ class ForumEntity extends EntityAccess
     {
         $parents = [];
         $parent = $this->getParent();
-        while (null != $parent) {
+        while (null !== $parent) {
             $parents[$parent->getForum_id()] = $parent;
             $parent = $parent->getParent();
         }
@@ -419,7 +421,7 @@ class ForumEntity extends EntityAccess
 
     public function setPop3Connection($connection)
     {
-        if (is_null($connection) || $connection instanceof Pop3Connection) {
+        if (null === $connection || $connection instanceof Pop3Connection) {
             $this->pop3Connection = $connection;
         }
 

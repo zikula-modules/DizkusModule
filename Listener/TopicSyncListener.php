@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -49,8 +51,6 @@ class TopicSyncListener implements EventSubscriberInterface
      * Sync forum topic
      *
      * Respond to event DizkusEvents::TOPIC_SYNC
-     *
-     * @param GenericEvent $event
      *
      * @param bollean $recursive
      *
