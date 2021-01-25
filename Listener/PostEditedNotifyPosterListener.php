@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -90,8 +92,6 @@ class PostEditedNotifyPosterListener implements EventSubscriberInterface
 
     /**
      * Notify poster by email about deleted post
-     *
-     * @param GenericEvent $event
      *
      * @return void
      */

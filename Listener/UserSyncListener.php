@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -50,8 +52,6 @@ class UserSyncListener implements EventSubscriberInterface
      * Sync forum user
      *
      * Respond to event DizkusEvents::USER_SYNC
-     *
-     * @param GenericEvent $event
      *
      * @param bollean $recursive
      *

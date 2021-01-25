@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -123,7 +125,7 @@ class RankEntity extends EntityAccess
      */
     public function getRank_link()
     {
-        $link = 'http://' == substr($this->description, 0, 7) ? $this->description : '';
+        $link = 'http://' === mb_substr($this->description, 0, 7) ? $this->description : '';
 
         return $link;
     }

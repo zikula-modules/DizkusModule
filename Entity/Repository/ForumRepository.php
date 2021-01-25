@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -31,7 +33,7 @@ class ForumRepository extends NestedTreeRepository
             var_dump($query->getDQL());
             var_dump($query->getParameters());
             var_dump($query->getSQL());
-            die;
+            exit;
         }
 
         return $result;
@@ -125,7 +127,7 @@ class ForumRepository extends NestedTreeRepository
                     $parent = $forum->getParent();
                     $parentName = isset($parent) ? $parent->getName() : $this->translator->__('Root');
                     $topforum['cat_title'] = $parentName;
-                    array_push($topForums, $topforum);
+                    $topForums[] = $topforum;
                 }
             }
         }

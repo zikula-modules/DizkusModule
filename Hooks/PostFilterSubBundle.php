@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -13,8 +15,8 @@
 namespace Zikula\DizkusModule\Hooks;
 
 use Zikula\Bundle\HookBundle\Category\FilterHooksCategory;
-use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Bundle\HookBundle\HookSubscriberInterface;
+use Zikula\Common\Translator\TranslatorInterface;
 
 /**
  * PostFilterSubBundle
@@ -30,9 +32,6 @@ class PostFilterSubBundle extends AbstractSubBundle implements HookSubscriberInt
      */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;

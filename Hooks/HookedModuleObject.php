@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -62,10 +64,8 @@ class HookedModuleObject implements \ArrayAccess
     {
         switch ($offset) {
             case 'enabled':
-
                 return true;
             default:
-
                 return array_key_exists($offset, $this->data);
         }
     }
@@ -74,10 +74,8 @@ class HookedModuleObject implements \ArrayAccess
     {
         switch ($offset) {
             case 'enabled':
-
                 return $this->enabled;
             default:
-
                 return $this->offsetExists($offset) ? $this->data[$offset] : false;
         }
     }
@@ -90,7 +88,6 @@ class HookedModuleObject implements \ArrayAccess
 
                 return true;
             default:
-
                 return $this->offsetExists($offset) ? $this->data[$offset] = $value : false;
         }
     }

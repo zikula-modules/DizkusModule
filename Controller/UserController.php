@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -20,11 +22,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface; // used in annotations - do not remove
 use Symfony\Component\Security\Core\Exception\AccessDeniedException; // used in annotations - do not remove
+use Zikula\Core\Response\PlainResponse;
+use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
 use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\ForumUserEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
-use Zikula\DizkusModule\Controller\AbstractBaseController as AbstractController;
-use Zikula\Core\Response\PlainResponse;
 use Zikula\DizkusModule\Form\Type\UserPreferencesType;
 
 class UserController extends AbstractController
@@ -80,7 +82,7 @@ class UserController extends AbstractController
             $managedForumUser = $currentForumUserManager;
         }
         //Anons are logged in but do not have prefs access
-        if ((!$currentForumUserManager->isLoggedIn() || $currentForumUserManager->isAnonymous()) && is_null($user)) {
+        if ((!$currentForumUserManager->isLoggedIn() || $currentForumUserManager->isAnonymous()) && null === $user) {
             throw new AccessDeniedException($this->__('Anonymos users do not have access to this part. Please log in.'));
         }
 
@@ -170,7 +172,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ('all' == $unsubscribe) {
+            if ('all' === $unsubscribe) {
                 $forumUserManager->get()->clearForumSubscriptions();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromForum($unsubscribe);
@@ -199,11 +201,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -234,8 +236,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ('json' == $format) {
-        } elseif ('ajax.html' == $format) {
+        if ('json' === $format) {
+        } elseif ('ajax.html' === $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -254,11 +256,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -290,8 +292,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ('json' == $format) {
-        } elseif ('ajax.html' == $format) {
+        if ('json' === $format) {
+        } elseif ('ajax.html' === $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $managedForum->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -320,7 +322,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ('all' == $unsubscribe) {
+            if ('all' === $unsubscribe) {
                 $forumUserManager->get()->clearTopicSubscriptions();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->unsubscribeFromTopic($unsubscribe);
@@ -349,11 +351,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -384,8 +386,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ('json' == $format) {
-        } elseif ('ajax.html' == $format) {
+        if ('json' === $format) {
+        } elseif ('ajax.html' === $format) {
         } else {
             $this->addFlash('status', $status);
 
@@ -406,11 +408,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -440,8 +442,8 @@ class UserController extends AbstractController
             $status = $this->__('Something went wrong.');
         }
 
-        if ('json' == $format) {
-        } elseif ('ajax.html' == $format) {
+        if ('json' === $format) {
+        } elseif ('ajax.html' === $format) {
         } else {
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $managedTopic->getId()], RouterInterface::ABSOLUTE_URL));
         }
@@ -470,7 +472,7 @@ class UserController extends AbstractController
 
         if ($request->query->has('unsubscribe')) {
             $unsubscribe = $request->query->get('unsubscribe');
-            if ('all' == $unsubscribe) {
+            if ('all' === $unsubscribe) {
                 $forumUserManager->get()->clearForumFavorites();
             } elseif (is_numeric($unsubscribe)) {
                 $forumUserManager->removeFavoriteForum($unsubscribe);
@@ -499,11 +501,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -531,9 +533,9 @@ class UserController extends AbstractController
 
         if ($forumUserManager->addFavoriteForum($forum)->store()) {
             return new PlainResponse('successful');
-        } else {
-            return new PlainResponse('something went wrong');
         }
+
+        return new PlainResponse('something went wrong');
     }
 
     /**
@@ -549,11 +551,11 @@ class UserController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         $forumUserManager = $this->get('zikula_dizkus_module.forum_user_manager')->getManager();
@@ -581,9 +583,9 @@ class UserController extends AbstractController
 
         if ($forumUserManager->removeFavoriteForum($forum)->store()) {
             return new PlainResponse('successful');
-        } else {
-            return new PlainResponse('something went wrong');
         }
+
+        return new PlainResponse('something went wrong');
     }
 
     /**
@@ -604,7 +606,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $forumUserManager->setForumViewSettings('favorities' == $setting ? true : false)->store();
+        $forumUserManager->setForumViewSettings('favorities' === $setting ? true : false)->store();
 
         return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_index', [], RouterInterface::ABSOLUTE_URL));
     }

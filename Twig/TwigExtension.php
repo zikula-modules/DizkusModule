@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -13,8 +15,8 @@
 namespace Zikula\DizkusModule\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Zikula\DizkusModule\Entity\TopicEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
+use Zikula\DizkusModule\Entity\TopicEntity;
 
 /**
  * Twig extension base class.
@@ -99,7 +101,7 @@ class TwigExtension extends \Twig_Extension
             return $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams);
         }
 
-        $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams).'#post/'.$topic->getLast_post()->getId();
+        $url = $this->container->get('router')->generate('zikuladizkusmodule_topic_viewtopic', $urlParams) . '#post/' . $topic->getLast_post()->getId();
 
         return $url;
     }

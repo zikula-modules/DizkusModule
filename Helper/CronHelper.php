@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -73,42 +75,42 @@ class CronHelper
         $pop3conn = $forum->getPop3Connection()->getConnection();
         // array of connection details
         include_once 'modules/zikula/dizkus-module/vendor/pop3class/pop3.php';
-        if ($forum->getPop3Connection()->isActive() && $pop3conn['last_connect'] <= time() - $pop3conn['interval'] * 60 || true == $force) {
-            $this->mailcronecho('found active: '.$forum['forum_id'].' = '.$forum['name'].'\n', $args['debug']);
+        if ($forum->getPop3Connection()->isActive() && $pop3conn['last_connect'] <= time() - $pop3conn['interval'] * 60 || true === $force) {
+            $this->mailcronecho('found active: ' . $forum['forum_id'] . ' = ' . $forum['name'] . '\n', $args['debug']);
             // get new mails for this forum
             $pop3 = new pop3_class();
             $pop3->hostname = $pop3conn['server'];
             $pop3->port = $pop3conn['port'];
             $error = '';
             // open connection to pop3 server
-            if ('' == ($error = $pop3->Open())) {
-                $this->mailcronecho('Connected to the POP3 server \''.$pop3->hostname."'.\n", $args['debug']);
+            if ('' === ($error = $pop3->Open())) {
+                $this->mailcronecho('Connected to the POP3 server \'' . $pop3->hostname . "'.\n", $args['debug']);
                 // login to pop3 server
-                if ('' == ($error = $pop3->Login($pop3conn['login'], base64_decode($pop3conn['password']), 0))) {
-                    $this->mailcronecho('User \''.$pop3conn['login'].'\' logged into POP3 server \''.$pop3->hostname."'.\n", $args['debug']);
+                if ('' === ($error = $pop3->Login($pop3conn['login'], base64_decode($pop3conn['password']), 0))) {
+                    $this->mailcronecho('User \'' . $pop3conn['login'] . '\' logged into POP3 server \'' . $pop3->hostname . "'.\n", $args['debug']);
                     // check for message
-                    if ('' == ($error = $pop3->Statistics($messages, $size))) {
+                    if ('' === ($error = $pop3->Statistics($messages, $size))) {
                         $this->mailcronecho("There are {$messages} messages in the mailbox, amounting to a total of {$size} bytes.\n", $args['debug']);
                         // get message list...
                         $result = $pop3->ListMessages('', 1);
                         if (is_array($result) && count($result) > 0) {
                             // logout the currentuser
-                            $this->mailcronecho('Logging out \''.UserUtil::getVar('uname')."'.\n", $args['debug']);
+                            $this->mailcronecho('Logging out \'' . UserUtil::getVar('uname') . "'.\n", $args['debug']);
                             UserUtil::logOut();
                             // login the correct user
                             if (UserUtil::logIn($pop3conn['coreUser']->getUid(), base64_decode($pop3conn['coreUser']->getPass()), false)) {
-                                $this->mailcronecho('Done! User '.$pop3conn['coreUser']->getUname().' successfully logged in.', $args['debug']);
+                                $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' successfully logged in.', $args['debug']);
                                 if (!ModUtil::apiFunc($this->name, 'Permission', 'canWrite', $forum)) {
-                                    $this->mailcronecho('Error! Insufficient permissions for '.$pop3conn['coreUser']->getUname().' in forum '.$forum['name'].'(id='.$forum['forum_id'].').', $args['debug']);
+                                    $this->mailcronecho('Error! Insufficient permissions for ' . $pop3conn['coreUser']->getUname() . ' in forum ' . $forum['name'] . '(id=' . $forum['forum_id'] . ').', $args['debug']);
                                     UserUtil::logOut();
-                                    $this->mailcronecho('Done! User '.$pop3conn['coreUser']->getUname().' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
 
                                     return false;
                                 }
-                                $this->mailcronecho('Adding new posts as user \''.$pop3conn['coreUser']->getUname()."'.\n", $args['debug']);
+                                $this->mailcronecho('Adding new posts as user \'' . $pop3conn['coreUser']->getUname() . "'.\n", $args['debug']);
                                 // .cycle through the message list
                                 for ($cnt = 1; $cnt <= count($result); $cnt++) {
-                                    if ('' == ($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1))) {
+                                    if ('' === ($error = $pop3->RetrieveMessage($cnt, $headers, $body, -1))) {
                                         // echo "Message $i:\n---Message headers starts below---\n";
                                         $subject = '';
                                         $from = '';
@@ -118,30 +120,30 @@ class CronHelper
                                         foreach ($headers as $header) {
                                             //echo htmlspecialchars($header),"\n";
                                             // get subject
-                                            $header = strtolower($header);
-                                            if (0 === strpos(strtolower($header), 'subject:')) {
-                                                $subject = trim(strip_tags(substr($header, 8)));
+                                            $header = mb_strtolower($header);
+                                            if (0 === mb_strpos(mb_strtolower($header), 'subject:')) {
+                                                $subject = trim(strip_tags(mb_substr($header, 8)));
                                             }
                                             // get sender
-                                            if (0 === strpos($header, 'from:')) {
-                                                $from = trim(strip_tags(substr($header, 5)));
+                                            if (0 === mb_strpos($header, 'from:')) {
+                                                $from = trim(strip_tags(mb_substr($header, 5)));
                                                 // replace @ and . to make it harder for email harvesers,
                                                 // credits to Teb for this idea
                                                 $from = str_replace(['@', '.'], [' (at) ', ' (dot) '], $from);
                                             }
                                             // get msgid from In-Reply-To: if this is an nswer to a prior
                                             // posting
-                                            if (0 === strpos($header, 'in-reply-to:')) {
-                                                $replyto = trim(strip_tags(substr($header, 12)));
+                                            if (0 === mb_strpos($header, 'in-reply-to:')) {
+                                                $replyto = trim(strip_tags(mb_substr($header, 12)));
                                             }
                                             // this msg id
-                                            if (0 === strpos($header, 'message-id:')) {
-                                                $msgid = trim(strip_tags(substr($header, 11)));
+                                            if (0 === mb_strpos($header, 'message-id:')) {
+                                                $msgid = trim(strip_tags(mb_substr($header, 11)));
                                             }
                                             // check for X-DizkusTopicID, if set, then this is a possible
                                             // loop (mailinglist subscribed to the forum too)
-                                            if (0 === strpos($header, 'X-DizkusTopicID:')) {
-                                                $original_topic_id = trim(strip_tags(substr($header, 17)));
+                                            if (0 === mb_strpos($header, 'X-DizkusTopicID:')) {
+                                                $original_topic_id = trim(strip_tags(mb_substr($header, 17)));
                                             }
                                         }
                                         if (empty($subject)) {
@@ -149,8 +151,8 @@ class CronHelper
                                         }
                                         // check if subject matches our matchstring
                                         if (empty($original_topic_id)) {
-                                            if (empty($pop3conn['matchstring']) || 0 != preg_match($pop3conn['matchstring'], $subject)) {
-                                                $message = '[code=htmlmail,user='.$from.']'.implode("\n", $body).'[/code]';
+                                            if (empty($pop3conn['matchstring']) || 0 !== preg_match($pop3conn['matchstring'], $subject)) {
+                                                $message = '[code=htmlmail,user=' . $from . ']' . implode("\n", $body) . '[/code]';
                                                 if (!empty($replyto)) {
                                                     // this seems to be a reply, we find the original posting
                                                     // and store this mail in the same thread
@@ -180,7 +182,7 @@ class CronHelper
                                                                 'attach_signature' => 1,
                                                                 'subscribe_topic'  => 0,
                                                                 'msgid'            => $msgid, ]);
-                                                    $this->mailcronecho("Added new topic '{$subject}' (topic ID {$topic_id}) to '".$forum['name']."' forum.\n", $args['debug']);
+                                                    $this->mailcronecho("Added new topic '{$subject}' (topic ID {$topic_id}) to '" . $forum['name'] . "' forum.\n", $args['debug']);
                                                 }
                                             } else {
                                                 $this->mailcronecho("Warning! Message subject  line '{$subject}' does not match requirements and will be ignored.", $args['debug']);
@@ -194,14 +196,14 @@ class CronHelper
                                 }
                                 // logout the mail2forum user
                                 if (UserUtil::logOut()) {
-                                    $this->mailcronecho('Done! User '.$pop3conn['coreUser']->getUname().' logged out.', $args['debug']);
+                                    $this->mailcronecho('Done! User ' . $pop3conn['coreUser']->getUname() . ' logged out.', $args['debug']);
                                 }
                             } else {
-                                $this->mailcronecho("Error! Could not log user '".$pop3conn['coreUser']->getUname()."' in.\n");
+                                $this->mailcronecho("Error! Could not log user '" . $pop3conn['coreUser']->getUname() . "' in.\n");
                             }
                             // close pop3 connection and finally delete messages
-                            if ('' == $error && '' == ($error = $pop3->Close())) {
-                                $this->mailcronecho("Disconnected from POP3 server '".$pop3->hostname."'.\n");
+                            if ('' === $error && '' === ($error = $pop3->Close())) {
+                                $this->mailcronecho("Disconnected from POP3 server '" . $pop3->hostname . "'.\n");
                             }
                         } else {
                             $error = $result;
@@ -210,7 +212,7 @@ class CronHelper
                 }
             }
             if (!empty($error)) {
-                $this->mailcronecho('error: ', htmlspecialchars($error)."\n");
+                $this->mailcronecho('error: ', htmlspecialchars($error) . "\n");
             }
             // store the timestamp of the last connection to the database
             $managedForum->get()->getPop3Connection()->updateConnectTime();
@@ -224,7 +226,7 @@ class CronHelper
     private function mailcronecho($text, $debug = false)
     {
         echo $text;
-        if (true == $debug) {
+        if (true === $debug) {
             echo '<br />';
         }
         flush();

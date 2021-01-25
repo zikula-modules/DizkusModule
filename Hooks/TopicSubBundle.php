@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -12,9 +14,9 @@
 
 namespace Zikula\DizkusModule\Hooks;
 
-use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Bundle\HookBundle\Category\UiHooksCategory;
 use Zikula\Bundle\HookBundle\HookSubscriberInterface;
+use Zikula\Common\Translator\TranslatorInterface;
 
 /**
  * TopicSubBundle
@@ -42,9 +44,6 @@ class TopicSubBundle extends AbstractSubBundle implements HookSubscriberInterfac
      */
     private $translator;
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;

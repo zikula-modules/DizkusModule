@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -178,8 +180,8 @@ class CountHelper
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('count(a)')->from("Zikula\\DizkusModule\\Entity\\{$entityname}Entity", 'a');
-        if (isset($where) && isset($parameter)) {
-            $qb->andWhere('a.'.$where.' = :parameter')->setParameter('parameter', $parameter);
+        if (isset($where, $parameter)) {
+            $qb->andWhere('a.' . $where . ' = :parameter')->setParameter('parameter', $parameter);
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();

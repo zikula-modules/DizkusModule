@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -22,9 +24,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\Hook\ValidationHook;
 use Zikula\Core\Hook\ValidationProviders;
-use Zikula\Core\Hook\ProcessHook;
 use Zikula\Core\RouteUrl;
 use Zikula\DizkusModule\Entity\ForumEntity;
 //use Zikula\DizkusModule\Form\Type\ModerateType;
@@ -37,15 +39,13 @@ class ForumController extends AbstractController
      *
      * Show all forums a user may see
      *
-     * @param Request $request
-     *
      * @throws AccessDeniedException on failed perm check
      *
      * @return Response|RedirectResponse
      */
     public function indexAction(Request $request)
     {
-        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                         'forum_disabled_info' => $this->getVar('forum_disabled_info'),
             ]);
@@ -104,7 +104,6 @@ class ForumController extends AbstractController
      * View forum by id
      * opens a forum and shows the last postings
      *
-     * @param Request $request
      * @param int     $forum   the forum id
      * @param int     $start   the posting to start with if on page 1+
      *
@@ -115,7 +114,7 @@ class ForumController extends AbstractController
      */
     public function viewforumAction(Request $request, $forum, $start = 1)
     {
-        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
+        if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                         'forum_disabled_info' => $this->getVar('forum_disabled_info'),
             ]);
@@ -207,7 +206,6 @@ class ForumController extends AbstractController
      * Move up or down a forum in the tree
      *
      * @param string $action
-     * @param ForumEntity $forum
      *
      * @return RedirectResponse
      *
@@ -221,7 +219,7 @@ class ForumController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         /** @var $repo \Gedmo\Tree\Entity\Repository\NestedTreeRepository */
         $repo = $em->getRepository('Zikula\DizkusModule\Entity\ForumEntity');
-        if ('moveUp' == $action) {
+        if ('moveUp' === $action) {
             $repo->moveUp($forum, true);
         } else {
             $repo->moveDown($forum, true);
@@ -245,11 +243,11 @@ class ForumController extends AbstractController
         if (!$this->getVar('forum_enabled') && !$this->hasPermission($this->name . '::', '::', ACCESS_ADMIN)) {
             if ($request->isXmlHttpRequest()) {
                 return new UnavailableResponse([], strip_tags($this->getVar('forum_disabled_info')));
-            } else {
-                return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
+            }
+
+            return $this->render('@ZikulaDizkusModule/Common/dizkus.disabled.html.twig', [
                     'forum_disabled_info' => $this->getVar('forum_disabled_info'),
                 ]);
-            }
         }
 
         if (!$this->get('zikula_dizkus_module.security')->canRead([])) {
@@ -304,7 +302,7 @@ class ForumController extends AbstractController
         }
 
         // disallow editing of root forum
-        if (1 == $forum->getId()) {
+        if (1 === $forum->getId()) {
             $this->addFlash('error', $this->__("Editing of root forum is disallowed", 403));
 
             return new RedirectResponse($this->get('router')->generate('zikuladizkusmodule_forum_tree', [], RouterInterface::ABSOLUTE_URL));
@@ -597,7 +595,7 @@ class ForumController extends AbstractController
 
         if ($form->isValid() && !$hookvalidators->hasErrors()) {
             $data = $form->getData();
-            if (1 == $data['action']) {
+            if (1 === $data['action']) {
                 // get the child forums and move them
                 $children = $forum->getChildren();
                 foreach ($children as $child) {

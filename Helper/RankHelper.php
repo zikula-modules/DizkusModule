@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -61,7 +63,7 @@ class RankHelper
      */
     public function getAll($ranktype)
     {
-        if (RankEntity::TYPE_POSTCOUNT == $ranktype) {
+        if (RankEntity::TYPE_POSTCOUNT === $ranktype) {
             $orderby = 'minimumCount';
         } else {
             $orderby = 'title';
@@ -82,10 +84,10 @@ class RankHelper
     public function getAllRankImages()
     {
         // read images
-        $handle = opendir(\Zikula\DizkusModule\DizkusModuleInstaller::generateRelativePath().'/Resources/public/images/'.$this->imagesPath);
+        $handle = opendir(\Zikula\DizkusModule\DizkusModuleInstaller::generateRelativePath() . '/Resources/public/images/' . $this->imagesPath);
         $filelist = [];
         while ($file = readdir($handle)) {
-            if ($this->isImageFile($this->imagesPath.'/'.$file)) {
+            if ($this->isImageFile($this->imagesPath . '/' . $file)) {
                 $filelist[] = $file;
             }
         }
@@ -108,13 +110,13 @@ class RankHelper
         }
         //title, description, minimumCount, maximumCount, type, image
         foreach ($args['ranks'] as $rankid => $rank) {
-            if ('-1' == $rankid) {
+            if ('-1' === $rankid) {
                 $r = new RankEntity();
                 $r->merge($rank);
                 $this->entityManager->persist($r);
             } else {
                 $r = $this->entityManager->find('Zikula\DizkusModule\Entity\RankEntity', $rankid);
-                if ((isset($rank['rank_delete'])) && ('1' == $rank['rank_delete'])) {
+                if ((isset($rank['rank_delete'])) && ('1' === $rank['rank_delete'])) {
                     $this->entityManager->remove($r);
                     // update users that are assigned the rank to null
                     $users = $this->entityManager->getRepository('ZikulaDizkusModule:RankEntity')->findBy(['rank' => $rankid]);
@@ -183,9 +185,9 @@ class RankHelper
 
     private function addImageAndLink($data)
     {
-        $data['rank_link'] = 'http://' == substr($data['description'], 0, 7) ? $data['description'] : '';
+        $data['rank_link'] = 'http://' === mb_substr($data['description'], 0, 7) ? $data['description'] : '';
         if (!empty($data['image'])) {
-            $data['image'] = $this->getVar('url_ranks_images').'/'.$data['image'];
+            $data['image'] = $this->getVar('url_ranks_images') . '/' . $data['image'];
             $data['image_attr'] = function_exists('getimagesize') ? @getimagesize($data['image']) : null;
         }
 
@@ -198,7 +200,7 @@ class RankHelper
      */
     private function isImageFile($filepath)
     {
-        if (function_exists('getimagesize') && false != @getimagesize($filepath)) {
+        if (function_exists('getimagesize') && false !== @getimagesize($filepath)) {
             return true;
         }
         if (preg_match('/^(.*)\\.(gif|jpg|jpeg|png)/si', $filepath)) {

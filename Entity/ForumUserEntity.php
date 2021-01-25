@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -67,7 +69,7 @@ class ForumUserEntity extends EntityAccess
      * @Gedmo\Timestampable
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $lastvisit = null;
+    private $lastvisit;
 
     /**
      * user_favorites
@@ -307,8 +309,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * add a forum as favorite.
-     *
-     * @param ForumEntity $forum
      */
     public function addFavoriteForum(ForumEntity $forum)
     {
@@ -320,8 +320,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * remove a forum as favorite.
-     *
-     * @param ForumUserFavoriteEntity $forumUserFavorite
      */
     public function removeFavoriteForum(ForumUserFavoriteEntity $forumUserFavorite)
     {
@@ -348,8 +346,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * add a topic subscription.
-     *
-     * @param TopicEntity $topic
      */
     public function addTopicSubscription(TopicEntity $topic)
     {
@@ -359,8 +355,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * remove a topic subscription.
-     *
-     * @param TopicSubscriptionEntity $topicSubscription
      */
     public function removeTopicSubscription(TopicSubscriptionEntity $topicSubscription)
     {
@@ -387,8 +381,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * add a forum subscription.
-     *
-     * @param ForumEntity $forum
      */
     public function addForumSubscription(ForumEntity $forum)
     {
@@ -398,8 +390,6 @@ class ForumUserEntity extends EntityAccess
 
     /**
      * remove a forum subscription.
-     *
-     * @param ForumSubscriptionEntity $forumSubscription
      */
     public function removeForumSubscription(ForumSubscriptionEntity $forumSubscription)
     {

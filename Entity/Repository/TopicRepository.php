@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -85,7 +87,6 @@ class TopicRepository extends EntityRepository
      * @param $page int limit listing page (default=1)
      * @param $limit int limit listing (default=25)
      *
-     *
      * @return array (postings, mail2forumpostings, rsspostings, text_to_display)
      */
     public function getTopics($since = null, $unanswered = false, $unsolved = false, $page = 1, $limit = 25)
@@ -116,7 +117,7 @@ class TopicRepository extends EntityRepository
                 break;
             default:
                 // since
-                $qb->where('l.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-'. $since .' hours'));
+                $qb->where('l.post_time > :wheretime')->setParameter('wheretime', (new \DateTime())->modify('-' . $since . ' hours'));
         }
 
         if ($unanswered) {
@@ -140,7 +141,6 @@ class TopicRepository extends EntityRepository
     /**
      * Retrieve a topic from hook parameters
      *
-     * @param  Hook $hook
      * @return TopicEntity/NULL
      */
     public function getHookedTopic(Hook $hook)

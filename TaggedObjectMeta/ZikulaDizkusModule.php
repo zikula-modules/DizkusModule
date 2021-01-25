@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -14,10 +16,10 @@ namespace Zikula\DizkusModule\TaggedObjectMeta;
 
 use DateUtil;
 use ModUtil;
-use ZLanguage;
-use Zikula\DizkusModule\Manager\TopicManager;
-use Zikula\DizkusModule\Manager\ForumManager;
 use Zikula\Core\UrlInterface;
+use Zikula\DizkusModule\Manager\ForumManager;
+use Zikula\DizkusModule\Manager\TopicManager;
+use ZLanguage;
 
 class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
 {
@@ -28,7 +30,7 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
         // default to empty
         $route = $urlObject->getRoute();
         $args = $urlObject->getArgs();
-        if (false !== strpos($route, 'viewtopic')) {
+        if (false !== mb_strpos($route, 'viewtopic')) {
             // item is post or topic
             if (isset($args['topic'])) {
                 $managedTopic = new TopicManager($args['topic']);
@@ -41,9 +43,9 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
             }
         } else {
             // item is forum
-            $forumid = isset($args['forum']) ? $args['forum'] : null;
+            $forumid = $args['forum'] ?? null;
             if (!isset($forumid)) {
-                $forumid = isset($args['viewcat']) ? $args['viewcat'] : null;
+                $forumid = $args['viewcat'] ?? null;
             }
             if (isset($forumid)) {
                 $managedForum = new ForumManager($forumid);
@@ -86,7 +88,7 @@ class ZikulaDizkusModule extends \Tag_AbstractTaggedObjectMeta
             $topiclabel = __('topic', $dom);
             $forumlabel = __('forum', $dom);
             $urlObject = $this->getUrlObject();
-            $label = 'viewtopic' == $urlObject->getAction() ? $topiclabel : $forumlabel;
+            $label = 'viewtopic' === $urlObject->getAction() ? $topiclabel : $forumlabel;
             $modinfo = ModUtil::getInfoFromName('ZikulaDizkusModule');
             $link = "{$modinfo['displayname']} {$label}: <a href='{$urlObject->getUrl()}'>{$title}</a> ({$date})";
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright 2013 Zikula Foundation.
  *
@@ -14,11 +16,11 @@
 
 namespace Zikula\DizkusModule\HookedTopicMeta;
 
-use Zikula\Core\UrlInterface;
+use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Bundle\HookBundle\Hook\Hook;
 use Zikula\Bundle\HookBundle\Hook\ProcessHook;
-use Zikula\Bundle\HookBundle\Hook\DisplayHook;
 use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\Core\UrlInterface;
 
 abstract class AbstractHookedTopicMeta
 {
@@ -68,8 +70,6 @@ abstract class AbstractHookedTopicMeta
 
     /**
      * Constructor
-     *
-     * @param Hook $hook
      */
     public function __construct(Hook $hook)
     {

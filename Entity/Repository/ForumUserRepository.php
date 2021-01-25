@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -56,7 +58,7 @@ class ForumUserRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $timePeriod = new \DateTime();
-        $timePeriod->modify("-$months months");
+        $timePeriod->modify("-${months} months");
         $qb->select('u')
             ->from('Zikula\DizkusModule\Entity\ForumUserEntity', 'u')
             ->where('u.user_id > 1')
@@ -133,7 +135,7 @@ class ForumUserRepository extends EntityRepository
             ;
 
         $activetime = new \DateTime(); // @todo maybe need to check TZ here
-        $activetime->modify('-'.$secinactivemins.' minutes');
+        $activetime->modify('-' . $secinactivemins . ' minutes');
         $qb->setParameter('activetime', $activetime);
 
         $onlineusers = $qb->getQuery()->getResult();
@@ -142,7 +144,7 @@ class ForumUserRepository extends EntityRepository
         if (is_array($onlineusers)) {
             $total = count($onlineusers);
             foreach ($onlineusers as $onlineuser) {
-                if (0 != $onlineuser['uid']) {
+                if (0 !== $onlineuser['uid']) {
                     $unames[$onlineuser['uid']]['user'] = $onlineuser[0];
                     $unames[$onlineuser['uid']]['isModerator'] = false;
                     if ($moderatorCheck) {

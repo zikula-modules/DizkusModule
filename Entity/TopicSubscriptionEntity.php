@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -48,9 +50,6 @@ class TopicSubscriptionEntity extends EntityAccess
 
     /**
      * Constructor
-     *
-     * @param ForumUserEntity $forumUser
-     * @param TopicEntity     $topic
      */
     public function __construct(ForumUserEntity $forumUser, TopicEntity $topic)
     {
@@ -95,8 +94,6 @@ class TopicSubscriptionEntity extends EntityAccess
 
     /**
      * Set the ForumUser
-     *
-     * @param ForumUserEntity $forumUser
      */
     public function setUser(ForumUserEntity $forumUser)
     {

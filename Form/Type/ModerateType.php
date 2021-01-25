@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -38,8 +40,8 @@ class ModerateType extends AbstractType
         $topics = $managedForum->getTopics();
         $topicSelect[''] = '<< ' . $this->translator->__('Choose target topic') . ' >>';
         foreach ($topics as $topic) {
-            $text = substr($topic->getTitle(), 0, 50);
-            $text = strlen($text) < strlen($topic->getTitle()) ? "$text..." : $text;
+            $text = mb_substr($topic->getTitle(), 0, 50);
+            $text = mb_strlen($text) < mb_strlen($topic->getTitle()) ? "${text}..." : $text;
             $topicSelect[$topic->getTopic_id()] = $text;
         }
         $this->topics = $topicSelect;

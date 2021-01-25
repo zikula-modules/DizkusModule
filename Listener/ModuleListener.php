@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -13,11 +15,11 @@
 namespace Zikula\DizkusModule\Listener;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Zikula\Bundle\HookBundle\Dispatcher\Storage\Doctrine\DoctrineStorage;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\DizkusModule\ZikulaDizkusModule;
@@ -67,8 +69,6 @@ class ModuleListener implements EventSubscriberInterface
      * respond to event 'module_dispatch.service_links'
      * populate Services menu with hook option link.
      *
-     * @param GenericEvent $event
-     *
      * @return void
      */
     public function serviceLinks(GenericEvent $event)
@@ -91,8 +91,6 @@ class ModuleListener implements EventSubscriberInterface
      * Receives $modinfo as event $args.
      *
      * On module delete handle associated hooked topics
-     *
-     * @param GenericEvent $event
      *
      * @return void
      */

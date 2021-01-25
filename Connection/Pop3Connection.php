@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -71,7 +73,7 @@ class Pop3Connection
      *
      * object
      */
-    private $coreUser = null;
+    private $coreUser;
 
     /**
      * matchstring
@@ -86,15 +88,15 @@ class Pop3Connection
      */
     public function __construct($data)
     {
-        $this->active = isset($data['active']) ? $data['active'] : false;
-        $this->server = isset($data['server']) ? $data['server'] : '';
-        $this->port = isset($data['port']) ? $data['port'] : 110;
-        $this->login = isset($data['login']) ? $data['login'] : '';
-        $this->password = isset($data['password']) ? $data['password'] : '';
-        $this->interval = isset($data['interval']) ? $data['interval'] : 0;
-        $this->lastconnect = isset($data['lastconnect']) ? $data['lastconnect'] : 0;
-        $this->coreUser = isset($data['coreUser']) ? $data['coreUser'] : null;
-        $this->matchstring = isset($data['matchstring']) ? $data['matchstring'] : '';
+        $this->active = $data['active'] ?? false;
+        $this->server = $data['server'] ?? '';
+        $this->port = $data['port'] ?? 110;
+        $this->login = $data['login'] ?? '';
+        $this->password = $data['password'] ?? '';
+        $this->interval = $data['interval'] ?? 0;
+        $this->lastconnect = $data['lastconnect'] ?? 0;
+        $this->coreUser = $data['coreUser'] ?? null;
+        $this->matchstring = $data['matchstring'] ?? '';
     }
 
     /**

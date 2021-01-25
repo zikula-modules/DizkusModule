@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright Dizkus Team 2012.
  *
@@ -23,9 +25,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Zikula\Bundle\HookBundle\Hook\Hook;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Core\Hook\ProcessHook;
+use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Entity\PostEntity;
 use Zikula\DizkusModule\Entity\TopicEntity;
-use Zikula\DizkusModule\Entity\ForumEntity;
 use Zikula\DizkusModule\Helper\SynchronizationHelper;
 use Zikula\DizkusModule\Security\Permission;
 use Zikula\ExtensionsModule\Api\VariableApi;
@@ -107,17 +109,6 @@ class TopicManager
 
     /**
      * Construct the manager
-     *
-     * @param TranslatorInterface $translator
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
-     * @param EntityManager $entityManager
-     * @param CurrentUserApi $userApi
-     * @param Permission $permission
-     * @param VariableApi $variableApi
-     * @param ForumUserManager $forumUserManagerService
-     * @param ForumManager $forumManagerService
-     * @param SynchronizationHelper $synchronizationHelper
      */
     public function __construct(
             TranslatorInterface $translator,
@@ -176,7 +167,6 @@ class TopicManager
     /**
      * Start managing by hook
      *
-     * @param Hook $hook
      * @param boolean $create
      *
      * @return TopicManager
@@ -540,7 +530,7 @@ class TopicManager
      */
     private function getAdjacent($oper, $dir)
     {
-        $dql = "SELECT t.id FROM Zikula\DizkusModule\Entity\TopicEntity t
+        $dql = "SELECT t.id FROM Zikula\\DizkusModule\\Entity\\TopicEntity t
             WHERE t.topic_time {$oper} :time
             AND t.forum = :forum
             AND t.sticky = 0
@@ -552,9 +542,9 @@ class TopicManager
             ->getScalarResult();
         if ($result) {
             return $result[0]['id'];
-        } else {
-            return $this->_topic->getId(); // return current value (checks in template for this)
         }
+
+        return $this->_topic->getId(); // return current value (checks in template for this)
     }
 
     /**
@@ -585,7 +575,7 @@ class TopicManager
         }
 
         $last_page = 1;
-        if ('ASC' == $postSortOrder) {
+        if ('ASC' === $postSortOrder) {
             // +1 for the initial posting
             $last_page = floor($replyCount / $posts_per_page) * $posts_per_page + 1;
         }
@@ -681,12 +671,12 @@ class TopicManager
      */
     public function move(ForumEntity $forum, $createshadowtopic = false)
     {
-        if ($this->getForumId() != $forum->getId()) {
+        if ($this->getForumId() !== $forum->getId()) {
             if (true === $createshadowtopic) {
                 // prepare shadow data
                 $newUrl = $this->router->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $this->getId()]);
                 $title = $this->translator->__f('*** Moved:* \'%title\' * to * \'%forum\' ***', ['%title' => $this->getTitle(), '%forum' => $forum->getName()]);
-                $message = $this->translator->__('The original topic has been moved').' <a title="'.$this->translator->__('moved').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
+                $message = $this->translator->__('The original topic has been moved') . ' <a title="' . $this->translator->__('moved') . '" href="' . $newUrl . '">' . $this->translator->__('here') . '</a>.';
                 // moderator that performs move action
                 $poster = $this->forumUserManagerService->getManager();
                 // create shadow topic
@@ -729,11 +719,11 @@ class TopicManager
     public function split(PostEntity $post, $subject = null, ForumEntity $destinationForum = null)
     {
         // prepare data
-        $title = !is_null($subject)
+        $title = null !== $subject
             ? $subject
             : $this->translator->__('Split') . ': ' . $this->getTitle();
 
-        $forum = !is_null($destinationForum)
+        $forum = null !== $destinationForum
             ? $destinationForum
             : $this->getForum();
 
@@ -820,7 +810,7 @@ class TopicManager
             // prepare shadow data
             $newUrl = $this->router->generate('zikuladizkusmodule_topic_viewtopic', ['topic' => $destinationTopic->getId()]);
             $title = $this->translator->__f('*** Joined with * \'%topic\' ', ['%topic' => $destinationTopic->getTitle()]);
-            $message = $this->translator->__('The original postings from this topic has been ').' <a title="'.$this->translator->__('joined with').'" href="'.$newUrl.'">'.$this->translator->__('here').'</a>.';
+            $message = $this->translator->__('The original postings from this topic has been ') . ' <a title="' . $this->translator->__('joined with') . '" href="' . $newUrl . '">' . $this->translator->__('here') . '</a>.';
             // moderator that performs move action
             $poster = $this->forumUserManagerService->getManager();
             //update shadow topic with new data
@@ -868,8 +858,6 @@ class TopicManager
 
     /**
      * Add hook data to topic
-     *
-     * @param ProcessHook $hook
      */
     public function setHookData(ProcessHook $hook)
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Dizkus
  *
@@ -24,7 +26,7 @@ class RecentPostsBlock extends AbstractBlockHandler
      */
     public function display(array $properties)
     {
-        if (!$this->hasPermission('ZikulaDizkusModule::RecentPostsBlock', "$properties[bid]::", ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaDizkusModule::RecentPostsBlock', "{$properties['bid']}::", ACCESS_READ)) {
             return '';
         }
 
@@ -105,7 +107,7 @@ class RecentPostsBlock extends AbstractBlockHandler
 //            }
 //        }
 
-        return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [
+        return $this->renderView("@ZikulaDizkusModule/Block/${template}.html.twig", [
             'lastposts'  => $posts,
             'showfooter' => $properties['showfooter'],
         ]);

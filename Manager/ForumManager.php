@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -109,16 +111,6 @@ class ForumManager
 
     /**
      * Construct the manager
-     *
-     * @param TranslatorInterface $translator
-     * @param RouterInterface $router
-     * @param RequestStack $requestStack
-     * @param EntityManager $entityManager
-     * @param CurrentUserApi $userApi
-     * @param Permission $permission
-     * @param VariableApi $variableApi
-     * @param PermissionApi $permissionApi
-     * @param ForumUserManager $forumUserManagerService
      */
     public function __construct(
             TranslatorInterface $translator,
@@ -274,7 +266,7 @@ class ForumManager
      */
     public function getBreadcrumbs($withoutCurrent = false)
     {
-        if (0 == $this->_forum->getLvl()) {
+        if (0 === $this->_forum->getLvl()) {
             // already root
             return [];
         }
@@ -283,7 +275,7 @@ class ForumManager
             ->getPath($this->_forum);
         $output = [];
         foreach ($forums as $key => $forum) {
-            if (0 == $key) {
+            if (0 === $key) {
                 continue;
             }
             $url = $this->router->generate('zikuladizkusmodule_forum_viewforum', ['forum' => $forum->getForum_id()]);
@@ -441,8 +433,6 @@ class ForumManager
     /**
      * Is this forum a child of the provided forum?
      *
-     * @param ForumEntity $forum
-     *
      * @return bool
      */
     public function isChildOf(ForumEntity $forum)
@@ -509,13 +499,13 @@ class ForumManager
         $pre = str_repeat('-', $level * 2);
         $output = [];
         foreach ($input as $i) {
-            if ($id != $i['forum_id']) {
+            if ($id !== $i['forum_id']) {
                 // only include results if
-                if (ForumEntity::STATUS_LOCKED == $i['status'] && $includeLocked || ForumEntity::STATUS_UNLOCKED == $i['status']) {
-                    if (ForumEntity::ROOTNAME == $i['name']) {
+                if (ForumEntity::STATUS_LOCKED === $i['status'] && $includeLocked || ForumEntity::STATUS_UNLOCKED === $i['status']) {
+                    if (ForumEntity::ROOTNAME === $i['name']) {
                         $i['name'] = $this->__('Forum Index (top level)');
                     }
-                    $output[$i['forum_id']] = $pre.$i['name'].'('.$i['forum_id'].')';
+                    $output[$i['forum_id']] = $pre . $i['name'] . '(' . $i['forum_id'] . ')';
                 }
                 if (isset($i['__children'])) {
                     $output = $output + $this->getNode($i['__children'], $id, $level + 1, $includeLocked);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -74,7 +76,7 @@ class NotificationsHelper
         /* @var $post \Zikula\DizkusModule\Entity\PostEntity */
         $post = $args['post'];
         $subject = $post->isFirst() ? '' : 'Re: ';
-        $subject .= $post->getTopic()->getForum()->getName().' :: '.$post->getTopic()->getTitle();
+        $subject .= $post->getTopic()->getForum()->getName() . ' :: ' . $post->getTopic()->getTitle();
         /* @var $view Zikula_View */
         $view = Zikula_View::getInstance($this->getName());
         $poster = $post->getPoster()->getUser();
@@ -86,7 +88,7 @@ class NotificationsHelper
             ->assign('topic_time_ml', DateUtil::formatDatetime($post->getTopic()->getTopic_time(), 'datetimebrief'))
             ->assign('post_message', $post->getPost_text())->assign('topic_id', $post->getTopic_id())
             ->assign('forum_id', $post->getTopic()->getForum()->getForum_id())
-            ->assign('topic_url', $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $post->getTopic_id()], RouterInterface::ABSOLUTE_URL).'#dzk_quickreply')
+            ->assign('topic_url', $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $post->getTopic_id()], RouterInterface::ABSOLUTE_URL) . '#dzk_quickreply')
             ->assign('subscription_url', $this->get('router')->generate('zikuladizkusmodule_user_prefs', [], RouterInterface::ABSOLUTE_URL))
             ->assign('base_url', $view->getRequest()->getBaseUrl());
         $message = $view->fetch('Mail/notifyuser.txt');
@@ -101,7 +103,7 @@ class NotificationsHelper
             if (in_array($subscriber['uid'], $notified) || empty($subscriber['email'])) {
                 continue;
             }
-            if (SecurityUtil::checkPermission($this->name.'::', $post->getTopic()->getForum()->getParent()->getName().':'.$post->getTopic()->getForum()->getName().':', ACCESS_READ, $subscriber['uid'])) {
+            if (SecurityUtil::checkPermission($this->name . '::', $post->getTopic()->getForum()->getParent()->getName() . ':' . $post->getTopic()->getForum()->getName() . ':', ACCESS_READ, $subscriber['uid'])) {
                 $args = [
                     'fromname'    => System::getVar('sitename'),
                     'fromaddress' => $fromAddress,
@@ -110,9 +112,9 @@ class NotificationsHelper
                     'subject'     => $subject,
                     'body'        => $message,
                     'headers'     => [
-                        'X-UserID: '.md5(UserUtil::getVar('uid')),
-                        'X-Mailer: Dizkus v'.$dizkusModuleInfo['version'],
-                        'X-DizkusTopicID: '.$post->getTopic_id(), ], ];
+                        'X-UserID: ' . md5(UserUtil::getVar('uid')),
+                        'X-Mailer: Dizkus v' . $dizkusModuleInfo['version'],
+                        'X-DizkusTopicID: ' . $post->getTopic_id(), ], ];
 
                 try {
                     $isNotified = ModUtil::apiFunc('ZikulaMailerModule', 'user', 'sendmessage', $args);
@@ -142,11 +144,11 @@ class NotificationsHelper
         $mods = ModUtil::apiFunc($this->name, 'moderators', 'get', ['forum_id' => $args['post']->getTopic()->getForum()->getForum_id()]);
         // generate the mailheader
         $email_from = ModUtil::getVar($this->name, 'email_from');
-        if ('' == $email_from) {
+        if ('' === $email_from) {
             // nothing in forumwide-settings, use adminmail
             $email_from = System::getVar('adminmail');
         }
-        $subject = DataUtil::formatForDisplay($this->__('Moderation request')).': '.strip_tags($args['post']->getTopic()->getTitle());
+        $subject = DataUtil::formatForDisplay($this->__('Moderation request')) . ': ' . strip_tags($args['post']->getTopic()->getTitle());
         $sitename = System::getVar('sitename');
         $recipients = [];
         // using the uid as the key to the array avoids duplication
@@ -157,7 +159,7 @@ class NotificationsHelper
         if (count($mods['groups']) > 0) {
             foreach (array_keys($mods['groups']) as $gid) {
                 $group = ModUtil::apiFunc('Groups', 'user', 'get', ['gid' => $gid]);
-                if (false != $group) {
+                if (false !== $group) {
                     foreach ($group['members'] as $gm_uid) {
                         $mod_email = UserUtil::getVar('email', $gm_uid);
                         $mod_uname = UserUtil::getVar('uname', $gm_uid);
@@ -166,7 +168,7 @@ class NotificationsHelper
                                 'uname' => $mod_uname,
                                 'email' => $mod_email, ];
                         }
-                        if ($gm_uid == $notifyAdminAsMod) {
+                        if ($gm_uid === $notifyAdminAsMod) {
                             // admin is also moderator
                             $admin_is_mod = true;
                         }
@@ -182,38 +184,38 @@ class NotificationsHelper
                         'uname' => $uname,
                         'email' => $mod_email, ];
                 }
-                if ($uid == $notifyAdminAsMod) {
+                if ($uid === $notifyAdminAsMod) {
                     // admin is also moderator
                     $admin_is_mod = true;
                 }
             }
         }
         // determine if we also notify an admin as a moderator
-        if (false == $admin_is_mod && $notifyAdminAsMod > 1) {
+        if (false === $admin_is_mod && $notifyAdminAsMod > 1) {
             $recipients[$notifyAdminAsMod] = [
                 'uname' => UserUtil::getVar('uname', $notifyAdminAsMod),
                 'email' => UserUtil::getVar('email', $notifyAdminAsMod), ];
         }
         $reporting_userid = UserUtil::getVar('uid');
         $reporting_username = UserUtil::getVar('uname');
-        if (is_null($reporting_username)) {
+        if (null === $reporting_username) {
             $reporting_username = $this->__('Guest');
         }
         $start = ModUtil::apiFunc('Mailer', 'user', 'getTopicPage', ['replyCount' => $args['post']->getTopic()->getReplyCount()]);
-        $linkToTopic = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $args['post']->getTopic_id(), 'start' => $start], RouterInterface::ABSOLUTE_URL)."#pid{$args['post']->getPost_id()}";
+        $linkToTopic = $this->get('router')->generate('zikuladizkusmodule_user_viewtopic', ['topic' => $args['post']->getTopic_id(), 'start' => $start], RouterInterface::ABSOLUTE_URL) . "#pid{$args['post']->getPost_id()}";
         $posttext = $this->getVar('striptagsfromemail') ? strip_tags($args['post']->getPost_text()) : $args['post']->getPost_text();
-        $message = $this->__f('Request for moderation on %s', System::getVar('sitename')).'
-'.$args['post']->getTopic()->getForum()->getName().' :: '.$args['post']->getTopic()->getTitle().'
+        $message = $this->__f('Request for moderation on %s', System::getVar('sitename')) . '
+' . $args['post']->getTopic()->getForum()->getName() . ' :: ' . $args['post']->getTopic()->getTitle() . '
 
-'.$this->__('Reporting user').": {$reporting_username}\n".$this->__('Comment').':
-'.strip_tags($args['comment']).'
+' . $this->__('Reporting user') . ": {$reporting_username}\n" . $this->__('Comment') . ':
+' . strip_tags($args['comment']) . '
 
-'.$this->__('Post Content').':
-'.'---------------------------------------------------------------------
-'.$posttext.'
-'.'---------------------------------------------------------------------
+' . $this->__('Post Content') . ':
+' . '---------------------------------------------------------------------
+' . $posttext . '
+' . '---------------------------------------------------------------------
 
-'.$this->__('Link to topic').": {$linkToTopic}\n".'
+' . $this->__('Link to topic') . ": {$linkToTopic}\n" . '
 ';
         $modinfo = ModUtil::getInfoFromName($this->name);
         if (count($recipients) > 0) {
@@ -226,8 +228,8 @@ class NotificationsHelper
                     'subject'     => $subject,
                     'body'        => $message,
                     'headers'     => [
-                        'X-UserID: '.$reporting_userid,
-                        'X-Mailer: '.$modinfo['name'].' '.$modinfo['version'], ], ]);
+                        'X-UserID: ' . $reporting_userid,
+                        'X-Mailer: ' . $modinfo['name'] . ' ' . $modinfo['version'], ], ]);
             }
             $this->request->getSession()->getFlashBag()->add('status', $this->__('The moderator has been contacted about this post. Thank you.'));
         } else {

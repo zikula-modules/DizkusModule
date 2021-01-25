@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -12,14 +14,14 @@
 
 namespace Zikula\DizkusModule\Manager;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Zikula\Bundle\HookBundle\Collector\HookCollector;
-use Zikula\ExtensionsModule\Api\CapabilityApi;
-use Doctrine\Common\Collections\ArrayCollection;
 use Zikula\Common\Translator\TranslatorInterface;
-use Zikula\ExtensionsModule\Api\VariableApi;
-use Zikula\DizkusModule\Hooks\HookedModuleObject;
 use Zikula\DizkusModule\Hooks\BindingObject;
+use Zikula\DizkusModule\Hooks\HookedModuleObject;
+use Zikula\ExtensionsModule\Api\CapabilityApi;
+use Zikula\ExtensionsModule\Api\VariableApi;
 
 /**
  * Settings manager
@@ -48,12 +50,6 @@ class SettingsManager
 
     /**
      * Construct the manager
-     *
-     * @param TranslatorInterface $translator
-     * @param EntityManager $entityManager
-     * @param VariableApi $variableApi
-     * @param HookCollector $hookCollector
-     * @param CapabilityApi $capabilityApi
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -171,7 +167,7 @@ class SettingsManager
         }
 
         foreach ($providersCollection as $key => $provider) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+            if (null !== $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
                 $providerSettings = $settings[str_replace('.', '-', $key)];
                 $provider->setSettings($providerSettings);
                 if (array_key_exists('modules', $providerSettings)) {
@@ -242,7 +238,7 @@ class SettingsManager
         }
 
         foreach ($subscribersCollection as $key => $subscriber) {
-            if (null != $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
+            if (null !== $settings && array_key_exists(str_replace('.', '-', $key), $settings)) {
                 $subscriberSettings = $settings[str_replace('.', '-', $key)];
                 $subscriber->setSettings($subscriberSettings);
                 if (array_key_exists('modules', $subscriberSettings)) {

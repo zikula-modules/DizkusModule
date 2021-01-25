@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -83,7 +85,6 @@ class SynchronizationHelper
     /**
      * Recursive function to add counts to parents
      *
-     * @param ForumEntity $forum
      * @param string      $entity
      */
     private function addToParentForumCount(ForumEntity $forum, $entity = 'Post')

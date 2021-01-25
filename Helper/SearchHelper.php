@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -53,8 +55,6 @@ class SearchHelper implements SearchableInterface
 
     /**
      * SearchHelper constructor.
-     * @param PermissionApiInterface $permissionApi
-     * @param SessionInterface $session
      */
     public function __construct(
         PermissionApiInterface $permissionApi,
@@ -119,10 +119,10 @@ class SearchHelper implements SearchableInterface
         $results = [];
 
         $forums = isset($modVars['search_forums']) && !empty($modVars['search_forums']) ? $modVars['search_forums'] : null;
-        $location = isset($modVars['search_forums_in']) ? $modVars['search_forums_in'] : 'post';
+        $location = $modVars['search_forums_in'] ?? 'post';
 
         foreach ($words as $word) {
-            if (strlen($word) < $this->minsearchlength || strlen($word) > $this->minsearchlength) {
+            if (mb_strlen($word) < $this->minsearchlength || mb_strlen($word) > $this->minsearchlength) {
                 $this->errors[] = $this->translator->__f('For forum searches, each search term must be between %1s and %2s characters in length.', ['%1s' => $this->minsearchlength, '%2s' => $this->maxsearchlength]);
 
                 return [];

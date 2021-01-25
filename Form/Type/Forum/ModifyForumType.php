@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -16,16 +18,16 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Zikula\DizkusModule\Manager\ForumUserManager;
-use Zikula\DizkusModule\Form\Extension\UserModeratorsChoiceLoader;
-use Zikula\DizkusModule\Form\DataTransformer\ModeratorUsersTransformer;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zikula\DizkusModule\Form\DataTransformer\ModeratorGroupsTransformer;
+use Zikula\DizkusModule\Form\DataTransformer\ModeratorUsersTransformer;
+use Zikula\DizkusModule\Form\Extension\UserModeratorsChoiceLoader;
+use Zikula\DizkusModule\Manager\ForumUserManager;
 
 class ModifyForumType extends AbstractType
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Zikula package.
  *
@@ -92,8 +94,6 @@ class PostBadNotifyModeratorListener implements EventSubscriberInterface
     /**
      * Notify moderators by email
      * Respond to event DizkusEvents::POST_NOTIFY_MODERATOR
-     *
-     * @param GenericEvent $event
      *
      * @return void
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -24,7 +26,7 @@ class StatisticsBlock extends AbstractBlockHandler
      */
     public function display(array $properties)
     {
-        if (!$this->hasPermission('ZikulaDizkusModule::StatisticsBlock', "$properties[bid]::", ACCESS_READ)) {
+        if (!$this->hasPermission('ZikulaDizkusModule::StatisticsBlock', "{$properties['bid']}::", ACCESS_READ)) {
             return '';
         }
 
@@ -68,7 +70,7 @@ class StatisticsBlock extends AbstractBlockHandler
         $lastposts = $this->get('zikula_dizkus_module.post_manager')->getLastPosts($paramArray);
         $topposters = $this->get('zikula_dizkus_module.post_manager')->getTopPosters($paramArray);
 
-        return $this->renderView("@ZikulaDizkusModule/Block/$template.html.twig", [
+        return $this->renderView("@ZikulaDizkusModule/Block/${template}.html.twig", [
             'topforums'      => $topforums,
             'topforumscount' => count($topforums),
             'lastposts'      => $lastposts,

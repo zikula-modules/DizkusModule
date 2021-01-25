@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus.
  *
@@ -37,8 +39,6 @@ class UserListener implements EventSubscriberInterface
      * respond to event 'user.account.delete'.
      *
      * on User delete, handle associated information in Dizkus
-     *
-     * @param GenericEvent $event
      *
      * @return void
      */

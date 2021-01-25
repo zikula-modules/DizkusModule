@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Dizkus
  *
@@ -54,7 +56,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
 
     public function getId()
     {
-        return strtolower($this->getType());
+        return mb_strtolower($this->getType());
     }
 
     /**
@@ -72,8 +74,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
      */
     private function getType()
     {
-        $type = get_class($this);
-        $type = substr($type, strrpos($type, '\\') + 1, -strlen('_ImportHandler'));
+        $type = static::class;
+        $type = mb_substr($type, mb_strrpos($type, '\\') + 1, -mb_strlen('_ImportHandler'));
 
         return $type;
     }
@@ -111,12 +113,10 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
 
             break;
             case 'forum':
-
             $data = 'done forum';
 
             break;
             case 'other':
-
             $data = 'done other';
 
             break;
